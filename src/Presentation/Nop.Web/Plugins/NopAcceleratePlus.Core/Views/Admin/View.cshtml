@@ -1,0 +1,116 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Core.Models.SolrLogModel
+@{
+    //page title
+    ViewBag.Title = T("XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.SolrLogs").Text;
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.SolrLogs");
+}
+@inject Nop.Core.IWebHelper webHelper
+
+<style type="text/css">
+    .form-text-row {
+        padding-top: 6px;
+        word-break: break-word;
+    }
+</style>
+<form asp-controller="NopAcceleratePlusCore" asp-action="View" method="get">
+    @Html.AntiForgeryToken()
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.NopAcceleratePlus.Core.Fields.NopAccelerateCore") - @T("Admin.System.Log.ViewLogDetails")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a href="@Url.RouteUrl("XcellenceIT.Plugin.NopAcceleratePlus.Core.SolrLogs")">back to solr log</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="button" id="delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </button>
+        </div>
+        <nop-action-confirmation asp-button-id="delete" />
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    @Html.ValidationSummary(true)
+                    <div class="card-body">
+                        
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <nop-label asp-for="ShortMessage" />
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-text-row">@Model.ShortMessage</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <nop-label asp-for="FullMessage" />
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-text-row">@Model.FullMessage</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <nop-label asp-for="IpAddress" />
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-text-row">@Model.IpAddress</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <nop-label asp-for="PageUrl" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-text-row">@Model.PageUrl</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <nop-label asp-for="CreatedOn" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-text-row">@Model.CreatedOn</div>
+                                    </div>
+                                </div>
+                           
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("NopAcceleratePlusCoreVersion")
+    </div>
+</form>
+<script type="text/javascript">
+    var selectedIds = @Model.Id;
+    $(document).ready(function () {
+        $('#delete-action-confirmation-submit-button').click(function (e) {
+            var requestUrl = '@Url.Action("Delete", "NopAcceleratePlusCore",new { id = @Model.Id })';
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: requestUrl,
+                complete: function (data) {
+                    if (data) {
+                        selectedIds = 0;
+                        window.location.href = '@Url.Action("SolrLogs", "NopAcceleratePlusCore")'
+                    } else {
+                        alert("No Solrlog found with the specified id");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                },
+                traditional: true
+            });
+            $('#delete-selected-action-confirmation').modal('toggle');
+            return false;
+         });
+    });
+</script>

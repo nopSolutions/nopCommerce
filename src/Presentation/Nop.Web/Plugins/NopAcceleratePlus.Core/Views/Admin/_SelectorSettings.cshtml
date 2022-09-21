@@ -1,0 +1,178 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Core.Models.GeneralSettingModel
+@{
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.GeneralSetting");
+}
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="SortBySelector_OverrideForStore" asp-input="SortBySelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SortBySelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="SortBySelector" />
+                    <span asp-validation-for="SortBySelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="PageSizeSelector_OverrideForStore" asp-input="PageSizeSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PageSizeSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="PageSizeSelector" />
+                    <span asp-validation-for="PageSizeSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="PaginationSelector_OverrideForStore" asp-input="PaginationSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PaginationSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="PaginationSelector" />
+                    <span asp-validation-for="PaginationSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="ProductGridSelector_OverrideForStore" asp-input="ProductGridSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductGridSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="ProductGridSelector" />
+                    <span asp-validation-for="ProductGridSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="ProductListSelector_OverrideForStore" asp-input="ProductListSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductListSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="ProductListSelector" />
+                    <span asp-validation-for="ProductListSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="RefineButtonSelector_OverrideForStore" asp-input="RefineButtonSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="RefineButtonSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="RefineButtonSelector" />
+                    <span asp-validation-for="RefineButtonSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="PageBodySelector_OverrideForStore" asp-input="PageBodySelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="PageBodySelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="PageBodySelector" />
+                    <span asp-validation-for="PageBodySelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="FeaturedProductGridSelector_OverrideForStore" asp-input="FeaturedProductGridSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="FeaturedProductGridSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="FeaturedProductGridSelector" />
+                    <span asp-validation-for="FeaturedProductGridSelector"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="ViewModeSelector_OverrideForStore" asp-input="ViewModeSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ViewModeSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="ViewModeSelector" />
+                    <span asp-validation-for="ViewModeSelector"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="ProductReplaceSelector_OverrideForStore" asp-input="ProductReplaceSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductReplaceSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="ProductReplaceSelector" />
+                    <span asp-validation-for="ProductReplaceSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="ScrollToTopHeight_OverrideForStore" asp-input="ScrollToTopHeight" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ScrollToTopHeight" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="ScrollToTopHeight" />
+                    <span asp-validation-for="ScrollToTopHeight"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="EnableScrollToTop_OverrideForStore" asp-input="EnableScrollToTop" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableScrollToTop" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="EnableScrollToTop" />
+                    <span asp-validation-for="EnableScrollToTop"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="EnableScrollToTopFacetApplies_OverrideForStore" asp-input="EnableScrollToTopFacetApplies" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="EnableScrollToTopFacetApplies" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="EnableScrollToTopFacetApplies" />
+                    <span asp-validation-for="EnableScrollToTopFacetApplies"></span>
+                </div>
+            </div>
+            <div class="form-group row" id="pnlSearchPageScrollFacetSelector">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="SearchPageScrollFacetSelector_OverrideForStore" asp-input="SearchPageScrollFacetSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SearchPageScrollFacetSelector" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="SearchPageScrollFacetSelector" />
+                    <span asp-validation-for="SearchPageScrollFacetSelector"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="MobileViewScreenSize_OverrideForStore" asp-input="MobileViewScreenSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MobileViewScreenSize" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="MobileViewScreenSize" />
+                    <span asp-validation-for="MobileViewScreenSize"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.EnableScrollToTopFacetApplies)").click(toggleEnableScrollToTopFacetApplies);
+        toggleEnableScrollToTopFacetApplies();
+        function toggleEnableScrollToTopFacetApplies() {
+            if ($('#@Html.IdFor(model => model.EnableScrollToTopFacetApplies)').is(':checked')) {
+                $('#pnlSearchPageScrollFacetSelector').show();
+
+            } else {
+                $('#pnlSearchPageScrollFacetSelector').hide();
+            }
+        }
+    });
+</script>

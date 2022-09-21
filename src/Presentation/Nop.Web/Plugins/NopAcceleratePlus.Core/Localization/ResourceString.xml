@@ -1,0 +1,1316 @@
+﻿<!--
+// *************************************************************************
+// *                                                                       *
+// * nopAccelerate Plus - Solr Integration Extension for nopCommerce       *
+// * Copyright (c) Xcellence-IT. All Rights Reserved.                      *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * Email: info@nopaccelerate.com                                         *
+// * Website: http://www.nopaccelerate.com                                 *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * This  software is furnished  under a license  and  may  be  used  and *
+// * modified  only in  accordance with the terms of such license and with *
+// * the  inclusion of the above  copyright notice.  This software or  any *
+// * other copies thereof may not be provided or  otherwise made available *
+// * to any  other  person.   No title to and ownership of the software is *
+// * hereby transferred.                                                   *
+// *                                                                       *
+// * You may not reverse  engineer, decompile, defeat  license  encryption *
+// * mechanisms  or  disassemble this software product or software product *
+// * license.  Xcellence-IT may terminate this license if you don't comply *
+// * with  any  of  the  terms and conditions set forth in  our  end  user *
+// * license agreement (EULA).  In such event,  licensee  agrees to return *
+// * licensor  or destroy  all copies of software  upon termination of the *
+// * license.                                                              *
+// *                                                                       *
+// * Please see the  License file for the full End User License Agreement. *
+// * The  complete license agreement is also available on  our  website at * 
+// * http://www.nopaccelerate.com/enterprise-license                       *
+// *                                                                       *
+// *************************************************************************
+-->
+<Language Name="English" IsDefault="true" IsRightToLeft="false">
+
+  <!--#region Menu -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Menu.MainTitle">
+    <Value>nopAccelerate Plus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Menu.SubTitle">
+    <Value>nopAccelerate+ Core</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.NopAccelerateCore">
+    <Value>nopAccelerate Plus Core</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrLogs">
+    <Value>Solr Logs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ProductStatus">
+    <Value>Product Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.GeneralSetting">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Body.EmailFormat">
+    <Value>
+      <![CDATA[<p>Dear %Administration.Name%,</p><p>This is an automated notice that Solr Instance for your Store %Store.Name%-%Store.URL% is down. That means, that your nopCommerce store Search and Faceted navigation on Catalog &amp; Search Pages will cease to work correctly. Don't worry, the pages will still work but instead of Solr's index, the requests will be served by nopCommerce default methods from SQL Server.</p><p>We urge you to look into this on urgent basis and start the Solr. Once you verify its working, just restart your store.</p><p>For more details on how to start Solr, please check our <a href="http://docs.nopaccelerate.com/files/nopaccelerate-plus-plug-in/" target="_blank"> support documentation</a>.</p><p>Best Regards,</p><p>nopAccelerate Team<br /><a class="external" href="http://www.nopaccelerate.com/">www.nopAccelerate.com</a></p>]]>
+    </Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Core.EmailFormat">
+    <Value>Urgent Notice Solr Instance for your Store %Store.Name% is Down</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Setting Title-->
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.Configure">
+    <Value>nopAccelerate Plus Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.GeneralSetting">
+    <Value>nopAccelerate Plus general setting</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.ProductStatus">
+    <Value>nopAccelerate Plus product status</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.SolrLogs">
+    <Value>nopAccelerate Plus solr logs</Value>
+  </LocaleResource>
+
+  <!--#endregion-->
+
+  <!--#region Configuration Setting -->
+
+  <!--#region FormValues  -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrCoreURL">
+    <Value>Solr Core URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrCoreURL.Hint">
+    <Value>Please enter Solr Core URL. Solr Core URL is different then Solr URL. For example my Solr server is at 127.0.0.1:8983/solr but my core is actually at 127.0.0.1:8983/solr/midcore</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ClearCacheTime">
+    <Value>Clear Cache Time(in minutes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ClearCacheTime.Hint">
+    <Value>Defines a time in minutes after which the plugin caches will refreshes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.BatchSize">
+    <Value>Indexing Batch Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.BatchSize.Hint">
+    <Value>Indexing for your catalog is done in smaller batches. This setting defines size of such batch. A default value is good enough, however you can experiment with different value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.DeleteBatchSize">
+    <Value>Delete Batch Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.DeleteBatchSize.Hint">
+    <Value>Defines batch size for deleting data from index.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PatternDelimited">
+    <Value>Import Pattern Delimeter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PatternDelimited.Hint">
+    <Value>Specifies Pattern Delimeter 'SplitBy' Attribute used during Indexing. You should not change this unless advised by nopAccelerate Support team.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.AdvanceSearchEnable">
+    <Value>Use Advance Search Handler</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.AdvanceSearchEnable.Hint">
+    <Value>If enabled, the search queries will be performed at different search handler. You should not enable this without configuring Advance Search Handler first. Else this may break your search features.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.EmailNotification">
+    <Value>Alert Email Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.EmailNotification.Hint">
+    <Value>Give your email address to receive an email notification alert when Solr is unreachable.NOTES:It will send email to first email address and other comma separated EmailIds are in CC</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PerformIndexingOnEntityChange">
+    <Value>Perform Indexing on Entity Change</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PerformIndexingOnEntityChange.Hint">
+    <Value>If this setting is enable, then on any entity change, it will automatic perform indexing for pending products.We recommend to disable this if you are bulk updating catalog entities using third party / external tools / script, as this tracks nopCommerce entity change event and starts indexing in the background which can cause issue when youre performing bulk update.In such cases, we recommend to index using scheduled task or by doing a get request to "yourwebsite.com/Admin/NopAcceleratePlusSearch/StartIndexing" to start indexing manually after your bulk update process.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.StoreSolrQuery">
+    <Value>Enable Solr Debug  Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.StoreSolrQuery.Hint">
+    <Value>This is only for developer purpose...If you want to store the SolrQuery in Solr log then enable this setting</Value>
+  </LocaleResource>
+    
+  <LocaleResource Name="NopAcceleratePlus.Core.EmailNotification.Required">
+    <Value>Email notification column required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.EmailAddress.required">
+    <Value>Solr down email is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrCoreConnection">
+    <Value>Solr Connection</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ManagedSchemaStatus">
+    <Value>Managed Schema</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.CoreStreamBodyStatus">
+    <Value>Core Stream Body</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.DbConfigFileStatus">
+    <Value>DB Config File</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.DataImportRequestHandlerStatus">
+    <Value>Request Handler</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PatternHandlerStatus">
+    <Value>Pattern Handler</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Connected">
+    <Value>Connected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Connected.Message">
+    <Value>Solr Connection Successful</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Disconnected">
+    <Value>Disconnected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Disconnected.Message">
+    <Value>Solr Connection Failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrIndexingStatus">
+    <Value>Solr Indexing Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrStatus">
+    <Value>Solr Status :</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.FullCoreSetup">
+    <Value>FullCore Setup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.CoreUpdate">
+    <Value>Update Core</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrQuery">
+    <Value>Solr Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrQuery.Hint">
+    <Value>Enter solr query for get solr response</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrResult">
+    <Value>Solr Result</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrResult.Hint">
+    <Value>Display solr result when you enter solr query and execute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.TabSolrDebug.Title">
+    <Value>This section is only for developer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabconfiguration">
+    <Value>Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabsolrdebug">
+    <Value>Solr Debug</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.ExecuteButton">
+    <Value>Execute</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.SolrQuery.Required">
+    <Value>Solr query is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.ErrorMessage">
+    <Value>Please enter valid Url</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.SolrDown.Title">
+    <Value>Solr Down</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.SolrDown.Message">
+    <Value>Solr is down So please start the Solr to get your catalog and search product result from nopAccelerate</Value>
+  </LocaleResource>
+  
+
+  <!--#endregion-->
+
+  <!--#region Buttons  -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.StartIndexing">
+    <Value>Start Indexing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.StopIndexing">
+    <Value>Stop Indexing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ReIndexing">
+    <Value>ReIndex</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.MarkAllAsPending">
+    <Value>Mark All as Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.CheckSolrConnection">
+    <Value>Check Solr Connection</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.Refresh">
+    <Value>Refresh</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.Reload">
+    <Value>Reload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ClearCoreData">
+    <Value>Clear Index Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ManageIncrementalTable">
+    <Value>Recreate Status Table</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ClearNopAccCache">
+    <Value>Clear Cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.CoreSetupButton">
+    <Value>Core Setup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.DownloadZip">
+    <Value>Setup Files Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.WizardSetupStep">
+    <Value>Setup Wizard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.Export">
+    <Value>Export Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.Import">
+    <Value>Import Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.XmlFile">
+    <Value>Xml file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.XmlFile.Note1">
+    <Value>NOTE:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.XmlFile.Note2">
+    <Value><![CDATA[This will import settings from a settings xml file exported from current or previous versions of the Plugin. Note that it will not set values for newer settings.Please note that it may take several minutes. And <strong>DO NOT Click twice</strong> on Import button.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Setting.Imported">
+    <Value>The settings have been imported.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.UploadFile">
+    <Value>Please upload file.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.PluginVersion.Match">
+    <Value>The settings have been imported but your plugin version is mismatched with current version so some setting need to update manually.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.NopCommerceVersion.Match">
+    <Value>The settings have been imported but your nopComerce version is mismatched with current version so some setting need to update manually.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.DeletedStore">
+    <Value>The settings have been imported but you have deleted store on your site, and Common store setting will be applied on the same.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Alert.CreatedStore">
+    <Value>The settings have been imported but you have created store on your site, and Common store setting will be applied on the same.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.NopCommerceSupportedVersion">
+    <Value>NopCommerceSupportedVersion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.PluginSupportedVersion">
+    <Value>PluginSupportedVersion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.StoreIds">
+    <Value>StoreIds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.DateTime">
+    <Value>DateTime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.NopAccelerate_Setting">
+    <Value>NopAccelerate_Setting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.Value">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.XmlNode.StoreId">
+    <Value>StoreId</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.nopAcceleratePlusVersion">
+    <Value>nopAccelerate Plus Core</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Validation Error  -->
+
+  <LocaleResource Name="NopAcceleratePlus.Core.SolrCoreURL.Required">
+    <Value>Solr Core URL is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.PatternDelimited.Required">
+    <Value>Pattern Delimeter is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.PatternDelimited.CommaIssue">
+    <Value>Pattern Delimeter must not contain ,(comma)</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.BatchSize.MinimumBatchSize">
+    <Value>Batch Size Must be 1 or Greater</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.DeleteBatchSize.MinimumDeleteBatchSize">
+    <Value>Delete Batch Size Must be 1 or Greater</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.DeleteBatchSize.MinimumClearCacheTime">
+    <Value>Clear Cache Time Must be 1 minutes or Greater</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.Validations.NeedsCoreFullSetup">
+    <Value>Solr Core needs to be Setup first</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Core.SearchMinimumMatch.ValueRange">
+    <Value>Percentage Should be beetween 0 to 100</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="NopAcceleratePlus.Core.Seo.Validation.AttributeURLDelimeter.Required">
+    <Value>Attribute URL Delimeter should not be Empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.CanonicalURL">
+    <Value>Canonical URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.CanonicalURL.Hint">
+    <Value>Enable Canonical url for add canonical url on search page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.NoIndexMetaTag">
+    <Value>No Index</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.NoIndexMetaTag.Hint">
+    <Value><![CDATA[Adds meta tag <meta name="robots" content="noindex"> to prevent duplicate content issues.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.URLDescription">
+    <Value><![CDATA[<p>Ideally one should also block crawlers access to pages where facets are applied as it may result into duplicate content warning.There are two ways to do the same.</p><p>1. Configuring URL Parameters in Google Webmaster Tool's URL Parameter Tool and specify how these parameters affect the page and whether to crawl it or not. Please refer to &nbsp;<a class="external" href="https://webmasters.googleblog.com/2014/02/faceted-navigation-best-and-5-of-worst.html">this</a> document&nbsp;and&nbsp;<a class="external" href="https://support.google.com/webmasters/answer/6080548?visit_id=636841770757125139-2586606308&amp;rd=1">this</a>&nbsp;to understand how it impacts. <a class="external" href="https://www.youtube.com/watch?v=DiEYcBZ36po&amp;feature=youtu.be">Here</a> is a good video that talks about Configuring URL Parameters in Webmaster Tools&nbsp;. </p><p>2. Disallow specific URL parameters using robots.txt. Make sure you're not blocking access to Search results as they may help you create a great landing pages. Please refer to  page&nbsp;<a class="external" href="https://stackoverflow.com/questions/9149782/ignore-urls-in-robot-txt-with-specific-parameters">this</a>&nbsp;for details on how to configure this.</p><p>We strongly recommend using the URL Parameter Tool to configure the same. However, it is best to talk to your SEO consultant for advise.</p><p>Also note that, we have already added&nbsp;<strong>rel=nofollow</strong>&nbsp;by default into the facet links to instruct crawlers not to follow dynamic links generated by facets combination.</p>]]></Value>
+  </LocaleResource>
+  
+  <!--#endregion-->
+
+  <!--#endregion-->
+
+  <!--#region Solr Log -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Id">
+    <Value>Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ShortMessage">
+    <Value>Short Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.FullMessage">
+    <Value>Full Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.IpAddress">
+    <Value>IpAddress</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.PageUrl">
+    <Value>PageUrl</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.CreatedOn">
+    <Value>CreatedOn</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ShortMessage.Message">
+    <Value>Images are Generated for {0} Products, Total Time: {1} Seconds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.FullMessage.Message">
+    <Value>ProductIds for which images are generated:{0}</Value>
+  </LocaleResource>
+  
+  
+
+  <!--#endregion-->
+
+  <!--#region Product Status -->
+  <!--#region Grid -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ProductIds">
+    <Value>ProductIds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ProductId">
+    <Value>ProductId</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ProductName">
+    <Value>Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrStatus">
+    <Value>SolrStatus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ImageStatus">
+    <Value>Image Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Deleted.Deleted">
+    <Value>Deleted Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Deleted.NonDeleted">
+    <Value>Non Deleted Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrStatus.IndexedOnly">
+    <Value>Indexed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SolrStatus.PendingOnly">
+    <Value>Pending</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ImageStatus.IndexedOnly">
+    <Value>Indexed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ImageStatus.PendingOnly">
+    <Value>Pending</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Published.PublishedOnly">
+    <Value>Published Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Published.UnpublishedOnly">
+    <Value>Unpublished Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Grid.Button.MarkAsPending">
+    <Value>Mark as pending</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.Indexed">
+    <Value>Indexed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.Pending">
+    <Value>Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.NonDeleted">
+    <Value>Non Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.Message.UnPublished">
+    <Value>UnPublished</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.FullImageUrl">
+    <Value>FullImageUrl</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.ImageUrl">
+    <Value>ImageUrl</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.AutoCompleteImageUrl">
+    <Value>AutoCompleteImageUrl</Value>
+  </LocaleResource>
+  
+  <!--#endregion-->
+  <!--#region Search Options -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductName">
+    <Value>Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductName.Hint">
+    <Value>Search SolrProductStatus by Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchCategory">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchCategory.Hint">
+    <Value>Search SolrProductStatus by Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchIncludeSubCategories">
+    <Value>Include SubCategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchIncludeSubCategories.Hint">
+    <Value>If Enable then Include SubCategories for SolrProductStatus Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchManufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchManufacturer.Hint">
+    <Value>Search SolrProductStatus by Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchVendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchVendor.Hint">
+    <Value>Search SolrProductStatus by Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchWarehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchWarehouse.Hint">
+    <Value>Search SolrProductStatus by Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductType">
+    <Value>Product Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductType.Hint">
+    <Value>Search SolrProductStatus by Product Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchPublished.Hint">
+    <Value>Search SolrProductStatus by Published Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchDeleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchDeleted.Hint">
+    <Value>Search SolrProductStatus by Deleted Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchSolrStatus">
+    <Value>SolrStatus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchSolrStatus.Hint">
+    <Value>Search SolrProductStatus by Deleted SolrStatus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchImageStatus">
+    <Value>Image Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchImageStatus.Hint">
+    <Value>Search SolrProductStatus by ImageStatus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductIds">
+    <Value>ProductIds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Fields.SearchProductIds.Hint">
+    <Value>Search SolrProductStatus by Comma Separated ProductIds</Value>
+  </LocaleResource>
+  <!--#endregion-->
+  <!--#region Buttons -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.DeletedSelected">
+    <Value>Delete Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.MarkAsPending">
+    <Value>MarkAsPending Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ImageStatus">
+    <Value>ImageStatus Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.ImageStatusAll">
+    <Value>Set All Image Status</Value>
+  </LocaleResource>
+  
+  <!--#endregion-->
+  <!--#endregion-->
+  <!--#region Controller ResourceString -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.MarkAllAsPending">
+    <Value>Mark all Products as Pending Successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingDone">
+    <Value>Indexing done successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.Image.IndexingDone">
+    <Value>Image Indexing done successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.StopIndexing">
+    <Value>Indexing has been Stop Successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.Image.StopIndexing">
+    <Value>Image Indexing has been Stop Successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.ReloadSuccess">
+    <Value>Solr Core Reloaded Successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.ReloadFailed">
+    <Value>Issue in reload of core. Please reload this core manually from Solr Admin panel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.CoreClearData">
+    <Value>SolrCore data deleted successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.CoreUlrNotEmpty">
+    <Value>SolrCore url must not be Empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.SqlJdbcNotFound">
+    <Value>Sql Jdbc Jar file is not found at specifified location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingAlreadyStart">
+    <Value>Indexing already in Progress so not able to Start Indexing again</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.Image.IndexingAlreadyStart">
+    <Value>Image Indexing already in Progress so not able to Start Indexing again</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingFailed">
+    <Value>Indexing Failed please check the Solr Logs to review the proper reason of failed indexing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.Image.IndexingFailed">
+    <Value>Image Indexing is Failed please check the Solr Logs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus">
+    <Value>Solr Debug Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus.Enable">
+    <Value>Enable Solr Debug done Succesfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus.Disable">
+    <Value>Disable Solr Debug done Succesfully</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#endregion-->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableOvverrideProductOverViewModel">
+    <Value>Use nopCommerce ProductOverViewModel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableOvverrideProductOverViewModel.Hint">
+    <Value>If this setting is enable then it will use the ProductOverViewModel method of nopCommerce instead of nopAccelerate plus</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.UseCaching">
+    <Value>Do not use caching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.UseCaching.Hint">
+    <Value>Do not enable this setting, this setting is use only for development side</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.GetAttributesFromSolr">
+    <Value>Get Attributes From Solr</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.GetAttributesFromSolr.Hint">
+    <Value>Enable this setting will get productAttributes and Specification Attributes from Solr instead of Database</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.StoreLastContinueShoppingPage">
+    <Value>Store Last Continue Shopping Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.StoreLastContinueShoppingPage.Hint">
+    <Value>Enable this setting will store Last Continue Shopping Page But disable this setting for performance improvement</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.SkipAvailableDateTimeQuery">
+    <Value>Skip ProductAvailable DateTime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.SkipAvailableDateTimeQuery.Hint">
+    <Value>Enable this setting will skip the Available DateTime query for solr which improves the performance</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableAdminSearch">
+    <Value>Enable Admin Products Search from Solr</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableAdminSearch.Hint">
+    <Value>If enabled, Products on Catalog > Product List will be searched and fetched from Solr index instead of nopCommerce Search methods. You should enable this only after full indexing has been completed.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableImageIndexing">
+    <Value>Prepare Images during Indexing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.EnableImageIndexing.Hint">
+    <Value>If enabled, images thumbs will be prepared and stored on disk during indexing and the image URLs will be stored in Solr. This helps making your catalog and search pages faster. However, with larger catalogs enabling this can impact indexing speed. When disabled, it does not generate images and images will be loaded from default method.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ShowImagesInGrid">
+    <Value>Show Image Url in Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ShowImagesInGrid.Hint">
+    <Value>If enabled, image url will show in grid of Product status</Value>
+  </LocaleResource>
+
+  <!--#region SeoName Setting -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.CategorySEOName">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ManufacturerSEOName">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ProducttagSEOName">
+    <Value>Product Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.VendorSEOName">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.StockAvailabilitySeoName">
+    <Value>Availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ProductRatingSeoName">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.SpecificationAttributeSEOName">
+    <Value>Specificationattribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.ProductAttributeSEOName">
+    <Value>ProductAttribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.PriceRangeSEOName">
+    <Value>Price Range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.PriceSlotSEOName">
+    <Value>Price Slot</Value>
+  </LocaleResource>
+    <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.SearchWithin">
+    <Value>Search Term</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Value.ExcludeStock">
+    <Value>Exclude Out of Stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Value.IncludeStock">
+    <Value>Include Out of Stock</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region ConfirmBox Message -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ClearCoreData">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will delete all the data Solr Index have for configured Solr Core. That means it won't return query results until indexing is completed again and your website may be impacted due that. Use Mark All as Pending feature instead, if you want to just re-index all the data without clearing the existing index data.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.MarkAllAsPending">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will mark all entities' index status as Pending. That means, it will index all the entities again overwriting existing index data.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.StopIndexing">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will stop indexing process in-between. Note that, it will stop it only if its already indexing.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ReIndexing">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will delete all the existing index data into the configured Solr Core and mark all products as pending for re-indexing, and start indexing again. That means it won't return query results until indexing is completed again and your website may be impacted due that. Use Mark All as Pending feature instead, if you want to just re-index all the data without clearing the existing index data.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ManageIncrementalTable">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">Are you sure you want to reset and recreate Status Table? This will recreate the table (NopAcc_Plus_Incremental_Solr_Product) which tracks the entities status for indexation. Once done, it will be in a state when plugin was installed. This is helpful for troubleshooting purposes. Do not use this until you understand what you're doing or asked by nopAccelerate Support team. Note that this will mark all entities as Pending for indexing, and will cause full indexing.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.WizardSetupStep">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will start the Setup Wizard. You should be running Setup Wizard again only if you are setting up the Plugin again as this will change your current configurations.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ClearNopAccCache">
+    <Value><![CDATA[<p>WARNING. Please read this before performing action: </p><p style="font-weight: 900;">This will clear the cache of nopAccelerate plus. If you have changed for product and it is not affecting in front side so we don't want to clear the full cache,So We will just clear the nopAccelerate Cache </p>]]></Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Url Delimeters -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Url.AttributeURLDelimeter">
+    <Value>Attribute URL Delimeter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Url.AttributeURLDelimeter.Hint">
+    <Value>Attribute URL Delimeter for all productAttributes and specificationAttributes</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Indexing Status Message -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingStatus.InProgress">
+    <Value>Indexing in Progress</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingStatus.Stopped">
+    <Value>Indexing is Stopped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingStatus.Ideal">
+    <Value>Indexing is Ideal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.SolrIndexingStatus">
+    <Value>Indexing Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Message.IndexingStatus">
+    <Value>Indexing Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.noproductFound">
+    <Value>No product found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Search.Scroll.More">
+    <Value>Load more results...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.License.Expire.Warning">
+    <Value>There has been an issue with license for the nopAccelerate Core. you're using. And therefore the plugin is not in active state. Please contact nopAccelerate Support team by visiting our website or by emailing at support@nopAccelerate.com.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.search.License.Expire.Warning">
+    <Value>There has been an issue with license for the nopAccelerate Search. you're using. And therefore the plugin is not in active state. Please contact nopAccelerate Support team by visiting our website or by emailing at support@nopAccelerate.com.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.ProductLimit.Exceed.Warning">
+    <Value>ProductLimit is exceed of nopAccelerate plus plugins</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.License.Server.Down">
+    <Value>License Sever is down so issue while Getting License Information.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Warning.Pecentage.Required">
+    <Value>5% indexing is not done yet so please make sure that you have completed 100% indexing and then enabling the search and catalog Settings</Value>
+  </LocaleResource>
+    <LocaleResource Name="Plugins.NopAcceleratePlus.Warning.InfiniteScroling">
+    <Value>Infinite Scrolling should not be enable when Ajax request is disable</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region PerformanceSettings -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabperformance">
+    <Value>Performance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabseo">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabselector">
+    <Value>Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.tabsorting">
+    <Value>Sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Performance.EnableSolrPrice">
+    <Value>Enable Product Price from Solr</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Performance.EnableSolrPrice.Hint">
+    <Value>Enable this functionality if you want to directly use solr price without any discounted price</Value>
+  </LocaleResource>
+
+  <!--#endregion-->
+  
+  <!--#region SelectorSettings -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.SortBy">
+    <Value>Sort By Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.SortBy.Hint">
+    <Value>Sort By Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.PageSize">
+    <Value>Page Size Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.PageSize.Hint">
+    <Value>Page Size Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.Pagination">
+    <Value>Pagination Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.Pagination.Hint">
+    <Value>Pagination Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductGrid">
+    <Value>Product Grid Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductGrid.Hint">
+    <Value>Product Grid Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductList">
+    <Value>Product List Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductList.Hint">
+    <Value>Product List Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.RefineButtonSelector">
+    <Value>Refine Button Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.RefineButtonSelector.Hint">
+    <Value>Refine Button Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.PageBodySelector">
+    <Value>Page Body Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.PageBodySelector.Hint">
+    <Value>Page Body Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.FeaturedProductGridSelector">
+    <Value>Featured ProductGrid Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.FeaturedProductGridSelector.Hint">
+    <Value>Featured ProductGrid Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ViewModeSelector">
+    <Value>ViewMode Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ViewModeSelector.Hint">
+    <Value>ViewMode Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductReplaceSelector">
+    <Value>Product Replace Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ProductReplaceSelector.Hint">
+    <Value>Product Replace Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ScrollToTopHeight">
+    <Value>Scroll to Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.ScrollToTopHeight.Hint">
+    <Value>Scroll to Height</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.EnableScrollToTop">
+    <Value>Enable Scroll To Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.EnableScrollToTop.Hint">
+    <Value>Enable Scroll to Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.EnableScrollToTopFacetApplies">
+    <Value>Enable Scroll To Top Facet Applied</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.EnableScrollToTopFacetApplies.Hint">
+    <Value>Enable Scroll To Top Facet Applied</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.SearchPageScrollFacetSelector">
+    <Value>Facet Selection scroll Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.SearchPageScrollFacetSelector.Hint">
+    <Value>Set the selector when facet selection on search page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.MobileViewScreenSize">
+    <Value>Mobile Screen Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Selector.MobileViewScreenSize.Hint">
+    <Value>When to Show the Mobile Screen</Value>
+  </LocaleResource>
+  
+  
+  <!--#endregion-->
+  
+  <!--#region ProductRating -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Sorting.Enum.PanelHint">
+    <Value>Note : You need to Enable "Allow product sorting" on Configuration > Settings Catalog settings(In Advanced Settings).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.BlockTitle.ProductSorting">
+    <Value>Product Rating</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Warning Messages -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Connection.Warning">
+    <Value>Solr Connection is Stopped..Please Start Solr to Fetch Data From Solr Or Solr is not setup properly</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.numberofproductfount">
+    <Value>{0} products found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Sorting.Enum.Relevency">
+    <Value>Relevancy</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.showingresultfor">
+    <Value><![CDATA[Showing results for <b>{0}</b>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.didyoumean">
+    <Value><![CDATA[Did you mean <a href='/search?q={0}&spellCheck=false'><span style='font-weight: bold'>{0}</span></a>?]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.showresultfor">
+    <Value><![CDATA[Show results for <a href='/search?q={0}&spellCheck=false'><span style='font-weight: bold'>{0}</span></a>? instead]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.SpellCheckDiv">
+    <Value><![CDATA[<div class='search-suggestions'><div class='suggested-results'>Showing results for "<b>{0}</b>"</div><div class="show-result">Show results for <a href='/search?q={1}&spellCheck=false'><span style='font-weight: bold'>{1}</span></a> instead</div></div>]]></Value>
+  </LocaleResource>
+  
+  <!--#endregion-->
+
+  <!--#region Getting Started Messages -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.GettingStarted.Message">
+    <Value><![CDATA[<h4>Getting Started with nopAccelerate Plus</h4><p>Quick Start Wizard is the fastest way to integrate nopAccelerate Plus plugins into your store, because it:</p><p></p><ul><li>Does the necessary work required in easy and step by step wizard</li> <li>Gives you basic idea about the key settings and how it impacts the features</li><li>Gives you glimplse of key features the plugin offers</li></ul><p></p><p><a href="#" target="_blank">No Thanks, I will setup it manually or import settings</a></p><button type="button" id="wizardsetup" class="btn btn-primary">Yes</button>]]></Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Wizard Setup Messages -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup">
+    <Value>Basic Solr Setup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrCoreConfiguration">
+    <Value>Solr Core Configurations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccelerateBasic">
+    <Value>nopAccelerate Plus Basics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAcceleratePlus">
+    <Value>More about nopAccelerate Plus</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Title">
+    <Value>Setting up Solr Connection</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question">
+    <Value>1. Are you installing Solr on same Windows Server/VM?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question.Answer.Yes">
+    <Value>Yes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question.Answer.No">
+    <Value>No, Please let us know what you're using?</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Wizard Setup Admin Messages -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.GettingStarted.Admin.PageOpen">
+    <Value>Start with Getting Started with nopAccelerate Plus page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.GettingStarted.Admin.Button.Yes">
+    <Value>Getting started with Wizard setup of nopAccelerate Plus plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.GettingStarted.Admin.Button.No">
+    <Value>Rejected with nopAccelerate Plus Wizard setup,I will setup manually or Import Settings</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.Yes">
+    <Value>Solr will be installed on same server, so moving forward to configure Java Runtime Environment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.No">
+    <Value>Select this option:No, Please let us know what you're using?, So forwarded to next step (Step : 1 - Remotely hosted dedicated Solr Server (Server, VPS, Azure VM, Docker etc.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.Yes.Previous">
+    <Value>Back to Setting up Solr Connection from Step : 1 - Java Runtime Environment </Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.No.Previous">
+    <Value>Back to Setting up Solr Connection from Step : 1 - Remotely hosted dedicated Solr Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.JavaRunTimeEnv.Ready">
+    <Value>Java Runtime Environment is setup succesfully, so moving forward to Installing Solr on Windows.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.InstallSolrWindow.Previous">
+    <Value>Back to Step : 1 - Java Runtime Environment from Step : 2 - Installing Solr on Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.InstallSolrWindow.Next">
+    <Value>Installing Solr on Windows is completed succesfully, so moving forward to Solr Core Configurations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SolCoreConfiguration.Next">
+    <Value>Solr Core Configurations are done succesfully, so moving forward to nopAccelerate Plus Basics.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SolCoreConfiguration.Previous">
+    <Value>Back to Step : 2 - Installing Solr on Windows from Solr Core Configurations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Next">
+    <Value>NopAccelerate Plus Basics is completed succesfully, so moving forward to know more about nopAccelerate Plus.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Previous">
+    <Value>Back Solr Core Configurations from NopAccelerate Plus Basics </Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Next">
+    <Value>NopAccelerate Plus Basics is complete so  moving to More about nopAccelerate Plus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Previous">
+    <Value>Back Solr Core Configurations from NopAccelerate Plus Basics </Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.MoreAboutNopAccPlus.Previous">
+    <Value>Back NopAccelerate Plus Basics from More about nopAccelerate Plus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.MoreAboutNopAccPlus.Submit">
+    <Value>Wizard Setup for nopAccelerate Plus is completed succesfully so moving forward to nopAccelerate Plus configuration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.RemoteHosted.Previous">
+    <Value>Back to SolrConnection from Remotely Hosted to Setup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.RemoteHosted.Next">
+    <Value>Moving from Remotely Hosted Server to Solr Core Confifuration</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Wizard Step Schema -->
+
+  <!--Buttons-->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Next">
+    <Value>Above tasks are done, proceed to next step</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.YouReady">
+    <Value>You are ready to use</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Retry">
+    <Value>Retry</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous">
+    <Value>Previous</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.ReadyNext">
+    <Value>I'm ready, proceed to next step.</Value>
+  </LocaleResource>
+  <!--Buttons-->
+
+  <!--Input Info-->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Input.SolrCore">
+    <Value>Solr Core URL :</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Input.BatchSize">
+    <Value>Batch Size :</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Input.EmailNotification">
+    <Value>Solr down Notification :</Value>
+  </LocaleResource>
+
+  <!--Input Info-->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.ManagedSchemaStatus">
+    <Value>Required Schema is created</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DbConfigFileStatus">
+    <Value>Database Configuration files Sets properly</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DataImportRequestHandlerStatus">
+    <Value>Solr DIH configured</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.CheckSolrConnection">
+    <Value>Core connection is working</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.SqlSolrQueryTest">
+    <Value><![CDATA[Solr to SQL Server query test. If this step fails, that means Solr cannot read from SQL Server. <a href="http://docs.nopaccelerate.com/files/nopaccelerate-plus-plug-in/Errorwhileperformingindexingusin.html" target="_blank">Click here</a> to find possible causes and how to fix them.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DataImportStatus">
+    <Value>Tested Data Import with commit</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SolrSetup.TestImportData">
+    <Value>Please wait few minutes till Solr is Setting up and Tested with Demo Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Wizard.SolrSetup.CoreSetup">
+    <Value>Please wait few minutes till solr core is setting up</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Wizard Setup Content -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Content">
+    <Value><![CDATA[<p>The nopAccelerate Plus enhances nopCommerce by integrating it with Apache Solr, the popular, blazing-fast, open source enterprise search platform built on Apache Lucene and is highly reliable, scalable and fault tolerant and more. Solr powers the search and navigation features of many of the world's largest internet sites. </p><p>A Solr core is a uniquely named, managed, and configured index running in a Solr server; a Solr server can host one or more cores. nopAccelerate Plus uses a Solr Core to index data from nopCommerce database, which is then used to perform search and navigation query instead of SQL Server. A single Solr Core is sufficient for one nopCommerce site with multiple languages, currency or stores. </p><p>You can host Solr on same Server which is hosting your web app. If you are on Windows VM or VPS, you can install Solr on the same server. If you are using cloud app server like Azure Web App Service, you will need to host Solr separately on Azure VM or use our <a href="http://shop.xcellence-it.com/solr-hosting" target="_blank">cloud Solr Hosting Service</a></p><p>You will have better speed and one click Solr core integration if your nopCommerce and Solr is on same server.</p>]]></Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTIme.Title">
+    <Value>Step : 1 - Java Runtime Environment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTime.Content">
+    <Value><![CDATA[<p>Do you have JRE (Java Runtime Environment) version 1.8 or higher installed on your Server? </p><p>Not Sure? Check this (<a href="https://stackoverflow.com/questions/18888220/how-to-check-whether-java-is-installed-on-the-computer" target="_blank">https://stackoverflow.com/questions/18888220/how-to-check-whether-java-is-installed-on-the-computer</a>)</p><p>If you don’t have the required version, or if the java command is not found, download and install the latest version from Oracle at <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>.</p><p>Once Java setup is complete, make sure to Set Java Home (<a href="https://www.wikihow.com/Set-Java-Home" target="_blank">https://www.wikihow.com/Set-Java-Home</a>).</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTime.CheckBoxMessage">
+    <Value>I have completed Java Runtime Environment setup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Button.DownloadZip.Label">
+    <Value>RemoteCoreSetupFiles.zip</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Title">
+    <Value>Step : 2 - Installing Solr on Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Content.Step1">
+    <Value><![CDATA[<ul><li>Download the Solr from <a href="https://lucene.apache.org/solr/mirrors-solr-latest-redir.html" target="_blank">https://lucene.apache.org/solr/mirrors-solr-latest-redir.html</a>, use the zipped file.</li><li>Extract zip file on C:\Solr</li><li>Start Solr Server using CMD</li></ul>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Content.Step2">
+    <Value><![CDATA[<p>To check the created core, you can look at <strong>C:\Solr5\server\solr\newCore </strong></p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.CheckBoxMessage">
+    <Value>I have completed solr setup and started solr using above commands.</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Title">
+    <Value>Basic Solr Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.Step1">
+    <Value><![CDATA[<p>It is very important to configure Solr correctly before you proceed with using nopAccelerate Plus for your store. At this stage you should be able to open the Solr Admin. It's a good check to make sure Solr is setup correctly.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.Step2">
+    <Value><![CDATA[<p>To check the created core, you can look at <strong>C:\Solr5\server\solr\newCore </strong></p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.SolrCoreUrl">
+    <Value><![CDATA[Once your Solr is Up & Running, please give us the Solr Core URL:]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.ScheduleTask.Part1">
+    <Value><![CDATA[<ul style="padding: 15px 40px;"><li>Apart from above, you need to setup Solr to start at System Startup. You can do the same by setting up a Windows Schedule Task. You can <a href="{0}">Download</a> a task export xml to get started. Please modify it as required.</li></ul>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.CheckBoxMessage">
+    <Value><![CDATA[I have setup Solr Core and added a Windows Schedule Task to start Solr at System Startup.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.CoreReadyMessage">
+    <Value><![CDATA[Your instance of Solr Core is configured correctly and is ready to use.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.UPdateDbFile">
+    <Value><![CDATA[Check DB Config]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.DbUpdate">
+    <Value><![CDATA[<p>Before we proceed with Solr Core Configurations, there is one step you need to perform manually on your remotely hosted Solr Core. </p><p>Click Download SolrSetup Zip button then Zip foler is download for Setting up Solr. Copy db-data-config.xml and solrconfig.xml and then paste them in Conf folder of Solr Core then reload Core From Admin Panel of Core </p><p>Please check the C:\solr-7.5.0\contrib\dataimporthandler\lib And check that sqljdbc42.jar file exist or not...if not then Copy the Jar File from Zip Folder and paste at C:\solr-7.5.0\contrib\dataimporthandler\lib </p><p>After successfully doing upper steps please click on Update DbFile on Solr button. It will Checked the Second Option(Database Configuration files Sets properly) and then Click on retry Button to again Setup the Solr</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.RemoteFailed">
+    <Value><![CDATA[<p>Oops! There is something wrong. Please follow the instructions.</p><p>Please download the 'RemoteCoreSetupFiles.zip' which contains the files required to be copied at your remotely hosted Solr directory.</p><p>Copy db-data-config.xml, solrconfig.xml and synonyms.txt and paste them at Conf folder of your Solr Data Directory. Once done, please Reload the Core from Solr Admin.</p><p>Before we connect to SQL Server database from Solr, we need to install Microsoft JDBC Driver into Solr. To do the same, please copy sqljdbc42.jar file from the 'RemoteCoreSetupFiles.zip' and paste it at Solr's lib folder for dataimporthandler. On Windows it should be at C:\solr-7.5.0\contrib\dataimporthandler\lib. Please create folder if its not there already.</p><p>If you're using a Solr hosting service, please share above instruction with their support team to do the needful.</p><p>Once above steps are performed, please press 'Check DB Config' button to verify the same. Once it's passed, press Retry button to proceed further wih Setup.</p>]]></Value>
+  </LocaleResource>
+  
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Title">
+    <Value>nopAccelerate Plus Basics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Content.Step1">
+    <Value><![CDATA[<p>The nopAccelerate Plus enhances nopCommerce by integrating it with Apache Solr. But first Solr will need data to be index into it. We have configured Solr to read directly from SQL Server using <a href="https://lucene.apache.org/solr/guide/6_6/uploading-structured-data-store-data-with-the-data-import-handler.html" target="_blank">Solr's DIH features</a>. Relax, you don't need to worry about anything. This wizard gives you idea on how it works in the background.</p><p>The nopAccelerate Plus plugin automatically tracks any changes (using SQL Triggers) you made into nopCommerce entities like editing a product or category, and updates the NopAcc_Plus_Incremental_Solr_Product. This table stores indexing status of the entities. We have already installed a Scheduled Task into nopCommerce, which will keep executing DIH automatically in the background at every one hour by default. You can change the frequency by changing directly into the <a href="/Admin/ScheduleTask/List" target="_blank">Scheduled Task</a> in nopCommerce.</p><p>You can also start indexing manually using 'Start Indexing' button on nopAccelerate Plus Configure page.</p><p>Note that first indexing will take time as it will need to crate a full index. Once its done, subsequent changes are really faster. And you can monitor the Indexing Status on our Configure page.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Content.Step2">
+    <Value><![CDATA[<p>The indexing will be executed into smaller batches, where it will fetch defined number of entities in one go from SQL and index into Solr. Depending on the size of your nopCommerce database, full indexing will take some time. A default batch size is 500 products which is good for most stores, however you can experiment with different value.</p><p>Once indexing is completed, please enable the features from setting page to improve the user experience of your store.</p>]]></Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAccPlus.Title">
+    <Value>More about nopAccelerate Plus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAccPlus.Content.Step1">
+    <Value><![CDATA[<p>The setup is completed. If you are new to the nopAccelerate Plus and wants to learn more, please use the Tour implemented specillay to introudce you to the plugin feature and how to use them.</p><div><h4>nopAccelerate Theme Compatibility</h4><p>The plugin uses your active theme's view templates, so it should be compatible with most themes and plugins. If not, try switching to default theme and disabling plugins to find out which plugin is not compatible. As per our experience those plugins will not work which overrides the Catalog Services or Catalog Controller, as our plugin does the same.</p><p>The plugin uses its own view templates for Facet Filters. It is designed elgantly, and should work well with all third party themes. However, to match it perfectly you may need to apply your own styles. Or you can <a href="https://www.nopaccelerate.com/contact/" target="_blank">hire our team</a> to do the same for you.</p></div>]]></Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.RemoteHost.Title">
+    <Value>Step : 1 - Remotely hosted dedicated Solr Server (Server, VPS, Azure VM, Docker etc.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.RemoteHost.Step1">
+    <Value><![CDATA[<p>To install Solr, check the System Requirements(<a href="https://lucene.apache.org/solr/guide/7_0/solr-system-requirements.html" target="_blank">https://lucene.apache.org/solr/guide/7_0/solr-system-requirements.html</a>) and complete the Solr installation using the Solr installation guide (<a href="https://lucene.apache.org/solr/guide/7_0/installing-solr.html" target="_blank">here</a>). Note that the plugin supports the remotely hosted Solr instance, however the installation support for remotely hosted Solr instance is not included as part of standard product support and you may need to buy it separately if you want our team to do it for you.</p><p>Once done, please make sure that your Solr instance is accessible from your Web App Server. You may need to create a firewall rule to open connection to Solr if its not accessible.</p><p>Once your Solr is up, please create a new Solr Core and give us Solr Core URL below:</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrHostingService.Content.Step1">
+    <Value><![CDATA[<ul><li>Download the Solr from <a href="https://lucene.apache.org/solr/mirrors-solr-latest-redir.html" target="_blank">https://lucene.apache.org/solr/mirrors-solr-latest-redir.html</a>, use the zipped file.</li><li>Extract zip file on C:\Solr</li><li>Start Solr Server using CMD</li></ul>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrHostingService.CheckBoxMessage">
+    <Value><![CDATA[I have completed Remotely hosted dedicated Solr Server]]></Value>
+  </LocaleResource>
+
+  <!--#region Sorting Option -->
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.NameAsc">
+    <Value>Name Asc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.NameDesc">
+    <Value>Name Desc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.PriceAsc">
+    <Value>Price Asc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.PriceDesc">
+    <Value>Price Desc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.RatingAsc">
+    <Value>Rating Asc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.XcellenceIT.Plugin.NopAcceleratePlus.Core.Utility.NopAccPlusProductSortingEnum.RatingDesc">
+    <Value>Rating Desc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Solr.Sorting.Enum.Relevency">
+    <Value>Relevancy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Catalog.Textbox.PlaceHolder.SearchWithinCatalog">
+    <Value>Search for {0}</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+
+  <!--#region Sorting Option -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.PriceRange">
+    <Value>Price Range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.Min">
+    <Value>Min:{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.Max">
+    <Value>Max:{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.Clear">
+    <Value>Clear</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.ClearAll">
+    <Value>Clear All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Field.Facet.SelectedOptions">
+    <Value>Selected Options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.Textbox.PlaceHolder.SearchFor">
+    <Value>Search for {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.Textbox.Title.TitleIn">
+    <Value>Type in a {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.More">
+    <Value>More</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.Less">
+    <Value>Less</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.AndUp">
+    <Value><![CDATA[& up]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.Button.BackToTop">
+    <Value>Back to Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Core.Facet.EnterSearchTerms">
+    <Value>Please enter some search keyword</Value>
+  </LocaleResource>
+  <!--#endregion-->
+</Language>

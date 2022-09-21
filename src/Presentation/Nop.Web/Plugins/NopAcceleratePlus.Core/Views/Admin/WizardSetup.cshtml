@@ -1,0 +1,788 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Core.Models.WizardSetupModel
+@{
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.Configure");
+}
+@inject Nop.Core.IWebHelper webHelper
+<script src="~/Plugins/NopAcceleratePlus.Core/Content/js/owl.carousel.js"></script>
+<link href="~/Plugins/NopAcceleratePlus.Core/Content/css/admin-search-configure.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Plugins/NopAcceleratePlus.Core/Content/css/wizard-style.min.css">
+<link rel="stylesheet" href="~/Plugins/NopAcceleratePlus.Core/Content/css/owl.carousel.min.css">
+<link rel="stylesheet" href="~/Plugins/NopAcceleratePlus.Core/Content/css/owl.theme.default.min.css">
+
+<script src="~/Plugins/NopAcceleratePlus.Core/Content/js/jquery.backstretch.min.js"></script>
+<script src="~/Plugins/NopAcceleratePlus.Core/Content/js/retina-1.1.0.min.js"></script>
+<script src="~/Plugins/NopAcceleratePlus.Core/Content/js/scripts.js"></script>
+
+<style>
+    #fieldSetShema input[type="checkbox"] {
+        display: none;
+    }
+
+    #IsRemoteServer {
+        display: none;
+    }
+</style>
+<nop-antiforgery-token />
+<!-- Top content -->
+<div class="top-content">
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-10 form-box getting-started">
+                <form role="form" action="" method="post" class="f1 row">
+                    <div class="col-md-4">
+                        <div class="owl-carousel owl-theme" id="wizard-img-slider">
+                            <div class="item">
+                                <img class="wizard-img" src="~/Plugins/NopAcceleratePlus.Core/Content/img/nopaccelerate-plus.png" />
+                            </div>
+                            <div class="item">
+                                <img class="wizard-img" src="~/Plugins/NopAcceleratePlus.Core/Content/img/blazing-fast.png" />
+                            </div>
+                            <div class="item">
+                                <img class="wizard-img" src="~/Plugins/NopAcceleratePlus.Core/Content/img/drill-down-search.png" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="f1-steps">
+                            <div class="f1-progress">
+                                <div class="f1-progress-line" data-now-value="14.5" data-number-of-steps="4" style="width: 14.5%;"></div>
+                            </div>
+                            <div class="f1-step active">
+                                <div class="f1-step-icon"><i class="fas fa-sliders-h"></i></div>
+                                <p>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup")</p>
+                            </div>
+                            <div class="f1-step">
+                                <div class="f1-step-icon"><i class="fas fa-cogs"></i></div>
+                                <p>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrCoreConfiguration")</p>
+                            </div>
+                            <div class="f1-step">
+                                <div class="f1-step-icon"><i class="fab fa-buysellads"></i></div>
+                                <p>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccelerateBasic")</p>
+                            </div>
+                            <div class="f1-step">
+                                <div class="f1-step-icon"><i class="fa fa-info"></i></div>
+                                <p>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAcceleratePlus")</p>
+                            </div>
+                        </div>
+                        <fieldset id="fieldSetupInfo">
+                            <div id="setting-up-solr-connection">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Content")
+                                <p><strong>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question")</strong></p>
+                                <button type="button" id="yes" class="btn btn-primary">@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question.Answer.Yes")</button>
+                                <button type="button" id="no" class="btn btn-default">@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.BasicSolrSetup.Question.Answer.No")</button>
+                                <nop-editor asp-for="IsRemoteServer" />
+                            </div>
+                            <div id="solr-config-yes-step-1">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTIme.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTime.Content")
+                                <label class="container">
+                                    @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.JavaRunTime.CheckBoxMessage")
+                                    <input type="checkbox" id="JavaSetup">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <button type="button" id="previous-setting-up-solr-connection-yes" class="btn btn-default">Previous</button>
+                                <button disabled type="button" id="next-solr-config-yes-step-2" class="btn btn-primary float-right yes-class">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.ReadyNext")</button>
+                            </div>
+                            <div id="solr-config-yes-step-2">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Content.Step1")
+                                <div class="owl-carousel owl-theme" id="owl-carousel-content">
+                                    <div class="item">
+                                        <p><strong>Step 1: To Start Solr Server(solr should be 7.5 or above version)</strong></p>
+                                        <p>To start the Server, all you need is to run few commands on your command prompt. We are assuming you’ve extracted the Solr folder to “C:\Solr”</p>
+                                        <p class="code-content">
+                                            C:\&gt;cd C:\Solr\bin<br>
+                                            C:\Solr\bin&gt;<strong>solr start -p 8983</strong><br>
+                                            Here, “-p 8983” represents Solr Instance running on port 8983. You can change this port if needed.
+                                        </p>
+                                    </div>
+                                    <div class="item">
+                                        <p><strong>Step 2: To Create New Core in Solr</strong></p>
+                                        <p>To create new core, Solr instance must be running on specified port (For example, we are running Solr on 8983 port). Once your Solr Instance is running, all you need to do is write the simple command and core will be created automatically by executing following command.</p>
+                                        <p class="code-content">
+                                            C:\&gt;cd C:\Solr\bin<br>
+                                            C:\Solr\bin&gt;<strong>solr create -c &lt;core-name&gt; -p 8983</strong><br>
+                                            Ex: C:\Solr\bin&gt;<strong>solr create -c newCore -p 8983</strong><br>
+                                            Here, “-p 8983” represents Solr Instance running on port 8983. You can change this port if needed.
+                                        </p>
+                                    </div>
+                                </div>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.Content.Step2")
+                                <label class="container">
+                                    @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrOnWindows.CheckBoxMessage")
+                                    <input type="checkbox" id="InstallingSolrOnWindow">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <button type="button" id="solr-config-yes" class="btn btn-default">Previous</button>
+                                <button disabled type="button" id="next-solr-config-yes-step-3" class="btn btn-primary float-right">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.ReadyNext")</button>
+                            </div>
+                            <div id="solr-config-yes-step-3">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.Step1")
+                                <div class="code">
+                                    <p class="code-content">
+                                        You can open Solr Admin by going at http://localhost:8983/solr (replace localhost and port number as per your setup)<br /><br />
+                                        Your Solr Core URL will be, http://localhost:8983/solr/CoreName (replace CoreName with the name of the core you  have setup)
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" style="line-height: 20px;margin-bottom:10px;">
+                                        @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.SolrCoreUrl")
+                                    </div>
+                                    <div class="col-md-12">
+                                        <nop-editor asp-for="SolrCoreURL" id="solr-core-url" />
+                                    </div>
+                                </div>
+                                <p>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.ScheduleTask.Part1", Model.DownLoadTaskXmlFile)</p>
+                                <label class="container">
+                                    @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.CheckBoxMessage")
+                                    <input type="checkbox" id="BasicSolrConfiguration">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <button type="button" id="previous-solr-config-yes-step-1" class="btn btn-default">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                                <div class="f1-buttons">
+                                    <button disabled type="button" class="btn float-right btn-primary" id="SolrCoreInput">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Next")</button>
+                                    <button type="button" class="btn btn-next float-right btn-primary" id="SolrCoreInput-Next" style="display:none">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Next")</button>
+                                </div>
+                            </div>
+                            <div id="solr-config-no-step-1">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.RemoteHost.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.RemoteHost.Step1")
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <nop-editor asp-for="SolrCoreURLRemote" class="form-control" id="solr-core-url" />
+                                    </div>
+                                </div>
+                                <label class="container">
+                                    @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrHostingService.CheckBoxMessage")
+                                    <input type="checkbox" id="RemoteBasicSolrConfigure">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <button type="button" id="previous-setting-up-solr-connection-no" class="btn btn-default">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                                <div class="f1-buttons">
+                                    <button disabled type="button" id="RemoteHostedNextStep" class="btn float-right btn-primary">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Next")</button>
+                                    <button type="button" class="btn btn-next float-right btn-primary" id="RemoteHostedNextStepButton" style="display:none">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Next")</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset id="fieldSetShema">
+                            <h4>Solr Core Configurations</h4>
+                            <p>Setting up Solr Core at <label id="CoreMainUrl"></label> with a Solr Core name <label id="CoreName"></label> </p>
+                            <p>
+                                <ul class="core-status">
+                                    <li>
+                                        @if (Model.ManagedSchemaStatus)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.ManagedSchemaStatus")</label>
+                                        <nop-editor asp-for="ManagedSchemaStatus" />
+                                    </li>
+                                    <li>
+                                        @if (Model.DbConfigFileStatus)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DbConfigFileStatus")</label>
+                                        <nop-editor asp-for="DbConfigFileStatus" />
+                                    </li>
+                                    <li>
+                                        @if (Model.DataImportRequestHandlerStatus)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DataImportRequestHandlerStatus")</label>
+                                        <nop-editor asp-for="DataImportRequestHandlerStatus" />
+                                    </li>
+                                    <li>
+                                        @if (Model.CheckSolrConnection)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.CheckSolrConnection")</label>
+                                        <nop-editor asp-for="CheckSolrConnection" />
+                                    </li>
+                                    <li>
+                                        @if (Model.SqlSolrQueryTest)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.SqlSolrQueryTest")</label>
+                                        <nop-editor asp-for="SqlSolrQueryTest" />
+                                    </li>
+                                    <li>
+                                        @if (Model.DataImportStatus)
+                                        {
+                                            <i class="fa fa-check-circle"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-times-circle"></i>
+                                        }
+                                        <label>@T("Plugins.NopAcceleratePlus.Solr.Wizard.Shema.DataImportStatus")</label>
+                                        <nop-editor asp-for="DataImportStatus" />
+                                    </li>
+                                    <li><nop-editor asp-for="FullCoreSetupWithImportSolrData" /></li>
+                                </ul>
+                            </p>
+                            <p id="FullCoreSetupMessage">
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.CoreReadyMessage")
+                            </p>
+                            <div id="RemoteHostedSection">
+                                <div class="float-right" id="RemoteDownloadSetting">
+                                    <a href="@Model.DownloadZipUrl"><input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.DownloadZip.Label")" id="DownloadZip" /></a>
+                                    <button value="Click here after @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.UPdateDbFile")" id="SetDb" type="button" class="btn tbn-default">@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.UPdateDbFile")</button>
+                                </div>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.SolrConfiguration.Content.RemoteFailed")
+                            </div>
+                            <button type="button" class="btn btn-previous btn-default" id="InstallSolrWindow-Previous">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                            <button type="button" class="btn" id="Retry">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Retry")</button>
+                            <div class="f1-buttons">
+                                <button type="button" class="btn btn-next float-right btn-primary" id="InstallSolrWindow-Next">Next</button>
+                            </div>
+                        </fieldset>
+                        <fieldset id="fieldSetNopAccBasics">
+                            <div id="solr-nopAccBasic-1">
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Title")</h4>
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Content.Step1")
+                                <button type="button" class="btn btn-previous btn-default" id="nopAccBasic-Previous">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                                <button type="button" id="next-solr-nopAccBasic-2" class="btn btn-primary float-right">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.ReadyNext")</button>
+                            </div>
+                            <div id="solr-nopAccBasic-2">
+                                @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Content.Step2")
+                                <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.NopAccPlusBasic.Title")</h4>
+                                <div class="row">
+                                    <div class="col-md-4">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Input.SolrCore")</div>
+                                    <div class="col-md-8"><nop-editor asp-for="SolrCoreURL" asp-disabled="true" /></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Input.BatchSize")</div>
+                                    <div class="col-md-8" style="height: 34px;"><nop-editor asp-for="BatchSize" /></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Input.EmailNotification")</div>
+                                    <div class="col-md-8"><nop-editor asp-for="SolrDownEmail" /></div>
+                                </div>
+                                <button type="button" class="btn btn-default" id="solr-nopAccBasic-1-Previous">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                                <div class="f1-buttons">
+                                    <button type="button" class="btn btn-next float-right btn-primary" id="nopAccBasic-Next" style="display:none">Next</button>
+                                    <button type="button" class="btn float-right btn-primary" id="nopAccBasic-firstClick">Next</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset id="fieldSetMoreAboutNopAcc">
+                            <h4>@T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAccPlus.Title")</h4>
+                            @T("Plugins.NopAcceleratePlus.Solr.WizardSetUp.Message.Step.MoreAboutNopAccPlus.Content.Step1")
+                            <button type="button" class="btn btn-previous btn-default" id="MoreAboutNopAccPlus-Previous">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.Previous")</button>
+                            <div class="f1-buttons">
+                                <button type="submit" class="btn btn-submit pull-right btn-primary" id="NopAccPlus-MoreAbout-Submit">@T("Plugins.NopAcceleratePlus.Solr.Wizard.Buttons.YouReady")</button>
+                            </div>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">nopAccelerate Plus</h4>
+            </div>
+            <div class="modal-body">
+                <p>Model Popup Message</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function showModelPopup(title, text) {
+        $("#myModal").find(".modal-title").text(title);
+        $("#myModal").find(".modal-body").text(text);
+        $('#myModal').modal('show');
+    }
+
+    $(document).ready(function () {
+        $('#BatchSize').parent();
+        $('#BatchSize').parent().css("max-width", "500px");
+
+        // CheckBox Enable should enable next button
+        $('#JavaSetup').click(function () {
+            if ($(this).prop("checked") == true) {
+                $('#next-solr-config-yes-step-2').removeAttr('disabled');
+            }
+            else if ($(this).prop("checked") == false) {
+                $('#next-solr-config-yes-step-2').attr('disabled', true);
+            }
+        });
+
+        $('#InstallingSolrOnWindow').click(function () {
+            if ($(this).prop("checked") == true) {
+                $('#next-solr-config-yes-step-3').removeAttr('disabled');
+            }
+            else if ($(this).prop("checked") == false) {
+                $('#next-solr-config-yes-step-3').attr('disabled', true);
+            }
+        });
+
+        $('#BasicSolrConfiguration').click(function () {
+            if ($(this).prop("checked") == true) {
+                $('#SolrCoreInput').removeAttr('disabled');
+            }
+            else if ($(this).prop("checked") == false) {
+                $('#SolrCoreInput').attr('disabled', true);
+            }
+        });
+        $('#RemoteBasicSolrConfigure').click(function () {
+            if ($(this).prop("checked") == true) {
+                $('#RemoteHostedNextStep').removeAttr('disabled');
+            }
+            else if ($(this).prop("checked") == false) {
+                $('#RemoteHostedNextStep').attr('disabled', true);
+            }
+        });
+        // end
+        $('.throbber-header').html("@T("Plugins.NopAcceleratePlus.Solr.Wizard.SolrSetup.TestImportData")");
+        $("#InstallSolrWindow-Next").prop('disabled', true);
+        $("#yes").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.Yes")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            IsRemoteServer(false);
+            $("#setting-up-solr-connection").fadeOut(400, function () {
+                $("#solr-config-yes-step-1").fadeIn();
+            });
+        });
+        $("#previous-setting-up-solr-connection-yes").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.Yes.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-yes-step-1").fadeOut(400, function () {
+                $("#setting-up-solr-connection").fadeIn();
+            });
+        });
+        $("#next-solr-config-yes-step-2").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.JavaRunTimeEnv.Ready")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-yes-step-1").fadeOut(400, function () {
+                $("#solr-config-yes-step-2").fadeIn();
+            });
+        });
+        $("#solr-config-yes").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.Yes.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-yes-step-2").fadeOut(400, function () {
+                $("#solr-config-yes-step-1").fadeIn();
+            });
+        });
+        $("#next-solr-config-yes-step-3").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.JavaRunTimeEnv.Ready")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-yes-step-2").fadeOut(400, function () {
+                $("#solr-config-yes-step-3").fadeIn();
+            });
+        });
+        $("#previous-solr-config-yes-step-1").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.InstallSolrWindow.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-yes-step-3").fadeOut(400, function () {
+                $("#solr-config-yes-step-2").fadeIn();
+            });
+        });
+        $("#solr-nopAccBasic-1-Previous").click(function () {
+            $("#EmailValidationMessage").remove();
+            $("#solr-nopAccBasic-2").fadeOut(400, function () {
+                $("#solr-nopAccBasic-1").fadeIn();
+            });
+        });
+        $("#no").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.No")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            IsRemoteServer(true);
+            $("#setting-up-solr-connection").fadeOut(400, function () {
+                $("#solr-config-no-step-1").fadeIn();
+            });
+        });
+        $("#previous-setting-up-solr-connection-no").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SettingUpSolrConnection.No.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-config-no-step-1").fadeOut(400, function () {
+                $("#setting-up-solr-connection").fadeIn();
+            });
+        });
+        $("#next-solr-nopAccBasic-2").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.RemoteHosted.Next")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            $("#solr-nopAccBasic-1").fadeOut(400, function () {
+                $("#solr-nopAccBasic-2").fadeIn();
+            });
+        });
+
+        $("#Retry").click(function () {
+            var IsRemoteServer = $("#IsRemoteServer").is(":checked");
+            if (IsRemoteServer == true) {
+                RemoteHostedNextStepFunction(true);
+            }
+            else {
+                SolrCoreInputClickFunction(true);
+            }
+        });
+
+        $("#SetDb").click(function () {
+            var requestUrl = '@Url.Action("SetDbFile", "NopAcceleratePlusCore")';
+            $.ajax({
+                type: 'GET',
+                url: requestUrl,
+                success: function (data) {
+                    if (data) {
+                        $("#DbConfigFileStatus").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+                    }
+                    else {
+                        $("#DbConfigFileStatus").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        function CoreSetup(data) {
+            if (data.ManagedSchemaStatus) {
+                $("#ManagedSchemaStatus").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#ManagedSchemaStatus").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+            if (data.DbConfigFileStatus) {
+                $("#DbConfigFileStatus").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#DbConfigFileStatus").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+            if (data.DataImportRequestHandlerStatus) {
+                $("#DataImportRequestHandlerStatus").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#DataImportRequestHandlerStatus").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+            if (data.CheckSolrConnection) {
+                $("#CheckSolrConnection").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#CheckSolrConnection").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+            if (data.SqlSolrQueryTest) {
+                $("#SqlSolrQueryTest").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#SqlSolrQueryTest").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+            if (data.DataImportStatus) {
+                $("#DataImportStatus").siblings("i").removeClass("fa-times-circle").addClass("fa-check-circle");
+            }
+            else {
+                $("#DataImportStatus").siblings("i").removeClass("fa-check-circle").addClass("fa-times-circle");
+            }
+        }
+        function RemoteHostedNextStepFunction(retryButtonStatus) {
+            $("#ValidationMessage").remove();
+
+            var SolrCoreURLRemote = $('#SolrCoreURLRemote').val();
+            var regexPattern = /^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$/;
+            if (regexPattern.test(SolrCoreURLRemote) == false & SolrCoreURLRemote.length > 0) {
+                $("#SolrCoreURLRemote").after("<span id='ValidationMessage' style='color: red'>@T("Plugins.NopAcceleratePlus.Core.ErrorMessage")</span>");
+                return false;
+            }
+
+            if ($("#SolrCoreURLRemote").val() == "") {
+                showModelPopup("Validation Message", "Solr Core must not be Empty");
+                return false;
+            };
+
+            $(".throbber").show();
+            var requestUrl = '@Url.Action("SaveSolrCore", "NopAcceleratePlusCore")';
+            $.ajax({
+                type: 'GET',
+                url: requestUrl,
+                data: { SolrCoreURL: SolrCoreURLRemote, remoteStatus : true },
+                success: function (data) {
+                    CoreSetup(data);
+                    if (data.FullCoreSetupWithImportSolrData) {
+                        $("#InstallSolrWindow-Next").prop('disabled', false);
+                        $("#FullCoreSetupMessage").css("display", "block");
+                        $("#Retry").css("display", "none");
+                        $("#RemoteHostedSection").css("display", "none");
+                    }
+                    else {
+                        $("#InstallSolrWindow-Next").prop('disabled', true);
+                        $("#FullCoreSetupMessage").css("display", "none");
+                        $("#Retry").css("display", "inline-block");
+                        $("#RemoteHostedSection").css("display", "block");
+                    }
+                    $("#DownloadZip").css("display", "block");
+                    $('#solr-nopAccBasic-2').find('#SolrCoreURL').val(SolrCoreURLRemote);
+                    $("#CoreName").text(data.CoreName);
+                    $("#CoreMainUrl").text(data.CoreMainUrl);
+                    if (retryButtonStatus == false) {
+                        $("#RemoteHostedNextStepButton").click();
+                    }
+                    var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.InstallSolrWindow.Next")";
+                    var longMessage = "";
+                    AdminLoAjaxCall(shortMessage, longMessage);
+                    $(".throbber").hide();
+
+                },
+                error: function (error) {
+                    $(".throbber").hide();
+                }
+            });
+            $("#solr-config-no-step-1").fadeOut(400, function () {
+                $("#solr-config-no-step-2").fadeIn();
+            });
+        }
+
+        $("#RemoteHostedNextStep").click(function () {
+            RemoteHostedNextStepFunction(false);
+        });
+
+        $("#InstallSolrWindow-Next").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SolCoreConfiguration.Next")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+        });
+        $("#InstallSolrWindow-Previous").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.SolCoreConfiguration.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+            var IsRemoteServer = $("#IsRemoteServer").is(":checked");
+            if (IsRemoteServer) {
+                $("#solr-config-no-step-1").fadeIn();
+            }
+            else {
+                $("#solr-config-yes-step-3").fadeIn();
+            }
+        });
+        $("#nopAccBasic-Next").click(function () {
+                var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Next")";
+                var longMessage = "";
+                AdminLoAjaxCall(shortMessage, longMessage);
+                return true;
+        });
+        $("#nopAccBasic-firstClick").click(function () {
+            $("#EmailValidationMessage").remove();
+            if ($("#SolrDownEmail").val() == "") {
+
+                $("#SolrDownEmail").after("<span id='EmailValidationMessage' style='color: red'>@T("Plugins.NopAcceleratePlus.Core.EmailAddress.required")</span>");
+                return false;
+            } else {
+                $("#nopAccBasic-Next").click();
+            }
+        });
+
+        $("#nopAccBasic-Previous").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.NopAccPlusBasic.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+        });
+
+        $("#MoreAboutNopAccPlus-Previous").click(function () {
+            var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.MoreAboutNopAccPlus.Previous")";
+            var longMessage = "";
+            AdminLoAjaxCall(shortMessage, longMessage);
+        });
+
+        function SolrCoreInputClickFunction(retryStatus) {
+            $("#ValidationMessage").remove();
+            var solrCoreUrl = $('#solr-config-yes-step-3').find('#SolrCoreURL').val();
+            var regexPattern = /^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$/;
+            if (regexPattern.test(solrCoreUrl) == false & solrCoreUrl.length > 0) {
+                $('#solr-config-yes-step-3').find('#SolrCoreURL').after("<span id='ValidationMessage' style='color: red'>@T("Plugins.NopAcceleratePlus.Core.ErrorMessage")</span>");
+                return false;
+            }
+
+            if ($("#SolrCoreURL").val() == "") {
+                showModelPopup("Validation Message", "Solr Core must not be Empty")
+                return false;
+            };
+            $(".throbber").show();
+            var requestUrl = '@Url.Action("SaveSolrCore", "NopAcceleratePlusCore")';
+            $.ajax({
+                type: 'GET',
+                url: requestUrl,
+                data: { SolrCoreURL: solrCoreUrl, remoteStatus: false },
+                success: function (data) {
+                    CoreSetup(data);
+                    if (data.FullCoreSetupWithImportSolrData) {
+                        $("#InstallSolrWindow-Next").prop('disabled', false);
+                        $("#FullCoreSetupMessage").css("display", "block");
+                        $("#Retry").css("display", "none");
+                    }
+                    else {
+                        $("#InstallSolrWindow-Next").prop('disabled', true);
+                        $("#FullCoreSetupMessage").css("display", "none");
+                        $("#Retry").css("display", "block");
+                    }
+                    $("#CoreName").text(data.CoreName);
+                    $("#CoreMainUrl").text(data.CoreMainUrl);
+                    $("#RemoteHostedSection").css("display", "none");
+                    if (retryStatus == false) {
+                        $("#SolrCoreInput-Next").click();
+                    }
+                    var shortMessage = "@T("Plugins.NopAcceleratePlus.Solr.Wizard.InstallSolrWindow.Next")";
+                    var longMessage = "";
+                    AdminLoAjaxCall(shortMessage, longMessage);
+                    $(".throbber").hide();
+                    $('#SolrCoreURL').text(solrCoreUrl);
+                    $('#solr-nopAccBasic-2').find('#SolrCoreURL').val(solrCoreUrl);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            return false;
+        }
+        $("#SolrCoreInput").click(function () {
+            SolrCoreInputClickFunction(false);
+        });
+    });
+
+    function IsRemoteServer(remoteServerStatus) {
+        var requestUrl = '@Url.Action("IsRemoteServer", "NopAcceleratePlusCore")';
+        $.ajax({
+            type: 'GET',
+            url: requestUrl,
+            data: { IsRemoteServer: remoteServerStatus },
+            success: function (data) {
+                if (data) {
+                    $('#IsRemoteServer').attr('checked', true);
+                } else
+                {
+                    $('#IsRemoteServer').removeAttr('checked');
+                }
+            },
+            error: function (error) {
+                return false;
+            }
+        });
+        return false;
+    }
+
+    function AdminLoAjaxCall(shortMessage, longMessage) {
+        var requestUrl = '@Url.Action("SaveAdminLog", "NopAcceleratePlusCore")';
+        $.ajax({
+            type: 'GET',
+            url: requestUrl,
+            data: { shortMessage: shortMessage, longMessage: longMessage},
+            success: function (data) {
+            },
+            error: function (error) {
+            }
+        });
+        return false;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#wizard-img-slider').owlCarousel({
+            loop: true,
+            margin: 10,
+            dots: false,
+            autoplay: true,
+            animateOut: 'fadeOut',
+            autoplayTimeout: 4000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false
+                },
+                600: {
+                    items: 1,
+                    nav: false
+                },
+                1000: {
+                    items: 1,
+                    nav: false,
+                    loop: true
+                }
+            }
+        })
+        $('#owl-carousel-content').owlCarousel({
+            margin: 10,
+            dots: false,
+            nav: true,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: true
+                },
+                600: {
+                    items: 1,
+                    nav: true
+                },
+                1000: {
+                    items: 1,
+                    nav: true
+                }
+            }
+        })
+        $('#owl-carousel-no-content').owlCarousel({
+            margin: 10,
+            dots: false,
+            nav: true,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: true
+                },
+                600: {
+                    items: 1,
+                    nav: true
+                },
+                1000: {
+                    items: 1,
+                    nav: true
+                }
+            }
+        })
+    })
+</script>

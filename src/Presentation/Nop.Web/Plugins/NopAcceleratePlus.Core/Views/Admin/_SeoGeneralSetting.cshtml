@@ -1,0 +1,66 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Core.Models.GeneralSettingModel
+@{
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.GeneralSetting");
+}
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="CanonicalURL_OverrideForStore" asp-input="CanonicalURL" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CanonicalURL" />
+                </div>
+                <div class="col-md-2">
+                    <nop-editor asp-for="CanonicalURL" />
+                    <span asp-validation-for="CanonicalURL"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="NoIndexMetaTag_OverrideForStore" asp-input="NoIndexMetaTag" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NoIndexMetaTag" />
+                </div>
+                <div class="col-md-2">
+                    <nop-editor asp-for="NoIndexMetaTag" />
+                    <span asp-validation-for="NoIndexMetaTag"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <nop-override-store-checkbox asp-for="AttributeURLDelimeter_OverrideForStore" asp-input="AttributeURLDelimeter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AttributeURLDelimeter" />
+                </div>
+                <div class="col-md-8">
+                    <nop-editor asp-for="AttributeURLDelimeter" />
+                    <span asp-validation-for="AttributeURLDelimeter"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label id="sampleUrl" style="background-color: #eeeeee; padding: 10px 25px; font-family: courier, monospace; color: #3c8dbc;"></label>
+                    <nop-editor asp-for="SampleUrlFormat" />
+                </div>
+            </div>
+            <div class="url-description">
+                @Html.Raw(T("Plugins.NopAcceleratePlus.Core.Field.URLDescription"))
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var label = $('#SampleUrlFormat').val();
+        $(document).ready(function () {
+            $("#SampleUrlFormat").hide();
+            var AttributeValue = $('#AttributeURLDelimeter').val();
+            var replaceText = label.replace(/\-AttributeURLDelimeter-/g, AttributeValue);
+            $('#sampleUrl').text(replaceText);
+        });
+
+        $('#AttributeURLDelimeter').keyup(function () {
+            var AttributeValue = $('#AttributeURLDelimeter').val();
+            var replaceText = label.replace(/\-AttributeURLDelimeter-/g, AttributeValue);
+            $('#sampleUrl').text(replaceText);
+        });
+    });
+</script>

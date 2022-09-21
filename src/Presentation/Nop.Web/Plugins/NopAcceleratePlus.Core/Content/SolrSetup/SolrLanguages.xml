@@ -1,0 +1,34 @@
+<solr>
+  <language>
+    <field key="en" value="text_en" />
+    <field key="ar" value="text_ar" />
+    <field key="bg" value="text_bg" />
+    <field key="ca" value="text_ca" />
+    <field key="cz" value="text_cz" />
+    <field key="da" value="text_da" />
+    <field key="de" value="text_de" />
+    <field key="el" value="text_el" />
+    <field key="es" value="text_es" />
+    <field key="eu" value="text_eu" />
+    <field key="fa" value="text_fa" />
+    <field key="fi" value="text_fi" />
+    <field key="fr" value="text_fr" />
+    <field key="ga" value="text_ga" />
+    <field key="gl" value="text_gl" />
+    <field key="hi" value="text_hi" />
+    <field key="hu" value="text_hu" />
+    <field key="hy" value="text_hy" />
+    <field key="id" value="text_id" />
+    <field key="it" value="text_it" />
+    <field key="ja" value="text_ja" />
+    <field key="lv" value="text_lv" />
+    <field key="nl" value="text_nl" />
+    <field key="no" value="text_no" />
+    <field key="pt" value="text_pt" />
+    <field key="ro" value="text_ro" />
+    <field key="ru" value="text_ru" />
+    <field key="sv" value="text_sv" />
+    <field key="th" value="text_th" />
+    <field key="tr" value="text_tr" />
+  </language>
+</solr>

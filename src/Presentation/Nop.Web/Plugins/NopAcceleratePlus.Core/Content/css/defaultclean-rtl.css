@@ -1,0 +1,102 @@
+﻿.nopAcc-filter .filter-block {
+    margin: 0;
+}
+
+.nopAccPlus-clear-all {
+    top: 15px;
+    left: 45px;
+}
+
+.master-column-wrapper {
+    clear: both;
+}
+
+.block {
+    max-width: 100%;
+}
+
+.nopAcc-filter .filter-block .title {
+    background: #F9F9F9;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.title label, .title {
+    font-weight: 600;
+    color: #444;
+}
+
+.nopAccPlus-selected-title {
+    font-weight: 600;
+}
+
+.nopAcc-plus-filter.nopAcc-plus-mobile {
+    max-width: 600px;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.nopAcc-filter .filter-block .filtersGroupPanel #Rating li,
+.nopAcc-filter .filter-block .filtersGroupPanel li {
+    padding: 5px 0 5px 5px;
+}
+
+.nopAcc-filter .filter-block .acc_icon_expand.rotate {
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+
+.nopAcc-filter .filter-block .acc_icon_expand {
+    display: block;
+    width: 18px;
+    height: 18px;
+    position: relative;
+    right: 10px;
+    top: 50%;
+    float: left;
+    margin-left: -10px;
+    background: url(../img/plusminus.png) center 0;
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.nopAcc-filter .filter-block.acc_active .acc_icon_expand {
+    background: url(../img/plusminus.png) center -18px;
+}
+
+.nopAcc-filter .filter-block .filtersGroupPanel ul li .attribute-squares .attribute-square {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.nopAcc-filter .filter-block:first-of-type, .nopAcc-filter .filter-block:first-of-type .title {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.nopAcc-filter .filter-block:last-of-type, .nopAcc-filter .filter-block:last-of-type .filtersGroupPanel {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.product-rating-box {
+    margin-top: 0px;
+}
+
+.nopAcc-filter .filter-block .filtersGroupPanel #Rating li label {
+    padding: 0;
+}
+
+@media (max-width: 1024px) {
+    .nopAcc-filter .filter-block {
+        padding: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .nopAcc-search-box, .nopAcc-search-box input {
+        width: 100%;
+    }
+}

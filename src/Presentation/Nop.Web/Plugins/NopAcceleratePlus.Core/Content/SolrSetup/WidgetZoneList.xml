@@ -1,0 +1,8 @@
+﻿<WidgetZone>
+  <List>
+    <field key="left_side_column_before" value="left_side_column_before" />
+    <field key="left_side_column_after" value="left_side_column_after" />
+    <field key="main_column_after" value="main_column_after" />
+    <field key="main_column_before" value="main_column_before" />
+  </List>
+ </WidgetZone>
