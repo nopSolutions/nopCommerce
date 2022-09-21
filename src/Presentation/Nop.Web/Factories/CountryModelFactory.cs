@@ -1,12 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
-using Nop.Services.Directory;
-using Nop.Services.Localization;
-using Nop.Web.Models.Directory;
-
 namespace Nop.Web.Factories
 {
     /// <summary>
@@ -69,50 +60,24 @@ namespace Nop.Web.Factories
             if (country == null)
             {
                 //country is not selected ("choose country" item)
-                if (addSelectStateItem)
-                {
-                    result.Insert(0, new StateProvinceModel
-                    {
-                        id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.SelectState")
-                    });
-                }
-                else
-                {
-                    result.Insert(0, new StateProvinceModel
-                    {
-                        id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.Other")
-                    });
-                }
+                return addSelectStateItem
+                    ? AddStateProvider(result, "Address.SelectState")
+                    : AddStateProvider(result, "Address.Other");
             }
-            else
-            {
-                //some country is selected
-                if (!result.Any())
-                {
-                    //country does not have states
-                    result.Insert(0, new StateProvinceModel
-                    {
-                        id = 0,
-                        name = await _localizationService.GetResourceAsync("Address.Other")
-                    });
-                }
-                else
-                {
-                    //country has some states
-                    if (addSelectStateItem)
-                    {
-                        result.Insert(0, new StateProvinceModel
-                        {
-                            id = 0,
-                            name = await _localizationService.GetResourceAsync("Address.SelectState")
-                        });
-                    }
-                }
-            }
+            if (!result.Any()) return AddStateProvider(result, "Address.Other");
 
+            if (addSelectStateItem) return AddStateProvider(result, "Address.SelectState");
             return result;
+        }
+
+        private IList<StateProvinceModel> AddStateProvider(IList<StateProvinceModel> states, string resourceKey, int index = 0)
+        {
+            states.Insert(index, new StateProvinceModel
+            {
+                id = 0,
+                name = await _localizationService.GetResourceAsync(resourceKey)
+            });
+            return states;
         }
 
         #endregion
