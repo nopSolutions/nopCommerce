@@ -878,16 +878,6 @@ namespace Nop.Services.Catalog
         Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId);
 
         /// <summary>
-        /// Gets a warehouse by identifier
-        /// </summary>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
-
-        /// <summary>
         /// Deletes a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>

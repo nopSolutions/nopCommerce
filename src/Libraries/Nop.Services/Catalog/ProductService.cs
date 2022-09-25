@@ -2663,19 +2663,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Gets a warehouse by identifier
-        /// </summary>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
-        {
-            return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
-        }
-
-        /// <summary>
         /// Deletes a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
