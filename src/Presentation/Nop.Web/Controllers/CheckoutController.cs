@@ -244,6 +244,69 @@ namespace Nop.Web.Controllers
             return string.Empty;
         }
 
+        protected async Task<JsonResult> EditAddressAsync(AddressModel addressModel, IFormCollection form, Func<Customer, IList<ShoppingCartItem>, Address, Task<JsonResult>> getResult)
+        {
+            try
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                if (!cart.Any())
+                    throw new Exception("Your cart is empty");
+
+                //find address (ensure that it belongs to the current customer)
+                var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressModel.Id);
+                if (address == null)
+                    throw new Exception("Address can't be loaded");
+
+                //custom address attributes
+                var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+
+                if (customAttributeWarnings.Any()) 
+                    return Json(new { error = 1, message = customAttributeWarnings });
+
+                address = addressModel.ToEntity(address);
+                address.CustomAttributes = customAttributes;
+
+                await _addressService.UpdateAddressAsync(address);
+
+                return await getResult(customer, cart, address);
+            }
+            catch (Exception exc)
+            {
+                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                return Json(new { error = 1, message = exc.Message });
+            }
+        }
+
+        protected async Task<JsonResult> DeleteAddressAsync(int addressId, Func<IList<ShoppingCartItem>, Task<JsonResult>> getResult)
+        {
+            try
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+                if (!cart.Any())
+                    throw new Exception("Your cart is empty");
+
+                var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+                if (address != null)
+                {
+                    await _customerService.RemoveCustomerAddressAsync(customer, address);
+                    await _customerService.UpdateCustomerAsync(customer);
+                    await _addressService.DeleteAddressAsync(address);
+                }
+
+                return await getResult(cart);
+            }
+            catch (Exception exc)
+            {
+                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
+                return Json(new { error = 1, message = exc.Message });
+            }
+        }
+
         #endregion
 
         #region Methods (common)
@@ -389,57 +452,33 @@ namespace Nop.Web.Controllers
         /// Save edited address
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="form"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, IFormCollection form, bool opc = false)
+        public virtual async Task<IActionResult> SaveEditBillingAddress(CheckoutBillingAddressModel model, IFormCollection form, bool opc = false)
         {
             try
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                //find address (ensure that it belongs to the current customer)
-                var address = await _customerService.GetCustomerAddressAsync(customer.Id, model.BillingNewAddress.Id);
-                if (address == null)
-                    throw new Exception("Address can't be loaded");
-
-                //custom address attributes
-                var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
-                var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-
-                if(customAttributeWarnings.Any())
+                return await EditAddressAsync(model.BillingNewAddress, form, async (customer, cart, address) =>
                 {
-                    return Json(new { error = 1, message = customAttributeWarnings });
-                }
+                    customer.BillingAddressId = address.Id;
+                    await _customerService.UpdateCustomerAsync(customer);
 
-                address = model.BillingNewAddress.ToEntity(address);
-                address.CustomAttributes = customAttributes;
+                    if (!opc) 
+                        return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
 
-                await _addressService.UpdateAddressAsync(address);
-
-                customer.BillingAddressId = address.Id;
-                await _customerService.UpdateCustomerAsync(customer);
-
-                if (!opc)
-                {
+                    var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
+                    
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("CheckoutBillingAddress")
+                        selected_id = model.BillingNewAddress.Id,
+                        update_section = new UpdateSectionJsonModel
+                        {
+                            name = "billing",
+                            html = await RenderPartialViewToStringAsync("OpcBillingAddress",
+                                billingAddressModel)
+                        }
                     });
-                }
-
-                var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
-                return Json(new
-                {
-                    selected_id = model.BillingNewAddress.Id,
-                    update_section = new UpdateSectionJsonModel
-                    {
-                        name = "billing",
-                        html = await RenderPartialViewToStringAsync("OpcBillingAddress", billingAddressModel)
-                    }
                 });
             }
             catch (Exception exc)
@@ -454,41 +493,82 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="addressId"></param>
         /// <param name="opc"></param>
-        public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
+        public virtual async Task<IActionResult> DeleteEditBillingAddress(int addressId, bool opc = false)
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
-
-            var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
-            if (address != null)
+            return await DeleteAddressAsync(addressId, async (cart) =>
             {
-                await _customerService.RemoveCustomerAddressAsync(customer, address);
-                await _customerService.UpdateCustomerAsync(customer);
-                await _addressService.DeleteAddressAsync(address);
-            }
+                if (!opc) 
+                    return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
 
-            if (!opc)
-            {
+                var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart);
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("CheckoutBillingAddress")
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "billing",
+                        html = await RenderPartialViewToStringAsync("OpcBillingAddress", billingAddressModel)
+                    }
                 });
-            }
-
-            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart);
-            return Json(new
-            {
-                update_section = new UpdateSectionJsonModel
-                {
-                    name = "billing",
-                    html = await RenderPartialViewToStringAsync("OpcBillingAddress", billingAddressModel)
-                }
             });
         }
 
+        /// <summary>
+        /// Delete edited address
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <param name="opc"></param>
+        public virtual async Task<IActionResult> DeleteEditShippingAddress(int addressId, bool opc = false)
+        {
+            return await DeleteAddressAsync(addressId, async (cart) =>
+            {
+                if (!opc)
+                    return Json(new { redirect = Url.RouteUrl("CheckoutShippingAddress") });
+
+                var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart);
+                
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "shipping",
+                        html = await RenderPartialViewToStringAsync("OpcShippingAddress", shippingAddressModel)
+                    }
+                });
+            });
+        }
+
+        /// <summary>
+        /// Save edited address
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="opc"></param>
+        /// <returns></returns>
+        public virtual async Task<IActionResult> SaveEditShippingAddress(CheckoutShippingAddressModel model, IFormCollection form, bool opc = false)
+        {
+            return await EditAddressAsync(model.ShippingNewAddress, form, async (customer, cart, address) =>
+            {
+                customer.ShippingAddressId = address.Id;
+                await _customerService.UpdateCustomerAsync(customer);
+
+                if (!opc)
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("CheckoutShippingAddress")
+                    });
+
+                var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, address.CountryId);
+                return Json(new
+                {
+                    selected_id = model.ShippingNewAddress.Id,
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "shipping",
+                        html = await RenderPartialViewToStringAsync("OpcShippingAddress", shippingAddressModel)
+                    }
+                });
+            });
+        }
+        
         #endregion
 
         #region Methods (multistep checkout)
