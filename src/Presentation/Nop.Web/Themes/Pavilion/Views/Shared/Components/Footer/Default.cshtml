@@ -19,7 +19,7 @@
     var removeCopyright = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removecopyright", false, storeId, true);
     var removeDesignedBy = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removedesignedby", false, storeId, true);
 
-    var shouldDisplayContractSales = @Context.Request.Host.Contains("abcwarehouse");
+    var shouldDisplayContractSales = @Context.Request.Host.ToString().Contains("abcwarehouse");
 }
 
 @* custom styles *@
