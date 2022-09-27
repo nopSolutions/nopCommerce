@@ -166,8 +166,6 @@ namespace Nop.Web.Factories
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
             _videoService = videoService;
-
-
         }
 
         #endregion
@@ -939,7 +937,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var model = new List<ProductDetailsModel.ProductAttributeModel>();
-            var store = await _storeService.GetStoreByIdAsync(updatecartitem.StoreId);
+            var store = updatecartitem != null ? await _storeService.GetStoreByIdAsync(updatecartitem.StoreId) : await _storeContext.GetCurrentStoreAsync();
             
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributeMapping)
