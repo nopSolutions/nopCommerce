@@ -18,6 +18,8 @@
     var storeId = (await storeContext.GetCurrentStoreAsync()).Id;
     var removeCopyright = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removecopyright", false, storeId, true);
     var removeDesignedBy = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removedesignedby", false, storeId, true);
+
+    var shouldDisplayContractSales = @Context.Request.Host.Contains("abcwarehouse");
 }
 
 @* custom styles *@
@@ -98,7 +100,10 @@
                     {
                         <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
                     }
-                    <li><a href="http://abccontractsales.com/">Contract Sales</a></li>
+                    @if (shouldDisplayContractSales)
+                    {
+                        <li><a href="http://abccontractsales.com/">Contract Sales</a></li>
+                    }
                 </ul>
             </div>
             <div class="footer-block footer-block-last">
