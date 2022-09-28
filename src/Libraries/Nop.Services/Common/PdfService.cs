@@ -387,7 +387,7 @@ namespace Nop.Services.Common
             cellOrderNote.Border = Rectangle.NO_BORDER;
             notesHeader.AddCell(cellOrderNote);
             doc.Add(notesHeader);
-            doc.Add(new Paragraph(" "));
+            doc.Add(new Paragraph(" ", font));
 
             var notesTable = new PdfPTable(2)
             {
@@ -703,7 +703,7 @@ namespace Nop.Services.Common
             if (vendorId != 0 || string.IsNullOrEmpty(order.CheckoutAttributeDescription))
                 return;
 
-            doc.Add(new Paragraph(" "));
+            doc.Add(new Paragraph(" ", font));
             var attribTable = new PdfPTable(1)
             {
                 RunDirection = GetDirection(lang),
@@ -739,7 +739,7 @@ namespace Nop.Services.Common
             cellProducts.Border = Rectangle.NO_BORDER;
             productsHeader.AddCell(cellProducts);
             doc.Add(productsHeader);
-            doc.Add(new Paragraph(" "));
+            doc.Add(new Paragraph(" ", font));
 
             //a vendor should have access only to products
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendorId);
@@ -941,7 +941,7 @@ namespace Nop.Services.Common
             await PrintShippingInfoAsync(lang, order, titleFont, font, addressTable);
 
             doc.Add(addressTable);
-            doc.Add(new Paragraph(" "));
+            doc.Add(new Paragraph(" ", font));
         }
 
         /// <summary>
@@ -1008,7 +1008,7 @@ namespace Nop.Services.Common
                         shippingAddressPdf.AddCell(new Paragraph(indent + text, font));
                     }
 
-                    shippingAddressPdf.AddCell(new Paragraph(" "));
+                    shippingAddressPdf.AddCell(new Paragraph(" ", font));
                 }
                 else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
                 {
@@ -1032,7 +1032,7 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(pickupAddress.ZipPostalCode))
                         shippingAddressPdf.AddCell(new Paragraph($"{indent}{pickupAddress.ZipPostalCode}", font));
 
-                    shippingAddressPdf.AddCell(new Paragraph(" "));
+                    shippingAddressPdf.AddCell(new Paragraph(" ", font));
                 }
 
                 shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.ShippingMethod", indent, lang, font, order.ShippingMethod));
@@ -1120,7 +1120,7 @@ namespace Nop.Services.Common
                     : order.PaymentMethodSystemName;
                 if (!string.IsNullOrEmpty(paymentMethodStr))
                 {
-                    billingAddressPdf.AddCell(new Paragraph(" "));
+                    billingAddressPdf.AddCell(new Paragraph(" ", font));
                     billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.PaymentMethod", indent, lang, font, paymentMethodStr));
                     billingAddressPdf.AddCell(new Paragraph());
                 }
@@ -1131,7 +1131,7 @@ namespace Nop.Services.Common
                 {
                     foreach (var item in customValues)
                     {
-                        billingAddressPdf.AddCell(new Paragraph(" "));
+                        billingAddressPdf.AddCell(new Paragraph(" ", font));
                         billingAddressPdf.AddCell(new Paragraph(indent + item.Key + ": " + item.Value, font));
                         billingAddressPdf.AddCell(new Paragraph());
                     }
@@ -1432,13 +1432,13 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(pickupAddress.ZipPostalCode))
                         addressTable.AddCell(new Paragraph($"   {pickupAddress.ZipPostalCode}", font));
 
-                    addressTable.AddCell(new Paragraph(" "));
+                    addressTable.AddCell(new Paragraph(" ", font));
                 }
 
-                addressTable.AddCell(new Paragraph(" "));
+                addressTable.AddCell(new Paragraph(" ", font));
 
                 addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.ShippingMethod", lang, font, order.ShippingMethod));
-                addressTable.AddCell(new Paragraph(" "));
+                addressTable.AddCell(new Paragraph(" ", font));
                 doc.Add(addressTable);
 
                 var productsTable = new PdfPTable(3) { WidthPercentage = 100f };
@@ -1580,9 +1580,9 @@ namespace Nop.Services.Common
                 }
 
                 productTable.AddCell(new Paragraph($"{productNumber}. {productName}", titleFont));
-                productTable.AddCell(new Paragraph(" "));
+                productTable.AddCell(new Paragraph(" ", font));
                 productTable.AddCell(new Paragraph(_htmlFormatter.StripTags(_htmlFormatter.ConvertHtmlToPlainText(productDescription, decode: true)), font));
-                productTable.AddCell(new Paragraph(" "));
+                productTable.AddCell(new Paragraph(" ", font));
 
                 if (product.ProductType == ProductType.SimpleProduct)
                 {
@@ -1600,7 +1600,7 @@ namespace Nop.Services.Common
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                         productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantityAsync(product)}", font));
 
-                    productTable.AddCell(new Paragraph(" "));
+                    productTable.AddCell(new Paragraph(" ", font));
                 }
 
                 var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
@@ -1635,7 +1635,7 @@ namespace Nop.Services.Common
                     }
 
                     productTable.AddCell(table);
-                    productTable.AddCell(new Paragraph(" "));
+                    productTable.AddCell(new Paragraph(" ", font));
                 }
 
                 if (product.ProductType == ProductType.GroupedProduct)
@@ -1645,7 +1645,7 @@ namespace Nop.Services.Common
                     foreach (var associatedProduct in await _productService.GetAssociatedProductsAsync(product.Id, showHidden: true))
                     {
                         productTable.AddCell(new Paragraph($"{productNumber}-{pvNum}. {await _localizationService.GetLocalizedAsync(associatedProduct, x => x.Name, lang.Id)}", font));
-                        productTable.AddCell(new Paragraph(" "));
+                        productTable.AddCell(new Paragraph(" ", font));
 
                         //uncomment to render associated product description
                         //string apDescription = associated_localizationService.GetLocalized(product, x => x.ShortDescription, lang.Id);
@@ -1676,7 +1676,7 @@ namespace Nop.Services.Common
                         if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                             productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantityAsync(associatedProduct)}", font));
 
-                        productTable.AddCell(new Paragraph(" "));
+                        productTable.AddCell(new Paragraph(" ", font));
 
                         pvNum++;
                     }
