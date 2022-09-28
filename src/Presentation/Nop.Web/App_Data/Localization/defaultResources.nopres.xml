@@ -13935,6 +13935,9 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode.Hint">
     <Value>The discount coupon code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode.Reserved">
+    <Value>The entered coupon code is already reserved for the discount '{0}'</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Discount">
     <Value>Discount</Value>
   </LocaleResource>
