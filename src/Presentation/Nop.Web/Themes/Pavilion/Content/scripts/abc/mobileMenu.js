@@ -204,7 +204,7 @@ function menuSetting() {
         $(menu_array[1]).css('width', "33.3%");
         $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/HawthWeeklyAD.png')");
         $(menu_array[1]).find('a').attr("href", '/sale-ad-3')
-        $(menu_array[0]).find('a').find('span').text('Sale Ad')
+        $(menu_array[1]).find('a').find('span').text('Sale Ad')
         $(menu_array[2]).css('width', "33.3%");
         $(menu_array[2]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/CreditIcon.png')");
         $(menu_array[2]).find('a').attr("href", '/special-financing-options-2')
