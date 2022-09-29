@@ -196,17 +196,19 @@ function menuSetting() {
     $(menu_array[len]).find('span').css('line-height', '0px');
 
     // hardcode for Mickey, since the menu items don't match
-
     if (window.location.href.indexOf("mickeyshorr.com") > -1) {
         $(menu_array[0]).css('width', "33.3%");
         $(menu_array[0]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/LocationsButton.png')");
         $(menu_array[0]).find('a').attr("href", '/AllShops')
+        $(menu_array[0]).find('a').find('span').text('Locations')
         $(menu_array[1]).css('width', "33.3%");
         $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/HawthWeeklyAD.png')");
         $(menu_array[1]).find('a').attr("href", '/sale-ad-3')
+        $(menu_array[0]).find('a').find('span').text('Sale Ad')
         $(menu_array[2]).css('width', "33.3%");
         $(menu_array[2]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/CreditIcon.png')");
         $(menu_array[2]).find('a').attr("href", '/special-financing-options-2')
+        $(menu_array[2]).find('a').find('span').text('Financing')
         $(menu_array[3]).remove();
     }
 }
