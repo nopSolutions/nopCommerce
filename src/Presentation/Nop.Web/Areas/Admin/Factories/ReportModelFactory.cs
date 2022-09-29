@@ -66,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
+            _storeContext = storeContext;
             _workContext = workContext;
         }
 
