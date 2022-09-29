@@ -144,7 +144,7 @@ namespace Nop.Services.ExportImport.Help
                     if (!UseDropdownLists)
                         continue;
 
-                    var validator = cell.DataValidation;
+                    var validator = cell.GetDataValidation();
                     validator.InCellDropdown = true;
 
                     validator.IgnoreBlanks = prop.AllowBlank;
