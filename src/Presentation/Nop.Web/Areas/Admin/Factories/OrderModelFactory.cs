@@ -719,14 +719,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
+                    var store = await _storeService.GetStoreByIdAsync(order.StoreId);
+                    
                     //values
                     var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         //price adjustment
                         var (priceAdjustment, _) = await _taxService.GetProductPriceAsync(product,
-                            await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer));
+                            await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store));
 
                         var priceAdjustmentStr = string.Empty;
                         if (priceAdjustment != 0)
@@ -1346,6 +1347,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId);
 
             model.ProductId = product.Id;
             model.OrderId = order.Id;
@@ -1355,7 +1357,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder;
 
             var presetQty = 1;
-            var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, decimal.Zero, true, presetQty);
+            var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, decimal.Zero, true, presetQty);
+
             var (presetPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, true, customer);
             var (presetPriceExclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, false, customer);
             model.UnitPriceExclTax = presetPriceExclTax;

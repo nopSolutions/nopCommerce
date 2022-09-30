@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
 using Nop.Services.Catalog;
@@ -16,6 +17,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Orders;
+using Nop.Services.Stores;
 using Nop.Tests.Nop.Services.Tests.Payments;
 using NUnit.Framework;
 
@@ -32,10 +34,12 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         private ISettingService _settingService;
         private IShoppingCartService _shoppingCartService;
         private ShoppingCartSettings _shoppingCartSettings;
+        private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
 
         private Discount _discount;
         private Customer _customer;
+        private Store _store; 
 
         #region Utilities
 
@@ -58,6 +62,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             {
                 CustomerId = _customer.Id,
                 ProductId = product.Id,
+                StoreId = _store.Id,
                 Quantity = quantity
             };
 
@@ -103,9 +108,8 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             _customerService = GetService<ICustomerService>();
             _discountService = GetService<IDiscountService>();
             _shoppingCartService = GetService<IShoppingCartService>();
-
             _shoppingCartSettings = GetService<ShoppingCartSettings>();
-
+            _storeService = GetService<IStoreService>();
             _rewardPointsSettings = GetService<RewardPointsSettings>();
 
             _discount = new Discount
@@ -118,7 +122,8 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             };
 
             _customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
-
+            _store = (await _storeService.GetAllStoresAsync()).First();
+            
             await GetService<IGenericAttributeService>().SaveAttributeAsync(_customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, "Payments.TestMethod", 1);
         }

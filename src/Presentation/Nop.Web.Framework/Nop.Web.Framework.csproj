@@ -14,10 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.344" />
-    <PackageReference Include="WebMarkupMin.AspNetCore6" Version="2.11.0" />
-    <PackageReference Include="WebMarkupMin.NUglify" Version="2.11.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCore6" Version="2.12.0" />
+    <PackageReference Include="WebMarkupMin.NUglify" Version="2.12.0" />
   </ItemGroup>
 
   <ItemGroup>
