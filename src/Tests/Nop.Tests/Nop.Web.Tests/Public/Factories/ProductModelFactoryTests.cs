@@ -73,7 +73,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         }
 
         [Test]
-        [Ignore("For some reason the items array time to time is empty")]
         public async Task CanPrepareProductReviewsModel()
         {
             var product = await _productService.GetProductByIdAsync(3);
