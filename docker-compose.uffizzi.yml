@@ -1,0 +1,26 @@
+version: "3"
+
+x-uffizzi:
+    ingress:
+        service: nopcommerce_web
+        port: 80
+
+services:
+    nopcommerce_web:
+        image: "${NOPCOMMERCE_IMAGE}"
+        ports:
+            - "80:80"
+        depends_on:
+            - nopcommerce_database
+        deploy:
+            resources:
+                limits:
+                    memory: 1000M
+    nopcommerce_database:
+        image: "postgres:latest"
+        container_name: nopcommerce_postgres_server
+        restart: "always"
+        ports:
+            - "5432"
+        environment:
+            POSTGRES_PASSWORD: "password" 
