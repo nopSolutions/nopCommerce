@@ -19,11 +19,13 @@
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.1.0" />
+    <PackageReference Include="Optional" Version="4.0.0" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.9.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.2" />
     <PackageReference Include="Svg.Skia" Version="0.5.16" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
+    <PackageReference Include="Triplex.Validations" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
