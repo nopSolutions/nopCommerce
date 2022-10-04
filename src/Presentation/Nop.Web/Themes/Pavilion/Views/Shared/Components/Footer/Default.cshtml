@@ -19,6 +19,7 @@
     var removeCopyright = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removecopyright", false, storeId, true);
     var removeDesignedBy = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removedesignedby", false, storeId, true);
 
+    var hideCustomerService = @Context.Request.Host.ToString().Contains("mickeyshorr");
     var shouldDisplayContractSales = @Context.Request.Host.ToString().Contains("abcwarehouse");
 }
 
@@ -91,21 +92,24 @@
                     }
                 </ul>
             </div>
-            <div class="footer-block">
-                <div class="title">
-                    <strong>@T("Footer.CustomerService")</strong>
+            @if (!hideCustomerService)
+            {
+                <div class="footer-block">
+                    <div class="title">
+                        <strong>@T("Footer.CustomerService")</strong>
+                    </div>
+                    <ul class="list">
+                        @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                        {
+                            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                        }
+                        @if (shouldDisplayContractSales)
+                        {
+                            <li><a href="http://abccontractsales.com/">Contract Sales</a></li>
+                        }
+                    </ul>
                 </div>
-                <ul class="list">
-                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
-                    {
-                        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
-                    }
-                    @if (shouldDisplayContractSales)
-                    {
-                        <li><a href="http://abccontractsales.com/">Contract Sales</a></li>
-                    }
-                </ul>
-            </div>
+            }
             <div class="footer-block footer-block-last">
                 <div class="title">
                     <strong>@T("Footer.MyAccount")</strong>
