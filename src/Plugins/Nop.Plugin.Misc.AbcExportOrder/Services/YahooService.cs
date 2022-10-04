@@ -284,7 +284,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                                                             .FirstOrDefault();
                     if (package == null)
                     {
-                        throw new Exception($"Unable to find base for model {model.Name}, size {entry.Size}, base {baseName}");
+                        throw new Exception($"Unable to find package for model {model.Name}, size {entry.Size}, base {baseName}");
                     }
 
                     return (package.ItemNo, package.Price);
