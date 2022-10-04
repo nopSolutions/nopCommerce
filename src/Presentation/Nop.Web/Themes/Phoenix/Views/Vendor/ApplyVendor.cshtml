@@ -1,0 +1,153 @@
+﻿@model ApplyVendorModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-apply-vendor-page");
+}
+<div class="page apply-vendor-page">
+    <div class="section-head">
+        <h2>@T("PageTitle.Vendors.Apply")</h2>
+    </div>
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
+    <div class="page-body section-width">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorTop, additionalData = Model })
+        @if (Model.DisableFormInput)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="px_register_input">
+                            <div class="inputs">
+                                <div class="px_input_field">
+                                    <span class="pi-identification px_icon"></span>
+                                    <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
+                                </div>
+                                <nop-required />
+                                <span asp-validation-for="Name"></span>
+
+                            </div>
+                        </div>
+                        <div class="px_register_input">
+                            <div class="inputs">
+                                <div class="px_input_field">
+                                    <span class="pi-mail-2 px_icon"></span>
+                                    <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
+                                </div>
+                                <nop-required />
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                        <div class="inputs">
+                            <textarea asp-for="Description" class="description" placeholder="Description"></textarea>
+                        </div>
+                        
+                        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                        @if (Model.TermsOfServiceEnabled)
+                        {
+                            <script asp-location="Footer">
+                                $(document).ready(function() {
+                                    $('#apply-vendor').on('click', function() {
+                                        if ($('#termsofservice').is(':checked')) {
+                                            //do some stuff
+                                            return true;
+                                        } else {
+                                            //just show validation errors, dont post+
+                                            Swal.fire('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Vendors.ApplyAccount.AcceptTermsOfService.Required").Text))')
+                                            @*alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Vendors.ApplyAccount.AcceptTermsOfService.Required").Text))');*@
+                                            return false;
+                                        }
+                                    });
+                                });
+                            </script>
+
+                            <div class="terms-of-service">
+                                <label class="checkbox path" for="termsofservice">
+                                    <input id="termsofservice" type="checkbox" name="termsofservice" />
+                                    <svg viewBox="0 0 21 21">
+                                        <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                    </svg>
+                                    @T("Vendors.ApplyAccount.AcceptTermsOfService")
+                                </label>
+                                @if (Model.TermsOfServicePopup)
+                                {
+                                    <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                                    <script asp-location="Footer">
+                                        $(document).ready(function() {
+                                            $('#read-acceptterms').on('click',
+                                                function (e) {
+                                                    displayPopupContentFromUrl(
+                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                        '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
+                                                });
+                                        });
+                                    </script>
+                                    
+                                }
+                                else
+                                {
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="inputs">
+                        <label for="imagefile" class="button-2 et_pb_contact_form_label">@T("Theme.Phoenix.Account.Avatar.ChooseFile")</label>
+                        <input id="imagefile" name="uploadedFile" type="file" class=" file-upload" />
+                    </div>
+                    @*<button type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button primary-btn">@T("Vendors.ApplyAccount.Button")</button>*@
+                    <button type="button" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button primary-btn">@T("Vendors.ApplyAccount.Button")</button>
+                </div>
+            </form>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })
+    </div>
+</div>
+
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('input[type="file"]').on('click', function () {
+            $(".file_names").html("");
+        })
+        if ($('input[type="file"]')[0]) {
+            var fileInput = document.querySelector('label[for="imagefile"]');
+            fileInput.ondragover = function () {
+                this.className = "et_pb_contact_form_label changed";
+                return false;
+            }
+            fileInput.ondragleave = function () {
+                this.className = "et_pb_contact_form_label";
+                return false;
+            }
+            fileInput.ondrop = function (e) {
+                e.preventDefault();
+                var fileNames = e.dataTransfer.files;
+                for (var x = 0; x < fileNames.length; x++) {
+                    console.log(fileNames[x].name);
+                    $ = jQuery.noConflict();
+                    $('label[for="imagefile"]').append("<div class='file_names'>" + fileNames[x].name + "</div>");
+                }
+            }
+            $('#imagefile').change(function () {
+                var fileNames = $('#imagefile')[0].files[0].name;
+                $('label[for="imagefile"]').append("<div class='file_names'>" + fileNames + "</div>");
+            });
+        }
+    });
+</script>

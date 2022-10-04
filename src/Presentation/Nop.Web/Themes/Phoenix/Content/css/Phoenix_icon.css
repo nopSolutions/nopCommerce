@@ -1,0 +1,634 @@
+/************************************
+ * PHOENIX THEME 2.0.0 || nopCypher *
+ * Copyright 2022 NOPCYPHER.COM      *
+ ************************************/
+
+
+@font-face {
+  font-family: 'phoniex-icon';
+  src: url('../fonts/phoniex-icon.eot?nm5n26');
+  src: url('../fonts/phoniex-icon.eot?nm5n26#iefix') format('embedded-opentype'),
+      url('../fonts/phoniex-icon.ttf?nm5n26') format('truetype'), 
+      url('../fonts/phoniex-icon.woff?nm5n26') format('woff'), 
+      url('../fonts/phoniex-icon.svg?nm5n26#phoniex-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+[class^="pi-"], [class*=" pi-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'phoniex-icon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pi-px-shopping-cart:before {
+  content: "\e99b";
+  font-size: 25px;
+}
+.pi-reply-message:before {
+  content: "\e999";
+}
+.pi-visibility:before {
+  content: "\e99a";
+}
+.pi-clock-1:before {
+  content: "\e998";
+}
+.pi-wrench:before {
+  content: "\e997";
+}
+.pi-edit:before {
+  content: "\e995";
+}
+.pi-delete:before {
+  content: "\e996";
+}
+.pi-dropdown:before {
+  content: "\e992";
+}
+.pi-hemberg:before {
+  content: "\e993";
+  font-size: 30px;
+  font-weight: 600;
+  color: #102c5a;
+}
+.pi-cancel:before {
+  content: "\e994";
+}
+.pi-shopping-cart-2:before {
+  content: "\e991";
+  font-size: 30px;
+}
+.pi-checklist:before {
+  content: "\e98e";
+  font-size: 30px;
+}
+.pi-credit-card:before {
+  content: "\e98f";
+  font-size: 30px;
+}
+.pi-shipped:before {
+  content: "\e990";
+  font-size: 30px;
+}
+.pi-empty-cart .path1:before {
+  content: "\e978";
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path2:before {
+  content: "\e979";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path3:before {
+  content: "\e97a";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path4:before {
+  content: "\e97b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path5:before {
+  content: "\e97c";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path6:before {
+  content: "\e97d";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path7:before {
+  content: "\e97e";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path8:before {
+  content: "\e97f";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path9:before {
+  content: "\e980";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path10:before {
+  content: "\e981";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path11:before {
+  content: "\e982";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path12:before {
+  content: "\e983";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path13:before {
+  content: "\e984";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path14:before {
+  content: "\e985";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path15:before {
+  content: "\e986";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path16:before {
+  content: "\e987";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path17:before {
+  content: "\e988";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path18:before {
+  content: "\e989";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path19:before {
+  content: "\e98a";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-empty-cart .path20:before {
+  content: "\e98b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path21:before {
+  content: "\e98c";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-empty-cart .path22:before {
+  content: "\e98d";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-checked:before {
+  content: "\e977";
+}
+.pi-mail-21:before {
+  content: "\e976";
+  font-size: 16px;
+}
+.pi-minus:before {
+  content: "\e974";
+  font-size: 12px;
+  color: #000;
+  cursor: pointer;
+}
+.pi-plus-1:before {
+  content: "\e975";
+  font-size: 12px;
+  color: #000;
+  cursor: pointer;
+}
+.pi-gift-card:before {
+  content: "\e95a";
+  font-size: 120px;
+  color: #102c5a;
+  opacity: .3;
+}
+.pi-discount:before {
+  content: "\e95b";
+  font-size: 120px;
+  color: #102c5a;
+  opacity: .3;
+}
+.pi-shopping .path1:before {
+  content: "\e95c";
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path2:before {
+  content: "\e95d";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path3:before {
+  content: "\e95e";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path4:before {
+  content: "\e95f";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path5:before {
+  content: "\e960";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path6:before {
+  content: "\e961";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path7:before {
+  content: "\e962";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path8:before {
+  content: "\e963";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path9:before {
+  content: "\e964";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path10:before {
+  content: "\e965";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path11:before {
+  content: "\e966";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path12:before {
+  content: "\e967";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path13:before {
+  content: "\e968";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path14:before {
+  content: "\e969";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path15:before {
+  content: "\e96a";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.pi-shopping .path16:before {
+  content: "\e96b";
+  margin-left: -1em;
+  color: rgb(238, 238, 238);
+}
+.pi-shopping .path17:before {
+  content: "\e96c";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path18:before {
+  content: "\e96d";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path19:before {
+  content: "\e96e";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path20:before {
+  content: "\e96f";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path21:before {
+  content: "\e970";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path22:before {
+  content: "\e971";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-shopping .path23:before {
+  content: "\e972";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.pi-refresh:before {
+  content: "\e973";
+}
+.pi-remove-from-cart:before {
+  content: "\e959";
+  font-size: 25px;
+  color: #000;
+}
+.pi-user-6:before {
+  content: "\e951";
+  font-size: 25px;
+}
+.pi-facebook-app-symbol:before {
+  content: "\e901";
+}
+.pi-rss:before {
+  content: "\e902";
+}
+.pi-twitter-1:before {
+  content: "\e903";
+}
+.pi-youtube-1:before {
+  content: "\e904";
+}
+.pi-search:before {
+  content: "\e906";
+  font-size: 25px;
+}
+.pi-shopping-bag-1:before {
+  content: "\e900";
+  font-size: 20px;
+}
+.pi-heart:before {
+  content: "\e905";
+  font-size: 25px;
+}
+.pi-compare .path1:before {
+  content: "\e93c";
+  font-size: 20px;
+}
+.pi-compare .path2:before {
+  content: "\e93d";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path3:before {
+  content: "\e93e";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path4:before {
+  content: "\e93f";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path5:before {
+  content: "\e940";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path6:before {
+  content: "\e941";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path7:before {
+  content: "\e942";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path8:before {
+  content: "\e943";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path9:before {
+  content: "\e944";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path10:before {
+  content: "\e945";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path11:before {
+  content: "\e946";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path12:before {
+  content: "\e947";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path13:before {
+  content: "\e948";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path14:before {
+  content: "\e949";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path15:before {
+  content: "\e94a";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path16:before {
+  content: "\e94b";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path17:before {
+  content: "\e94c";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path18:before {
+  content: "\e94d";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-compare .path19:before {
+  content: "\e94e";
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-expand-1:before {
+  content: "\e939";
+  font-size: 40px;
+  color: #fff;
+}
+.pi-arrowhead-thin-outline-to-the-left:before {
+  content: "\e953";
+}
+.pi-arrow-point-to-right:before {
+  content: "\e954";
+  font-size: 14px;
+}
+.product-icon .add-to-wishlist-button {
+  margin: 0 0 15px 0;
+  background-color: transparent;
+}
+.pi-free-delivery:before {
+  content: "\e919";
+  font-size: 50px;
+  color: #000;
+}
+.pi-money-back:before {
+  content: "\e91a";
+  font-size: 50px;
+  color: #000;
+}
+.pi-technical-support-1:before {
+  content: "\e950";
+  font-size: 50px;
+  color: #000;
+}
+.pi-padlock1:before {
+  content: "\e916";
+  font-size: 50px;
+  color: #000;
+}
+.pi-menu-2:before {
+  content: "\e93b";
+  font-size: 25px;
+  color: #fff;
+  margin-right: 25px;
+}
+.pi-list-text:before {
+  content: "\e93a";
+  font-size: 25px;
+  color: #fff;
+}
+.pi-conversation:before {
+  content: "\e952";
+  font-size: 20px;
+}
+.pi-menu-3 .path1:before {
+  content: "\e912";
+  color: #000;
+  font-size: 20px;
+}
+.pi-menu-3 .path2:before {
+  content: "\e913";
+  color: #000;
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-menu-3 .path3:before {
+  content: "\e914";
+  color: #333;
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-menu-3 .path4:before {
+  content: "\e915";
+  color: #000;
+  margin-left: -1em;
+  font-size: 20px;
+}
+.pi-key:before {
+  content: "\e90f";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 60px;
+}
+.pi-mail-2:before {
+  content: "\e911";
+  font-size: 25px;
+  color: #fff;
+}
+.pi-log-in:before {
+  content: "\e910";
+  font-size: 20px
+}
+.pi-clipboard:before {
+  content: "\e90b";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 60px;
+}
+.pi-add-user-1:before {
+  content: "\e908";
+  font-size: 20px;
+}
+.pi-worker:before {
+  content: "\e90e";
+  font-size: 25px;
+}
+.pi-assistant:before {
+  content: "\e909";
+  font-size: 25px;
+}
+.pi-identification:before {
+  content: "\e90c";
+}
+.pi-id-card:before {
+  content: "\e938";
+}
+.pi-office-building:before {
+  content: "\e90d";
+}
+.pi-home:before {
+  content: "\e955";
+}
+.pi-mailbox:before {
+  content: "\e958";
+}
+.pi-call-1:before {
+  content: "\e956";
+}
+.pi-fax:before {
+  content: "\e957";
+}
+.px_icon:before {
+  font-size: 25px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  background-color: #102C5A;
+  color: #fff;
+  z-index: 9;
+  opacity: 1;
+}
+.pi-caret-down:before {
+  content: "\e920";
+  color: #102c5a;
+  font-size: 12px;
+}
+.pi-check:before {
+  content: "\e90a";
+  font-size: 11px;
+  color: #000;
+  font-weight: 700;
+}

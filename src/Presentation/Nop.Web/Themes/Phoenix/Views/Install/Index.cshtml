@@ -1,0 +1,293 @@
+﻿@model InstallModel
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ILS.GetResource("Title")</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
+    <link rel="shortcut icon" href="/icons/icons_0/favicon.ico" />
+    @if (ILS.GetCurrentLanguage().IsRightToLeft)
+    {
+        <link href="@Url.Content("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
+    }
+    else
+    {
+        <link href="@Url.Content("~/lib_npm/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
+    }
+    <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="@Url.Content("~/js/public.common.js")"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="clearfix">
+            <div class="row">
+                <div class="col-md-3 offset-md-9">
+                    <select name="language" id="language" class="language-selector form-control" onchange="window.location.href=this.value;" asp-items="Model.AvailableLanguages"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="logo-wrapper col-md-12">
+                    <div class="logo"></div>
+                </div>
+            </div>
+        </div>
+        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
+            <div class="content">
+                <div asp-validation-summary="All" class="message-error"></div>
+
+                <p>@ILS.GetResource("Tooltip2")</p>
+                <p>@ILS.GetResource("Documentation1") 
+                    <a href="@(Docs.Main + Utm.OnInstall)" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.
+                </p>
+
+                <script>
+                    function showThrobber(message) {
+                        $('.throbber-header').html(message);
+                        window.setTimeout(function () {
+                            $(".throbber").show();
+                        }, 1000);
+                    }
+
+                    $(document).ready(function () {
+                        $('#installation-form').submit(function () {
+                            if ($('#installation-form').valid()) {
+                                $("html, body").animate({ scrollTop: 0 }, 400);
+                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
+                                $('button[type=submit]', this).attr('disabled', 'disabled');
+                            }
+                        });
+                    });
+
+                    $(document).ready(function () {
+                        $('#restart-form').submit(function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
+                            $('button[type=submit]', this).attr('disabled', 'disabled');
+                        });
+                    });
+
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(x => x.ConnectionStringRaw)').click(toggleSqlConnectionInfo);
+
+                        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
+
+                        toggleSqlConnectionInfo();
+                        toggleCollation();
+                    });
+
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(m => m.DataProvider)').on('change', function() {
+                            var integratedSecurityProviders = ['@((int)DataProviderType.SqlServer)']
+                            if(!integratedSecurityProviders.includes($(this).val())) {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('checked', false);
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', true)
+
+                                toggleSqlAuthenticationType();
+                            } else {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', false)
+                            }
+                        });
+                    });
+
+                    function toggleSqlConnectionInfo() {
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');
+                        if (connectionStringRaw) {
+                            $('#sqlDatabaseInfo').hide();
+                            $('#sqlDatabaseConnectionString').show();
+                        } else {
+                            $('#sqlDatabaseInfo').show();
+                            $('#sqlDatabaseConnectionString').hide();
+                        }
+                    }
+
+                    function toggleCollation() {
+
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
+                        var collationInput = $("#@Html.IdFor(x => x.Collation)")
+                        if (connectionStringRaw) {
+                            collationInput.show();
+                        } else {
+                            collationInput.hide();
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.RestartUrl))
+                    {
+                        <text>
+                            $(document).ready(function () {
+                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
+                                $.ajax({
+                                    type: "GET",
+                                    url: "@Url.Action("RestartApplication", "Install")",
+                                    complete: function() {
+                                        window.setTimeout(function () {
+                                            window.location.replace('@Model.RestartUrl');
+                                        }, @NopCommonDefaults.RestartTimeout);
+                                    }
+                                });
+                            });
+                        </text>
+                    }
+                </script>
+
+                <div class="form-horizontal">
+                    <div class="card border-light margin-t-30">
+                        <h3 class="card-header">
+                            @ILS.GetResource("StoreInformation")
+                        </h3>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("AdminEmail")
+                                </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="AdminEmail" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("AdminPassword")
+                                </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="AdminPassword" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("ConfirmPassword")
+                                </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="ConfirmPassword" class="form-control" />
+                                </div>
+                            </div>
+                            @if (Model.InstallRegionalResources)
+                            {
+                                <div class="form-group row" id="regionalResources">
+                                    <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                        @ILS.GetResource("Country")
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select asp-for="Country" asp-items="Model.AvailableCountries" class="form-control"></select>
+                                    </div>
+                                </div>
+                            }
+                            @if (!Model.DisableSampleDataOption)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="InstallSampleData" />
+                                            <label class="form-check-label" for="@Html.IdFor(m => m.InstallSampleData)">
+                                                @ILS.GetResource("CreateSampleData")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card border-light margin-t-10">
+                        <h3 class="card-header">
+                            @ILS.GetResource("DatabaseInformation")
+                        </h3>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("Database")
+                                </label>
+                                <div class="col-sm-8">
+                                    <select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="CreateDatabaseIfNotExists" />
+                                        <label class="form-check-label" for="@Html.IdFor(m => m.CreateDatabaseIfNotExists)">
+                                            @ILS.GetResource("CreateDatabaseIfDoesNotExist")
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="ConnectionStringRaw" />
+                                        <label class="form-check-label" for="@Html.IdFor(m => m.ConnectionStringRaw)">
+                                            @ILS.GetResource("RawConnectionString")
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sqlConnectionInfo">
+                                <hr />
+                                @await Html.PartialAsync("_Install.ConnectionString", Model)
+                                <div class="form-group row" id="sqlDatabaseConnectionString">
+                                    <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                        @ILS.GetResource("ConnectionString")
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input asp-for="ConnectionString" class="form-control" />
+                                        <span class="hint">
+                                            @ILS.GetResource("Example"):<br />
+                                            Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
+                                            ID=userName;Password=password
+                                            <br />
+                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank" rel="noopener noreferrer">here</a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" id="sqlConnectionInfo">
+                                    <div class="col-sm-8 offset-sm-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="UseCustomCollation" />
+                                            <label class="form-check-label" for="@Html.IdFor(m => m.UseCustomCollation)">
+                                                @ILS.GetResource("CustomCollation")
+                                            </label>
+                                            <input asp-for="Collation" class="form-control margin-t-10" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row margin-t-30">
+                                <div class="col-sm-12 text-center">
+                                    <button type="submit" class="btn btn-md btn-install">@ILS.GetResource("Install")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="content-footer">
+            <form asp-action="RestartInstall" asp-controller="Install" id="restart-form" method="post">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">Wait...</h1>
+                    <p><img src="@Url.Content("~/css/install/images/install-synchronizing.gif")" alt="" /></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

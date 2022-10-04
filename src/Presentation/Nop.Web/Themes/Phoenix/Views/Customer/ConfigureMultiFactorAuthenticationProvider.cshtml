@@ -1,0 +1,42 @@
+﻿@model MultiFactorAuthenticationProviderModel
+
+@using Nop.Core
+@using Nop.Services.Customers
+@inject IWorkContext workContext
+@inject ICustomerService customerService
+
+@{
+    var isRegisterCustomer = await customerService.IsRegisteredAsync(await workContext.GetCurrentCustomerAsync());
+    Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.MultiFactorAuthentication").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+}
+
+@if (isRegisterCustomer)
+{
+    @section left
+    {
+        @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
+    }
+}
+
+<div class="page account-page multi-factor-authentication-config-page">
+    <div class="page-title">
+        @if (isRegisterCustomer)
+        {
+            <h1>@T("PageTitle.MultiFactorAuthentication") - @Model.Name</h1>
+        }
+        else
+        {
+            <h1>@T("PageTitle.MultiFactorAuthentication")</h1>
+        }
+    </div>
+    <div class="page-body">
+        <div class="configure-provider">
+            @(await Component.InvokeAsync(Model.ViewComponentName)) 
+        </div>
+    </div>
+</div>

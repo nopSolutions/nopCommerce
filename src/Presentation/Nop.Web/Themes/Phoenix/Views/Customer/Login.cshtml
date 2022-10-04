@@ -1,0 +1,150 @@
+﻿@model LoginModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-login-page");
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+}
+<div class="page login-page section-padding">    
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
+    <div class="page-body section-width">
+        <div class="customer-blocks">            
+            <div class="external-authentication">
+                @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+            </div>
+            <div class="px-login">
+                @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
+                <div class="px-login-register-block">
+                    <div class="returning-wrapper fieldset">
+                        <div class="px_login_icon">
+                            <span class="pi-key"></span>
+                        </div>
+                        <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
+                            <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                            <div class="form-fields">
+                                @if (Model.UsernamesEnabled)
+                                {
+                                    <div class="inputs">
+                                        <div class="px_input">
+                                            <span class="pi-identification px_icon"></span>
+                                            <input asp-for="Username" class="username" autofocus="autofocus" placeholder="User Name" />
+                                        </div>
+                                        <div class="px_input_error">
+                                            <span asp-validation-for="Username"></span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="inputs">
+                                        <div class="px_input_field">
+                                            <span class="pi-mail-2 px_icon"></span>
+                                            <input asp-for="Email" class="email" autofocus="autofocus" placeholder="Email Id" />
+                                        </div>
+                                        <div class="px_input_error">
+                                            <span asp-validation-for="Email"></span>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="inputs">
+                                    <div class="px_input_field">
+                                        <span class="pi-padlock1 px_icon"></span>
+                                        <input asp-for="Password" class="password" placeholder="Password" />
+                                    </div>
+                                    <div class="px_input_error">
+                                        <span asp-validation-for="Password"></span>
+                                    </div>
+                                </div>
+                                <div class="px_forgot_password">
+                                    <div class="inputs reversed">
+                                        <label class="checkbox path" asp-for="RememberMe">
+                                            <input type="checkbox" asp-for="RememberMe" />
+                                            <svg viewBox="0 0 21 21">
+                                                <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                            </svg>
+                                            @T("Account.Login.Fields.RememberMe")
+                                        </label>
+                                    </div>
+                                    <div class="px_psw_recovery">
+                                        <span class="forgot-password">
+                                            <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (Model.DisplayCaptcha)
+                                {
+                                    <nop-captcha />
+                                }
+                            </div>
+                            <div class="buttons">
+                                <button type="submit" class="button-1 login-button primary-btn"><span class="pi-log-in"></span> @T("Account.Login.LoginButton")</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="px-checkoutgest">
+                        <div class="px_login_icon">
+                            <span class="pi-add-user-1"></span>
+                        </div>
+                        <div class="px_loginpage-register">
+                            @if (Model.RegistrationType == UserRegistrationType.Disabled)
+                            {
+                                <div class="new-wrapper">
+                                    <div class="title">
+                                        <h2>@T("Account.Register")</h2>
+                                    </div>
+                                    <div class="text">
+                                        <p>@T("Account.Register.Result.Disabled")</p>
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.CheckoutAsGuest)
+                            {
+                                <div class="new-wrapper checkout-as-guest-or-register-block">
+                                    <div class="title">
+                                        <h2>@T("Account.Login.CheckoutAsGuestOrRegister")</h2>
+                                    </div>
+                                    <div class="text">
+                                        @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                                    </div>
+                                    <div class="buttons">
+                                        <button type="button" class="button-1 checkout-as-guest-button primary-btn" onclick="location.href='@Url.RouteUrl("Checkout")'">@T("Account.Login.CheckoutAsGuest")</button>
+                                        <button type="button" class="button-1 register-button primary-btn" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="new-wrapper register-block">
+                                    <div class="title">
+                                        <h2>@T("Account.Login.NewCustomer")</h2>
+                                    </div>
+                                    <div class="text">
+                                        <p> @T("Account.Login.NewCustomerText")</p>
+                                    </div>
+                                    <div class="buttons">
+                                        <button type="button" class="button-1 register-button primary-btn" onclick="location.href='@registerUrl'">
+                                            <span class="pi-add-user-1"></span>
+                                            @T("Account.Register")
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

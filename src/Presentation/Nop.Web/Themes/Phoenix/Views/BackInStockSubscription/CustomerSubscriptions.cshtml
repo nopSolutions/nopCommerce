@@ -1,0 +1,103 @@
+﻿@model CustomerBackInStockSubscriptionsModel
+@{    
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-back-in-stock-subscription-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+}
+<div class="page account-page back-in-stock-subscription-list-page">
+    <div class="page-title section-head">
+        <h2>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h2>
+    </div>
+    <div class="page-body">
+        @if (Model.Subscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.BackInStockSubscriptions.Description")
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $('#selectall').on('click', function () {
+                        $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
+                    });
+
+                    $('.subscription-list .rowcheckbox').on('change', function (e) {
+                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
+                        $('#selectall').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    });
+                });
+            </script>
+            <form asp-route="CustomerBackInStockSubscriptions" method="post">
+                <div class="subscription-list">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="select-boxes">
+                                    <label class="checkbox path">
+                                       @T("Theme.Phoenix.select")
+                                    </label>                                    
+                                </th>
+                                <th class="product">
+                                    @T("Account.BackInStockSubscriptions.ProductColumn")
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.Subscriptions.Count; i++)
+                            {
+                                var item = Model.Subscriptions[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="select-boxes px_checkeBox">
+                                        <label class="checkbox path">
+                                            <input type="checkbox" name="biss@(item.Id)" />
+                                            <svg viewBox="0 0 21 21">
+                                                <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                            </svg>
+                                            
+                                        </label>
+                                        
+                                    </td>
+                                    <td class="product">
+                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                    @{
+                        var pager = await Html.PagerAsync(Model.PagerModel);
+                    }
+                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                    <div class="buttons">
+                        <button type="submit" name="save" class="button-1 delete-selected-biss-button primary-btn">@T("Account.BackInStockSubscriptions.DeleteSelected")</button>
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.BackInStockSubscriptions.NoSubscriptions")
+            </div>
+        }
+    </div>
+</div>

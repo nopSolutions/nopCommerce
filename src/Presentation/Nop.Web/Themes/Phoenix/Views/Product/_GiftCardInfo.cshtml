@@ -1,0 +1,49 @@
+﻿@model ProductDetailsModel.GiftCardModel
+@if (Model.IsGiftCard)
+{
+<div class="giftcard">
+    <div class="px_register_input">
+        <div class="inputs">
+            <div class="px_input_field">
+                <span class="pi-identification px_icon"></span>
+                <input asp-for="RecipientName" class="recipient-name" placeholder="RecipientName" />
+            </div>
+            <nop-required />                
+        </div>
+    </div>
+    @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+    {
+        <div class="px_register_input">
+            <div class="inputs">
+                <div class="px_input_field">
+                    <span class="pi-mail-2 px_icon"></span>
+                    <input asp-for="RecipientEmail" class="recipient-email" placeholder="RecipientEmail" />
+                </div>
+                <nop-required />
+            </div>
+        </div>
+    }
+    <div class="px_register_input">
+        <div class="inputs">
+            <div class="px_input_field">
+                <span class="pi-identification px_icon"></span>
+                <input asp-for="SenderName" class="sender-name" placeholder="Your Name" />
+            </div>
+            <nop-required />                
+        </div>
+    </div>
+    @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+    {
+        <div class="px_register_input">
+            <div class="inputs">
+                <div class="px_input_field">
+                    <span class="pi-mail-2 px_icon"></span>
+                    <input asp-for="SenderEmail" class="sender-email" placeholder="Your Email" />
+                </div>
+                <nop-required />
+            </div>
+        </div>
+    }
+    <textarea asp-for="Message" class="message" placeholder="Message"></textarea>
+</div>
+}

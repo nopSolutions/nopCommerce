@@ -1,0 +1,55 @@
+﻿@model ShoppingCartModel.GiftCardBoxModel
+@if (Model.Display)
+{
+
+<div id="gift-accordion">
+    <h3>
+        <span class="pi-caret-down"></span>
+        <div class="title">
+            <span>@T("ShoppingCart.GiftCardCouponCode")</span>
+        </div>
+    </h3>
+    <div>
+        <div class="giftcard-box">
+            <div class="px_giftcard">
+                <div>
+                    <div class="hint">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
+                    <div class="coupon-code">
+                        <input name="giftcardcouponcode" id="giftcardcouponcode" type="text" class="gift-card-coupon-code" aria-label="@T("ShoppingCart.GiftCardCouponCode.Label")" />
+                        <button type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode" class="button-2 apply-gift-card-coupon-code-button primary-btn">@T("ShoppingCart.GiftCardCouponCode.Button")</button>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
+                            @Model.Message
+                        </div>
+                    }
+                    <div class="px_discount_icon">
+                        <span class="pi-gift-card"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>    
+</div>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $('#giftcardcouponcode').on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    $('#applygiftcardcouponcode').trigger("click");
+                    return false;
+                }
+            });
+        });
+
+        $(function () {
+            $("#gift-accordion").accordion({
+                active: false,
+                navigation: true,
+                collapsible: true
+            });
+        });
+    </script>
+}

@@ -1,0 +1,164 @@
+﻿@model Nop.Web.Models.Catalog.SearchModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Search").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-search-page");
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.advs)").on('click', toggleAdvancedSearch);
+        toggleAdvancedSearch();
+    });
+
+    function toggleAdvancedSearch() {
+        if ($('#@Html.IdFor(model => model.advs)').is(':checked')) {
+            $('#advanced-search-block').show();
+        }
+        else {
+            $('#advanced-search-block').hide();
+        }
+    }
+</script>
+
+
+
+@section PxCatalogFilter
+{
+
+    @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+
+}
+
+
+<div class="page search-page">
+    <div class="section-head">
+        <h2>@T("Search")</h2>
+    </div>
+    <div class="page-body">
+        <div class="px-category-bg">
+            <div class="search-results">
+                <div class="search-input">
+                    <form asp-route="ProductSearch" method="get">
+                        <div class="fieldset">
+                            <div class="form-fields">
+                                <div class="basic-search">
+                                    <div class="px_register_input">
+                                        <div class="inputs">
+                                            <div class="px_input_field">
+                                                <span class="pi-search px_icon"></span>
+                                                <input asp-for="q" class="search-text" placeholder="@T("Search.SearchTerm")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBasic, additionalData = Model })
+                                    <div class="inputs reversed">
+                                        <label class="checkbox path" asp-for="advs">
+                                            <input type="checkbox" asp-for="advs" />
+                                            <svg viewBox="0 0 21 21">
+                                                <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                            </svg>
+                                            @T("Search.AdvancedSearch")
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="advanced-search" id="advanced-search-block">
+                                    @if (Model.AvailableCategories.Count > 0)
+                                    {
+                                        <div class="px_register_input">
+                                            <div class="inputs">
+                                                <div class="px_input_field">
+                                                    <span class="pi-menu-2 px_icon"></span>
+                                                    <select asp-for="cid" asp-items="Model.AvailableCategories"></select>s
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="px_register_input">
+                                            <div class="inputs reversed">
+                                                <label class="checkbox path" asp-for="isc">
+                                                    <input type="checkbox" asp-for="isc" />
+                                                    <svg viewBox="0 0 21 21">
+                                                        <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                                    </svg>
+                                                    @T("Search.IncludeSubCategories")
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.AvailableManufacturers.Count > 0)
+                                    {
+                                        <div class="px_register_input">
+                                            <div class="inputs">
+                                                <div class="px_input_field">
+                                                    <span class="pi-menu-2 px_icon"></span>
+                                                    <select asp-for="mid" asp-items="Model.AvailableManufacturers"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.asv && Model.AvailableVendors.Count > 0)
+                                    {
+                                        <div class="px_register_input">
+                                            <div class="inputs">
+                                                <label asp-for="vid">@T("Search.Vendor"):</label>
+                                                <div class="px_input_field">
+                                                    <span class="pi-worker px_icon"></span>
+                                                    <select asp-for="vid" asp-items="Model.AvailableVendors"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="px_register_input">
+                                        <div class="inputs reversed">
+                                            <label class="checkbox path" asp-for="sid">
+                                                <input type="checkbox" asp-for="sid" />
+                                                <svg viewBox="0 0 21 21">
+                                                    <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                                </svg>
+                                                @T("Search.SearchInDescriptions")
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" class="button-1 search-button primary-btn">@T("Search.Button")</button>
+                        </div>
+                    </form>
+                </div>
+
+                <script asp-location="Footer">
+                $(document).ready(function () {
+                    $(CatalogProducts).on('before', function (e) {
+                        var isAdvanced = $('#@Html.IdFor(model => model.advs)').is(':checked');
+
+                        e.payload.urlBuilder
+                            .addParameter('q', $('#@Html.IdFor(model => model.q)').val())
+                            .addParameter('advs', isAdvanced);
+
+                        if (isAdvanced) {
+                            e.payload.urlBuilder
+                                .addParameter('cid', $('#@Html.IdFor(model => model.cid)').val())
+                                .addParameter('isc', $('#@Html.IdFor(model => model.isc)').is(':checked'))
+                                .addParameter('mid', $('#@Html.IdFor(model => model.mid)').val())
+                                .addParameter('vid', $('#@Html.IdFor(model => model.vid)').val())
+                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'));
+                        }
+                    });
+                });
+                </script>
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageAfterResults, additionalData = Model })
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBeforeResults, additionalData = Model })
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("SearchProducts", "Catalog"));
+        }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+    </div>
+</div>

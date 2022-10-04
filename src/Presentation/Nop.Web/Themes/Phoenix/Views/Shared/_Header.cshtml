@@ -1,0 +1,116 @@
+﻿@using Nop.Core
+@inject IWorkContext workContext
+<div class="topbar">
+    <div class="header-upper">        
+          @await Component.InvokeAsync("Widget", new { widgetZone = "phoenix_theme_header_text" })
+        <div class="topmenu-right">
+            <div class="header-selectors-wrapper">
+                @await Component.InvokeAsync("LanguageSelector")
+                @await Component.InvokeAsync("CurrencySelector")
+                @await Component.InvokeAsync("TaxTypeSelector")
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="px-header-mobile-logo">
+    <div class="px-logo-menuicon-mobile">
+        <div class="header-logo">
+            @await Component.InvokeAsync("Logo")
+        </div>
+    </div>
+</div>
+<div class="header sticky px-header-mobile">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+    <div class="header-lower">
+        <div class="px-logo-menuicon-mobile">
+            <div class="pi-hemberg hemberg-menu-desktop" style="cursor:pointer" onclick="openNav()"></div>
+            <div class="header-logo px-header-logo-desktop">
+                @await Component.InvokeAsync("Logo")
+            </div>
+        </div>
+
+        <div class="px-serch-hederlink-mobile">
+            <div class="px-serch-hederlink-mobile-sub">
+                <div class="px_search-mobile"><span class="pi-search"></span></div>
+                <div class="search-box store-search-box px_search-desktop">
+                    @await Component.InvokeAsync("SearchBox")
+                </div>
+                <div class="px-my-Account">
+                    @await Component.InvokeAsync("HeaderLinks")
+                    <div class="px_cart_overlay"></div>
+                    @await Component.InvokeAsync("FlyoutShoppingCart")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-navbar">
+        <div class="header-menu">
+            @await Component.InvokeAsync("TopMenu")
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>
+
+<script asp-location="Footer">
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() >= 300) {
+            $('.px-header-mobile').addClass('fixed-header');
+        }
+        else {
+            $('.px-header-mobile').removeClass('fixed-header');
+        }
+    });
+
+    $(".px_search-mobile").click(function () {
+        $('.header-lower').addClass('px-search-bar');
+        $('.px_search-desktop').addClass('search-open');
+        if ($('.px_search-desktop').hasClass('search-open')) {
+            $('.search-open').slideDown();
+            $("input.search-box-text").focus();
+            $('.px_search-desktop.search-open').css('opacity', 1);
+        } else {
+            $('.bs_search_bar').slideUp();
+            $('.px_search-desktop').css('opacity', 0);
+        }
+        if ($(this).hasClass('s-open')) {
+            $('.px_search-desktop').removeClass('search-open');
+            $('.header-lower').removeClass('px-search-bar');
+            $('.bs_search_bar').slideUp();
+            $('.px_search-desktop').css('opacity', 0);
+            $(this).addClass('s-close');
+            $(this).removeClass('s-open');
+        }
+        else {
+            $(this).addClass('s-open');
+            $(this).removeClass('s-close');
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.keyCode === 27) {
+            $('.search-open').css('opacity', 0);
+            $('.px_search-desktop').removeClass('search-open');
+            $('.header-lower').removeClass('px-search-bar');
+            // $('.bs_search_bar').hide();
+            $('.px_search-mobile').removeClass('s-open');
+            $('.px_search-mobile').addClass('s-close');
+        }
+    });
+
+    $(document).ready(function () {
+        $(window).bind('scroll', function () {
+            var navHeight = $(window).height() - 70;
+            if ($(window).scrollTop() > navHeight) {
+                $('.px-header-mobile-box').addClass('fixed');
+            }
+            else {
+                $('.px-header-mobile-box').removeClass('fixed');
+            }
+        });
+    });
+</script>

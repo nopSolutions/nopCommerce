@@ -1,0 +1,45 @@
+﻿@model CustomerAvatarModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-avatar-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Avatar })
+}
+<form asp-route="CustomerAvatar" method="post" enctype="multipart/form-data">
+    <div class="page account-page avatar-page">
+        <div class="page-title section-head">
+            <h2>@T("Account.MyAccount") - @T("Account.Avatar")</h2>
+        </div>
+        <div class="page-body">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="fieldset">
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <div class="image">
+                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                    </div>
+                }
+                <input id="imagefile" name="uploadedFile" type="file" class="upload-image" />
+                <label for="imagefile" class="button-2">@T("Theme.Phoenix.Account.Avatar.ChooseFile")</label>
+            </div>
+            <div class="info">
+                @T("Account.Avatar.UploadRules")
+            </div>
+            <div class="buttons">
+                <button type="submit" name="upload-avatar" class="button-1 upload-avatar-button primary-btn">@T("Common.Upload")</button>
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <button type="submit" name="remove-avatar" class="button-2 remove-avatar-button primary-btn">@T("Account.Avatar.RemoveAvatar")</button>
+                }
+            </div>
+            
+        </div>
+    </div>
+</form>

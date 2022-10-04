@@ -1,0 +1,34 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@{
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+
+    //add main CSS file
+    if (supportRtl)
+    {
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/responsive.rtl.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/Phoenix.rtl.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/Phoenix_icon.rtl.css", excludeFromBundle: false);
+    }
+    else
+    {
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/responsive.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/Phoenix.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css", excludeFromBundle: false);
+        NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/Phoenix_icon.css", excludeFromBundle: false);
+    }
+
+    //other 3rd party css file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/slick.css", excludeFromBundle: false);
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/slick-theme.css", excludeFromBundle: false);
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/slinky.min.css", excludeFromBundle: false);
+
+    //common
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/jquery-ui.min.css");
+}

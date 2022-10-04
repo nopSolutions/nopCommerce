@@ -1,0 +1,8 @@
+﻿@model ProductDetailsModel
+@if (!string.IsNullOrWhiteSpace(Model.PageShareCode))
+{
+    <div class="product-share-button">
+        <h2>@T("Theme.Phoenix.Product.Share.Button")</h2>
+        @Html.Raw(Model.PageShareCode)
+    </div>
+}

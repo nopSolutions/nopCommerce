@@ -1,0 +1,81 @@
+﻿@model HomepageNewsItemsModel
+@if (Model.NewsItems.Count > 0)
+{
+    <div class="section-padding section-bg">
+        <div class="section-width">
+            <div class="news-list-homepage">
+                <div class="section-head title">
+                    <h2>@T("News")</h2>
+                </div>
+                <div class=" px_news">
+                    <div class="news-items">
+                        @foreach (var item in Model.NewsItems)
+                        {
+                            <div class="news-item">
+                                <div class="news-head">
+                                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a>
+                                </div>
+                                <div class="news-body">
+                                    @Html.Raw(item.Short)
+                                </div>
+                                <div class="px-news-date">
+                                    <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+                                </div>
+                                <div class="px-news-buttons">
+                                    <a class=" primary-btn" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">@T("News.MoreInfo")</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="view-all">
+                    <a href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script asp-location="Footer">
+    $(".news-items").slick({
+        infinite: true,
+        autoplay: false,
+        dots: false,
+        arrows: true,
+        slidesToShow: 4,
+        slidesToScroll: -1,
+        slidesToScroll: 1
+        ,
+        responsive: [{
+            breakpoint: 1381,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        },
+        {
+            breakpoint: 1199,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        },
+            {
+            breakpoint: 769,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }]
+    })</script>

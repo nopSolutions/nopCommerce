@@ -1,0 +1,216 @@
+﻿@model AddressModel
+
+
+    <input class="address-id" asp-for="Id" type="hidden"/>
+    <div class="edit-address">
+        <div class="px_customer_info">
+
+
+            <div class="px_register_input">
+                <div class="inputs">
+                    <div class="px_input_field">
+                        <span class="pi-identification px_icon"></span>
+                        <input asp-for="FirstName" placeholder="Firstname" />
+                    </div>
+                    <nop-required />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+            </div>
+
+            <div class="px_register_input">
+                <div class="inputs">
+                    <div class="px_input_field">
+                        <span class="pi-id-card px_icon"></span>
+                        <input asp-for="LastName" placeholder="Lastname" />
+                    </div>
+                    <nop-required />
+                    <span asp-validation-for="LastName"></span>
+                </div>
+            </div>
+
+            <div class="px_register_input">
+                <div class="inputs">
+                    <div class="px_input_field">
+                        <span class="pi-mail-2 px_icon"></span>
+                        <input asp-for="Email" placeholder="Email ID" />
+                    </div>
+                    <nop-required />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+
+            @if (Model.CompanyEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-office-building px_icon"></span>
+                            <input asp-for="Company" placeholder="Company" />
+                        </div>
+                        @if (Model.CompanyRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="Company"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.CountryEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-home px_icon"></span>
+                            <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                                    data-trigger="country-select"
+                                    data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                    data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                    data-loading="#states-loading-progress"></select>
+                        </div>
+                        <nop-required />
+                        <span asp-validation-for="CountryId"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-home px_icon"></span>
+                            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
+                        </div>
+                        <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+                        <span asp-validation-for="StateProvinceId"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.CityEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-office-building px_icon"></span>
+                            <input asp-for="City" placeholder="City" />
+                        </div>
+                        @if (Model.CityRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="City"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.ZipPostalCodeEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-mailbox px_icon"></span>
+                            <input asp-for="ZipPostalCode" placeholder="Zip Code" />
+                        </div>
+                        @if (Model.ZipPostalCodeRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="ZipPostalCode"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.CountyEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-home px_icon"></span>
+                            <input asp-for="County" placeholder="County" />
+                        </div>
+                        @if (Model.CountyRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="County"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.StreetAddressEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-home px_icon"></span>
+                            <input asp-for="Address1" placeholder="street Address" />
+                        </div>
+                        @if (Model.StreetAddressRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="Address1"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.StreetAddress2Enabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-home px_icon"></span>
+                            <input asp-for="Address2" placeholder="street Address 2" />
+                        </div>
+                        @if (Model.StreetAddress2Required)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="Address2"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.PhoneEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-call-1 px_icon"></span>
+                            <input asp-for="PhoneNumber" placeholder="Phone Number" />
+                        </div>
+                        @if (Model.PhoneRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="PhoneNumber"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.FaxEnabled)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <div class="px_input_field">
+                            <span class="pi-fax px_icon"></span>
+                            <input asp-for="FaxNumber" placeholder="Fax" />
+                        </div>
+                        @if (Model.FaxRequired)
+                        {
+                            <nop-required />
+                        }
+                        <span asp-validation-for="FaxNumber"></span>
+                    </div>
+                </div>
+            }
+
+            @if (Model.CustomAddressAttributes.Count > 0)
+            {
+                @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+            }
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
+    </div>

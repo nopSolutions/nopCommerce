@@ -1,0 +1,33 @@
+﻿@model IList<ProductOverviewModel>
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.NewProducts").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-recently-added-products-page");
+}
+<div class="page recently-added-products-page">
+    <div class="section-head">
+        <a href="@Url.RouteUrl("NewProductsRSS")" class="link-rss" title="@T("Products.NewProducts.RSS.Hint")">@T("Products.NewProducts.RSS")</a>
+        <h2>@T("Products.NewProducts")</h2>
+    </div>
+    <div class="page-body">
+        <div class="px-category-bg">
+            @if (Model.Count > 0)
+            {
+                <div class="product-grid">
+                    <div class="item-grid">
+                        @foreach (var product in Model)
+                        {
+                            <div class="item-box">
+                                @await Html.PartialAsync("_ProductBox", product)
+                            </div>
+                        }
+                    </div>
+                </div>        
+            }
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,85 @@
+﻿@model CheckoutConfirmModel
+<div class="checkout-data">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop, additionalData = Model })
+    @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
+    {
+        <div class="section confirm-order">
+            @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
+            {
+                <div>
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                </div>
+            }
+            @if (Model.Warnings.Count > 0)
+            {
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmBottom, additionalData = Model })
+    <div class="section order-summary">
+        @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
+    </div>
+    @if (string.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
+    {
+        <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
+            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+        </div>
+        <div class="terms-of-service">
+            <label class="checkbox path" for="termsofservice">
+                <input type="checkbox" id="termsofservice" name="termsofservice" />
+                <svg viewBox="0 0 21 21">
+                    <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                </svg>
+                @T("Checkout.TermsOfService.IAccept")
+            </label>
+            @if (Model.TermsOfServicePopup)
+            {
+                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                <script>
+                    $(document).ready(function() {
+                        $('#read-terms').on('click', function(e) {
+                            e.preventDefault();
+                            displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                        });
+                    });
+                </script>
+            }
+            else
+            {
+                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+            }
+
+           
+        </div>
+    }
+</div>
+
+<script asp-location="Footer">
+    // cart item pluse minus 
+
+
+    $(document).ready(function () {
+        $('.pi-minus').click(function () {
+            var $input = $(this).parent().find('input');
+            var count = parseInt($input.val()) - 1;
+            count = count < 1 ? 1 : count;
+            $input.val(count);
+            $input.change();
+            return false;
+        });
+        $('.pi-plus-1').click(function () {
+            var $input = $(this).parent().find('input');
+            $input.val(parseInt($input.val()) + 1);
+            $input.change();
+            return false;
+        });
+    });
+</script>

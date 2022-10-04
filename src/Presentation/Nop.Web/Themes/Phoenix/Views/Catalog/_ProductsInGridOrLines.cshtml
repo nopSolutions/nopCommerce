@@ -1,0 +1,68 @@
+﻿@model CatalogProductsModel
+
+
+
+<div class="px-category-bg">
+    @if (!string.IsNullOrEmpty(Model.WarningMessage))
+    {
+        <div class="warning">
+            @Model.WarningMessage
+        </div>
+    }
+
+    @if (Model.Products.Count > 0)
+    {
+
+        if (Model.ViewMode == "list")
+        {
+            <div class="product-list">
+                <div class="item-grid px_category_product">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBoxList", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="product-grid">
+                <div class="item-grid px_category_product">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_ProductBox", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        var pager = Html.Pager(Model)
+            .QueryParam("pagenumber")
+            // for search page
+            .BooleanParameterName("advs")
+            .BooleanParameterName("isc")
+            .BooleanParameterName("sid")
+            .RenderEmptyParameters(true);
+
+        @if (!await pager.IsEmpty())
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+    }
+    else if (!string.IsNullOrEmpty(Model.NoResultMessage))
+    {
+        <div class="no-result">
+            @Model.NoResultMessage
+        </div>
+    }
+</div>
+
+
+
+
+

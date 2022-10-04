@@ -1,0 +1,491 @@
+/************************************
+ * PHOENIX THEME 1.3.0|| nopCypher *
+ * Copyright 2021 NOPCYPHER.COM      *
+ ************************************/
+/*-------background-color:#102c5a---*/
+
+.topbar,
+.header-links ul li a span.px-unread-qty,
+.header .search-box .search-box-button,
+.category-item h2 a,
+.sub-category-item h2 a,
+.primary-btn,
+.secoendry-btn:hover,
+.slick-prev,
+.slick-next,
+.bestsellers .item-box .buttons button,
+.px_login_icon,
+.circle--inner,
+.private-messages-page .ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited,
+.product-specs-box td.spec-name,
+.cart th,
+.data-table th,
+.forum-table th,
+.bar-notification.success,
+.footer,
+.newsletter-subscribe-button,
+.block .list li > ul.sublist li a::before,
+.block .tags li:hover,
+.product-tags-all-page li:hover,
+.product-tags-list li:hover,
+.blogpost-page .tags ul li:hover,
+.blog-page .tags ul li:hover,
+.poll .buttons button,
+.product-selectors,
+.product-list .item-box .buttons .add-to-wishlist-button,
+.product-list .item-box .buttons .add-to-compare-list-button,
+.product-list .item-box .buttons .product-box-add-to-cart-button,
+.pager li span,
+.pager li a:hover,
+.pager li a:focus,
+.overview .add-to-wishlist-button,
+.variant-overview .add-to-wishlist-button,
+.overview .add-to-compare-list-button,
+.overview .email-a-friend-button,
+.overview .add-to-cart-button,
+.ui-datepicker-header,
+.attribute-squares .selected-value .attribute-square-container,
+.tooltip-container .tooltip-header,
+.product-review-item .review-item-head,
+.enter-password-form button[type="submit"],
+.contact-page .button-1,
+.email-a-friend-page .button-1,
+.apply-vendor-page .button-1,
+.login-page .returning-wrapper .inputs span.px_icon-bg,
+.address-list-page .button-2,
+.order-list-page .button-2,
+.order-progress li.active-step span,
+.order-progress li.active-step span::after,
+.shopping-cart-page .common-buttons button,
+.cart-collaterals .button-2,
+.cart-collaterals .button-2:hover,
+.cart-collaterals .button-2:focus,
+.apply-shipping-button,
+.shopping-cart-page .common-buttons .estimate-shipping-button,
+.opc .allow .step-title,
+.order-details-page .repost .button-2,
+.user-agreement-page .button-1,
+.profile-page .ui-tabs-nav li.ui-state-active a,
+.account-page .button-2,
+.apply-vendor-page .button-2,
+.account-page .button-2:hover,
+.px_icon:before,
+button.mfp-close,
+button.mfp-arrow,
+.ui-slider .ui-slider-range,
+button.button-2.apply-gift-card-coupon-code-button:hover,
+.cart .product .edit-item a,
+.manufacturer-item h2 a {
+  background-color: #102c5a;
+}
+/*-------background-color:#102c5a !important-------*/
+
+.swal2-styled.swal2-confirm,
+.swal2-styled.swal2-cancel,
+.theme-custom .nivo-controlNav a.active {
+  background-color: #102c5a !important;
+}
+/*--------responsive background-color:#102c5a-------*/
+
+@media all and (max-width: 1000px) {
+  #mySidenav,
+  .slinky-theme-default,
+  .menu-toggle {
+    background-color: #102c5a;
+  }
+}
+@media all and (min-width: 1001px) {
+  .header-menu .sublist li:hover > a,
+  .header-menu .sublist li:focus > a,
+  .news-list-homepage .news-item:before {
+    background-color: #102c5a;
+  }
+}
+@media all and (max-width: 991px) {
+  .html-category-page .px_category_page .col-sidebar .px_left_side_category,
+  .html-category-page .px_category_page .col-sidebar .block .title {
+    background-color: #102c5a;
+  }
+}
+/*--------border-color:#102c5a-------*/
+
+.circle--outer,
+.block .tags li,
+.product-tags-all-page li,
+.product-tags-list li,
+.blogpost-page .tags ul li,
+.blog-page .tags ul li,
+.pager li a,
+.pager li span,
+.wishlist-content .update-wishlist-button:hover,
+.wishlist-content .email-a-friend-wishlist-button:hover,
+.cart-collaterals .button-2:hover,
+.cart-collaterals .button-2:focus,
+.estimate-shipping-radio:checked + label,
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default,
+.ui-button,
+html .ui-button.ui-state-disabled:hover,
+html .ui-button.ui-state-disabled:active {
+  border-color: #102c5a;
+}
+/*--------border-color:#102c5a !important------- */
+
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-button:hover,
+.ui-button:focus,
+.px_loginpage-register .buttons button:hover {
+  border-color: #102c5a !important;
+}
+/*--------border-active-color:#102c5a-------*/
+
+.checkbox {
+  --border-active: #102c5a;
+}
+/*--------border-bottom-color:#102c5a-------*/
+
+.px-my-Account ul li > ul.login-list,
+.skltbs-tab-group .skltbs-tab-item .skltbs-tab.skltbs-active {
+  border-bottom-color: #102c5a;
+}
+/*--------outline-color:#102c5a-------*/
+
+.ui-datepicker-calendar .ui-state-active {
+  outline-color: #102c5a;
+}
+/*--------color:#102c5a-------*/
+
+.section-head h2,
+.px_category:hover .category-item h2 a,
+.product-icon button span,
+.primary-btn:hover,
+.secoendry-btn,
+.bestsellers .item-box .buttons button:hover,
+.bestsellers .item-box .buttons button:hover .pi-shopping-bag-1:before,
+.bestsellers .item-box .buttons button:hover .pi-heart:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path1:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path2:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path3:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path4:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path5:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path6:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path7:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path8:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path9:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path10:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path11:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path12:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path13:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path14:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path15:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path16:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path17:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path18:before,
+.bestsellers .item-box .buttons button:hover .pi-compare .path19:before,
+.service_content h3,
+.profile-page .ui-tabs ul li a,
+.px_ex_shipping a,
+.profile-page .profile-info-box .send-pm a:hover,
+.order-details-page .shipments table tbody .view-details a:hover,
+.px_mini_shopping_cart_title h2,
+.data-table a,
+.forum-table a,
+.cart .product a:hover,
+.cart .product a:focus,
+.data-table .product a:hover,
+.data-table .product a:focus,
+.data-table .info a:hover,
+.data-table .info a:focus,
+.cart td.subtotal .discount,
+.cart td.subtotal .discount-additional-info,
+.eu-cookie-bar-notification a,
+.header-links a:hover,
+.header-links a:focus,
+.ui-autocomplete a,
+.ui-autocomplete a:hover,
+.ui-autocomplete a:focus,
+.ui-autocomplete a.ui-state-focus,
+.newsletter-subscribe-button:hover,
+.newsletter-subscribe-button:focus,
+.block .view-all a:hover,
+.block .view-all a:focus,
+.poll .buttons button:hover,
+.poll .buttons button:focus,
+.px_featured .item-box .product-box-add-to-cart-button:hover,
+.px_featured .item-box .product-box-add-to-cart-button:focus,
+.overview .add-to-cart-button:hover,
+.overview .add-to-cart-button:focus,
+.variant-overview .add-to-cart-button:hover,
+.variant-overview .add-to-cart-button:focus,
+.wishlist-content .update-wishlist-button,
+.wishlist-content .email-a-friend-wishlist-button,
+.shopping-cart-page .common-buttons button:hover,
+.shopping-cart-page .common-buttons button:focus,
+.shopping-cart-page .common-buttons .estimate-shipping-button:hover,
+.shopping-cart-page .common-buttons .estimate-shipping-button:focus,
+.product-details-page .overview-buttons .add-to-wishlist-button:hover,
+.product-details-page .overview-buttons .add-to-compare-list-button:hover,
+.product-details-page .overview-buttons .email-a-friend-button:hover,
+.block .list .active > a,
+.block .list a:hover,
+.block .list a:focus,
+.block .tags li a:hover,
+.block .tags li a:focus,
+.product-tags-all-page li a:hover,
+.product-tags-all-page li a:focus,
+.breadcrumb a:hover,
+.breadcrumb a:focus,
+.item-box .product-title a:hover,
+.item-box .product-title a:focus,
+.item-box .tax-shipping-info a,
+.manufacturer-grid .title a:hover,
+.manufacturer-grid .title a:focus,
+.vendor-grid .title a:hover,
+.vendor-grid .title a:focus,
+.product-review-links a:hover,
+.product-review-links a:focus,
+.overview .value a,
+.variant-overview .value a,
+.overview .tax-shipping-info a,
+.variant-overview .tax-shipping-info a,
+.product-essential .full-description span,
+.product-essential .product-collateral .title > span,
+.variant-overview .variant-name,
+.product-specs-box td.spec-group-name,
+.product-reviews-page h1 a,
+.product-review-item .review-info a,
+.product-review-helpfulness .vote,
+.wishlist-content .tax-shipping-info a,
+.wishlist-content .update-wishlist-button:hover,
+.wishlist-content .email-a-friend-wishlist-button:hover,
+.wishlist-page .share-info a:hover,
+.wishlist-page .share-info a:focus,
+.compare-products-table .remove-button:hover,
+.compare-products-table .remove-button:focus,
+.compare-products-table .product-name td a:hover,
+.compare-products-table .product-name td a:focus,
+.email-a-friend-page .title h2,
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a,
+.inputs.accept-consent span,
+.inputs.accept-consent a,
+.return-request-page h1 a,
+.registration-result-page .result,
+.login-page .returning-wrapper .inputs.reversed a:hover,
+.login-page .returning-wrapper .inputs.reversed a:focus,
+.external-auth-association a,
+.add-more-external-records a,
+.recurring-payments .button-2,
+.return-request-list-page a,
+.order-progress li span,
+.shopping-cart-page .checkout-attributes a,
+.shopping-cart-page .tax-shipping-info a,
+.cart-total .order-total,
+.terms-of-service a,
+.cart-collaterals .button-2:hover,
+.cart-collaterals .button-2:focus,
+.cart-collaterals .title,
+.remove-discount-button span.pi-delete:before,
+.remove-gift-card-button span.pi-delete:before,
+.section.order-completed > span,
+.order-completed .details a,
+.opc .allow .step-title .number,
+.opc .back-link a:hover,
+.opc .back-link a:focus,
+.order-details-page .order-overview .order-total strong,
+.order-details-page .download a,
+.order-details-page .tax-shipping-info a,
+.sitemap-page .entity a:hover,
+.sitemap-page .entity a:focus,
+.post-title:hover,
+.post-title:focus,
+.news-title:hover,
+.news-title:focus,
+.blog-page .tags a,
+.blogpost-page .tags a,
+.blog-posts .buttons .read-comments:hover,
+.blog-posts .buttons .read-comments:focus,
+.comment-info a.username:hover,
+.comment-info a.username:focus,
+.news-list-homepage .view-all a:hover,
+.news-list-homepage .view-all a:focus,
+.forum-search-box .advanced a:hover,
+.forum-search-box .advanced a:focus,
+.forums-table-section-title a:hover,
+.forums-table-section-title a:focus,
+.forums-table-section .forum-title a:hover,
+.forums-table-section .forum-title a:focus,
+.forums-table-section .topic-title a:hover,
+.forums-table-section .topic-title a:focus,
+.topic-post a.username:hover,
+.topic-post a.username:focus,
+.topic-post .post-actions .edit-post-button:hover,
+.topic-post .post-actions .edit-post-button:focus,
+.topic-post .post-actions .delete-post-button:hover,
+.topic-post .post-actions .delete-post-button:focus,
+.topic-post .post-actions .post-link-button,
+.private-message-send-page a,
+.private-messages-page td.subject a.pm-unread,
+.latest-posts .topic-title a:hover,
+.latest-posts .topic-title a:focus,
+.downloadable-products-page table tbody .download a:hover,
+.skltbs-tab-group .skltbs-tab-item .skltbs-tab.skltbs-active,
+.px-products-filters h3,
+.pi-caret-down:before,
+.pi-discount:before,
+button.swal2-confirm.primary-btn.swal2-styled:hover,
+button.swal2-cancel.primary-btn.swal2-styled:hover,
+.pi-gift-card:before,
+.pi-menu-3 .path1:before,
+.pi-menu-3 .path2:before,
+.pi-menu-3 .path3:before,
+.pi-menu-3 .path4:before,
+button#check-availability-button:hover,
+.pi-hemberg:before {
+  color: #102c5a;
+}
+/*-------color:#102c5a !important---*/
+
+.ui-datepicker-calendar .ui-state-active,
+.address-list-page .button-2:hover,
+.address-list-page .button-2:focus,
+.order-list-page .button-2:hover,
+.order-list-page .button-2:focus,
+.apply-vendor-page .buttons .inputs .button-2:hover,
+.cart-collaterals #discount-accordion .button-2:hover,
+.cart-collaterals #gift-accordion .button-2:hover,
+.px_category:hover .sub-category-item h2 a,
+.px_manufacturer:hover .manufacturer-item h2 a {
+  color: #102c5a !important;
+}
+/*-------color:#102c5a !important---*/
+
+@media all and (max-width: 1000px) {
+  .header .search-box span.pi-search {
+    color: #102c5a !important;
+  }
+}
+@media all and (min-width: 769px) {
+  .shipment-details-page .tracking-number .tracking-url {
+    color: #102c5a;
+  }
+}
+@media all and (min-width: 1001px) {
+  .mini-shopping-cart .name a:hover,
+  .mini-shopping-cart .name a:focus,
+  .header-menu > ul > li > a:hover,
+  .header-menu > ul > li > a:focus,
+  .header-menu .sublist > li > a {
+    color: #102c5a;
+  }
+}
+@media all and (max-width: 991px) {
+  .html-category-page .px_category_page .col-sidebar .block .view-all a,
+  .html-category-page .px_category_page .col-sidebar .block .view-all a:hover {
+    color: #102c5a;
+  }
+}
+/*-------background-color:#CAD2DF---*/
+
+.px-my-Account ul li > ul.login-list,
+.section-head h2::after,
+.primary-btn:hover,
+.secoendry-btn,
+.bestsellers .item-box .buttons button:hover,
+.px-products-filters,
+.admin-header-links,
+.poll strong,
+.product-specs-box td,
+.tooltip-container,
+.shopping-cart-page .order-progress .active-step span.pi-shopping-cart-2::after,
+.checkout-page.billing-address-page .order-progress .active-step span.pi-home::after,
+.checkout-page.shipping-method-page .order-progress .active-step span.pi-shipped::after,
+.checkout-page.payment-method-page .order-progress .active-step span.pi-credit-card::after,
+.checkout-page.order-confirm-page .order-progress .active-step span.pi-checklist::after,
+.order-progress li span,
+.order-progress li span::after,
+.shipping-method .method-name,
+.payment-method .payment-logo,
+.opc .allow .step-title .number,
+.slick-prev:hover,
+.slick-prev:focus,
+.slick-next:hover,
+.slick-next:focus,
+::selection,
+.px_loginpage-register,
+.cart-collaterals #discount-accordion .button-2:hover,
+.cart-collaterals #gift-accordion .button-2:hover,
+button#check-availability-button:hover,
+.order-progress li::after {
+  background-color: #cad2df;
+}
+/*-------background-color:#CAD2DF !important---*/
+
+.newsletter-subscribe-button:hover,
+.newsletter-subscribe-button:focus,
+.block .view-all a:hover,
+.block .view-all a:focus,
+.poll .buttons button:hover,
+.poll .buttons button:focus,
+.px_featured .item-box .product-box-add-to-cart-button:hover,
+.px_featured .item-box .product-box-add-to-cart-button:focus,
+.overview .add-to-cart-button:hover,
+.overview .add-to-cart-button:focus,
+.variant-overview .add-to-cart-button:hover,
+.variant-overview .add-to-cart-button:focus,
+.wishlist-content .update-wishlist-button,
+.wishlist-content .email-a-friend-wishlist-button,
+.shopping-cart-page .common-buttons button:hover,
+.shopping-cart-page .common-buttons button:focus,
+.shopping-cart-page .common-buttons .estimate-shipping-button:hover,
+.shopping-cart-page .common-buttons .estimate-shipping-button:focus,
+.product-details-page .overview-buttons .add-to-wishlist-button:hover,
+.product-details-page .overview-buttons .add-to-compare-list-button:hover,
+.product-details-page .overview-buttons .email-a-friend-button:hover,
+.address-list-page .button-2:hover,
+.address-list-page .button-2:focus,
+.order-list-page .button-2:hover,
+.order-list-page .button-2:focus,
+.apply-vendor-page .buttons .inputs .button-2:hover,
+button.swal2-confirm.primary-btn.swal2-styled:hover,
+button.swal2-cancel.primary-btn.swal2-styled:hover {
+  background-color: #cad2df !important;
+}
+/*-------responsive-background-color:#CAD2DF---*/
+
+@media all and (min-width: 769px) {
+  .product-list .item-box .buttons .add-to-wishlist-button:hover,
+  .product-list .item-box .buttons .add-to-compare-list-button:hover,
+  .product-list .item-box .buttons .product-box-add-to-cart-button:hover {
+    background-color: #cad2df;
+  }
+}
+@media all and (min-width: 1001px) {
+  .header-menu .sublist li:hover > a {
+    background-color: #cad2df;
+  }
+}
+@media all and (max-width: 480px) {
+  .newsletter-email .newsletter-subscribe-button {
+    background-color: #cad2df;
+  }
+  .newsletter-email .newsletter-subscribe-button.primary-btn:before {
+    border-color: transparent transparent #cad2df;
+  }
+  .newsletter-email .newsletter-subscribe-button.primary-btn:after {
+    border-color: transparent #cad2df transparent transparent;
+  }
+}
+/****** border-color: #CAD2DF   ******/
+
+.main_service_item {
+  border-color: #cad2df;
+}

@@ -1,0 +1,89 @@
+﻿@model MiniShoppingCartModel
+
+
+
+<div id="flyout-cart" class="flyout-cart">
+    <div class="px_mini_shopping_cart_title">
+        <h2>@T("Theme.Phoenix.Mini.Shopping.Cart")</h2>
+        <span class="pi-cancel pi-cart-cancel"></span>
+    </div>
+    <div class="mini-shopping-cart">
+        <div class="px_mini_shopping_cart_item">
+            <div class="count">
+                @if (Model.TotalProducts == 0)
+                {
+                    @T("ShoppingCart.Mini.NoItems") }
+                else
+                {
+                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, $"<a href=\"{Url.RouteUrl("ShoppingCart")}\">{string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts)}</a>"))}
+            </div>
+            @if (Model.TotalProducts > 0)
+            {
+                <div class="px_items_scroll">
+                    <div class="items">
+                        @for (var i = 0; i < Model.Items.Count; i++)
+                        {
+                            var item = Model.Items[i];
+                            <div class="item @(i == 0 ? "first" : null)">
+                                @if (Model.ShowProductImages)
+                                {
+                                    <div class="picture">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
+                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                        </a>
+                                    </div>}
+                                <div class="product">
+                                    <div class="name">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>}
+                                    <div class="price">@T("ShoppingCart.Mini.UnitPrice"): <span>@item.UnitPrice</span></div>
+                                    <div class="quantity">@T("ShoppingCart.Mini.Quantity"): <span>@item.Quantity</span></div>
+
+
+                                </div>
+                            </div>}
+                    </div>
+                </div>}
+
+        </div>
+
+        <div class="px_mini_shopping_cart_total">
+            <div class="px_subtotal-main">
+                <div class="px_subtotal">
+                    <div class="totals">@T("ShoppingCart.Totals.SubTotal"): <strong>@Model.SubTotal</strong></div>
+                    <div class="buttons">
+                        @if (Model.DisplayShoppingCartButton)
+                        {
+                            <button type="button" class="button-1 cart-button primary-btn" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("ShoppingCart.Mini.ViewCart")</button>}
+                        @if (Model.DisplayCheckoutButton)
+                        {
+                            var checkoutUrl = "";
+                            if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
+                            {
+                                checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                            }
+                            else
+                            {
+                                checkoutUrl = Url.RouteUrl("Checkout");
+                            }
+                            <button type="button" class="button-1 checkout-button secoendry-btn" onclick="setLocation('@checkoutUrl')">@T("Checkout.Button")</button>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.px_mini_shopping_cart_title .pi-cart-cancel').click(function () {
+            $('.flyout-cart').removeClass("slideright active");
+            $('.px_cart_overlay').removeClass("overlayadded");
+            $('body').removeClass("overflowhidden");
+        });
+    </script>
+
+</div>
+

@@ -1,0 +1,73 @@
+﻿@using Nop.Core
+@inject IWorkContext workContext
+@model IList<ProductOverviewModel>
+@if (Model.Count > 0)
+{
+    <div class="section-padding related-products-grid product-grid">
+        <div class="section-width">
+            <div class="title section-head">
+                <h2>@T("Products.RelatedProducts")</h2>
+            </div>
+            <div class="item-grid related-products-slider">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        @await Html.PartialAsync("_ProductBox", item)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<script asp-location="Footer">
+    $(".related-products-slider").slick({
+        infinite: true,
+        autoplay: false,
+        dots: false,
+        arrows: true,
+        slidesToShow: 5,
+        slidesToScroll: -1,
+        rtl: @((await workContext.GetWorkingLanguageAsync()).Rtl.ToString().ToLower()),
+        slidesToScroll: 1
+        ,
+        responsive: [{
+            breakpoint: 1381,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 1025,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+            },
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: -1,
+                    slidesToScroll: 1
+                }
+            },
+            {
+            breakpoint: 769,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }]
+    })
+</script>

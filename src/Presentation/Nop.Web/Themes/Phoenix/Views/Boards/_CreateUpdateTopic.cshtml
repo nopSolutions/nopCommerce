@@ -1,0 +1,84 @@
+﻿@model EditForumTopicModel
+@using Nop.Core.Domain.Forums;
+@{
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-edit-page");
+}
+
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
+<div class="page forum-edit-page section-width">
+    <div class="section-head">
+        @if (Model.IsEdit)
+        {
+            <h2>@T("Forum.EditTopic")</h2>
+        }
+        else
+        {
+            <h2>@T("Forum.NewTopic")</h2>
+        }
+    </div>
+    <div class="page-body">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ForumId" />
+
+        <div class="px_private_message_send">
+            <div class="inputs">
+                <label>@T("Forum.ForumName"):</label>
+                <strong>@Model.ForumName</strong>
+            </div>
+            <div class="px_register_input">
+                <div class="inputs">
+                    <div class="px_input_field">
+                        <span class="pi-clipboard px_icon"></span>
+                        <input asp-for="Subject" class="forum-topic-title-text" placeholder="@T("Forum.TopicTitle")" />
+                    </div>
+                    <span asp-validation-for="Subject"></span>
+                </div>
+            </div>
+            <div class="px_register_input">
+                <div class="inputs">
+                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                    {
+                        <nop-bb-code-editor asp-for="Text" />
+                    }
+                    <textarea asp-for="Text" class="forum-post-text"></textarea>
+                    <span asp-validation-for="Text"></span>
+                </div>
+            </div>
+            @if (Model.IsCustomerAllowedToSetTopicPriority)
+            {
+                <div class="px_register_input">
+                    <div class="inputs">
+                        <label>@T("Forum.Priority"):</label>
+                        <div class="px_input_field">
+                            <span class="pi-plus-1  px_icon"></span>
+                            <select asp-for="TopicTypeId" asp-items="@(new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))"></select>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <div class="inputs reversed">
+                    <label class="checkbox path" asp-for="Subscribed">
+                        <input type="checkbox" asp-for="Subscribed" />
+                        <svg viewBox="0 0 21 21">
+                            <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                        </svg>
+                        @T("Forum.NotifyWhenSomeonePostsInThisTopic")
+                    </label>
+                </div>
+            }
+            @if (Model.DisplayCaptcha)
+            {
+                <nop-captcha />
+            }
+            <div class="buttons">
+                <button type="submit" class="button-1 submit-topic-button primary-btn">@T("Forum.Submit")</button>
+                <button type="button" class="button-2 cancel-topic-button primary-btn" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')">@T("Forum.Cancel")</button>
+            </div>
+        </div>
+
+    </div>
+</div>

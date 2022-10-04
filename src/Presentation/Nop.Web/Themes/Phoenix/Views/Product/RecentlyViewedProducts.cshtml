@@ -1,0 +1,31 @@
+﻿@model IList<ProductOverviewModel>
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-recently-viewed-products-page");
+}
+<div class="page recently-viewed-products-page">
+    <div class="section-head">
+        <h2>@T("Products.RecentlyViewedProducts")</h2>
+    </div>
+    <div class="page-body">
+        <div class="px-category-bg">
+            @if (Model.Count > 0)
+            {
+                <div class="product-grid">
+                    <div class="item-grid px_category_product">
+                        @foreach (var product in Model)
+                        {
+                            <div class="item-box">
+                                @await Html.PartialAsync("_ProductBox", product)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+﻿@model SpecificationFilterModel
+
+<div class="product-filter product-spec-filter block">
+    <div class="filter-title title">
+        <h2 class="px_filter_block_title">@T("Filtering.SpecificationFilter")</h2>
+    </div>
+    <div class="filter-content listbox">
+        @foreach (var attr in Model.Attributes)
+        {
+        <div class="block group product-spec-group @(attr.Values.Any(x => !string.IsNullOrEmpty(x.ColorSquaresRgb)) ? "product-spec-color" : null )">
+            <div class="name title">
+                <h4>@attr.Name</h4>
+            </div>
+            <div class="listbox">
+                @foreach (var value in attr.Values)
+                {
+                    <div class="item @(!string.IsNullOrEmpty(value.ColorSquaresRgb) ? "color-item" : null)">
+                        @if (string.IsNullOrEmpty(value.ColorSquaresRgb))
+                        {
+
+                            <label class="checkbox path" for="attribute-option-@value.Id">
+                                <input id="attribute-option-@value.Id" type="checkbox" data-option-id="@value.Id" checked="@value.Selected" />
+                                <svg viewBox="0 0 21 21">
+                                    <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                </svg>
+                                @value.Name
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="checkbox path attribute-squares color-squares" for="attribute-option-@value.Id">
+                                <input id="attribute-option-@value.Id" type="checkbox" data-option-id="@value.Id" checked="@value.Selected" />
+                                <svg viewBox="0 0 21 21" class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">
+                                    <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                                </svg>
+                                @value.Name
+                            </label>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var $optionEls = $('[data-option-id]');
+        $optionEls.on('change', function () {
+            CatalogProducts.getProducts();
+        });
+
+        $(CatalogProducts).on('before', function (e) {
+            var selectedOptions = $.map($optionEls, function (el) {
+                var $optionEl = $(el);
+                if ($optionEl.is(':checked')) return $optionEl.data('option-id');
+                return null;
+            });
+
+            if (selectedOptions && selectedOptions.length > 0) {
+                e.payload.urlBuilder
+                    .addParameter('specs', selectedOptions.join(','));
+            }
+        });
+    });
+</script>

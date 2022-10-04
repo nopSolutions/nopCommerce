@@ -1,0 +1,69 @@
+﻿@model ProductEmailAFriendModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.ProductName);
+    //page class
+    NopHtml.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
+    NopHtml.AppendPageCssClassParts("html-email-a-friend-page");
+}
+<div class="page email-a-friend-page section-width">
+    <div class="section-head">
+        <h2>@T("Products.EmailAFriend.Title")</h2>
+    </div>
+    <div class="page-body">
+        <div class="title">
+            <h2><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
+        </div>
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="ProductEmailAFriend" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="px_register_input">
+                            <div class="inputs">
+                                <div class="px_input_field">
+                                    <span class="pi-mail-2 px_icon"></span>
+                                    <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Products.EmailAFriend.FriendEmail.Hint")" />
+                                </div>
+                                <nop-required />
+                                <span asp-validation-for="FriendEmail"></span>
+                            </div>
+                        </div>
+                        <div class="px_register_input">
+                            <div class="inputs">
+                                <div class="px_input_field">
+                                    <span class="pi-mail-2 px_icon"></span>
+                                    <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Products.EmailAFriend.YourEmailAddress.Hint")" />
+                                </div>
+                                <nop-required />
+                                <span asp-validation-for="YourEmailAddress"></span>
+                            </div>
+                        </div>     
+                        <div class="px_register_input">
+                            <div class="inputs">
+                            <span asp-validation-for="PersonalMessage"></span>
+                            <textarea asp-for="PersonalMessage" class="your-email" placeholder="@T("Products.EmailAFriend.PersonalMessage.Hint")"></textarea>                            
+                        </div>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" name="send-email" class="button-1 send-email-a-friend-button primary-btn">@T("Products.EmailAFriend.Button")</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>

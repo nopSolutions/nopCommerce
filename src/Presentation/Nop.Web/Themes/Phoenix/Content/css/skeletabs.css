@@ -1,0 +1,254 @@
+/*! Skeletabs v2.1.1: bundled themes and effects | MIT License */
+
+.skltbs-theme-light .skltbs-tab-group,
+.skltbs-theme-dark .skltbs-tab-group {
+  margin: 0;
+  padding: 0 25px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+.skltbs-theme-light .skltbs-tab-group::after,
+.skltbs-theme-dark .skltbs-tab-group::after {
+	content: "";
+	clear: both;
+	display: table
+}
+.skltbs-theme-light .skltbs-tab-item:last-child button,
+.skltbs-theme-dark .skltbs-tab-item:last-child button {
+	margin: 0;
+}
+.skltbs-theme-light .skltbs-tab,
+.skltbs-theme-dark .skltbs-tab {
+	display: block;
+	border: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	background: transparent;
+	padding: 0;
+	margin: 0 40px 0 0;
+	font-size: 20px;
+	font-weight: 600;
+	color: #000;
+	text-transform: uppercase;
+}
+.skltbs-theme-light .skltbs-tab:disabled,
+.skltbs-theme-dark .skltbs-tab:disabled {
+	background: transparent;
+	cursor: not-allowed;
+	-ms-touch-action: none;
+	touch-action: none
+}
+.skltbs-theme-light .skltbs-panel,
+.skltbs-theme-dark .skltbs-panel {
+	padding: 15px 25px;
+}
+.skltbs-theme-light .skltbs-panel-heading,
+.skltbs-theme-dark .skltbs-panel-heading {
+	margin-top: 3px
+}
+.skltbs-theme-light .skltbs-panel-heading:first-child,
+.skltbs-theme-dark .skltbs-panel-heading:first-child {
+	margin-top: 0
+}
+.skltbs-theme-light .skltbs-panel-heading .skltbs-tab,
+.skltbs-theme-dark .skltbs-panel-heading .skltbs-tab {
+	width: 100%
+}
+.skltbs-theme-light {
+	color: #333
+}
+.skltbs-theme-light .skltbs-tab:focus {
+	outline: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.skltbs-theme-light .skltbs-tab:disabled {
+	color: #ccc;
+	background: transparent
+}
+.skltbs-theme-light .skltbs-tab.skltbs-active:focus,
+.skltbs-theme-light .skltbs-tab.skltbs-active:hover {
+	border: 0;
+	color: #102c5a;
+	box-shadow: none;
+}
+.skltbs-theme-light .skltbs-panel {
+	background-color: #fff;
+	border-top: 1px solid #DEE2E6;
+    text-align: left;
+}
+.skltbs-theme-light .skltbs-panel:focus {
+	outline: 0;
+	border-color: #ddd;
+}
+.skltbs-theme-dark {
+	color: #fff
+}
+.skltbs-theme-dark .skltbs-tab {
+	background: #222;
+}
+.skltbs-theme-dark .skltbs-tab:focus {
+	outline: 0;
+	-webkit-box-shadow: inset 0 0 0 2px #222;
+	box-shadow: inset 0 0 0 2px #222;
+}
+.skltbs-theme-dark .skltbs-tab:disabled {
+	color: #fff;
+	background: transparent
+}
+.skltbs-theme-dark .skltbs-tab.skltbs-active {
+	background: #2b8ff5
+}
+.skltbs-theme-dark .skltbs-tab.skltbs-active:focus,
+.skltbs-theme-dark .skltbs-tab.skltbs-active:hover {
+	border-color: #000
+}
+.skltbs-theme-dark .skltbs-panel {
+	background-color: #1a1b1c;
+	border: 2px solid #2d2e2f
+}
+.skltbs-theme-dark .skltbs-panel:focus {
+	outline: 0;
+	border-color: #085cb2
+}
+.skltbs-mode-tabs .skltbs-panel-group {
+	position: relative
+}
+.skltbs-mode-tabs.use-fade .skltbs-panel {
+	position: relative;
+	-webkit-transition: opacity 500ms;
+	transition: opacity 500ms
+}
+.skltbs-mode-tabs.use-fade .skltbs-leave {
+	position: absolute;
+	top: 0;
+	display: block !important;
+	opacity: 1
+}
+.skltbs-mode-tabs.use-fade .skltbs-leave-active {
+	opacity: 0
+}
+.skltbs-mode-tabs.use-fade .skltbs-enter {
+	opacity: 0
+}
+.skltbs-mode-tabs.use-fade .skltbs-enter-active {
+	opacity: 1
+}
+.skltbs-mode-tabs.use-fade-scale .skltbs-panel {
+	position: relative;
+	-webkit-transition: 500ms;
+	transition: 500ms;
+	-webkit-transition-property: opacity, -webkit-transform;
+	transition-property: opacity, -webkit-transform;
+	transition-property: opacity, transform;
+	transition-property: opacity, transform, -webkit-transform
+}
+.skltbs-mode-tabs.use-fade-scale .skltbs-leave {
+	position: absolute;
+	top: 0;
+	display: block !important;
+	opacity: 1;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1)
+}
+.skltbs-mode-tabs.use-fade-scale .skltbs-leave-active {
+	opacity: 0;
+	-webkit-transform: scale(0.95);
+	-ms-transform: scale(0.95);
+	transform: scale(0.95)
+}
+.skltbs-mode-tabs.use-fade-scale .skltbs-enter {
+	opacity: 0;
+	-webkit-transform: scale(0.95);
+	-ms-transform: scale(0.95);
+	transform: scale(0.95)
+}
+.skltbs-mode-tabs.use-fade-scale .skltbs-enter-active {
+	opacity: 1;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1)
+}
+.skltbs-mode-tabs.use-drop .skltbs-panel {
+	position: relative;
+	-webkit-transition: 500ms;
+	transition: 500ms;
+	-webkit-transition-property: opacity, -webkit-transform;
+	transition-property: opacity, -webkit-transform;
+	transition-property: opacity, transform;
+	transition-property: opacity, transform, -webkit-transform
+}
+.skltbs-mode-tabs.use-drop .skltbs-leave {
+	position: absolute;
+	top: 0;
+	display: block !important;
+	opacity: 1;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0)
+}
+.skltbs-mode-tabs.use-drop .skltbs-leave-active {
+	opacity: 0;
+	-webkit-transform: translate3d(0, 50%, 0);
+	transform: translate3d(0, 50%, 0)
+}
+.skltbs-mode-tabs.use-drop .skltbs-enter {
+	opacity: 0;
+	-webkit-transform: scale(0.5);
+	-ms-transform: scale(0.5);
+	transform: scale(0.5)
+}
+.skltbs-mode-tabs.use-drop .skltbs-enter-active {
+	opacity: 1;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1)
+}
+.skltbs-mode-tabs.use-rotate .skltbs-panel-group {
+	overflow: hidden
+}
+.skltbs-mode-tabs.use-rotate .skltbs-panel {
+	position: relative;
+	-webkit-transition: 500ms;
+	transition: 500ms;
+	-webkit-transition-property: opacity, -webkit-transform;
+	transition-property: opacity, -webkit-transform;
+	transition-property: opacity, transform;
+	transition-property: opacity, transform, -webkit-transform
+}
+.skltbs-mode-tabs.use-rotate .skltbs-leave {
+	position: absolute;
+	top: 0;
+	display: block !important;
+	opacity: 1;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0)
+}
+.skltbs-mode-tabs.use-rotate .skltbs-leave-active {
+	opacity: 0;
+	-webkit-transform: translate3d(-50%, 0, 0);
+	transform: translate3d(-50%, 0, 0)
+}
+.skltbs-mode-tabs.use-rotate .skltbs-enter {
+	opacity: 0;
+	-webkit-transform: translate3d(50%, 0, 0);
+	transform: translate3d(50%, 0, 0)
+}
+.skltbs-mode-tabs.use-rotate .skltbs-enter-active {
+	opacity: 1;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0)
+}
+.skltbs-tab-group .skltbs-tab-item .skltbs-tab.skltbs-active {
+  padding: 0 0 14px 0;
+  color: #102c5a;
+  border-bottom: 2px solid #102c5a;
+}

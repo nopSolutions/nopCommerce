@@ -1,0 +1,151 @@
+﻿@model CustomerRewardPointsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-reward-points-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+}
+<div class="page account-page reward-points-page">
+    <div class="page-title section-head">
+        <h2>@T("Account.MyAccount") - @T("Account.RewardPoints")</h2>
+    </div>
+    <div class="page-body">
+        <div class="reward-points-overview">
+            <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+            @if (Model.MinimumRewardPointsBalance > 0)
+            {
+                <div class="min-balance">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+            }
+        </div>
+        <div class="section reward-points-history">
+            <div class="title">
+                <strong>@T("RewardPoints.History")</strong>
+            </div>
+            @if (Model.RewardPoints.Count > 0)
+            {
+                <div class="reward-points-history-desktop">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="20%"/>
+                                <col width="10%"/>
+                                <col width="10%"/>
+                                <col/>
+                                <col width="20%"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="date">
+                                    @T("RewardPoints.Fields.CreatedDate")
+                                </th>
+                                <th class="points">
+                                    @T("RewardPoints.Fields.Points")
+                                </th>
+                                <th class="points-balance">
+                                    @T("RewardPoints.Fields.PointsBalance")
+                                </th>
+                                <th class="message">
+                                    @T("RewardPoints.Fields.Message")
+                                </th>
+                                <th class="endDate">
+                                    @T("RewardPoints.Fields.EndDate")
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.RewardPoints.Count; i++)
+                            {
+                                var item = Model.RewardPoints[i];
+                                <tr @(i%2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="date">
+                                        @item.CreatedOn
+                                    </td>
+                                    <td class="points">
+                                        @item.Points
+                                    </td>
+                                    <td class="points-balance">
+                                        @item.PointsBalance
+                                    </td>
+                                    <td class="message">
+                                        @item.Message
+                                    </td>
+                                    <td class="endDate">
+                                        @item.EndDate
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="px-reward-points-mobile">
+                    <div class="px-reward-points-mobile-main-section">
+                        <div class="px-reward-points-mobile-main-data">
+                            <div class="px-reward-points-date-mobile">
+                                @for (var i = 0; i < Model.RewardPoints.Count; i++)
+                                {
+                                    var item = Model.RewardPoints[i];
+                                     <div class="px-reward-points-mobile-box">                                    
+                                            <div class="px-reward-points-mobile-box-data">
+                                            <div class="date px-reward-points-mobile-data">
+                                                <label class="date px-reward-points-mobile-title">
+                                                    @T("RewardPoints.Fields.CreatedDate") :
+                                                </label>
+                                                @item.CreatedOn
+                                            </div>
+                                            <div class="points px-reward-points-mobile-data">
+                                                <label class="points px-reward-points-mobile-title">
+                                                    @T("RewardPoints.Fields.Points") :
+                                                </label>
+                                                @item.Points
+                                            </div>
+                                            <div class="points-balance px-reward-points-mobile-data">
+                                                <label class="points-balance px-reward-points-mobile-title">
+                                                    @T("RewardPoints.Fields.PointsBalance") :
+                                                </label>
+                                                @item.PointsBalance
+                                            </div>
+                                            <div class="message px-reward-points-mobile-data">
+                                                <label class="message px-reward-points-mobile-title">
+                                                    @T("RewardPoints.Fields.Message") :
+                                                </label>
+                                                @item.Message
+                                            </div>
+                                            <div class="endDate px-reward-points-mobile-data">
+                                                <label class="endDate px-reward-points-mobile-title">
+                                                    @T("RewardPoints.Fields.EndDate") :
+                                                </label>
+                                                @item.EndDate
+                                            </div>                                       
+                                            </div>
+                                    </div>
+                                 }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                var pager = await Html.PagerAsync(Model.PagerModel);
+                if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("RewardPoints.NoHistory")
+                </div>
+            }
+        </div>
+    </div>
+</div>

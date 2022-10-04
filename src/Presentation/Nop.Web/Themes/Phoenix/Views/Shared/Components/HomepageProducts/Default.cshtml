@@ -1,0 +1,62 @@
+﻿@model IList<ProductOverviewModel>
+@using Nop.Core
+@inject IWorkContext workContext
+@if (Model.Count > 0)
+{
+<div class="section-padding section-bg product-grid home-page-product-grid ">
+    <div class="section-width">
+        <div class="section-head title">
+            <h2>@T("Homepage.Products")</h2>
+        </div>
+        <div class="item-grid px_featured">
+            @foreach (var item in Model)
+            {
+<div class="item-box">
+    @await Html.PartialAsync("_ProductBox", item)
+</div>                }
+        </div>
+    </div>
+</div>}
+
+<script asp-location="Footer">
+    $(".px_featured").slick({
+        infinite: true,
+        autoplay: false,
+        dots: false,
+        arrows: true,
+        slidesToShow: 5,
+        slidesToScroll: -1,
+        rtl: @((await workContext.GetWorkingLanguageAsync()).Rtl.ToString().ToLower()),
+        slidesToScroll: 1
+        ,
+        responsive: [{
+            breakpoint: 1441,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 1025,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 769,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }, {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: -1,
+                slidesToScroll: 1
+            }
+        }]
+    })
+</script>

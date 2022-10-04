@@ -1,0 +1,57 @@
+﻿@model SendPrivateMessageModel
+@{    
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.SendPM").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-send-page");
+}
+<form asp-route="SendPM" method="post">
+    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    <div class="page private-messages private-message-send-page section-width">
+        <div class="section-head">
+            <h2>@T("PrivateMessages.Send.PostMessage")</h2>
+        </div>
+        <div class="page-body">
+            <input type="hidden" asp-for="ToCustomerId" />
+            <input type="hidden" asp-for="ReplyToMessageId"/>
+                <div class="px_private_message_send">
+                    <div class="inputs">
+                        <label>@T("PrivateMessages.Send.To")</label>
+                        @if (Model.AllowViewingToProfile)
+                        {
+                            <a href="@Url.RouteUrl("CustomerProfile", new {id = Model.ToCustomerId})">@(Model.CustomerToName)</a>
+                        }
+                        else
+                        {
+                            <span>@Model.CustomerToName</span>
+                        }
+                    </div>
+                    <div class="px_register_input">
+                        <div class="inputs">
+                            <div class="px_input_field">
+                                <span class="pi-clipboard px_icon"></span>
+                                <input asp-for="Subject" class="pm-title-text" placeholder="@T("Theme.Phoenix.PrivateMessages.Send.Subject")" />
+                            </div>                        
+                            <span asp-validation-for="Subject"></span>
+                        </div>
+                    </div>
+                    <div class="px_register_input">
+                        <div class="inputs message">
+                            <nop-bb-code-editor asp-for="Message" />
+                            <div class="px_input_field">
+                                <textarea asp-for="Message" class="bb-editor-text" placeholder="@T("Theme.Phoenix.PrivateMessages.Send.Message")" ></textarea>
+                            </div>
+                            <span asp-validation-for="Message"></span>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="button-1 send-pm-button primary-btn">@T("PrivateMessages.Send.SendButton")</button>
+                        <button type="button" class="button-2 cancel-pm-button primary-btn" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.Send.CancelButton")</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+</form>

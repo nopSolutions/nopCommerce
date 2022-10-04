@@ -1,0 +1,77 @@
+﻿@model IList<ManufacturerModel>
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-manufacturer-list-page");
+}
+<div class="page manufacturer-list-page">
+    <div class="page-title">
+        <h1>@T("Manufacturers.List")</h1>
+    </div>
+    <div class="page-body">
+        <div class="manufacturer-grid">
+            <div class="item-grid px_category_product">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box px_manufacturer">
+                        <div class="manufacturer-item">
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    <div class="px_category_hover">
+                                    </div>
+                                </a>
+                            </div>
+                            <h2 class="title">
+                                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script asp-location="Footer">
+    $(".px_manufacturer").slick({
+    infinite: !0,
+    slidesToShow: 4,
+    slidesToScroll: -1,
+    slidesToScroll: 1,
+    responsive: [{
+        breakpoint: 1381,
+        settings: {
+            slidesToShow: 3,
+            slidesToScroll: -1,
+            slidesToScroll: 1
+        }
+    }, {
+        breakpoint: 1025,
+        settings: {
+            slidesToShow: 3,
+            slidesToScroll: -1,
+            slidesToScroll: 1
+        }
+    }, {
+        breakpoint: 769,
+        settings: {
+            slidesToShow: 2,
+            slidesToScroll: -1,
+            slidesToScroll: 1
+        }
+    }, {
+        breakpoint: 576,
+        settings: {
+            slidesToShow: 1,
+            slidesToScroll: -1,
+            slidesToScroll: 1
+        }
+    }]
+    })
+</script>*@

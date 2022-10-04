@@ -1,0 +1,80 @@
+.slinky-menu {
+  transform: translateZ(0);
+}
+.slinky-menu > ul {
+  left: 0;
+  position: relative;
+  transform: translateZ(0);
+}
+.slinky-menu ul,
+.slinky-menu li {
+  list-style: none;
+  margin: 0;
+}
+.slinky-menu ul {
+  width: 100%;
+}
+.slinky-menu a {
+  align-items: center;
+  display: flex;
+}
+.slinky-menu a span {
+  flex: 1;
+  line-height: 1.4;
+}
+.slinky-menu li ul {
+  display: none;
+  left: 100%;
+  position: absolute;
+  top: 0;
+}
+.slinky-menu .header {
+  display: flex;
+}
+.slinky-menu .header .title {
+  flex: 1;
+  line-height: 1.4;
+  margin: 0;
+  order: 1;
+}
+.slinky-theme-default {
+  background: #f6f7f8;
+}
+.slinky-theme-default .title {
+    color: #333;
+    padding: 1em;
+}
+.slinky-theme-default li {
+  line-height: 1;
+}
+.slinky-theme-default a:not(.back) {
+  color: #333;
+  padding: 1em;
+}
+.slinky-theme-default a:not(.back):hover {
+  background: rgba(90, 200, 250, 0.25);
+}
+.slinky-theme-default a:not(.back):active {
+  background: rgba(90, 200, 250, 0.5);
+}
+.slinky-theme-default .back::before {
+  content: "\e954";
+  font-family: 'phoniex-icon' !important;
+  font-size: 14px;
+  color: #fff;
+}
+.slinky-theme-default .next::after {
+  margin-left: 1em;
+}
+.slinky-theme-default .back::before {
+  padding: 1em;
+  transform: scaleX(-1);
+}
+.slinky-theme-default .next:hover::after,
+.slinky-theme-default .back:hover::before {
+  opacity: 0.75;
+}
+.slinky-theme-default .next:active::after,
+.slinky-theme-default .back:active::before {
+  opacity: 1;
+}

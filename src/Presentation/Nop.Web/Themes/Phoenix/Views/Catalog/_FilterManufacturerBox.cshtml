@@ -1,0 +1,44 @@
+﻿@model ManufacturerFilterModel
+
+<div class="product-filter product-manufacturer-filter block">
+    <div class="filter-title title">
+        <h2 class="px_filter_block_title">@T("Filtering.ManufacturerFilter")</h2>
+    </div>
+    <div class="filter-content listbox">
+        <ul class="group product-manufacturer-group">
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+            <li class="item">
+                <label for="attribute-manufacturer-@manufacturer.Value" class="checkbox path">
+                    <input id="attribute-manufacturer-@manufacturer.Value" type="checkbox" data-manufacturer-id="@manufacturer.Value" checked="@manufacturer.Selected" />
+                    <svg viewBox="0 0 21 21">
+                        <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                    </svg>
+                    @manufacturer.Text
+                </label>
+            </li>
+            }
+        </ul>
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var $msEls = $('[data-manufacturer-id]');
+        $msEls.on('change', function () {
+            CatalogProducts.getProducts();
+        });
+
+        $(CatalogProducts).on('before', function (e) {
+            var selectedMs = $.map($msEls, function (el) {
+                var $mEl = $(el);
+                if ($mEl.is(':checked')) return $mEl.data('manufacturer-id')
+                return null;
+            });
+
+            if (selectedMs && selectedMs.length > 0) {
+                e.payload.urlBuilder
+                    .addParameter('ms', selectedMs.join(','));
+            }
+        });
+    });
+</script>

@@ -1,0 +1,101 @@
+﻿@model IList<PollModel>
+@{
+    int count = 1;
+}
+
+@if (Model.Count > 0)
+{
+    <div class="home-page-polls section-padding section-bg">
+        <div class="section-head title">
+            <h2>@T("Polls.Title")</h2>
+        </div>
+        @foreach (var poll in Model)
+        { 
+            <div class="poll px_poll" id="poll-block-@(poll.Id)">
+            <strong class="poll-display-text">@poll.Name</strong>
+
+
+                @if (poll.AlreadyVoted)
+                {
+                    <ul class="poll-results">
+                        @foreach (var item in poll.Answers)
+                        {
+                            <li class="answer">
+                                @string.Format(T("Polls.VotesResultLine").Text, item.Name, item.NumberOfVotes, item.PercentOfTotalVotes.ToString("0.0"))
+                            </li>
+                        }
+                        <span class="poll-total-votes">@string.Format(T("Polls.TotalVotes").Text, poll.TotalVotes)</span>
+                    </ul> 
+                }
+                 else
+                 {
+                    <ul class="poll-options">
+                        @foreach (var item in poll.Answers)
+                        {
+                        <li class="answer">
+                            <label for="pollanswers-@(item.Id)">
+                                <input id="pollanswers-@(item.Id)" type="radio" name="pollanswers-@(poll.Id)" value="@item.Id" />
+                                <div class="circle">
+                                    <div class="circle--inner circle--inner__1"></div>
+                                    <div class="circle--inner circle--inner__2"></div>
+                                    <div class="circle--inner circle--inner__3"></div>
+                                    <div class="circle--inner circle--inner__4"></div>
+                                    <div class="circle--inner circle--inner__5"></div>
+                                    <div class="circle--outer"></div>
+                                </div>
+                                @item.Name
+                            </label>
+                        </li>
+                        }
+                        <div class="buttons">
+                            <button type="button" id="vote-poll-@(poll.Id)" class="button-2 vote-poll-button primary-btn">@T("Polls.Vote")</button>
+                            <span id="poll-voting-progress-@(poll.Id)" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+                        </div>
+                        <div class="poll-vote-error" id="block-poll-vote-error-@(poll.Id)" style="display:none"></div>
+                    </ul>
+
+
+                   <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $('#vote-poll-@(poll.Id)').on('click', function () {
+                                var pollAnswerId = $("input:radio[name=pollanswers-@(poll.Id)]:checked").val();
+                                if (typeof (pollAnswerId) == 'undefined') {
+                                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Polls.SelectAnswer").Text))');
+                                }
+                                else {
+                                    var voteProgress = $("#poll-voting-progress-@(poll.Id)");
+                                    voteProgress.show();
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.RouteUrl("PollVote"))",
+                                        data: {
+                                            "pollAnswerId": pollAnswerId
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.error) {
+                                                $("#block-poll-vote-error-@(poll.Id)").html(data.error);
+                                                $('#block-poll-vote-error-@(poll.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
+                                            }
+                                            if (data.html) {
+                                                $("#poll-block-@(poll.Id)").replaceWith(data.html);
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert('Failed to vote.');
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            voteProgress.hide();
+                                        }
+                                    });
+                                }
+                                return false;
+                            });
+                        });
+                    </script>
+                    }
+        </div>
+            count++;
+        }  
+    </div>
+}

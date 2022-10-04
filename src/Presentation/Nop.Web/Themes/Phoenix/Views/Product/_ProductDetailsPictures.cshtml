@@ -1,0 +1,294 @@
+﻿@model ProductDetailsModel
+@using Nop.Core.Domain.Common
+@using Nop.Core
+@inject IWorkContext workContext
+@inject CommonSettings commonSettings
+@{ 
+    <link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
+    <script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
+
+    <link rel="stylesheet" href="/Themes/Phoenix/Content/fancybox/jquery.fancybox.css" />
+    <script asp-exclude-from-bundle="true" src="/Themes/Phoenix/Content/fancybox/jquery.fancybox.js" asp-location="Footer"></script>
+    <script asp-exclude-from-bundle="true" src="~/Themes/Phoenix/Content/js/xzoom.min.js" asp-location="Footer"></script>
+
+    <link rel="stylesheet" href="~/Themes/Phoenix/Content/css/xzoom.css" />
+}
+
+
+<div class="gallery">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
+    <div class="picture" id="xzoom-@Model.Id">
+        @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count > 0)
+        {            
+            <img class="xzoom" id="xzoom-fancy-@Model.Id" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" xoriginal="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />           
+         }
+        else
+        {
+            <img class="xzoom" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" xoriginal="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+        }
+    </div>
+    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+    {
+        <div class="picture-thumbs px-product-thumb-slider" id="thumb-@Model.Id">           
+            @foreach (var picture in Model.PictureModels)
+            {
+                <a class="thumb-item"  href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                    <img class="xzoom-gallery" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" xpreview="@picture.FullSizeImageUrl" />
+                </a>
+             }
+        </div>
+        @if (Model.PictureModels.Count > 4)
+            {
+                <script asp-location="Footer">
+                    $(".px-product-thumb-slider").slick({
+                    infinite: !0,
+                    slidesToShow: 4,  
+                    slidesToScroll: -1,
+                    rtl: @((await workContext.GetWorkingLanguageAsync()).Rtl.ToString().ToLower()),
+                    slidesToScroll: 1,
+                        responsive: [{
+                            breakpoint: 1025,
+                            settings: {
+                                slidesToShow: 4,
+                                vertical: false,
+                                verticalSwiping: false,
+                                slidesToScroll: -1,
+                                slidesToScroll: 1
+                            }
+                        }, {
+                            breakpoint: 769,
+                            settings: {
+                                slidesToShow: 4,
+                                vertical: false,
+                                verticalSwiping: false,
+                                slidesToScroll: -1,
+                                slidesToScroll: 1
+                            }
+                        }, {
+                            breakpoint: 576,
+                            settings: {
+                                slidesToShow: 3,
+                                vertical: false,
+                                verticalSwiping: false,
+                                slidesToScroll: -1,
+                                slidesToScroll: 1
+                            }
+                        },{
+                            breakpoint: 400,
+                            settings: {
+                                slidesToShow: 2,
+                                vertical: false,
+                                verticalSwiping: false,
+                                slidesToScroll: -1,
+                                slidesToScroll: 1
+                            }
+                        }]
+                    });
+                    </script> 
+            }
+        }
+        else
+        {
+            if (Model.PictureModels.Count > 1)
+            {
+            <div class="picture-thumbs px-product-thumb-slider">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    <a class="thumb-item"  href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                        <img class="xzoom-gallery" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" xpreview="@picture.FullSizeImageUrl" />
+                    </a>
+                }
+            </div>
+            @if (Model.PictureModels.Count > 4)
+            {
+                <script asp-location="Footer">
+            $(".px-product-thumb-slider").slick({
+            infinite: !0,
+            slidesToShow: 4,  
+            slidesToScroll: -1,
+            rtl: @((await workContext.GetWorkingLanguageAsync()).Rtl.ToString().ToLower()),
+            slidesToScroll: 1,
+                responsive: [{
+                    breakpoint: 1025,
+                    settings: {
+                        slidesToShow: 4,
+                        vertical: false,
+                        verticalSwiping: false,
+                        slidesToScroll: -1,
+                        slidesToScroll: 1
+                    }
+                }, {
+                    breakpoint: 769,
+                    settings: {
+                        slidesToShow: 4,
+                        vertical: false,
+                        verticalSwiping: false,
+                        slidesToScroll: -1,
+                        slidesToScroll: 1
+                    }
+                }, {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 3,
+                        vertical: false,
+                        verticalSwiping: false,
+                        slidesToScroll: -1,
+                        slidesToScroll: 1
+                    }
+                },{
+                    breakpoint: 400,
+                    settings: {
+                        slidesToShow: 2,
+                        vertical: false,
+                        verticalSwiping: false,
+                        slidesToScroll: -1,
+                        slidesToScroll: 1
+                    }
+                }]
+            });
+            </script>
+             }   
+        }
+     }
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
+</div>
+
+<script asp-location="Footer">
+    (function ($) {
+        $(document).ready(function () {
+           $('.xzoom, .xzoom-gallery').xzoom({ title: true, tint: '#222', Xoffset: 15 });
+         //  $('.xzoom, .xzoom-gallery').xzoom({ position: '#xzoom-id', tint: '#222' });
+         //   $('.xzoom, .xzoom-gallery').xzoom({ position: 'lens', lensShape: 'circle', sourceClass: 'xzoom-hidden' });
+
+
+            //Integration with hammer.js
+            var isTouchSupported = 'ontouchstart' in window;
+
+            if (isTouchSupported) {
+                //If touch device
+                $('.xzoom, .xzoom2, .xzoom3, .xzoom4, .xzoom5').each(function () {
+                    var xzoom = $(this).data('xzoom');
+                    xzoom.eventunbind();
+                });
+
+                $('.xzoom, .xzoom2, .xzoom3').each(function () {
+                    var xzoom = $(this).data('xzoom');
+                    $(this).hammer().on("tap", function (event) {
+                        event.pageX = event.gesture.center.pageX;
+                        event.pageY = event.gesture.center.pageY;
+                        var s = 1, ls;
+
+                        xzoom.eventmove = function (element) {
+                            element.hammer().on('drag', function (event) {
+                                event.pageX = event.gesture.center.pageX;
+                                event.pageY = event.gesture.center.pageY;
+                                xzoom.movezoom(event);
+                                event.gesture.preventDefault();
+                            });
+                        }
+
+                        xzoom.eventleave = function (element) {
+                            element.hammer().on('tap', function (event) {
+                                xzoom.closezoom();
+                            });
+                        }
+                        xzoom.openzoom(event);
+                    });
+                });
+
+                $('.xzoom').each(function () {
+                    var xzoom = $(this).data('xzoom');
+                    $(this).hammer().on("tap", function (event) {
+                        event.pageX = event.gesture.center.pageX;
+                        event.pageY = event.gesture.center.pageY;
+                        var s = 1, ls;
+
+                        xzoom.eventmove = function (element) {
+                            element.hammer().on('drag', function (event) {
+                                event.pageX = event.gesture.center.pageX;
+                                event.pageY = event.gesture.center.pageY;
+                                xzoom.movezoom(event);
+                                event.gesture.preventDefault();
+                            });
+                        }
+
+                        var counter = 0;
+                        xzoom.eventclick = function (element) {
+                            element.hammer().on('tap', function () {
+                                counter++;
+                                if (counter == 1) setTimeout(openfancy, 300);
+                                event.gesture.preventDefault();
+                            });
+                        }
+
+                        function openfancy() {
+                            if (counter == 2) {
+                                xzoom.closezoom();
+                                $.fancybox.open(xzoom.gallery().cgallery);
+                            } else {
+                                xzoom.closezoom();
+                            }
+                            counter = 0;
+                        }
+                        xzoom.openzoom(event);
+                    });
+                });
+
+                $('.xzoom').each(function () {
+                    var xzoom = $(this).data('xzoom');
+                    $(this).hammer().on("tap", function (event) {
+                        event.pageX = event.gesture.center.pageX;
+                        event.pageY = event.gesture.center.pageY;
+                        var s = 1, ls;
+
+                        xzoom.eventmove = function (element) {
+                            element.hammer().on('drag', function (event) {
+                                event.pageX = event.gesture.center.pageX;
+                                event.pageY = event.gesture.center.pageY;
+                                xzoom.movezoom(event);
+                                event.gesture.preventDefault();
+                            });
+                        }
+
+                        var counter = 0;
+                        xzoom.eventclick = function (element) {
+                            element.hammer().on('tap', function () {
+                                counter++;
+                                if (counter == 1) setTimeout(openmagnific, 300);
+                                event.gesture.preventDefault();
+                            });
+                        }
+
+                        function openmagnific() {
+                            if (counter == 2) {
+                                xzoom.closezoom();
+                                var gallery = xzoom.gallery().cgallery;
+                                var i, images = new Array();
+                                for (i in gallery) {
+                                    images[i] = { src: gallery[i] };
+                                }
+                                $.magnificPopup.open({ items: images, type: 'image', gallery: { enabled: true } });
+                            } else {
+                                xzoom.closezoom();
+                            }
+                            counter = 0;
+                        }
+                        xzoom.openzoom(event);
+                    });
+                });
+
+            } else {
+                //If not touch device
+
+                //Integration with fancybox plugin
+                $('#xzoom-fancy-@Model.Id').bind('click', function (event) {
+                    var xzoom = $(this).data('xzoom');
+                    xzoom.closezoom();
+                    $.fancybox.open(xzoom.gallery().cgallery, { padding: 0, helpers: { overlay: { locked: false } } });
+                    event.preventDefault();
+                });
+
+            }
+        });
+    })(jQuery);
+</script>

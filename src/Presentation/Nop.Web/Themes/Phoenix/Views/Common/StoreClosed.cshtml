@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.StoreClosed").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-store-closed-page");
+}
+<div class="page store-closed-page section-width">
+    <div class="section-head">
+        <h2>@T("StoreClosed")</h2>
+    </div>
+    <div class="page-body">
+        <p>@T("StoreClosed.Hint")</p>
+    </div>
+</div>
