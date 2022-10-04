@@ -50,7 +50,6 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             {
                 return null;
             }
-            oi.AttributeDescription = "Mattress Size: Queen<br />Base (Queen): 6&quot; Low-Pro Box Spring<br />Home Delivery: This item will be delivered to you by Hawthorne";
             var baseIndex = oi.AttributeDescription.IndexOf("Base (");
             var baseString = oi.AttributeDescription.Substring(baseIndex);
 
