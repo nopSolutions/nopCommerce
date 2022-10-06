@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Represent sitemap.xml settings
     /// </summary>
-    public class SitemapXmlSettings : ISettings
+    public partial class SitemapXmlSettings : ISettings
     {
         public SitemapXmlSettings()
         {
@@ -62,5 +62,15 @@ namespace Nop.Core.Domain.Common
         /// A list of custom URLs to be added to sitemap.xml (include page names only)
         /// </summary>
         public List<string> SitemapCustomUrls { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating after which period of time the sitemap files will be rebuilt (in hours)
+        /// </summary>
+        public int RebuildSitemapXmlAfterHours { get; set;}
+
+        /// <summary>
+        /// Gets or sets the wait time (in seconds) before the operation can be started again
+        /// </summary>
+        public int SitemapBuildOperationDelay { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
     /// <summary>
     /// Store pickup point service
     /// </summary>
-    public partial class StorePickupPointService : IStorePickupPointService
+    public class StorePickupPointService : IStorePickupPointService
     {
         #region Constants
 

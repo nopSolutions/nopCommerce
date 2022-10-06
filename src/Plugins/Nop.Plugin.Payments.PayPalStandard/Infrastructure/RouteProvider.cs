@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Infrastructure
 {
-    public partial class RouteProvider : IRouteProvider
+    public class RouteProvider : IRouteProvider
     {
         /// <summary>
         /// Register routes

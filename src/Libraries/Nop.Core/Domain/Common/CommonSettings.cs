@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Common settings
     /// </summary>
-    public class CommonSettings : ISettings
+    public partial class CommonSettings : ISettings
     {
         public CommonSettings()
         {

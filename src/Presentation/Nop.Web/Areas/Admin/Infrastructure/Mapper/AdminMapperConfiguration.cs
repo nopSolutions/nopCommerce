@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
     /// <summary>
     /// AutoMapper configuration for admin area models
     /// </summary>
-    public class AdminMapperConfiguration : Profile, IOrderedMapperProfile
+    public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
     {
         #region Ctor
 
@@ -1576,7 +1576,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<Store, StoreModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore());
-            CreateMap<StoreModel, Store>();
+            CreateMap<StoreModel, Store>()
+                .ForMember(entity => entity.Deleted, options => options.Ignore());
         }
 
         /// <summary>

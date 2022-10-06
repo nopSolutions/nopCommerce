@@ -25,9 +25,9 @@ namespace Nop.Web.Controllers
         #region States / provinces
 
         //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
+        [CheckAccessPublicStore(ignore: true)]
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             var model = await _countryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);

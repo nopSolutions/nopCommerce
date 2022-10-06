@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Order settings
     /// </summary>
-    public class OrderSettings : ISettings
+    public partial class OrderSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether customer can make re-order

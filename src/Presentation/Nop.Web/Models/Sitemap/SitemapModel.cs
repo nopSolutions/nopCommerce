@@ -25,7 +25,7 @@ namespace Nop.Web.Models.Sitemap
 
         #region Nested classes
 
-        public record SitemapItemModel
+        public partial record SitemapItemModel
         {
             public string GroupTitle { get; set; }
             public string Url { get; set; }

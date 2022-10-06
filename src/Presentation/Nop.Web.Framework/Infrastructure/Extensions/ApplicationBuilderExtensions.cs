@@ -31,6 +31,7 @@ using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore6;
@@ -250,6 +251,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 if (!string.IsNullOrEmpty(appSettings.Get<CommonConfig>().StaticFilesCacheControl))
                     context.Context.Response.Headers.Append(HeaderNames.CacheControl, appSettings.Get<CommonConfig>().StaticFilesCacheControl);
             }
+
+            //add handling if sitemaps 
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory)),
+                RequestPath = new PathString($"/{NopSeoDefaults.SitemapXmlDirectory}"),
+                OnPrepareResponse = context =>
+                {
+                    if (!DataSettingsManager.IsDatabaseInstalled() ||
+                        !EngineContext.Current.Resolve<SitemapXmlSettings>().SitemapXmlEnabled)
+                    {
+                        context.Context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        context.Context.Response.ContentLength = 0;
+                        context.Context.Response.Body = Stream.Null;
+                    }
+                }
+            });
 
             //common static files
             application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });

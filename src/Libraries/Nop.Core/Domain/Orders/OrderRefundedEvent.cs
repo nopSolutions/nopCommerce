@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Order refunded event
     /// </summary>
-    public class OrderRefundedEvent
+    public partial class OrderRefundedEvent
     {
         /// <summary>
         /// Ctor

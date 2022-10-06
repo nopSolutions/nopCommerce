@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Security
     /// <summary>
     /// CAPTCHA settings
     /// </summary>
-    public class CaptchaSettings : ISettings
+    public partial class CaptchaSettings : ISettings
     {
         /// <summary>
         /// Is CAPTCHA enabled?

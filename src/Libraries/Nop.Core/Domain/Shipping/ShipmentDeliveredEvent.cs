@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Shipment delivered event
     /// </summary>
-    public class ShipmentDeliveredEvent
+    public partial class ShipmentDeliveredEvent
     {
         /// <summary>
         /// Ctor

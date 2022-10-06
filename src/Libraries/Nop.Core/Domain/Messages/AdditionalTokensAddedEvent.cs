@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Messages
     /// <summary>
     /// Event for "Additional tokens added"
     /// </summary>
-    public class AdditionalTokensAddedEvent
+    public partial class AdditionalTokensAddedEvent
     {
         public AdditionalTokensAddedEvent()
         {

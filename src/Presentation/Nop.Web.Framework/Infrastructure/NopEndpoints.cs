@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring endpoints on application startup
     /// </summary>
-    public class NopEndpoints : INopStartup
+    public partial class NopEndpoints : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

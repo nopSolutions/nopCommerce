@@ -41,13 +41,13 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public record TopicModel : BaseNopEntityModel
+        public partial record TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
         }
 
-        public record CategoryLineModel : BaseNopModel
+        public partial record CategoryLineModel : BaseNopModel
         {
             public int Level { get; set; }
             public bool ResponsiveMobileMenu { get; set; }

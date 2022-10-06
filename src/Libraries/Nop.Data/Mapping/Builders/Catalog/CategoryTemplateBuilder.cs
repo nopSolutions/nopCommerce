@@ -6,7 +6,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
     /// <summary>
     /// Represents a category template entity builder
     /// </summary>
-    public class CategoryTemplateBuilder : NopEntityBuilder<CategoryTemplate>
+    public partial class CategoryTemplateBuilder : NopEntityBuilder<CategoryTemplate>
     {
         #region Methods
 

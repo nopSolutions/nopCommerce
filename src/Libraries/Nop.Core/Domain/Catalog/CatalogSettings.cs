@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Catalog settings
     /// </summary>
-    public class CatalogSettings : ISettings
+    public partial class CatalogSettings : ISettings
     {
         public CatalogSettings()
         {

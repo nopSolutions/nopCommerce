@@ -33,7 +33,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 
         #region Nested class
 
-        public partial class ConfigurationLocalizedModel : ILocalizedLocaleModel
+        public class ConfigurationLocalizedModel : ILocalizedLocaleModel
         {
             public int LanguageId { get; set; }
             

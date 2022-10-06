@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class MultistoreDisabledWarningViewComponent : NopViewComponent
+    public partial class MultistoreDisabledWarningViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly ISettingService _settingService;

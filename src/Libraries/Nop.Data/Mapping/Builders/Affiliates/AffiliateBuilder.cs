@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Builders.Affiliates
     /// <summary>
     /// Represents a affiliate entity builder
     /// </summary>
-    public class AffiliateBuilder : NopEntityBuilder<Affiliate>
+    public partial class AffiliateBuilder : NopEntityBuilder<Affiliate>
     {
         #region Methods
 

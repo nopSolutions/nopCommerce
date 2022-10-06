@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Security
     /// <summary>
     /// Security settings
     /// </summary>
-    public class SecuritySettings : ISettings
+    public partial class SecuritySettings : ISettings
     {
         /// <summary>
         /// Gets or sets an encryption key

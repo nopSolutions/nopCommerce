@@ -8,7 +8,7 @@ namespace Nop.Data
     /// Represents temporary storage
     /// </summary>
     /// <typeparam name="T">Storage record mapping class</typeparam>
-    public class TempSqlDataStorage<T> : TempTable<T>, ITempDataStorage<T> where T : class
+    public partial class TempSqlDataStorage<T> : TempTable<T>, ITempDataStorage<T> where T : class
     {
         #region Ctor
 

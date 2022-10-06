@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Directory
     /// <summary>
     /// Measure settings
     /// </summary>
-    public class MeasureSettings : ISettings
+    public partial class MeasureSettings : ISettings
     {
         /// <summary>
         /// Base dimension identifier

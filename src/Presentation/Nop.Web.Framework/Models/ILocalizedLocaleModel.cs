@@ -4,7 +4,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Represents localized locale model
     /// </summary>
-    public interface ILocalizedLocaleModel
+    public partial interface ILocalizedLocaleModel
     {
         /// <summary>
         /// Gets or sets the language identifier

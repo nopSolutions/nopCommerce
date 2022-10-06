@@ -47,7 +47,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Initialize and execute task
         /// </summary>
-        protected void ExecuteTask(ScheduleTask scheduleTask)
+        protected async Task PerformTaskAsync(ScheduleTask scheduleTask)
         {
             var type = Type.GetType(scheduleTask.Type) ??
                        //ensure that it works fine when only the type name is specified (do not require fully qualified names)
@@ -75,11 +75,11 @@ namespace Nop.Services.ScheduleTasks
 
             scheduleTask.LastStartUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            _scheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
-            task.ExecuteAsync().Wait();
+            await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
+            await task.ExecuteAsync();
             scheduleTask.LastEndUtc = scheduleTask.LastSuccessUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            _scheduleTaskService.UpdateTaskAsync(scheduleTask).Wait();
+            await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Nop.Services.ScheduleTasks
                 var expiration = TimeSpan.FromSeconds(expirationInSeconds);
 
                 //execute task with lock
-                _locker.PerformActionWithLock(scheduleTask.Type, expiration, () => ExecuteTask(scheduleTask));
+                await _locker.PerformActionWithLockAsync(scheduleTask.Type, expiration, () => PerformTaskAsync(scheduleTask));
             }
             catch (Exception exc)
             {

@@ -13,7 +13,7 @@ namespace Nop.Services.Messages
     /// <summary>
     /// SMTP Builder
     /// </summary>
-    public class SmtpBuilder : ISmtpBuilder
+    public partial class SmtpBuilder : ISmtpBuilder
     {
         #region Fields
 

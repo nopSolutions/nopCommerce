@@ -4,7 +4,7 @@ using WebOptimizer;
 
 namespace Nop.Web.Framework.WebOptimizer
 {
-    public class WebOptimizerConfig : WebOptimizerOptions, IConfig
+    public partial class WebOptimizerConfig : WebOptimizerOptions, IConfig
     {
         #region Ctor
 

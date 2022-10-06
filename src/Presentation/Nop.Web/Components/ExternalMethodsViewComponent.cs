@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ExternalMethodsViewComponent : NopViewComponent
+    public partial class ExternalMethodsViewComponent : NopViewComponent
     {
         #region Fields
 

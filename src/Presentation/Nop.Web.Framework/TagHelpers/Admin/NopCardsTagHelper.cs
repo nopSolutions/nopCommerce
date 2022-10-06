@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-cards" tag helper
     /// </summary>
     [HtmlTargetElement("nop-cards", Attributes = ID_ATTRIBUTE_NAME)]
-    public class NopCardsTagHelper : TagHelper
+    public partial class NopCardsTagHelper : TagHelper
     {
         #region Constants
 

@@ -1,19 +1,10 @@
 ﻿'use strict'
 
-//plugins
-const gulp = require('gulp');
+import gulp from 'gulp';
+import { prepareCldr } from './gulp/tasks/prepareCldr.js';
+import copyDependencies from './gulp/tasks/copyDependencies.js';
+import clean from './gulp/tasks/clean.js';
 
-//const
-const prepareCldr = require('./gulp/tasks/prepareCldr');
-const copyDependencies = require('./gulp/tasks/copyDependencies');
-const clean = require('./gulp/tasks/clean');
-const clearLibraries = require('./gulp/tasks/clearLibraries');
-
-//init task
-exports.Step_1_install_dependencies = gulp.series(
-  clean.Execute,
-  copyDependencies.Execute
+gulp.task('default', 
+  gulp.series(clean, copyDependencies, prepareCldr)
 );
-
-exports.Step_2_prepareCldr = prepareCldr.Execute;
-exports.Step_3_clearLibraries = clearLibraries.Execute;

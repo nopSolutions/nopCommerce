@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.News
     /// <summary>
     /// News settings
     /// </summary>
-    public class NewsSettings : ISettings
+    public partial class NewsSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether news are enabled

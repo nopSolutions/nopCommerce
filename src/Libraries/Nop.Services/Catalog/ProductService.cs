@@ -11,6 +11,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -60,7 +61,6 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<Shipment> _shipmentRepository;
         protected readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         protected readonly IRepository<TierPrice> _tierPriceRepository;
-        protected readonly IRepository<Warehouse> _warehouseRepository;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
@@ -102,7 +102,6 @@ namespace Nop.Services.Catalog
             IRepository<Shipment> shipmentRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<TierPrice> tierPriceRepository,
-            IRepository<Warehouse> warehouseRepository,
             IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
@@ -140,7 +139,6 @@ namespace Nop.Services.Catalog
             _shipmentRepository = shipmentRepository;
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _tierPriceRepository = tierPriceRepository;
-            _warehouseRepository = warehouseRepository;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
@@ -2148,9 +2146,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="store">Store</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, int storeId)
+        public virtual async Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, Store store)
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -2164,7 +2162,7 @@ namespace Nop.Services.Catalog
             //get actual tier prices
             return (await GetTierPricesByProductAsync(product.Id))
                 .OrderBy(price => price.Quantity)
-                .FilterByStore(storeId)
+                .FilterByStore(store)
                 .FilterByCustomerRole(await _customerService.GetCustomerRoleIdsAsync(customer))
                 .FilterByDate()
                 .RemoveDuplicatedQuantities()
@@ -2231,13 +2229,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="store">Store</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the ier price
+        /// The task result contains the tier price
         /// </returns>
-        public virtual async Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, int storeId, int quantity)
+        public virtual async Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, Store store, int quantity)
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -2249,7 +2247,7 @@ namespace Nop.Services.Catalog
                 return null;
 
             //get the most suitable tier price based on the passed quantity
-            return (await GetTierPricesAsync(product, customer, storeId))?.LastOrDefault(price => quantity >= price.Quantity);
+            return (await GetTierPricesAsync(product, customer, store))?.LastOrDefault(price => quantity >= price.Quantity);
         }
 
         #endregion
@@ -2660,19 +2658,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId)
         {
             return await _productWarehouseInventoryRepository.GetAllAsync(query => query.Where(pwi => pwi.ProductId == productId));
-        }
-
-        /// <summary>
-        /// Gets a warehouse by identifier
-        /// </summary>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
-        {
-            return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
         }
 
         /// <summary>

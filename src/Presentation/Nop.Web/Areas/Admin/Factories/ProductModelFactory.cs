@@ -71,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVideoService _videoService;
@@ -112,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
+            IStoreContext storeContext,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
             IVideoService videoService,
@@ -150,6 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _shoppingCartService = shoppingCartService;
             _specificationAttributeService = specificationAttributeService;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _storeContext = storeContext;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
             _videoService = videoService;
@@ -1941,6 +1944,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 warehouseId: searchModel.WarehouseId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            
             //prepare grid model
             var model = await new StockQuantityHistoryListModel().PrepareToGridAsync(searchModel, stockQuantityHistory, () =>
             {
@@ -1958,7 +1964,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (combination != null)
                     {
                         stockQuantityHistoryModel.AttributeCombination = await _productAttributeFormatter
-                            .FormatAttributesAsync(product, combination.AttributesXml, (await _workContext.GetCurrentCustomerAsync()), renderGiftCardAttributes: false);
+                            .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, renderGiftCardAttributes: false);
                     }
 
                     stockQuantityHistoryModel.WarehouseName = historyEntry.WarehouseId.HasValue
@@ -2355,6 +2361,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetAllProductAttributeCombinationsAsync(product.Id)).ToPagedList(searchModel);
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            
             //prepare grid model
             var model = await new ProductAttributeCombinationListModel().PrepareToGridAsync(searchModel, productAttributeCombinations, () =>
             {
@@ -2365,7 +2373,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     productAttributeCombinationModel.AttributesXml = await _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, "<br />", true, true, true, false);
+                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, "<br />", true, true, true, false);
 
                     var combinationPicture = (await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id)).FirstOrDefault();
                     var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(combinationPicture?.PictureId ?? 0, 75, false);

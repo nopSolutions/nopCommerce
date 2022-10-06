@@ -5,7 +5,7 @@ namespace Nop.Services.Orders
     /// <summary>
     /// Represents the returnable order item
     /// </summary>
-    public class ReturnableOrderItem
+    public partial class ReturnableOrderItem
     {
         #region Properties
 

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class LanguageSelectorViewComponent : NopViewComponent
+    public partial class LanguageSelectorViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

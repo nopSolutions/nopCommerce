@@ -306,7 +306,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetProductCombinations(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);

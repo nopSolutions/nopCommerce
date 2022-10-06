@@ -93,7 +93,7 @@ namespace Nop.Web.Framework
             var allStores = _storeRepository.GetAll(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, cache => default);
+            }, _ => default, includeDeleted: false);
             
             var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 

@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
             var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);

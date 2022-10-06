@@ -70,6 +70,21 @@ namespace Nop.Services.Seo
         /// </summary>
         public static int SitemapMaxUrlNumber => 50000;
 
+        /// <summary>
+        /// Gets the name of the sitemap directory
+        /// </summary>
+        public static string SitemapXmlDirectory => "sitemaps";
+
+        /// <summary>
+        /// Gets a pattern to build sitemap filename
+        /// </summary>
+        /// <remarks>
+        /// {0} : store Id
+        /// {1} : language Id
+        /// {0} : sitemap index
+        /// </remarks>
+        public static string SitemapXmlFilePattern => "sitemap-{0}-{1}-{2}.xml";
+
         #endregion
 
         #region Caching defaults

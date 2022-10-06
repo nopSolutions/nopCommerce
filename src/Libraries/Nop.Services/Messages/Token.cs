@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents token
     /// </summary>
-    public sealed class Token
+    public sealed partial class Token
     {
         #region Ctor
 

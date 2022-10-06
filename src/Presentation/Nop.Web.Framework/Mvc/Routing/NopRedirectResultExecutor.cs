@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// <summary>
     /// Represents custom overridden redirect result executor
     /// </summary>
-    public class NopRedirectResultExecutor : RedirectResultExecutor
+    public partial class NopRedirectResultExecutor : RedirectResultExecutor
     {
         #region Fields
 

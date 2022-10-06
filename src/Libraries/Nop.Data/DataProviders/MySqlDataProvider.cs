@@ -15,7 +15,7 @@ using Nop.Core;
 
 namespace Nop.Data.DataProviders
 {
-    public class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
+    public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Fields
 

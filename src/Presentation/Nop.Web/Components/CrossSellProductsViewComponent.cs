@@ -12,7 +12,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CrossSellProductsViewComponent : NopViewComponent
+    public partial class CrossSellProductsViewComponent : NopViewComponent
     {
         private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;

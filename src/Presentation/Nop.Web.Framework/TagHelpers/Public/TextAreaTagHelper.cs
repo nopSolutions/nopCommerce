@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "textarea" tag helper
     /// </summary>
     [HtmlTargetElement("textarea", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class TextAreaTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper
+    public partial class TextAreaTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper
     {
         #region Constants
 

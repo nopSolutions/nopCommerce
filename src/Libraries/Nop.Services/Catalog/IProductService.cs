@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -593,9 +594,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="store">Store</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, int storeId);
+        Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, Store store);
 
         /// <summary>
         /// Gets a tier prices by product identifier
@@ -640,13 +641,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="store">Store</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the ier price
         /// </returns>
-        Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, int storeId, int quantity);
+        Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, Store store, int quantity);
 
         #endregion
 
@@ -876,16 +877,6 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId);
-
-        /// <summary>
-        /// Gets a warehouse by identifier
-        /// </summary>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory

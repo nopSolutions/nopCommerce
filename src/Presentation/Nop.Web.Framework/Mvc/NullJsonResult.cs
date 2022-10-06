@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Mvc
     /// <summary>
     /// Null JSON result
     /// </summary>
-    public class NullJsonResult : JsonResult
+    public partial class NullJsonResult : JsonResult
     {
         /// <summary>
         /// Ctor

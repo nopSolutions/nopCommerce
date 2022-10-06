@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-select" tag helper
     /// </summary>
     [HtmlTargetElement("nop-select", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopSelectTagHelper : TagHelper
+    public partial class NopSelectTagHelper : TagHelper
     {
         #region Constants
 

@@ -36,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
+        private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
+            IStoreContext storeContext,
             IWorkContext workContext)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -64,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
+            _storeContext = storeContext;
             _workContext = workContext;
         }
 
@@ -77,6 +80,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter orders
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -93,6 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 categoryId: searchModel.CategoryId,
                 productId: searchModel.ProductId,
                 manufacturerId: searchModel.ManufacturerId,
+                vendorId: currentVendor?.Id ?? searchModel.VendorId,
                 storeId: searchModel.StoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -173,7 +180,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare "group by" filter
             searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
-            
+
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -292,16 +302,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }).ToListAsync());
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            
             lowStockProductModels.AddRange(await combinations.SelectAwait(async combination =>
             {
                 var product = await _productService.GetProductByIdAsync(combination.ProductId);
+                    
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
 
                     Attributes = await _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), "<br />", true, true, true, false),
+                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, "<br />", true, true, true, false),
                     ManageInventoryMethod = await _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod),
 
                     StockQuantity = combination.StockQuantity,

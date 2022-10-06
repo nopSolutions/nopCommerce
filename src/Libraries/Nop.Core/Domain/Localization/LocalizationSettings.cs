@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Localization
     /// <summary>
     /// Localization settings
     /// </summary>
-    public class LocalizationSettings : ISettings
+    public partial class LocalizationSettings : ISettings
     {
         /// <summary>
         /// Default admin area language identifier

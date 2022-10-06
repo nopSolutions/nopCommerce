@@ -7,7 +7,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class AclDisabledWarningViewComponent : NopViewComponent
+    public partial class AclDisabledWarningViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly ISettingService _settingService;

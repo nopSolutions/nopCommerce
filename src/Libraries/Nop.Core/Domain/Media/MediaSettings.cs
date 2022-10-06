@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Media
     /// <summary>
     /// Media settings
     /// </summary>
-    public class MediaSettings : ISettings
+    public partial class MediaSettings : ISettings
     {
         /// <summary>
         /// Picture size of customer avatars (if enabled)

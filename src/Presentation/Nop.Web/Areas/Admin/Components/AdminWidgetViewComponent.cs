@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays an admin widgets
     /// </summary>
-    public class AdminWidgetViewComponent : NopViewComponent
+    public partial class AdminWidgetViewComponent : NopViewComponent
     {
         #region Fields
 

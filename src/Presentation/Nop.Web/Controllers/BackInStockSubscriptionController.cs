@@ -64,7 +64,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> SubscribePopup(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);

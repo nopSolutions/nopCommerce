@@ -10,7 +10,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
     /// <summary>
     /// Facebook authentication event consumer (used for saving customer fields on registration)
     /// </summary>
-    public partial class FacebookAuthenticationEventConsumer : IConsumer<CustomerAutoRegisteredByExternalMethodEvent>
+    public class FacebookAuthenticationEventConsumer : IConsumer<CustomerAutoRegisteredByExternalMethodEvent>
     {
         #region Fields
 

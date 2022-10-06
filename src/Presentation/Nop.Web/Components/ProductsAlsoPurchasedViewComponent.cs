@@ -14,7 +14,7 @@ using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Components
 {
-    public class ProductsAlsoPurchasedViewComponent : NopViewComponent
+    public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;

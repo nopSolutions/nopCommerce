@@ -827,11 +827,15 @@ namespace Nop.Web.Controllers
             var price = string.Empty;
             //base price
             var basepricepangv = string.Empty;
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
+            if (!product.CustomerEntersPrice && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
+                var currentStore = await _storeContext.GetCurrentStoreAsync();
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                
                 //we do not calculate price of "customer enters price" option is enabled
                 var (finalPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(product,
-                    await _workContext.GetCurrentCustomerAsync(),
+                    currentCustomer,
+                    currentStore,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate, true);

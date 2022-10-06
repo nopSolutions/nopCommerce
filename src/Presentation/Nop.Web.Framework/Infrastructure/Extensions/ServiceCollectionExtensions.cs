@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -296,6 +297,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
                 options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new CustomPropertiesModelBinderProvider());
                 //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
@@ -305,18 +307,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration =>
-            {
-                //register all available validators from Nop assemblies
-                var assemblies = mvcBuilder.PartManager.ApplicationParts
-                    .OfType<AssemblyPart>()
-                    .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(part => part.Assembly);
-                configuration.RegisterValidatorsFromAssemblies(assemblies);
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
-                //implicit/automatic validation of child properties
-                configuration.ImplicitlyValidateChildProperties = true;
-            });
+            //register all available validators from Nop assemblies
+            var assemblies = mvcBuilder.PartManager.ApplicationParts
+                .OfType<AssemblyPart>()
+                .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
+                .Select(part => part.Assembly);
+            services.AddValidatorsFromAssemblies(assemblies);
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();

@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// PPDF settings
     /// </summary>
-    public class PdfSettings : ISettings
+    public partial class PdfSettings : ISettings
     {
         /// <summary>
         /// PDF logo picture identifier

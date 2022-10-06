@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Events
     /// <summary>
     /// Represents an event that occurs when a generic route is processed and before default transformation
     /// </summary>
-    public class GenericRoutingEvent
+    public partial class GenericRoutingEvent
     {
         #region Ctor
 

@@ -5,7 +5,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Store information settings
     /// </summary>
-    public class StoreInformationSettings : ISettings
+    public partial class StoreInformationSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether "powered by nopCommerce" text should be displayed.

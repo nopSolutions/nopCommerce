@@ -812,7 +812,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// JS file meta data
         /// </summary>
-        private record ScriptReferenceMeta
+        private partial record ScriptReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling
@@ -833,7 +833,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// CSS file meta data
         /// </summary>
-        private record CssReferenceMeta
+        private partial record CssReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling

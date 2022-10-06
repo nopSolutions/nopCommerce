@@ -3,7 +3,7 @@
     /// <summary>
     /// Order status changed event
     /// </summary>
-    public class OrderStatusChangedEvent
+    public partial class OrderStatusChangedEvent
     {
         /// <summary>
         /// Ctor

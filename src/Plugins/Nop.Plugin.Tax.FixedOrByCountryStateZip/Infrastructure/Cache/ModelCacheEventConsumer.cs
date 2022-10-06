@@ -13,7 +13,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer : 
+    public class ModelCacheEventConsumer : 
         //tax rates
         IConsumer<EntityInsertedEvent<TaxRate>>,
         IConsumer<EntityUpdatedEvent<TaxRate>>,

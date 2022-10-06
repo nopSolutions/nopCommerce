@@ -14,7 +14,7 @@ namespace Nop.Services.ExportImport.Help
     /// Class for working with PropertyByName object list
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
-    public class PropertyManager<T>
+    public partial class PropertyManager<T>
     {
         /// <summary>
         /// All properties
@@ -144,7 +144,7 @@ namespace Nop.Services.ExportImport.Help
                     if (!UseDropdownLists)
                         continue;
 
-                    var validator = cell.DataValidation;
+                    var validator = cell.GetDataValidation();
                     validator.InCellDropdown = true;
 
                     validator.IgnoreBlanks = prop.AllowBlank;

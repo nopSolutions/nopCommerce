@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -14,14 +15,17 @@ namespace Nop.Services.Catalog
         /// Filter tier prices by a store
         /// </summary>
         /// <param name="source">Tier prices</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="store">Store reference</param>
         /// <returns>Filtered tier prices</returns>
-        public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, int storeId)
+        public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, Store store)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == store.Id);
         }
 
         /// <summary>

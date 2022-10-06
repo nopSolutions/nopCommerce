@@ -646,16 +646,7 @@ namespace Nop.Services.ExportImport
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
-                async psa => new ExportSpecificationAttribute
-                {
-                    AttributeTypeId = psa.AttributeTypeId,
-                    CustomValue = psa.CustomValue,
-                    AllowFiltering = psa.AllowFiltering,
-                    ShowOnProductPage = psa.ShowOnProductPage,
-                    DisplayOrder = psa.DisplayOrder,
-                    SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
-                    SpecificationAttributeId = (await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId)).SpecificationAttributeId
-                }).ToListAsync();
+                async psa => await ExportSpecificationAttribute.CreateAsync(psa,_specificationAttributeService)).ToListAsync();
 
             if (!attributes.Any())
                 return row;

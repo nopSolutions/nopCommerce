@@ -2781,7 +2781,7 @@ namespace Nop.Services.ExportImport
 
         #region Nested classes
 
-        protected class ProductPictureMetadata
+        protected partial class ProductPictureMetadata
         {
             public Product ProductItem { get; set; }
 
@@ -2794,7 +2794,7 @@ namespace Nop.Services.ExportImport
             public bool IsNew { get; set; }
         }
 
-        public class CategoryKey
+        public partial class CategoryKey
         {
             /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)

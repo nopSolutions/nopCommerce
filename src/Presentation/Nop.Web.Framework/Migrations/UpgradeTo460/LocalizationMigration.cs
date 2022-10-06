@@ -292,6 +292,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Stores.Ssl.Disable"] = "Disable SSL",
                 ["Admin.Configuration.Stores.Ssl.Updated"] = "The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.",
 
+                ["Admin.Reports.SalesSummary.Vendor"] = "Vendor",
+                ["Admin.Reports.SalesSummary.Vendor.Hint"] = "Search by a specific vendor.",
+
+                //#6353
+                ["Admin.Promotions.Discounts.Fields.CouponCode.Reserved"] = "The entered coupon code is already reserved for the discount '{0}'",
+
                 //1934
                 ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures"] = "Pictures",
                 ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
@@ -299,8 +305,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
                 ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
                 ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
-                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
-            }, languageId).Wait();
+                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",            }, languageId).Wait();
 
             #endregion
         }

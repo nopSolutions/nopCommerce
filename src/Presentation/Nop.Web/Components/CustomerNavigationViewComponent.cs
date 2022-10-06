@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CustomerNavigationViewComponent : NopViewComponent
+    public partial class CustomerNavigationViewComponent : NopViewComponent
     {
         private readonly ICustomerModelFactory _customerModelFactory;
 

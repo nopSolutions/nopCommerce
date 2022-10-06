@@ -4,6 +4,6 @@ namespace Nop.Web.Models.Sitemap
 {
     public partial record SitemapXmlModel : BaseNopModel
     {
-        public string SitemapXml { get; set; }
+        public string SitemapXmlPath { get; set; }
     }
 }
