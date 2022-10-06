@@ -479,7 +479,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("Quantity", p => p.Quantity),
                 new PropertyByName<ExportProductAttribute>("IsPreSelected", p => p.IsPreSelected),
                 new PropertyByName<ExportProductAttribute>("DisplayOrder", p => p.DisplayOrder),
-                new PropertyByName<ExportProductAttribute>("PictureId", p => p.PictureId)
+                new PropertyByName<ExportProductAttribute>("PictureIds", async p => string.Join(",",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(p.Id)).Select(vp => vp.PictureId)))
             };
 
             return new PropertyManager<ExportProductAttribute>(attributeProperties, _catalogSettings);
@@ -565,7 +566,8 @@ namespace Nop.Services.ExportImport
                     var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
 
                     if (values?.Any() ?? false)
-                        return values.Select(pav =>
+                    {
+                        IEnumerable<ExportProductAttribute> productAttributes = await values.SelectAwait(async pav =>
                             new ExportProductAttribute
                             {
                                 AttributeId = productAttribute.Id,
@@ -588,8 +590,12 @@ namespace Nop.Services.ExportImport
                                 Quantity = pav.Quantity,
                                 IsPreSelected = pav.IsPreSelected,
                                 DisplayOrder = pav.DisplayOrder,
-                                PictureId = pav.PictureId
-                            });
+                                PictureIds = string.Join(",",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(pav.Id)).Select(vp => vp.PictureId))
+                            }).ToListAsync();
+
+                        return productAttributes;
+                    }
 
                     var attribute = new ExportProductAttribute
                     {
@@ -1185,7 +1191,8 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Quantity", productAttributeValue.Quantity);
                             await xmlWriter.WriteStringAsync("IsPreSelected", productAttributeValue.IsPreSelected);
                             await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeValue.DisplayOrder);
-                            await xmlWriter.WriteStringAsync("PictureId", productAttributeValue.PictureId);
+                            await xmlWriter.WriteStringAsync("PictureIds", string.Join(",", 
+                                (await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id)).Select(vp => vp.PictureId)));
                             await xmlWriter.WriteEndElementAsync();
                         }
 

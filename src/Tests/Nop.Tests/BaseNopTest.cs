@@ -103,14 +103,14 @@ namespace Nop.Tests
 
         private static void Init()
         {
-            
+
             var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
-            
+
             dataProvider.CreateDatabase(null);
             dataProvider.InitializeDatabase();
 
             var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
-            
+
             _serviceProvider.GetService<IInstallationService>()
                 .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
             _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
@@ -118,7 +118,7 @@ namespace Nop.Tests
             var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
             EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
         }
-        
+
         protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
         where Tm : BaseNopModel
         {
@@ -174,7 +174,7 @@ namespace Nop.Tests
                 .FindClassesOfType<IConfig>()
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
-            
+
             var appSettings = new AppSettings(configurations);
             appSettings.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
             Singleton<AppSettings>.Instance = appSettings;
@@ -537,14 +537,14 @@ namespace Nop.Tests
                 return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
             }
         }
-        
+
         public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
         {
             baseEntity.Id = 0;
 
             await insert(baseEntity);
             baseEntity.Id.Should().BeGreaterThan(0);
-            
+
             updateEntity.Id = baseEntity.Id;
             await update(updateEntity);
 
@@ -658,11 +658,11 @@ namespace Nop.Tests
         {
             public TestPictureService(IDownloadService downloadService,
                 IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
-                IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
-                IRepository<PictureBinary> pictureBinaryRepository,
+                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
+                IRepository<Picture> pictureRepository, IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser, productAttributeService,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {

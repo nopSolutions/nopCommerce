@@ -299,6 +299,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 taxSettings.EuVatEnabledForGuests = false;
                 settingService.SaveSettingAsync(taxSettings, settings => settings.EuVatEnabledForGuests).Wait();
             }
+
+            var productEditorSettings = settingService.LoadSettingAsync<ProductEditorSettings>().Result;
+
+            //#1934
+            if (!settingService.SettingExistsAsync(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly).Result)
+            {
+                productEditorSettings.DisplayAttributeCombinationImagesOnly = false;
+                settingService.SaveSettingAsync(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly).Wait();
+            }
         }
 
         public override void Down()

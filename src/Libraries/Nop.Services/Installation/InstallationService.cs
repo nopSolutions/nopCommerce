@@ -6178,24 +6178,37 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            await InsertInstallationDataAsync(
+            var pavNatural = await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamPrint.Id,
-                    PictureId = picProductNikeFloralShoe1Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Natural",
                     DisplayOrder = 1,
                     ImageSquaresPictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_2.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Natural Print"))).Id
-                },
+                });
+
+            await InsertInstallationDataAsync(new ProductAttributeValuePicture
+            {
+                PictureId = picProductNikeFloralShoe1Id,
+                ProductAttributeValueId = pavNatural.Id
+            });
+
+            var pavFresh = await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamPrint.Id,
-                    PictureId = picProductNikeFloralShoe2Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Fresh",
                     DisplayOrder = 2,
                     ImageSquaresPictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Fresh Print"))).Id
+                });
+
+            await InsertInstallationDataAsync(
+                new ProductAttributeValuePicture
+                {
+                    PictureId = picProductNikeFloralShoe2Id,
+                    ProductAttributeValueId = pavFresh.Id
                 });
 
             await AddProductTagAsync(productNikeFloral, "cool");
@@ -6325,34 +6338,55 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            await InsertInstallationDataAsync(
+            var pavRed = await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = picProductAdidasId,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Red",
                     IsPreSelected = true,
                     ColorSquaresRgb = "#663030",
                     DisplayOrder = 1
-                },
-                new ProductAttributeValue
+                });
+
+            await InsertInstallationDataAsync(
+                new ProductAttributeValuePicture
+                {
+                    PictureId = picProductAdidasId,
+                    ProductAttributeValueId = pavRed.Id
+                });
+
+            var pavBlue = await InsertInstallationDataAsync(new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = picProductAdidas2Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Blue",
                     ColorSquaresRgb = "#363656",
                     DisplayOrder = 2
-                },
+                });
+
+            await InsertInstallationDataAsync(
+                new ProductAttributeValuePicture
+                {
+                    PictureId = picProductAdidas2Id,
+                    ProductAttributeValueId = pavBlue.Id
+                });
+
+            var pavSilver = await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = picProductAdidas3Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Silver",
                     ColorSquaresRgb = "#c5c5d5",
                     DisplayOrder = 3
+                });
+
+            await InsertInstallationDataAsync(
+                new ProductAttributeValuePicture
+                {
+                    PictureId = picProductAdidas3Id,
+                    ProductAttributeValueId = pavSilver.Id
                 });
 
             await AddProductTagAsync(productAdidas, "cool");

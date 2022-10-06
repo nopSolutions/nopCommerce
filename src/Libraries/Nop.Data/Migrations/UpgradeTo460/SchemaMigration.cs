@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -9,7 +10,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-20 00:00:00", "SchemaMigration for 4.60.0", MigrationProcessType.Update)]
+    [NopMigration("2022-02-02 00:00:00", "SchemaMigration for 4.60.0", MigrationProcessType.Update)]
     public class SchemaMigration : Migration
     {
         /// <summary>
@@ -156,6 +157,25 @@ namespace Nop.Data.Migrations.UpgradeTo460
             {
                 Alter.Table(discountTableName)
                     .AddColumn(isActiveDiscountColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+            }
+
+            //1934
+            if (!Schema.Table(nameof(ProductAttributeCombinationPicture)).Exists())
+            {
+                Create.TableFor<ProductAttributeCombinationPicture>();
+            }
+            if (!Schema.Table(nameof(ProductAttributeValuePicture)).Exists())
+            {
+                Create.TableFor<ProductAttributeValuePicture>();
+            }
+
+            var productTableName = nameof(Product);
+            var displayAttributeCombinationImagesOnlyColumnName = nameof(Product.DisplayAttributeCombinationImagesOnly);
+            
+            if (!Schema.Table(productTableName).Column(displayAttributeCombinationImagesOnlyColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(displayAttributeCombinationImagesOnlyColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
         }
 

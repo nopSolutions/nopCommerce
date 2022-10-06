@@ -78,11 +78,6 @@ namespace Nop.Core.Domain.Catalog
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture (identifier) associated with this value. This picture should replace a product main picture once clicked (selected).
-        /// </summary>
-        public int PictureId { get; set; }
-
-        /// <summary>
         /// Gets or sets the attribute value type
         /// </summary>
         public AttributeValueType AttributeValueType

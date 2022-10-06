@@ -50,6 +50,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
+
+                //1934
+                "Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.Hint",
+                "Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture",
+                "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.Hint",
+                "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture"
             }).Wait();
 
             #endregion
@@ -285,6 +291,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Stores.Ssl.Enable"] = "Enable SSL",
                 ["Admin.Configuration.Stores.Ssl.Disable"] = "Disable SSL",
                 ["Admin.Configuration.Stores.Ssl.Updated"] = "The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.",
+
+                //1934
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures"] = "Pictures",
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures"] = "Pictures",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
+                ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
+                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
+                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
             }, languageId).Wait();
 
             #endregion

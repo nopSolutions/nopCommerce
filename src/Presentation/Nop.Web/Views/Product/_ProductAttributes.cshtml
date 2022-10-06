@@ -492,6 +492,23 @@
                         if (data.pictureFullSizeUrl) {
                             $('#main-product-img-lightbox-anchor-@Model.Id').attr("href", data.pictureFullSizeUrl);
                         }
+                        @if (Model.DisplayAttributeCombinationImagesOnly) 
+                        {
+                            <text>
+                            $.each($('.thumb-item'), function(i, elem) { 
+                                var id = $(elem).data('pictureid');
+                                console.log(id)
+                                console.log($(elem))
+                                elems = elem
+                                if (data.pictureIds.length == 0 || data.pictureIds.includes(id)) {
+                                    $(elem).show();
+                                }
+                                else { 
+                                    $(elem).hide();
+                                }
+                            });
+                            </text>    
+                        }
                         if (data.message) {
                             alert(data.message);
                         }

@@ -33,6 +33,7 @@ namespace Nop.Services.Media
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<PictureBinary> _pictureBinaryRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
@@ -50,6 +51,7 @@ namespace Nop.Services.Media
             ILogger logger,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IRepository<Picture> pictureRepository,
             IRepository<PictureBinary> pictureBinaryRepository,
             IRepository<ProductPicture> productPictureRepository,
@@ -63,6 +65,7 @@ namespace Nop.Services.Media
             _logger = logger;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _pictureRepository = pictureRepository;
             _pictureBinaryRepository = pictureBinaryRepository;
             _productPictureRepository = productPictureRepository;
@@ -405,6 +408,19 @@ namespace Nop.Services.Media
                 return image.Bytes;
             }
 
+        }
+
+        /// <summary>
+        /// Gets pictures
+        /// </summary>
+        /// <param name="pictureIds">Picture identifiers</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of pictures
+        /// </returns>
+        protected virtual async Task<IList<Picture>> GetPicturesByIdsAsync(int[] pictureIds)
+        {
+            return await _pictureRepository.GetByIdsAsync(pictureIds, cache => default);
         }
 
         #endregion
@@ -1104,16 +1120,23 @@ namespace Nop.Services.Media
 
             //first, try to get product attribute combination picture
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
-            var combinationPicture = await GetPictureByIdAsync(combination?.PictureId ?? 0);
-            if (combinationPicture != null)
-                return combinationPicture;
+            if (combination != null)
+            { 
+                var combinationPicture = (await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id)).FirstOrDefault();
+                if (await GetPictureByIdAsync(combinationPicture?.PictureId ?? 0) is Picture picture)
+                    return picture;
+            }
 
             //then, let's see whether we have attribute values with pictures
-            var attributePicture = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
-                .SelectAwait(async attributeValue => await GetPictureByIdAsync(attributeValue?.PictureId ?? 0))
-                .FirstOrDefaultAsync(picture => picture != null);
-            if (attributePicture != null)
-                return attributePicture;
+            var values = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
+            foreach (var attributeValue in values)
+            {
+                var valuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(attributeValue.Id);
+                var attributePicture = (await GetPicturesByIdsAsync(valuePictures.Select(vp => vp.PictureId).ToArray())).FirstOrDefault();
+
+                if (attributePicture != null)
+                    return attributePicture;
+            }
 
             //now let's load the default product picture
             var productPicture = (await GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();

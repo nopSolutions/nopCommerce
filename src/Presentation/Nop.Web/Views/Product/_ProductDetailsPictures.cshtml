@@ -26,7 +26,7 @@
         <div class="picture-thumbs">
             @foreach (var picture in Model.PictureModels)
             {
-                <a class="thumb-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                <a class="thumb-item" data-pictureid="@picture.Id" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
                     <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
                 </a>
             }
@@ -71,7 +71,7 @@
             <div class="picture-thumbs">
                 @foreach (var picture in Model.PictureModels)
                 {
-                    <div class="thumb-item">
+                    <div class="thumb-item" data-pictureid="@picture.Id">
                         <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
                     </div>
                 }

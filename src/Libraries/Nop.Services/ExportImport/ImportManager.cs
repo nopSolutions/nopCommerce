@@ -685,13 +685,16 @@ namespace Nop.Services.ExportImport
             var quantity = productAttributeManager.GetProperty("Quantity").IntValue;
             var isPreSelected = productAttributeManager.GetProperty("IsPreSelected").BooleanValue;
             var displayOrder = productAttributeManager.GetProperty("DisplayOrder").IntValue;
-            var pictureId = productAttributeManager.GetProperty("PictureId").IntValue;
+            var pictureIdsStr = productAttributeManager.GetProperty("PictureIds").StringValue;
             var textPrompt = productAttributeManager.GetProperty("AttributeTextPrompt").StringValue;
             var isRequired = productAttributeManager.GetProperty("AttributeIsRequired").BooleanValue;
             var attributeDisplayOrder = productAttributeManager.GetProperty("AttributeDisplayOrder").IntValue;
 
             var productAttributeMapping = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(lastLoadedProduct.Id))
                 .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+            var pictureIds = new List<int>();
+            if (!string.IsNullOrWhiteSpace(pictureIdsStr))
+                pictureIds = Array.ConvertAll(pictureIdsStr.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse).ToList();
 
             if (productAttributeMapping == null)
             {
@@ -760,11 +763,11 @@ namespace Nop.Services.ExportImport
                     ColorSquaresRgb = colorSquaresRgb,
                     ImageSquaresPictureId = imageSquaresPictureId,
                     CustomerEntersQty = customerEntersQty,
-                    Quantity = quantity,
-                    PictureId = pictureId
+                    Quantity = quantity
                 };
 
                 await _productAttributeService.InsertProductAttributeValueAsync(pav);
+                await SaveAttributeValuePicturesAsync(lastLoadedProduct, pav, pictureIds);
             }
             else
             {
@@ -781,9 +784,37 @@ namespace Nop.Services.ExportImport
                 pav.Quantity = quantity;
                 pav.IsPreSelected = isPreSelected;
                 pav.DisplayOrder = displayOrder;
-                pav.PictureId = pictureId;
 
                 await _productAttributeService.UpdateProductAttributeValueAsync(pav);
+                await SaveAttributeValuePicturesAsync(lastLoadedProduct,pav, pictureIds);
+            }
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task SaveAttributeValuePicturesAsync(Product product, ProductAttributeValue value, IList<int> pictureIds)
+        {
+            var existingValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id);
+            var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
+
+            //delete manufacturers
+            foreach (var existingValuePicture in existingValuePictures)
+                if (pictureIds.Contains(existingValuePicture.PictureId) || !productPictureIds.Contains(existingValuePicture.PictureId))
+                    await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+
+            //add manufacturers
+            foreach (var pictureId in pictureIds)
+            {
+                if (!productPictureIds.Contains(pictureId))
+                    continue;
+
+                if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id, pictureId) == null)
+                {
+                    await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
+                    {
+                        ProductAttributeValueId = value.Id,
+                        PictureId = pictureId
+                    });
+                }
             }
         }
 

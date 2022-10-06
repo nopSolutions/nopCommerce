@@ -5,19 +5,22 @@ using System.Globalization;
 using System.Linq;
 using FluentMigrator;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
+using Nop.Data.Migrations.UpgradeTo460.Domain;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-03 00:00:00", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+    [NopMigration("2022-02-03 00:00:00", "DataMigration for 4.60.0", MigrationProcessType.Update)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
@@ -272,6 +275,75 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         EmailAccountId = _dataProvider.GetTable<EmailAccount>().FirstOrDefault()?.Id ?? 0
                     }
                 );
+            }
+
+            //1934
+            var productAttributeCombinationTableName = nameof(ProductAttributeCombination);
+
+            var pac = Schema.Table(productAttributeCombinationTableName);
+            var columnName = "PictureId";
+
+            if (pac.Column(columnName).Exists())
+            {
+                var combinationQuery =
+                    from c in _dataProvider.GetTable<ProductAttributeCombination450>()
+                    join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
+                    select c;
+
+                pageIndex = 0;
+
+                while (true)
+                {
+                    var combinations = combinationQuery.ToPagedListAsync(pageIndex, pageSize).Result;
+
+                    if (!combinations.Any())
+                        break;
+
+                    foreach (var combination in combinations)
+                        _dataProvider.InsertEntity(new ProductAttributeCombinationPicture
+                        {
+                            PictureId = combination.PictureId,
+                            ProductAttributeCombinationId = combination.Id
+                        });
+
+                    pageIndex++;
+                }
+
+                // delete picture column after moving data to combination piture table
+                Delete.Column(columnName).FromTable(productAttributeCombinationTableName);
+            }
+
+            var productAttributeValueTableName = nameof(ProductAttributeValue);
+            var pav = Schema.Table(productAttributeValueTableName);
+
+            if (pav.Column(columnName).Exists())
+            {
+                var valueQuery =
+                    from c in _dataProvider.GetTable<ProductAttributeValue450>()
+                    join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
+                    select c;
+
+                pageIndex = 0;
+
+                while (true)
+                {
+                    var values = valueQuery.ToPagedListAsync(pageIndex, pageSize).Result;
+
+                    if (!values.Any())
+                        break;
+
+                    foreach (var value in values)
+                        _dataProvider.InsertEntity(new ProductAttributeValuePicture
+                        {
+                            PictureId = value.PictureId,
+                            ProductAttributeValueId = value.Id
+                        });
+
+                    pageIndex++;
+                }
+
+                // delete picture column after moving data to value piture table
+                Delete.Column(columnName).FromTable(productAttributeValueTableName);
             }
         }
 
