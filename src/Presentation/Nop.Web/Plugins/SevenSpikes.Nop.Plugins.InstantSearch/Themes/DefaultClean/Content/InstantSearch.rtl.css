@@ -1,0 +1,20 @@
+﻿span.search-box-text,
+.search-box-select {
+    float: right;
+}
+.instant-search-busy {
+    background-position: 10px center !important;
+}
+
+/* AUTOCOMPLETE */
+
+.instantSearch {
+	right: 0 !important;
+}
+.instant-search-item .img-block {
+    float: right !important;
+}
+.instant-search-item .detail {
+    text-align: right !important;
+    margin: 0 70px 0 0;
+}

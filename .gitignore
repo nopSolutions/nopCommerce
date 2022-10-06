@@ -225,6 +225,7 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.HtmlWidgets/
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.InstantSearch/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.JCarousel/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.NopQuickTabs/
@@ -240,8 +241,6 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/Widgets.Flixmedia/
 !src/Presentation/Nop.Web/Plugins/Widgets.GoogleAnalytics/
 !src/Presentation/Nop.Web/Plugins/Widgets.PowerReviews/
-!src/Presentation/Nop.Web/Plugins/NopAcceleratePlus.Core/
-!src/Presentation/Nop.Web/Plugins/NopAcceleratePlus.Search/
 
 # Automation
 automation/node_modules
