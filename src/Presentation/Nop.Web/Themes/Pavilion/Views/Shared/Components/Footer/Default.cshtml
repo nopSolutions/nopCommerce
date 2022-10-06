@@ -19,8 +19,12 @@
     var removeCopyright = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removecopyright", false, storeId, true);
     var removeDesignedBy = await settingService.GetSettingByKeyAsync("pavilionthemesettings.removedesignedby", false, storeId, true);
 
-    var hideCustomerService = @Context.Request.Host.ToString().Contains("mickeyshorr");
+    var isMickey = @Context.Request.Host.ToString().Contains("mickeyshorr");
+    var hideCustomerService = isMickey;
     var shouldDisplayContractSales = @Context.Request.Host.ToString().Contains("abcwarehouse");
+    var manageCreditCardLink = isMickey ?
+        "https://consumercenter.mysynchrony.com/consumercenter/login/" :
+        "https://www.mysynchrony.com/mysynchrony/merchants/cmp-index.html?market=electronics&store=abcwarehouse";
 }
 
 @* custom styles *@
@@ -130,7 +134,7 @@
                     @if (Model.ShoppingCartEnabled && Model.DisplayShoppingCartFooterItem)
                     {
                         <li><a href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
-                        <li><a href="https://www.mysynchrony.com/mysynchrony/merchants/cmp-index.html?market=electronics&store=abcwarehouse">Manage Credit Card</a></li>
+                        <li><a href="@manageCreditCardLink">Manage Credit Card</a></li>
                     }
                     @if (Model.WishlistEnabled && Model.DisplayWishlistFooterItem)
                     {
