@@ -16,6 +16,7 @@ using Nop.Services.Tax;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Tax.AbcTax.Services
 {
@@ -45,6 +46,7 @@ namespace Nop.Plugin.Tax.AbcTax.Services
         private readonly TaxSettings _taxSettings;
 
         private readonly IWarrantyTaxService _warrantyTaxService;
+        private readonly ILogger _logger;
 
         public CustomOrderTotalCalculationService(CatalogSettings catalogSettings,
             IAddressService addressService,
@@ -69,14 +71,15 @@ namespace Nop.Plugin.Tax.AbcTax.Services
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings,
             // custom
-            IWarrantyTaxService warrantyTaxService
+            IWarrantyTaxService warrantyTaxService,
+            ILogger logger
         )
             : base(catalogSettings, addressService, checkoutAttributeParser, customerService,
                 discountService, genericAttributeService, giftCardService, orderService,
                 paymentService, priceCalculationService, productService, rewardPointService,
                 shippingPluginManager, shippingService, shoppingCartService,
                 storeContext, taxService, workContext, rewardPointsSettings,
-                shippingSettings, shoppingCartSettings, taxSettings)
+                shippingSettings, shoppingCartSettings, taxSettings, logger)
         {
             _catalogSettings = catalogSettings;
             _addressService = addressService;
@@ -103,6 +106,7 @@ namespace Nop.Plugin.Tax.AbcTax.Services
 
             // custom
             _warrantyTaxService = warrantyTaxService;
+            _logger = logger;
         }
 
         public override async Task<(decimal discountAmount, List<Discount> appliedDiscounts, decimal subTotalWithoutDiscount, decimal subTotalWithDiscount, SortedDictionary<decimal, decimal> taxRates)> GetShoppingCartSubTotalAsync(

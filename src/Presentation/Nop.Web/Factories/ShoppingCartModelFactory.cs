@@ -38,6 +38,7 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Services.Logging;
 
 namespace Nop.Web.Factories
 {
@@ -95,6 +96,8 @@ namespace Nop.Web.Factories
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
+        private readonly ILogger _logger;
+
         #endregion
 
         #region Ctor
@@ -144,7 +147,8 @@ namespace Nop.Web.Factories
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            ILogger logger)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -192,6 +196,7 @@ namespace Nop.Web.Factories
             _shoppingCartSettings = shoppingCartSettings;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
+            _logger = logger;
         }
 
         #endregion
@@ -1172,6 +1177,8 @@ namespace Nop.Web.Factories
                 else
                 {
                     var (shoppingCartTaxBase, taxRates) = await _orderTotalCalculationService.GetTaxTotalAsync(cart);
+                    await _logger.InformationAsync($"shoppingCartTaxBase: {shoppingCartTaxBase}");
+                    await _logger.InformationAsync($"taxRates: {taxRates.FirstOrDefault()}");
                     var shoppingCartTax = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTaxBase, await _workContext.GetWorkingCurrencyAsync());
 
                     if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)

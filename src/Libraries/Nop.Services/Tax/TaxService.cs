@@ -826,6 +826,7 @@ namespace Nop.Services.Tax
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
             };
             var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(taxTotalRequest);
+            await _logger.InformationAsync($"taxTotalResult: {taxTotalResult}");
 
             //tax total is calculated, now consumers can adjust it
             await _eventPublisher.PublishAsync(new TaxTotalCalculatedEvent(taxTotalRequest, taxTotalResult));
