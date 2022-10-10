@@ -1162,8 +1162,6 @@ namespace Nop.Services.Orders
             var taxRates = taxTotalResult?.TaxRates ?? new SortedDictionary<decimal, decimal>();
             var taxTotal = taxTotalResult?.TaxTotal ?? decimal.Zero;
 
-            await _logger.InformationAsync($"taxTotal: {taxTotal}");
-
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 taxTotal = await _priceCalculationService.RoundPriceAsync(taxTotal);
 

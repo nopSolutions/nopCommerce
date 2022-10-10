@@ -144,7 +144,9 @@ namespace Nop.Plugin.Tax.AbcTax
             var taxTotal = decimal.Zero;
 
             taxTotal += await GetSubtotalTaxTotalAsync(taxRates, taxTotalRequest);
+            await _logger.InformationAsync($"taxTotal (AbcTaxProvider, subtotal): {taxTotal}");
             taxTotal += await GetShippingTaxAsync(taxRates, taxTotalRequest);
+            await _logger.InformationAsync($"taxTotal (AbcTaxProvider, shipping): {taxTotal}");
 
             //short-circuit to avoid circular reference when calculating payment method additional fee during the checkout process
             if (!taxTotalRequest.UsePaymentMethodAdditionalFee)
@@ -322,6 +324,7 @@ namespace Nop.Plugin.Tax.AbcTax
         {
             var (_, _, _, _, orderSubTotalTaxRates) = await _orderTotalCalculationService
                 .GetShoppingCartSubTotalAsync(taxTotalRequest.ShoppingCart, false);
+            await _logger.InformationAsync($"orderSubTotalTaxRates: {orderSubTotalTaxRates.FirstOrDefault()}");
             var subTotalTaxTotal = decimal.Zero;
             foreach (var kvp in orderSubTotalTaxRates)
             {

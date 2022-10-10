@@ -1177,8 +1177,6 @@ namespace Nop.Web.Factories
                 else
                 {
                     var (shoppingCartTaxBase, taxRates) = await _orderTotalCalculationService.GetTaxTotalAsync(cart);
-                    await _logger.InformationAsync($"shoppingCartTaxBase: {shoppingCartTaxBase}");
-                    await _logger.InformationAsync($"taxRates: {taxRates.FirstOrDefault()}");
                     var shoppingCartTax = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTaxBase, await _workContext.GetWorkingCurrencyAsync());
 
                     if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
