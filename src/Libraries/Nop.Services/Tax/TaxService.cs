@@ -299,7 +299,6 @@ namespace Nop.Services.Tax
             var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
             {
-                await _logger.InformationAsync("activeTaxProvider is null");
                 return (taxRate, true);
             }
 
@@ -566,6 +565,7 @@ namespace Nop.Services.Tax
 
             (taxRate, isTaxable) = await GetTaxRateAsync(product, taxCategoryId, customer, price);
             await _logger.InformationAsync($"taxRate (GetProductPriceAsync): {taxRate}");
+            await _logger.InformationAsync($"isTaxable (GetProductPriceAsync): {isTaxable}");
 
             if (priceIncludesTax)
             {
