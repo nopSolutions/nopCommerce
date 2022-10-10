@@ -564,8 +564,6 @@ namespace Nop.Services.Tax
             bool isTaxable;
 
             (taxRate, isTaxable) = await GetTaxRateAsync(product, taxCategoryId, customer, price);
-            await _logger.InformationAsync($"taxRate (GetProductPriceAsync): {taxRate}");
-            await _logger.InformationAsync($"isTaxable (GetProductPriceAsync): {isTaxable}");
 
             if (priceIncludesTax)
             {
