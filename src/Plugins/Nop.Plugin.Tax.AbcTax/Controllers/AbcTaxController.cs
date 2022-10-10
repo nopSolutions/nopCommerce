@@ -139,6 +139,7 @@ namespace Nop.Plugin.Tax.AbcTax.Controllers
             }
 
             _abcTaxSettings.TaxJarAPIToken = model.TaxJarAPIToken;
+            _abcTaxSettings.IsDebugMode = model.IsDebugMode;
             await _settingService.SaveSettingAsync(_abcTaxSettings);
 
             _notificationService.SuccessNotification(

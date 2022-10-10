@@ -33,6 +33,9 @@ namespace Nop.Plugin.Tax.AbcTax.Models
         [NopResourceDisplayName("Plugins.Tax.AbcTax.Fields.TaxJarAPIToken")]
         public string TaxJarAPIToken { get; set; }
 
+        [NopResourceDisplayName("Plugins.Tax.AbcTax.Fields.IsDebugMode")]
+        public bool IsDebugMode { get; set; }
+
         public string TaxCategoriesCanNotLoadedError { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }

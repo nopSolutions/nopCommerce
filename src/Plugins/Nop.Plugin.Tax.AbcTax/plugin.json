@@ -2,7 +2,7 @@
   "Group": "Tax providers",
   "FriendlyName": "ABC Warehouse Tax",
   "SystemName": "Tax.AbcTax",
-  "Version": "4.40.0",
+  "Version": "4.40.1",
   "SupportedVersions": [ "4.40" ],
   "Author": "Dave Farinelli",
   "DisplayOrder": 1,

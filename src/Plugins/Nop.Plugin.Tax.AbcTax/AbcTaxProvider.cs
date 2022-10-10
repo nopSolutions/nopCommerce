@@ -20,6 +20,7 @@ using Nop.Services.Tax;
 using Nop.Data;
 using Nop.Services.Directory;
 using Taxjar;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Tax.AbcTax
 {
@@ -41,6 +42,7 @@ namespace Nop.Plugin.Tax.AbcTax
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
         private readonly TaxSettings _taxSettings;
+        private readonly ILogger _logger;
 
         public AbcTaxProvider(AbcTaxSettings abcTaxSettings,
             IAbcTaxService abcTaxService,
@@ -57,7 +59,8 @@ namespace Nop.Plugin.Tax.AbcTax
             ITaxjarRateService taxjarRateService,
             ITaxService taxService,
             IWebHelper webHelper,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ILogger logger)
         {
             _abcTaxSettings = abcTaxSettings;
             _abcTaxService = abcTaxService;
@@ -75,6 +78,7 @@ namespace Nop.Plugin.Tax.AbcTax
             _taxService = taxService;
             _webHelper = webHelper;
             _taxSettings = taxSettings;
+            _logger = logger;
         }
 
         public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
@@ -94,12 +98,32 @@ namespace Nop.Plugin.Tax.AbcTax
                 taxRateRequest.Address
             );
 
-            if (foundRecord == null) return result;
+            if (_abcTaxSettings.IsDebugMode && foundRecord != null)
+            {
+                await _logger.InformationAsync($"TaxJar Enabled: {foundRecord.IsTaxJarEnabled}");
+                await _logger.InformationAsync($"Percentage: {foundRecord.Percentage}");
+                await _logger.InformationAsync($"TaxCategoryId: {foundRecord.TaxCategoryId}");
+            }
+
+            if (foundRecord == null)
+            {
+                if (_abcTaxSettings.IsDebugMode)
+                {
+                    await _logger.InformationAsync($"Record not found for currentStoreId: {taxRateRequest.CurrentStoreId}, taxCategoryId: {taxRateRequest.TaxCategoryId}, address: {taxRateRequest.Address}");
+                }
+
+                return result;
+            }
 
             // get TaxJar rate if appropriate
             result.TaxRate = foundRecord.IsTaxJarEnabled ?
                 await _taxjarRateService.GetTaxJarRateAsync(taxRateRequest.Address) :
                 foundRecord.Percentage;
+
+            if (_abcTaxSettings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"Tax Rate: {result.TaxRate}");
+            }
             
             return result;
         }
@@ -155,32 +179,7 @@ namespace Nop.Plugin.Tax.AbcTax
             await _settingService.SaveSettingAsync(new AbcTaxSettings());
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
-            {
-                ["Plugins.Tax.AbcTax.Tax.Categories.Manage"] = "Manage tax categories",
-                ["Plugins.Tax.AbcTax.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
-                ["Plugins.Tax.AbcTax.TaxByCountryStateZip"] = "By Country",
-                ["Plugins.Tax.AbcTax.Fields.TaxCategoryName"] = "Tax category",
-                ["Plugins.Tax.AbcTax.Fields.Rate"] = "Rate",
-                ["Plugins.Tax.AbcTax.Fields.Store"] = "Store",
-                ["Plugins.Tax.AbcTax.Fields.Store.Hint"] = "If an asterisk is selected, then this shipping rate will apply to all stores.",
-                ["Plugins.Tax.AbcTax.Fields.Country"] = "Country",
-                ["Plugins.Tax.AbcTax.Fields.Country.Hint"] = "The country.",
-                ["Plugins.Tax.AbcTax.Fields.StateProvince"] = "State / province",
-                ["Plugins.Tax.AbcTax.Fields.StateProvince.Hint"] = "If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.",
-                ["Plugins.Tax.AbcTax.Fields.Zip"] = "Zip",
-                ["Plugins.Tax.AbcTax.Fields.Zip.Hint"] = "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.",
-                ["Plugins.Tax.AbcTax.Fields.TaxCategory"] = "Tax category",
-                ["Plugins.Tax.AbcTax.Fields.TaxCategory.Hint"] = "The tax category.",
-                ["Plugins.Tax.AbcTax.Fields.Percentage"] = "Percentage",
-                ["Plugins.Tax.AbcTax.Fields.Percentage.Hint"] = "The tax rate.",
-                ["Plugins.Tax.AbcTax.Fields.IsTaxJarEnabled"] = "Is TaxJar enabled",
-                ["Plugins.Tax.AbcTax.Fields.IsTaxJarEnabled.Hint"] = "Whether the rate is enabled.",
-                ["Plugins.Tax.AbcTax.Fields.TaxJarAPIToken"] = "TaxJar API Token",
-                ["Plugins.Tax.AbcTax.Fields.TaxJarAPIToken.Hint"] = "Whether the rate is enabled.",
-                ["Plugins.Tax.AbcTax.AddRecord"] = "Add tax rate",
-                ["Plugins.Tax.AbcTax.AddRecordTitle"] = "New tax rate"
-            });
+            await UpdateLocales();
 
             // If possible, import data from old Tax plugin
             await _nopDataProvider.ExecuteNonQueryAsync($@"
@@ -209,6 +208,46 @@ namespace Nop.Plugin.Tax.AbcTax
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Tax.AbcTax");
 
             await base.UninstallAsync();
+        }
+
+        public override async Task UpdateAsync(string oldVersion, string currentVersion)
+        {
+            //locales
+            await UpdateLocales();
+
+            await base.UpdateAsync(oldVersion, currentVersion);
+        }
+
+        private async Task UpdateLocales()
+        {
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            {
+                ["Plugins.Tax.AbcTax.Tax.Categories.Manage"] = "Manage tax categories",
+                ["Plugins.Tax.AbcTax.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
+                ["Plugins.Tax.AbcTax.TaxByCountryStateZip"] = "By Country",
+                ["Plugins.Tax.AbcTax.Fields.TaxCategoryName"] = "Tax category",
+                ["Plugins.Tax.AbcTax.Fields.Rate"] = "Rate",
+                ["Plugins.Tax.AbcTax.Fields.Store"] = "Store",
+                ["Plugins.Tax.AbcTax.Fields.Store.Hint"] = "If an asterisk is selected, then this shipping rate will apply to all stores.",
+                ["Plugins.Tax.AbcTax.Fields.Country"] = "Country",
+                ["Plugins.Tax.AbcTax.Fields.Country.Hint"] = "The country.",
+                ["Plugins.Tax.AbcTax.Fields.StateProvince"] = "State / province",
+                ["Plugins.Tax.AbcTax.Fields.StateProvince.Hint"] = "If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.",
+                ["Plugins.Tax.AbcTax.Fields.Zip"] = "Zip",
+                ["Plugins.Tax.AbcTax.Fields.Zip.Hint"] = "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.",
+                ["Plugins.Tax.AbcTax.Fields.TaxCategory"] = "Tax category",
+                ["Plugins.Tax.AbcTax.Fields.TaxCategory.Hint"] = "The tax category.",
+                ["Plugins.Tax.AbcTax.Fields.Percentage"] = "Percentage",
+                ["Plugins.Tax.AbcTax.Fields.Percentage.Hint"] = "The tax rate.",
+                ["Plugins.Tax.AbcTax.Fields.IsTaxJarEnabled"] = "Is TaxJar enabled",
+                ["Plugins.Tax.AbcTax.Fields.IsTaxJarEnabled.Hint"] = "Whether the rate is enabled.",
+                ["Plugins.Tax.AbcTax.Fields.TaxJarAPIToken"] = "TaxJar API Token",
+                ["Plugins.Tax.AbcTax.Fields.TaxJarAPIToken.Hint"] = "Whether the rate is enabled.",
+                ["Plugins.Tax.AbcTax.Fields.IsDebugMode"] = "Debug Mode Enabled",
+                ["Plugins.Tax.AbcTax.Fields.IsDebugMode.Hint"] = "Enables debugging in logs.",
+                ["Plugins.Tax.AbcTax.AddRecord"] = "Add tax rate",
+                ["Plugins.Tax.AbcTax.AddRecordTitle"] = "New tax rate"
+            });
         }
 
         private async Task<decimal> GetShippingTaxAsync(
