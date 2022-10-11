@@ -56,7 +56,7 @@ namespace Nop.Plugin.Misc.AbcStatusApi.Controllers
             string password = Request.Query["password"];
             var loginResult = await _customerRegistrationService.ValidateCustomerAsync(email, password);
 
-            if (loginResult != CustomerLoginResults.Successful) { return Forbid(); }
+            if (loginResult != CustomerLoginResults.Successful) { return new BadRequestObjectResult("Unable to login, check credentials."); }
             
             Customer apiCustomer = await _customerService.GetCustomerByEmailAsync(email);
             if (apiCustomer == null)
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Misc.AbcStatusApi.Controllers
             }
 
             var adminCustomerRole = (await _customerService.GetCustomerRolesAsync(apiCustomer)).FirstOrDefault(cr => cr.SystemName == "Administrators");
-            if (adminCustomerRole == null) { return Forbid(); }
+            if (adminCustomerRole == null) { return new BadRequestObjectResult("Unable to find admin role for customer."); }
 
             string statusId = Request.Query["id"];
             string statusType = Request.Query["statusType"];
