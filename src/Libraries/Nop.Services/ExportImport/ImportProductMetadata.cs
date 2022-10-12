@@ -12,7 +12,7 @@ namespace Nop.Services.ExportImport
 
         public PropertyManager<Product, Language> Manager { get; internal set; }
 
-        public IList<PropertyByName<Product>> Properties { get; set; }
+        public IList<PropertyByName<Product, Language>> Properties { get; set; }
 
         public int CountProductsInFile => ProductsInFile.Count;
 

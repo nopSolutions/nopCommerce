@@ -1046,57 +1046,57 @@ namespace Nop.Services.ExportImport
 
             var productAttributeProperties = new[]
             {
-                new PropertyByName<ExportProductAttribute>("AttributeId"),
-                new PropertyByName<ExportProductAttribute>("AttributeName"),
-                new PropertyByName<ExportProductAttribute>("DefaultValue"),
-                new PropertyByName<ExportProductAttribute>("ValidationMinLength"),
-                new PropertyByName<ExportProductAttribute>("ValidationMaxLength"),
-                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions"),
-                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize"),
-                new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
-                new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
-                new PropertyByName<ExportProductAttribute>("AttributeControlType"),
-                new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"),
-                new PropertyByName<ExportProductAttribute>("ProductAttributeValueId"),
-                new PropertyByName<ExportProductAttribute>("ValueName"),
-                new PropertyByName<ExportProductAttribute>("AttributeValueType"),
-                new PropertyByName<ExportProductAttribute>("AssociatedProductId"),
-                new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
-                new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
-                new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
-                new PropertyByName<ExportProductAttribute>("PriceAdjustmentUsePercentage"),
-                new PropertyByName<ExportProductAttribute>("WeightAdjustment"),
-                new PropertyByName<ExportProductAttribute>("Cost"),
-                new PropertyByName<ExportProductAttribute>("CustomerEntersQty"),
-                new PropertyByName<ExportProductAttribute>("Quantity"),
-                new PropertyByName<ExportProductAttribute>("IsPreSelected"),
-                new PropertyByName<ExportProductAttribute>("DisplayOrder"),
-                new PropertyByName<ExportProductAttribute>("PictureId")
+                new PropertyByName<ExportProductAttribute, Language>("AttributeId"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeName"),
+                new PropertyByName<ExportProductAttribute, Language>("DefaultValue"),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationMinLength"),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationMaxLength"),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationFileAllowedExtensions"),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationFileMaximumSize"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeTextPrompt"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeIsRequired"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeControlType"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeDisplayOrder"),
+                new PropertyByName<ExportProductAttribute, Language>("ProductAttributeValueId"),
+                new PropertyByName<ExportProductAttribute, Language>("ValueName"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeValueType"),
+                new PropertyByName<ExportProductAttribute, Language>("AssociatedProductId"),
+                new PropertyByName<ExportProductAttribute, Language>("ColorSquaresRgb"),
+                new PropertyByName<ExportProductAttribute, Language>("ImageSquaresPictureId"),
+                new PropertyByName<ExportProductAttribute, Language>("PriceAdjustment"),
+                new PropertyByName<ExportProductAttribute, Language>("PriceAdjustmentUsePercentage"),
+                new PropertyByName<ExportProductAttribute, Language>("WeightAdjustment"),
+                new PropertyByName<ExportProductAttribute, Language>("Cost"),
+                new PropertyByName<ExportProductAttribute, Language>("CustomerEntersQty"),
+                new PropertyByName<ExportProductAttribute, Language>("Quantity"),
+                new PropertyByName<ExportProductAttribute, Language>("IsPreSelected"),
+                new PropertyByName<ExportProductAttribute, Language>("DisplayOrder"),
+                new PropertyByName<ExportProductAttribute, Language>("PictureId")
             };
 
             var productAttributeLocalizedProperties = new[]
             {
-                new LocalizedPropertyByName<ExportProductAttribute, Language>("DefaultValue"),
-                new LocalizedPropertyByName<ExportProductAttribute, Language>("AttributeTextPrompt"),
-                new LocalizedPropertyByName<ExportProductAttribute, Language>("ValueName")
+                new PropertyByName<ExportProductAttribute, Language>("DefaultValue"),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeTextPrompt"),
+                new PropertyByName<ExportProductAttribute, Language>("ValueName")
             };
 
             var productAttributeManager = new PropertyManager<ExportProductAttribute, Language>(productAttributeProperties, _catalogSettings, productAttributeLocalizedProperties, languages);
 
             var specificationAttributeProperties = new[]
             {
-                new PropertyByName<ExportSpecificationAttribute>("AttributeType", p => p.AttributeTypeId),
-                new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", p => p.SpecificationAttributeId),
-                new PropertyByName<ExportSpecificationAttribute>("CustomValue", p => p.CustomValue),
-                new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", p => p.SpecificationAttributeOptionId),
-                new PropertyByName<ExportSpecificationAttribute>("AllowFiltering", p => p.AllowFiltering),
-                new PropertyByName<ExportSpecificationAttribute>("ShowOnProductPage", p => p.ShowOnProductPage),
-                new PropertyByName<ExportSpecificationAttribute>("DisplayOrder", p => p.DisplayOrder)
+                new PropertyByName<ExportSpecificationAttribute, Language>("AttributeType", (p, l) => p.AttributeTypeId),
+                new PropertyByName<ExportSpecificationAttribute, Language>("SpecificationAttribute", (p, l) => p.SpecificationAttributeId),
+                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue", (p, l) => p.CustomValue),
+                new PropertyByName<ExportSpecificationAttribute, Language>("SpecificationAttributeOptionId", (p, l) => p.SpecificationAttributeOptionId),
+                new PropertyByName<ExportSpecificationAttribute, Language>("AllowFiltering", (p, l) => p.AllowFiltering),
+                new PropertyByName<ExportSpecificationAttribute, Language>("ShowOnProductPage", (p, l) => p.ShowOnProductPage),
+                new PropertyByName<ExportSpecificationAttribute, Language>("DisplayOrder", (p, l) => p.DisplayOrder)
             };
 
             var specificationAttributeLocalizedProperties = new[]
             {
-                new LocalizedPropertyByName<ExportSpecificationAttribute, Language>("CustomValue")
+                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue")
             };
 
             var specificationAttributeManager = new PropertyManager<ExportSpecificationAttribute, Language>(specificationAttributeProperties, _catalogSettings, specificationAttributeLocalizedProperties, languages);
@@ -1395,16 +1395,16 @@ namespace Nop.Services.ExportImport
 
             var orderItemProperties = new[]
             {
-                new PropertyByName<OrderItem>("OrderItemGuid"),
-                new PropertyByName<OrderItem>("Name"),
-                new PropertyByName<OrderItem>("Sku"),
-                new PropertyByName<OrderItem>("PriceExclTax"),
-                new PropertyByName<OrderItem>("PriceInclTax"),
-                new PropertyByName<OrderItem>("Quantity"),
-                new PropertyByName<OrderItem>("DiscountExclTax"),
-                new PropertyByName<OrderItem>("DiscountInclTax"),
-                new PropertyByName<OrderItem>("TotalExclTax"),
-                new PropertyByName<OrderItem>("TotalInclTax")
+                new PropertyByName<OrderItem, Language>("OrderItemGuid"),
+                new PropertyByName<OrderItem, Language>("Name"),
+                new PropertyByName<OrderItem, Language>("Sku"),
+                new PropertyByName<OrderItem, Language>("PriceExclTax"),
+                new PropertyByName<OrderItem, Language>("PriceInclTax"),
+                new PropertyByName<OrderItem, Language>("Quantity"),
+                new PropertyByName<OrderItem, Language>("DiscountExclTax"),
+                new PropertyByName<OrderItem, Language>("DiscountInclTax"),
+                new PropertyByName<OrderItem, Language>("TotalExclTax"),
+                new PropertyByName<OrderItem, Language>("TotalInclTax")
             };
 
             var orderItemManager = new PropertyManager<OrderItem, Language>(orderItemProperties, _catalogSettings);
@@ -1619,8 +1619,8 @@ namespace Nop.Services.ExportImport
             if (worksheet == null)
                 throw new NopException("No worksheet found");
 
-            var properties = new List<PropertyByName<T>>();
-            var localizedProperties = new List<LocalizedPropertyByName<T, Language>>();
+            var properties = new List<PropertyByName<T, Language>>();
+            var localizedProperties = new List<PropertyByName<T, Language>>();
             var localizedWorksheets = new List<IXLWorksheet>();
 
             var poz = 1;
@@ -1634,7 +1634,7 @@ namespace Nop.Services.ExportImport
                         break;
 
                     poz += 1;
-                    properties.Add(new PropertyByName<T>(cell.Value.ToString()));
+                    properties.Add(new PropertyByName<T, Language>(cell.Value.ToString()));
                 }
                 catch
                 {
@@ -1662,7 +1662,7 @@ namespace Nop.Services.ExportImport
                             break;
 
                         poz += 1;
-                        localizedProperties.Add(new LocalizedPropertyByName<T, Language>(cell.Value.ToString()));
+                        localizedProperties.Add(new PropertyByName<T, Language>(cell.Value.ToString()));
                     }
                     catch
                     {

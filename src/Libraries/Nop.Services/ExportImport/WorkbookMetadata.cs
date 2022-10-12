@@ -7,9 +7,9 @@ namespace Nop.Services.ExportImport
 {
     public class WorkbookMetadata<T>
     {
-        public List<PropertyByName<T>> DefaultProperties { get; set; }
+        public List<PropertyByName<T, Language>> DefaultProperties { get; set; }
 
-        public List<LocalizedPropertyByName<T, Language>> LocalizedProperties { get; set; }
+        public List<PropertyByName<T, Language>> LocalizedProperties { get; set; }
 
         public IXLWorksheet DefaultWorksheet { get; set; }
 
