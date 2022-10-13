@@ -2,6 +2,17 @@
     Overwrites styles.css for the Pavilion theme.
 */
 
+/* InstantSearch changes */
+
+@media (max-width: 1000px)
+{
+    div.instantSearch {
+        top: 100px !important;
+    }
+}
+
+/* end InstantSearch changes
+
 .header-middle {
     padding: 10px 0;
 }
