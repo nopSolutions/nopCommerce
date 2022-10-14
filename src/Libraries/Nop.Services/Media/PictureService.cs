@@ -917,9 +917,12 @@ namespace Nop.Services.Media
 
             //contentType is not always available 
             //that's why we manually update it here
-            //http://www.sfsu.edu/training/mimetype.htm
-            if (string.IsNullOrEmpty(contentType) || contentType == MimeTypes.ImageSvg) 
+            //https://mimetype.io/all-types/
+            if (string.IsNullOrEmpty(contentType)) 
                 contentType = GetPictureContentTypeByFileExtension(fileExtension);
+
+            if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSVGUploads)
+                return null;
 
             var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
 

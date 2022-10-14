@@ -78,6 +78,11 @@ namespace Nop.Core.Domain.Media
         public bool DefaultPictureZoomEnabled { get; set; }
 
         /// <summary>
+        /// A value indicating whether to allow uploading of SVG files in admin area
+        /// </summary>
+        public bool AllowSVGUploads { get; set; }
+
+        /// <summary>
         /// Maximum allowed picture size. If a larger picture is uploaded, then it'll be resized
         /// </summary>
         public int MaximumImageSize { get; set; }

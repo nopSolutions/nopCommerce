@@ -314,6 +314,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 sitemapXmlSettings.SitemapBuildOperationDelay = 60;
                 settingService.SaveSettingAsync(sitemapXmlSettings, settings => settings.SitemapBuildOperationDelay).Wait();
             }
+
+            //#6378
+            if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.AllowSVGUploads).Result)
+            {
+                mediaSettings.AllowSVGUploads = false;
+                settingService.SaveSettingAsync(mediaSettings, settings => settings.AllowSVGUploads).Wait();
+            }
         }
 
         public override void Down()
