@@ -48,6 +48,7 @@ using Nop.Services.Cms;
 using Nop.Plugin.Misc.AbcCore.Models;
 using Newtonsoft.Json;
 using Nop.Plugin.Misc.AbcFrontend.Models;
+using Nop.Plugin.Misc.AbcCore;
 
 namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 {
@@ -70,6 +71,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
         private readonly IBackendStockService _backendStockService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IWidgetPluginManager _widgetPluginManager;
+        private readonly CoreSettings _coreSettings;
 
         public CustomShoppingCartController(
             CaptchaSettings captchaSettings,
@@ -111,7 +113,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             IRepository<CustomerShopMapping> customerShopMappingRepository,
             IBackendStockService backendStockService,
             IProductAbcDescriptionService productAbcDescriptionService,
-            IWidgetPluginManager widgetPluginManager
+            IWidgetPluginManager widgetPluginManager,
+            CoreSettings coreSettings
         ) : base(captchaSettings, customerSettings, checkoutAttributeParser, checkoutAttributeService,
             currencyService, customerActivityService, customerService, discountService,
             downloadService, genericAttributeService, giftCardService, localizationService,
@@ -138,6 +141,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             _backendStockService = backendStockService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _widgetPluginManager = widgetPluginManager;
+            _coreSettings = coreSettings;
         }
 
         //add product to cart using AJAX
@@ -211,6 +215,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             string attributes = "";
             ProductAttributeMapping hdProductAttribute = null;
+            ProductAttributeMapping pickupProductAttribute = null;
 
             var pams =  await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
 
@@ -223,7 +228,19 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                     case "Home Delivery":
                         hdProductAttribute = pam;
                         break;
+                    case "Pickup":
+                        pickupProductAttribute = pam;
+                        break;
                 }
+            }
+
+            // ABC: set up for Pickup only mode - force redirect to PDP
+            if (pickupProductAttribute != null && _coreSettings.IsPickupOnlyMode)
+            {
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                });
             }
 
             // home delivery is default, so if it is home delivered, add the attribute no matter what

@@ -15,5 +15,7 @@ namespace Nop.Plugin.Misc.AbcCore.Models
         public List<ProductStock> ProductStocks;
 
         public int ProductId;
+
+        public bool IsPickupOnlyMode;
     }
 }

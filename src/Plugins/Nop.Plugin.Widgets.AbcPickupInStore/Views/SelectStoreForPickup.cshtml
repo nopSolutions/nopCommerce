@@ -109,29 +109,32 @@
 
 <br/>
 
-<div class="title-background"> 
-    <span class="title-text">Have It Shipped</span>
-</div>
+@if (!Model.IsPickupOnlyMode)
+{
+    <div class="title-background"> 
+        <span class="title-text">Have It Shipped</span>
+    </div>
 
-<br />
+    <br />
 
-<table class="home-delivery-table">
-    <tr>
-        <td colspan="2">
-            <div class="title-subtext-background">
-                <span class="title-subtext">Add to cart to calculate shipping cost</span>
-            </div>
-        </td>
-        <td class="button-column store-col-3">
-            <button class="add-to-cart-btn-custom" onclick="AjaxCart.addproducttocart_details('/addproducttocart/details/@Model.ProductId/1', '#product-details-form');return false;">Add to Cart</button>
-        </td>
-    </tr>
-    <tr class="mobile-btn-row">
-        <td class="store-col-span" colspan="2">
-            <div class="store-col-block last-col-block">
+    <table class="home-delivery-table">
+        <tr>
+            <td colspan="2">
+                <div class="title-subtext-background">
+                    <span class="title-subtext">Add to cart to calculate shipping cost</span>
+                </div>
+            </td>
+            <td class="button-column store-col-3">
                 <button class="add-to-cart-btn-custom" onclick="AjaxCart.addproducttocart_details('/addproducttocart/details/@Model.ProductId/1', '#product-details-form');return false;">Add to Cart</button>
-            </div>
-        </td>
-        <td class="store-col-3"></td>
-    </tr>
-</table>
+            </td>
+        </tr>
+        <tr class="mobile-btn-row">
+            <td class="store-col-span" colspan="2">
+                <div class="store-col-block last-col-block">
+                    <button class="add-to-cart-btn-custom" onclick="AjaxCart.addproducttocart_details('/addproducttocart/details/@Model.ProductId/1', '#product-details-form');return false;">Add to Cart</button>
+                </div>
+            </td>
+            <td class="store-col-3"></td>
+        </tr>
+    </table>
+}

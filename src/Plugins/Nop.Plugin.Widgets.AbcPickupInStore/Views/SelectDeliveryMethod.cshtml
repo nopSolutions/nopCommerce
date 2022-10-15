@@ -21,7 +21,6 @@
     string accentColor = "#" + storeSpecificColor;
 
     var productFlag = frontEndService.GetProductFlag(Model.ProductId);
-    bool isOnlineOnly = productFlag != null && productFlag.PriceBucketImageUrl != null && productFlag.PriceBucketImageUrl.Contains("Online");
 
     string storeText = "";
     if (Model.SelectedShop != null)
@@ -119,11 +118,17 @@
 			background-color: #e5e5e5;
 			border-color: #c3c3c3;
 		}
-
+</style>
+@if (!Model.IsPickupOnlyMode)
+{
+	<style>
 		div#zipcode-input-container {
 			display:none;
 		}
-</style>
+	</style>	
+}
+
+
 
 <script>
 		$(function() {
@@ -148,25 +153,25 @@
 </script>
 
 <div class="delivery-method-selection">
-    <div class="radio-row">
-        <input id="home-delivery-radio" type="radio" class="radio-input" name="delivery-method" checked="checked" />
-        <label class="radio-label" for="home-delivery-radio">
-            Home Delivery
+	@if (!Model.IsPickupOnlyMode)
+	{
+		<div class="radio-row">
+			<input id="home-delivery-radio" type="radio" class="radio-input" name="delivery-method" checked="checked" />
+			<label class="radio-label" for="home-delivery-radio">
+				Home Delivery
+			</label>
+		</div>
+	}
+	<div class="radio-row">
+        <input id="pickup-radio" type="radio" class="radio-input" name="delivery-method" checked="@Model.IsPickupOnlyMode" />
+        <label class="radio-label" for="pickup-radio">
+            <span id="display_store_pretext">@Model.PickupInStoreText</span><span id="display_store_text">@storeText</span>
         </label>
+		<div id="zipcode-input-container">
+			<span class="title-subtext">Zipcode:&nbsp; </span>
+			<input id="zipcode_input" type="text">
+			<button id="zipcode_submit_btn" class="">Go</button>
+		</div>
     </div>
-    @if (!isOnlineOnly)
-    {
-        <div class="radio-row">
-            <input id="pickup-radio" type="radio" class="radio-input" name="delivery-method" />
-            <label class="radio-label" for="pickup-radio">
-                <span id="display_store_pretext">@Model.PickupInStoreText</span><span id="display_store_text">@storeText</span>
-            </label>
-			<div id="zipcode-input-container">
-				<span class="title-subtext">Zipcode:&nbsp; </span>
-				<input id="zipcode_input" type="text">
-				<button id="zipcode_submit_btn" class="">Go</button>
-			</div>
-        </div>
-    }
 
 </div>

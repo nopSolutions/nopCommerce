@@ -6,6 +6,7 @@ using SevenSpikes.Nop.Plugins.StoreLocator.Services;
 using Nop.Services.Orders;
 using Nop.Core;
 using SevenSpikes.Nop.Plugins.StoreLocator.Domain;
+using Nop.Plugin.Misc.AbcCore;
 
 namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
 {
@@ -18,6 +19,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
 
         private readonly PickupInStoreSettings _pickupInStoreSettings;
         private readonly StoreLocatorSettings _storeLocatorSettings;
+        private readonly CoreSettings _coreSettings;
 
         public PickStoreModelFactory(
             ICustomerShopService customerShopService,
@@ -25,7 +27,8 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
             IShoppingCartService shoppingCartService,
             IWorkContext workContext,
             PickupInStoreSettings pickupInStoreSettings,
-            StoreLocatorSettings storeLocatorSettings
+            StoreLocatorSettings storeLocatorSettings,
+            CoreSettings coreSettings
         ) {
             _customerShopService = customerShopService;
             _shopService = shopService;
@@ -33,6 +36,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
             _workContext = workContext;
             _pickupInStoreSettings = pickupInStoreSettings;
             _storeLocatorSettings = storeLocatorSettings;
+            _coreSettings = coreSettings;
         }
 
         public async Task<PickStoreModel> InitializePickStoreModelAsync()
@@ -54,6 +58,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
 
             model.PickupInStoreText = _pickupInStoreSettings.PickupInStoreText;
             model.GoogleMapsAPIKey = _storeLocatorSettings.GoogleApiKey;
+            model.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode;
 
             return model;
         }

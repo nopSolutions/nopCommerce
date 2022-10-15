@@ -20,6 +20,7 @@ using Nop.Services.Messages;
 using Nop.Core.Domain.Orders;
 using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Shops;
 using System.Threading.Tasks;
+using Nop.Plugin.Misc.AbcCore;
 
 namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
 {
@@ -41,6 +42,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
         private readonly StoreLocatorSettings _storeLocatorSettings;
         private readonly INotificationService _notificationService;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly CoreSettings _coreSettings;
 
         public PickStoreController(
             IWorkContext workContext,
@@ -58,7 +60,8 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
             ILogger logger,
             StoreLocatorSettings storeLocatorSettings,
             INotificationService notificationService,
-            IProductAttributeService productAttributeService
+            IProductAttributeService productAttributeService,
+            CoreSettings coreSettings
         )
         {
             _workContext = workContext;
@@ -77,6 +80,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
             _storeLocatorSettings = storeLocatorSettings;
             _notificationService = notificationService;
             _productAttributeService = productAttributeService;
+            _coreSettings = coreSettings;
         }
         public IActionResult Configure()
         {
@@ -158,6 +162,8 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
                     ProductId = productId
                 };
             }
+
+            stockResponse.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode;
 
             return PartialView("~/Plugins/Widgets.AbcPickupInStore/Views/SelectStoreForPickup.cshtml", stockResponse);
         }

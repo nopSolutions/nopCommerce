@@ -15,5 +15,8 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         [NopResourceDisplayName(CoreLocales.MobilePhoneNumber)]
         public string MobilePhoneNumber { get; set; }
+
+        [NopResourceDisplayName(CoreLocales.IsPickupOnlyMode)]
+        public bool IsPickupOnlyMode { get; set; }
     }
 }
