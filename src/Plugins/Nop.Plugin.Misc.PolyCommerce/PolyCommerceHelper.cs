@@ -29,7 +29,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
                                             StoreId,
                                             IsActive,
                                             CreatedOnUtc
-                                            from[dbo].[PolyCommerceStore]
+                                            from [dbo].[PolyCommerceStore]
                                             where Token = @Token";
 
                     command.CommandType = CommandType.Text;

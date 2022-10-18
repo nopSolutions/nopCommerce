@@ -23,6 +23,10 @@ using Nop.Services.Orders;
 using Nop.Core.Events;
 using System.Data.SqlClient;
 using Dapper;
+using DocumentFormat.OpenXml.EMMA;
+using Nop.Plugin.Misc.PolyCommerce.Models.GetOrders;
+using PolyCommerceOrderItem = Nop.Plugin.Misc.PolyCommerce.Models.GetOrders.PolyCommerceOrderItem;
+using System.Globalization;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
@@ -364,6 +368,65 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/polycommerce/orders/get_orders")]
+        public async Task<IActionResult> GetOrders(string updatedAtMin, string updatedAtMax)
+        {
+            var dataSettings = DataSettingsManager.LoadSettings();
+            var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
+
+            var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
+
+            if (store == null)
+            {
+                return Unauthorized();
+            }
+
+            var updatedAtMinDate = DateTime.TryParseExact(updatedAtMin, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var updatedAtMinDateVal) ? updatedAtMinDateVal : (DateTime?)null;
+            var updatedAtMaxDate = DateTime.TryParseExact(updatedAtMax, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var updatedAtMaxDateVal) ? updatedAtMaxDateVal : (DateTime?)null;
+
+            if (updatedAtMinDate == null)
+            {
+                throw new InvalidOperationException($"Could not case updatedAtMin as DateTime. updatedAtMin = {updatedAtMin}");
+            }
+
+            if (updatedAtMaxDate == null)
+            {
+                throw new InvalidOperationException($"Could not case updatedAtMax as DateTime. updatedAtMax = {updatedAtMax}");
+            }
+
+            var orderQuery = @"select sh.ShippedDateUtc, 
+                               sh.TrackingNumber,
+                               sh.OrderId,
+                               sh.CreatedOnUtc as CreatedOn,
+                               shi.Quantity as ShippedQuantity,
+                               shi.ShipmentId,
+                               oi.Quantity as OrderedQuantity,
+                               oi.ProductId,
+                               o.ShippingStatusId,
+                               o.ShippingMethod
+                               from Shipment sh
+                               join ShipmentItem shi on shi.ShipmentId = sh.Id
+                               join OrderItem oi on oi.Id = shi.OrderItemId
+                               join [dbo].[Order] o on o.Id = oi.OrderId
+                               where sh.CreatedOnUtc >= @OrdersAfterDate
+                               and sh.CreatedOnUtc < @OrdersBeforeDate";
+
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
+            {
+                var orders = await conn.QueryAsync<PolyCommerceOrderItem>(orderQuery, new { OrdersAfterDate = updatedAtMinDate, OrdersBeforeDate = updatedAtMaxDate });
+                var groupedOrders = orders.GroupBy(x => x.ShipmentId).Select(x => new PolyCommerceShipmentHeader { ShipmentId = x.First().ShipmentId, OrderId = x.First().OrderId, ShippingStatusId = x.First().ShippingStatusId, OrderItems = x.ToList() });
+
+                var result = new PolyCommerceGetOrdersResult
+                {
+                    Shipments = groupedOrders.ToList()
+                };
+
+                return Ok(result);
+            }
+        }
+
+        [Obsolete("Using endpoint api/polycommerce/orders/get_orders instead.")]
         [HttpPost]
         [Route("api/polycommerce/orders/check_for_shipped_orders")]
         public async Task<IActionResult> CheckForShippedOrders([FromBody] PolyCommerceCheckForShippedOrdersModel model)

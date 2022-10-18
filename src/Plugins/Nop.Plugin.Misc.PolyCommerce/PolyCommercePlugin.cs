@@ -30,6 +30,14 @@ namespace Nop.Plugin.Misc.PolyCommerce
 	                                                                    constraint PK_PolyCommerceStore primary key(Id),
 	                                                                    constraint FK_PolyCommerceStore_Store foreign key(StoreId) references Store(Id)
                                                                     )");
+
+                await conn.ExecuteAsync(@"if not exists (SELECT * 
+                                        FROM sys.indexes 
+                                        WHERE name='IX_Shipment_CreatedOnUtc' AND object_id = OBJECT_ID('dbo.Shipment')
+                                        )
+                                        begin
+	                                        create index IX_Shipment_CreatedOnUtc on Shipment(CreatedOnUtc);
+                                        end");
             }
 
             await base.InstallAsync();
