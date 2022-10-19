@@ -6,7 +6,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models
     /// <summary>
     /// Represents GoogleAuthenticator search model
     /// </summary>
-    public partial record GoogleAuthenticatorSearchModel : BaseSearchModel
+    public record GoogleAuthenticatorSearchModel : BaseSearchModel
     {
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
         public string SearchEmail { get; set; }

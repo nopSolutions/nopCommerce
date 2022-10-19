@@ -139,12 +139,12 @@ namespace Nop.Services.Catalog
                 else if (overridePublished.HasValue)
                     query = query.Where(m => m.Published == overridePublished.Value);
 
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-
-                //apply ACL constraints
                 if (!showHidden)
                 {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                    //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
                     query = await _aclService.ApplyAcl(query, customer);
                 }
@@ -242,7 +242,7 @@ namespace Nop.Services.Catalog
                 return new List<Manufacturer>();
 
             // get available products in category
-            var productsQuery = 
+            var productsQuery =
                 from p in _productRepository.Table
                 where !p.Deleted && p.Published &&
                       (p.ParentGroupedProductId == 0 || p.VisibleIndividually) &&
@@ -263,7 +263,7 @@ namespace Nop.Services.Catalog
                 ? await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)
                 : null;
 
-            var productCategoryQuery = 
+            var productCategoryQuery =
                 from pc in _productCategoryRepository.Table
                 where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
                       (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)

@@ -1,16 +1,16 @@
 /**
- * Globalize Runtime v1.6.0
+ * Globalize Runtime v1.7.0
  *
- * http://github.com/jquery/globalize
+ * https://github.com/globalizejs/globalize
  *
- * Copyright jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://jquery.org/license
  *
- * Date: 2020-09-08T11:54Z
+ * Date: 2021-08-02T11:53Z
  */
 /*!
- * Globalize Runtime v1.6.0 2020-09-08T11:54Z Released under the MIT license
+ * Globalize Runtime v1.7.0 2021-08-02T11:53Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -799,7 +799,7 @@ var outOfRange = function( value, low, high ) {
  *
  * ref: http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
  */
-var dateParse = function( value, tokens, properties ) {
+var dateParse = function( _value, tokens, properties ) {
 	var amPm, day, daysOfYear, month, era, hour, hour12, timezoneOffset, valid,
 		YEAR = 0,
 		MONTH = 1,
@@ -1077,6 +1077,8 @@ var dateParse = function( value, tokens, properties ) {
 	return date;
 };
 
+
+/* eslint-disable no-unused-expressions */
 
 
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
@@ -20,9 +21,11 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Nop.Core;
@@ -42,6 +45,7 @@ using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -259,6 +263,9 @@ namespace Nop.Tests
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             services.AddSingleton<ILocker, MemoryCacheManager>();
 
+            services.AddSingleton<IDistributedCache>(new MemoryDistributedCache(new TestMemoryDistributedCacheoptions()));
+            services.AddTransient<MemoryDistributedCacheManager>();
+            
             //services
             services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
             services.AddTransient<ICategoryService, CategoryService>();
@@ -537,7 +544,19 @@ namespace Nop.Tests
                 return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
             }
         }
-        
+
+        public static T GetService<T>(IServiceScope scope)
+        {
+            try
+            {
+                return scope.ServiceProvider.GetService<T>();
+            }
+            catch (InvalidOperationException)
+            {
+                return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
+            }
+        }
+
         public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
         {
             baseEntity.Id = 0;
@@ -780,6 +799,18 @@ namespace Nop.Tests
 
                 return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
             }
+        }
+
+        private class TestMemoryDistributedCache
+        {
+            public TestMemoryDistributedCache()
+            {
+            }
+        }
+
+        private class TestMemoryDistributedCacheoptions : IOptions<MemoryDistributedCacheOptions>
+        {
+            public MemoryDistributedCacheOptions Value => new();
         }
 
         #endregion

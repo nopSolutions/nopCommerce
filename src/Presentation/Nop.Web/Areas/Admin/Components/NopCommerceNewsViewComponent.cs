@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays the nopCommerce news
     /// </summary>
-    public class NopCommerceNewsViewComponent : NopViewComponent
+    public partial class NopCommerceNewsViewComponent : NopViewComponent
     {
         #region Fields
 

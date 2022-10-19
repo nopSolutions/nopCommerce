@@ -18,7 +18,7 @@ namespace Nop.Services.Media.RoxyFileman
     /// <summary>
     /// Database RoxyFileman service
     /// </summary>
-    public class DatabaseRoxyFilemanService : FileRoxyFilemanService
+    public partial class DatabaseRoxyFilemanService : FileRoxyFilemanService
     {
         #region Fields
 

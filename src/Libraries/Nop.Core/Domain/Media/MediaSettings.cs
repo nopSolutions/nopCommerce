@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Media
     /// <summary>
     /// Media settings
     /// </summary>
-    public class MediaSettings : ISettings
+    public partial class MediaSettings : ISettings
     {
         /// <summary>
         /// Picture size of customer avatars (if enabled)
@@ -76,6 +76,11 @@ namespace Nop.Core.Domain.Media
         /// A value indicating whether picture zoom is enabled
         /// </summary>
         public bool DefaultPictureZoomEnabled { get; set; }
+
+        /// <summary>
+        /// A value indicating whether to allow uploading of SVG files in admin area
+        /// </summary>
+        public bool AllowSVGUploads { get; set; }
 
         /// <summary>
         /// Maximum allowed picture size. If a larger picture is uploaded, then it'll be resized

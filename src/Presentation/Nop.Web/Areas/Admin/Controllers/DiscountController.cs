@@ -403,6 +403,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
         }
 
+        //action displaying notification (warning) to a store owner that entered coupon code already exists
+        public virtual async Task<IActionResult> CouponCodeReservedWarning(int discountId, string couponCode)
+        {
+            if (string.IsNullOrEmpty(couponCode))
+                return Json(new { Result = string.Empty });
+
+            //check whether discount with passed coupon code exists
+            var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: couponCode, showHidden: true))
+                .Where(discount => discount.Id != discountId);
+            if (!discounts.Any())
+                return Json(new { Result = string.Empty });
+
+            var message = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.CouponCode.Reserved"), discounts.FirstOrDefault().Name);
+            return Json(new { Result = message });
+        }
+
         #endregion
 
         #region Applied to products

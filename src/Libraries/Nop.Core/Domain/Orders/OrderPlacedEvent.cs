@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Order placed event
     /// </summary>
-    public class OrderPlacedEvent
+    public partial class OrderPlacedEvent
     {
         /// <summary>
         /// Ctor

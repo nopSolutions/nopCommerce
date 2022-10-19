@@ -8,7 +8,7 @@ namespace Nop.Data.DataProviders.Interceptors
     /// <summary>
     /// Represents a class allows MiniProfiler to collect SQL execution timings
     /// </summary>
-    public class UnwrapProfilerInterceptor : UnwrapDataObjectInterceptor
+    public partial class UnwrapProfilerInterceptor : UnwrapDataObjectInterceptor
     {
         // as interceptor is thread-safe, we will create
         // and use single instance of it

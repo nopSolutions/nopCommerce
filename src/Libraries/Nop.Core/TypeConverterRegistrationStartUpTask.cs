@@ -10,7 +10,7 @@ namespace Nop.Core
     /// <summary>
     /// Startup task for the registration custom type converters
     /// </summary>
-    public class TypeConverterRegistrationStartUpTask : IStartupTask
+    public partial class TypeConverterRegistrationStartUpTask : IStartupTask
     {
         /// <summary>
         /// Executes a task

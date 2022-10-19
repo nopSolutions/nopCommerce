@@ -133,7 +133,7 @@ namespace Nop.Data.Migrations
         }
 
         /// <summary>
-        /// Executes all found (and applied) migrations
+        /// Executes a Down for all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
@@ -146,6 +146,37 @@ namespace Nop.Data.Migrations
                 _migrationRunner.Down(migrationInfo.Migration);
                 _versionLoader.Value.DeleteVersion(migrationInfo.Version);
             }
+        }
+
+        /// <summary>
+        /// Executes down expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to rollback</param>
+        public void DownMigration(IMigration migration)
+        {
+            if (migration is null)
+                throw new ArgumentNullException(nameof(migration));
+
+            var migrationInfo = _migrationRunnerConventions.GetMigrationInfoForMigration(migration);
+
+            _migrationRunner.Down(migrationInfo.Migration);
+            _versionLoader.Value.DeleteVersion(migrationInfo.Version);
+        }
+
+        /// <summary>
+        /// Executes up expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to apply</param>
+        public void UpMigration(IMigration migration)
+        {
+            if (migration is null)
+                throw new ArgumentNullException(nameof(migration));
+
+            var migrationInfo = _migrationRunnerConventions.GetMigrationInfoForMigration(migration);
+            _migrationRunner.Up(migrationInfo.Migration);
+
+            _versionLoader.Value
+                    .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
         }
 
         #endregion

@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Menu
     /// <summary>
     /// Sitemap node
     /// </summary>
-    public class SiteMapNode
+    public partial class SiteMapNode
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteMapNode"/> class.

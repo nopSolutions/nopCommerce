@@ -3,7 +3,7 @@
     /// <summary>
     /// Customer activated event
     /// </summary>
-    public class CustomerActivatedEvent
+    public partial class CustomerActivatedEvent
     {
         /// <summary>
         /// Ctor

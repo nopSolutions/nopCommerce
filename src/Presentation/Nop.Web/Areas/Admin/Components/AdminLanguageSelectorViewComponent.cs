@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays the admin language selector
     /// </summary>
-    public class AdminLanguageSelectorViewComponent : NopViewComponent
+    public partial class AdminLanguageSelectorViewComponent : NopViewComponent
     {
         #region Fields
 

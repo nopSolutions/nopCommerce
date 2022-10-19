@@ -2,6 +2,7 @@
 
 @{
     Layout = "_ConfigurePlugin";
+    var learnMore = "<p>Learn more about the PayPal Commerce plugin configuration <a href='https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html' target='_blank'>here</a>.</p>";
 }
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
@@ -24,7 +25,10 @@
             $('#pnlDescription').showElement();
             @if (!Model.IsConfigured)
             {
-                <text>$('#pnlSave').showElement();</text>
+                <text>
+                    $('#pnlSave').showElement();
+                    $('#pnlLearnMore').showElement();
+                </text>
             }
         }
         else {
@@ -33,7 +37,10 @@
             $('#pnlDescription').hideElement();
             @if (!Model.IsConfigured)
             {
-                <text>$('#pnlSave').hideElement();</text>
+                <text>
+                    $('#pnlSave').hideElement();
+                    $('#pnlLearnMore').hideElement();
+                </text>
             }
         }
     }
@@ -145,6 +152,11 @@
                                 @T("Plugins.Payments.PayPalCommerce.Onboarding.ButtonRevoke")
                             </button>
                         }
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        @Html.Raw(learnMore)
                     </div>
                 </div>
             </div>
@@ -308,6 +320,11 @@
                 <div class="form-group row" id="pnlSave">
                     <div class="col-md-9 offset-md-3">
                         <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+                <div class="form-group row" id="pnlLearnMore">
+                    <div class="col-12">
+                        @Html.Raw(learnMore)
                     </div>
                 </div>
             </div>

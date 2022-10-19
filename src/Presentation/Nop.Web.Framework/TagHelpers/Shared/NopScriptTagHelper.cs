@@ -24,7 +24,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// Script bundling tag helper
     /// </summary>
     [HtmlTargetElement(SCRIPT_TAG_NAME)]
-    public class NopScriptTagHelper : UrlResolutionTagHelper
+    public partial class NopScriptTagHelper : UrlResolutionTagHelper
     {
         #region Constants
         private const string SCRIPT_TAG_NAME = "script";

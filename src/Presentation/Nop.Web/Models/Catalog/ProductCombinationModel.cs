@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     /// <summary>
     /// Represents a product combination model
     /// </summary>
-    public record ProductCombinationModel : BaseNopModel
+    public partial record ProductCombinationModel : BaseNopModel
     {
         #region Properties
 

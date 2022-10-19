@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Blogs
     /// <summary>
     /// Blog settings
     /// </summary>
-    public class BlogSettings : ISettings
+    public partial class BlogSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether blog is enabled

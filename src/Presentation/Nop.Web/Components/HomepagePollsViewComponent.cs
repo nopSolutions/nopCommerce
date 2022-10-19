@@ -6,7 +6,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class HomepagePollsViewComponent : NopViewComponent
+    public partial class HomepagePollsViewComponent : NopViewComponent
     {
         private readonly IPollModelFactory _pollModelFactory;
 

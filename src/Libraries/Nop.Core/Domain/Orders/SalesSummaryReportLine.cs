@@ -1,4 +1,6 @@
-﻿namespace Nop.Core.Domain.Orders
+﻿using System;
+
+namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents sales summary report line
@@ -6,6 +8,8 @@
     public partial class SalesSummaryReportLine
     {
         public string Summary { get; set; }
+
+        public DateTime SummaryDate { get; set; }
 
         public int NumberOfOrders { get; set; }
 

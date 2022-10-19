@@ -3,7 +3,7 @@
     /// <summary>
     /// Category for the official marketplace
     /// </summary>
-    public class OfficialFeedCategory
+    public partial class OfficialFeedCategory
     {
         /// <summary>
         /// Identifier

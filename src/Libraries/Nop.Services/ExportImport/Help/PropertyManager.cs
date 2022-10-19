@@ -16,7 +16,7 @@ namespace Nop.Services.ExportImport.Help
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
     /// <typeparam name="L">Language</typeparam>
-    public class PropertyManager<T, L> where L : Language
+    public partial class PropertyManager<T, L> where L : Language
     {
         /// <summary>
         /// Default properties
@@ -199,7 +199,7 @@ namespace Nop.Services.ExportImport.Help
                     if (!UseDropdownLists)
                         continue;
 
-                    var validator = cell.DataValidation;
+                    var validator = cell.GetDataValidation();
                     validator.InCellDropdown = true;
 
                     validator.IgnoreBlanks = prop.AllowBlank;
@@ -280,7 +280,7 @@ namespace Nop.Services.ExportImport.Help
                     if (!UseDropdownLists)
                         continue;
 
-                    var validator = cell.DataValidation;
+                    var validator = cell.GetDataValidation();
                     validator.InCellDropdown = true;
 
                     validator.IgnoreBlanks = prop.AllowBlank;

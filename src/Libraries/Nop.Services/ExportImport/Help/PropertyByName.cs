@@ -10,7 +10,7 @@ namespace Nop.Services.ExportImport.Help
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
     /// <typeparam name="L">Language</typeparam>
-    public class PropertyByName<T, L>
+    public partial class PropertyByName<T, L>
     {
         private object _propertyValue;
 

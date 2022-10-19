@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
-    public record CheckoutPickupPointsModel : BaseNopModel
+    public partial record CheckoutPickupPointsModel : BaseNopModel
     {
         public CheckoutPickupPointsModel()
         {

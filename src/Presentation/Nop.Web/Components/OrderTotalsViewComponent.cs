@@ -8,7 +8,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class OrderTotalsViewComponent : NopViewComponent
+    public partial class OrderTotalsViewComponent : NopViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IShoppingCartService _shoppingCartService;

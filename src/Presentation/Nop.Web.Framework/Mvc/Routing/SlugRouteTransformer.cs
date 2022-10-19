@@ -24,7 +24,7 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// <summary>
     /// Represents slug route transformer
     /// </summary>
-    public class SlugRouteTransformer : DynamicRouteValueTransformer
+    public partial class SlugRouteTransformer : DynamicRouteValueTransformer
     {
         #region Fields
 

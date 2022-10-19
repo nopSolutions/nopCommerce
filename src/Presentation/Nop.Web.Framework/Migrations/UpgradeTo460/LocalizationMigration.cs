@@ -271,7 +271,30 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Promotions.Discounts.List.IsActive.All"] = "All",
                 ["Admin.Promotions.Discounts.List.IsActive.Hint"] = "Search by \"IsActive\" property.",
                 ["Admin.Promotions.Discounts.List.IsActive.InactiveOnly"] = "Inactive only",
-                
+
+                //#1961
+                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests"] = "EU VAT enabled for guests",
+                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint"] = "Check to enable EU VAT (the European Union Value Added Tax) for guest customers. They will have to enter it during the checkout at the billing address step.",
+                ["Checkout.VatNumber"] = "VAT number",
+                ["Checkout.VatNumber.Disabled"] = "VAT number can be entered (on the <a href=\"{0}\">customer info page</a>) and used only after registration",
+                ["Checkout.VatNumber.Warning"] = "VAT number is {0}",
+
+                //#4591
+                ["Admin.Configuration.Stores.Fields.SslEnabled"] = "SSL",
+                ["Admin.Configuration.Stores.Fields.SslEnabled.Hint"] = "SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.",
+                ["Admin.Configuration.Stores.Ssl.Enable"] = "Enable SSL",
+                ["Admin.Configuration.Stores.Ssl.Disable"] = "Disable SSL",
+                ["Admin.Configuration.Stores.Ssl.Updated"] = "The SSL setting has been successfully changed. Do not forget to synchronize the store URL with the current HTTP protocol.",
+
+                ["Admin.Reports.SalesSummary.Vendor"] = "Vendor",
+                ["Admin.Reports.SalesSummary.Vendor.Hint"] = "Search by a specific vendor.",
+
+                //#6353
+                ["Admin.Promotions.Discounts.Fields.CouponCode.Reserved"] = "The entered coupon code is already reserved for the discount '{0}'",
+
+                //#6378
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area",
             }, languageId).Wait();
 
             #endregion

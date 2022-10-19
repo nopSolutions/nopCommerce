@@ -5,7 +5,7 @@ namespace Nop.Services.Media.RoxyFileman
     /// <summary>
     /// RoxyFileman service interface
     /// </summary>
-    public interface IRoxyFilemanService
+    public partial interface IRoxyFilemanService
     {
         #region Configuration
 

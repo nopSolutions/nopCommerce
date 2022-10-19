@@ -26,7 +26,7 @@ using StackExchange.Profiling.Data;
 
 namespace Nop.Data.DataProviders
 {
-    public abstract class BaseDataProvider : IMappingEntityAccessor
+    public abstract partial class BaseDataProvider : IMappingEntityAccessor
     {
         #region Fields
 

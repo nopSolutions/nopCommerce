@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CurrencySelectorViewComponent : NopViewComponent
+    public partial class CurrencySelectorViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
 

@@ -9,7 +9,7 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Components
 {
-    public class OrderSummaryViewComponent : NopViewComponent
+    public partial class OrderSummaryViewComponent : NopViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IShoppingCartService _shoppingCartService;

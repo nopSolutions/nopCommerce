@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Gdpr
     /// <summary>
     /// Customer permanently deleted (GDPR)
     /// </summary>
-    public class CustomerPermanentlyDeleted
+    public partial class CustomerPermanentlyDeleted
     {
         /// <summary>
         /// Ctor

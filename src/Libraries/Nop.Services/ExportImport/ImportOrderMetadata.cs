@@ -6,7 +6,7 @@ using Nop.Services.ExportImport.Help;
 
 namespace Nop.Services.ExportImport
 {
-    public class ImportOrderMetadata
+    public partial class ImportOrderMetadata
     {
         public int EndRow { get; internal set; }
 

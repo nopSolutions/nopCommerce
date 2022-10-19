@@ -23,6 +23,7 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
@@ -88,6 +89,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreService storeService,
             ITaxService taxService,
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
@@ -636,6 +638,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             //check whether the shopping was initiated by the customer
             var customer = await _workContext.GetCurrentCustomerAsync();
+
+            var store = await _storeContext.GetCurrentStoreAsync();
+
             if (item.CustomerId != customer.Id)
                 throw new NopException("Shopping was not initiated by customer");
 
@@ -648,7 +653,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             var categoryName = (await _categoryService.GetCategoryByIdAsync(categoryMapping?.CategoryId ?? 0))?.Name;
             var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
             var quantity = product != null ? (int?)item.Quantity : null;
-            var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, includeDiscounts: false);
+            var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, includeDiscounts: false);
             var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice);
             var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
             var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, currentCurrency);

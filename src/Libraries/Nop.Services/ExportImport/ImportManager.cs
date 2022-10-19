@@ -190,22 +190,22 @@ namespace Nop.Services.ExportImport
 
         private static ExportedAttributeType GetTypeOfExportedAttribute(IXLWorksheet defaultWorksheet, List<IXLWorksheet> localizedWorksheets, PropertyManager<ExportProductAttribute, Language> productAttributeManager, PropertyManager<ExportSpecificationAttribute, Language> specificationAttributeManager, int iRow)
         {
-            productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+            productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
             if (productAttributeManager.IsCaption)
             {
                 foreach (var worksheet in localizedWorksheets)
-                    productAttributeManager.ReadLocalizedFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+                    productAttributeManager.ReadLocalizedFromXlsx(worksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                 return ExportedAttributeType.ProductAttribute;
             }
 
-            specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+            specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
             if (specificationAttributeManager.IsCaption)
             {
                 foreach (var worksheet in localizedWorksheets)
-                    specificationAttributeManager.ReadLocalizedFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+                    specificationAttributeManager.ReadLocalizedFromXlsx(worksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                 return ExportedAttributeType.SpecificationAttribute;
             }
@@ -896,7 +896,7 @@ namespace Nop.Services.ExportImport
                 if (lWorksheet == null)
                     continue;
 
-                productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+                productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
                 productAttributeManager.CurrentLanguage = language;
 
                 valueName = productAttributeManager.GetLocalizedProperty("ValueName").StringValue;
@@ -986,7 +986,7 @@ namespace Nop.Services.ExportImport
                 if (lWorksheet == null)
                     continue;
 
-                specificationAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+                specificationAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
                 specificationAttributeManager.CurrentLanguage = language;
 
                 customValue = specificationAttributeManager.GetLocalizedProperty("CustomValue").StringValue;
@@ -1169,10 +1169,10 @@ namespace Nop.Services.ExportImport
             var allAttributeIds = new List<int>();
             var allSpecificationAttributeOptionIds = new List<int>();
 
-            var attributeIdCellNum = 1 + ExportProductAttribute.ProducAttributeCellOffset;
+            var attributeIdCellNum = 1 + ExportProductAttribute.ProductAttributeCellOffset;
             var specificationAttributeOptionIdCellNum =
                 specificationAttributeManager.GetIndex("SpecificationAttributeOptionId") +
-                ExportProductAttribute.ProducAttributeCellOffset;
+                ExportProductAttribute.ProductAttributeCellOffset;
 
             var productsInFile = new List<int>();
 
@@ -1212,7 +1212,7 @@ namespace Nop.Services.ExportImport
                     {
                         case ExportedAttributeType.ProductAttribute:
                             productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow,
-                                ExportProductAttribute.ProducAttributeCellOffset);
+                                ExportProductAttribute.ProductAttributeCellOffset);
                             if (int.TryParse((defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value ?? string.Empty).ToString(), out var aid))
                             {
                                 allAttributeIds.Add(aid);
@@ -1220,7 +1220,7 @@ namespace Nop.Services.ExportImport
 
                             break;
                         case ExportedAttributeType.SpecificationAttribute:
-                            specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
+                            specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                             if (int.TryParse((defaultWorksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value ?? string.Empty).ToString(), out var saoid))
                             {
@@ -3024,7 +3024,7 @@ namespace Nop.Services.ExportImport
 
         #region Nested classes
 
-        protected class ProductPictureMetadata
+        protected partial class ProductPictureMetadata
         {
             public Product ProductItem { get; set; }
 
@@ -3037,7 +3037,7 @@ namespace Nop.Services.ExportImport
             public bool IsNew { get; set; }
         }
 
-        public class CategoryKey
+        public partial class CategoryKey
         {
             /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)

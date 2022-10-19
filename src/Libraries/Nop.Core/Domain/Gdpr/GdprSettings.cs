@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Gdpr
     /// <summary>
     /// GDPR settings
     /// </summary>
-    public class GdprSettings : ISettings
+    public partial class GdprSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether GDPR is enabled

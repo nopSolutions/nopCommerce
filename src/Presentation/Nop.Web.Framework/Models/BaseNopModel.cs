@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -14,6 +15,7 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Ctor
         /// </summary>
+        [Obsolete]
         public BaseNopModel()
         {
             CustomProperties = new Dictionary<string, object>();
@@ -53,6 +55,7 @@ namespace Nop.Web.Framework.Models
         /// Gets or sets property to store any custom values for models 
         /// </summary>
         [XmlIgnore]
+        [Obsolete]
         public Dictionary<string, object> CustomProperties { get; set; }
 
         #endregion

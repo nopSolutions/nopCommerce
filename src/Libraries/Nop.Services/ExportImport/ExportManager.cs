@@ -677,13 +677,13 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
             foreach (var lws in localizedWorksheets)
             {
-                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
                 lws.Worksheet.Row(row).OutlineLevel = 1;
                 lws.Worksheet.Row(row).Collapse();
             }
@@ -692,14 +692,14 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
 
                 foreach (var lws in localizedWorksheets)
                 {
                     attributeManager.CurrentLanguage = lws.Language;
-                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                     lws.Worksheet.Row(row).OutlineLevel = 1;
                     lws.Worksheet.Row(row).Collapse();
                 }
@@ -714,28 +714,18 @@ namespace Nop.Services.ExportImport
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
-                async psa => new ExportSpecificationAttribute
-                {
-                    Id = psa.Id,
-                    AttributeTypeId = psa.AttributeTypeId,
-                    CustomValue = psa.CustomValue,
-                    AllowFiltering = psa.AllowFiltering,
-                    ShowOnProductPage = psa.ShowOnProductPage,
-                    DisplayOrder = psa.DisplayOrder,
-                    SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
-                    SpecificationAttributeId = (await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId)).SpecificationAttributeId
-                }).ToListAsync();
+                async psa => await ExportSpecificationAttribute.CreateAsync(psa, _specificationAttributeService)).ToListAsync();
 
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
             foreach (var lws in localizedWorksheets)
             {
-                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
                 lws.Worksheet.Row(row).OutlineLevel = 1;
                 lws.Worksheet.Row(row).Collapse();
             }
@@ -744,14 +734,14 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
 
                 foreach (var lws in localizedWorksheets)
                 {
                     attributeManager.CurrentLanguage = lws.Language;
-                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                     lws.Worksheet.Row(row).OutlineLevel = 1;
                     lws.Worksheet.Row(row).Collapse();
                 }

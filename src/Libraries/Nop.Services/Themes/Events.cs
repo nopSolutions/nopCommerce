@@ -5,7 +5,7 @@ namespace Nop.Services.Themes
     /// <summary>
     /// Themes uploaded event
     /// </summary>
-    public class ThemesUploadedEvent
+    public partial class ThemesUploadedEvent
     {
         #region Ctor
 

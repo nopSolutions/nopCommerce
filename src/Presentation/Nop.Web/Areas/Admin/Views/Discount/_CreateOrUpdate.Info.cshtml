@@ -13,6 +13,14 @@
         toggleLimitation();
         toggleUsePercentage();
         toggleRequiresCouponCode();
+
+        if ('@Model.CouponCode') {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: '@Model.CouponCode' });
+        }
+
+        $('#@Html.IdFor(model => model.CouponCode)').on('input change', function () {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: $(this).val() });
+        });
     });
 
     function toggleDiscountType() {

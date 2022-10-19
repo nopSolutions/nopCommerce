@@ -3,7 +3,7 @@
     /// <summary>
     /// Shipment created event
     /// </summary>
-    public class ShipmentCreatedEvent
+    public partial class ShipmentCreatedEvent
     {
         #region Ctor
 

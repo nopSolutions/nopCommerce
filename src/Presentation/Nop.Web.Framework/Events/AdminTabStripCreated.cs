@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Events
     /// <summary>
     /// Admin tabstrip created event
     /// </summary>
-    public class AdminTabStripCreated
+    public partial class AdminTabStripCreated
     {
         /// <summary>
         /// Ctor

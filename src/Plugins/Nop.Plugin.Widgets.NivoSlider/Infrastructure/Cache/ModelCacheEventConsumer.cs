@@ -9,7 +9,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer :
+    public class ModelCacheEventConsumer :
         IConsumer<EntityInsertedEvent<Setting>>,
         IConsumer<EntityUpdatedEvent<Setting>>,
         IConsumer<EntityDeletedEvent<Setting>>

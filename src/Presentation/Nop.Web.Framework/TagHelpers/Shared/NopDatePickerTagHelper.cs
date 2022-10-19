@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// "nop-date-picker" tag helper
     /// </summary>
     [HtmlTargetElement("nop-date-picker", Attributes = DAY_NAME_ATTRIBUTE_NAME + "," + MONTH_NAME_ATTRIBUTE_NAME + "," + YEAR_NAME_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopDatePickerTagHelper : TagHelper
+    public partial class NopDatePickerTagHelper : TagHelper
     {
         #region Constants
 

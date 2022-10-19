@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays common statistics
     /// </summary>
-    public class CommonStatisticsViewComponent : NopViewComponent
+    public partial class CommonStatisticsViewComponent : NopViewComponent
     {
         #region Fields
 

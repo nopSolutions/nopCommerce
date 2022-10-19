@@ -267,5 +267,12 @@ namespace Nop.Services.Media
         /// <returns>A task that represents the asynchronous operation
         /// The task result contains the byte array</returns>
         Task<byte[]> ConvertSvgToPngAsync(string filePath);
+
+        /// <summary>
+        /// Get content type for picture by file extension
+        /// </summary>
+        /// <param name="fileExtension">The file extension</param>
+        /// <returns>Picture's content type</returns>
+        string GetPictureContentTypeByFileExtension(string fileExtension);
     }
 }

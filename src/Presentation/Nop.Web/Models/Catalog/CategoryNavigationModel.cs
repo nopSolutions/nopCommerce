@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public record CategoryLineModel : BaseNopModel
+        public partial record CategoryLineModel : BaseNopModel
         {
             public int CurrentCategoryId { get; set; }
             public CategorySimpleModel Category { get; set; }

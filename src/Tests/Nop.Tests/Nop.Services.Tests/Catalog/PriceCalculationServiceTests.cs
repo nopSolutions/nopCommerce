@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using NUnit.Framework;
@@ -42,14 +43,15 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
         {
             var product = await _productService.GetProductBySkuAsync("BP_20_WSP");
 
-            //customer
             var customer = new Customer();
+            var store = new Store();
 
-            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
             finalPrice.Should().Be(79.99M);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
             
-            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
+
             finalPrice.Should().Be(19M);
             finalPriceWithoutDiscounts.Should().Be(finalPriceWithoutDiscounts);
         }
@@ -59,22 +61,23 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
         {
             var product = await _productService.GetProductBySkuAsync("BP_20_WSP");
 
-            //customer
             var customer = new Customer();
+            var store = new Store();
 
-            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
             finalPrice.Should().Be(79.99M);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
-            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
             finalPrice.Should().Be(19);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
-            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 3);
             finalPrice.Should().Be(19);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
-            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 5);
             finalPrice.Should().Be(17);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
-            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 7);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 7);
+
             finalPrice.Should().Be(17);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
         }
@@ -86,6 +89,8 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             //customer
             var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
+            var store = new Store();
+                
             var roles = await _customerService.GetAllCustomerRolesAsync();
             var customerRole = roles.FirstOrDefault();
 
@@ -103,12 +108,12 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             product.HasTierPrices = true;
 
-            var (rezWithoutDiscount1, rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
-            var (rezWithoutDiscount2, rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
-            var (rezWithoutDiscount3, rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
-            var (rezWithoutDiscount4, rez4, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
-            var (rezWithoutDiscount5, rez5, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 10);
-            var (rezWithoutDiscount6, rez6, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 15);
+            var (rezWithoutDiscount1, rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
+            var (rezWithoutDiscount2, rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
+            var (rezWithoutDiscount3, rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 3);
+            var (rezWithoutDiscount4, rez4, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 5);
+            var (rezWithoutDiscount5, rez5, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 10);
+            var (rezWithoutDiscount6, rez6, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 15);
 
             foreach (var tierPrice in tierPrices)
                 await _productService.DeleteTierPriceAsync(tierPrice);
@@ -135,8 +140,10 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             //customer
             var customer = new Customer();
+            var store = new Store();
 
-            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 5, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 5, false);
+
             finalPrice.Should().Be(84.99M);
             finalPrice.Should().Be(finalPriceWithoutDiscounts);
         }
@@ -146,7 +153,8 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
         {
             var product = await _productService.GetProductBySkuAsync("BP_20_WSP");
             var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
-
+            var store = new Store();
+            
             var mapping = new DiscountProductMapping
             {
                 DiscountId = 1,
@@ -159,7 +167,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
            
-            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store);
 
             await _productService.DeleteDiscountProductMappingAsync(mapping);
             await _customerService.RemoveDiscountCouponCodeAsync(customer, "123");

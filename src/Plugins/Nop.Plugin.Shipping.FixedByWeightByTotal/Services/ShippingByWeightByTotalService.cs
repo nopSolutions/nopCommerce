@@ -11,7 +11,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
     /// <summary>
     /// Represents service shipping by weight service implementation
     /// </summary>
-    public partial class ShippingByWeightByTotalService : IShippingByWeightByTotalService
+    public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
     {
         #region Constants
 

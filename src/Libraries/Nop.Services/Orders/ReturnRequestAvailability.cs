@@ -6,7 +6,7 @@ namespace Nop.Services.Orders
     /// <summary>
     /// Represents the return request availability
     /// </summary>
-    public class ReturnRequestAvailability
+    public partial class ReturnRequestAvailability
     {
         #region Properties
 

@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Vendors
     /// <summary>
     /// Vendor settings
     /// </summary>
-    public class VendorSettings : ISettings
+    public partial class VendorSettings : ISettings
     {
         /// <summary>
         /// Gets or sets the default value to use for Vendor page size options (for new vendors)

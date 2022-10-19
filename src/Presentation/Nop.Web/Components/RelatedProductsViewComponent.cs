@@ -9,7 +9,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class RelatedProductsViewComponent : NopViewComponent
+    public partial class RelatedProductsViewComponent : NopViewComponent
     {
         private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;

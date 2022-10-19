@@ -10,7 +10,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
     /// <summary>
     /// Represents the HTTP client to request Facebook Conversions API
     /// </summary>
-    public partial class FacebookConversionsHttpClient
+    public class FacebookConversionsHttpClient
     {
         #region Fields
 
