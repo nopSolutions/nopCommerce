@@ -410,18 +410,26 @@ namespace Nop.Services.Shipping
         public virtual async Task<IShipmentTracker> GetShipmentTrackerAsync(Shipment shipment)
         {
             var order = await _orderRepository.GetByIdAsync(shipment.OrderId, cache => default);
+            IShipmentTracker shipmentTracker = null;
 
-            if (!order.PickupInStore)
+            if (order.PickupInStore)
+            {
+                var pickupPointProvider = await _pickupPluginManager
+                    .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
+
+                if (pickupPointProvider != null)
+                    shipmentTracker = await pickupPointProvider.GetShipmentTrackerAsync();
+            }
+            else
             {
                 var shippingRateComputationMethod = await _shippingPluginManager
                     .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
 
-                return await shippingRateComputationMethod?.GetShipmentTrackerAsync();
+                if (shippingRateComputationMethod != null)
+                    shipmentTracker = await shippingRateComputationMethod.GetShipmentTrackerAsync();
             }
 
-            var pickupPointProvider = await _pickupPluginManager
-                .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
-            return await pickupPointProvider?.GetShipmentTrackerAsync();
+            return shipmentTracker;
         }
 
         #endregion
