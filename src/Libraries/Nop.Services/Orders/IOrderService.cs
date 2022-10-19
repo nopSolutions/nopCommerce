@@ -249,7 +249,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of items in all shipments
+        /// The task result contains the total number of items in all shipments
         /// </returns>
         Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem);
 
@@ -259,7 +259,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of already delivered items which can be added to new shipments
+        /// The task result contains the total number of already delivered items which can be added to new shipments
         /// </returns>
         Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem);
 
@@ -269,7 +269,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue if download is allowed; otherwise, false.
+        /// The task result contains the true if download is allowed; otherwise, false.
         /// </returns>
         Task<bool> IsDownloadAllowedAsync(OrderItem orderItem);
 
@@ -279,7 +279,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue if license download is allowed; otherwise, false.
+        /// The task result contains the true if license download is allowed; otherwise, false.
         /// </returns>
         Task<bool> IsLicenseDownloadAllowedAsync(OrderItem orderItem);
 
