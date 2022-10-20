@@ -6,7 +6,8 @@
 @{
     var showTour = ViewBag.ShowTour ?? false;
 }
-@if (showTour)
+
+@if (showTour && await workContext.GetCurrentVendorAsync() is null)
 {
     <link rel="stylesheet" href="~/lib_npm/shepherd.js/css/shepherd.css" />
     <script src="~/lib_npm/shepherd.js/js/shepherd.min.js"></script>
