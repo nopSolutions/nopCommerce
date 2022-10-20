@@ -15315,6 +15315,15 @@
   <LocaleResource Name="Admin.System.Maintenance.DeleteGuests.TotalDeleted">
     <Value>{0} customers were deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteMinificationFiles">
+    <Value>Delete minification files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteMinificationFiles.Text">
+    <Value>Clear the bundles directory.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted">
+    <Value>{0} files were deleted</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ReIndexTables">
     <Value>Re-index database tables</Value>
   </LocaleResource>

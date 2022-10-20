@@ -9,11 +9,12 @@ namespace Nop.Web.Areas.Admin.Models.Common
     {
         public MaintenanceModel()
         {
-            DeleteGuests = new DeleteGuestsModel();
-            DeleteAbandonedCarts = new DeleteAbandonedCartsModel();
-            DeleteExportedFiles = new DeleteExportedFilesModel();
-            BackupFileSearchModel = new BackupFileSearchModel();
-            DeleteAlreadySentQueuedEmails = new DeleteAlreadySentQueuedEmailsModel();
+            DeleteGuests = new();
+            DeleteAbandonedCarts = new();
+            DeleteExportedFiles = new();
+            BackupFileSearchModel = new();
+            DeleteAlreadySentQueuedEmails = new();
+            DeleteMinificationFiles = new();
         }
 
         public DeleteGuestsModel DeleteGuests { get; set; }
@@ -25,6 +26,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public BackupFileSearchModel BackupFileSearchModel { get; set; }
 
         public DeleteAlreadySentQueuedEmailsModel DeleteAlreadySentQueuedEmails { get; set; }
+
+        public DeleteMinificationFilesModel DeleteMinificationFiles { get; set; }
 
         public bool BackupSupported { get; set; }
 
@@ -79,6 +82,11 @@ namespace Nop.Web.Areas.Admin.Models.Common
             public DateTime? EndDate { get; set; }
 
             public int? NumberOfDeletedEmails { get; set; }
+        }
+
+        public partial record DeleteMinificationFilesModel : BaseNopModel
+        {
+            public int? NumberOfDeletedFiles { get; set; }
         }
 
         #endregion

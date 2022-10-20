@@ -295,6 +295,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6378
                 ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
                 ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area",
+
+                //#6213
+                ["Admin.System.Maintenance.DeleteMinificationFiles"] = "Delete minification files",
+                ["Admin.System.Maintenance.DeleteMinificationFiles.Text"] = "Clear the bundles directory.",
+                ["Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted"] = "{0} files were deleted",
             }, languageId).Wait();
 
             #endregion
