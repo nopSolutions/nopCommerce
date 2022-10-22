@@ -9,7 +9,10 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models.GetOrders
 {
     public class PolyCommerceOrderItem
     {
+        [JsonIgnore]
         public DateTime ShippedDate { get; set; }
+
+        [JsonIgnore]
         public string TrackingNumber { get; set; }
 
         [JsonIgnore]
@@ -23,6 +26,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models.GetOrders
 
         [JsonIgnore]
         public int ShippingStatusId { get; set; }
+
+        [JsonIgnore]
         public string ShippingMethod { get; set; }
 
     }

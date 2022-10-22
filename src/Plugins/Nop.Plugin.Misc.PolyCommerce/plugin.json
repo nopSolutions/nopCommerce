@@ -2,10 +2,10 @@
   "Group": "Misc",
   "FriendlyName": "PolyCommerce",
   "SystemName": "Misc.PolyCommerce",
-  "Version": "1.10",
-  "SupportedVersions": [ "4.20", "4.40" ],
+  "Version": "1.20",
+  "SupportedVersions": [ "4.20", "4.40", "4.50" ],
   "Author": "PolyCommerce Team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Misc.PolyCommerce.dll",
-  "Description": "This plugin allows to integrate with PolyCommerce."
+  "Description": "This plugin allows integration with PolyCommerce."
 }

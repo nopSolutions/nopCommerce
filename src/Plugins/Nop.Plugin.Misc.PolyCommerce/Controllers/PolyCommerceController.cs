@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;

@@ -21,9 +21,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Core.Events;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Dapper;
-using DocumentFormat.OpenXml.EMMA;
 using Nop.Plugin.Misc.PolyCommerce.Models.GetOrders;
 using PolyCommerceOrderItem = Nop.Plugin.Misc.PolyCommerce.Models.GetOrders.PolyCommerceOrderItem;
 using System.Globalization;
@@ -33,7 +32,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderService _orderService;
-        private readonly IRepository<Order> _orderRepository;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
@@ -52,8 +50,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly IAddressService _addressService;
 
-        public OrdersController(IRepository<Order> orderRepository,
-            ICustomerActivityService customerActivityService,
+        public OrdersController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IRepository<Language> languageRepository,
@@ -72,7 +69,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             IRepository<Product> productRepository,
             IProductAttributeService productAttributeService)
         {
-            _orderRepository = orderRepository;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
             _customerService = customerService;
@@ -415,7 +411,16 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             using (var conn = new SqlConnection(dataSettings.ConnectionString))
             {
                 var orders = await conn.QueryAsync<PolyCommerceOrderItem>(orderQuery, new { OrdersAfterDate = updatedAtMinDate, OrdersBeforeDate = updatedAtMaxDate });
-                var groupedOrders = orders.GroupBy(x => x.ShipmentId).Select(x => new PolyCommerceShipmentHeader { ShipmentId = x.First().ShipmentId, OrderId = x.First().OrderId, ShippingStatusId = x.First().ShippingStatusId, OrderItems = x.ToList() });
+                var groupedOrders = orders.GroupBy(x => x.ShipmentId).Select(x => new PolyCommerceShipmentHeader 
+                { 
+                    ShipmentId = x.First().ShipmentId, 
+                    OrderId = x.First().OrderId, 
+                    ShippingStatusId = x.First().ShippingStatusId, 
+                    TrackingNumber = x.First().TrackingNumber,
+                    ShippedDate = x.First().ShippedDate,
+                    ShippingMethod = x.First().ShippingMethod,
+                    OrderItems = x.ToList() 
+                });
 
                 var result = new PolyCommerceGetOrdersResult
                 {

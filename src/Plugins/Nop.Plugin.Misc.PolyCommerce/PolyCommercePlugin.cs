@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Data;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Menu;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Dapper;
 
 namespace Nop.Plugin.Misc.PolyCommerce

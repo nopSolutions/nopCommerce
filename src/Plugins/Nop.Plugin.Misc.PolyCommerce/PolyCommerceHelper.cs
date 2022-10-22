@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
@@ -8,8 +8,14 @@ namespace Nop.Plugin.Misc.PolyCommerce
 {
     public static class PolyCommerceHelper
     {
-        //public static string GetBaseUrl() => "https://localhost:44367";
-        public static string GetBaseUrl() => "https://portal.polycommerce.com";
+        public static string GetBaseUrl()
+        {
+            #if DEBUG
+                return "https://localhost:44340";
+            #else
+                return "https://portal.polycommerce.com";
+            #endif
+        }
 
         public static async Task<PolyCommerceStore> GetPolyCommerceStoreByToken(string token)
         {
@@ -46,7 +52,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
                         return null;
                     }
 
-                    while(await reader.ReadAsync())
+                    while (await reader.ReadAsync())
                     {
                         var polyCommerceStore = new PolyCommerceStore
                         {
