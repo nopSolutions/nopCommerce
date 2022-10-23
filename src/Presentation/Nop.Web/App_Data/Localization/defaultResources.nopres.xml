@@ -7839,6 +7839,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media">
     <Value>Media settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSVGUploads">
+    <Value>Allow SVG uploads in admin area</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSVGUploads.Hint">
+    <Value>Check to allow uploading of SVG files in admin area</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize">
     <Value>Associated product image size</Value>
   </LocaleResource>
@@ -13934,6 +13940,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode.Hint">
     <Value>The discount coupon code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode.Reserved">
+    <Value>The entered coupon code is already reserved for the discount '{0}'</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Discount">
     <Value>Discount</Value>

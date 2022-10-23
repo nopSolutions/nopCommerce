@@ -100,6 +100,12 @@ export default function copyDependencies()
       .pipe(filter(['*.min.{css,js}', '**/images/*']))
       .pipe(gulp.dest(`${targetPath}jquery-ui-dist`)),
 
+    //jquery-ui-touch-punch
+    gulp
+      .src(`${nodeModules}jquery-ui-touch-punch/**`)
+      .pipe(filter(['*.min.*']))
+      .pipe(gulp.dest(`${targetPath}jquery-ui-touch-punch`)),
+
     //Globalize
     gulp
       .src(`${nodeModules}globalize/dist/**`)

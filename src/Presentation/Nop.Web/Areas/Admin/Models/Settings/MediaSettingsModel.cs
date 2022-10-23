@@ -85,6 +85,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DefaultPictureZoomEnabled { get; set; }
         public bool DefaultPictureZoomEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.AllowSVGUploads")]
+        public bool AllowSVGUploads { get; set; }
+        public bool AllowSVGUploads_OverrideForStore { get; set; }
+
         #endregion
     }
 }

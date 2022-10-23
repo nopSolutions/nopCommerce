@@ -371,7 +371,7 @@ namespace Nop.Tests.Nop.Data.Tests
                     break;
                 case DataProviderType.MySql:
                     connStr.Should()
-                        .Be(@"server=127.0.0.1;database=test_db;allowuservariables=True;user id=test;password=passwd");
+                        .Be(@"Server=127.0.0.1;Database=test_db;Allow User Variables=True;User ID=test;Password=passwd");
                     break;
                 case DataProviderType.PostgreSQL:
                     connStr.Should()

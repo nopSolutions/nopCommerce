@@ -288,6 +288,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 ["Admin.Reports.SalesSummary.Vendor"] = "Vendor",
                 ["Admin.Reports.SalesSummary.Vendor.Hint"] = "Search by a specific vendor.",
+
+                //#6353
+                ["Admin.Promotions.Discounts.Fields.CouponCode.Reserved"] = "The entered coupon code is already reserved for the discount '{0}'",
+
+                //#6378
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area",
             }, languageId).Wait();
 
             #endregion

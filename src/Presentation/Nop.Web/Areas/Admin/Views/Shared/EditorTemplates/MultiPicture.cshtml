@@ -1,4 +1,6 @@
-﻿@model int
+﻿@using Nop.Core.Domain.Media
+@model int
+@inject MediaSettings mediaSettings
 
 @{
     //other variables
@@ -59,6 +61,18 @@
 </script>
 <script>
     $(document).ready(function() {
+        
+        var allowedExtensions = ["bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"];
+        
+        @{
+            if (mediaSettings.AllowSVGUploads)
+            {
+                <text>
+                    allowedExtensions.push("svg");
+                    </text>
+            }
+        }
+
         $("#@(clientId)").fineUploader({
             request: {
                 endpoint: '@endpoint'
@@ -66,7 +80,7 @@
             template: "@(clientId)-qq-template",
             multiple: true,
             validation: {
-                allowedExtensions: [ "bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"]
+                    allowedExtensions: allowedExtensions
             }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {

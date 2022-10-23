@@ -425,7 +425,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string FilterableSpecificationAttributeOptionsPrefix => "Nop.filterablespecificationattributeoptions";
+        public static string FilterableSpecificationAttributeOptionsPrefix => "Nop.specificationattributeoption";
 
         /// <summary>
         /// Gets a key for specification attribute groups caching by product id

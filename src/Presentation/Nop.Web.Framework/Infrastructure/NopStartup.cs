@@ -15,6 +15,7 @@ using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -85,10 +86,24 @@ namespace Nop.Web.Framework.Infrastructure
 
             //static cache manager
             var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.Get<DistributedCacheConfig>().Enabled)
+            var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
+            if (distributedCacheConfig.Enabled)
             {
-                services.AddScoped<ILocker, DistributedCacheManager>();
-                services.AddScoped<IStaticCacheManager, DistributedCacheManager>();
+                switch (distributedCacheConfig.DistributedCacheType)
+                {
+                    case DistributedCacheType.Memory:
+                        services.AddScoped<ILocker, MemoryDistributedCacheManager>();
+                        services.AddScoped<IStaticCacheManager, MemoryDistributedCacheManager>();
+                        break;
+                    case DistributedCacheType.SqlServer:
+                        services.AddScoped<ILocker, MsSqlServerCacheManager>();
+                        services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
+                        break;
+                    case DistributedCacheType.Redis:
+                        services.AddScoped<ILocker, RedisCacheManager>();
+                        services.AddScoped<IStaticCacheManager, RedisCacheManager>();
+                        break;
+                }
             }
             else
             {
