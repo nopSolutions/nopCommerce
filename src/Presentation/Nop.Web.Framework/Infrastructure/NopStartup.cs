@@ -238,6 +238,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IPickupPluginManager, PickupPluginManager>();
             services.AddScoped<IShippingPluginManager, ShippingPluginManager>();
             services.AddScoped<ITaxPluginManager, TaxPluginManager>();
+            services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 

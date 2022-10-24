@@ -385,6 +385,7 @@ namespace Nop.Tests
             services.AddTransient<IPickupPluginManager, PickupPluginManager>();
             services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
+            services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
             services.AddTransient<IPictureService, TestPictureService>();
             services.AddScoped<IVideoService, VideoService>();
