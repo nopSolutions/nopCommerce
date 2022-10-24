@@ -771,7 +771,7 @@ namespace Nop.Services.Installation
                 },
                 new ProductAvailabilityRange
                 {
-                    Name = "2 week",
+                    Name = "2 weeks",
                     DisplayOrder = 3
                 }
             };
