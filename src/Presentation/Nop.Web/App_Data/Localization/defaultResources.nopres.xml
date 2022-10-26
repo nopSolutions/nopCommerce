@@ -3154,7 +3154,7 @@
     <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
-    <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
+    <Value>If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Name">
     <Value>Product name</Value>
@@ -3643,7 +3643,7 @@
     <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint">
-    <Value>If you have enabled 'Manage stock by attributes' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).</Value>
+    <Value>If you track inventory by product attributes, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow">
     <Value>Notify admin for quantity below</Value>
