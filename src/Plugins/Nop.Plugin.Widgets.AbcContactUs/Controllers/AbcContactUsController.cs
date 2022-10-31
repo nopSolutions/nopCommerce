@@ -112,16 +112,15 @@ namespace Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Controllers
             if (_captchaSettings.Enabled)
             {
                 var gCaptchaResponseValue = model.GRecaptchaResponse;
-
                 if (StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                 {
-                    return BadRequest();
+                    return BadRequest("CAPTCHA response not provided.");
                 }
 
-                var response = _captchaHttpClient.ValidateCaptchaAsync(gCaptchaResponseValue).Result;
+                var response = await _captchaHttpClient.ValidateCaptchaAsync(gCaptchaResponseValue);
                 if (!response.IsValid)
                 {
-                    return BadRequest();
+                    return BadRequest("CAPTCHA response invalid.");
                 }
             }
 
