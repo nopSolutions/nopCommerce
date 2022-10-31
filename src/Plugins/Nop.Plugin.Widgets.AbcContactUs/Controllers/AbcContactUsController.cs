@@ -136,7 +136,14 @@ namespace Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Controllers
             else
             {
                 var shop = _shopRepository.Table.Where(s => s.Name == model.SelectedStore).FirstOrDefault();
-                toAddress = _shopAbcRepository.Table.Where(sabc => sabc.ShopId == shop.Id).FirstOrDefault().AbcEmail;
+                var shopAbc = _shopAbcRepository.Table.Where(sabc => sabc.ShopId == shop.Id).FirstOrDefault();
+
+                if (shopAbc == null)
+                {
+                    await _logger.WarningAsync($"AbcContactUs: shopAbc not found for shop {shop.Id}:{shop.Name}, sending to base contact email {_settings.ContactUsEmail}.");
+                }
+
+                toAddress = shopAbc != null ? shopAbc.AbcEmail : _settings.ContactUsEmail;
                 ccEmails.Add(_settings.ContactUsEmail);
             }
 
