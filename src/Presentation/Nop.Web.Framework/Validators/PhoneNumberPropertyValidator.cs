@@ -45,7 +45,9 @@ namespace Nop.Web.Framework.Validators
                 return true;
 
             if (string.IsNullOrEmpty(phoneNumber))
-                return false;
+            {
+                return !customerSettings.PhoneRequired;
+            }
 
             return customerSettings.PhoneNumberValidationUseRegex
                 ? Regex.IsMatch(phoneNumber, customerSettings.PhoneNumberValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
