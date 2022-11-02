@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using ClosedXML.Excel;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Services.ExportImport.Help;
 
 namespace Nop.Services.ExportImport
@@ -8,15 +10,19 @@ namespace Nop.Services.ExportImport
     {
         public int EndRow { get; internal set; }
 
-        public PropertyManager<Product> Manager { get; internal set; }
+        public PropertyManager<Product, Language> Manager { get; internal set; }
 
-        public IList<PropertyByName<Product>> Properties { get; set; }
+        public IList<PropertyByName<Product, Language>> Properties { get; set; }
 
         public int CountProductsInFile => ProductsInFile.Count;
 
-        public PropertyManager<ExportProductAttribute> ProductAttributeManager { get; internal set; }
+        public PropertyManager<ExportProductAttribute, Language> ProductAttributeManager { get; internal set; }
 
-        public PropertyManager<ExportSpecificationAttribute> SpecificationAttributeManager { get; internal set; }
+        public PropertyManager<ExportSpecificationAttribute, Language> SpecificationAttributeManager { get; internal set; }
+
+        public IXLWorksheet DefaultWorksheet { get; set; }
+
+        public List<IXLWorksheet> LocalizedWorksheets { get; set; }
 
         public int SkuCellNum { get; internal set; }
 

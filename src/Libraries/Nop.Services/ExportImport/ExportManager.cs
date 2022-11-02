@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -14,9 +16,11 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
@@ -68,7 +72,9 @@ namespace Nop.Services.ExportImport
         private readonly IForumService _forumService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IMeasureService _measureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -113,7 +119,9 @@ namespace Nop.Services.ExportImport
             IForumService forumService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
+            ILanguageService languageService,
             ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
             IManufacturerService manufacturerService,
             IMeasureService measureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -154,7 +162,9 @@ namespace Nop.Services.ExportImport
             _forumService = forumService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
             _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
             _manufacturerService = manufacturerService;
             _measureService = measureService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -191,19 +201,21 @@ namespace Nop.Services.ExportImport
 
             totalCategories += categories.Count;
 
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
             foreach (var category in categories)
             {
                 await xmlWriter.WriteStartElementAsync("Category");
 
                 await xmlWriter.WriteStringAsync("Id", category.Id);
 
-                await xmlWriter.WriteStringAsync("Name", category.Name);
-                await xmlWriter.WriteStringAsync("Description", category.Description);
+                await WriteLocalizedPropertyXmlAsync(category, c => c.Name, xmlWriter, languages);
+                await WriteLocalizedPropertyXmlAsync(category, c => c.Description, xmlWriter, languages);
                 await xmlWriter.WriteStringAsync("CategoryTemplateId", category.CategoryTemplateId);
-                await xmlWriter.WriteStringAsync("MetaKeywords", category.MetaKeywords, await IgnoreExportCategoryPropertyAsync());
-                await xmlWriter.WriteStringAsync("MetaDescription", category.MetaDescription, await IgnoreExportCategoryPropertyAsync());
-                await xmlWriter.WriteStringAsync("MetaTitle", category.MetaTitle, await IgnoreExportCategoryPropertyAsync());
-                await xmlWriter.WriteStringAsync("SeName", await _urlRecordService.GetSeNameAsync(category, 0), await IgnoreExportCategoryPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(category, c => c.MetaKeywords, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(category, c => c.MetaDescription, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(category, c => c.MetaTitle, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
+                await WriteLocalizedSeNameXmlAsync(category, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("ParentCategoryId", category.ParentCategoryId);
                 await xmlWriter.WriteStringAsync("PictureId", category.PictureId);
                 await xmlWriter.WriteStringAsync("PageSize", category.PageSize, await IgnoreExportCategoryPropertyAsync());
@@ -444,75 +456,101 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
+        private async Task<TProperty> GetLocalizedAsync<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> keySelector,
+            Language language) where TEntity : BaseEntity, ILocalizedEntity
+        {
+            if (entity == null)
+                return default(TProperty);
+
+            return await _localizationService.GetLocalizedAsync(entity, keySelector, language.Id, false);
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<PropertyManager<ExportProductAttribute, Language>> GetProductAttributeManagerAsync(IList<Language> languages)
         {
             var attributeProperties = new[]
             {
-                new PropertyByName<ExportProductAttribute>("AttributeId", p => p.AttributeId),
-                new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
-                new PropertyByName<ExportProductAttribute>("DefaultValue", p => p.DefaultValue),
-                new PropertyByName<ExportProductAttribute>("ValidationMinLength", p => p.ValidationMinLength),
-                new PropertyByName<ExportProductAttribute>("ValidationMaxLength", p => p.ValidationMaxLength),
-                new PropertyByName<ExportProductAttribute>("ValidationFileAllowedExtensions", p => p.ValidationFileAllowedExtensions),
-                new PropertyByName<ExportProductAttribute>("ValidationFileMaximumSize", p => p.ValidationFileMaximumSize),
-                new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
-                new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
-                new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
+                new PropertyByName<ExportProductAttribute, Language>("AttributeId", (p, l) => p.AttributeId),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeName", (p, l) => p.AttributeName),
+                new PropertyByName<ExportProductAttribute, Language>("DefaultValue", (p, l) => p.DefaultValue),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationMinLength", (p, l) => p.ValidationMinLength),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationMaxLength", (p, l) => p.ValidationMaxLength),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationFileAllowedExtensions", (p, l) => p.ValidationFileAllowedExtensions),
+                new PropertyByName<ExportProductAttribute, Language>("ValidationFileMaximumSize", (p, l) => p.ValidationFileMaximumSize),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeTextPrompt", (p, l) => p.AttributeTextPrompt),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeIsRequired", (p, l) => p.AttributeIsRequired),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeControlType", (p, l) => p.AttributeControlTypeId)
                 {
                     DropDownElements = await AttributeControlType.TextBox.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder", p => p.AttributeDisplayOrder),
-                new PropertyByName<ExportProductAttribute>("ProductAttributeValueId", p => p.Id),
-                new PropertyByName<ExportProductAttribute>("ValueName", p => p.Name),
-                new PropertyByName<ExportProductAttribute>("AttributeValueType", p => p.AttributeValueTypeId)
+                new PropertyByName<ExportProductAttribute, Language>("AttributeDisplayOrder", (p, l) => p.AttributeDisplayOrder),
+                new PropertyByName<ExportProductAttribute, Language>("ProductAttributeValueId", (p, l) => p.Id),
+                new PropertyByName<ExportProductAttribute, Language>("ValueName", (p, l) => p.Name),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeValueType", (p, l) => p.AttributeValueTypeId)
                 {
                     DropDownElements = await AttributeValueType.Simple.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<ExportProductAttribute>("AssociatedProductId", p => p.AssociatedProductId),
-                new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
-                new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
-                new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
-                new PropertyByName<ExportProductAttribute>("PriceAdjustmentUsePercentage", p => p.PriceAdjustmentUsePercentage),
-                new PropertyByName<ExportProductAttribute>("WeightAdjustment", p => p.WeightAdjustment),
-                new PropertyByName<ExportProductAttribute>("Cost", p => p.Cost),
-                new PropertyByName<ExportProductAttribute>("CustomerEntersQty", p => p.CustomerEntersQty),
-                new PropertyByName<ExportProductAttribute>("Quantity", p => p.Quantity),
-                new PropertyByName<ExportProductAttribute>("IsPreSelected", p => p.IsPreSelected),
-                new PropertyByName<ExportProductAttribute>("DisplayOrder", p => p.DisplayOrder),
-                new PropertyByName<ExportProductAttribute>("PictureId", p => p.PictureId)
+                new PropertyByName<ExportProductAttribute, Language>("AssociatedProductId", (p, l) => p.AssociatedProductId),
+                new PropertyByName<ExportProductAttribute, Language>("ColorSquaresRgb", (p, l) => p.ColorSquaresRgb),
+                new PropertyByName<ExportProductAttribute, Language>("ImageSquaresPictureId", (p, l) => p.ImageSquaresPictureId),
+                new PropertyByName<ExportProductAttribute, Language>("PriceAdjustment", (p, l) => p.PriceAdjustment),
+                new PropertyByName<ExportProductAttribute, Language>("PriceAdjustmentUsePercentage", (p, l) => p.PriceAdjustmentUsePercentage),
+                new PropertyByName<ExportProductAttribute, Language>("WeightAdjustment", (p, l) => p.WeightAdjustment),
+                new PropertyByName<ExportProductAttribute, Language>("Cost", (p, l) => p.Cost),
+                new PropertyByName<ExportProductAttribute, Language>("CustomerEntersQty", (p, l) => p.CustomerEntersQty),
+                new PropertyByName<ExportProductAttribute, Language>("Quantity", (p, l) => p.Quantity),
+                new PropertyByName<ExportProductAttribute, Language>("IsPreSelected", (p, l) => p.IsPreSelected),
+                new PropertyByName<ExportProductAttribute, Language>("DisplayOrder", (p, l) => p.DisplayOrder),
+                new PropertyByName<ExportProductAttribute, Language>("PictureId", (p, l) => p.PictureId)
             };
 
-            return new PropertyManager<ExportProductAttribute>(attributeProperties, _catalogSettings);
+            var localizedProperties = new[]
+            {
+                new PropertyByName<ExportProductAttribute, Language>("DefaultValue", async (p, l) =>
+                    await GetLocalizedAsync(await _productAttributeService.GetProductAttributeMappingByIdAsync(p.AttributeMappingId), x => x.DefaultValue, l)),
+                new PropertyByName<ExportProductAttribute, Language>("AttributeTextPrompt", async (p, l) =>
+                    await GetLocalizedAsync(await _productAttributeService.GetProductAttributeMappingByIdAsync(p.AttributeMappingId), x => x.TextPrompt, l)),
+                new PropertyByName<ExportProductAttribute, Language>("ValueName", async (p, l) =>
+                    await GetLocalizedAsync(await _productAttributeService.GetProductAttributeValueByIdAsync(p.Id), x => x.Name, l)),
+            };
+
+            return new PropertyManager<ExportProductAttribute, Language>(attributeProperties, _catalogSettings, localizedProperties, languages);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportSpecificationAttribute>> GetSpecificationAttributeManagerAsync()
+        private async Task<PropertyManager<ExportSpecificationAttribute, Language>> GetSpecificationAttributeManagerAsync(IList<Language> languages)
         {
             var attributeProperties = new[]
             {
-                new PropertyByName<ExportSpecificationAttribute>("AttributeType", p => p.AttributeTypeId)
+                new PropertyByName<ExportSpecificationAttribute, Language>("AttributeType", (p, l) => p.AttributeTypeId)
                 {
                     DropDownElements = await SpecificationAttributeType.Option.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", p => p.SpecificationAttributeId)
+                new PropertyByName<ExportSpecificationAttribute, Language>("SpecificationAttribute", (p, l) => p.SpecificationAttributeId)
                 {
                     DropDownElements = (await _specificationAttributeService.GetSpecificationAttributesAsync()).Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
                 },
-                new PropertyByName<ExportSpecificationAttribute>("CustomValue", p => p.CustomValue),
-                new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", p => p.SpecificationAttributeOptionId),
-                new PropertyByName<ExportSpecificationAttribute>("AllowFiltering", p => p.AllowFiltering),
-                new PropertyByName<ExportSpecificationAttribute>("ShowOnProductPage", p => p.ShowOnProductPage),
-                new PropertyByName<ExportSpecificationAttribute>("DisplayOrder", p => p.DisplayOrder)
+                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue", (p, l) => p.CustomValue),
+                new PropertyByName<ExportSpecificationAttribute, Language>("SpecificationAttributeOptionId", (p, l) => p.SpecificationAttributeOptionId),
+                new PropertyByName<ExportSpecificationAttribute, Language>("AllowFiltering", (p, l) => p.AllowFiltering),
+                new PropertyByName<ExportSpecificationAttribute, Language>("ShowOnProductPage", (p, l) => p.ShowOnProductPage),
+                new PropertyByName<ExportSpecificationAttribute, Language>("DisplayOrder", (p, l) => p.DisplayOrder)
             };
 
-            return new PropertyManager<ExportSpecificationAttribute>(attributeProperties, _catalogSettings);
+            var localizedProperties = new[]
+            {
+                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue", async (p, l) => 
+                    await GetLocalizedAsync(await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(p.Id), x => x.CustomValue, l)),
+            };
+
+            return new PropertyManager<ExportSpecificationAttribute, Language>(attributeProperties, _catalogSettings, localizedProperties, languages);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
+        private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product, Language>[] properties, PropertyByName<Product, Language>[] localizedProperties, IEnumerable<Product> itemsToExport, IList<Language> languages)
         {
-            var productAttributeManager = await GetProductAttributeManagerAsync();
-            var specificationAttributeManager = await GetSpecificationAttributeManagerAsync();
+            var productAttributeManager = await GetProductAttributeManagerAsync(languages);
+            var specificationAttributeManager = await GetSpecificationAttributeManagerAsync(languages);
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
@@ -532,20 +570,38 @@ namespace Nop.Services.ExportImport
                 fsaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
-                var manager = new PropertyManager<Product>(properties, _catalogSettings);
-                manager.WriteCaption(worksheet);
+                var manager = new PropertyManager<Product, Language>(properties, _catalogSettings, localizedProperties, languages);
+                manager.WriteDefaultCaption(worksheet);
+
+                var localizedWorksheets = new List<(Language Language, IXLWorksheet Worksheet)>();
+                if (languages.Count >= 2)
+                {
+                    foreach (var language in languages)
+                    {
+                        var lws = workbook.Worksheets.Add(language.UniqueSeoCode);
+                        localizedWorksheets.Add(new (language, lws));
+                        manager.WriteLocalizedCaption(lws);
+                    }
+                }
 
                 var row = 2;
                 foreach (var item in itemsToExport)
                 {
                     manager.CurrentObject = item;
-                    await manager.WriteToXlsxAsync(worksheet, row++, fWorksheet: fpWorksheet);
+                    await manager.WriteDefaultToXlsxAsync(worksheet, row, fWorksheet: fpWorksheet);
+
+                    foreach (var lws in localizedWorksheets)
+                    {
+                        manager.CurrentLanguage = lws.Language;
+                        await manager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, fWorksheet: fpWorksheet);
+                    }
+                    row++;
 
                     if (_catalogSettings.ExportImportProductAttributes) 
-                        row = await ExportProductAttributesAsync(item, productAttributeManager, worksheet, row, fbaWorksheet);
+                        row = await ExportProductAttributesAsync(item, productAttributeManager, worksheet, localizedWorksheets, row, fbaWorksheet);
 
                     if (_catalogSettings.ExportImportProductSpecificationAttributes) 
-                        row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
+                        row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, localizedWorksheets, row, fsaWorksheet);
                 }
 
                 workbook.SaveAs(stream);
@@ -555,7 +611,8 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
+        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute, Language> attributeManager,
+            IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
@@ -573,6 +630,7 @@ namespace Nop.Services.ExportImport
                                 AttributeTextPrompt = pam.TextPrompt,
                                 AttributeIsRequired = pam.IsRequired,
                                 AttributeControlTypeId = pam.AttributeControlTypeId,
+                                AttributeMappingId = pav.ProductAttributeMappingId,
                                 AssociatedProductId = pav.AssociatedProductId,
                                 AttributeDisplayOrder = pam.DisplayOrder,
                                 Id = pav.Id,
@@ -619,66 +677,97 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
+
+            foreach (var lws in localizedWorksheets)
+            {
+                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+                lws.Worksheet.Row(row).OutlineLevel = 1;
+                lws.Worksheet.Row(row).Collapse();
+            }
 
             foreach (var exportProductAttribute in attributes)
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
+
+                foreach (var lws in localizedWorksheets)
+                {
+                    attributeManager.CurrentLanguage = lws.Language;
+                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                    lws.Worksheet.Row(row).OutlineLevel = 1;
+                    lws.Worksheet.Row(row).Collapse();
+                }
             }
 
             return row + 1;
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
+        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute, Language> attributeManager, 
+            IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
-                async psa => await ExportSpecificationAttribute.CreateAsync(psa,_specificationAttributeService)).ToListAsync();
+                async psa => await ExportSpecificationAttribute.CreateAsync(psa, _specificationAttributeService)).ToListAsync();
 
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+            attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
+
+            foreach (var lws in localizedWorksheets)
+            {
+                attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+                lws.Worksheet.Row(row).OutlineLevel = 1;
+                lws.Worksheet.Row(row).Collapse();
+            }
 
             foreach (var exportProductAttribute in attributes)
             {
                 row++;
                 attributeManager.CurrentObject = exportProductAttribute;
-                await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapse();
+
+                foreach (var lws in localizedWorksheets)
+                {
+                    attributeManager.CurrentLanguage = lws.Language;
+                    await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                    lws.Worksheet.Row(row).OutlineLevel = 1;
+                    lws.Worksheet.Row(row).Collapse();
+                }
             }
 
             return row + 1;
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
+        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order, Language>[] properties, IEnumerable<Order> itemsToExport)
         {
             var orderItemProperties = new[]
             {
-                new PropertyByName<OrderItem>("OrderItemGuid", oi => oi.OrderItemGuid),
-                new PropertyByName<OrderItem>("Name", async oi => (await _productService.GetProductByIdAsync(oi.ProductId)).Name),
-                new PropertyByName<OrderItem>("Sku", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
-                new PropertyByName<OrderItem>("PriceExclTax", oi => oi.UnitPriceExclTax),
-                new PropertyByName<OrderItem>("PriceInclTax", oi => oi.UnitPriceInclTax),
-                new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
-                new PropertyByName<OrderItem>("DiscountExclTax", oi => oi.DiscountAmountExclTax),
-                new PropertyByName<OrderItem>("DiscountInclTax", oi => oi.DiscountAmountInclTax),
-                new PropertyByName<OrderItem>("TotalExclTax", oi => oi.PriceExclTax),
-                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax)
+                new PropertyByName<OrderItem, Language>("OrderItemGuid", (oi, l) => oi.OrderItemGuid),
+                new PropertyByName<OrderItem, Language>("Name", async (oi, l) => (await _productService.GetProductByIdAsync(oi.ProductId)).Name),
+                new PropertyByName<OrderItem, Language>("Sku", async (oi, l) => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
+                new PropertyByName<OrderItem, Language>("PriceExclTax", (oi, l) => oi.UnitPriceExclTax),
+                new PropertyByName<OrderItem, Language>("PriceInclTax", (oi, l) => oi.UnitPriceInclTax),
+                new PropertyByName<OrderItem, Language>("Quantity", (oi, l) => oi.Quantity),
+                new PropertyByName<OrderItem, Language>("DiscountExclTax", (oi, l) => oi.DiscountAmountExclTax),
+                new PropertyByName<OrderItem, Language>("DiscountInclTax", (oi, l) => oi.DiscountAmountInclTax),
+                new PropertyByName<OrderItem, Language>("TotalExclTax", (oi, l) => oi.PriceExclTax),
+                new PropertyByName<OrderItem, Language>("TotalInclTax", (oi, l) => oi.PriceInclTax)
             };
 
-            var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties, _catalogSettings);
+            var orderItemsManager = new PropertyManager<OrderItem, Language>(orderItemProperties, _catalogSettings);
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
@@ -694,14 +783,14 @@ namespace Nop.Services.ExportImport
                 fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
-                var manager = new PropertyManager<Order>(properties, _catalogSettings);
-                manager.WriteCaption(worksheet);
+                var manager = new PropertyManager<Order, Language>(properties, _catalogSettings);
+                manager.WriteDefaultCaption(worksheet);
 
                 var row = 2;
                 foreach (var order in itemsToExport)
                 {
                     manager.CurrentObject = order;
-                    await manager.WriteToXlsxAsync(worksheet, row++);
+                    await manager.WriteDefaultToXlsxAsync(worksheet, row++);
 
                     //a vendor should have access only to his products
                     var vendor = await _workContext.GetCurrentVendorAsync();
@@ -710,7 +799,7 @@ namespace Nop.Services.ExportImport
                     if (!orderItems.Any())
                         continue;
 
-                    orderItemsManager.WriteCaption(worksheet, row, 2);
+                    orderItemsManager.WriteDefaultCaption(worksheet, row, 2);
                     worksheet.Row(row).OutlineLevel = 1;
                     worksheet.Row(row).Collapse();
 
@@ -718,7 +807,7 @@ namespace Nop.Services.ExportImport
                     {
                         row++;
                         orderItemsManager.CurrentObject = orderItem;
-                        await orderItemsManager.WriteToXlsxAsync(worksheet, row, 2, fpWorksheet);
+                        await orderItemsManager.WriteDefaultToXlsxAsync(worksheet, row, 2, fpWorksheet);
                         worksheet.Row(row).OutlineLevel = 1;
                         worksheet.Row(row).Collapse();
                     }
@@ -736,6 +825,80 @@ namespace Nop.Services.ExportImport
         private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
             return await _customerAttributeFormatter.FormatAttributesAsync(customer.CustomCustomerAttributesXML, ";");
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task WriteLocalizedPropertyXmlAsync<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
+            XmlWriter xmlWriter, IList<Language> languages, bool ignore = false, string overriddenNodeName = null) 
+            where TEntity : BaseEntity, ILocalizedEntity
+        {
+            if (ignore)
+                return;
+
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            if (keySelector.Body is not MemberExpression member)
+                throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
+
+            if (member.Member is not PropertyInfo propInfo)
+                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
+
+            var localeKeyGroup = entity.GetType().Name;
+            var localeKey = propInfo.Name;
+
+            var nodeName = localeKey;
+            if (!string.IsNullOrWhiteSpace(overriddenNodeName))
+                nodeName = overriddenNodeName;
+
+            await xmlWriter.WriteStartElementAsync(nodeName);
+            await xmlWriter.WriteStringAsync("Standard", propInfo.GetValue(entity));
+
+            if (languages.Count >= 2)
+            {
+                await xmlWriter.WriteStartElementAsync("Locales");
+
+                var properties = await _localizedEntityService.GetEntityLocalizedPropertiesAsync(entity.Id, localeKeyGroup, localeKey);
+                foreach (var language in languages)
+                    if (properties.FirstOrDefault(lp => lp.LanguageId == language.Id) is LocalizedProperty localizedProperty)
+                        await xmlWriter.WriteStringAsync(language.UniqueSeoCode, localizedProperty.LocaleValue);
+
+                await xmlWriter.WriteEndElementAsync();
+            }
+
+            await xmlWriter.WriteEndElementAsync();
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task WriteLocalizedSeNameXmlAsync<TEntity>(TEntity entity, XmlWriter xmlWriter, IList<Language> languages,
+            bool ignore = false, string overriddenNodeName = null)
+            where TEntity : BaseEntity, ISlugSupported
+        {
+            if (ignore)
+                return;
+
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var nodeName = "SEName";
+            if (!string.IsNullOrWhiteSpace(overriddenNodeName))
+                nodeName = overriddenNodeName;
+
+            await xmlWriter.WriteStartElementAsync(nodeName);
+            await xmlWriter.WriteStringAsync("Standard", await _urlRecordService.GetSeNameAsync(entity, 0));
+
+            if (languages.Count >= 2)
+            {
+                await xmlWriter.WriteStartElementAsync("Locales");
+
+                foreach (var language in languages)
+                    if (await _urlRecordService.GetSeNameAsync(entity, language.Id, returnDefaultValue: false) is string seName && !string.IsNullOrWhiteSpace(seName))
+                        await xmlWriter.WriteStringAsync(language.UniqueSeoCode, seName);
+
+                await xmlWriter.WriteEndElementAsync();
+            }
+
+            await xmlWriter.WriteEndElementAsync();
         }
 
         #endregion
@@ -765,18 +928,20 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteStartElementAsync("Manufacturers");
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
 
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
             foreach (var manufacturer in manufacturers)
             {
                 await xmlWriter.WriteStartElementAsync("Manufacturer");
 
                 await xmlWriter.WriteStringAsync("ManufacturerId", manufacturer.Id.ToString());
-                await xmlWriter.WriteStringAsync("Name", manufacturer.Name);
-                await xmlWriter.WriteStringAsync("Description", manufacturer.Description);
+                await WriteLocalizedPropertyXmlAsync(manufacturer, m => m.Name, xmlWriter, languages);
+                await WriteLocalizedPropertyXmlAsync(manufacturer, m => m.Description, xmlWriter, languages);
                 await xmlWriter.WriteStringAsync("ManufacturerTemplateId", manufacturer.ManufacturerTemplateId);
-                await xmlWriter.WriteStringAsync("MetaKeywords", manufacturer.MetaKeywords, await IgnoreExportManufacturerPropertyAsync());
-                await xmlWriter.WriteStringAsync("MetaDescription", manufacturer.MetaDescription, await IgnoreExportManufacturerPropertyAsync());
-                await xmlWriter.WriteStringAsync("MetaTitle", manufacturer.MetaTitle, await IgnoreExportManufacturerPropertyAsync());
-                await xmlWriter.WriteStringAsync("SEName", await _urlRecordService.GetSeNameAsync(manufacturer, 0), await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(manufacturer, m => m.MetaKeywords, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(manufacturer, m => m.MetaDescription, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedPropertyXmlAsync(manufacturer, m => m.MetaTitle, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedSeNameXmlAsync(manufacturer, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("PictureId", manufacturer.PictureId);
                 await xmlWriter.WriteStringAsync("PageSize", manufacturer.PageSize, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("AllowCustomersToSelectPageSize", manufacturer.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerPropertyAsync());
@@ -804,7 +969,7 @@ namespace Nop.Services.ExportImport
                         await xmlWriter.WriteStartElementAsync("ProductManufacturer");
                         await xmlWriter.WriteStringAsync("ProductManufacturerId", productManufacturer.Id);
                         await xmlWriter.WriteStringAsync("ProductId", productManufacturer.ProductId);
-                        await xmlWriter.WriteStringAsync("ProductName", product.Name);
+                        await WriteLocalizedPropertyXmlAsync(product, p => p.Name, xmlWriter, languages, overriddenNodeName: "ProductName");
                         await xmlWriter.WriteStringAsync("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
                         await xmlWriter.WriteStringAsync("DisplayOrder", productManufacturer.DisplayOrder);
                         await xmlWriter.WriteEndElementAsync();
@@ -833,28 +998,40 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers)
         {
-            //property manager 
-            var manager = new PropertyManager<Manufacturer>(new[]
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+            var localizedProperties = new[]
             {
-                new PropertyByName<Manufacturer>("Id", p => p.Id),
-                new PropertyByName<Manufacturer>("Name", p => p.Name),
-                new PropertyByName<Manufacturer>("Description", p => p.Description),
-                new PropertyByName<Manufacturer>("ManufacturerTemplateId", p => p.ManufacturerTemplateId),
-                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("SeName", async p => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("Picture", async p => await GetPicturesAsync(p.PictureId)),
-                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("PriceRangeFiltering", p => p.PriceRangeFiltering, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("PriceFrom", p => p.PriceFrom, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("PriceTo", p => p.PriceTo, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("ManuallyPriceRange", p => p.ManuallyPriceRange, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("Published", p => p.Published, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
-            }, _catalogSettings);
+                new PropertyByName<Manufacturer, Language>("Id", (p, l) => p.Id),
+                new PropertyByName<Manufacturer, Language>("Name", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.Name, l.Id, false)),
+                new PropertyByName<Manufacturer, Language>("MetaKeywords", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaKeywords, l.Id, false)),
+                new PropertyByName<Manufacturer, Language>("MetaDescription", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaDescription, l.Id, false)),
+                new PropertyByName<Manufacturer, Language>("MetaTitle", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaTitle, l.Id, false)),
+                new PropertyByName<Manufacturer, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, l.Id, returnDefaultValue: false), await IgnoreExportManufacturerPropertyAsync())
+            };
+
+            //property manager 
+            var manager = new PropertyManager<Manufacturer, Language>(new[]
+            {
+                new PropertyByName<Manufacturer, Language>("Id", (p, l) => p.Id),
+                new PropertyByName<Manufacturer, Language>("Name", (p, l) => p.Name),
+                new PropertyByName<Manufacturer, Language>("Description", (p, l) => p.Description),
+                new PropertyByName<Manufacturer, Language>("ManufacturerTemplateId", (p, l) => p.ManufacturerTemplateId),
+                new PropertyByName<Manufacturer, Language>("MetaKeywords", (p, l)=> p.MetaKeywords, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("MetaDescription", (p, l) => p.MetaDescription, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("MetaTitle", (p, l) => p.MetaTitle, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("Picture", async (p, l) => await GetPicturesAsync(p.PictureId)),
+                new PropertyByName<Manufacturer, Language>("PageSize", (p, l) => p.PageSize, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("AllowCustomersToSelectPageSize", (p, l) => p.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("PageSizeOptions", (p, l) => p.PageSizeOptions, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("PriceRangeFiltering", (p, l) => p.PriceRangeFiltering, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("PriceFrom", (p, l) => p.PriceFrom, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("PriceTo", (p, l) => p.PriceTo, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("ManuallyPriceRange", (p, l) => p.ManuallyPriceRange, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("Published", (p, l) => p.Published, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer, Language>("DisplayOrder", (p, l) => p.DisplayOrder)
+            }, _catalogSettings, localizedProperties, languages);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportManufacturers",
@@ -908,37 +1085,49 @@ namespace Nop.Services.ExportImport
                 //performance optimization, load all parent categories in one SQL request
                 parentCategories.AddRange(await _categoryService.GetCategoriesByIdsAsync(categories.Select(c => c.ParentCategoryId).Where(id => id != 0).ToArray()));
 
-            //property manager 
-            var manager = new PropertyManager<Category>(new[]
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+            var localizedProperties = new[]
             {
-                new PropertyByName<Category>("Id", p => p.Id),
-                new PropertyByName<Category>("Name", p => p.Name),
-                new PropertyByName<Category>("Description", p => p.Description),
-                new PropertyByName<Category>("CategoryTemplateId", p => p.CategoryTemplateId),
-                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("SeName", async p => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
-                new PropertyByName<Category>("ParentCategoryName", async p =>
+                new PropertyByName<Category, Language>("Id", (p, l) => p.Id),
+                new PropertyByName<Category, Language>("Name", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.Name, l.Id, false)),
+                new PropertyByName<Category, Language>("MetaKeywords", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaKeywords, l.Id, false)),
+                new PropertyByName<Category, Language>("MetaDescription", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaDescription, l.Id, false)),
+                new PropertyByName<Category, Language>("MetaTitle", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaTitle, l.Id, false)),
+                new PropertyByName<Category, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, l.Id, returnDefaultValue: false), await IgnoreExportCategoryPropertyAsync())
+            };
+
+            //property manager 
+            var manager = new PropertyManager<Category, Language>(new[]
+            {
+                new PropertyByName<Category, Language>("Id", (p, l) => p.Id),
+                new PropertyByName<Category, Language>("Name", (p, l) => p.Name),
+                new PropertyByName<Category, Language>("Description", (p, l) => p.Description),
+                new PropertyByName<Category, Language>("CategoryTemplateId", (p, l) => p.CategoryTemplateId),
+                new PropertyByName<Category, Language>("MetaKeywords", (p, l) => p.MetaKeywords, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("MetaDescription", (p, l) => p.MetaDescription, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("MetaTitle", (p, l) => p.MetaTitle, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("ParentCategoryId", (p, l) => p.ParentCategoryId),
+                new PropertyByName<Category, Language>("ParentCategoryName", async (p, l) =>
                 {
                     var category = parentCategories.FirstOrDefault(c => c.Id == p.ParentCategoryId);
                     return category != null ? await _categoryService.GetFormattedBreadCrumbAsync(category) : null;
 
                 }, !_catalogSettings.ExportImportCategoriesUsingCategoryName),
-                new PropertyByName<Category>("Picture", async p => await GetPicturesAsync(p.PictureId)),
-                new PropertyByName<Category>("PageSize", p => p.PageSize, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("PriceRangeFiltering", p => p.PriceRangeFiltering, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("PriceFrom", p => p.PriceFrom, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("PriceTo", p => p.PriceTo, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("ManuallyPriceRange", p => p.ManuallyPriceRange, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("Published", p => p.Published, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
-            }, _catalogSettings);
+                new PropertyByName<Category, Language>("Picture", async (p, l) => await GetPicturesAsync(p.PictureId)),
+                new PropertyByName<Category, Language>("PageSize", (p, l) => p.PageSize, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("PriceRangeFiltering", (p, l) => p.PriceRangeFiltering, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("PriceFrom", (p, l) => p.PriceFrom, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("PriceTo", (p, l) => p.PriceTo, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("ManuallyPriceRange", (p, l) => p.ManuallyPriceRange, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("AllowCustomersToSelectPageSize", (p, l) => p.AllowCustomersToSelectPageSize, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("PageSizeOptions", (p, l) => p.PageSizeOptions, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("ShowOnHomepage", (p, l) => p.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("IncludeInTopMenu", (p, l) => p.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("Published", (p, l) => p.Published, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category, Language>("DisplayOrder", (p, l) => p.DisplayOrder)
+            }, _catalogSettings, localizedProperties, languages);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportCategories",
@@ -971,6 +1160,8 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
             var currentVendor = await _workContext.GetCurrentVendorAsync();
 
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
             foreach (var product in products)
             {
                 await xmlWriter.WriteStartElementAsync("Product");
@@ -979,9 +1170,9 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("ProductTypeId", product.ProductTypeId, await IgnoreExportProductPropertyAsync(p => p.ProductType));
                 await xmlWriter.WriteStringAsync("ParentGroupedProductId", product.ParentGroupedProductId, await IgnoreExportProductPropertyAsync(p => p.ProductType));
                 await xmlWriter.WriteStringAsync("VisibleIndividually", product.VisibleIndividually, await IgnoreExportProductPropertyAsync(p => p.VisibleIndividually));
-                await xmlWriter.WriteStringAsync("Name", product.Name);
-                await xmlWriter.WriteStringAsync("ShortDescription", product.ShortDescription);
-                await xmlWriter.WriteStringAsync("FullDescription", product.FullDescription);
+                await WriteLocalizedPropertyXmlAsync(product, p => p.Name, xmlWriter, languages);
+                await WriteLocalizedPropertyXmlAsync(product, p => p.ShortDescription, xmlWriter, languages);
+                await WriteLocalizedPropertyXmlAsync(product, p => p.FullDescription, xmlWriter, languages);
                 await xmlWriter.WriteStringAsync("AdminComment", product.AdminComment, await IgnoreExportProductPropertyAsync(p => p.AdminComment));
                 //vendor can't change this field
                 await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null);
@@ -990,10 +1181,10 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
                 //vendor can't change this field
                 await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null);
-                await xmlWriter.WriteStringAsync("MetaKeywords", product.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo));
-                await xmlWriter.WriteStringAsync("MetaDescription", product.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo));
-                await xmlWriter.WriteStringAsync("MetaTitle", product.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo));
-                await xmlWriter.WriteStringAsync("SEName", await _urlRecordService.GetSeNameAsync(product, 0), await IgnoreExportProductPropertyAsync(p => p.Seo));
+                await WriteLocalizedPropertyXmlAsync(product, p => p.MetaKeywords, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
+                await WriteLocalizedPropertyXmlAsync(product, p => p.MetaDescription, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
+                await WriteLocalizedPropertyXmlAsync(product, p => p.MetaTitle, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
+                await WriteLocalizedSeNameXmlAsync(product, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("AllowCustomerReviews", product.AllowCustomerReviews, await IgnoreExportProductPropertyAsync(p => p.AllowCustomerReviews));
                 await xmlWriter.WriteStringAsync("SKU", product.Sku);
                 await xmlWriter.WriteStringAsync("ManufacturerPartNumber", product.ManufacturerPartNumber, await IgnoreExportProductPropertyAsync(p => p.ManufacturerPartNumber));
@@ -1121,7 +1312,7 @@ namespace Nop.Services.ExportImport
                         await xmlWriter.WriteStringAsync("ProductAttributeMappingId", productAttributeMapping.Id);
                         await xmlWriter.WriteStringAsync("ProductAttributeId", productAttributeMapping.ProductAttributeId);
                         await xmlWriter.WriteStringAsync("ProductAttributeName", productAttribute.Name);
-                        await xmlWriter.WriteStringAsync("TextPrompt", productAttributeMapping.TextPrompt);
+                        await WriteLocalizedPropertyXmlAsync(productAttributeMapping, pam => pam.TextPrompt, xmlWriter, languages, overriddenNodeName: "TextPrompt");
                         await xmlWriter.WriteStringAsync("IsRequired", productAttributeMapping.IsRequired);
                         await xmlWriter.WriteStringAsync("AttributeControlTypeId", productAttributeMapping.AttributeControlTypeId);
                         await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeMapping.DisplayOrder);
@@ -1152,7 +1343,7 @@ namespace Nop.Services.ExportImport
                                     productAttributeMapping.ValidationFileMaximumSize.Value);
                             }
 
-                            await xmlWriter.WriteStringAsync("DefaultValue", productAttributeMapping.DefaultValue);
+                            await WriteLocalizedPropertyXmlAsync(productAttributeMapping, pam => pam.DefaultValue, xmlWriter, languages, overriddenNodeName: "DefaultValue");
                         }
                         //conditions
                         await xmlWriter.WriteElementStringAsync("ConditionAttributeXml", productAttributeMapping.ConditionAttributeXml);
@@ -1163,7 +1354,7 @@ namespace Nop.Services.ExportImport
                         {
                             await xmlWriter.WriteStartElementAsync("ProductAttributeValue");
                             await xmlWriter.WriteStringAsync("ProductAttributeValueId", productAttributeValue.Id);
-                            await xmlWriter.WriteStringAsync("Name", productAttributeValue.Name);
+                            await WriteLocalizedPropertyXmlAsync(productAttributeValue, pav => pav.Name, xmlWriter, languages, overriddenNodeName: "Name");
                             await xmlWriter.WriteStringAsync("AttributeValueTypeId", productAttributeValue.AttributeValueTypeId);
                             await xmlWriter.WriteStringAsync("AssociatedProductId", productAttributeValue.AssociatedProductId);
                             await xmlWriter.WriteStringAsync("ColorSquaresRgb", productAttributeValue.ColorSquaresRgb);
@@ -1293,162 +1484,176 @@ namespace Nop.Services.ExportImport
         public virtual async Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products)
         {
             var currentVendor = await _workContext.GetCurrentVendorAsync();
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+            var localizedProperties = new[]
+            {
+                new PropertyByName<Product, Language>("ProductId", (p, l) => p.Id),
+                new PropertyByName<Product, Language>("Name", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.Name, l.Id, false)),
+                new PropertyByName<Product, Language>("ShortDescription", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.ShortDescription, l.Id, false)),
+                new PropertyByName<Product, Language>("FullDescription", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.FullDescription, l.Id, false)),
+                new PropertyByName<Product, Language>("MetaKeywords", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaKeywords, l.Id, false)),
+                new PropertyByName<Product, Language>("MetaDescription", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaDescription, l.Id, false)),
+                new PropertyByName<Product, Language>("MetaTitle", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.MetaTitle, l.Id, false)),
+                new PropertyByName<Product, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, l.Id, returnDefaultValue: false), await IgnoreExportProductPropertyAsync(p => p.Seo))
+            };
+
             var properties = new[]
             {
-                new PropertyByName<Product>("ProductId", p => p.Id),
-                new PropertyByName<Product>("ProductType", p => p.ProductTypeId, await IgnoreExportProductPropertyAsync(p => p.ProductType))
+                new PropertyByName<Product, Language>("ProductId", (p, l) => p.Id),
+                new PropertyByName<Product, Language>("ProductType", (p, l) => p.ProductTypeId, await IgnoreExportProductPropertyAsync(p => p.ProductType))
                 {
                     DropDownElements = await ProductType.SimpleProduct.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId, await IgnoreExportProductPropertyAsync(p => p.ProductType)),
-                new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually, await IgnoreExportProductPropertyAsync(p => p.VisibleIndividually)),
-                new PropertyByName<Product>("Name", p => p.Name),
-                new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
-                new PropertyByName<Product>("FullDescription", p => p.FullDescription),
+                new PropertyByName<Product, Language>("ParentGroupedProductId", (p, l) => p.ParentGroupedProductId, await IgnoreExportProductPropertyAsync(p => p.ProductType)),
+                new PropertyByName<Product, Language>("VisibleIndividually", (p, l) => p.VisibleIndividually, await IgnoreExportProductPropertyAsync(p => p.VisibleIndividually)),
+                new PropertyByName<Product, Language>("Name", (p, l) => p.Name),
+                new PropertyByName<Product, Language>("ShortDescription", (p, l) => p.ShortDescription),
+                new PropertyByName<Product, Language>("FullDescription", (p, l) => p.FullDescription),
                 //vendor can't change this field
-                new PropertyByName<Product>("Vendor", p => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null)
+                new PropertyByName<Product, Language>("Vendor", (p, l) => p.VendorId, await IgnoreExportProductPropertyAsync(p => p.Vendor) || currentVendor != null)
                 {
                     DropDownElements = (await _vendorService.GetAllVendorsAsync(showHidden: true)).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("ProductTemplate", p => p.ProductTemplateId, await IgnoreExportProductPropertyAsync(p => p.ProductTemplate))
+                new PropertyByName<Product, Language>("ProductTemplate", (p, l) => p.ProductTemplateId, await IgnoreExportProductPropertyAsync(p => p.ProductTemplate))
                 {
                     DropDownElements = (await _productTemplateService.GetAllProductTemplatesAsync()).Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty)
                 },
                 //vendor can't change this field
-                new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
+                new PropertyByName<Product, Language>("ShowOnHomepage", (p, l) => p.ShowOnHomepage, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
                 //vendor can't change this field
-                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
-                new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo)),
-                new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo)),
-                new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo)),
-                new PropertyByName<Product>("SeName", async p => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportProductPropertyAsync(p => p.Seo)),
-                new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews, await IgnoreExportProductPropertyAsync(p => p.AllowCustomerReviews)),
-                new PropertyByName<Product>("Published", p => p.Published, await IgnoreExportProductPropertyAsync(p => p.Published)),
-                new PropertyByName<Product>("SKU", p => p.Sku),
-                new PropertyByName<Product>("ManufacturerPartNumber", p => p.ManufacturerPartNumber, await IgnoreExportProductPropertyAsync(p => p.ManufacturerPartNumber)),
-                new PropertyByName<Product>("Gtin", p => p.Gtin, await IgnoreExportProductPropertyAsync(p => p.GTIN)),
-                new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
-                new PropertyByName<Product>("GiftCardType", p => p.GiftCardTypeId, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard))
+                new PropertyByName<Product, Language>("DisplayOrder", (p, l) => p.DisplayOrder, await IgnoreExportProductPropertyAsync(p => p.ShowOnHomepage) || currentVendor != null),
+                new PropertyByName<Product, Language>("MetaKeywords", (p, l) => p.MetaKeywords, await IgnoreExportProductPropertyAsync(p => p.Seo)),
+                new PropertyByName<Product, Language>("MetaDescription", (p, l) => p.MetaDescription, await IgnoreExportProductPropertyAsync(p => p.Seo)),
+                new PropertyByName<Product, Language>("MetaTitle", (p, l) => p.MetaTitle, await IgnoreExportProductPropertyAsync(p => p.Seo)),
+                new PropertyByName<Product, Language>("SeName", async (p, l) => await _urlRecordService.GetSeNameAsync(p, 0), await IgnoreExportProductPropertyAsync(p => p.Seo)),
+                new PropertyByName<Product, Language>("AllowCustomerReviews", (p, l) => p.AllowCustomerReviews, await IgnoreExportProductPropertyAsync(p => p.AllowCustomerReviews)),
+                new PropertyByName<Product, Language>("Published", (p, l) => p.Published, await IgnoreExportProductPropertyAsync(p => p.Published)),
+                new PropertyByName<Product, Language>("SKU", (p, l) => p.Sku),
+                new PropertyByName<Product, Language>("ManufacturerPartNumber", (p, l) => p.ManufacturerPartNumber, await IgnoreExportProductPropertyAsync(p => p.ManufacturerPartNumber)),
+                new PropertyByName<Product, Language>("Gtin", (p, l) => p.Gtin, await IgnoreExportProductPropertyAsync(p => p.GTIN)),
+                new PropertyByName<Product, Language>("IsGiftCard", (p, l) => p.IsGiftCard, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
+                new PropertyByName<Product, Language>("GiftCardType", (p, l) => p.GiftCardTypeId, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard))
                 {
                     DropDownElements = await GiftCardType.Virtual.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
-                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
-                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
-                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
-                new PropertyByName<Product>("IsDownload", p => p.IsDownload, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("DownloadId", p => p.DownloadId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("DownloadActivationType", p => p.DownloadActivationTypeId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct))
+                new PropertyByName<Product, Language>("OverriddenGiftCardAmount", (p, l) => p.OverriddenGiftCardAmount, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
+                new PropertyByName<Product, Language>("RequireOtherProducts", (p, l) => p.RequireOtherProducts, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
+                new PropertyByName<Product, Language>("RequiredProductIds", (p, l) => p.RequiredProductIds, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
+                new PropertyByName<Product, Language>("AutomaticallyAddRequiredProducts", (p, l) => p.AutomaticallyAddRequiredProducts, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
+                new PropertyByName<Product, Language>("IsDownload", (p, l) => p.IsDownload, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("DownloadId", (p, l) => p.DownloadId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("UnlimitedDownloads", (p, l) => p.UnlimitedDownloads, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("MaxNumberOfDownloads", (p, l) => p.MaxNumberOfDownloads, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("DownloadActivationType", (p, l) => p.DownloadActivationTypeId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct))
                 {
                     DropDownElements = await DownloadActivationType.Manually.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("IsRecurring", p => p.IsRecurring, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
-                new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
-                new PropertyByName<Product>("RecurringCyclePeriod", p => p.RecurringCyclePeriodId, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct))
+                new PropertyByName<Product, Language>("HasSampleDownload", (p, l) => p.HasSampleDownload, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("SampleDownloadId", (p, l) => p.SampleDownloadId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("HasUserAgreement", (p, l) => p.HasUserAgreement, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("UserAgreementText", (p, l) => p.UserAgreementText, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
+                new PropertyByName<Product, Language>("IsRecurring", (p, l) => p.IsRecurring, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
+                new PropertyByName<Product, Language>("RecurringCycleLength", (p, l) => p.RecurringCycleLength, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
+                new PropertyByName<Product, Language>("RecurringCyclePeriod", (p, l) => p.RecurringCyclePeriodId, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct))
                 {
                     DropDownElements = await RecurringProductCyclePeriod.Days.ToSelectListAsync(useLocalization: false),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
-                new PropertyByName<Product>("IsRental", p => p.IsRental, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
-                new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
-                new PropertyByName<Product>("RentalPricePeriod", p => p.RentalPricePeriodId, await IgnoreExportProductPropertyAsync(p => p.IsRental))
+                new PropertyByName<Product, Language>("RecurringTotalCycles", (p, l) => p.RecurringTotalCycles, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
+                new PropertyByName<Product, Language>("IsRental", (p, l) => p.IsRental, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
+                new PropertyByName<Product, Language>("RentalPriceLength", (p, l) => p.RentalPriceLength, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
+                new PropertyByName<Product, Language>("RentalPricePeriod", (p, l) => p.RentalPricePeriodId, await IgnoreExportProductPropertyAsync(p => p.IsRental))
                 {
                     DropDownElements = await RentalPricePeriod.Days.ToSelectListAsync(useLocalization: false),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
-                new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping, await IgnoreExportProductPropertyAsync(p => p.FreeShipping)),
-                new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately, await IgnoreExportProductPropertyAsync(p => p.ShipSeparately)),
-                new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge, await IgnoreExportProductPropertyAsync(p => p.AdditionalShippingCharge)),
-                new PropertyByName<Product>("DeliveryDate", p => p.DeliveryDateId, await IgnoreExportProductPropertyAsync(p => p.DeliveryDate))
+                new PropertyByName<Product, Language>("IsShipEnabled", (p, l) => p.IsShipEnabled),
+                new PropertyByName<Product, Language>("IsFreeShipping", (p, l) => p.IsFreeShipping, await IgnoreExportProductPropertyAsync(p => p.FreeShipping)),
+                new PropertyByName<Product, Language>("ShipSeparately", (p, l) => p.ShipSeparately, await IgnoreExportProductPropertyAsync(p => p.ShipSeparately)),
+                new PropertyByName<Product, Language>("AdditionalShippingCharge", (p, l) => p.AdditionalShippingCharge, await IgnoreExportProductPropertyAsync(p => p.AdditionalShippingCharge)),
+                new PropertyByName<Product, Language>("DeliveryDate", (p, l) => p.DeliveryDateId, await IgnoreExportProductPropertyAsync(p => p.DeliveryDate))
                 {
                     DropDownElements = (await _dateRangeService.GetAllDeliveryDatesAsync()).Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
-                new PropertyByName<Product>("TaxCategory", p => p.TaxCategoryId)
+                new PropertyByName<Product, Language>("IsTaxExempt", (p, l) => p.IsTaxExempt),
+                new PropertyByName<Product, Language>("TaxCategory", (p, l) => p.TaxCategoryId)
                 {
                     DropDownElements = (await _taxCategoryService.GetAllTaxCategoriesAsync()).Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductPropertyAsync(p => p.TelecommunicationsBroadcastingElectronicServices)),
-                new PropertyByName<Product>("ManageInventoryMethod", p => p.ManageInventoryMethodId)
+                new PropertyByName<Product, Language>("IsTelecommunicationsOrBroadcastingOrElectronicServices", (p, l) => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductPropertyAsync(p => p.TelecommunicationsBroadcastingElectronicServices)),
+                new PropertyByName<Product, Language>("ManageInventoryMethod", (p, l) => p.ManageInventoryMethodId)
                 {
                     DropDownElements = await ManageInventoryMethod.DontManageStock.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("ProductAvailabilityRange", p => p.ProductAvailabilityRangeId, await IgnoreExportProductPropertyAsync(p => p.ProductAvailabilityRange))
+                new PropertyByName<Product, Language>("ProductAvailabilityRange", (p, l) => p.ProductAvailabilityRangeId, await IgnoreExportProductPropertyAsync(p => p.ProductAvailabilityRange))
                 {
                     DropDownElements = (await _dateRangeService.GetAllProductAvailabilityRangesAsync()).Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses, await IgnoreExportProductPropertyAsync(p => p.UseMultipleWarehouses)),
-                new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, await IgnoreExportProductPropertyAsync(p => p.Warehouse)),
-                new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
-                new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
-                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
-                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumStockQuantity)),
-                new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, await IgnoreExportProductPropertyAsync(p => p.LowStockActivity))
+                new PropertyByName<Product, Language>("UseMultipleWarehouses", (p, l) => p.UseMultipleWarehouses, await IgnoreExportProductPropertyAsync(p => p.UseMultipleWarehouses)),
+                new PropertyByName<Product, Language>("WarehouseId", (p, l) => p.WarehouseId, await IgnoreExportProductPropertyAsync(p => p.Warehouse)),
+                new PropertyByName<Product, Language>("StockQuantity", (p, l) => p.StockQuantity),
+                new PropertyByName<Product, Language>("DisplayStockAvailability", (p, l) => p.DisplayStockAvailability, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
+                new PropertyByName<Product, Language>("DisplayStockQuantity", (p, l) => p.DisplayStockQuantity, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
+                new PropertyByName<Product, Language>("MinStockQuantity", (p, l) => p.MinStockQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumStockQuantity)),
+                new PropertyByName<Product, Language>("LowStockActivity", (p, l) => p.LowStockActivityId, await IgnoreExportProductPropertyAsync(p => p.LowStockActivity))
                 {
                     DropDownElements = await LowStockActivity.Nothing.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow, await IgnoreExportProductPropertyAsync(p => p.NotifyAdminForQuantityBelow)),
-                new PropertyByName<Product>("BackorderMode", p => p.BackorderModeId, await IgnoreExportProductPropertyAsync(p => p.Backorders))
+                new PropertyByName<Product, Language>("NotifyAdminForQuantityBelow", (p, l) => p.NotifyAdminForQuantityBelow, await IgnoreExportProductPropertyAsync(p => p.NotifyAdminForQuantityBelow)),
+                new PropertyByName<Product, Language>("BackorderMode", (p, l) => p.BackorderModeId, await IgnoreExportProductPropertyAsync(p => p.Backorders))
                 {
                     DropDownElements = await BackorderMode.NoBackorders.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions, await IgnoreExportProductPropertyAsync(p => p.AllowBackInStockSubscriptions)),
-                new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumCartQuantity)),
-                new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity, await IgnoreExportProductPropertyAsync(p => p.MaximumCartQuantity)),
-                new PropertyByName<Product>("AllowedQuantities", p => p.AllowedQuantities, await IgnoreExportProductPropertyAsync(p => p.AllowedQuantities)),
-                new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations", p => p.AllowAddingOnlyExistingAttributeCombinations, await IgnoreExportProductPropertyAsync(p => p.AllowAddingOnlyExistingAttributeCombinations)),
-                new PropertyByName<Product>("NotReturnable", p => p.NotReturnable, await IgnoreExportProductPropertyAsync(p => p.NotReturnable)),
-                new PropertyByName<Product>("DisableBuyButton", p => p.DisableBuyButton, await IgnoreExportProductPropertyAsync(p => p.DisableBuyButton)),
-                new PropertyByName<Product>("DisableWishlistButton", p => p.DisableWishlistButton, await IgnoreExportProductPropertyAsync(p => p.DisableWishlistButton)),
-                new PropertyByName<Product>("AvailableForPreOrder", p => p.AvailableForPreOrder, await IgnoreExportProductPropertyAsync(p => p.AvailableForPreOrder)),
-                new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc", p => p.PreOrderAvailabilityStartDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.AvailableForPreOrder)),
-                new PropertyByName<Product>("CallForPrice", p => p.CallForPrice, await IgnoreExportProductPropertyAsync(p => p.CallForPrice)),
-                new PropertyByName<Product>("Price", p => p.Price),
-                new PropertyByName<Product>("OldPrice", p => p.OldPrice, await IgnoreExportProductPropertyAsync(p => p.OldPrice)),
-                new PropertyByName<Product>("ProductCost", p => p.ProductCost, await IgnoreExportProductPropertyAsync(p => p.ProductCost)),
-                new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
-                new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
-                new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
-                new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
-                new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
-                new PropertyByName<Product>("BasepriceUnit", p => p.BasepriceUnitId, await IgnoreExportProductPropertyAsync(p => p.PAngV))
+                new PropertyByName<Product, Language>("AllowBackInStockSubscriptions", (p, l) => p.AllowBackInStockSubscriptions, await IgnoreExportProductPropertyAsync(p => p.AllowBackInStockSubscriptions)),
+                new PropertyByName<Product, Language>("OrderMinimumQuantity", (p, l) => p.OrderMinimumQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumCartQuantity)),
+                new PropertyByName<Product, Language>("OrderMaximumQuantity", (p, l) => p.OrderMaximumQuantity, await IgnoreExportProductPropertyAsync(p => p.MaximumCartQuantity)),
+                new PropertyByName<Product, Language>("AllowedQuantities", (p, l) => p.AllowedQuantities, await IgnoreExportProductPropertyAsync(p => p.AllowedQuantities)),
+                new PropertyByName<Product, Language>("AllowAddingOnlyExistingAttributeCombinations", (p, l) => p.AllowAddingOnlyExistingAttributeCombinations, await IgnoreExportProductPropertyAsync(p => p.AllowAddingOnlyExistingAttributeCombinations)),
+                new PropertyByName<Product, Language>("NotReturnable", (p, l) => p.NotReturnable, await IgnoreExportProductPropertyAsync(p => p.NotReturnable)),
+                new PropertyByName<Product, Language>("DisableBuyButton", (p, l) => p.DisableBuyButton, await IgnoreExportProductPropertyAsync(p => p.DisableBuyButton)),
+                new PropertyByName<Product, Language>("DisableWishlistButton", (p, l) => p.DisableWishlistButton, await IgnoreExportProductPropertyAsync(p => p.DisableWishlistButton)),
+                new PropertyByName<Product, Language>("AvailableForPreOrder", (p, l) => p.AvailableForPreOrder, await IgnoreExportProductPropertyAsync(p => p.AvailableForPreOrder)),
+                new PropertyByName<Product, Language>("PreOrderAvailabilityStartDateTimeUtc", (p, l) => p.PreOrderAvailabilityStartDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.AvailableForPreOrder)),
+                new PropertyByName<Product, Language>("CallForPrice", (p, l) => p.CallForPrice, await IgnoreExportProductPropertyAsync(p => p.CallForPrice)),
+                new PropertyByName<Product, Language>("Price", (p, l) => p.Price),
+                new PropertyByName<Product, Language>("OldPrice", (p, l) => p.OldPrice, await IgnoreExportProductPropertyAsync(p => p.OldPrice)),
+                new PropertyByName<Product, Language>("ProductCost", (p, l) => p.ProductCost, await IgnoreExportProductPropertyAsync(p => p.ProductCost)),
+                new PropertyByName<Product, Language>("CustomerEntersPrice", (p, l) => p.CustomerEntersPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
+                new PropertyByName<Product, Language>("MinimumCustomerEnteredPrice", (p, l) => p.MinimumCustomerEnteredPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
+                new PropertyByName<Product, Language>("MaximumCustomerEnteredPrice", (p, l) => p.MaximumCustomerEnteredPrice, await IgnoreExportProductPropertyAsync(p => p.CustomerEntersPrice)),
+                new PropertyByName<Product, Language>("BasepriceEnabled", (p, l) => p.BasepriceEnabled, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
+                new PropertyByName<Product, Language>("BasepriceAmount", (p, l) => p.BasepriceAmount, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
+                new PropertyByName<Product, Language>("BasepriceUnit", (p, l) => p.BasepriceUnitId, await IgnoreExportProductPropertyAsync(p => p.PAngV))
                 {
                     DropDownElements = (await _measureService.GetAllMeasureWeightsAsync()).Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
-                new PropertyByName<Product>("BasepriceBaseUnit", p => p.BasepriceBaseUnitId, await IgnoreExportProductPropertyAsync(p => p.PAngV))
+                new PropertyByName<Product, Language>("BasepriceBaseAmount", (p, l) => p.BasepriceBaseAmount, await IgnoreExportProductPropertyAsync(p => p.PAngV)),
+                new PropertyByName<Product, Language>("BasepriceBaseUnit", (p, l) => p.BasepriceBaseUnitId, await IgnoreExportProductPropertyAsync(p => p.PAngV))
                 {
                     DropDownElements = (await _measureService.GetAllMeasureWeightsAsync()).Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
-                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
-                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
-                new PropertyByName<Product>("Weight", p => p.Weight, await IgnoreExportProductPropertyAsync(p => p.Weight)),
-                new PropertyByName<Product>("Length", p => p.Length, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
-                new PropertyByName<Product>("Width", p => p.Width, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
-                new PropertyByName<Product>("Height", p => p.Height, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
-                new PropertyByName<Product>("Categories", GetCategoriesAsync),
-                new PropertyByName<Product>("Manufacturers", GetManufacturersAsync, await IgnoreExportProductPropertyAsync(p => p.Manufacturers)),
-                new PropertyByName<Product>("ProductTags", GetProductTagsAsync, await IgnoreExportProductPropertyAsync(p => p.ProductTags)),
-                new PropertyByName<Product>("IsLimitedToStores", p => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
-                new PropertyByName<Product>("LimitedToStores", GetLimitedToStoresAsync, await IgnoreExportLimitedToStoreAsync()),
-                new PropertyByName<Product>("Picture1", async p => await GetPictureAsync(p, 0)),
-                new PropertyByName<Product>("Picture2", async p => await GetPictureAsync(p, 1)),
-                new PropertyByName<Product>("Picture3", async p => await GetPictureAsync(p, 2))
+                new PropertyByName<Product, Language>("MarkAsNew", (p, l) => p.MarkAsNew, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
+                new PropertyByName<Product, Language>("MarkAsNewStartDateTimeUtc", (p, l) => p.MarkAsNewStartDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
+                new PropertyByName<Product, Language>("MarkAsNewEndDateTimeUtc", (p, l) => p.MarkAsNewEndDateTimeUtc, await IgnoreExportProductPropertyAsync(p => p.MarkAsNew)),
+                new PropertyByName<Product, Language>("Weight", (p, l) => p.Weight, await IgnoreExportProductPropertyAsync(p => p.Weight)),
+                new PropertyByName<Product, Language>("Length", (p, l) => p.Length, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
+                new PropertyByName<Product, Language>("Width", (p, l) => p.Width, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
+                new PropertyByName<Product, Language>("Height", (p, l) => p.Height, await IgnoreExportProductPropertyAsync(p => p.Dimensions)),
+                new PropertyByName<Product, Language>("Categories", async (p, l) =>  await GetCategoriesAsync(p)),
+                new PropertyByName<Product, Language>("Manufacturers", async (p, l) =>  await GetManufacturersAsync(p), await IgnoreExportProductPropertyAsync(p => p.Manufacturers)),
+                new PropertyByName<Product, Language>("ProductTags", async (p, l) =>  await GetProductTagsAsync(p), await IgnoreExportProductPropertyAsync(p => p.ProductTags)),
+                new PropertyByName<Product, Language>("IsLimitedToStores", (p, l) => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
+                new PropertyByName<Product, Language>("LimitedToStores",async (p, l) =>  await GetLimitedToStoresAsync(p), await IgnoreExportLimitedToStoreAsync()),
+                new PropertyByName<Product, Language>("Picture1", async (p, l) => await GetPictureAsync(p, 0)),
+                new PropertyByName<Product, Language>("Picture2", async (p, l) => await GetPictureAsync(p, 1)),
+                new PropertyByName<Product, Language>("Picture3", async (p, l) => await GetPictureAsync(p, 2))
             };
 
             var productList = products.ToList();
@@ -1463,16 +1668,16 @@ namespace Nop.Services.ExportImport
             }
 
             if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
-                return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
+                return await new PropertyManager<Product, Language>(properties, _catalogSettings).ExportToXlsxAsync(productList);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportProducts",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), productList.Count));
 
             if (productAdvancedMode || _productEditorSettings.ProductAttributes)
-                return await ExportProductsToXlsxWithAttributesAsync(properties, productList);
+                return await ExportProductsToXlsxWithAttributesAsync(properties, localizedProperties, productList, languages);
 
-            return await new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsxAsync(productList);
+            return await new PropertyManager<Product, Language>(properties, _catalogSettings, localizedProperties, languages).ExportToXlsxAsync(productList);
         }
 
         /// <summary>
@@ -1637,76 +1842,76 @@ namespace Nop.Services.ExportImport
             //property array
             var properties = new[]
             {
-                new PropertyByName<Order>("OrderId", p => p.Id),
-                new PropertyByName<Order>("StoreId", p => p.StoreId),
-                new PropertyByName<Order>("OrderGuid", p => p.OrderGuid, ignore),
-                new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
-                new PropertyByName<Order>("CustomerGuid", async p => (await _customerService.GetCustomerByIdAsync(p.CustomerId))?.CustomerGuid, ignore),
-                new PropertyByName<Order>("OrderStatus", p => p.OrderStatusId, ignore)
+                new PropertyByName<Order, Language>("OrderId", (p, l) => p.Id),
+                new PropertyByName<Order, Language>("StoreId", (p, l) => p.StoreId),
+                new PropertyByName<Order, Language>("OrderGuid", (p, l) => p.OrderGuid, ignore),
+                new PropertyByName<Order, Language>("CustomerId", (p, l) => p.CustomerId, ignore),
+                new PropertyByName<Order, Language>("CustomerGuid", async (p, l) => (await _customerService.GetCustomerByIdAsync(p.CustomerId))?.CustomerGuid, ignore),
+                new PropertyByName<Order, Language>("OrderStatus", (p, l) => p.OrderStatusId, ignore)
                 {
                     DropDownElements = await OrderStatus.Pending.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Order>("PaymentStatus", p => p.PaymentStatusId, ignore)
+                new PropertyByName<Order, Language>("PaymentStatus", (p, l) => p.PaymentStatusId, ignore)
                 {
                     DropDownElements = await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Order>("ShippingStatus", p => p.ShippingStatusId, ignore)
+                new PropertyByName<Order, Language>("ShippingStatus", (p, l) => p.ShippingStatusId, ignore)
                 {
                     DropDownElements = await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax, ignore),
-                new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax, ignore),
-                new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p => p.OrderSubTotalDiscountInclTax, ignore),
-                new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p => p.OrderSubTotalDiscountExclTax, ignore),
-                new PropertyByName<Order>("OrderShippingInclTax", p => p.OrderShippingInclTax, ignore),
-                new PropertyByName<Order>("OrderShippingExclTax", p => p.OrderShippingExclTax, ignore),
-                new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p => p.PaymentMethodAdditionalFeeInclTax, ignore),
-                new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p => p.PaymentMethodAdditionalFeeExclTax, ignore),
-                new PropertyByName<Order>("TaxRates", p => p.TaxRates, ignore),
-                new PropertyByName<Order>("OrderTax", p => p.OrderTax, ignore),
-                new PropertyByName<Order>("OrderTotal", p => p.OrderTotal, ignore),
-                new PropertyByName<Order>("RefundedAmount", p => p.RefundedAmount, ignore),
-                new PropertyByName<Order>("OrderDiscount", p => p.OrderDiscount, ignore),
-                new PropertyByName<Order>("CurrencyRate", p => p.CurrencyRate),
-                new PropertyByName<Order>("CustomerCurrencyCode", p => p.CustomerCurrencyCode),
-                new PropertyByName<Order>("AffiliateId", p => p.AffiliateId, ignore),
-                new PropertyByName<Order>("PaymentMethodSystemName", p => p.PaymentMethodSystemName, ignore),
-                new PropertyByName<Order>("ShippingPickupInStore", p => p.PickupInStore, ignore),
-                new PropertyByName<Order>("ShippingMethod", p => p.ShippingMethod),
-                new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
-                new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
-                new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
-                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc),
-                new PropertyByName<Order>("BillingFirstName", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("BillingLastName", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
-                new PropertyByName<Order>("BillingEmail", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
-                new PropertyByName<Order>("BillingCompany", async p => (await orderBillingAddress(p))?.Company ?? string.Empty),
-                new PropertyByName<Order>("BillingCountry", async p => (await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("BillingCountryCode", async p => (await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)))?.TwoLetterIsoCode, ignore),
-                new PropertyByName<Order>("BillingStateProvince", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("BillingStateProvinceAbbreviation", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)))?.Abbreviation, ignore),
-                new PropertyByName<Order>("BillingCounty", async p => (await orderBillingAddress(p))?.County ?? string.Empty),
-                new PropertyByName<Order>("BillingCity", async p => (await orderBillingAddress(p))?.City ?? string.Empty),
-                new PropertyByName<Order>("BillingAddress1", async p => (await orderBillingAddress(p))?.Address1 ?? string.Empty),
-                new PropertyByName<Order>("BillingAddress2", async p => (await orderBillingAddress(p))?.Address2 ?? string.Empty),
-                new PropertyByName<Order>("BillingZipPostalCode", async p => (await orderBillingAddress(p))?.ZipPostalCode ?? string.Empty),
-                new PropertyByName<Order>("BillingPhoneNumber", async p => (await orderBillingAddress(p))?.PhoneNumber ?? string.Empty),
-                new PropertyByName<Order>("BillingFaxNumber", async p => (await orderBillingAddress(p))?.FaxNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFirstName", async p => (await orderAddress(p))?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("ShippingLastName", async p => (await orderAddress(p))?.LastName ?? string.Empty),
-                new PropertyByName<Order>("ShippingEmail", async p => (await orderAddress(p))?.Email ?? string.Empty),
-                new PropertyByName<Order>("ShippingCompany", async p => (await orderAddress(p))?.Company ?? string.Empty),
-                new PropertyByName<Order>("ShippingCountry", async p => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingCountryCode", async p => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.TwoLetterIsoCode, ignore),
-                new PropertyByName<Order>("ShippingStateProvince", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
-                new PropertyByName<Order>("ShippingStateProvinceAbbreviation", async p => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Abbreviation, ignore),
-                new PropertyByName<Order>("ShippingCounty", async p => (await orderAddress(p))?.County ?? string.Empty),
-                new PropertyByName<Order>("ShippingCity", async p => (await orderAddress(p))?.City ?? string.Empty),
-                new PropertyByName<Order>("ShippingAddress1", async p => (await orderAddress(p))?.Address1 ?? string.Empty),
-                new PropertyByName<Order>("ShippingAddress2", async p => (await orderAddress(p))?.Address2 ?? string.Empty),
-                new PropertyByName<Order>("ShippingZipPostalCode", async p => (await orderAddress(p))?.ZipPostalCode ?? string.Empty),
-                new PropertyByName<Order>("ShippingPhoneNumber", async p => (await orderAddress(p))?.PhoneNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFaxNumber", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty)
+                new PropertyByName<Order, Language>("OrderSubtotalInclTax", (p, l) => p.OrderSubtotalInclTax, ignore),
+                new PropertyByName<Order, Language>("OrderSubtotalExclTax", (p, l) => p.OrderSubtotalExclTax, ignore),
+                new PropertyByName<Order, Language>("OrderSubTotalDiscountInclTax", (p, l) => p.OrderSubTotalDiscountInclTax, ignore),
+                new PropertyByName<Order, Language>("OrderSubTotalDiscountExclTax", (p, l) => p.OrderSubTotalDiscountExclTax, ignore),
+                new PropertyByName<Order, Language>("OrderShippingInclTax", (p, l) => p.OrderShippingInclTax, ignore),
+                new PropertyByName<Order, Language>("OrderShippingExclTax", (p, l) => p.OrderShippingExclTax, ignore),
+                new PropertyByName<Order, Language>("PaymentMethodAdditionalFeeInclTax", (p, l) => p.PaymentMethodAdditionalFeeInclTax, ignore),
+                new PropertyByName<Order, Language>("PaymentMethodAdditionalFeeExclTax", (p, l) => p.PaymentMethodAdditionalFeeExclTax, ignore),
+                new PropertyByName<Order, Language>("TaxRates", (p, l) => p.TaxRates, ignore),
+                new PropertyByName<Order, Language>("OrderTax", (p, l) => p.OrderTax, ignore),
+                new PropertyByName<Order, Language>("OrderTotal", (p, l) => p.OrderTotal, ignore),
+                new PropertyByName<Order, Language>("RefundedAmount", (p, l) => p.RefundedAmount, ignore),
+                new PropertyByName<Order, Language>("OrderDiscount", (p, l) => p.OrderDiscount, ignore),
+                new PropertyByName<Order, Language>("CurrencyRate", (p, l) => p.CurrencyRate),
+                new PropertyByName<Order, Language>("CustomerCurrencyCode", (p, l) => p.CustomerCurrencyCode),
+                new PropertyByName<Order, Language>("AffiliateId", (p, l) => p.AffiliateId, ignore),
+                new PropertyByName<Order, Language>("PaymentMethodSystemName", (p, l) => p.PaymentMethodSystemName, ignore),
+                new PropertyByName<Order, Language>("ShippingPickupInStore", (p, l) => p.PickupInStore, ignore),
+                new PropertyByName<Order, Language>("ShippingMethod", (p, l) => p.ShippingMethod),
+                new PropertyByName<Order, Language>("ShippingRateComputationMethodSystemName", (p, l) => p.ShippingRateComputationMethodSystemName, ignore),
+                new PropertyByName<Order, Language>("CustomValuesXml", (p, l) => p.CustomValuesXml, ignore),
+                new PropertyByName<Order, Language>("VatNumber", (p, l) => p.VatNumber, ignore),
+                new PropertyByName<Order, Language>("CreatedOnUtc", (p, l) => p.CreatedOnUtc),
+                new PropertyByName<Order, Language>("BillingFirstName", async (p, l) => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingLastName", async (p, l) => (await orderBillingAddress(p))?.LastName ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingEmail", async (p, l) => (await orderBillingAddress(p))?.Email ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingCompany", async (p, l) => (await orderBillingAddress(p))?.Company ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingCountry", async (p, l) => (await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)))?.Name ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingCountryCode", async (p, l) => (await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)))?.TwoLetterIsoCode, ignore),
+                new PropertyByName<Order, Language>("BillingStateProvince", async (p, l) => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)))?.Name ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingStateProvinceAbbreviation", async (p, l) => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)))?.Abbreviation, ignore),
+                new PropertyByName<Order, Language>("BillingCounty", async (p, l) => (await orderBillingAddress(p))?.County ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingCity", async (p, l) => (await orderBillingAddress(p))?.City ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingAddress1", async (p, l) => (await orderBillingAddress(p))?.Address1 ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingAddress2", async (p, l) => (await orderBillingAddress(p))?.Address2 ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingZipPostalCode", async (p, l) => (await orderBillingAddress(p))?.ZipPostalCode ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingPhoneNumber", async (p, l) => (await orderBillingAddress(p))?.PhoneNumber ?? string.Empty),
+                new PropertyByName<Order, Language>("BillingFaxNumber", async (p, l) => (await orderBillingAddress(p))?.FaxNumber ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingFirstName", async (p, l) => (await orderAddress(p))?.FirstName ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingLastName", async (p, l) => (await orderAddress(p))?.LastName ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingEmail", async (p, l) => (await orderAddress(p))?.Email ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingCompany", async (p, l) => (await orderAddress(p))?.Company ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingCountry", async (p, l) => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingCountryCode", async (p, l) => (await _countryService.GetCountryByAddressAsync(await orderAddress(p)))?.TwoLetterIsoCode, ignore),
+                new PropertyByName<Order, Language>("ShippingStateProvince", async (p, l) => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Name ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingStateProvinceAbbreviation", async (p, l) => (await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)))?.Abbreviation, ignore),
+                new PropertyByName<Order, Language>("ShippingCounty", async (p, l) => (await orderAddress(p))?.County ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingCity", async (p, l) => (await orderAddress(p))?.City ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingAddress1", async (p, l) => (await orderAddress(p))?.Address1 ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingAddress2", async (p, l) => (await orderAddress(p))?.Address2 ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingZipPostalCode", async (p, l) => (await orderAddress(p))?.ZipPostalCode ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingPhoneNumber", async (p, l) => (await orderAddress(p))?.PhoneNumber ?? string.Empty),
+                new PropertyByName<Order, Language>("ShippingFaxNumber", async (p, l) => (await orderAddress(p))?.FaxNumber ?? string.Empty)
             };
 
             //activity log
@@ -1715,7 +1920,7 @@ namespace Nop.Services.ExportImport
 
             return _orderSettings.ExportWithProducts
                 ? await ExportOrderToXlsxWithProductsAsync(properties, orders)
-                : await new PropertyManager<Order>(properties, _catalogSettings).ExportToXlsxAsync(orders);
+                : await new PropertyManager<Order, Language>(properties, _catalogSettings).ExportToXlsxAsync(orders);
         }
 
         /// <summary>
@@ -1725,6 +1930,18 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
+            async Task<object> getPasswordFormat(Customer customer)
+            {
+                var password = await _customerService.GetCurrentPasswordAsync(customer.Id);
+
+                var passwordFormatId = password?.PasswordFormatId ?? 0;
+
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return passwordFormatId;
+
+                return CommonHelper.ConvertEnum(((PasswordFormat)passwordFormatId).ToString());
+            }
+
             var vendors = await _vendorService.GetVendorsByCustomerIdsAsync(customers.Select(c => c.Id).ToArray());
 
             object getVendor(Customer customer)
@@ -1760,49 +1977,52 @@ namespace Nop.Services.ExportImport
             }
 
             //property manager 
-            var manager = new PropertyManager<Customer>(new[]
+            var manager = new PropertyManager<Customer, Language>(new[]
             {
-                new PropertyByName<Customer>("CustomerId", p => p.Id),
-                new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
-                new PropertyByName<Customer>("Email", p => p.Email),
-                new PropertyByName<Customer>("Username", p => p.Username),
-                new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
-                new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
-                new PropertyByName<Customer>("Vendor", getVendor),
-                new PropertyByName<Customer>("Active", p => p.Active),
-                new PropertyByName<Customer>("CustomerRoles", async p=>string.Join(", ",
+                new PropertyByName<Customer, Language>("CustomerId", (p, l) => p.Id),
+                new PropertyByName<Customer, Language>("CustomerGuid", (p, l) => p.CustomerGuid),
+                new PropertyByName<Customer, Language>("Email", (p, l) => p.Email),
+                new PropertyByName<Customer, Language>("Username", (p, l) => p.Username),
+                new PropertyByName<Customer, Language>("Password", async (p, l) => (await _customerService.GetCurrentPasswordAsync(p.Id))?.Password),
+                new PropertyByName<Customer, Language>("PasswordFormat",  async (p, l) => await getPasswordFormat(p)),
+                new PropertyByName<Customer, Language>("PasswordSalt", async (p, l) => (await _customerService.GetCurrentPasswordAsync(p.Id))?.PasswordSalt),
+                new PropertyByName<Customer, Language>("IsTaxExempt", (p, l) => p.IsTaxExempt),
+                new PropertyByName<Customer, Language>("AffiliateId", (p, l) => p.AffiliateId),
+                new PropertyByName<Customer, Language>("Vendor",  (p, l) => getVendor(p)),
+                new PropertyByName<Customer, Language>("Active", (p, l) => p.Active),
+                new PropertyByName<Customer, Language>("CustomerRoles",  async (p, l) =>  string.Join(", ",
                     (await _customerService.GetCustomerRolesAsync(p)).Select(role => _catalogSettings.ExportImportRelatedEntitiesByName ? role.Name : role.Id.ToString()))), 
-                new PropertyByName<Customer>("IsGuest", async p => await _customerService.IsGuestAsync(p)),
-                new PropertyByName<Customer>("IsRegistered", async p => await _customerService.IsRegisteredAsync(p)),
-                new PropertyByName<Customer>("IsAdministrator", async p => await _customerService.IsAdminAsync(p)),
-                new PropertyByName<Customer>("IsForumModerator", async p => await _customerService.IsForumModeratorAsync(p)),
-                new PropertyByName<Customer>("IsVendor", async p => await _customerService.IsVendorAsync(p)),
-                new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
+                new PropertyByName<Customer, Language>("IsGuest", async (p, l) => await _customerService.IsGuestAsync(p)),
+                new PropertyByName<Customer, Language>("IsRegistered", async (p, l) => await _customerService.IsRegisteredAsync(p)),
+                new PropertyByName<Customer, Language>("IsAdministrator", async (p, l) => await _customerService.IsAdminAsync(p)),
+                new PropertyByName<Customer, Language>("IsForumModerator", async (p, l) => await _customerService.IsForumModeratorAsync(p)),
+                new PropertyByName<Customer, Language>("IsVendor", async (p, l) => await _customerService.IsVendorAsync(p)),
+                new PropertyByName<Customer, Language>("CreatedOnUtc", (p, l) => p.CreatedOnUtc),
                 //attributes
-                new PropertyByName<Customer>("FirstName", p => p.FirstName, !_customerSettings.FirstNameEnabled),
-                new PropertyByName<Customer>("LastName", p => p.LastName, !_customerSettings.LastNameEnabled),
-                new PropertyByName<Customer>("Gender", p => p.Gender, !_customerSettings.GenderEnabled),
-                new PropertyByName<Customer>("Company", p => p.Company, !_customerSettings.CompanyEnabled),
-                new PropertyByName<Customer>("StreetAddress", p => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
-                new PropertyByName<Customer>("StreetAddress2", p => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
-                new PropertyByName<Customer>("ZipPostalCode", p => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Customer>("City", p => p.City, !_customerSettings.CityEnabled),
-                new PropertyByName<Customer>("County", p => p.County, !_customerSettings.CountyEnabled),
-                new PropertyByName<Customer>("Country", getCountry, !_customerSettings.CountryEnabled),
-                new PropertyByName<Customer>("StateProvince", getStateProvince, !_customerSettings.StateProvinceEnabled),
-                new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
-                new PropertyByName<Customer>("VatNumber", p => p.VatNumber),
-                new PropertyByName<Customer>("VatNumberStatusId", p => p.VatNumberStatusId),
-                new PropertyByName<Customer>("VatNumberStatus", p => p.VatNumberStatusId)
+                new PropertyByName<Customer, Language>("FirstName", (p, l) => p.FirstName, !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer, Language>("LastName", (p, l) => p.LastName, !_customerSettings.LastNameEnabled),
+                new PropertyByName<Customer, Language>("Gender", (p, l) => p.Gender, !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer, Language>("Company", (p, l) => p.Company, !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer, Language>("StreetAddress", (p, l) => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer, Language>("StreetAddress2", (p, l) => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer, Language>("ZipPostalCode", (p, l) => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer, Language>("City", (p, l) => p.City, !_customerSettings.CityEnabled),
+                new PropertyByName<Customer, Language>("County", (p, l) => p.County, !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer, Language>("Country",  async (p, l) => await getCountry(p), !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer, Language>("StateProvince",  async (p, l) => await getStateProvince(p), !_customerSettings.StateProvinceEnabled),
+                new PropertyByName<Customer, Language>("Phone", (p, l) => p.Phone, !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer, Language>("Fax", (p, l) => p.Fax, !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer, Language>("VatNumber", (p, l) => p.VatNumber),
+                new PropertyByName<Customer, Language>("VatNumberStatusId", (p, l) => p.VatNumberStatusId),
+                new PropertyByName<Customer, Language>("VatNumberStatus", (p, l) => p.VatNumberStatusId)
                 {
                     DropDownElements = await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false)
                 },
-                new PropertyByName<Customer>("TimeZone", p => p.TimeZoneId, !_dateTimeSettings.AllowCustomersToSetTimeZone),
-                new PropertyByName<Customer>("AvatarPictureId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
-                new PropertyByName<Customer>("ForumPostCount", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
-                new PropertyByName<Customer>("Signature", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
-                new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributesAsync)
+                new PropertyByName<Customer, Language>("TimeZone", (p, l) => p.TimeZoneId, !_dateTimeSettings.AllowCustomersToSetTimeZone),
+                new PropertyByName<Customer, Language>("AvatarPictureId", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
+                new PropertyByName<Customer, Language>("ForumPostCount", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
+                new PropertyByName<Customer, Language>("Signature", async (p, l) => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
+                new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p))
             }, _catalogSettings);
 
             //activity log
@@ -1842,7 +2062,12 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteElementStringAsync("CustomerGuid", null, customer.CustomerGuid.ToString());
                 await xmlWriter.WriteElementStringAsync("Email", null, customer.Email);
                 await xmlWriter.WriteElementStringAsync("Username", null, customer.Username);
-                
+
+                var customerPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
+                await xmlWriter.WriteElementStringAsync("Password", null, customerPassword?.Password);
+                await xmlWriter.WriteElementStringAsync("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
+                await xmlWriter.WriteElementStringAsync("PasswordSalt", null, customerPassword?.PasswordSalt);
+
                 await xmlWriter.WriteElementStringAsync("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 await xmlWriter.WriteElementStringAsync("AffiliateId", null, customer.AffiliateId.ToString());
                 await xmlWriter.WriteElementStringAsync("VendorId", null, customer.VendorId.ToString());
@@ -1999,104 +2224,104 @@ namespace Nop.Services.ExportImport
             async Task<Address> orderBillingAddress(Order o) => await _addressService.GetAddressByIdAsync(o.BillingAddressId);
 
             //customer info and customer attributes
-            var customerManager = new PropertyManager<Customer>(new[]
+            var customerManager = new PropertyManager<Customer, Language>(new[]
             {
-                new PropertyByName<Customer>("Email", p => p.Email),
-                new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
+                new PropertyByName<Customer, Language>("Email", (p, l) => p.Email),
+                new PropertyByName<Customer, Language>("Username", (p, l) => p.Username, !_customerSettings.UsernamesEnabled), 
                 //attributes
-                new PropertyByName<Customer>("First name", p => p.FirstName, !_customerSettings.FirstNameEnabled),
-                new PropertyByName<Customer>("Last name", p => p.LastName, !_customerSettings.LastNameEnabled),
-                new PropertyByName<Customer>("Gender", p => p.Gender, !_customerSettings.GenderEnabled),
-                new PropertyByName<Customer>("Date of birth", p => p.DateOfBirth, !_customerSettings.DateOfBirthEnabled),
-                new PropertyByName<Customer>("Company", p => p.Company, !_customerSettings.CompanyEnabled),
-                new PropertyByName<Customer>("Street address", p => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
-                new PropertyByName<Customer>("Street address 2", p => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
-                new PropertyByName<Customer>("Zip / postal code", p => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Customer>("City", p => p.City, !_customerSettings.CityEnabled),
-                new PropertyByName<Customer>("County", p => p.County, !_customerSettings.CountyEnabled),
-                new PropertyByName<Customer>("Country", async p => (await _countryService.GetCountryByIdAsync(p.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
-                new PropertyByName<Customer>("State province", async p => (await _stateProvinceService.GetStateProvinceByIdAsync(p.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
-                new PropertyByName<Customer>("Phone", p => p.Phone, !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", p => p.Fax, !_customerSettings.FaxEnabled),
-                new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributesAsync)
+                new PropertyByName<Customer, Language>("First name", (p, l) => p.FirstName, !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer, Language>("Last name", (p, l) => p.LastName, !_customerSettings.LastNameEnabled),
+                new PropertyByName<Customer, Language>("Gender", (p, l) => p.Gender, !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer, Language>("Date of birth", (p, l) => p.DateOfBirth, !_customerSettings.DateOfBirthEnabled),
+                new PropertyByName<Customer, Language>("Company", (p, l) => p.Company, !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer, Language>("Street address", (p, l) => p.StreetAddress, !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer, Language>("Street address 2", (p, l) => p.StreetAddress2, !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer, Language>("Zip / postal code", (p, l) => p.ZipPostalCode, !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer, Language>("City", (p, l) => p.City, !_customerSettings.CityEnabled),
+                new PropertyByName<Customer, Language>("County", (p, l) => p.County, !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer, Language>("Country", async (p, l) => (await _countryService.GetCountryByIdAsync(p.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer, Language>("State province", async (p, l) => (await _stateProvinceService.GetStateProvinceByIdAsync(p.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
+                new PropertyByName<Customer, Language>("Phone", (p, l) => p.Phone, !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer, Language>("Fax", (p, l) => p.Fax, !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer, Language>("Customer attributes",  async (p, l) => await GetCustomCustomerAttributesAsync(p))
             }, _catalogSettings);
 
             //customer orders
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var orderManager = new PropertyManager<Order>(new[]
+            var orderManager = new PropertyManager<Order, Language>(new[]
             {
-                new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
-                new PropertyByName<Order>("Order status", async p => await _localizationService.GetLocalizedEnumAsync(p.OrderStatus)),
-                new PropertyByName<Order>("Order total", async p => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, currentLanguage.Id)),
-                new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
-                new PropertyByName<Order>("Created on", async p => (await _dateTimeHelper.ConvertToUserTimeAsync(p.CreatedOnUtc, DateTimeKind.Utc)).ToString("D")),
-                new PropertyByName<Order>("Billing first name", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("Billing last name", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
-                new PropertyByName<Order>("Billing email", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
-                new PropertyByName<Order>("Billing company", async p => (await orderBillingAddress(p))?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
-                new PropertyByName<Order>("Billing country", async p => await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
-                new PropertyByName<Order>("Billing state province", async p => await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
-                new PropertyByName<Order>("Billing county", async p => (await orderBillingAddress(p))?.County ?? string.Empty, !_addressSettings.CountyEnabled),
-                new PropertyByName<Order>("Billing city", async p => (await orderBillingAddress(p))?.City ?? string.Empty, !_addressSettings.CityEnabled),
-                new PropertyByName<Order>("Billing address 1", async p => (await orderBillingAddress(p))?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
-                new PropertyByName<Order>("Billing address 2", async p => (await orderBillingAddress(p))?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
-                new PropertyByName<Order>("Billing zip postal code", async p => (await orderBillingAddress(p))?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Order>("Billing phone number", async p => (await orderBillingAddress(p))?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
-                new PropertyByName<Order>("Billing fax number", async p => (await orderBillingAddress(p))?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled),
-                new PropertyByName<Order>("Shipping first name", async p => (await orderAddress(p))?.FirstName ?? string.Empty),
-                new PropertyByName<Order>("Shipping last name", async p => (await orderAddress(p))?.LastName ?? string.Empty),
-                new PropertyByName<Order>("Shipping email", async p => (await orderAddress(p))?.Email ?? string.Empty),
-                new PropertyByName<Order>("Shipping company", async p => (await orderAddress(p))?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
-                new PropertyByName<Order>("Shipping country", async p => await _countryService.GetCountryByAddressAsync(await orderAddress(p)) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
-                new PropertyByName<Order>("Shipping state province", async p => await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
-                new PropertyByName<Order>("Shipping county", async p => (await orderAddress(p))?.County ?? string.Empty, !_addressSettings.CountyEnabled),
-                new PropertyByName<Order>("Shipping city", async p => (await orderAddress(p))?.City ?? string.Empty, !_addressSettings.CityEnabled),
-                new PropertyByName<Order>("Shipping address 1", async p => (await orderAddress(p))?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
-                new PropertyByName<Order>("Shipping address 2", async p => (await orderAddress(p))?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
-                new PropertyByName<Order>("Shipping zip postal code",
-                    async p => (await orderAddress(p))?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Order>("Shipping phone number", async p => (await orderAddress(p))?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
-                new PropertyByName<Order>("Shipping fax number", async p => (await orderAddress(p))?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled)
+                new PropertyByName<Order, Language>("Order Number", (p, l) => p.CustomOrderNumber),
+                new PropertyByName<Order, Language>("Order status", async (p, l) => await _localizationService.GetLocalizedEnumAsync(p.OrderStatus)),
+                new PropertyByName<Order, Language>("Order total", async (p, l) => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, currentLanguage.Id)),
+                new PropertyByName<Order, Language>("Shipping method", (p, l) => p.ShippingMethod),
+                new PropertyByName<Order, Language>("Created on", async (p, l) => (await _dateTimeHelper.ConvertToUserTimeAsync(p.CreatedOnUtc, DateTimeKind.Utc)).ToString("D")),
+                new PropertyByName<Order, Language>("Billing first name", async (p, l) => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
+                new PropertyByName<Order, Language>("Billing last name", async (p, l) => (await orderBillingAddress(p))?.LastName ?? string.Empty),
+                new PropertyByName<Order, Language>("Billing email", async (p, l) => (await orderBillingAddress(p))?.Email ?? string.Empty),
+                new PropertyByName<Order, Language>("Billing company", async (p, l) => (await orderBillingAddress(p))?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Order, Language>("Billing country", async (p, l) => await _countryService.GetCountryByAddressAsync(await orderBillingAddress(p)) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Order, Language>("Billing state province", async (p, l) => await _stateProvinceService.GetStateProvinceByAddressAsync(await orderBillingAddress(p)) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Order, Language>("Billing county", async (p, l) => (await orderBillingAddress(p))?.County ?? string.Empty, !_addressSettings.CountyEnabled),
+                new PropertyByName<Order, Language>("Billing city", async (p, l) => (await orderBillingAddress(p))?.City ?? string.Empty, !_addressSettings.CityEnabled),
+                new PropertyByName<Order, Language>("Billing address 1", async (p, l) => (await orderBillingAddress(p))?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Order, Language>("Billing address 2", async (p, l) => (await orderBillingAddress(p))?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Order, Language>("Billing zip postal code", async (p, l) => (await orderBillingAddress(p))?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Order, Language>("Billing phone number", async (p, l) => (await orderBillingAddress(p))?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Order, Language>("Billing fax number", async (p, l) => (await orderBillingAddress(p))?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled),
+                new PropertyByName<Order, Language>("Shipping first name", async (p, l) => (await orderAddress(p))?.FirstName ?? string.Empty),
+                new PropertyByName<Order, Language>("Shipping last name", async (p, l) => (await orderAddress(p))?.LastName ?? string.Empty),
+                new PropertyByName<Order, Language>("Shipping email", async (p, l) => (await orderAddress(p))?.Email ?? string.Empty),
+                new PropertyByName<Order, Language>("Shipping company", async (p, l) => (await orderAddress(p))?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Order, Language>("Shipping country", async (p, l) => await _countryService.GetCountryByAddressAsync(await orderAddress(p)) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Order, Language>("Shipping state province", async (p, l) => await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(p)) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Order, Language>("Shipping county", async (p, l) => (await orderAddress(p))?.County ?? string.Empty, !_addressSettings.CountyEnabled),
+                new PropertyByName<Order, Language>("Shipping city", async (p, l) => (await orderAddress(p))?.City ?? string.Empty, !_addressSettings.CityEnabled),
+                new PropertyByName<Order, Language>("Shipping address 1", async (p, l) => (await orderAddress(p))?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Order, Language>("Shipping address 2", async (p, l) => (await orderAddress(p))?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Order, Language>("Shipping zip postal code",
+                    async (p, l) => (await orderAddress(p))?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Order, Language>("Shipping phone number", async (p, l) => (await orderAddress(p))?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Order, Language>("Shipping fax number", async (p, l) => (await orderAddress(p))?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled)
             }, _catalogSettings);
 
-            var orderItemsManager = new PropertyManager<OrderItem>(new[]
+            var orderItemsManager = new PropertyManager<OrderItem, Language>(new[]
             { 
-                new PropertyByName<OrderItem>("SKU", async oi => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
-                new PropertyByName<OrderItem>("Name", async oi => await _localizationService.GetLocalizedAsync(await _productService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
-                new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),
-                new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
-                new PropertyByName<OrderItem>("Total", async oi => await _priceFormatter.FormatPriceAsync((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
+                new PropertyByName<OrderItem, Language>("SKU", async (oi, l) => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
+                new PropertyByName<OrderItem, Language>("Name", async (oi, l) => await _localizationService.GetLocalizedAsync(await _productService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
+                new PropertyByName<OrderItem, Language>("Price", async (oi, l) => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),
+                new PropertyByName<OrderItem, Language>("Quantity", (oi, l) => oi.Quantity),
+                new PropertyByName<OrderItem, Language>("Total", async (oi, l) => await _priceFormatter.FormatPriceAsync((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);
 
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
 
             //customer addresses
-            var addressManager = new PropertyManager<Address>(new[]
+            var addressManager = new PropertyManager<Address, Language>(new[]
             {
-                new PropertyByName<Address>("First name", p => p.FirstName),
-                new PropertyByName<Address>("Last name", p => p.LastName),
-                new PropertyByName<Address>("Email", p => p.Email),
-                new PropertyByName<Address>("Company", p => p.Company, !_addressSettings.CompanyEnabled),
-                new PropertyByName<Address>("Country", async p => await _countryService.GetCountryByAddressAsync(p) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
-                new PropertyByName<Address>("State province", async p => await _stateProvinceService.GetStateProvinceByAddressAsync(p) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
-                new PropertyByName<Address>("County", p => p.County, !_addressSettings.CountyEnabled),
-                new PropertyByName<Address>("City", p => p.City, !_addressSettings.CityEnabled),
-                new PropertyByName<Address>("Address 1", p => p.Address1, !_addressSettings.StreetAddressEnabled),
-                new PropertyByName<Address>("Address 2", p => p.Address2, !_addressSettings.StreetAddress2Enabled),
-                new PropertyByName<Address>("Zip / postal code", p => p.ZipPostalCode, !_addressSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Address>("Phone number", p => p.PhoneNumber, !_addressSettings.PhoneEnabled),
-                new PropertyByName<Address>("Fax number", p => p.FaxNumber, !_addressSettings.FaxEnabled),
-                new PropertyByName<Address>("Custom attributes", async p => await _customerAttributeFormatter.FormatAttributesAsync(p.CustomAttributes, ";"))
+                new PropertyByName<Address, Language>("First name", (p, l) => p.FirstName),
+                new PropertyByName<Address, Language>("Last name", (p, l) => p.LastName),
+                new PropertyByName<Address, Language>("Email", (p, l) => p.Email),
+                new PropertyByName<Address, Language>("Company", (p, l) => p.Company, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Address, Language>("Country", async (p, l) => await _countryService.GetCountryByAddressAsync(p) is Country country ? await _localizationService.GetLocalizedAsync(country, c => c.Name) : string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Address, Language>("State province", async (p, l) => await _stateProvinceService.GetStateProvinceByAddressAsync(p) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, sp => sp.Name) : string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Address, Language>("County", (p, l) => p.County, !_addressSettings.CountyEnabled),
+                new PropertyByName<Address, Language>("City", (p, l) => p.City, !_addressSettings.CityEnabled),
+                new PropertyByName<Address, Language>("Address 1", (p, l) => p.Address1, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Address, Language>("Address 2", (p, l) => p.Address2, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Address, Language>("Zip / postal code", (p, l) => p.ZipPostalCode, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Address, Language>("Phone number", (p, l) => p.PhoneNumber, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Address, Language>("Fax number", (p, l) => p.FaxNumber, !_addressSettings.FaxEnabled),
+                new PropertyByName<Address, Language>("Custom attributes", async (p, l) => await _customerAttributeFormatter.FormatAttributesAsync(p.CustomAttributes, ";"))
             }, _catalogSettings);
 
             //customer private messages
-            var privateMessageManager = new PropertyManager<PrivateMessage>(new[]
+            var privateMessageManager = new PropertyManager<PrivateMessage, Language>(new[]
             {
-                new PropertyByName<PrivateMessage>("From", async pm => await _customerService.GetCustomerByIdAsync(pm.FromCustomerId) is Customer cFrom ? (_customerSettings.UsernamesEnabled ? cFrom.Username : cFrom.Email) : string.Empty),
-                new PropertyByName<PrivateMessage>("To", async pm => await _customerService.GetCustomerByIdAsync(pm.ToCustomerId) is Customer cTo ? (_customerSettings.UsernamesEnabled ? cTo.Username : cTo.Email) : string.Empty),
-                new PropertyByName<PrivateMessage>("Subject", pm => pm.Subject),
-                new PropertyByName<PrivateMessage>("Text", pm => pm.Text),
-                new PropertyByName<PrivateMessage>("Created on", async pm => (await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc)).ToString("D"))
+                new PropertyByName<PrivateMessage, Language>("From", async (pm, l) => await _customerService.GetCustomerByIdAsync(pm.FromCustomerId) is Customer cFrom ? (_customerSettings.UsernamesEnabled ? cFrom.Username : cFrom.Email) : string.Empty),
+                new PropertyByName<PrivateMessage, Language>("To", async (pm, l) => await _customerService.GetCustomerByIdAsync(pm.ToCustomerId) is Customer cTo ? (_customerSettings.UsernamesEnabled ? cTo.Username : cTo.Email) : string.Empty),
+                new PropertyByName<PrivateMessage, Language>("Subject", (pm, l) => pm.Subject),
+                new PropertyByName<PrivateMessage, Language>("Text", (pm, l) => pm.Text),
+                new PropertyByName<PrivateMessage, Language>("Created on", async (pm, l) => (await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc)).ToString("D"))
             }, _catalogSettings);
 
             List<PrivateMessage> pmList = null;
@@ -2107,11 +2332,11 @@ namespace Nop.Services.ExportImport
             }
 
             //customer GDPR logs
-            var gdprLogManager = new PropertyManager<GdprLog>(new[]
+            var gdprLogManager = new PropertyManager<GdprLog, Language>(new[]
             {
-                new PropertyByName<GdprLog>("Request type", async log => await _localizationService.GetLocalizedEnumAsync(log.RequestType)),
-                new PropertyByName<GdprLog>("Request details", log => log.RequestDetails),
-                new PropertyByName<GdprLog>("Created on", async log => (await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc)).ToString("D"))
+                new PropertyByName<GdprLog, Language>("Request type", async (log, l) => await _localizationService.GetLocalizedEnumAsync(log.RequestType)),
+                new PropertyByName<GdprLog, Language>("Request details", (log, l) => log.RequestDetails),
+                new PropertyByName<GdprLog, Language>("Created on", async (log, l) => (await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc)).ToString("D"))
             }, _catalogSettings);
 
             var gdprLog = await _gdprService.GetAllLogAsync(customer.Id);
@@ -2132,8 +2357,8 @@ namespace Nop.Services.ExportImport
                 //customer info and customer attributes
                 var customerInfoRow = 2;
                 customerManager.CurrentObject = customer;
-                customerManager.WriteCaption(customerInfoWorksheet);
-                await customerManager.WriteToXlsxAsync(customerInfoWorksheet, customerInfoRow);
+                customerManager.WriteDefaultCaption(customerInfoWorksheet);
+                await customerManager.WriteDefaultToXlsxAsync(customerInfoWorksheet, customerInfoRow);
 
                 //customer addresses
                 if (await _customerService.GetAddressesByCustomerIdAsync(customer.Id) is IList<Address> addresses && addresses.Any())
@@ -2144,13 +2369,13 @@ namespace Nop.Services.ExportImport
                     cell.Value = "Address List";
                     customerInfoRow += 1;
                     addressManager.SetCaptionStyle(cell);
-                    addressManager.WriteCaption(customerInfoWorksheet, customerInfoRow);
+                    addressManager.WriteDefaultCaption(customerInfoWorksheet, customerInfoRow);
 
                     foreach (var customerAddress in addresses)
                     {
                         customerInfoRow += 1;
                         addressManager.CurrentObject = customerAddress;
-                        await addressManager.WriteToXlsxAsync(customerInfoWorksheet, customerInfoRow);
+                        await addressManager.WriteDefaultToXlsxAsync(customerInfoWorksheet, customerInfoRow);
                     }
                 }
 
@@ -2159,7 +2384,7 @@ namespace Nop.Services.ExportImport
                 {
                     var ordersWorksheet = workbook.Worksheets.Add("Orders");
 
-                    orderManager.WriteCaption(ordersWorksheet);
+                    orderManager.WriteDefaultCaption(ordersWorksheet);
 
                     var orderRow = 1;
 
@@ -2167,7 +2392,7 @@ namespace Nop.Services.ExportImport
                     {
                         orderRow += 1;
                         orderManager.CurrentObject = order;
-                        await orderManager.WriteToXlsxAsync(ordersWorksheet, orderRow);
+                        await orderManager.WriteDefaultToXlsxAsync(ordersWorksheet, orderRow);
 
                         //products
                         var orederItems = await _orderService.GetOrderItemsAsync(order.Id);
@@ -2177,7 +2402,7 @@ namespace Nop.Services.ExportImport
 
                         orderRow += 1;
 
-                        orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
+                        orderItemsManager.WriteDefaultCaption(ordersWorksheet, orderRow, 2);
                         ordersWorksheet.Row(orderRow).OutlineLevel = 1;
                         ordersWorksheet.Row(orderRow).Collapse();
 
@@ -2185,7 +2410,7 @@ namespace Nop.Services.ExportImport
                         {
                             orderRow++;
                             orderItemsManager.CurrentObject = orederItem;
-                            await orderItemsManager.WriteToXlsxAsync(ordersWorksheet, orderRow, 2, fWorksheet);
+                            await orderItemsManager.WriteDefaultToXlsxAsync(ordersWorksheet, orderRow, 2, fWorksheet);
                             ordersWorksheet.Row(orderRow).OutlineLevel = 1;
                             ordersWorksheet.Row(orderRow).Collapse();
                         }
@@ -2196,7 +2421,7 @@ namespace Nop.Services.ExportImport
                 if (pmList?.Any() ?? false)
                 {
                     var privateMessageWorksheet = workbook.Worksheets.Add("Private messages");
-                    privateMessageManager.WriteCaption(privateMessageWorksheet);
+                    privateMessageManager.WriteDefaultCaption(privateMessageWorksheet);
 
                     var privateMessageRow = 1;
 
@@ -2205,7 +2430,7 @@ namespace Nop.Services.ExportImport
                         privateMessageRow += 1;
 
                         privateMessageManager.CurrentObject = privateMessage;
-                        await privateMessageManager.WriteToXlsxAsync(privateMessageWorksheet, privateMessageRow);
+                        await privateMessageManager.WriteDefaultToXlsxAsync(privateMessageWorksheet, privateMessageRow);
                     }
                 }
 
@@ -2213,7 +2438,7 @@ namespace Nop.Services.ExportImport
                 if (gdprLog.Any())
                 {
                     var gdprLogWorksheet = workbook.Worksheets.Add("GDPR requests (log)");
-                    gdprLogManager.WriteCaption(gdprLogWorksheet);
+                    gdprLogManager.WriteDefaultCaption(gdprLogWorksheet);
 
                     var gdprLogRow = 1;
 
@@ -2222,7 +2447,7 @@ namespace Nop.Services.ExportImport
                         gdprLogRow += 1;
 
                         gdprLogManager.CurrentObject = log;
-                        await gdprLogManager.WriteToXlsxAsync(gdprLogWorksheet, gdprLogRow);
+                        await gdprLogManager.WriteDefaultToXlsxAsync(gdprLogWorksheet, gdprLogRow);
                     }
                 }
 
