@@ -215,7 +215,7 @@ namespace Nop.Services.ExportImport
                 await WriteLocalizedPropertyXmlAsync(category, c => c.MetaKeywords, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
                 await WriteLocalizedPropertyXmlAsync(category, c => c.MetaDescription, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
                 await WriteLocalizedPropertyXmlAsync(category, c => c.MetaTitle, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
-                await WriteLocalizedSeNameXmlAsync(category, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedSeNameXmlAsync(category, xmlWriter, languages, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("ParentCategoryId", category.ParentCategoryId);
                 await xmlWriter.WriteStringAsync("PictureId", category.PictureId);
                 await xmlWriter.WriteStringAsync("PageSize", category.PageSize, await IgnoreExportCategoryPropertyAsync());
@@ -244,7 +244,7 @@ namespace Nop.Services.ExportImport
                     await xmlWriter.WriteStartElementAsync("ProductCategory");
                     await xmlWriter.WriteStringAsync("ProductCategoryId", productCategory.Id);
                     await xmlWriter.WriteStringAsync("ProductId", productCategory.ProductId);
-                    await xmlWriter.WriteStringAsync("ProductName", product.Name);
+                    await WriteLocalizedPropertyXmlAsync(product, p => p.Name, xmlWriter, languages, overriddenNodeName: "ProductName");
                     await xmlWriter.WriteStringAsync("IsFeaturedProduct", productCategory.IsFeaturedProduct);
                     await xmlWriter.WriteStringAsync("DisplayOrder", productCategory.DisplayOrder);
                     await xmlWriter.WriteEndElementAsync();
@@ -402,7 +402,7 @@ namespace Nop.Services.ExportImport
             // we need only the picture at a specific index, no need to get more pictures than that
             var recordsToReturn = pictureIndex + 1;
             var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id, recordsToReturn);
-            
+
             return pictures.Count > pictureIndex ? await _pictureService.GetThumbLocalPathAsync(pictures[pictureIndex]) : null;
         }
 
@@ -539,7 +539,7 @@ namespace Nop.Services.ExportImport
 
             var localizedProperties = new[]
             {
-                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue", async (p, l) => 
+                new PropertyByName<ExportSpecificationAttribute, Language>("CustomValue", async (p, l) =>
                     await GetLocalizedAsync(await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(p.Id), x => x.CustomValue, l)),
             };
 
@@ -579,7 +579,7 @@ namespace Nop.Services.ExportImport
                     foreach (var language in languages)
                     {
                         var lws = workbook.Worksheets.Add(language.UniqueSeoCode);
-                        localizedWorksheets.Add(new (language, lws));
+                        localizedWorksheets.Add(new(language, lws));
                         manager.WriteLocalizedCaption(lws);
                     }
                 }
@@ -597,10 +597,10 @@ namespace Nop.Services.ExportImport
                     }
                     row++;
 
-                    if (_catalogSettings.ExportImportProductAttributes) 
+                    if (_catalogSettings.ExportImportProductAttributes)
                         row = await ExportProductAttributesAsync(item, productAttributeManager, worksheet, localizedWorksheets, row, fbaWorksheet);
 
-                    if (_catalogSettings.ExportImportProductSpecificationAttributes) 
+                    if (_catalogSettings.ExportImportProductSpecificationAttributes)
                         row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, localizedWorksheets, row, fsaWorksheet);
                 }
 
@@ -660,7 +660,7 @@ namespace Nop.Services.ExportImport
 
                     //validation rules
                     if (!pam.ValidationRulesAllowed())
-                        return new List<ExportProductAttribute> {attribute};
+                        return new List<ExportProductAttribute> { attribute };
 
                     attribute.ValidationMinLength = pam.ValidationMinLength;
                     attribute.ValidationMaxLength = pam.ValidationMaxLength;
@@ -709,7 +709,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute, Language> attributeManager, 
+        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute, Language> attributeManager,
             IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
@@ -829,7 +829,7 @@ namespace Nop.Services.ExportImport
 
         /// <returns>A task that represents the asynchronous operation</returns>
         private async Task WriteLocalizedPropertyXmlAsync<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
-            XmlWriter xmlWriter, IList<Language> languages, bool ignore = false, string overriddenNodeName = null) 
+            XmlWriter xmlWriter, IList<Language> languages, bool ignore = false, string overriddenNodeName = null)
             where TEntity : BaseEntity, ILocalizedEntity
         {
             if (ignore)
@@ -1184,7 +1184,7 @@ namespace Nop.Services.ExportImport
                 await WriteLocalizedPropertyXmlAsync(product, p => p.MetaKeywords, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await WriteLocalizedPropertyXmlAsync(product, p => p.MetaDescription, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await WriteLocalizedPropertyXmlAsync(product, p => p.MetaTitle, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
-                await WriteLocalizedSeNameXmlAsync(product, xmlWriter, languages, await IgnoreExportManufacturerPropertyAsync());
+                await WriteLocalizedSeNameXmlAsync(product, xmlWriter, languages, await IgnoreExportProductPropertyAsync(p => p.Seo));
                 await xmlWriter.WriteStringAsync("AllowCustomerReviews", product.AllowCustomerReviews, await IgnoreExportProductPropertyAsync(p => p.AllowCustomerReviews));
                 await xmlWriter.WriteStringAsync("SKU", product.Sku);
                 await xmlWriter.WriteStringAsync("ManufacturerPartNumber", product.ManufacturerPartNumber, await IgnoreExportProductPropertyAsync(p => p.ManufacturerPartNumber));
@@ -1281,7 +1281,7 @@ namespace Nop.Services.ExportImport
 
                 if (!await IgnoreExportProductPropertyAsync(p => p.TierPrices))
                 {
-                    await  xmlWriter.WriteStartElementAsync("TierPrices");
+                    await xmlWriter.WriteStartElementAsync("TierPrices");
                     var tierPrices = await _productService.GetTierPricesByProductAsync(product.Id);
                     foreach (var tierPrice in tierPrices)
                     {
@@ -1301,7 +1301,7 @@ namespace Nop.Services.ExportImport
 
                 if (!await IgnoreExportProductPropertyAsync(p => p.ProductAttributes))
                 {
-                    await  xmlWriter.WriteStartElementAsync("ProductAttributes");
+                    await xmlWriter.WriteStartElementAsync("ProductAttributes");
                     var productAttributMappings =
                         await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
                     foreach (var productAttributeMapping in productAttributMappings)
@@ -1930,18 +1930,6 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
-            async Task<object> getPasswordFormat(Customer customer)
-            {
-                var password = await _customerService.GetCurrentPasswordAsync(customer.Id);
-
-                var passwordFormatId = password?.PasswordFormatId ?? 0;
-
-                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
-                    return passwordFormatId;
-
-                return CommonHelper.ConvertEnum(((PasswordFormat)passwordFormatId).ToString());
-            }
-
             var vendors = await _vendorService.GetVendorsByCustomerIdsAsync(customers.Select(c => c.Id).ToArray());
 
             object getVendor(Customer customer)
@@ -1983,15 +1971,12 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("CustomerGuid", (p, l) => p.CustomerGuid),
                 new PropertyByName<Customer, Language>("Email", (p, l) => p.Email),
                 new PropertyByName<Customer, Language>("Username", (p, l) => p.Username),
-                new PropertyByName<Customer, Language>("Password", async (p, l) => (await _customerService.GetCurrentPasswordAsync(p.Id))?.Password),
-                new PropertyByName<Customer, Language>("PasswordFormat",  async (p, l) => await getPasswordFormat(p)),
-                new PropertyByName<Customer, Language>("PasswordSalt", async (p, l) => (await _customerService.GetCurrentPasswordAsync(p.Id))?.PasswordSalt),
                 new PropertyByName<Customer, Language>("IsTaxExempt", (p, l) => p.IsTaxExempt),
                 new PropertyByName<Customer, Language>("AffiliateId", (p, l) => p.AffiliateId),
                 new PropertyByName<Customer, Language>("Vendor",  (p, l) => getVendor(p)),
                 new PropertyByName<Customer, Language>("Active", (p, l) => p.Active),
                 new PropertyByName<Customer, Language>("CustomerRoles",  async (p, l) =>  string.Join(", ",
-                    (await _customerService.GetCustomerRolesAsync(p)).Select(role => _catalogSettings.ExportImportRelatedEntitiesByName ? role.Name : role.Id.ToString()))), 
+                    (await _customerService.GetCustomerRolesAsync(p)).Select(role => _catalogSettings.ExportImportRelatedEntitiesByName ? role.Name : role.Id.ToString()))),
                 new PropertyByName<Customer, Language>("IsGuest", async (p, l) => await _customerService.IsGuestAsync(p)),
                 new PropertyByName<Customer, Language>("IsRegistered", async (p, l) => await _customerService.IsRegisteredAsync(p)),
                 new PropertyByName<Customer, Language>("IsAdministrator", async (p, l) => await _customerService.IsAdminAsync(p)),
@@ -2062,11 +2047,6 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteElementStringAsync("CustomerGuid", null, customer.CustomerGuid.ToString());
                 await xmlWriter.WriteElementStringAsync("Email", null, customer.Email);
                 await xmlWriter.WriteElementStringAsync("Username", null, customer.Username);
-
-                var customerPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
-                await xmlWriter.WriteElementStringAsync("Password", null, customerPassword?.Password);
-                await xmlWriter.WriteElementStringAsync("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
-                await xmlWriter.WriteElementStringAsync("PasswordSalt", null, customerPassword?.PasswordSalt);
 
                 await xmlWriter.WriteElementStringAsync("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 await xmlWriter.WriteElementStringAsync("AffiliateId", null, customer.AffiliateId.ToString());
@@ -2285,7 +2265,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem, Language>(new[]
-            { 
+            {
                 new PropertyByName<OrderItem, Language>("SKU", async (oi, l) => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(oi.ProductId), oi.AttributesXml)),
                 new PropertyByName<OrderItem, Language>("Name", async (oi, l) => await _localizationService.GetLocalizedAsync(await _productService.GetProductByIdAsync(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem, Language>("Price", async (oi, l) => await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency((await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderByIdAsync(oi.OrderId)).CustomerCurrencyCode, false, currentLanguage.Id)),

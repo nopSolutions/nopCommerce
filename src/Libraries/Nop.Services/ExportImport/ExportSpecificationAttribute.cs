@@ -26,6 +26,7 @@ namespace Nop.Services.ExportImport
 
             var attribute = new ExportSpecificationAttribute
             {
+                Id = specificationAttribute.Id,
                 AttributeTypeId = specificationAttribute.AttributeTypeId,
                 AllowFiltering = specificationAttribute.AllowFiltering,
                 ShowOnProductPage = specificationAttribute.ShowOnProductPage,

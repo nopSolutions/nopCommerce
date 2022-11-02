@@ -23,7 +23,6 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -52,17 +51,14 @@ namespace Nop.Services.ExportImport
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICategoryService _categoryService;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -99,17 +95,14 @@ namespace Nop.Services.ExportImport
 
         public ImportManager(CatalogSettings catalogSettings,
             IAddressService addressService,
-            IAffiliateService affiliateService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             ICategoryService categoryService,
-            ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             ICustomNumberFormatter customNumberFormatter,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IGenericAttributeService genericAttributeService,
             IHttpClientFactory httpClientFactory,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -141,18 +134,15 @@ namespace Nop.Services.ExportImport
             VendorSettings vendorSettings)
         {
             _addressService = addressService;
-            _affiliateService = affiliateService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _catalogSettings = catalogSettings;
             _categoryService = categoryService;
-            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
             _customNumberFormatter = customNumberFormatter;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _genericAttributeService = genericAttributeService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _languageService = languageService;
@@ -277,7 +267,7 @@ namespace Nop.Services.ExportImport
             new FileExtensionContentTypeProvider().TryGetContentType(filePath, out var mimeType);
 
             //set to jpeg in case mime type cannot be found
-            return mimeType ?? MimeTypes.ImageJpeg;
+            return mimeType ?? _pictureService.GetPictureContentTypeByFileExtension(_fileProvider.GetFileExtension(filePath));
         }
 
         /// <summary>
@@ -296,6 +286,9 @@ namespace Nop.Services.ExportImport
                 return null;
 
             var mimeType = GetMimeTypeFromFilePath(picturePath);
+            if (string.IsNullOrEmpty(mimeType))
+                return null;
+
             var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
             var pictureAlreadyExists = false;
             if (picId != null)
@@ -345,6 +338,9 @@ namespace Nop.Services.ExportImport
                         continue;
 
                     var mimeType = GetMimeTypeFromFilePath(picturePath);
+                    if (string.IsNullOrEmpty(mimeType))
+                        continue;
+
                     var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                     var pictureAlreadyExists = false;
                     if (!product.IsNew)
@@ -412,6 +408,9 @@ namespace Nop.Services.ExportImport
                     try
                     {
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
+                        if (string.IsNullOrEmpty(mimeType))
+                            continue;
+
                         var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
                         var pictureAlreadyExists = false;
                         var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
@@ -896,8 +895,8 @@ namespace Nop.Services.ExportImport
                 if (lWorksheet == null)
                     continue;
 
-                productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
                 productAttributeManager.CurrentLanguage = language;
+                productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                 valueName = productAttributeManager.GetLocalizedProperty("ValueName").StringValue;
                 textPrompt = productAttributeManager.GetLocalizedProperty("AttributeTextPrompt").StringValue;
@@ -913,7 +912,7 @@ namespace Nop.Services.ExportImport
                     case AttributeControlType.TextBox:
                         if (productAttributeMapping.ValidationRulesAllowed())
                         {
-                            var defaultValue = productAttributeManager.GetDefaultProperty("DefaultValue")?.StringValue;
+                            var defaultValue = productAttributeManager.GetLocalizedProperty("DefaultValue")?.StringValue;
                             await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMapping, p => p.DefaultValue, defaultValue, language.Id);
                         }
 
@@ -986,8 +985,8 @@ namespace Nop.Services.ExportImport
                 if (lWorksheet == null)
                     continue;
 
-                specificationAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
                 specificationAttributeManager.CurrentLanguage = language;
+                specificationAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
                 customValue = specificationAttributeManager.GetLocalizedProperty("CustomValue").StringValue;
                 await _localizedEntityService.SaveLocalizedValueAsync(productSpecificationAttribute, p => p.CustomValue, customValue, language.Id);
@@ -1611,6 +1610,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <typeparam name="T">Type of object</typeparam>
         /// <param name="workbook">Excel workbook</param>
+        /// <param name="languages">Languages</param>
         /// <returns>Workbook metadata</returns>
         public static WorkbookMetadata<T> GetWorkbookMetadata<T>(IXLWorkbook workbook, IList<Language> languages)
         {
@@ -1671,9 +1671,9 @@ namespace Nop.Services.ExportImport
                 }
             }
 
-            return new WorkbookMetadata<T>() 
-            { 
-                DefaultProperties = properties, 
+            return new WorkbookMetadata<T>()
+            {
+                DefaultProperties = properties,
                 LocalizedProperties = localizedProperties,
                 DefaultWorksheet = worksheet,
                 LocalizedWorksheets = localizedWorksheets
@@ -2943,14 +2943,14 @@ namespace Nop.Services.ExportImport
                 }
 
                 //check order address field values from excel
-                if (string.IsNullOrWhiteSpace(orderAddress.FirstName) && string.IsNullOrWhiteSpace(orderAddress.LastName) &&string.IsNullOrWhiteSpace(orderAddress.Email))
+                if (string.IsNullOrWhiteSpace(orderAddress.FirstName) && string.IsNullOrWhiteSpace(orderAddress.LastName) && string.IsNullOrWhiteSpace(orderAddress.Email))
                     orderAddress = null;
 
                 //insert or update billing address
                 if (orderBillingAddress.Id == 0)
                 {
                     await _addressService.InsertAddressAsync(orderBillingAddress);
-                    order.BillingAddressId = orderBillingAddress.Id; 
+                    order.BillingAddressId = orderBillingAddress.Id;
                 }
                 else
                     await _addressService.UpdateAddressAsync(orderBillingAddress);
