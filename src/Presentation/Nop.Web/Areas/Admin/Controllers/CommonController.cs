@@ -197,6 +197,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-minification-files")]
+        public virtual async Task<IActionResult> MaintenanceDeleteMinificationFiles(MaintenanceModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            model.DeleteMinificationFiles.NumberOfDeletedFiles = 0;
+
+            foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath("bundles")))
+            {
+                try
+                {
+                    var info = _fileProvider.GetFileInfo(fullPath);
+
+                    if (info.Name.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    _fileProvider.DeleteFile(info.PhysicalPath);
+                    model.DeleteMinificationFiles.NumberOfDeletedFiles++;
+
+                }
+                catch (Exception exc)
+                {
+                    await _notificationService.ErrorNotificationAsync(exc);
+                }
+            }
+
+            return View(model);
+        }
+
         [HttpPost]
         public virtual async Task<IActionResult> BackupFiles(BackupFileSearchModel searchModel)
         {
