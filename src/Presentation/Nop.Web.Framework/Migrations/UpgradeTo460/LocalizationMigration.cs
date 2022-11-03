@@ -299,6 +299,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6396
                 ["Admin.Catalog.Products.Fields.MinStockQuantity.Hint"] = "If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.",
                 ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you track inventory by product attributes, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
+                
+                //#6213
+                ["Admin.System.Maintenance.DeleteMinificationFiles"] = "Delete minification files",
+                ["Admin.System.Maintenance.DeleteMinificationFiles.Text"] = "Clear the bundles directory.",
+                ["Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted"] = "{0} files were deleted",
             }, languageId).Wait();
 
             #endregion

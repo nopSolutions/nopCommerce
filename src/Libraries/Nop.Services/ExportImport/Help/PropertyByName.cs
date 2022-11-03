@@ -9,7 +9,8 @@ namespace Nop.Services.ExportImport.Help
     /// A helper class to access the property by name
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
-    public partial class PropertyByName<T>
+    /// <typeparam name="L">Language</typeparam>
+    public partial class PropertyByName<T, L>
     {
         private object _propertyValue;
 
@@ -20,7 +21,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="func">Feature property access</param>
         /// <param name="ignore">Specifies whether the property should be exported</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public PropertyByName(string propertyName, Func<T, Task<object>> func, bool ignore = false)
+        public PropertyByName(string propertyName, Func<T, L, Task<object>> func, bool ignore = false)
         {
             PropertyName = propertyName;
             GetProperty = func;
@@ -34,12 +35,12 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="propertyName">Property name</param>
         /// <param name="func">Feature property access</param>
         /// <param name="ignore">Specifies whether the property should be exported</param>
-        public PropertyByName(string propertyName, Func<T, object> func = null, bool ignore = false)
+        public PropertyByName(string propertyName, Func<T, L, object> func = null, bool ignore = false)
         {
             PropertyName = propertyName;
             
             if(func != null)
-                GetProperty = obj => Task.FromResult(func(obj));
+                GetProperty = (obj, lang) => Task.FromResult(func(obj, lang));
 
             PropertyOrderPosition = 1;
             Ignore = ignore;
@@ -54,7 +55,7 @@ namespace Nop.Services.ExportImport.Help
         /// Feature property access
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Func<T, Task<object>> GetProperty { get; }
+        public Func<T, L, Task<object>> GetProperty { get; }
 
         /// <summary>
         /// Property name

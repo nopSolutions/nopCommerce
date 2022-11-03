@@ -43,6 +43,11 @@
         public int AttributeControlTypeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the product attribute mapping identifier
+        /// </summary>
+        public int AttributeMappingId { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute value type identifier
         /// </summary>
         public int AttributeValueTypeId { get; set; }
