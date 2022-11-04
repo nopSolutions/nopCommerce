@@ -14,6 +14,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
@@ -272,6 +273,14 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         EmailAccountId = _dataProvider.GetTable<EmailAccount>().FirstOrDefault()?.Id ?? 0
                     }
                 );
+            }
+
+            //#6395
+            var paRange = _dataProvider.GetTable<ProductAvailabilityRange>().FirstOrDefault(par => string.Compare(par.Name, "2 week", StringComparison.InvariantCultureIgnoreCase) == 0);
+            if (paRange is not null)
+            {
+                paRange.Name = "2 weeks";
+                _dataProvider.UpdateEntityAsync(paRange).Wait();
             }
         }
 

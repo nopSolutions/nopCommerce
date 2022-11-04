@@ -116,6 +116,39 @@ namespace Nop.Services.Localization
         #region Methods
 
         /// <summary>
+        /// Find localized properties
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="localeKey">Locale key</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found localized properties
+        /// </returns>
+        public virtual async Task<IList<LocalizedProperty>> GetEntityLocalizedPropertiesAsync(int entityId, string localeKeyGroup, string localeKey)
+        {
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertiesCacheKey,
+                entityId, localeKeyGroup, localeKey);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var source = _localizationSettings.LoadAllLocalizedPropertiesOnStartup
+                    //load all records (we know they are cached)
+                    ? (await GetAllLocalizedPropertiesAsync()).AsQueryable()
+                    //gradual loading
+                    : _localizedPropertyRepository.Table;
+
+                var query = from lp in source
+                            where lp.EntityId == entityId &&
+                                  lp.LocaleKeyGroup == localeKeyGroup &&
+                                  lp.LocaleKey == localeKey
+                            select lp;
+
+                return await query.ToListAsync();
+            });
+        }
+
+        /// <summary>
         /// Find localized value
         /// </summary>
         /// <param name="languageId">Language identifier</param>
