@@ -304,6 +304,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.System.Maintenance.DeleteMinificationFiles"] = "Delete minification files",
                 ["Admin.System.Maintenance.DeleteMinificationFiles.Text"] = "Clear the bundles directory.",
                 ["Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted"] = "{0} files were deleted",
+
+                //#6336
+                ["Admin.Customers.Customers.RewardPoints.Fields.AddNegativePointsValidity"] = "Points validity is not allowed for point reduction.",
             }, languageId).Wait();
 
             #endregion
