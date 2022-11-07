@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Google Analytics 4 (GA4) - Google Tag Manager",
+  "SystemName": "FoxNetSoft.GoogleAnalytics4",
+  "Version": "1.02",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "FoxNetSoft",
+  "DisplayOrder": 10,
+  "FileName": "FoxNetSoft.Plugin.Misc.GoogleAnalytics4.dll",
+  "Description": "Google Analytics 4 (GA4)."
+}
