@@ -101,7 +101,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 Src = srcAttribute;
         }
 
-        private void ProcessAsset(TagHelperOutput output)
+        private void ProcessAsset(TagHelperOutput output, WebOptimizerConfig woConfig)
         {
             if (string.IsNullOrEmpty(Src))
                 return;
@@ -122,7 +122,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 asset = _assetPipeline.AddJavaScriptBundle(sourceFile, sourceFile);
             }
 
-            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{Src}?v={asset.GenerateCacheKey(ViewContext.HttpContext)}");
+            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{Src}?v={asset.GenerateCacheKey(ViewContext.HttpContext, woConfig)}");
         }
 
         #endregion
@@ -145,10 +145,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             if (!output.Attributes.ContainsName("type")) // we don't touch other types e.g. text/template
                 output.Attributes.SetAttribute("type", MimeTypes.TextJavascript);
 
+            var woConfig = _appSettings.Get<WebOptimizerConfig>();
+
             if (Location == ResourceLocation.Auto)
             {
                 // move script to the footer bundle when bundling is enabled
-                Location = _appSettings.Get<WebOptimizerConfig>().EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
+                Location = woConfig.EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
             }
 
             if (Location == ResourceLocation.None)
@@ -156,7 +158,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 if (!string.IsNullOrEmpty(Src))
                 {
                     ProcessSrcAttribute(context, output);
-                    ProcessAsset(output);
+                    ProcessAsset(output, woConfig);
                 }
 
                 return;
