@@ -1131,6 +1131,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (model.Points == 0)
                 return ErrorJson(await _localizationService.GetResourceAsync("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
 
+            //prevent adding negative point validity for point reduction
+            if (model.Points < 0 && model.PointsValidity.HasValue)
+                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Customers.Customers.RewardPoints.Fields.AddNegativePointsValidity"));
+
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(model.CustomerId);
             if (customer == null)
