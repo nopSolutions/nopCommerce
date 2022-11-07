@@ -927,13 +927,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor should have access only to their orders
+            if (!await HasAccessToOrderAsync(orderId))
+                return RedirectToAction("List");
+
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            var vendorId = 0;
-            if (currentVendor != null)
-            {
-                vendorId = currentVendor.Id;
-            }
+            var vendorId = currentVendor?.Id ?? 0;
 
             var order = await _orderService.GetOrderByIdAsync(orderId);
             var orders = new List<Order>

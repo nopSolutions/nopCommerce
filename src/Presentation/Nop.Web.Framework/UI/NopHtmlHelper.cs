@@ -405,7 +405,7 @@ namespace Nop.Web.Framework.UI
 
                 var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
                 result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}?v={3}\"></script>",
-                    MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext));
+                    MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
             }
 
             var scripts = _scriptParts[location]
@@ -424,7 +424,7 @@ namespace Nop.Web.Framework.UI
                 var asset = GetOrCreateBundle(item.Src, CreateJavaScriptAsset);
 
                 result.AppendFormat("<script type=\"{0}\" src=\"{1}?v={2}\"></script>",
-                    MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(httpContext));
+                    MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(httpContext, woConfig));
 
                 result.Append(Environment.NewLine);
             }
@@ -579,7 +579,7 @@ namespace Nop.Web.Framework.UI
 
                 var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
                 result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}?v={3}\" />",
-                    MimeTypes.TextCss, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext));
+                    MimeTypes.TextCss, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
             }
 
             var styles = _cssParts
@@ -601,7 +601,7 @@ namespace Nop.Web.Framework.UI
                 var asset = GetOrCreateBundle(item.Src, CreateCssAsset);
 
                 result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}?v={2}\" />",
-                    MimeTypes.TextCss, asset.Route, asset.GenerateCacheKey(httpContext));
+                    MimeTypes.TextCss, asset.Route, asset.GenerateCacheKey(httpContext, woConfig));
                 result.AppendLine();
             }
 
