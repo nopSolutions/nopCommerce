@@ -1437,14 +1437,16 @@ namespace Nop.Services.Catalog
 
             var result = new List<int>();
             if (!string.IsNullOrWhiteSpace(product.AllowedQuantities))
-                product.AllowedQuantities
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .ToList()
-                    .ForEach(qtyStr =>
-                    {
-                        if (int.TryParse(qtyStr.Trim(), out var qty))
-                            result.Add(qty);
-                    });
+            {
+                var quantities = product.AllowedQuantities
+                   .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                   .ToList();
+                foreach(var qtyStr in quantities)
+                {
+                    if (int.TryParse(qtyStr.Trim(), out var qty))
+                        result.Add(qty);
+                }
+            }    
 
             return result.ToArray();
         }

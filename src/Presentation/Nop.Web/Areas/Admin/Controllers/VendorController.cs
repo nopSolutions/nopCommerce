@@ -256,8 +256,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //parse vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach(var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             if (ModelState.IsValid)
             {
@@ -338,8 +341,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //parse vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach(var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             //custom address attributes
             var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
