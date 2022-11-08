@@ -275,8 +275,7 @@ namespace Nop.Web.Framework.Infrastructure
             });
 
             //installation service
-            if (!DataSettingsManager.IsDatabaseInstalled())
-                services.AddScoped<IInstallationService, InstallationService>();
+            services.AddScoped<IInstallationService, InstallationService>();
 
             //slug route transformer
             if (DataSettingsManager.IsDatabaseInstalled())
