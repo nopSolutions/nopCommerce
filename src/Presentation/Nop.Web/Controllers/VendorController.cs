@@ -241,8 +241,11 @@ namespace Nop.Web.Controllers
 
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach(var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             if (ModelState.IsValid)
             {
@@ -340,8 +343,11 @@ namespace Nop.Web.Controllers
 
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach (var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             if (ModelState.IsValid)
             {

@@ -174,7 +174,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
                 if (errors.Any())
-                    errors.ForEach(error => _notificationService.ErrorNotification(error));
+                {
+                    foreach(var error in errors)
+                    {
+                        _notificationService.ErrorNotification(error);
+                    }
+                }
                 else
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.NextPaymentProcessed"));
 

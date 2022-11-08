@@ -3338,10 +3338,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (requiredAttributeNames.Any())
             {
                 model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
-                model.ProductAttributes.SelectMany(pa => pa.Values)
+                var pavModels = model.ProductAttributes.SelectMany(pa => pa.Values)
                     .Where(v => allowedAttributeIds.Any(id => id == v.Id))
-                    .ToList().ForEach(v => v.Checked = "checked");
-
+                    .ToList();
+                foreach(var pavModel in pavModels)
+                {
+                    pavModel.Checked = "checked";
+                }
+                
                 model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 
                 return View(model);

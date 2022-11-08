@@ -78,7 +78,10 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             };
 
             var cart = new List<ShoppingCartItem> {sci1, sci2};
-            cart.ForEach(sci => sci.CustomerId = _customer.Id);
+            foreach(var sci in cart)
+            {
+                sci.CustomerId = _customer.Id;
+            }
 
             return cart;
         }
