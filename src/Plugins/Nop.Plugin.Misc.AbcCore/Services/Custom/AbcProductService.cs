@@ -23,11 +23,11 @@ using Nop.Services.Stores;
 
 namespace Nop.Plugin.Misc.AbcCore.Services.Custom
 {
-    public class CustomProductService : ProductService, ICustomProductService
+    public class AbcProductService : ProductService, IAbcProductService
     {
         private readonly IPictureService _pictureService;
 
-        public CustomProductService(
+        public AbcProductService(
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
@@ -82,17 +82,25 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
             _pictureService = pictureService;
         }
 
+        public async Task<IList<Product>> GetAllPublishedProductsAsync()
+        {
+            return await GetProductsByIdsAsync(GetAllPublishedProductsIds().ToArray());
+        }
+
         public async Task<IList<Product>> GetProductsWithoutImagesAsync()
         {
-            var publishedProductIds =
-                _productRepository.Table.Where(
-                    p => !p.Deleted &&
-                          p.Published).ToList()
-                .Select(p => p.Id);
-
+            var publishedProductIds = GetAllPublishedProductsIds();
             var productIdsWithPicture = (await GetProductsImagesIdsAsync(publishedProductIds.ToArray())).Select(p => p.Key);
 
             return await GetProductsByIdsAsync(publishedProductIds.Except(productIdsWithPicture).ToArray());
+        }
+
+        private IEnumerable<int> GetAllPublishedProductsIds()
+        {
+            return  _productRepository.Table.Where(
+                        p => !p.Deleted &&
+                        p.Published).ToList()
+                    .Select(p => p.Id);
         }
     }
 }

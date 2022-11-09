@@ -15,11 +15,11 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
 {
     public class MissingImageProductController : BaseAdminController
     {
-        private readonly ICustomProductService _customProductService;
+        private readonly IAbcProductService _customProductService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
 
         public MissingImageProductController(
-            ICustomProductService customProductService,
+            IAbcProductService customProductService,
             IProductAbcDescriptionService productAbcDescriptionService
         )
         {

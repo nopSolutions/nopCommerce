@@ -288,7 +288,10 @@
                     }
                     @await Html.PartialAsync("_ProductTierPrices", Model.TierPrices)
                     @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
+                    @*
+                    ABC: Since we use product tags for InstantSearch, don't display them
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
+                    *@
                 </div>
                 @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
                 @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })

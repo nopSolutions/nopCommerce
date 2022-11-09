@@ -51,7 +51,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<ICustomShopService, CustomShopService>();
             services.AddScoped<IProductAbcDescriptionService, ProductAbcDescriptionService>();
             services.AddScoped<IHomeDeliveryCostService, HomeDeliveryCostService>();
-            services.AddScoped<ICustomProductService, CustomProductService>();
+            services.AddScoped<IAbcProductService, AbcProductService>();
             services.AddScoped<ITermLookupService, TermLookupService>();
             services.AddScoped<ICardCheckService, CardCheckService>();
             services.AddScoped<IProductAbcFinanceService, ProductAbcFinanceService>();
