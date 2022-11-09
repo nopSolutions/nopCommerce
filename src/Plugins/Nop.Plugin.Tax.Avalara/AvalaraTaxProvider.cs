@@ -109,17 +109,19 @@ namespace Nop.Plugin.Tax.Avalara
 
                 //and get tax details
                 taxTotalResult = new TaxTotalResult { TaxTotal = transaction.totalTax.Value };
-                transaction.summary?
+                var taxRates = transaction.summary?
                     .Where(summary => summary.rate.HasValue && summary.tax.HasValue)
                     .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
-                    .ToList().ForEach(taxRate =>
-                    {
-                        if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
-                            taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
-                        else
-                            taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
-                    });
+                    .ToList();
 
+                foreach(var taxRate in taxRates)
+                {
+                    if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
+                        taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
+                    else
+                        taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
+                }
+                
                 _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
             }
 

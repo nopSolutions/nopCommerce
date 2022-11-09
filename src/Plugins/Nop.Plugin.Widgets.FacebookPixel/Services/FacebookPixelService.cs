@@ -978,10 +978,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PreparePixelScriptAsync(ConversionsEvent conversionsEvent)
         {
-            await HandleFunctionAsync(() =>
+            await HandleFunctionAsync(async() =>
             {
                 var events = _httpContextAccessor.HttpContext.Session.Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
-                conversionsEvent.Data.ForEach(async conversionsEventData =>
+                foreach (var conversionsEventData in conversionsEvent.Data)
                 {
                     conversionsEventData.StoreId ??= (await _storeContext.GetCurrentStoreAsync()).Id;
                     var activeEvent = events.FirstOrDefault(trackedEvent =>
@@ -1000,7 +1000,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                     activeEvent.EventObjects.Add(FormatCustomData(conversionsEventData.CustomData));
                     _httpContextAccessor.HttpContext.Session.Set(FacebookPixelDefaults.TrackedEventsSessionValue, events);
-                });
+                }
 
                 return Task.FromResult(true);
             });
