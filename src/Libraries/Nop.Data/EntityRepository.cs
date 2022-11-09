@@ -272,8 +272,9 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
+        /// izenjen parametar
         public virtual async Task<IList<TEntity>> GetAllAsync(
-            Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
+            Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func,
             Func<IStaticCacheManager, Task<CacheKey>> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()

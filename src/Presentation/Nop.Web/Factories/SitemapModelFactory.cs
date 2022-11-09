@@ -287,7 +287,7 @@ namespace Nop.Web.Factories
             var store = await _storeContext.GetCurrentStoreAsync();
 
             return await (await _productService.SearchProductsAsync(0, storeId: store.Id,
-                visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
+                visibleIndividuallyOnly: true, orderBy: ProductSorting.CreatedOn))
                 .SelectAwait(async product => await PrepareLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
         }
 

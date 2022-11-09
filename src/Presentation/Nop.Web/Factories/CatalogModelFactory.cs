@@ -711,7 +711,7 @@ namespace Nop.Web.Factories
                 PriceRangeModel availablePriceRange = null;
                 if (!category.ManuallyPriceRange)
                 {
-                    async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                    async Task<decimal?> getProductPriceAsync(ProductSorting orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             categoryIds: categoryIds,
@@ -725,8 +725,8 @@ namespace Nop.Web.Factories
 
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
-                        To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                        From = await getProductPriceAsync(ProductSorting.PriceAsc),
+                        To = await getProductPriceAsync(ProductSorting.PriceDesc)
                     };
                 }
                 else
@@ -772,7 +772,7 @@ namespace Nop.Web.Factories
                 priceMax: selectedPriceRange?.To,
                 manufacturerIds: command.ManufacturerIds,
                 filteredSpecOptions: filteredSpecs,
-                orderBy: (ProductSortingEnum)command.OrderBy);
+                orderBy: (ProductSorting)command.OrderBy);
 
             var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
@@ -984,7 +984,7 @@ namespace Nop.Web.Factories
                 PriceRangeModel availablePriceRange = null;
                 if (!manufacturer.ManuallyPriceRange)
                 {
-                    async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                    async Task<decimal?> getProductPriceAsync(ProductSorting orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             manufacturerIds: manufacturerIds,
@@ -998,8 +998,8 @@ namespace Nop.Web.Factories
 
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
-                        To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                        From = await getProductPriceAsync(ProductSorting.PriceAsc),
+                        To = await getProductPriceAsync(ProductSorting.PriceDesc)
                     };
                 }
                 else
@@ -1036,7 +1036,7 @@ namespace Nop.Web.Factories
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
                 filteredSpecOptions: filteredSpecs,
-                orderBy: (ProductSortingEnum)command.OrderBy);
+                orderBy: (ProductSorting)command.OrderBy);
 
             var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
@@ -1241,7 +1241,7 @@ namespace Nop.Web.Factories
                 PriceRangeModel availablePriceRange;
                 if (!vendor.ManuallyPriceRange)
                 {
-                    async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                    async Task<decimal?> getProductPriceAsync(ProductSorting orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             vendorId: vendor.Id,
@@ -1254,8 +1254,8 @@ namespace Nop.Web.Factories
 
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
-                        To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                        From = await getProductPriceAsync(ProductSorting.PriceAsc),
+                        To = await getProductPriceAsync(ProductSorting.PriceDesc)
                     };
                 }
                 else
@@ -1279,7 +1279,7 @@ namespace Nop.Web.Factories
                 priceMax: selectedPriceRange?.To,
                 storeId: store.Id,
                 visibleIndividuallyOnly: true,
-                orderBy: (ProductSortingEnum)command.OrderBy);
+                orderBy: (ProductSorting)command.OrderBy);
 
             var isFiltering = selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
@@ -1487,7 +1487,7 @@ namespace Nop.Web.Factories
                 PriceRangeModel availablePriceRange;
                 if (!_catalogSettings.ProductsByTagManuallyPriceRange)
                 {
-                    async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                    async Task<decimal?> getProductPriceAsync(ProductSorting orderBy)
                     {
                         var products = await _productService.SearchProductsAsync(0, 1,
                             storeId: store.Id,
@@ -1500,8 +1500,8 @@ namespace Nop.Web.Factories
 
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
-                        To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                        From = await getProductPriceAsync(ProductSorting.PriceAsc),
+                        To = await getProductPriceAsync(ProductSorting.PriceDesc)
                     };
                 }
                 else
@@ -1525,7 +1525,7 @@ namespace Nop.Web.Factories
                 storeId: store.Id,
                 productTagId: productTag.Id,
                 visibleIndividuallyOnly: true,
-                orderBy: (ProductSortingEnum)command.OrderBy);
+                orderBy: (ProductSorting)command.OrderBy);
 
             var isFiltering = selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
@@ -1765,7 +1765,7 @@ namespace Nop.Web.Factories
                         PriceRangeModel availablePriceRange;
                         if (!_catalogSettings.SearchPageManuallyPriceRange)
                         {
-                            async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                            async Task<decimal?> getProductPriceAsync(ProductSorting orderBy)
                             {
                                 var products = await _productService.SearchProductsAsync(0, 1,
                                     categoryIds: categoryIds,
@@ -1784,8 +1784,8 @@ namespace Nop.Web.Factories
 
                             availablePriceRange = new PriceRangeModel
                             {
-                                From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
-                                To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
+                                From = await getProductPriceAsync(ProductSorting.PriceAsc),
+                                To = await getProductPriceAsync(ProductSorting.PriceDesc)
                             };
                         }
                         else
@@ -1814,7 +1814,7 @@ namespace Nop.Web.Factories
                         searchDescriptions: searchInDescriptions,
                         searchProductTags: searchInProductTags,
                         languageId: workingLanguage.Id,
-                        orderBy: (ProductSortingEnum)command.OrderBy,
+                        orderBy: (ProductSorting)command.OrderBy,
                         vendorId: vendorId);
 
                     //search term statistics
@@ -1891,7 +1891,7 @@ namespace Nop.Web.Factories
         public virtual async Task PrepareSortingOptionsAsync(CatalogProductsModel model, CatalogProductsCommand command)
         {
             //get active sorting options
-            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSorting)).Cast<int>()
                 .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
 
             //order sorting options
@@ -1901,7 +1901,7 @@ namespace Nop.Web.Factories
 
             //set the default option
             model.OrderBy = command.OrderBy;
-            command.OrderBy = orderedActiveSortingOptions.FirstOrDefault()?.Id ?? (int)ProductSortingEnum.Position;
+            command.OrderBy = orderedActiveSortingOptions.FirstOrDefault()?.Id ?? (int)ProductSorting.Position;
 
             //ensure that product sorting is enabled
             if (!_catalogSettings.AllowProductSorting)
@@ -1915,7 +1915,7 @@ namespace Nop.Web.Factories
             {
                 model.AvailableSortOptions.Add(new SelectListItem
                 {
-                    Text = await _localizationService.GetLocalizedEnumAsync((ProductSortingEnum)option.Id),
+                    Text = await _localizationService.GetLocalizedEnumAsync((ProductSorting)option.Id),
                     Value = option.Id.ToString(),
                     Selected = option.Id == command.OrderBy
                 });

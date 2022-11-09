@@ -2718,13 +2718,12 @@ label, label + * {
   position: absolute;
   top: 0;
   z-index: 1;
-  width: 32px;
+  width: 32px !important; /*izmenjeno*/
   height: 32px;
   line-height: 32px;
   font-size: 0;
   /*override jQuery UI styles, do not delete doubled properties*/
   top: 0 !important;
-  width: 32px !important;
   height: 32px !important;
   border: none !important;
 }
@@ -2794,7 +2793,6 @@ label, label + * {
 .ui-datepicker-calendar .ui-state-active {
   outline: 2px solid #4ab2f1;
   font-weight: bold;
-  color: #4ab2f1;
   /*override jQuery UI styles, do not delete doubled properties*/
   color: #4ab2f1 !important;
 }

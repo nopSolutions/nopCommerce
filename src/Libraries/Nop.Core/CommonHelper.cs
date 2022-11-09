@@ -169,7 +169,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static bool ArraysEqual<T>(T[] a1, T[] a2)
         {
-            //also see Enumerable.SequenceEqual(a1, a2);
+            
             if (ReferenceEquals(a1, a2))
                 return true;
 
@@ -315,7 +315,10 @@ namespace Nop.Core
             {
                 date = new DateTime(year.Value, month.Value, day.Value, CultureInfo.CurrentCulture.Calendar);
             }
-            catch { }
+            catch
+            {
+                Console.WriteLine("Something wrong occured"); //izmenjeno
+            }
             return date;
         }
 
