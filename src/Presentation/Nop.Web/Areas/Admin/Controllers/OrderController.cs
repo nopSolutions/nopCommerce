@@ -463,7 +463,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
         }
-        
+
         [HttpPost]
         public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
         {
@@ -556,7 +556,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var errors = await _orderProcessingService.CaptureAsync(order);
                 await LogEditOrderAsync(order.Id);
-                
+
                 foreach (var error in errors)
                     _notificationService.ErrorNotification(error);
 
@@ -933,20 +933,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            var vendorId = currentVendor?.Id ?? 0;
 
             var order = await _orderService.GetOrderByIdAsync(orderId);
-            var orders = new List<Order>
-            {
-                order
-            };
 
             byte[] bytes;
-            await using (var stream = new MemoryStream())
-            {
-                await _pdfService.PrintOrdersToPdfAsync(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id, vendorId);
-                bytes = stream.ToArray();
-            }
+            await using var stream = new MemoryStream();
+
+            await _pdfService.PrintOrderToPdfAsync(stream, order, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync(), store: null, vendor: currentVendor);
+            bytes = stream.ToArray();
 
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
@@ -1015,11 +1009,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 byte[] bytes;
                 await using (var stream = new MemoryStream())
                 {
-                    await _pdfService.PrintOrdersToPdfAsync(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id, model.VendorId);
+                    await _pdfService.PrintOrdersToPdfAsync(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync(), currentVendor);
                     bytes = stream.ToArray();
                 }
 
-                return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+                return File(bytes, "application/zip", "orders.zip");
             }
             catch (Exception exc)
             {
@@ -1046,11 +1040,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            var vendorId = 0;
             if (currentVendor != null)
             {
                 orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
-                vendorId = currentVendor.Id;
             }
 
             try
@@ -1058,11 +1050,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 byte[] bytes;
                 await using (var stream = new MemoryStream())
                 {
-                    await _pdfService.PrintOrdersToPdfAsync(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id, vendorId);
+                    await _pdfService.PrintOrdersToPdfAsync(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync(), currentVendor);
                     bytes = stream.ToArray();
                 }
 
-                return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+                return File(bytes, "application/zip", "orders.zip");
             }
             catch (Exception exc)
             {
@@ -1688,7 +1680,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //no errors
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
-                
+
                 //attributes
                 var attributeDescription = await _productAttributeFormatter.FormatAttributesAsync(product, attributesXml, customer, currentStore);
 
@@ -2434,15 +2426,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
-            var shipments = new List<Shipment>
-            {
-                shipment
-            };
-
             byte[] bytes;
             await using (var stream = new MemoryStream())
             {
-                await _pdfService.PrintPackagingSlipsToPdfAsync(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id);
+                await _pdfService.PrintPackagingSlipToPdfAsync(stream, shipment, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync());
                 bytes = stream.ToArray();
             }
 
@@ -2493,11 +2480,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 byte[] bytes;
                 await using (var stream = new MemoryStream())
                 {
-                    await _pdfService.PrintPackagingSlipsToPdfAsync(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id);
+                    await _pdfService.PrintPackagingSlipsToPdfAsync(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync());
                     bytes = stream.ToArray();
                 }
 
-                return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
+                return File(bytes, "application/zip", "packagingslips.zip");
             }
             catch (Exception exc)
             {
@@ -2532,7 +2519,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 byte[] bytes;
                 await using (var stream = new MemoryStream())
                 {
-                    await _pdfService.PrintPackagingSlipsToPdfAsync(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : (await _workContext.GetWorkingLanguageAsync()).Id);
+                    await _pdfService.PrintPackagingSlipsToPdfAsync(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync());
                     bytes = stream.ToArray();
                 }
 

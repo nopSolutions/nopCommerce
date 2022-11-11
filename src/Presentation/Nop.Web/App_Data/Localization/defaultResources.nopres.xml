@@ -18351,152 +18351,104 @@
   <LocaleResource Name="PaymentMethod.SpecifyMethodError">
     <Value>Please specify payment method.</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Address">
-    <Value>Address: {0}</Value>
+  <LocaleResource Name="Pdf.Address">
+    <Value>Address</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Address2">
-    <Value>Address 2: {0}</Value>
+  <LocaleResource Name="Pdf.Address2">
+    <Value>Address2</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.BillingInformation">
-    <Value>Billing Information:</Value>
+  <LocaleResource Name="Pdf.Address.Company">
+    <Value>Company</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Company">
-    <Value>Company: {0}</Value>
+  <LocaleResource Name="Pdf.Address.Fax">
+    <Value>Fax</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Discount">
-    <Value>Discount:</Value>
+  <LocaleResource Name="Pdf.Address.Name">
+    <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Fax">
-    <Value>Fax: {0}</Value>
+  <LocaleResource Name="Pdf.Address.PaymentMethod">
+    <Value>Payment method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Address.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Address.ShippingMethod">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Address.VATNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.BillingInformation">
+    <Value>Billing Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Discount">
+    <Value>Discount</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.FileName">
     <Value>order</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.GiftCardInfo">
-    <Value>Gift card ({0}):</Value>
+  <LocaleResource Name="Pdf.GiftCardInfo">
+    <Value>Gift card ({0})</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Name">
-    <Value>Name: {0}</Value>
+  <LocaleResource Name="Pdf.Order">
+    <Value>Order</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Order#">
-    <Value>Order# {0}</Value>
+  <LocaleResource Name="Pdf.OrderDate">
+    <Value>Date</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.OrderDate">
-    <Value>Date: {0}</Value>
+  <LocaleResource Name="Pdf.OrderNotes">
+    <Value>Order notes</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.OrderNotes">
-    <Value>Order notes:</Value>
+  <LocaleResource Name="Pdf.OrderTotal">
+    <Value>Order total</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.OrderNotes.CreatedOn">
-    <Value>Created on</Value>
+  <LocaleResource Name="Pdf.PaymentMethodAdditionalFee">
+    <Value>Payment Method Additional Fee</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.OrderNotes.Note">
-    <Value>Note</Value>
+  <LocaleResource Name="Pdf.PickupPoint">
+    <Value>Pickup point</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.OrderTotal">
-    <Value>Order total:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.PaymentMethod">
-    <Value>Payment method: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.PaymentMethodAdditionalFee">
-    <Value>Payment Method Additional Fee:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Phone">
-    <Value>Phone: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Pickup">
-    <Value>Pickup point:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Product(s)">
-    <Value>Product(s)</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ProductName">
+  <LocaleResource Name="Pdf.Product.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ProductPrice">
+  <LocaleResource Name="Pdf.Product.Price">
     <Value>Price</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ProductQuantity">
+  <LocaleResource Name="Pdf.Product.Quantity">
     <Value>Qty</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ProductTotal">
+  <LocaleResource Name="Pdf.Product.Total">
     <Value>Total</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.RewardPoints">
-    <Value>{0} reward points:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Shipping">
-    <Value>Shipping:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ShippingInformation">
-    <Value>Shipping Information:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.ShippingMethod">
-    <Value>Shipping method: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.SKU">
+  <LocaleResource Name="Pdf.Product.Sku">
     <Value>SKU</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Sub-Total">
-    <Value>Sub-total:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.Tax">
-    <Value>Tax:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.TaxRate">
-    <Value>Tax {0}%:</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.VATNumber">
-    <Value>VAT number: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.VendorName">
+  <LocaleResource Name="Pdf.Product.VendorName">
     <Value>Vendor name</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Address">
-    <Value>Address: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Address2">
-    <Value>Address 2: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Company">
-    <Value>Company: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Name">
-    <Value>Name: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Order">
-    <Value>Order #{0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Phone">
-    <Value>Phone: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.ProductName">
-    <Value>Product Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.QTY">
-    <Value>Quantity</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.Shipment">
-    <Value>Shipment #{0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.ShippingMethod">
-    <Value>Shipping method: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFPackagingSlip.SKU">
-    <Value>SKU</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFProductCatalog.Price">
-    <Value>Price</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFProductCatalog.SKU">
-    <Value>SKU</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFProductCatalog.StockQuantity">
+  <LocaleResource Name="Pdf.Product.StockQuantity">
     <Value>Stock quantity</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFProductCatalog.Weight">
+  <LocaleResource Name="Pdf.Product.Weight">
     <Value>Weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.RewardPoints">
+    <Value>{0} reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.ShippingInformation">
+    <Value>Shipping Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.SubTotal">
+    <Value>Sub-total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.TaxRate">
+    <Value>Tax {0}%</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.AccessAdminPanel">
     <Value>Access admin area</Value>
