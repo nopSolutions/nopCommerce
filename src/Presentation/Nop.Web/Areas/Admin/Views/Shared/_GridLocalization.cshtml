@@ -1,0 +1,49 @@
+﻿@inject IWorkContext workContext
+{
+    "emptyTable":     "@JavaScriptEncoder.Default.Encode(T("Admin.DT.EmptyTable").Text)",
+    "info":           "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Info").Text)",
+    "infoEmpty":      "@JavaScriptEncoder.Default.Encode(T("Admin.DT.InfoEmpty").Text)",
+    "infoFiltered":   "@JavaScriptEncoder.Default.Encode(T("Admin.DT.InfoFiltered").Text)",
+    "thousands":      "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Thousands").Text)",
+    "lengthMenu":     "@JavaScriptEncoder.Default.Encode(T("Admin.DT.LengthMenu").Text)",
+    "loadingRecords": "@JavaScriptEncoder.Default.Encode(T("Admin.DT.LoadingRecords").Text)",
+    "processing":     "@JavaScriptEncoder.Default.Encode(T("Admin.DT.LoaderIcon").Text)",
+    "search":         "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Search").Text)",
+    "zeroRecords":    "@JavaScriptEncoder.Default.Encode(T("Admin.DT.ZeroRecords").Text)",
+    @*"paginate": {
+        "first":"@JavaScriptEncoder.Default.Encode(T("Admin.DT.Paginate.First").Text)",
+        "last":"@JavaScriptEncoder.Default.Encode(T("Admin.DT.Paginate.Last").Text)",
+        "next":"@JavaScriptEncoder.Default.Encode(T("Admin.DT.Paginate.Next").Text)",
+        "previous":"@JavaScriptEncoder.Default.Encode(T("Admin.DT.Paginate.previous").Text)"
+    },*@
+    @*"paginate": {
+        "first":"&#171;",
+        "last":"&#187;",
+        "next":"&#8250;",
+        "previous":"&#8249;"
+    },*@
+    "paginate": {
+        @if ((await workContext.GetWorkingLanguageAsync()).Rtl)
+        {
+            <text>
+                "first":"<i class='k-icon k-i-seek-e'></i>",
+                "last":"<i class='k-icon k-i-seek-w'></i>",
+                "next":"<i class='k-icon k-i-arrow-w'></i>",
+                "previous":"<i class='k-icon k-i-arrow-e'></i>"
+            </text>
+        }
+        else
+        { 
+            <text>
+                "first":"<i class='k-icon k-i-seek-w'></i>",
+                "last":"<i class='k-icon k-i-seek-e'></i>",
+                "next":"<i class='k-icon k-i-arrow-e'></i>",
+                "previous":"<i class='k-icon k-i-arrow-w'></i>"
+            </text>        
+        }
+    },
+    "aria": {
+        "sortAscending":  "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Aria.SortAscending").Text)",
+        "sortDescending": "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Aria.SortDescending").Text)"
+    }
+}

@@ -1,0 +1,84 @@
+@model TierPriceModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsTop, additionalData = Model })
+                    <div class="card card-default card-popup">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="Quantity" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="Quantity"/>
+                                    <span asp-validation-for="Quantity"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="Price" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="Price" />
+                                    <span asp-validation-for="Price"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="StoreId" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                    <span asp-validation-for="StoreId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="CustomerRoleId" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
+                                    <span asp-validation-for="CustomerRoleId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="StartDateTimeUtc" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="StartDateTimeUtc" />
+                                    <span asp-validation-for="StartDateTimeUtc"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="EndDateTimeUtc" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="EndDateTimeUtc" />
+                                    <span asp-validation-for="EndDateTimeUtc"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsBottom, additionalData = Model })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

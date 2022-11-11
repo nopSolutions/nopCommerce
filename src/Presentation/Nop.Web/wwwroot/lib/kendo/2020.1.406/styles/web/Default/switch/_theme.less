@@ -1,0 +1,201 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Switch
+
+.k-switch-container {
+    .box-shadow( @switch-container-shadow );
+}
+
+.k-switch-handle {
+    background-clip: border-box;
+}
+
+.k-switch-on {
+    .box-shadow( @switch-on-shadow );
+
+    .k-switch-container {
+        .fill(
+            @switch-on-text,
+            @switch-on-bg,
+            @switch-on-border
+        );
+        .composite-background( @switch-on-gradient );
+    }
+
+    .k-switch-handle {
+        .fill(
+            @switch-on-handle-text,
+            @switch-on-handle-bg,
+            @switch-on-handle-border
+        );
+        .composite-background( @switch-on-handle-gradient );
+        .box-shadow( @switch-on-handle-shadow );
+    }
+
+    &:focus,
+    &.k-state-focused {
+        .box-shadow( @switch-on-focused-shadow );
+
+        .k-switch-container {
+            .fill(
+                @switch-on-focused-text,
+                @switch-on-focused-bg,
+                @switch-on-focused-border,
+            );
+            .composite-background( @switch-on-focused-gradient );
+        }
+
+        .k-switch-handle {
+            .fill(
+                @switch-on-handle-focused-text,
+                @switch-on-handle-focused-bg,
+                @switch-on-handle-focused-border
+            );
+            .composite-background( @switch-on-handle-focused-gradient );
+        }
+    }
+
+    &:hover,
+    &.k-state-hover {
+        .k-switch-container {
+            .fill(
+                @switch-on-hovered-text,
+                @switch-on-hovered-bg,
+                @switch-on-hovered-border,
+            );
+            .composite-background( @switch-on-hovered-gradient );
+        }
+
+        .k-switch-handle {
+            .fill(
+                @switch-on-handle-hovered-text,
+                @switch-on-handle-hovered-bg,
+                @switch-on-handle-hovered-border
+            );
+            .composite-background( @switch-on-handle-hovered-gradient );
+        }
+    }
+
+    .k-switch-label-off {
+        color: transparent;
+    }
+}
+
+.k-switch-off {
+    .box-shadow( @switch-off-shadow );
+
+    .k-switch-container {
+        .fill(
+            @switch-off-text,
+            @switch-off-bg,
+            @switch-off-border
+        );
+        .composite-background( @switch-off-gradient );
+    }
+
+    .k-switch-handle {
+        .fill(
+            @switch-off-handle-text,
+            @switch-off-handle-bg,
+            @switch-off-handle-border
+        );
+        .composite-background( @switch-off-handle-gradient );
+        .box-shadow( @switch-off-handle-shadow );
+    }
+
+    &:focus,
+    &.k-state-focused {
+        .box-shadow( @switch-off-focused-shadow );
+
+        .k-switch-container {
+            .fill(
+                @switch-off-focused-text,
+                @switch-off-focused-bg,
+                @switch-off-focused-border
+            );
+            .composite-background(@switch-off-focused-gradient);
+        }
+
+        .k-switch-handle {
+            .fill(
+                @switch-off-handle-focused-text,
+                @switch-off-handle-focused-bg,
+                @switch-off-handle-focused-border
+            );
+            .composite-background( @switch-off-handle-hovered-gradient );
+        }
+    }
+
+    &:hover,
+    &.k-state-hover {
+        .k-switch-container {
+            .fill(
+                @switch-off-hovered-text,
+                @switch-off-hovered-bg,
+                @switch-off-hovered-border
+            );
+            .composite-background(@switch-off-hovered-gradient);
+        }
+
+        .k-switch-handle {
+            .fill(
+                @switch-off-handle-hovered-text,
+                @switch-off-handle-hovered-bg,
+                @switch-off-handle-hovered-border
+            );
+            .composite-background( @switch-off-handle-hovered-gradient );
+        }
+    }
+
+    .k-switch-label-on {
+        color: transparent;
+    }
+}
+
+.k-switch {
+    background-color: transparent;
+    box-shadow: none;
+
+    &:focus,
+    &.k-state-focused {
+
+        .k-switch-container {
+            outline: none;
+            .box-shadow( @switch-container-focused-shadow );
+        }
+    }
+
+    &:hover,
+    &.k-state-hover {
+
+        .k-switch-container {
+            .box-shadow( @switch-container-hovered-shadow );
+        }
+    }
+
+    &.k-state-disabled {
+        cursor: default;
+
+        &:focus,
+        &.k-state-focused {
+            .box-shadow( @switch-container-shadow );
+        }
+    }
+
+    &[aria-readonly="true"] {
+        pointer-events: none;
+    }
+}

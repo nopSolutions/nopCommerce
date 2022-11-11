@@ -1,0 +1,54 @@
+@model ForumSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ForumsEnabled_OverrideForStore" asp-input="ForumsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ForumsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ForumsEnabled" />
+            <span asp-validation-for="ForumsEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RelativeDateTimeFormattingEnabled_OverrideForStore" asp-input="RelativeDateTimeFormattingEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RelativeDateTimeFormattingEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RelativeDateTimeFormattingEnabled" />
+            <span asp-validation-for="RelativeDateTimeFormattingEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SignaturesEnabled_OverrideForStore" asp-input="SignaturesEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SignaturesEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SignaturesEnabled" />
+            <span asp-validation-for="SignaturesEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowCustomersPostCount_OverrideForStore" asp-input="ShowCustomersPostCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowCustomersPostCount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowCustomersPostCount" />
+            <span asp-validation-for="ShowCustomersPostCount"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ForumEditor_OverrideForStore" asp-input="ForumEditor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ForumEditor" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ForumEditor" asp-items="Model.ForumEditorValues" />
+            <span asp-validation-for="ForumEditor"></span>
+        </div>
+    </div>
+</div>

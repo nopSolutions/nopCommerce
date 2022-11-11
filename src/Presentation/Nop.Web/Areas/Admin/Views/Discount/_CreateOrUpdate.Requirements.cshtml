@@ -1,0 +1,288 @@
+﻿@model DiscountModel
+
+<script src="~/lib_npm/jsrender/jsrender.min.js" asp-location="Head"></script>
+<div class="card-body">
+    <div class="cards-group">
+        @if (Model.Id > 0)
+        {
+            <p>
+                @T("Admin.Promotions.Discounts.Requirements.Description")
+            </p>
+
+            <script>
+            $(document).ready(function() {
+                $("#@Html.IdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
+
+                //load add requirement box
+                loadNewRequirementBox();
+
+                //load existing requirements
+                loadRequirements();
+
+                //adding requirement event
+                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+                    var parentId = $("#@Html.IdFor(model => model.RequirementGroupId)").val();
+                    loadRequirements(newRequirementId, parentId);
+                });
+            });
+
+            //load HTML for adding requirement
+            function loadNewRequirementBox() {
+                //load URL
+                var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
+                if (ruleSystemName) {
+                    var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
+                    if (groupsElement.find('option').length > 1) {
+                        $("#pnlGroup").showElement();
+                    }
+                    else {
+                        $("#pnlGroup").hideElement();
+                    }
+                    if (ruleSystemName == 'AddGroup') {
+                        $("#pnlAddNewGroup").showElement();
+                        $("#pnlGroupName").showElement();
+                        $('#addrequirementplaceholder').html('');
+                    }
+                    else {
+                        $("#pnlAddNewGroup").hideElement();
+                        $("#pnlGroupName").hideElement();
+                        $.ajax({
+                            cache: false,
+                            url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
+                            data: {
+                                "systemName": ruleSystemName,
+                                "discountId": @Model.Id 
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                loadRequirementIntoBox(data.url, '#addrequirementplaceholder');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $('#addrequirementplaceholder').html('Failed to load requirement URL');
+                            }
+                        });
+                    }
+                } else {
+                    $("#pnlGroupName").hideElement();
+                    $("#pnlGroup").hideElement();
+                    $("#pnlAddNewGroup").hideElement();
+                    $('#addrequirementplaceholder').html('');
+                }
+            };
+
+            //load requirement HTML
+            function loadRequirementIntoBox(configureRuleUrl, placeholderName) {
+                $.ajax({
+                    cache: false,
+                    url: configureRuleUrl,
+                    dataType: "html",
+                    success: function (data, textStatus, jqXHR) {
+                        $(placeholderName).html(data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $(placeholderName).html('Failed to load requirement content.');
+                    }
+                });
+            };
+
+            function loadRequirements(discountRequirementId, parentId, interactionTypeId, deleteRequirement) {
+                var postData = {
+                    discountId: @Model.Id,
+                    discountRequirementId: (typeof discountRequirementId === 'undefined' ? 0 : discountRequirementId),
+                    parentId: (typeof parentId === 'undefined' ? null : parentId),
+                    interactionTypeId: (typeof interactionTypeId === 'undefined' ? null : interactionTypeId),
+                    deleteRequirement: (typeof deleteRequirement === 'undefined' ? false : deleteRequirement)
+                };                              
+
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("GetDiscountRequirements", "Discount"))",
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        //set requirements
+                        loadRequirementBoxes(data.Requirements, "#discountRequirementContainer", true);
+
+                        //set available groups
+                        var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
+                        groupsElement.html('');
+                        $.each(data.AvailableGroups, function (id, option) {
+                            groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
+                        });
+                        var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
+                        if (ruleSystemName && groupsElement.find('option').length > 1) {
+                            $("#pnlGroup").showElement();
+                        }
+                        else {
+                            $("#pnlGroup").hideElement();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#getDiscountRequirementsAlert").click();
+                    }
+                });
+            };
+
+            //load HTML for exisiting requirements
+            function loadRequirementBoxes(requirements, placeholder, hideEmptyString) {
+                if (requirements.length > 0 || hideEmptyString)
+                    $(placeholder).html('');
+                else
+                    $(placeholder).html('@T("Admin.Promotions.Discounts.Requirements.GroupIsEmpty")');
+                                
+                $(placeholder).append(
+                    $("#discountRequirementTemplate").render(requirements)
+                );
+
+                for (var i = 0; i < requirements.length; i++) {
+                    var placeholderName = '#editrequirementplaceholder' + requirements[i].DiscountRequirementId;
+                    $(placeholderName).html('loading...');
+                    if (requirements[i].IsGroup) {
+                        loadRequirementBoxes(requirements[i].ChildRequirements, placeholderName, false);
+                    }
+                    else {
+                        loadRequirementIntoBox(requirements[i].ConfigurationUrl, placeholderName);
+                    }
+                }
+            };
+
+            //add new group
+            function addNewGroup() {
+                var postData = {
+                    discountId: @Model.Id,
+                    name: $("#@Html.IdFor(model => model.GroupName)").val(),
+                };
+
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    data: postData,
+                    url: "@(Url.Action("AddNewGroup", "Discount"))",
+                    success: function (data, textStatus, jqXHR) {
+                        $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#failedToSave").click();
+                    }
+                });
+            };
+
+            //delete requirement rule
+            function deleteRequirement(discountRequirementId) {
+                loadRequirements(discountRequirementId, null, null, true);
+            };
+
+            //change interaction type
+            function changeInteraction(discountRequirementId, parentId, typeId) {
+                loadRequirements(discountRequirementId, parentId, typeId);
+            };
+            </script>
+
+            <!-- Template container -->
+            <div id="discountRequirementContainer"></div>
+
+            <!-- Discount requirement template -->
+            <script id="discountRequirementTemplate" type="text/x-jsrender">
+                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
+                    <div class="requirement-heading clearfix">
+                        {{if IsGroup}}
+                        <span class="float-left margin-r-5">
+                            @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
+                            <i>{{:RuleName}}</i>
+                        </span>
+                        <div class="interaction-type float-left clearfix">
+                            <span class="float-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm float-left" id="interactiontype{{>DiscountRequirementId}}" 
+                                    name="interactiontype{{>DiscountRequirementId}}" 
+                                    onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
+                                {{for AvailableInteractionTypes}}
+                                    {{if Selected}}
+                                        <option value="{{>Value}}" selected>{{>Text}}</option>
+                                    {{else}}
+                                        <option value="{{>Value}}">{{>Text}}</option>
+                                    {{/if}}
+                                {{/for}}
+                            </select>
+                        </div>
+                        {{else}}
+                        <div class="float-left">
+                            @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
+                            <i>{{:RuleName}}</i>
+                        </div>
+                        {{/if}}
+                        {{if ParentId}}
+                        <button type="button" class="btn btn-link" id="deleterequirement{{>DiscountRequirementId}}" onclick="deleteRequirement({{>DiscountRequirementId}})">
+                            <i class="far fa-trash-alt"></i>
+                            {{if IsGroup}}
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                            {{else}}
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                            {{/if}}
+                        </button>
+                        {{/if}}
+                    </div>
+                    <div class="requirement-body">
+                        <div id="editrequirementplaceholder{{>DiscountRequirementId}}"></div>
+                    </div>
+                </div>
+                {{if !IsLastInGroup}}                
+                <div class="interaction-type-label">
+                    {{>InteractionType}}                    
+                </div>
+                {{/if}}
+            </script>
+
+            <div class="card card-default card-add-requirement">
+                <div class="card-header">
+                    @T("Admin.Promotions.Discounts.Requirements.AddNew")
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AddDiscountRequirement" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
+                            <span asp-validation-for="AddDiscountRequirement"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row d-none" id="pnlGroup">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RequirementGroupId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="RequirementGroupId" asp-items="Model.AvailableRequirementGroups" />
+                            <span asp-validation-for="RequirementGroupId"></span>
+                        </div>
+                    </div>
+                    <div id="addrequirementplaceholder"></div>
+                    <div class="form-group row d-none" id="pnlGroupName">
+                        <div class="col-md-3">
+                            <nop-label asp-for="GroupName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="GroupName" />
+                            <span asp-validation-for="GroupName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row d-none" id="pnlAddNewGroup">
+                        <div class="col-md-9 offset-md-3">
+                            <button type="button" id="saverequirement" class="btn btn-primary" onclick="addNewGroup()">@T("Admin.Common.Save")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card card-default">
+                <div class="card-body">
+                    @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
+                </div>
+            </div>
+        }
+    </div>
+    <nop-alert asp-alert-id="failedToSave" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedToSave")" />
+    <nop-alert asp-alert-id="getDiscountRequirementsAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.Alert.FailedGetDiscountRequirements")" />
+</div>

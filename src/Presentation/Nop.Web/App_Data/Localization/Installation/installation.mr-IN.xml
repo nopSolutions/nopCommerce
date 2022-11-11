@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="मराठी" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>प्रशासन वापरकर्ता ईमेल</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>प्रशासक ईमेल प्रविष्ट करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>प्रशासन वापरकर्ता संकेतशब्द</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>प्रशासक संकेतशब्द प्रविष्ट करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>फोल्डर '{1}' वर '{0}' खाते सुधारित परवानग्यासह मंजूर केलेले नाही. कृपया या परवानग्या कॉन्फिगर करा.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>फाइल '{1}' वर सुधारित परवानगीसह '{0}' खाते मंजूर केलेले नाही. कृपया या परवानग्या कॉन्फिगर करा.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>गुप्तशब्द पक्के करा :</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>पुष्टीकरण संकेतशब्द प्रविष्ट करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>कनेक्शनची तार</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>एसक्यूएल कनेक्शन स्ट्रिंग आवश्यक आहे</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>चुकीचे एस क्यू एल कनेक्शन स्ट्रिंग स्वरूप</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>तुमचा देश निवडा</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>तुमचा देश निवडा</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>जर अस्तित्वात नसेल तर डेटाबेस तयार करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>नमुना डेटा तयार करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>सानुकूल कोलेशन निर्दिष्ट करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>डेटाबेस</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>डेटाबेस तयार करताना त्रुटी आली: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>डेटाबेस माहिती</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>डेटाबेस नाव</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>डेटाबेस अस्तित्वात नाही किंवा आपल्याला त्यास कनेक्ट होण्यास परवानगी नाही</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>डेटा प्रदाता निवडा</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>आपल्याला नॉमकॉमर्स कसे वापरावे याबद्दल माहिती हवी असल्यास भेट द्या</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com वर दस्तऐवजीकरण विभाग</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>उदाहरण</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>स्थापित करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>नॉपकॉमर्स स्थापित करीत आहे ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>एकात्मिक विंडोज प्रमाणीकरण वापरा</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>जुना संकेतशब्द जुळत नाही</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>कच्चा कनेक्शन स्ट्रिंग प्रविष्ट करा (प्रगत)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>स्थापना पुन्हा सुरू करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>स्थापना प्रक्रिया पुन्हा सुरू करण्यासाठी क्लिक करा (सर्व कॅशे केलेली मूल्ये साफ करा)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>रीस्टार्ट करत आहे ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>सर्व्हर नाव</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>सर्व्हरचे नाव आवश्यक आहे</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>सेटअप अयशस्वी: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>एसक्यूएल संकेतशब्द</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>एसक्यूएल संकेतशब्द आवश्यक आहे</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>मायक्रोसॉफ्ट एस क्यू एल सर्व्हर</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>एसक्यूएल वापरकर्तानाव</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>एसक्यूएल वापरकर्तानाव आवश्यक आहे</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>स्टोअर माहिती</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce स्थापना</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>हे विझार्ड पूर्ण करण्यासाठी आपल्या डेटाबेस सर्व्हरशी संबंधित काही माहिती आपल्याला माहित असणे आवश्यक आहे ("कनेक्शन स्ट्रिंग"). कृपया आवश्यक असल्यास आपल्या आयएसपीशी संपर्क साधा. आपण स्थानिक मशीन किंवा सर्व्हरवर स्थापित करत असल्यास आपल्या सिस्टम अ‍ॅडमिनकडून आपल्याला माहितीची आवश्यकता असू शकेल.</Value>
+  </LocaleResource>
+</Language>

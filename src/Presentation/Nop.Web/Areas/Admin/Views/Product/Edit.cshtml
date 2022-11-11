@@ -1,0 +1,101 @@
+@model ProductModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.EditProductDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Products");
+}
+
+<form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
+                <i class="far fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" name="copyproduct" class="btn bg-olive" data-toggle="modal" data-target="#copyproduct-window">
+                <i class="far fa-clone"></i>
+                @T("Admin.Catalog.Products.Copy")
+            </button>
+            <span id="product-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="product-delete" />
+
+@if (!Model.IsLoggedInAsVendor)
+{
+    //product editor settings modal
+    @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
+}
+
+@*copy product form*@
+<div id="copyproduct-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copyproduct-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form asp-controller="Product" asp-action="CopyProduct" method="post">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <input asp-for="CopyProductModel.Id" type="hidden" />
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="CopyProductModel.Name" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="CopyProductModel.Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="CopyProductModel.Published" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="CopyProductModel.Published" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="CopyProductModel.CopyMultimedia" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="CopyProductModel.CopyMultimedia" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Catalog.Products.Copy")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

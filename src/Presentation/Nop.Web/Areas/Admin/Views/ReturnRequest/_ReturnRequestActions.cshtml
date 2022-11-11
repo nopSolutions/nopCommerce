@@ -1,0 +1,46 @@
+﻿@model ReturnRequestActionSearchModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Admin.Configuration.Settings.Order.ReturnRequestActions")
+    </div>
+    <div class="card-body">
+        <p>
+            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
+        </p>
+        @await Html.PartialAsync("Table",  new DataTablesModel
+        {
+            Name = "returnrequestactions-grid",
+            UrlRead = new DataUrl("ReturnRequestActionList", "ReturnRequest", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestActionModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
+                }
+            }
+        })
+    </div>
+    <div class="card-footer">
+        <a asp-action="ReturnRequestActionCreate" asp-controller="ReturnRequest" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

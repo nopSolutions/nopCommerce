@@ -1,0 +1,82 @@
+@model StateProvinceModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="CountryId" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryStateDetailsTop, additionalData = Model })
+                <div class="card card-default card-popup">
+                    <div class="card-body">
+                        @(await Html.LocalizedEditorAsync<StateProvinceModel, StateProvinceLocalizedModel>("state-localized",
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <nop-label asp-for="@Model.Locales[item].Name" />
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <nop-editor asp-for="@Model.Locales[item].Name" />
+                                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                </div>
+      ,
+                                                @<div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <nop-label asp-for="Name"/>
+                                                        </div>
+                                                        <div class="col-sm-9">
+                                                            <nop-editor asp-for="Name" asp-required="true"/>
+                                                            <span asp-validation-for="Name"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                      ))
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Abbreviation"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="Abbreviation"/>
+                                <span asp-validation-for="Abbreviation"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Published"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="Published"/>
+                                <span asp-validation-for="Published"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="DisplayOrder"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="DisplayOrder"/>
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryStateDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

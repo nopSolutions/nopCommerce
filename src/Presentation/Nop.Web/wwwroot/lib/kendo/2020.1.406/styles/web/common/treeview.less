@@ -1,0 +1,129 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// TreeView
+
+div.k-treeview
+{
+    // due to k-widget
+    border-width: 0;
+    background: none;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.k-treeview .k-item
+{
+    display: block;
+    border-width: 0;
+    margin: 0;
+    padding: 0 0 0 16px;
+}
+
+.k-treeview > .k-group,
+.k-treeview .k-item > .k-group,
+.k-treeview .k-content
+{
+    margin: 0;
+    padding: 0;
+    background: none;
+    list-style-type: none;
+    position: relative;
+}
+
+.k-treeview .k-icon,
+.k-treeview .k-image,
+.k-treeview .k-sprite,
+.k-treeview .k-checkbox,
+.k-treeview .k-in
+{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.k-checkbox-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+}
+.k-treeview .k-checkbox-wrapper + .k-in {
+    margin-left: 4px;
+}
+
+.k-treeview .k-icon,
+.k-treeview .k-in
+{
+    vertical-align: middle;
+}
+
+.k-treeview .k-request-retry
+{
+    vertical-align: baseline;
+}
+
+.k-treeview .k-i-plus,
+.k-treeview .k-i-minus,
+.k-treeview .k-i-expand,
+.k-treeview .k-i-collapse
+{
+    margin-left: -16px;
+    cursor: pointer;
+}
+
+.k-treeview .k-i-collapse {
+    margin-top: -4px;
+}
+
+.k-treeview .k-sprite,
+.k-treeview .k-image
+{
+    margin-right: 3px;
+}
+
+.k-treeview .k-in {
+    margin: 0;
+    padding: @treeview-inner-padding;
+    line-height: 1.3333em;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.k-treeview span.k-in
+{
+    cursor: default;
+}
+
+.k-treeview .k-i-drag-and-drop {
+    position: absolute;
+    z-index: 10000;
+    visibility: hidden;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.k-treeview .k-state-hover {
+    cursor: pointer;
+}
+
+.k-rtl .k-treeview .k-i-expand,
+.k-rtl .k-treeview .k-i-collapse {
+    margin-left: 0;
+    margin-right: -16px;
+}
+.k-rtl .k-treeview .k-checkbox-wrapper + .k-in {
+    margin-left: 0;
+    margin-right: 4px;
+}

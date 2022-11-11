@@ -1,0 +1,96 @@
+﻿@model ProductModel
+
+<div class="card-body">
+    <p>
+        @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+        /*hide "add spec" table if no attributes are defined*/
+        if (Model.HasAvailableSpecificationAttributes)
+        {
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "specificationattributes-grid",
+                        UrlRead = new DataUrl("ProductSpecAttrList", "Product", new RouteValueDictionary { [nameof(Model.ProductSpecificationAttributeSearchModel.ProductId)] = Model.ProductSpecificationAttributeSearchModel.ProductId }),
+                        Length = Model.ProductPictureSearchModel.PageSize,
+                        LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeTypeName))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeName))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.ValueRaw))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value").Text,
+                                Width = "200",
+                                Encode = false
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.AllowFiltering))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.ShowOnProductPage))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductSpecAttributeAddOrEdit?productId=" + Model.ProductSpecificationAttributeSearchModel.ProductId + "&specificationId=", true))  
+                            }
+                        }
+                    })
+                </div>
+                <div class="card-footer">
+                    <a asp-action="ProductSpecAttributeAddOrEdit"
+                       asp-route-productId="@Model.Id"
+                       class="btn btn-primary">
+                        <i class="fas fa-plus-square"></i>
+                        @T("Admin.Catalog.Products.SpecificationAttributes.AddButton")
+                    </a>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card card-default">
+                <div class="card-body">
+                    @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card card-default">
+            <div class="card-body">
+                @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

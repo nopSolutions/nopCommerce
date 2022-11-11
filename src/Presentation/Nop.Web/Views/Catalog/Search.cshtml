@@ -1,0 +1,120 @@
+﻿@model Nop.Web.Models.Catalog.SearchModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Search").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-search-page");
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.advs)").on('click', toggleAdvancedSearch);
+        toggleAdvancedSearch();
+    });
+
+    function toggleAdvancedSearch() {
+        if ($('#@Html.IdFor(model => model.advs)').is(':checked')) {
+            $('#advanced-search-block').show();
+        }
+        else {
+            $('#advanced-search-block').hide();
+        }
+    }
+</script>
+
+@section CatalogFilters {
+    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+}
+
+<div class="page search-page">
+    <div class="page-title">
+        <h1>@T("Search")</h1>
+    </div>
+    <div class="page-body">
+        <div class="search-input">
+            <form asp-route="ProductSearch" method="get">
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="basic-search">
+                            <div class="inputs">
+                                <label asp-for="q">@T("Search.SearchTerm"):</label>
+                                <input asp-for="q" class="search-text" />
+                            </div>
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageBasic, additionalData = Model })
+                            <div class="inputs reversed">
+                                <input asp-for="advs" />
+                                <label asp-for="advs">@T("Search.AdvancedSearch")</label>
+                            </div>
+                        </div>
+                        <div class="advanced-search" id="advanced-search-block">
+                            @if (Model.AvailableCategories.Count > 0)
+                            {
+                                <div class="inputs">
+                                    <label asp-for="cid">@T("Search.Category"):</label>
+                                    <select asp-for="cid" asp-items="Model.AvailableCategories"></select>
+                                </div>
+                                <div class="inputs reversed">
+                                    <input asp-for="isc" />
+                                    <label asp-for="isc">@T("Search.IncludeSubCategories")</label>
+                                </div>
+                            }
+                            @if (Model.AvailableManufacturers.Count > 0)
+                            {
+                                <div class="inputs">
+                                    <label asp-for="mid">@T("Search.Manufacturer"):</label>
+                                    <select asp-for="mid" asp-items="Model.AvailableManufacturers"></select>
+                                </div>
+                            }
+                            @if (Model.asv && Model.AvailableVendors.Count > 0)
+                            {
+                                <div class="inputs">
+                                    <label asp-for="vid">@T("Search.Vendor"):</label>
+                                    <select asp-for="vid" asp-items="Model.AvailableVendors"></select>
+                                </div>
+                            }
+                            <div class="inputs reversed">
+                                <input asp-for="sid" />
+                                <label asp-for="sid">@T("Search.SearchInDescriptions")</label>
+                            </div>
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="button-1 search-button">@T("Search.Button")</button>
+                </div>
+            </form>
+        </div>
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageBeforeResults, additionalData = Model })
+        <div class="search-results">
+            @{
+                var catalogProductsViewData = new ViewDataDictionary(ViewData);
+                catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("SearchProducts", "Catalog"));
+            }
+            @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $(CatalogProducts).on('before', function (e) {
+                        var isAdvanced = $('#@Html.IdFor(model => model.advs)').is(':checked');
+
+                        e.payload.urlBuilder
+                            .addParameter('q', $('#@Html.IdFor(model => model.q)').val())
+                            .addParameter('advs', isAdvanced);
+
+                        if (isAdvanced) {
+                            e.payload.urlBuilder
+                                .addParameter('cid', $('#@Html.IdFor(model => model.cid)').val())
+                                .addParameter('isc', $('#@Html.IdFor(model => model.isc)').is(':checked'))
+                                .addParameter('mid', $('#@Html.IdFor(model => model.mid)').val())
+                                .addParameter('vid', $('#@Html.IdFor(model => model.vid)').val())
+                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'));
+                        }
+                    });
+                });
+            </script>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAfterResults, additionalData = Model })
+    </div>
+</div>

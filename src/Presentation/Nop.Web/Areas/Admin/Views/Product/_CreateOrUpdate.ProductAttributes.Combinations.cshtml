@@ -1,0 +1,154 @@
+@model ProductModel
+
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            <p>
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
+            </p>
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+            Name = "attributecombinations-grid",
+            UrlRead = new DataUrl("ProductAttributeCombinationList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeCombinationSearchModel.ProductId)] = Model.ProductAttributeCombinationSearchModel.ProductId }),
+            UrlDelete = new DataUrl("ProductAttributeCombinationDelete", "Product", null),
+            Length = Model.ProductPictureSearchModel.PageSize,
+            LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.AttributesXml))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes").Text,
+            Width = "400",
+            Render = new RenderCustom("renderProductAttributesCombinationsColumnAttributesXml")
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.StockQuantity))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity").Text,
+            Width = "150"
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.AllowOutOfStockOrders))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders").Text,
+            Width = "150",
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.Sku))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku").Text,
+            Width = "200"
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.ManufacturerPartNumber))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber").Text,
+            Width = "200"
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.Gtin))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin").Text,
+            Width = "200"
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.OverriddenPrice))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice").Text,
+            Width = "200",
+            Render = new RenderCustom("renderProductAttributesCombinationsColumnPrice")
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.NotifyAdminForQuantityBelow))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow").Text,
+            Width = "150"
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.PictureThumbnailUrl))
+            {
+            Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture").Text,
+            Width = "200",
+            Render = new RenderPicture()
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.Id))
+            {
+            Title = T("Admin.Common.Edit").Text,
+            Width = "100",
+            ClassName =  NopColumnClassDefaults.Button,
+            Render = new RenderCustom("renderProductAttributesCombinationsColumnEdit")
+            },
+            new ColumnProperty(nameof(ProductAttributeCombinationModel.Id))
+            {
+            Title = T("Admin.Common.Delete").Text,
+            Width = "100",
+            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+            ClassName =  NopColumnClassDefaults.Button
+            }
+            }
+            })
+
+            <script>
+                function renderProductAttributesCombinationsColumnPrice(data, type, row, meta) {
+                    return (data) ? Number.parseFloat(data).toFixed(2) : '';
+                }
+
+                function renderProductAttributesCombinationsColumnAttributesXml(data, type, row, meta) {
+                    var warnings = (row.Warnings != null) ? '<div><span style="color: red">' + row.Warnings + '</span></div>' : '';
+                    return row.AttributesXml + warnings;
+                }
+
+                function renderProductAttributesCombinationsColumnEdit(data, type, row, meta) {
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeCombinationEditPopup/")' + data + '?btnId=btnRefreshCombinations&formId=product-form\', 800, 700, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+                }
+            </script>
+
+        </div>
+        <div class="card-footer">
+            <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-primary">
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+            </button>
+            <button type="button" id="btnGenerateAllCombinations" class="btn btn-info">
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
+            </button>
+
+            <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-info">
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
+            </button>
+            <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />
+            <button type="submit" id="btnRefreshCombinations" style="display: none"></button>
+            <script>
+                $(document).ready(function() {
+                    $('#btnRefreshCombinations').click(function() {
+                        //refresh grid
+                        $("#attributecombinations-grid").DataTable().ajax.reload();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+
+                    //generate combinations
+                    $("#btnGenerateAllCombinations-action-confirmation-submit-button").bind("click", function () {
+                        var postData = {
+
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Url.Action("GenerateAllAttributeCombinations", "Product", new { productId = Model.Id })",
+                            data: postData,
+                            dataType: "json",
+                            success: function (data, textStatus, jqXHR) {
+                                //reload grid
+                                updateTable('#attributecombinations-grid');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $("#generateAllAttributeCombinationsAlert").click();
+                            }
+                        });
+                        $('#btnGenerateAllCombinations-action-confirmation').modal('toggle');
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsBottom, additionalData = Model })
+<nop-alert asp-alert-id="generateAllAttributeCombinationsAlert" asp-alert-message="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedGenerate")" />

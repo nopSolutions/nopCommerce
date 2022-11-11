@@ -1,0 +1,132 @@
+@model TemplatesModel
+
+<div class="card-body">
+    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CategoryTemplateListButtons, additionalData = Model })
+
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "templates-category-grid",
+        UrlRead = new DataUrl("CategoryTemplates", "Template", null),
+        UrlUpdate = new DataUrl("CategoryTemplateUpdate", "Template", null),
+        UrlDelete = new DataUrl("CategoryTemplateDelete", "Template", null),
+
+        Length = Model.TemplatesCategory.PageSize,
+        LengthMenu = Model.TemplatesCategory.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CategoryTemplateModel.Name))
+            {
+                Title = T("Admin.System.Templates.Category.Name").Text,
+                Width = "300",
+                Editable = true,
+                EditType = EditType.String
+            },
+            new ColumnProperty(nameof(CategoryTemplateModel.ViewPath))
+            {
+                Title = T("Admin.System.Templates.Category.ViewPath").Text,
+                Width = "300",
+                Editable = true,
+                EditType = EditType.String
+            },
+            new ColumnProperty(nameof(CategoryTemplateModel.DisplayOrder))
+            {
+                Title = T("Admin.System.Templates.Category.DisplayOrder").Text,
+                Width = "100",
+                Editable = true,
+                EditType = EditType.Number
+            },
+            new ColumnProperty(nameof(CategoryTemplateModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "200",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonsInlineEdit()
+            },
+            new ColumnProperty(nameof(CategoryTemplateModel.Id))
+            {
+                Title = T("Admin.Common.Delete").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+        }
+    })
+
+    <div class="card card-default">
+        <div class="card-header">
+            @T("Admin.Common.AddNewRecord")
+        </div>
+        <div class="card-body">
+                <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddCategoryTemplate.Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddCategoryTemplate.Name" />
+                    <span asp-validation-for="@Model.AddCategoryTemplate.Name"></span>
+                </div>
+            </div>
+                <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddCategoryTemplate.ViewPath" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddCategoryTemplate.ViewPath" />
+                    <span asp-validation-for="@Model.AddCategoryTemplate.ViewPath"></span>
+                </div>
+            </div>
+                <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddCategoryTemplate.DisplayOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddCategoryTemplate.DisplayOrder" />
+                    <span asp-validation-for="@Model.AddCategoryTemplate.DisplayOrder"></span>
+                </div>
+            </div>
+                <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="button" id="addCategoryTemplate" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#addCategoryTemplate').click(function () {
+                    $('#addCategoryTemplate').attr('disabled', true);
+                    var postData = {
+                        Name: $("#@Html.IdFor(model => model.AddCategoryTemplate.Name)").val(),
+                        ViewPath: $("#@Html.IdFor(model => model.AddCategoryTemplate.ViewPath)").val(),
+                        DisplayOrder: $("#@Html.IdFor(model => model.AddCategoryTemplate.DisplayOrder)").val()
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@Html.Raw(Url.Action("CategoryTemplateAdd", "Template", null))",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.Result) {
+                                //reload grid
+                                updateTable('#templates-category-grid');
+
+                                //clear input value
+                                $("#@Html.IdFor(model => model.AddCategoryTemplate.Name)").val('');
+                                $("#@Html.IdFor(model => model.AddCategoryTemplate.ViewPath)").val('');
+                                $("#@Html.IdFor(model => model.AddCategoryTemplate.DisplayOrder)").data("kendoNumericTextBox").value(0);
+
+                            } else {
+                                //display errors if returned
+                                display_nop_error(data);
+                            }
+                        },
+                        complete: function (jqXHR, textStatus) {
+                            $('#addCategoryTemplate').attr('disabled', false);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>

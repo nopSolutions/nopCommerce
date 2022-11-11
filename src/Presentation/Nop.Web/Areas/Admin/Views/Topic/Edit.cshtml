@@ -1,0 +1,48 @@
+@model TopicModel
+
+@using Nop.Core.Domain.Topics
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Topics.EditTopicDetails").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.Topic;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Topics");
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<form asp-controller="Topic" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.Topics.EditTopicDetails") - @Model.SystemName
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.ContentManagement.Topics.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Topic>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info" id="preview-topic-button">
+                <i class="far fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="topic-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TopicDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="topic-delete" />

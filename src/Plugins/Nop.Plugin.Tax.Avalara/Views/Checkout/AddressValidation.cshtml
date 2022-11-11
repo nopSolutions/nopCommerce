@@ -1,0 +1,31 @@
+﻿@model AddressValidationModel
+
+<script>
+    $(document).ready(function () {
+        @if (Model.IsError)
+        {
+            <text>alert('@Model.Message');</text>
+        }
+        else
+        {
+            <text>
+                var customerConfirmation = confirm('@Model.Message');
+                if (customerConfirmation) {
+                    var postData = {
+                        addressId: '@Model.AddressId',
+                        isNewAddress: '@Model.IsNewAddress'
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: 'POST',
+                        url: '@Url.Action("UseValidatedAddress", "AddressValidation")',
+                        data: postData,
+                        dataType: 'json'
+                    });
+                }
+            </text>
+        }
+    });
+</script>

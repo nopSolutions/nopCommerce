@@ -1,0 +1,98 @@
+@model CatalogSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Catalog").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Catalog settings");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "CatalogSettingsPage.HideSearchBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSearchBlockAttributeName);
+
+    const string hideProductReviewsBlockAttributeName = "CatalogSettingsPage.HideProductReviewsBlock";
+    var hideProductReviewsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductReviewsBlockAttributeName);
+
+    const string hideReviewTypesBlockAttributeName = "CatalogSettingsPage.HideReviewTypesBlock";
+    var hideReviewTypesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideReviewTypesBlockAttributeName);
+
+    const string hidePerformanceBlockAttributeName = "CatalogSettingsPage.HidePerformanceBlock";
+    var hidePerformanceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePerformanceBlockAttributeName);
+
+    const string hideShareBlockAttributeName = "CatalogSettingsPage.HideShareBlock";
+    var hideShareBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShareBlockAttributeName);
+
+    const string hideCompareProductsBlockAttributeName = "CatalogSettingsPage.HideCompareProductsBlock";
+    var hideCompareProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCompareProductsBlockAttributeName);
+
+    const string hideAdditionalSectionsBlockAttributeName = "CatalogSettingsPage.HideAdditionalSectionsBlock";
+    var hideAdditionalSectionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAdditionalSectionsBlockAttributeName);
+
+    const string hideProductFieldsBlockAttributeName = "CatalogSettingsPage.HideProductFieldsBlock";
+    var hideProductFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductFieldsBlockAttributeName);
+
+    const string hideProductPageBlockAttributeName = "CatalogSettingsPage.HideProductPageBlock";
+    var hideProductPageBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductPageBlockAttributeName);
+
+    const string hideCatalogPagesBlockAttributeName = "CatalogSettingsPage.HideCatalogPagesBlock";
+    var hideCatalogPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCatalogPagesBlockAttributeName);
+
+    const string hideTagsBlockAttributeName = "CatalogSettingsPage.HideTagsBlock";
+    var hideTagsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTagsBlockAttributeName);
+
+    const string hideTaxBlockAttributeName = "CatalogSettingsPage.HideTaxBlock";
+    var hideTaxBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTaxBlockAttributeName);
+
+    const string hideExportImportBlockAttributeName = "CatalogSettingsPage.HideExportImportBlock";
+    var hideExportImportBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideExportImportBlockAttributeName);
+
+    const string hideProductSortingBlockAttributeName = "CatalogSettingsPage.HideProductSortingBlock";
+    var hideProductSortingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductSortingBlockAttributeName);
+}
+
+
+<form asp-controller="Setting" asp-action="Catalog" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Catalog")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CatalogSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="catalogsettings-cards">
+                    <nop-card asp-name="catalogsettings-search" asp-icon="fas fa-search" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")" asp-hide-block-attribute-name="@hideSearchBlockAttributeName" asp-hide="@hideSearchBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.Search", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-product-reviews" asp-icon="far fa-comment" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews")" asp-hide-block-attribute-name="@hideProductReviewsBlockAttributeName" asp-hide="@hideProductReviewsBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.ProductReviews", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-review-types" asp-icon="far fa-comments" asp-title="@T("Admin.Settings.ReviewType")" asp-hide-block-attribute-name="@hideReviewTypesBlockAttributeName" asp-hide="@hideReviewTypesBlock" asp-advanced="true">@await Html.PartialAsync("../ReviewType/List", Model.ReviewTypeSearchModel)</nop-card>
+                    <nop-card asp-name="catalogsettings-performance" asp-icon="fas fa-chart-line" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Performance")" asp-hide-block-attribute-name="@hidePerformanceBlockAttributeName" asp-hide="@hidePerformanceBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.Performance", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-share" asp-icon="fas fa-share-square" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Share")" asp-hide-block-attribute-name="@hideShareBlockAttributeName" asp-hide="@hideShareBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.Share", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-compare-products" asp-icon="far fa-clone" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Compare")" asp-hide-block-attribute-name="@hideCompareProductsBlockAttributeName" asp-hide="@hideCompareProductsBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.CompareProducts", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-additional-sections" asp-icon="fas fa-plus" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections")" asp-hide-block-attribute-name="@hideAdditionalSectionsBlockAttributeName" asp-hide="@hideAdditionalSectionsBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.AdditionalSections", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-product-fields" asp-icon="fas fa-align-justify" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductFields")" asp-hide-block-attribute-name="@hideProductFieldsBlockAttributeName" asp-hide="@hideProductFieldsBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ProductFields", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-product-page" asp-icon="fas fa-file" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductPage")" asp-hide-block-attribute-name="@hideProductPageBlockAttributeName" asp-hide="@hideProductPageBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ProductPage", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-catalog-pages" asp-icon="fas fa-th-list" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages")" asp-hide-block-attribute-name="@hideCatalogPagesBlockAttributeName" asp-hide="@hideCatalogPagesBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.CatalogPages", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-tags" asp-icon="fas fa-tag" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Tags")" asp-hide-block-attribute-name="@hideTagsBlockAttributeName" asp-hide="@hideTagsBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.Tags", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-tax" asp-icon="fas fa-percent" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Tax")" asp-hide-block-attribute-name="@hideTaxBlockAttributeName" asp-hide="@hideTaxBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.Tax", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-export-import" asp-icon="fas fa-exchange-alt" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport")" asp-hide-block-attribute-name="@hideExportImportBlockAttributeName" asp-hide="@hideExportImportBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ExportImport", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-product-sorting" asp-icon="fas fa-sort" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductSorting")" asp-hide-block-attribute-name="@hideProductSortingBlockAttributeName" asp-hide="@hideProductSortingBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ProductSorting", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CatalogSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

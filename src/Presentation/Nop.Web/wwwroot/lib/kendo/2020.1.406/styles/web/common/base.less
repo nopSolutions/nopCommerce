@@ -1,0 +1,688 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Kendo base CSS
+
+.fake {color:red;}
+
+.k-common-test-class { opacity: 0; }
+
+.k-reset { margin:0;padding:0;border:0;outline:0;text-decoration:none;font-size:100%;list-style:none;}
+
+.k-no-click { pointer-events: none; }
+
+.k-floatwrap:after,.k-slider-items:after,.k-grid-toolbar:after {content:"";display:block;clear:both;visibility:hidden;height:0;overflow:hidden;}
+.k-floatwrap,.k-slider-items,.k-grid-toolbar {display:inline-block;}
+.k-floatwrap,.k-slider-items,.k-grid-toolbar {display:block;}
+
+// main gradient
+
+.k-block,
+.k-header,
+.k-grid-header,
+.k-toolbar,
+.k-grouping-header,
+.k-tooltip,
+.k-pager-wrap,
+.k-tabstrip-items .k-item,
+.k-link.k-state-hover,
+.k-textbox,
+.k-textbox:hover,
+.k-autocomplete,
+.k-dropdown-wrap,
+.k-picker-wrap,
+.k-numeric-wrap,
+.k-autocomplete.k-state-hover,
+.k-dropdown-wrap.k-state-hover,
+.k-picker-wrap.k-state-hover,
+.k-numeric-wrap.k-state-hover,
+.k-draghandle
+{
+    background-repeat: repeat;
+    background-position: 0 center;
+}
+
+.k-link:hover
+{
+    text-decoration: none;
+}
+
+.k-state-highlight > .k-link
+{
+    color: inherit;
+}
+
+// widget
+
+.k-textbox > input,
+.k-multiselect .k-input,
+.k-input[type="text"],
+.k-input[type="number"],
+.k-textbox,
+.k-picker-wrap .k-input {
+    font-size: 100%;
+    font-family: inherit;
+    border-style: solid;
+    border-width: 1px;
+    -webkit-appearance: none;
+}
+
+.k-widget,
+.k-block,
+.k-inline-block,
+.k-draghandle
+{
+    border-style: solid;
+    border-width: 1px;
+    -webkit-appearance: none;
+}
+
+.k-block,
+.k-widget
+{
+    line-height: normal;
+    outline: 0;
+}
+
+.k-widget .k-input::-ms-clear,
+.k-list-filter ::-ms-clear {
+    width : 0;
+    height: 0;
+}
+
+.k-block,
+.k-widget,
+.k-grid,
+.k-slider,
+.k-splitter,
+.k-treeview,
+.k-panelbar,
+.k-content,
+.k-header-column-menu {
+    outline: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.k-block,
+.k-slider,
+.k-splitbar,
+.k-calendar,
+.k-treeview,
+.k-pager-wrap,
+.k-grid-header .k-i-link-horizontal,
+.k-header-column-menu {
+    -webkit-touch-callout: none;
+}
+
+.k-header-column-menu {
+    color: inherit;
+}
+
+// Block
+.k-block {
+    padding: 2px;
+}
+.k-block > .k-header {
+    margin: -2px 0 10px -2px;
+    padding: .3em 2px;
+    width: 100%;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    font-size: 1.2em;
+    white-space: nowrap;
+    min-height: 16px; // icon size
+    position: relative;
+}
+
+// button
+
+a.k-button-expand
+{
+    display: block;
+}
+
+button.k-button-expand,
+input[type="submit"].k-button-expand,
+input[type="button"].k-button-expand,
+input[type="reset"].k-button-expand
+{
+    width: 100%;
+}
+
+.k-toolbar .k-button-icontext
+{
+    padding-right: .8em;
+}
+
+// link
+
+.k-link
+{
+    cursor: pointer;
+    outline: 0;
+    text-decoration: none;
+}
+
+.k-grid-header span.k-link
+{
+    cursor: default;
+}
+
+// states
+
+.k-state-disabled,
+.k-state-disabled .k-link,
+.k-state-disabled .k-icon,
+.k-state-disabled .k-draghandle,
+.k-state-disabled .k-upload-button input
+{
+    cursor: default !important;
+    pointer-events: none;
+    outline: 0;
+}
+
+.k-state-disabled
+{
+    opacity:.7;
+
+    & > .k-button {
+        opacity: 1;
+    }
+}
+
+@media print {
+    .k-state-disabled,
+    .k-state-disabled .k-input
+    {
+        opacity:1 !important;
+    }
+}
+
+.k-state-error
+{
+    border-style: ridge;
+}
+
+.k-state-empty
+{
+    font-style: italic;
+}
+
+// icons
+
+@grid-size: 16px;
+
+.k-icon.k-i-none
+{
+    background-image: none !important; // should never be a background on these
+}
+
+.k-image
+{
+    border: 0;
+}
+
+.k-widget .k-icon {
+    &.k-i-expand,
+    &.k-i-collapse {
+        cursor: pointer;
+    }
+}
+
+
+// Colors
+
+html .k-success-colored
+{
+    color: #507f50;
+    border-color: #d0dfd0;
+    background-color: #f0fff0;
+}
+
+html .k-info-colored
+{
+    color: #50607f;
+    border-color: #d0d9df;
+    background-color: #f0f9ff;
+}
+
+html .k-error-colored
+{
+    color: #7f5050;
+    border-color: #dfd0d0;
+    background-color: #fff0f0;
+}
+
+.k-inline-block
+{
+    padding: 0 2px;
+}
+
+// loading
+
+.k-loading,
+.k-loading-image
+{
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.k-icon.k-i-loading {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    &::before {
+        content: "";
+        display: none;
+    }
+}
+
+.k-loading-mask,
+.k-loading-image,
+.k-loading-text
+{
+    position: absolute;
+}
+
+.k-loading-mask
+{
+    z-index: 100;
+}
+
+.k-loading-mask.k-opaque
+{
+    .k-loading-color {
+        opacity: 1;
+    }
+}
+
+.k-loading-mask .k-loading-progress {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.k-loading-text
+{
+    text-indent: -4000px;
+    text-align: center; // rtl
+}
+
+.k-loading-image,
+.k-loading-color
+{
+    width: 100%;
+    height: 100%;
+}
+
+.k-loading-image
+{
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.k-loading-color
+{
+    filter: alpha(opacity=30);
+    opacity: .3;
+}
+
+.k-content-frame {
+    border: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.k-pane > .k-splitter-overlay {
+    filter: alpha(opacity=0);
+    opacity: 0;
+    position: absolute;
+}
+
+// drag n drop
+
+.k-drag-clue
+{
+    position: absolute;
+    z-index: 10003;
+    border-style: solid;
+    border-width: 1px;
+    font-size: .9em;
+    padding: .2em .4em;
+    white-space: nowrap;
+    cursor: default;
+}
+
+
+// ListBox Drag Clue
+.k-item.k-drag-clue {
+    font-size: inherit;
+}
+
+.k-drag-status
+{
+    margin-top: -3px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.k-reorder-cue
+{
+    position: absolute;
+    width: 1px;
+    overflow: visible;
+}
+
+.k-reorder-cue .k-icon
+{
+    position: absolute;
+    left: -4px;
+    width: 8px;
+    height: 4px;
+}
+
+.k-reorder-cue .k-i-arrow-60-down { top: -4px; }
+.k-reorder-cue .k-i-arrow-60-up { bottom: -4px; }
+
+// virtual scrollbar
+
+.k-scrollbar
+{
+    position: absolute;
+    overflow: scroll;
+}
+
+.k-scrollbar-vertical
+{
+    top: 0;
+    right: 0;
+    width: 17px; // scrollbar width
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.k-touch-scrollbar
+{
+    display: none;
+    position: absolute;
+    z-index: 200000;
+    height: 8px;
+    width: 8px;
+    border: 1px solid #8a8a8a;
+    background-color: #858585;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+    body .k-touch-scrollbar
+    {
+        height: 12px;
+        width: 12px;
+        border-radius: 7px;
+    }
+}
+
+.k-virtual-scrollable-wrap
+{
+    overflow-x:auto; // needed by IE8
+}
+
+// current time indicator
+
+.k-current-time
+{
+    background: #f00;
+    position: absolute;
+}
+
+.k-current-time-arrow-down
+{
+    width: 0;
+    height: 0;
+    background: transparent;
+    border-bottom: 4px solid  transparent;
+    border-top: 4px solid #f00;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}
+
+.k-current-time-arrow-left
+{
+    width: 0;
+    height: 0;
+    background: transparent;
+    border-bottom: 4px solid  transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid transparent;
+    border-right: 4px solid #f00;
+}
+
+.k-current-time-arrow-right
+{
+    width: 0;
+    height: 0;
+    background: transparent;
+    border-bottom: 4px solid  transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid #f00;
+    border-right: 4px solid transparent;
+}
+
+// override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4)
+
+.k-animation-container,
+.k-widget,
+.k-widget *,
+.k-animation-container *,
+.k-widget *:before,
+.k-animation-container *:after,
+.k-block .k-header,
+.k-list-container,
+.k-dialog .k-window-content
+{
+    .box-sizing(content-box);
+}
+
+.k-textbox,
+.k-autocomplete,
+.k-tabstrip > .k-content > .km-scroll-container,
+.k-block,
+.k-edit-cell .k-widget,
+.k-grid-edit-row .k-widget,
+.k-grid-edit-row .text-box,
+.km-actionsheet > li,
+.km-shim,
+div.k-window-content
+{
+    .box-sizing(border-box);
+}
+
+// Fix for Bootstrap 3
+.input-group .form-control
+{
+    .box-sizing(border-box);
+}
+
+.form-control.k-widget
+{
+    padding: 0;
+}
+
+// override iOS styles in mobile Kendo
+
+.km-widget,
+.km-widget *
+{
+    -moz-background-clip: border-box;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+}
+
+// Off-screen container used during export
+.k-pdf-export-shadow {
+    position: absolute;
+    overflow: hidden;
+    left: -15000px;
+    width: 14400px;
+}
+
+.km-native-scroller
+{
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-touch-action: pan-x pan-y;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -ms-scroll-snap-type: proximity;
+}
+
+// Horizontal rule
+.k-hr {
+    margin: .5em auto;
+    padding: 0;
+    height: 0;
+    border-width: 1px 0 0;
+    border-style: solid;
+    display: block;
+    float: none;
+    clear: both;
+}
+
+// Font Icons
+.k-icon,
+.k-tool-icon {
+    .use-font-icon();
+    color: inherit;
+}
+
+.k-i-drag-and-drop,
+.k-column-menu .k-sprite,
+.k-grid-mobile .k-resize-handle-inner:before,
+.k-grid-mobile .k-resize-handle-inner:after,
+.k-pager-numbers .k-current-page .k-link:after,
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
+    .use-font-icon();
+}
+.k-icon:before {
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.k-button.k-button-icon .k-icon,
+.k-grid-filter .k-icon,
+.k-header .k-icon {
+    text-indent: -99999px;
+    overflow: hidden;
+
+    &:before {
+        text-indent: 0;
+    }
+}
+
+
+// Sprite icons
+.k-sprite {
+    width: @grid-size;
+    height: @grid-size;
+    font-size: 0;
+    line-height: 0;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    .disable-high-contrast();
+}
+
+// Header/Footer templates
+.k-list-container {
+
+    .k-footer {
+
+        // ensure right calculating of popup - expanding parent to children with margin
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            overflow: hidden;
+        }
+    }
+}
+
+// Reorder cue
+.k-reorder-cue {
+    position: absolute;
+
+    &::before,
+    &::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border: 3px solid transparent;
+        position: absolute;
+        transform: translateX(-50%);
+    }
+
+    &::before {
+        border-bottom-width: 0;
+        border-top-color: currentColor;
+        top: -4px;
+    }
+    &::after {
+        border-top-width: 0;
+        border-bottom-color: currentColor;
+        bottom: -4px;
+    }
+}
+
+// Flipping
+.k-flip-h { transform: scaleX(-1); }
+.k-flip-v { transform: scaleY(-1); }
+.k-flip-h.k-flip-v { transform: scale(-1, -1); }
+
+// Text align
+.k-text-align-left,
+.k-text-left {
+    text-align: left;
+}
+
+.k-text-align-center,
+.k-text-center {
+    text-align: center;
+}
+
+.k-text-align-right,
+.k-text-right {
+    text-align: right;
+}
+
+.k-text-align-justify,
+.k-text-justify {
+    text-align: justify;
+}

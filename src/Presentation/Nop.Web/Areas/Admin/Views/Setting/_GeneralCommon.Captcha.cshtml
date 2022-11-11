@@ -1,0 +1,231 @@
+@model GeneralCommonSettingsModel
+@using Nop.Core.Domain.Security
+
+<div class="card-body">
+    <p>@T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")</p>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CaptchaSettings.Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CaptchaSettings.Enabled" />
+            <span asp-validation-for="CaptchaSettings.Enabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="CaptchaSettings.Enabled" disable-auto-generation="true">
+        <div class="form-group row" id="ssCaptchaTypepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.CaptchaType_OverrideForStore" asp-input="CaptchaSettings.CaptchaType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.CaptchaType" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="CaptchaSettings.CaptchaType" asp-items="Model.CaptchaSettings.CaptchaTypeValues" />
+                <span asp-validation-for="CaptchaSettings.CaptchaType"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssReCaptchaV3ScoreThresholdpnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaV3ScoreThreshold_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaV3ScoreThreshold" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ReCaptchaV3ScoreThreshold" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ReCaptchaV3ScoreThreshold" />
+                <span asp-validation-for="CaptchaSettings.ReCaptchaV3ScoreThreshold"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnLoginPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnLoginPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnLoginPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnLoginPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnLoginPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnLoginPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnRegistrationPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnRegistrationPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnRegistrationPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnRegistrationPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnRegistrationPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnRegistrationPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnForgotPassworPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnForgotPasswordPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnForgotPasswordPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnForgotPasswordPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnForgotPasswordPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnContactUsPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnContactUsPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnContactUsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnContactUsPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnContactUsPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnContactUsPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailWishlistToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailProductToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnEmailProductToFriendPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnBlogCommentPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnBlogCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnBlogCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnBlogCommentPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnNewsCommentPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnNewsCommentPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnProductReviewPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnProductReviewPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnProductReviewPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnProductReviewPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnProductReviewPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnProductReviewPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnApplyVendorPagepnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnApplyVendorPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnForumpnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForum_OverrideForStore" asp-input="CaptchaSettings.ShowOnForum" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnForum" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnForum" />
+                <span asp-validation-for="CaptchaSettings.ShowOnForum"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnCheckoutPageForGuests">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnCheckoutPageForGuests_OverrideForStore" asp-input="CaptchaSettings.ShowOnCheckoutPageForGuests" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnCheckoutPageForGuests" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnCheckoutPageForGuests" />
+                <span asp-validation-for="CaptchaSettings.ShowOnCheckoutPageForGuests"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssReCaptchaPublicKeypnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ReCaptchaPublicKey" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ReCaptchaPublicKey" />
+                <span asp-validation-for="CaptchaSettings.ReCaptchaPublicKey"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssReCaptchaPrivateKeypnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPrivateKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPrivateKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
+                <span asp-validation-for="CaptchaSettings.ReCaptchaPrivateKey"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#@Html.IdFor(model => model.CaptchaSettings.CaptchaType)').change(toggleReCaptchaV3ScoreThreshold);
+        $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
+        toggleReCaptcha();
+    });
+
+    function toggleReCaptchaV3ScoreThreshold() {
+        var reCaptchaV3 = "@((int)CaptchaType.ReCaptchaV3)";
+        if ($('#@Html.IdFor(model => model.CaptchaSettings.CaptchaType)').val() === reCaptchaV3)
+            $('#ssReCaptchaV3ScoreThresholdpnl').showElement();
+        else
+            $('#ssReCaptchaV3ScoreThresholdpnl').hideElement();
+    }
+
+    function toggleReCaptcha() {
+        if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
+            $('#ssCaptchaTypepnl').showElement();
+            $('#ssCaptchaShowOnLoginPagepnl').showElement();
+            $('#ssCaptchaShowOnRegistrationPagepnl').showElement();
+            $('#ssCaptchaShowOnForgotPassworPagepnl').showElement();
+            $('#ssCaptchaShowOnContactUsPagepnl').showElement();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showElement();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showElement();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').showElement();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').showElement();
+            $('#ssCaptchaShowOnProductReviewPagepnl').showElement();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
+            $('#ssCaptchaShowOnForumpnl').showElement();
+            $('#ssCaptchaShowOnCheckoutPageForGuests').showElement();
+            $('#ssReCaptchaPublicKeypnl').showElement();
+            $('#ssReCaptchaPrivateKeypnl').showElement();
+            toggleReCaptchaV3ScoreThreshold();
+        } else {
+            $('#ssCaptchaTypepnl').hideElement();
+            $('#ssReCaptchaV3ScoreThresholdpnl').hideElement();
+            $('#ssCaptchaShowOnLoginPagepnl').hideElement();
+            $('#ssCaptchaShowOnRegistrationPagepnl').hideElement();
+            $('#ssCaptchaShowOnForgotPassworPagepnl').hideElement();
+            $('#ssCaptchaShowOnContactUsPagepnl').hideElement();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hideElement();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hideElement();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').hideElement();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').hideElement();
+            $('#ssCaptchaShowOnProductReviewPagepnl').hideElement();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
+            $('#ssCaptchaShowOnForumpnl').hideElement();
+            $('#ssCaptchaShowOnCheckoutPageForGuests').hideElement();
+            $('#ssReCaptchaPublicKeypnl').hideElement();
+            $('#ssReCaptchaPrivateKeypnl').hideElement();
+        }
+    }
+</script>

@@ -1,0 +1,33 @@
+﻿@model SpecificationAttributeModel
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "used-by-products-grid",
+        UrlRead = new DataUrl("UsedByProducts", "SpecificationAttribute", new RouteValueDictionary { [nameof(Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId)] = Model.SpecificationAttributeProductSearchModel.SpecificationAttributeId }),
+        SearchButtonId = "search-categories",
+        Length = Model.SpecificationAttributeProductSearchModel.PageSize,
+        LengthMenu = Model.SpecificationAttributeProductSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductName))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product").Text
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.Published))
+            {
+                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(SpecificationAttributeProductModel.ProductId))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+            }
+        }
+    })
+</div>

@@ -1,0 +1,39 @@
+@model ReturnRequestActionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Order settings");
+}
+
+<form asp-controller="ReturnRequest" asp-action="ReturnRequestActionCreate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="ReturnRequestActionList">@T("Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestActionDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
+            </div>
+        </div>
+    </section>
+</form>

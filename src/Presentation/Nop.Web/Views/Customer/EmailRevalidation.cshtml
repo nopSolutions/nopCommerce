@@ -1,0 +1,22 @@
+﻿@model EmailRevalidationModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-email-revalidation-page");
+}
+<div class="page email-revalidation-page">
+    <div class="page-title">
+        <h1>@T("Account.EmailRevalidation")</h1>
+    </div>
+    <div class="page-body">
+        <div class="result">
+            @Model.Result
+        </div>
+        <div class="buttons">
+            <a href="@Model.ReturnUrl" class="button-1">@T("Common.Continue")</a>
+        </div>
+    </div>
+</div>

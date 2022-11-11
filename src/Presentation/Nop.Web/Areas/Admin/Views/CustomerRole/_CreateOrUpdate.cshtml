@@ -1,0 +1,153 @@
+@model CustomerRoleModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input asp-for="Id" type="hidden" />
+
+<script>
+    $(document).ready(function() {
+        toggleRemoveButton();
+    });
+    
+    function toggleRemoveButton() {
+        if ($('#@Html.IdFor(model => model.PurchasedWithProductId)').val() > 0) {
+            $('#purchased-with-product-name-remove').showElement();
+        } else {
+            $('#purchased-with-product-name-remove').hideElement();
+        }
+    }
+</script>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerRoleDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Name" asp-required="true" />
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Active" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Active" />
+                                <span asp-validation-for="Active"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="FreeShipping" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="FreeShipping" />
+                                <span asp-validation-for="FreeShipping"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TaxExempt" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TaxExempt" />
+                                <span asp-validation-for="TaxExempt"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OverrideTaxDisplayType" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="OverrideTaxDisplayType" />
+                                <span asp-validation-for="OverrideTaxDisplayType"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="OverrideTaxDisplayType">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="DefaultTaxDisplayTypeId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="DefaultTaxDisplayTypeId" asp-items="Model.TaxDisplayTypeValues" />
+                                    <span asp-validation-for="DefaultTaxDisplayTypeId"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EnablePasswordLifetime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnablePasswordLifetime" />
+                                <span asp-validation-for="EnablePasswordLifetime"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PurchasedWithProductId" />
+                            </div>
+                            <div class="col-md-9">
+                                <input type="hidden" asp-for="PurchasedWithProductId" />
+                                <span id="purchased-with-product-name">@Model.PurchasedWithProductName</span>
+                                <span asp-validation-for="PurchasedWithProductId"></span>
+                                <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCustomerRolePopup", "CustomerRole", new {productIdInput = Html.IdFor(model => model.PurchasedWithProductId), productNameInput = "purchased-with-product-name", btnId = "btnRefreshPurchasedWithProduct"}))', 800, 850, true); return false;" class="btn btn-primary">
+                                    @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose")
+                                </button>
+                                <button type="submit" id="purchased-with-product-name-remove" class="btn btn-danger">
+                                    @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove")
+                                </button>
+                                <button type="submit" id="btnRefreshPurchasedWithProduct" style="display: none"></button>
+
+                                <script>
+                                $(document).ready(function () {
+                                    $('#purchased-with-product-name-remove').click(function () {
+                                        $('#purchased-with-product-name').text('');
+                                        $("#@Html.IdFor(model => model.PurchasedWithProductId)").val(0);
+                                        toggleRemoveButton();
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+
+                                    $('#btnRefreshPurchasedWithProduct').click(function () {
+                                        toggleRemoveButton();
+
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+                                });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsSystemRole" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@T(Model.IsSystemRole ? "Admin.Common.Yes" : "Admin.Common.No")</div>
+                                <input type="hidden" asp-for="IsSystemRole" />
+                                <span asp-validation-for="IsSystemRole"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SystemName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SystemName" />
+                                <span asp-validation-for="SystemName"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerRoleDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,46 @@
+@model DatesRangesSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Dates and ranges");
+}
+
+@{
+    const string hideDatesBlockAttributeName = "DatesAndRangesPage.HideDatesBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideDatesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDatesBlockAttributeName);
+
+    const string hideRangesBlockAttributeName = "DatesAndRangesPage.HideRangesBlock";
+    var hideRangesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRangesBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Shipping.DatesAndRanges")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DatesAndRangesButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="form-horizontal">
+                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.DatesAndRanges", Docs.DatesAndRanges + Utm.OnAdmin)" />
+
+                <div class="cards-group">
+                    <nop-cards id="datesandranges-cards">
+                        <nop-card asp-name="datesandranges-dates" asp-icon="far fa-calendar-alt" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-card>
+                        <nop-card asp-name="datesandranges-ranges" asp-icon="fas fa-arrows-alt-h" asp-title="@T("Admin.Configuration.Shipping.ProductAvailabilityRanges")" asp-hide-block-attribute-name="@hideRangesBlockAttributeName" asp-hide="@hideRangesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Ranges", Model)</nop-card>
+
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DatesAndRangesDetailsBlock, additionalData = Model })
+                    </nop-cards>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

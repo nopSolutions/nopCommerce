@@ -1,0 +1,147 @@
+@model GiftCardSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.GiftCards").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Gift cards");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "GiftCardsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.GiftCards")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GiftCardListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="RecipientName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="RecipientName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ActivatedId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CouponCode" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="CouponCode" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-giftcards" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.GiftCards", Docs.GiftCards + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "giftcards-grid",
+                            UrlRead = new DataUrl("GiftCardList", "GiftCard", null),
+                            SearchButtonId = "search-giftcards",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.ActivatedId)),
+                                new FilterParameter(nameof(Model.CouponCode)),
+                                new FilterParameter(nameof(Model.RecipientName))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(GiftCardModel.AmountStr))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.Amount").Text
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.RemainingAmountStr))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.RemainingAmount").Text
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.GiftCardCouponCode))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.GiftCardCouponCode").Text
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.RecipientName))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.RecipientName").Text
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.IsGiftCardActivated))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.IsGiftCardActivated").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.CreatedOn))
+                                {
+                                    Title = T("Admin.GiftCards.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(GiftCardModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,123 @@
+﻿@model ScheduleTaskSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.System.ScheduleTasks").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Schedule tasks");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.System.ScheduleTasks")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons, additionalData = Model })
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
+        });
+    });
+</script>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <p>
+                        @T("Admin.System.ScheduleTasks.24days")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ScheduleTasks", Docs.ScheduleTasks + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                    </p>
+                    <p>
+                        <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
+                    </p>
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "schedule-tasks-grid",
+                        UrlRead = new DataUrl("List", "ScheduleTask", null),
+                        UrlUpdate = new DataUrl("TaskUpdate", "ScheduleTask", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ScheduleTaskModel.Name))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Name").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Seconds").Text,
+                                    Width = "150",
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Enabled))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Enabled").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.StopOnError))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.StopOnError").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastStartUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastStart").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastEndUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastEnd").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastSuccessUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastSuccess").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.RunNow").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnRunNow")
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+
+                    <script>
+                        function renderColumnRunNow(data, type, row, meta) {
+                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn btn-success">@T("Admin.System.ScheduleTasks.RunNow")</a>';
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

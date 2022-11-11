@@ -1,0 +1,86 @@
+@model CustomerRoleSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Customers.CustomerRoles").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Customer roles");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Customers.CustomerRoles")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerRoleListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CustomerRoles", Docs.CustomerRoles + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "customerroles-grid",
+                        UrlRead = new DataUrl("List", "CustomerRole", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CustomerRoleModel.Name))
+                            {
+                                Title = T("Admin.Customers.CustomerRoles.Fields.Name").Text,
+                                Width = "300"
+                            },
+                            new ColumnProperty(nameof(CustomerRoleModel.FreeShipping))
+                            {
+                                Title = T("Admin.Customers.CustomerRoles.Fields.FreeShipping").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CustomerRoleModel.TaxExempt))
+                            {
+                                Title = T("Admin.Customers.CustomerRoles.Fields.TaxExempt").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CustomerRoleModel.Active))
+                            {
+                                Title = T("Admin.Customers.CustomerRoles.Fields.Active").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CustomerRoleModel.IsSystemRole))
+                            {
+                                Title = T("Admin.Customers.CustomerRoles.Fields.IsSystemRole").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CustomerRoleModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

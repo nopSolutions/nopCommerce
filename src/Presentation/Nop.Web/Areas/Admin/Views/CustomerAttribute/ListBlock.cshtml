@@ -1,0 +1,58 @@
+﻿@model CustomerAttributeSearchModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Admin.Customers.CustomerAttributes")
+    </div>
+    <div class="card-body">
+        <p>
+            <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
+        </p>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "customerattributes-grid",
+            UrlRead = new DataUrl("List", "CustomerAttribute", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeModel.Name))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.AttributeControlTypeName))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.IsRequired))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.IsRequired").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.DisplayOrder))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/CustomerAttribute/Edit/"))
+                }
+            }
+        })
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary" href="@Url.Action("Create", "CustomerAttribute")">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

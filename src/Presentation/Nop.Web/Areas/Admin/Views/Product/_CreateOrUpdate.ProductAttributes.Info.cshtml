@@ -1,0 +1,76 @@
+@model ProductModel
+
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "productattributemappings-grid",
+                UrlRead = new DataUrl("ProductAttributeMappingList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeMappingSearchModel.ProductId)] = Model.ProductAttributeMappingSearchModel.ProductId }),
+                Length = Model.ProductPictureSearchModel.PageSize,
+                LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ProductAttribute))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.TextPrompt))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt").Text,
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.IsRequired))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.AttributeControlType))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType").Text,
+                        Width = "250"
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.DisplayOrder))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder").Text,
+                        Width = "150",
+                        ClassName =  NopColumnClassDefaults.CenterAll
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ValidationRulesString))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Encode = false
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ConditionString))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Encode = false
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductAttributeMappingEdit/"))
+                    }
+                }
+            })
+        </div>
+
+        <div class="card-footer">
+            <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn btn-primary">
+                <i class="fas fa-plus-square"></i>
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
+            </a>
+        </div>
+    </div>
+</div>
+@await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

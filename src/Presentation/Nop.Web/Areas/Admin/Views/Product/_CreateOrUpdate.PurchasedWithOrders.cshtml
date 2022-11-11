@@ -1,0 +1,64 @@
+@model ProductModel
+
+<div class="card-body">
+    <p>
+        @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
+    </p>
+    @{ 
+        var table = new DataTablesModel
+        {
+            Name = "purchased-with-orders-grid",
+            UrlRead = new DataUrl("PurchasedWithOrders", "Product", new RouteValueDictionary { [nameof(Model.ProductOrderSearchModel.ProductId)] = Model.ProductOrderSearchModel.ProductId }),
+            Length = Model.ProductPictureSearchModel.PageSize,
+            LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes
+        };
+
+        var columns = new List<ColumnProperty>();
+        columns.Add(new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+        {
+            Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+            Width = "200"
+        });
+        columns.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
+        {
+            Title = T("Admin.Orders.Fields.CustomerEmail").Text,
+            Width = "200"
+        });
+        if (!Model.IsLoggedInAsVendor)
+        {
+            columns.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+            {
+                Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                Width = "100"
+            });
+            columns.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
+            {
+                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
+                Width = "100"
+            });
+            columns.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+            {
+                Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                Width = "100"
+            });
+        }
+        columns.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+        {
+            Title = T("Admin.Orders.Fields.CreatedOn").Text,
+            Width = "200",
+            Render = new RenderDate(),
+            ClassName = NopColumnClassDefaults.CenterAll
+        });
+        columns.Add(new ColumnProperty(nameof(OrderModel.Id))
+        {
+            Title = T("Admin.Common.View").Text,
+            Width = "100",
+            ClassName = NopColumnClassDefaults.Button,
+            Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
+        });
+
+        table.ColumnCollection = columns;
+    }
+
+    @await Html.PartialAsync("Table", table)
+</div>

@@ -1,0 +1,112 @@
+@model ShippingProviderSearchModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Providers.Title").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.ShippingProviders;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Shipping providers");
+
+    string editQueryString = string.Empty;
+    var showTour = ViewBag.ShowTour ?? false;
+    if (showTour)
+    {
+        editQueryString = "?showtour=true";
+    }
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Shipping.Providers.Title")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingProviderListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <p>
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingProviders", Docs.ShippingProviders + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                            @T("Admin.Configuration.Shipping.Providers.DownloadMorePlugins", OfficialSite.ShippingPlugins + Utm.OnAdminShippingPlugins.Replace('?', '&'))
+                        </p>
+
+                        <div id="shipping-methods-area">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "shippingproviders-grid",
+                                RowIdBasedOnField = nameof(ShippingProviderModel.SystemName),
+                                UrlRead = new DataUrl("Providers", "Shipping", null),
+                                UrlUpdate = new DataUrl("ProviderUpdate", "Shipping", null),
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(nameof(ShippingProviderModel.FriendlyName))
+                                        {
+                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text
+                                        },
+                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
+                                        {
+                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Editable = true,
+                                            EditType = EditType.Number
+                                        },
+                                        new ColumnProperty(nameof(ShippingProviderModel.IsActive))
+                                        {
+                                            Title = T("Admin.Configuration.Shipping.Providers.Fields.IsActive").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean(),
+                                            Editable = true,
+                                            EditType = EditType.Checkbox
+                                        },
+                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
+                                            Width = "200",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-configure",
+                                            Render = new RenderCustom("renderColumnConfigure")
+                                        },
+                                        new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Common.Edit").Text,
+                                            Width = "150",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-edit",
+                                            Render = new RenderButtonsInlineEdit()
+                                        }
+                                    }
+                            })
+                        </div>
+
+                        <script>
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '@(editQueryString)"><i class="fas fa-cog"></i>@T("Admin.Configuration.Shipping.Providers.Configure").Text</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

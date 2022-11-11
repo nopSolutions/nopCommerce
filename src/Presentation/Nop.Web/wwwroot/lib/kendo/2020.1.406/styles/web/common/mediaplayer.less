@@ -1,0 +1,178 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-mediaplayer {
+    position: relative;
+
+    > video,
+    > iframe {
+        vertical-align: top;
+    }
+
+    .k-mediaplayer-overlay {
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+}
+
+
+// Title bar
+.k-mediaplayer-titlebar {
+    padding: 8px;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    background: linear-gradient( rgba(0,0,0, 0.7), rgba(0, 0, 0, 0.05) 80%, rgba(0, 0, 0, 0) );
+}
+
+
+// Toolbar
+.k-mediaplayer-toolbar-wrap {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.k-mediaplayer-toolbar {
+    padding: 2px;
+    border-width: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+
+
+    > * {
+        display: inline-flex;
+        align-items: center;
+        align-content: center;
+    }
+    > * + * {
+        margin-left: 5px;
+    }
+
+    .k-toolbar-spacer {
+        margin-top: 0;
+        margin-bottom: 0;
+        border-width: 0;
+        flex: 1;
+        opacity: 0;
+    }
+
+    .k-align-right {
+        & > * + * { margin-left: 5px; }
+    }
+
+    .k-mediaplayer-quality {
+        width: auto;
+        padding: 0;
+        background: none transparent;
+
+        .k-dropdown-wrap {
+            border: 0 none;
+            box-shadow: none;
+            padding: 0;
+            background: none transparent;
+            color: inherit;
+        }
+
+        .k-input {
+            display: none;
+        }
+
+        .k-select {
+            position: relative;
+            width: auto;
+            min-height: 0;
+            line-height: inherit;
+        }
+    }
+}
+.k-mediaplayer-volume-wrap,
+.k-mediaplayer-quality-wrap {
+    display: inline-flex;
+    align-items: center;
+}
+
+.k-quality-list {
+    width: 80px !important;
+    margin-left: -32px !important;
+}
+
+
+// Seekbar
+.k-slider.k-mediaplayer-seekbar {
+    width: 100%;
+    position: absolute;
+    z-index: 3;
+    top: -17px;
+    left: 0;
+
+    .k-slider-track {
+        width: 100% !important;
+        border-radius: 0;
+    }
+
+    .k-slider-selection {
+        border-radius: 0;
+    }
+
+    .k-draghandle {
+        opacity: 0;
+        transition: 0.2s opacity;
+    }
+
+    .k-draghandle.k-state-selected,
+    &:hover .k-draghandle {
+        opacity: 1;
+    }
+}
+
+
+// Full screen mode
+.k-mediaplayer-fullscreen {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+// No flexbox
+.k-no-flexbox {
+
+    .k-mediaplayer-toolbar .k-align-right {
+        > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+    .k-mediaplayer-toolbar .k-bare.k-button {
+        height: auto;
+    }
+    .k-mediaplayer-toolbar .k-toolbar-spacer {
+        display: none;
+    }
+
+}

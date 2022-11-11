@@ -1,0 +1,109 @@
+@model RecurringPaymentSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.RecurringPayments").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Recurring payments");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.RecurringPayments")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReccuringPaymentListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.RecurringPayments.Description")
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.RecurringPayments", Docs.RecurringPayments + Utm.OnAdmin)"  asp-add-wrapper="false"/>
+                            </p>
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "recurringpayments-grid",
+                                UrlRead = new DataUrl("List", "RecurringPayment", null),
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.ID").Text,
+                                        Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.CustomerId))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.Customer").Text,
+                                        Width = "200",
+                                        Render = new RenderCustom("renderColumnCustomerInfo")
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.CycleLength))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.CycleLength").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.CyclePeriodStr))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.CyclePeriod").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.IsActive))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.IsActive").Text,
+                                        Width = "200",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.StartDate))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.StartDate").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.NextPaymentDate))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.NextPaymentDate").Text,
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.TotalCycles))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.TotalCycles").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.CyclesRemaining))
+                                    {
+                                        Title = T("Admin.RecurringPayments.Fields.CyclesRemaining").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    }
+                                }
+                            })
+
+                            <script asp-location="Footer">
+                                function renderColumnCustomerInfo(data, type, row, meta) {
+                                    var textRenderer = $.fn.dataTable.render.text().display;
+                                    return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerEmail) + '</a>';
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

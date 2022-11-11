@@ -1,0 +1,53 @@
+@model GdprSettingsModel
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "consent-grid",
+        UrlRead = new DataUrl("GdprConsentList", "Setting", null),
+        Length = Model.GdprConsentSearchModel.PageSize,
+        LengthMenu = Model.GdprConsentSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(GdprConsentModel.Message))
+            {
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.Message").Text
+            },
+            new ColumnProperty(nameof(GdprConsentModel.IsRequired))
+            {
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.IsRequired").Text,
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(GdprConsentModel.DisplayDuringRegistration))
+            {
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration").Text,
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(GdprConsentModel.DisplayOnCustomerInfoPage))
+            {
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage").Text,
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(GdprConsentModel.DisplayOrder))
+            {
+                Title = T("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder").Text,
+                ClassName = NopColumnClassDefaults.CenterAll
+            },
+            new ColumnProperty(nameof(GdprConsentModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/Setting/EditGdprConsent/"))
+            }
+        }
+    })
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewConsent" name="btnAddNewConsent" onclick="javascript:setLocation('@(Url.Action("CreateGdprConsent", "Setting"))'); return false;" class="btn btn-primary">
+        @T("Admin.Configuration.Settings.Gdpr.Consent.AddNew")
+    </button>
+</div>

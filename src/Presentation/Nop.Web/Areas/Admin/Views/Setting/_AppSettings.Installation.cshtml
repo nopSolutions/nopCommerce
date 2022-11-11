@@ -1,0 +1,31 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="InstallationConfigModel.DisableSampleData" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="InstallationConfigModel.DisableSampleData" />
+            <span asp-validation-for="InstallationConfigModel.DisableSampleData"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="InstallationConfigModel.DisabledPlugins" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="InstallationConfigModel.DisabledPlugins" />
+            <span asp-validation-for="InstallationConfigModel.DisabledPlugins"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="InstallationConfigModel.InstallRegionalResources" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="InstallationConfigModel.InstallRegionalResources" />
+            <span asp-validation-for="InstallationConfigModel.InstallRegionalResources"></span>
+        </div>
+    </div>
+</div>

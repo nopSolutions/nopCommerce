@@ -1,0 +1,28 @@
+﻿@model IList<ProductTagModel>
+
+@using Nop.Core.Domain.Catalog
+
+@if (Model.Count > 0)
+{
+    <div class="product-tags-box">
+        <div class="title">
+            <strong>@T("Products.Tags")</strong>
+        </div>
+        <div class="product-tags-list">
+            <ul>
+                @for (var i = 0; i < Model.Count; i++)
+                {
+                    <li class="tag">
+                        <a href="@(Url.RouteUrl<ProductTag>(new { SeName = Model[i].SeName }))" class="producttag">
+                            @Model[i].Name
+                        </a> <span>@T("Products.Tags.Count", Model[i].ProductCount)</span>
+                    </li>
+                    if (i != Model.Count - 1)
+                    {
+                        <li class="separator">,</li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}

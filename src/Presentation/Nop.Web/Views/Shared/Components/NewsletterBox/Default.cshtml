@@ -1,0 +1,87 @@
+﻿@model NewsletterBoxModel
+<div class="newsletter">
+    <div class="title">
+        <strong>@T("Newsletter.Title")</strong>
+    </div>
+    <div class="newsletter-subscribe" id="newsletter-subscribe-block">
+        <div class="newsletter-email">
+            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") aria-label="@T("Newsletter.Subscribe")" />
+
+            <button type="button" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button">@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")</button>
+
+            @if (Model.AllowToUnsubscribe)
+            {
+                <div class="options">
+                    <span class="subscribe">
+                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
+                        <label for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
+                    </span>
+                    <span class="unsubscribe">
+                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
+                        <label for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
+                    </span>
+                </div>
+            }
+        </div>
+        <div class="newsletter-validation">
+            <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+            <span asp-validation-for="NewsletterEmail"></span>
+        </div>
+    </div>
+    <div class="newsletter-result" id="newsletter-result-block"></div>
+    <script asp-location="Footer">
+        function newsletter_subscribe(subscribe) {
+            var subscribeProgress = $("#subscribe-loading-progress");
+            subscribeProgress.show();
+            var postData = {
+                subscribe: subscribe,
+                email: $("#newsletter-email").val()
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    $("#newsletter-result-block").html(data.Result);
+                    if (data.Success) {
+                        $('#newsletter-subscribe-block').hide();
+                        $('#newsletter-result-block').show();
+                    } else {
+                        $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to subscribe.');
+                },
+                complete: function (jqXHR, textStatus) {
+                    subscribeProgress.hide();
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#newsletter-subscribe-button').on('click', function () {
+                @if (Model.AllowToUnsubscribe)
+                {
+                    <text>if ($('#newsletter_subscribe').is(':checked')) {
+                    newsletter_subscribe('true');
+                } else {
+                    newsletter_subscribe('false');
+                }</text>
+                }
+                else
+                {
+                    <text>newsletter_subscribe('true');</text>
+                }
+            });
+            $("#newsletter-email").on("keydown", function (event) {
+                if (event.keyCode == 13) {
+                    $("#newsletter-subscribe-button").trigger("click");
+                    return false;
+                }
+            });
+        });
+    </script>
+</div>

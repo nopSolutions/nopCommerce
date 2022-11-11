@@ -1,0 +1,32 @@
+@model ProductAvailabilityRangeModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Dates and ranges");
+}
+
+<form asp-controller="Shipping" asp-action="CreateProductAvailabilityRange" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="DatesAndRanges">@T("Admin.Configuration.Shipping.ProductAvailabilityRanges.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)
+</form>

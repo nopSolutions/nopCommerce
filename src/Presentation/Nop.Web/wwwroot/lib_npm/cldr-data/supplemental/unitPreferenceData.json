@@ -1,0 +1,289 @@
+{
+  "supplemental": {
+    "version": {
+      "_unicodeVersion": "12.1.0",
+      "_cldrVersion": "36"
+    },
+    "unitPreferenceData": {
+      "unitPreferences": {
+        "area": {
+          "land-agricult": {
+            "001": "hectare",
+            "GB": "acre",
+            "US": "acre"
+          },
+          "land-commercl": {
+            "001": "hectare",
+            "GB": "acre",
+            "US": "acre"
+          },
+          "land-residntl": {
+            "001": "hectare",
+            "GB": "acre",
+            "US": "acre"
+          }
+        },
+        "concentr": {
+          "blood-glucose": {
+            "001": "milligram-per-deciliter",
+            "AG": "millimole-per-liter",
+            "AI": "millimole-per-liter",
+            "AO": "millimole-per-liter",
+            "AU": "millimole-per-liter",
+            "BA": "millimole-per-liter",
+            "BG": "millimole-per-liter",
+            "BH": "millimole-per-liter",
+            "BM": "millimole-per-liter",
+            "BN": "millimole-per-liter",
+            "BW": "millimole-per-liter",
+            "BY": "millimole-per-liter",
+            "CA": "millimole-per-liter",
+            "CH": "millimole-per-liter",
+            "CM": "millimole-per-liter",
+            "CN": "millimole-per-liter",
+            "CZ": "millimole-per-liter",
+            "DK": "millimole-per-liter",
+            "DM": "millimole-per-liter",
+            "EE": "millimole-per-liter",
+            "FI": "millimole-per-liter",
+            "FJ": "millimole-per-liter",
+            "GB": "millimole-per-liter",
+            "GD": "millimole-per-liter",
+            "HK": "millimole-per-liter",
+            "HR": "millimole-per-liter",
+            "HU": "millimole-per-liter",
+            "IE": "millimole-per-liter",
+            "IM": "millimole-per-liter",
+            "IS": "millimole-per-liter",
+            "KE": "millimole-per-liter",
+            "KN": "millimole-per-liter",
+            "KW": "millimole-per-liter",
+            "KZ": "millimole-per-liter",
+            "LC": "millimole-per-liter",
+            "LI": "millimole-per-liter",
+            "LT": "millimole-per-liter",
+            "LU": "millimole-per-liter",
+            "LV": "millimole-per-liter",
+            "ME": "millimole-per-liter",
+            "MG": "millimole-per-liter",
+            "MK": "millimole-per-liter",
+            "MO": "millimole-per-liter",
+            "MS": "millimole-per-liter",
+            "MT": "millimole-per-liter",
+            "MU": "millimole-per-liter",
+            "MY": "millimole-per-liter",
+            "MZ": "millimole-per-liter",
+            "NA": "millimole-per-liter",
+            "NL": "millimole-per-liter",
+            "NO": "millimole-per-liter",
+            "NZ": "millimole-per-liter",
+            "OM": "millimole-per-liter",
+            "PG": "millimole-per-liter",
+            "RS": "millimole-per-liter",
+            "RU": "millimole-per-liter",
+            "SE": "millimole-per-liter",
+            "SG": "millimole-per-liter",
+            "SI": "millimole-per-liter",
+            "SK": "millimole-per-liter",
+            "TC": "millimole-per-liter",
+            "TO": "millimole-per-liter",
+            "UA": "millimole-per-liter",
+            "UG": "millimole-per-liter",
+            "VC": "millimole-per-liter",
+            "VG": "millimole-per-liter",
+            "VN": "millimole-per-liter",
+            "VU": "millimole-per-liter",
+            "ZA": "millimole-per-liter"
+          }
+        },
+        "consumption": {
+          "vehicle-fuel": {
+            "001": "liter-per-100kilometers",
+            "BR": "liter-per-kilometer",
+            "IT": "liter-per-kilometer",
+            "JP": "liter-per-kilometer",
+            "KR": "liter-per-kilometer",
+            "MX": "liter-per-kilometer",
+            "MY": "liter-per-kilometer",
+            "TH": "liter-per-kilometer",
+            "TR": "liter-per-kilometer",
+            "CA-alt-informal": "mile-per-gallon-imperial",
+            "GB-alt-informal": "mile-per-gallon-imperial",
+            "NL-alt-informal": "liter-per-kilometer",
+            "US": "mile-per-gallon"
+          }
+        },
+        "duration": {
+          "music-track": {
+            "001": "minute second"
+          },
+          "person-age": {
+            "001": "year-person month-person"
+          },
+          "tv-program": {
+            "001": "minute second"
+          }
+        },
+        "energy": {
+          "food": {
+            "001": "foodcalorie"
+          },
+          "person-usage": {
+            "001": "kilocalorie"
+          }
+        },
+        "length": {
+          "person": {
+            "001": "centimeter",
+            "AT": "meter centimeter",
+            "BE": "meter centimeter",
+            "DZ": "meter centimeter",
+            "EG": "meter centimeter",
+            "ES": "meter centimeter",
+            "FR": "meter centimeter",
+            "HK": "meter centimeter",
+            "ID": "meter centimeter",
+            "IL": "meter centimeter",
+            "IT": "meter centimeter",
+            "JO": "meter centimeter",
+            "MY": "meter centimeter",
+            "SA": "meter centimeter",
+            "SE": "meter centimeter",
+            "TR": "meter centimeter",
+            "VN": "meter centimeter",
+            "BR-alt-informal": "meter centimeter",
+            "CN-alt-informal": "meter centimeter",
+            "DE-alt-informal": "meter centimeter",
+            "DK-alt-informal": "meter centimeter",
+            "MX-alt-informal": "meter centimeter",
+            "NL-alt-informal": "meter centimeter",
+            "NO-alt-informal": "meter centimeter",
+            "PL-alt-informal": "meter centimeter",
+            "PT-alt-informal": "meter centimeter",
+            "RU-alt-informal": "meter centimeter",
+            "CA-alt-informal": "foot inch",
+            "GB-alt-informal": "foot inch",
+            "IN-alt-informal": "foot inch",
+            "US-alt-informal": "foot inch",
+            "US": "inch"
+          },
+          "small": {
+            "001": "centimeter",
+            "CA-alt-informal": "inch",
+            "GB-alt-informal": "inch",
+            "IN-alt-informal": "inch",
+            "US": "inch"
+          },
+          "rainfall": {
+            "001": "millimeter",
+            "BR": "centimeter",
+            "US": "inch"
+          },
+          "road": {
+            "001": "kilometer",
+            "GB": "mile",
+            "US": "mile",
+            "SE-alt-informal": "mile-scandinavian"
+          },
+          "small": {
+            "001": "meter",
+            "GB": "yard",
+            "US": "foot"
+          },
+          "snowfall": {
+            "001": "centimeter",
+            "US": "inch"
+          },
+          "vehicle": {
+            "001": "meter",
+            "GB": "foot inch",
+            "US": "foot inch",
+            "MX": "meter centimeter"
+          },
+          "visiblty": {
+            "001": "kilometer",
+            "DE": "meter",
+            "NL": "meter",
+            "GB": "mile",
+            "US": "mile"
+          },
+          "small": {
+            "001": "meter",
+            "GB": "foot",
+            "US": "foot"
+          }
+        },
+        "mass": {
+          "person": {
+            "001": "kilogram",
+            "GB": "stone pound",
+            "US": "pound"
+          },
+          "small": {
+            "001": "gram",
+            "DZ": "kilogram gram",
+            "EG": "kilogram gram",
+            "ES": "kilogram gram",
+            "JO": "kilogram gram",
+            "SA": "kilogram gram",
+            "GB": "pound ounce",
+            "HK": "pound ounce",
+            "US": "pound ounce"
+          }
+        },
+        "pressure": {
+          "baromtrc": {
+            "001": "hectopascal",
+            "BR": "millibar",
+            "EG": "millibar",
+            "GB": "millibar",
+            "IL": "millibar",
+            "TH": "millibar",
+            "IN": "inch-hg",
+            "US": "inch-hg",
+            "MX": "millimeter-of-mercury",
+            "RU": "millimeter-of-mercury"
+          }
+        },
+        "speed": {
+          "road-travel": {
+            "001": "kilometer-per-hour",
+            "GB": "mile-per-hour",
+            "US": "mile-per-hour"
+          },
+          "wind": {
+            "001": "kilometer-per-hour",
+            "FI": "meter-per-second",
+            "KR": "meter-per-second",
+            "NO": "meter-per-second",
+            "PL": "meter-per-second",
+            "RU": "meter-per-second",
+            "SE": "meter-per-second",
+            "US": "mile-per-hour"
+          }
+        },
+        "temperature": {
+          "person": {
+            "001": "celsius",
+            "US": "fahrenheit"
+          },
+          "weather": {
+            "001": "celsius",
+            "BS": "fahrenheit",
+            "BZ": "fahrenheit",
+            "KY": "fahrenheit",
+            "PR": "fahrenheit",
+            "PW": "fahrenheit",
+            "US": "fahrenheit"
+          }
+        },
+        "volume": {
+          "vehicle-fuel": {
+            "001": "liter",
+            "US": "gallon"
+          }
+        }
+      }
+    }
+  }
+}

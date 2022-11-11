@@ -1,0 +1,288 @@
+@model BlogCommentSearchModel
+
+@inject IStoreService storeService
+@using Nop.Services.Stores
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Blog.Comments").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Blog comments");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "BlogCommentsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.ContentManagement.Blog.Comments")
+    </h1>
+    <div class="float-right">
+        <button type="button" id="approve-selected" class="btn btn-success">
+            <i class="fas fa-check-square"></i>
+            @T("Admin.ContentManagement.Blog.Comments.ApproveSelected")
+        </button>
+        <button type="button" id="disapprove-selected" class="btn btn-secondary">
+            <i class="fas fa-minus-square"></i>
+            @T("Admin.ContentManagement.Blog.Comments.DisapproveSelected")
+        </button>
+        <button type="button" id="delete-selected" class="btn btn-danger">
+            <i class="far fa-trash-alt"></i>
+            @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogCommentListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="CreatedOnFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="CreatedOnFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="CreatedOnTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="CreatedOnTo" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchApprovedId" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchApprovedId" asp-items="Model.AvailableApprovedOptions" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchText" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchText" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-comments" class="btn btn-primary btn-search">
+                                            <i class="fas fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Blog", Docs.Blog + Utm.OnAdmin)" />
+
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "comments-grid",
+                                SearchButtonId = "search-comments",
+                                UrlRead = new DataUrl("Comments", "Blog", new RouteValueDictionary { [nameof(Model.BlogPostId)] = Model.BlogPostId }),
+                                UrlDelete = new DataUrl("CommentDelete", "Blog", null),
+                                UrlUpdate = new DataUrl("CommentUpdate", "Blog", null),
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.CreatedOnFrom)),
+                                    new FilterParameter(nameof(Model.CreatedOnTo)),
+                                    new FilterParameter(nameof(Model.SearchText)),
+                                    new FilterParameter(nameof(Model.SearchApprovedId))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(BlogCommentModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox("checkbox_comments"),
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.BlogPostTitle))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost").Text,
+                                        Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", nameof(BlogCommentModel.BlogPostId)))
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.StoreName))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.StoreName").Text,
+                                        Width = "100",
+                                        Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.Customer").Text,
+                                        Width = "100",
+                                        Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(BlogCommentModel.CustomerId)))
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.Comment))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.Comment").Text,
+                                        Width = "300",
+                                        Encode = false
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.IsApproved))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved").Text,
+                                        Width = "80",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean(),
+                                        Editable = true,
+                                        EditType = EditType.Checkbox
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.CreatedOn))
+                                    {
+                                        Title = T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonsInlineEdit()
+                                    },
+                                    new ColumnProperty(nameof(BlogCommentModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Delete").Text,
+                                        Width = "100",
+                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                        ClassName = NopColumnClassDefaults.Button
+                                    }
+                                }
+                            })
+
+                            <script>
+                        $(document).ready(function() {
+                            //"delete selected" button
+                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        showAlert('deleteSelectedCommentsFailed', errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
+                                        updateTable('#comments-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+
+                            //"approve selected" button
+                            $('#approve-selected').click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("ApproveSelected", "Blog"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('approveSelectedFailed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
+                                            updateTable('#comments-grid');
+                                        }
+                                    });
+                                    return false;
+                                });
+
+                            //"disapprove selected" button
+                            $('#disapprove-selected').click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DisapproveSelected", "Blog"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('disapproveSelectedFailed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
+                                            updateTable('#comments-grid');
+                                        }
+                                    });
+                                    return false;
+                                });
+                        });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
+<nop-alert asp-alert-id="approveSelectedFailed" />
+<nop-alert asp-alert-id="disapproveSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

@@ -1,0 +1,43 @@
+@model NewsSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowNotRegisteredUsersToLeaveComments_OverrideForStore" asp-input="AllowNotRegisteredUsersToLeaveComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowNotRegisteredUsersToLeaveComments" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowNotRegisteredUsersToLeaveComments" />
+            <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewsCommentsMustBeApproved_OverrideForStore" asp-input="NewsCommentsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewsCommentsMustBeApproved" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewsCommentsMustBeApproved" />
+            <span asp-validation-for="NewsCommentsMustBeApproved"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NotifyAboutNewNewsComments_OverrideForStore" asp-input="NotifyAboutNewNewsComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NotifyAboutNewNewsComments" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NotifyAboutNewNewsComments" />
+            <span asp-validation-for="NotifyAboutNewNewsComments"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="ShowNewsCommentsPerStore" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowNewsCommentsPerStore" />
+            <span asp-validation-for="ShowNewsCommentsPerStore"></span>
+        </div>
+    </div>
+</div>

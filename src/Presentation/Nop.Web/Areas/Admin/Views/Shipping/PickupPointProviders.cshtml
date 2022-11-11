@@ -1,0 +1,94 @@
+@model PickupPointProviderSearchModel
+
+@{    
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.PickupPointProviders").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Pickup points");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Shipping.PickupPointProviders")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PickupPointProviderListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PickupPoints", Docs.PickupPoints + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "pickup-point-providers-grid",
+                        UrlRead = new DataUrl("PickupPointProviders", "Shipping", null),
+                        UrlUpdate = new DataUrl("PickupPointProviderUpdate", "Shipping", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(PickupPointProviderModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.IsActive))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+
+                    <script>
+                        function renderColumnConfigure(data, type, row, meta) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text</a>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

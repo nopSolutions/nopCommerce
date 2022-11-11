@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl> 
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>
+
+    <OutputPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web\bin\$(Configuration)</OutputPath>
+  </PropertyGroup> 
+
+  <Target Name="NopClear">
+    
+    <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->  
+    <Exec Command='dotnet "ClearPluginAssemblies.dll" "OutputPath=$(OutputPath)|PluginPath=$(PluginPath)|SaveLocalesFolders=$(SaveLocalesFolders)"' />
+  </Target> 
+      
+</Project>

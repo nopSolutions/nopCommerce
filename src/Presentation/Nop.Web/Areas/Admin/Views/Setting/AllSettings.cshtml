@@ -1,0 +1,212 @@
+﻿@model SettingSearchModel
+
+@inject IStoreService storeService
+@using Nop.Services.Stores
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.AllSettings").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("All settings");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "AllSettingsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Settings.AllSettings")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AllSettingListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+        <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AllSettingsTop, additionalData = Model })
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchSettingName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchSettingName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchSettingValue" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchSettingValue" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-settings" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "settings-grid",
+                        UrlRead = new DataUrl("AllSettings", "Setting", null),
+                        UrlUpdate = new DataUrl("SettingUpdate", "Setting", null),
+                        UrlDelete = new DataUrl("SettingDelete", "Setting", null),
+                        SearchButtonId = "search-settings",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchSettingName)),
+                            new FilterParameter(nameof(Model.SearchSettingValue))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(SettingModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.Name").Text,
+                                Width = "300",
+                                Editable = true,
+                                EditType = EditType.String
+                            },
+                            new ColumnProperty(nameof(SettingModel.Value))
+                            {
+                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.Value").Text,
+                                Width = "300",
+                                Editable = true,
+                                EditType = EditType.String
+                            },
+                            new ColumnProperty(nameof(SettingModel.Store))
+                            {
+                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(SettingModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonsInlineEdit()
+                            },
+                            new ColumnProperty(nameof(SettingModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                            }
+                        }
+                    })
+                </div>
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Admin.Common.AddNewRecord")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSetting.Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.AddSetting.Name" />
+                                <span asp-validation-for="@Model.AddSetting.Name"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSetting.Value" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.AddSetting.Value" />
+                                <span asp-validation-for="@Model.AddSetting.Value"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSetting.StoreId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.AddSetting.StoreId" asp-items="@Model.AddSetting.AvailableStores" />
+                                <span asp-validation-for="@Model.AddSetting.StoreId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="button" id="addSetting" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#addSetting').click(function () {
+                                $('#addSetting').attr('disabled', true);
+                                var postData = {
+                                    Name: $("#@Html.IdFor(model => model.AddSetting.Name)").val(),
+                                    Value: $("#@Html.IdFor(model => model.AddSetting.Value)").val(),
+                                    StoreId: $("#@Html.IdFor(model => model.AddSetting.StoreId)").val()
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Html.Raw(Url.Action("SettingAdd", "Setting", null))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data.Result) {
+                                            //reload grid
+                                            updateTable('#settings-grid');
+
+                                            //clear input value
+                                            $("#@Html.IdFor(model => model.AddSetting.Name)").val('');
+                                            $("#@Html.IdFor(model => model.AddSetting.Value)").val('');
+                                            $("#@Html.IdFor(model => model.AddSetting.StoreId)").val(0);
+                                        } else {
+                                            //display errors if returned
+                                            display_nop_error(data);
+                                        }
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#addSetting').attr('disabled', false);
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AllSettingsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>
+</section>

@@ -1,0 +1,106 @@
+@model ProductAttributeMappingModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "productattributevalues-grid",
+       UrlRead = new DataUrl("ProductAttributeValueList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeValueSearchModel.ProductAttributeMappingId)] = Model.ProductAttributeValueSearchModel.ProductAttributeMappingId }),
+       UrlDelete = new DataUrl("ProductAttributeValueDelete", "Product", null),
+       Length = Model.ProductAttributeValueSearchModel.PageSize,
+       LengthMenu = Model.ProductAttributeValueSearchModel.AvailablePageSizes,
+       ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAttributeValueModel.AttributeValueTypeName))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.AssociatedProductName))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.PriceAdjustmentStr))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.WeightAdjustmentStr))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.PictureThumbnailUrl))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture").Text,
+                    Width = "200",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderPicture()
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderProductAttributeMappingValuesColumnEdit")
+                },
+                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+   })
+    
+        <script>
+            function renderProductAttributeMappingValuesColumnEdit(data, type, row, meta) {
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")' + data + '?btnId=btnRefresh&formId=productattribute-form\', 800, 750, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+            }
+        </script>
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 750, true);return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
+        </button>
+        <button type="submit" id="btnRefresh" style="display: none"></button>
+        <script>
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    updateTable('#productattributevalues-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.SaveBeforeEdit")
+    </div>
+}

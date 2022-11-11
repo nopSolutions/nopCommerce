@@ -1,0 +1,251 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Splitter
+
+.k-splitter
+{
+    position: relative;
+    height: 300px;
+}
+
+.k-pane > .k-splitter
+{
+    border-width: 0;
+    overflow: hidden;
+}
+
+.k-splitter .k-pane
+{
+    overflow: hidden;
+}
+
+.k-splitter .k-scrollable
+{
+    overflow: auto;
+}
+
+.k-splitter .k-pane-loading
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -8px 0 0 -8px;
+}
+
+.k-ghost-splitbar,
+.k-splitbar
+{
+    position: absolute;
+    border-style: solid;
+    font-size: 0;
+    outline: 0;
+    .prohibit-selection;
+}
+
+.k-splitter .k-ghost-splitbar-horizontal,
+.k-splitter .k-splitbar-horizontal
+{
+    top: 0;
+    width: 5px;
+    border-width: 0 1px;
+    background-repeat: repeat-y;
+}
+
+.k-ghost-splitbar-vertical,
+.k-splitbar-vertical
+{
+    left: 0;
+    height: 5px;
+    border-width: 1px 0;
+    background-repeat: repeat-x;
+}
+
+.k-splitbar-draggable-horizontal
+{
+    cursor: w-resize;
+}
+
+.k-splitbar-draggable-vertical
+{
+    cursor: n-resize;
+}
+
+.k-splitbar .k-resize-handle
+{
+    display: none;
+}
+
+.k-restricted-size-horizontal,
+.k-restricted-size-vertical
+{
+    background-color: #f00;
+}
+
+.k-splitbar-horizontal
+{
+    .k-icon
+    {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+    }
+
+    .k-i-arrow-60-right {
+        margin-left:-2px
+    }
+
+     &.k-splitbar-draggable-horizontal .k-i-arrow-60-right {
+        margin-top: 13px;
+    }
+
+    .k-i-arrow-60-left
+    {
+        margin-left:-3px
+    }
+
+    &.k-splitbar-draggable-horizontal .k-i-arrow-60-left
+    {
+        margin-top: -28px;
+    }
+}
+
+.k-splitbar-vertical
+{
+    .k-i-arrow-60-up
+    {
+        margin-top: -2px;
+    }
+
+    .k-i-arrow-60-down
+    {
+        margin-top: -2px;
+    }
+
+     &.k-splitbar-draggable-vertical .k-i-arrow-60-up
+    {
+        margin-left: -17px;
+    }
+
+     &.k-splitbar-draggable-vertical .k-i-arrow-60-down
+    {
+        margin-left: 23px;
+    }
+}
+
+.k-i-arrow-60-up,
+.k-i-arrow-60-right,
+.k-i-arrow-60-down,
+.k-i-arrow-60-left {
+    cursor: pointer;
+}
+
+.k-splitbar-horizontal .k-icon
+{
+    position: absolute;
+    top: 50%;
+    width: 7px;
+    height: 20px;
+    margin-top: -10px;
+}
+
+.k-splitbar-static-horizontal
+{
+    width:1px;
+}
+
+.k-splitbar-static-vertical
+{
+    height:1px;
+}
+
+.k-splitbar-vertical .k-icon
+{
+    position: absolute;
+    left: 50%;
+}
+
+.k-splitbar-draggable-vertical .k-resize-handle,
+.k-splitbar-draggable-horizontal .k-resize-handle
+{
+    display: inline-block;
+    border-radius: 1px;
+}
+
+.k-splitbar-draggable-horizontal .k-resize-handle
+{
+    width: 3px;
+    height: 16px;
+    margin-left: 1px;
+}
+
+.k-splitbar-draggable-vertical .k-resize-handle
+{
+    width: 16px;
+    height: 3px;
+    margin-top: 1px;
+}
+
+.k-splitbar {
+    .k-i-arrow-60-up,
+    .k-i-arrow-60-right,
+    .k-i-arrow-60-down,
+    .k-i-arrow-60-left {
+        font-size: 10px;
+    }
+
+}
+
+.k-splitter-resizing
+{
+    overflow: hidden;
+}
+
+.k-rtl
+{
+    .k-splitbar-horizontal
+    {
+        .k-resize-handle
+        {
+            margin-right: 1px;
+        }
+
+        .k-i-arrow-60-right {
+            margin-top: 13px;
+            margin-right: -3px
+        }
+
+        .k-i-arrow-60-left
+        {
+            margin-top: -28px;
+            margin-right: -2px
+        }
+    }
+
+    .k-splitbar-vertical
+    {
+        .k-i-arrow-60-up
+        {
+            margin-top: -2px;
+            margin-left: -17px;
+        }
+
+        .k-i-arrow-60-down
+        {
+            margin-top: -2px;
+            margin-left: 23px;
+        }
+    }
+}

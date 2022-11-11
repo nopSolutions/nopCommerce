@@ -1,0 +1,83 @@
+﻿@using Nop.Services.Stores
+@model CustomerModel
+@inject IStoreService storeService
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" asp-items="@Model.CustomerShoppingCartSearchModel.AvailableShoppingCartTypes" />
+        </div>
+    </div>
+</div>
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "currentshoppingcart-grid",
+        UrlRead = new DataUrl("GetCartList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerShoppingCartSearchModel.CustomerId)] = Model.CustomerShoppingCartSearchModel.CustomerId }),
+        Length = Model.CustomerShoppingCartSearchModel.PageSize,
+        LengthMenu = Model.CustomerShoppingCartSearchModel.AvailablePageSizes,
+        Filters = new List<FilterParameter>
+        {
+            new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
+        },
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+            {
+                Title = T("Admin.CurrentCarts.Product").Text,
+                Width = "500",
+                Render = new RenderCustom("renderProductName")
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+            {
+                Title = T("Admin.CurrentCarts.Quantity").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
+            {
+                Title = T("Admin.CurrentCarts.UnitPrice").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Total))
+            {
+                Title = T("Admin.CurrentCarts.Total").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Store))
+            {
+                Title = T("Admin.CurrentCarts.Store").Text,
+                Width = "200",
+                Visible = (await storeService.GetAllStoresAsync()).Count > 1
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
+            {
+                Title = T("Admin.CurrentCarts.UpdatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            }
+        }
+    })
+
+    <script>
+        $(document).ready(function() {
+            $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
+                updateTable('#currentshoppingcart-grid');
+            });
+        });
+    </script>
+
+    <script>
+        function renderProductName(data, type, row, meta) {
+            var link = '@Url.Content("~/Admin/Product/Edit/")' + row.ProductId;
+            var div = "";
+
+            if (row.AttributeInfo && row.AttributeInfo.length > 0)
+                div = "<div>" + row.AttributeInfo + "</div>";
+
+            return '<a href="' + link + '">' + data + '</a>'+div;
+        }
+    </script>
+</div>

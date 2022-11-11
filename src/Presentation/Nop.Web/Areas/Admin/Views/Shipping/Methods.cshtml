@@ -1,0 +1,76 @@
+@model ShippingMethodSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Methods").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Shipping providers");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Shipping.Methods")
+        <small>
+            <i class="fas fa-arrow-circle-left"></i>
+            <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
+        </small>
+    </h1>
+    <div class="float-right">
+        <a asp-action="CreateMethod" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingMethodListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <p>
+                        @T("Admin.Configuration.Shipping.Methods.Description")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingManagement", Docs.ShippingManagement + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                    </p>
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "shippingmethod-grid",
+                        UrlRead = new DataUrl("Methods", "Shipping", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ShippingMethodModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Name").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.Description))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Description").Text,
+                                Width = "400"
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

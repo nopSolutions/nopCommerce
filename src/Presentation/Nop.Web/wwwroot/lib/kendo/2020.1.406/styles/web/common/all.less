@@ -1,0 +1,84 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@import "mixins.less";
+@import "flex.less";
+@import "flex-containers.less";
+@import "base.less";
+@import "button.less";
+@import "responsivepanel.less";
+@import "forms.less";
+@import "window.less";
+@import "tabstrip.less";
+@import "panelbar.less";
+@import "pager.less";
+@import "menu.less";
+@import "grid.less";
+@import "treelist.less";
+@import "gantt.less";
+@import "pivot.less";
+@import "calendar.less";
+@import "treeview.less";
+@import "inputs.less";
+@import "colorpicker.less";
+@import "editor.less";
+@import "notification.less";
+@import "progressbar.less";
+@import "slider.less";
+@import "scheduler.less";
+@import "tooltip.less";
+@import "toolbar.less";
+@import "splitter.less";
+@import "upload.less";
+@import "mediaplayer.less";
+@import "imagebrowser.less";
+@import "dataviz.less";
+@import "adaptive/_layout.less";
+@import "../../common/transitions.less";
+@import "virtuallist.less";
+@import "font-icons.less";
+@import "spreadsheet.less";
+@import "dialog.less";
+@import "../Default/card/_layout.less";
+@import "../Default/chat/_layout.less";
+@import "../Default/calendar/_layout.less";
+@import "../Default/multiviewcalendar/_layout.less";
+@import "../Default/pdf-viewer/_layout.less";
+@import "../Default/scrollview/_layout.less";
+@import "../Default/switch/_layout.less";
+@import "../Default/filter/_layout.less";
+@import "../Default/drawer/_layout.less";
+@import "../Default/rating/_layout.less";
+@import "../Default/timeline/_layout.less";
+@import "../Default/breadcrumb/_layout.less";
+@import "../Default/listgroup/_layout.less";
+@import "../Default/badge/_layout.less";
+@import "../Default/checkbox/_layout.less";
+@import "../Default/radio/_layout.less";
+@import "../Default/filemanager/_layout.less";
+
+
+// Default fonts for PDF export
+@import "../fonts/DejaVu/dejavu.less";
+
+.kendo-pdf-hide-pseudo-elements {
+    &:before, &:after { display: none !important; }
+}
+
+.k-pdf-export {
+    sub, sup {
+        display: inline-block;
+    }
+}

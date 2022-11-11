@@ -1,0 +1,237 @@
+﻿@model Nop.Web.Models.Boards.SearchModel
+@using Nop.Core.Domain.Forums
+@using Nop.Services.Localization
+@inject ILocalizationService localizationService
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("Forum.PageTitle.Search").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-search-page");
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+        toggleAdvancedSearch();
+        $('#advs').on('click', function () {
+            toggleAdvancedSearch();
+        });
+    });
+    function toggleAdvancedSearch() {
+        if ($('#advs').is(':checked')) {
+            $('#advanced-search').show();
+        }
+        else {
+            $('#advanced-search').hide();
+        }
+    }
+</script>
+@await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent))
+<div class="page forum-search-page">
+    <div class="page-title">
+        <h1>@T("Forum.Search")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform, additionalData = Model })
+        <div class="search-input">
+            <form asp-route="Search" method="get">
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="basic-search">
+                            <div class="inputs">
+                                <label>@T("Forum.Search.SearchKeyword")</label>
+                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
+                            </div>
+                            <div class="inputs reversed">
+                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="advs" name="advs" type="checkbox" value="true">
+                                <label for="advs">@T("Forum.Search.AdvancedSearch")</label>
+                            </div>
+                        </div>
+                        <div class="advanced-search" id="advanced-search" style="display: none;">
+                            <div class="inputs">
+                                <label>@T("Forum.Search.SearchInForum")</label>
+                                <select name="forumId" id="forumId" asp-items="@(new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))"></select>
+                            </div>
+                            <div class="inputs">
+                                <label>@T("Forum.Search.SearchWithin")</label>
+                                <select name="within" id="within" asp-items="@(new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected))"></select>
+                            </div>
+                            <div class="inputs">
+                                <label>@T("Forum.Search.LimitResultsToPrevious")</label>
+                                <select name="limitDays" id="limitDays" asp-items="@(new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="button-1 forum-search-button">@T("Forum.SearchButton")</button>
+                </div>
+            </form>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform, additionalData = Model })
+        <div class="search-error">
+            @Model.Error
+        </div>
+        <div class="search-results">
+            @{
+                var searchterms = Model.SearchTerms;
+                string advs = null;
+                string within = null;
+                string limitDays = null;
+                string forumId = null;
+
+                if (Model.ShowAdvancedSearch)
+                {
+                    advs = "true";
+                    within = Model.WithinSelected.ToString();
+                    limitDays = Model.LimitDaysSelected.ToString();
+                    forumId = Model.ForumIdSelected.ToString();
+                }
+
+                var pager = await Html.PagerAsync(new PagerModel(localizationService)
+                {
+                    PageSize = Model.TopicPageSize,
+                    TotalRecords = Model.TopicTotalRecords,
+                    PageIndex = Model.TopicPageIndex,
+                    ShowTotalSummary = false,
+                    RouteActionName = "Search",
+                    RouteValues = new ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
+                });
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults, additionalData = Model })
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager upper">
+                    @pager
+                </div>
+            }
+            @if (Model.NoResultsVisisble)
+            {
+                <div class="no-result">
+                    @T("Forum.SearchNoResultsText")
+                </div>
+            }
+            <div class="forums-table-section topic-group">
+                @if (Model.SearchResultsVisible)
+                {
+                    <div class="table-wrapper">
+                        <table class="forum-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                                <col width="1" />
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <col width="1" />
+                                }
+                                <col width="1" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="topic-details" colspan="2">
+                                        @T("Forum.TopicTitle")
+                                    </th>
+                                    <th class="replies">
+                                        @T("Forum.Replies")
+                                    </th>
+                                    <th class="views">
+                                        @T("Forum.Views")
+                                    </th>
+                                    @if (Model.AllowPostVoting)
+                                    {
+                                        <th class="votes">
+                                            @T("Forum.Votes")
+                                        </th>
+                                    }
+                                    <th class="latest-post">
+                                        @T("Forum.LatestPost")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var topic in @Model.ForumTopics)
+                                {
+                                    var topicType = "post";
+                                    var topicText = string.Empty;
+                                    switch (topic.ForumTopicType)
+                                    {
+                                        case ForumTopicType.Normal:
+                                            topicType = "post";
+                                            break;
+                                        case ForumTopicType.Sticky:
+                                            topicType = "sticky";
+                                            topicText = $"[{T("Forum.Sticky")}]";
+                                            break;
+                                        case ForumTopicType.Announcement:
+                                            topicType = "announcement";
+                                            topicText = $"[{T("Forum.Announcement")}]";
+                                            break;
+                                        default:
+                                            topicType = "post";
+                                            break;
+                                    }
+                                    <tr>
+                                        <td class="image">
+                                            <div class="@topicType"></div>
+                                        </td>
+                                        <td class="topic-details">
+                                            <div class="topic-title">
+                                                @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
+                                                @if (!string.IsNullOrEmpty(topicText))
+                                                {
+                                                    <span class="topic-type">@topicText</span>
+                                                }
+                                            </div>
+                                            @if (topic.NumPosts > Model.PostsPageSize)
+                                            {
+                                                <div class="topic-pager">
+                                                    @await Html.ForumTopicSmallPagerAsync(topic)
+                                                </div>
+                                            }
+                                            <div class="topic-starter">
+                                                @if (topic.CustomerId > 0)
+                                                {
+                                                    <label>@T("Forum.Author"):</label>
+                                                    if (topic.AllowViewingProfiles)
+                                                    {
+                                                        @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                    }
+                                                    else
+                                                    {
+                                                        @topic.CustomerName
+                                                    }
+                                                }
+                                            </div>
+                                        </td>
+                                        <td class="replies">
+                                            @topic.NumReplies
+                                        </td>
+                                        <td class="views">
+                                            @topic.Views
+                                        </td>
+                                        @if (Model.AllowPostVoting)
+                                        {
+                                            <td class="votes">
+                                                @topic.Votes
+                                            </td>
+                                        }
+                                        <td class="latest-post">
+                                            @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager lower">
+                    @pager
+                </div>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults, additionalData = Model })
+        </div>
+    </div>
+</div>

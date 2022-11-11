@@ -1,0 +1,22 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+
+@inject INopHtmlHelper NopHtml
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Plugin.Shipping.EasyPost
+@using Nop.Plugin.Shipping.EasyPost.Domain.Batch
+@using Nop.Plugin.Shipping.EasyPost.Domain.Shipment
+@using Nop.Plugin.Shipping.EasyPost.Models.Batch
+@using Nop.Plugin.Shipping.EasyPost.Models.Configuration
+@using Nop.Plugin.Shipping.EasyPost.Models.Pickup
+@using Nop.Plugin.Shipping.EasyPost.Models.Product
+@using Nop.Plugin.Shipping.EasyPost.Models.Shipment
+@using Nop.Web.Framework
+@using Nop.Web.Framework.Extensions
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.Models
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Web.Framework.UI
+@using System.Text.Encodings.Web

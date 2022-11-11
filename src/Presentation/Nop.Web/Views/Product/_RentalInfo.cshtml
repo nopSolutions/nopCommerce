@@ -1,0 +1,86 @@
+﻿@model ProductDetailsModel
+
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
+@inject CatalogSettings catalogSettings
+@inject IUserAgentHelper userAgentHelper
+@if (Model.IsRental)
+{
+    <div class="attributes rental-attributes">
+        @{
+            var startDateControlId = $"rental_start_date_{Model.Id}";
+            var endDateControlId = $"rental_end_date_{Model.Id}";
+            var dateControlChangeHandlerFuncName = $"on_rental_datepicker_select_{Model.Id}";
+            
+            var datePickerFormat = Html.GetJQueryDateFormat();//java-script format
+            var isMobileDevice = userAgentHelper.IsMobileDevice();
+
+            <div class="attribute-item">
+                <div class="attribute-label">
+                    <label class="text-prompt">
+                        @T("Products.RentalStartDate"):
+                    </label>
+                    <span class="required">*</span>
+                </div>
+                <div class="attribute-data">
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToShortDateString() : null)" @if(isMobileDevice){<text>readonly</text>}/>
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="attribute-item">
+                <div class="attribute-label">
+                    <label class="text-prompt">
+                        @T("Products.RentalEndDate"):
+                    </label>
+                    <span class="required">*</span>
+                </div>
+                <div class="attribute-data">
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToShortDateString() : null)" @if(isMobileDevice){<text>readonly</text>}/>
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
+                        });
+                    </script>
+                </div>
+            </div>
+        }
+
+        <script asp-location="Footer">
+            function @(dateControlChangeHandlerFuncName)() {
+                @{
+                    //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
+                    var productId = Model.Id;
+                    if (catalogSettings.AjaxProcessAttributeChange)
+                    {
+                        <text>
+                        $.ajax({
+                            cache: false,
+                            url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))",
+                            data: $('#product-details-form').serialize(),
+                            type: "POST",
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.sku) {
+                                    $('#sku-@productId').text(data.sku);
+                                }
+                                if (data.mpn) {
+                                    $('#mpn-@productId').text(data.mpn);
+                                }
+                                if (data.gtin) {
+                                    $('#gtin-@productId').text(data.gtin);
+                                }
+                                if (data.price) {
+                                    $('.price-value-@productId').text(data.price);
+                                }
+                            }
+                        });
+                        </text>
+                    }
+                }
+            }
+        </script>
+    </div>
+}

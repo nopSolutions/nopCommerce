@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Deutsch" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>E-Mail des Administrators</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>E-Mail für Admin eingeben</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Administrator Passwort</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Admin-Passwort eingeben</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Das Konto '{0}' hat keine Ändern-Rechte für den Ordner '{1}'. Bitte konfigurieren Sie diese Berechtigungen.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Das Konto '{0}' hat keine Ändern-Rechte für die Datei '{1}'. Bitte konfigurieren Sie diese Berechtigungen.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Passwort bestätigen</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Passwort-Bestätigung ist notwendig</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Verbindungszeichenfolge</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Eine SQL-Verbindungszeichenfolge (= Connection string) ist erforderlich</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Falsches Format der SQL-Verbindungszeichenfolge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Land</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Wählen Sie Ihr Land ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Datenbank anlegen, wenn diese noch nicht existiert</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Beispieldaten erzeugen</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Eigene Sortierfolge festlegen</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Datenbank</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Beim Erstellen der Datenbank ist ein Fehler aufgetreten: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Datenbankinformation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Datenbankname</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Die Datenbank existiert nicht oder Sie haben keine Berechtigungen, sich mit ihr zu verbinden</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Wählen Sie den Daten-Provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Wenn Sie Informationen zur Nutzung von nopCommerce benötigen, besuchen Sie uns unter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>der Doku-Bereich auf nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Beispiel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Installieren</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installieren von nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Integrierte Windows-Authentifizierung verwenden</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Die Passwörter stimmen nicht überein</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Geben Sie die native Verbindungszeichenfolge ein (erweitert)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Installation erneut starten</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klicken Sie hier, um den Installationsprozess erneut zu starten (löscht alle zwischengespeicherten Werte)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Starte neu...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Servername</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Servername ist erforderlich</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Installation schlug fehl: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL-Passwort</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL-Password ist notwendig</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL-Benutzername</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL-Benutzername ist notwendig</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Shop Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce-Installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Um diesen Assistenten abzuschließen, müssen Sie einige Informationen über Ihren Datenbankserver ("Verbindungszeichenfolge") kennen. Bitte wenden Sie sich gegebenenfalls an Ihren ISP. Wenn Sie auf einem lokalen Rechner oder Server installieren, benötigen Sie möglicherweise Informationen von Ihrem Systemadministrator.</Value>
+  </LocaleResource>
+</Language>

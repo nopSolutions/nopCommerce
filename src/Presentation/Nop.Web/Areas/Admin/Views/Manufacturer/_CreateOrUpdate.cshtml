@@ -1,0 +1,49 @@
+﻿@model ManufacturerModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+@{
+	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+	const string hideDisplayBlockAttributeName = "ManufacturerPage.HideDisplayBlock";
+	var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);
+
+	const string hideMappingsBlockAttributeName = "ManufacturerPage.HideMappingsBlock";
+	var hideMappingsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMappingsBlockAttributeName, defaultValue: true);
+
+	const string hideSeoBlockAttributeName = "ManufacturerPage.HideSEOBlock";
+	var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+
+	const string hideProductsBlockAttributeName = "ManufacturerPage.HideProductsBlock";
+	var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "manufacturer-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="manufacturer-cards">
+                <nop-card asp-name="manufacturer-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="manufacturer-display" asp-icon="fas fa-tv" asp-title="@T("Admin.Catalog.Manufacturers.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
+                <nop-card asp-name="manufacturer-mappings" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Catalog.Manufacturers.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-card>
+                <nop-card asp-name="manufacturer-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
+                <nop-card asp-name="manufacturer-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

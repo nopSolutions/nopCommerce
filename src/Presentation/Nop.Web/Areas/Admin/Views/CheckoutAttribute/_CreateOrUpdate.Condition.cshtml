@@ -1,0 +1,111 @@
+﻿@using Nop.Core.Domain.Catalog
+@model CheckoutAttributeModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ConditionModel.EnableCondition" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ConditionModel.EnableCondition" />
+                <span asp-validation-for="ConditionModel.EnableCondition"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ConditionModel.EnableCondition">
+            @if (Model.ConditionModel.ConditionAttributes.Count > 0)
+            {
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ConditionModel.SelectedAttributeId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))" />
+
+                        <script>
+                            $(document).ready(function() {
+                                $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)")
+                                    .change(toggleConditionAttributes);
+
+                                toggleConditionAttributes();
+                            });
+
+                            function toggleConditionAttributes() {
+                                var selectedCheckoutAttributeId =
+                                    $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
+                                $('[id^="pnl_attribute_values_"]').hideElement();
+                                $('#pnl_attribute_values_' + selectedCheckoutAttributeId).showElement();
+                            }
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">&nbsp;</div>
+                    <div class="col-md-9">
+                        @for (var i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
+                        {
+                            <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Id" />
+                            <div id="@($"pnl_attribute_values_{Model.ConditionModel.ConditionAttributes[i].Id}")">
+                                @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
+                                {
+                                    case AttributeControlType.DropdownList:
+                                        <nop-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values" />
+                                        break;
+                                    case AttributeControlType.RadioList:
+                                    case AttributeControlType.ColorSquares:
+                                    case AttributeControlType.ImageSquares:
+                                        foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
+                                        {
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected" >
+                                                    @value.Text
+                                                </label>
+                                            </div>
+                                        }
+                                        break;
+                                    case AttributeControlType.Checkboxes:
+                                        for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
+                                        {
+                                            
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
+                                                    <input class="form-check-input" type="checkbox" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                    @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                </label>
+                                            </div>
+                                        }
+                                        break;
+                                    case AttributeControlType.ReadonlyCheckboxes:
+                                    case AttributeControlType.TextBox:
+                                    case AttributeControlType.MultilineTextbox:
+                                    case AttributeControlType.Datepicker:
+                                    case AttributeControlType.FileUpload:
+                                    default:
+                                        //not supported as conditions
+                                        break;
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 mt-3">
+                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
+                    </div>
+                </div>
+            }
+        </nop-nested-setting>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
+    </div>
+}

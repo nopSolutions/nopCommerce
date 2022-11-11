@@ -1,0 +1,182 @@
+@model TopicSearchModel
+@inject Nop.Services.Topics.ITopicService topicService
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.TopicList;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Topics");
+
+    string editQueryString = string.Empty;
+    var showTour = ViewBag.ShowTour ?? false;
+    if (showTour)
+    {
+        editQueryString = "?showtour=true";
+    }
+
+    const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.ContentManagement.Topics")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TopicListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchKeywords" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchKeywords" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-topics" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body" id="topics-area">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TopicsPages", Docs.TopicsPages + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "topics-grid",
+                        RowIdBasedOnField = nameof(TopicModel.TopicName),
+                        UrlRead = new DataUrl("List", "Topic", null),
+                        SearchButtonId = "search-topics",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchKeywords)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(TopicModel.TopicName))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.TopicName").Text
+                            },
+                            new ColumnProperty(nameof(TopicModel.Published))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.Published").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.DisplayOrder))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(TopicModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button + " column-edit",
+                                Render = new RenderCustom("renderColumnEdit")
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+    }
+</script>

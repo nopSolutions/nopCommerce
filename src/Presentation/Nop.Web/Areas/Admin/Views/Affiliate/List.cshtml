@@ -1,0 +1,165 @@
+@model AffiliateSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Affiliates").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Affiliates");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "AffiliatePage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Affiliates")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AffiliateListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchFirstName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchFirstName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchLastName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchLastName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchFriendlyUrlName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchFriendlyUrlName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="LoadOnlyWithOrders" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="LoadOnlyWithOrders" />
+                                    </div>
+                                </div>
+                                <nop-nested-setting asp-for="LoadOnlyWithOrders">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="OrdersCreatedFromUtc" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="OrdersCreatedFromUtc" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="OrdersCreatedToUtc" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="OrdersCreatedToUtc" />
+                                        </div>
+                                    </div>
+                                </nop-nested-setting>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-affiliates" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    <p>
+                        @T("Admin.Affiliates.Description")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Affiliates", Docs.Affiliates + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                    </p>
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "affiliates-grid",
+                        UrlRead = new DataUrl("List", "Affiliate", null),
+                        SearchButtonId = "search-affiliates",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchFirstName)),
+                            new FilterParameter(nameof(Model.SearchLastName)),
+                            new FilterParameter(nameof(Model.SearchFriendlyUrlName)),
+                            new FilterParameter(nameof(Model.LoadOnlyWithOrders), typeof(bool)),
+                            new FilterParameter(nameof(Model.OrdersCreatedFromUtc)),
+                            new FilterParameter(nameof(Model.OrdersCreatedToUtc))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.FirstName)}")
+                            {
+                                Title = T("Admin.Address.Fields.FirstName").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty($"{nameof(AffiliateModel.Address)}.{nameof(AddressModel.LastName)}")
+                            {
+                                Title = T("Admin.Address.Fields.LastName").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(AffiliateModel.Active))
+                            {
+                                Title = T("Admin.Affiliates.Fields.Active").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(AffiliateModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

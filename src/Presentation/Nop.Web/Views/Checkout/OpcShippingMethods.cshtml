@@ -1,0 +1,64 @@
+﻿@model CheckoutShippingMethodModel
+
+<div class="checkout-data">
+    @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
+    {
+        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+        <script>
+            $(document).ready(function () {
+                $(document).unbind('checkout_toggle_pickup_in_store');
+                $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                    if (e.checked)
+                        $('#shipping-methods-form').hide();
+                    else
+                        $('#shipping-methods-form').show();
+                });
+            });
+        </script>
+    }
+    @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
+    {
+        <div class="section shipping-method" id="shipping-methods-form">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
+            @if (Model.Warnings.Count == 0)
+            {
+                <ul class="method-list">
+                    @for (var i = 0; i < Model.ShippingMethods.Count; i++)
+                    {
+                        var shippingMethod = Model.ShippingMethods[i];
+                        <li>
+                            <div class="method-name">
+                                <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
+                                <label for="shippingoption_@(i)">@T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)</label>
+                            </div>
+                            @if (!string.IsNullOrEmpty(shippingMethod.Description))
+                            {
+                                <div class="method-description">
+                                    @Html.Raw(shippingMethod.Description)
+                                </div>
+                            }
+                        </li>
+                    }
+                </ul>
+                if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                {
+                    <div class="multiple-locations">
+                        @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom, additionalData = Model })
+        </div>
+    }
+</div>

@@ -1,0 +1,21 @@
+﻿@model BoardsIndexModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("Forum.PageTitle.Default").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forums-main-page");
+}
+<div class="page forums-main-page">
+    @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "ForumWelcomeMessage" })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsMainAfterHeader, additionalData = Model })
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        await Html.RenderPartialAsync("_ForumGroup", forumGroup);
+    }
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsMainBeforeActivediscussions, additionalData = Model })
+    @await Component.InvokeAsync(typeof(ForumActiveDiscussionsSmallViewComponent))
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsMainAfterActivediscussions, additionalData = Model })
+</div>

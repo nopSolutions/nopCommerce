@@ -1,0 +1,257 @@
+﻿@model ShoppingCartSearchModel
+
+@using Nop.Services.Stores
+@inject IStoreService storeService
+
+@{
+    var stores = await storeService.GetAllStoresAsync();
+
+    //page title
+    ViewBag.PageTitle = T("Admin.CurrentCarts.CartsAndWishlists").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Current shopping carts and wishlists");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "CurrentCartsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.CurrentCarts.CartsAndWishlists")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="StartDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="EndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="EndDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ProductId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
+                                        <span id="search-product-friendly-name"></span>
+                                        <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                        <input asp-for="ProductId" autocomplete="off" style="display: none;" />
+                                        <script>
+                                        $(document).ready(function() {
+                                            $('#search-product-name').autocomplete({
+                                                delay: 500,
+                                                minLength: 3,
+                                                source: '@Url.Action("SearchAutoComplete", "SearchComplete")',
+                                                select: function(event, ui) {
+                                                    $('#@Html.IdFor(model => model.ProductId)').val(ui.item.productid);
+                                                    $('#search-product-friendly-name').text(ui.item.label);
+
+                                                    $('#search-product-clear').show();
+                                                    return false;
+                                                }
+                                            });
+
+                                            //remove button
+                                            $('#search-product-clear').click(function() {
+                                                $('#@Html.IdFor(model => model.ProductId)').val('0');
+                                                $('#search-product-friendly-name').text('');
+                                                $('#search-product-clear').hide();
+                                                return false;
+                                            });
+                                        });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ShoppingCartType" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="ShoppingCartType" asp-items="@Model.AvailableShoppingCartTypes" />
+                                    </div>
+                                </div>
+                                <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group row" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="BillingCountryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-shopping-carts" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShoppingCartsAndWishlists", Docs.ShoppingCartsAndWishlists + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "carts-grid",
+                        UrlRead = new DataUrl("CurrentCarts", "ShoppingCart", null),
+                        SearchButtonId = "search-shopping-carts",
+                        PrimaryKeyColumn = nameof(ShoppingCartModel.CustomerId),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.ShoppingCartType)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.StoreId)),
+                            new FilterParameter(nameof(Model.BillingCountryId)),
+                            new FilterParameter(nameof(Model.ProductId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(null)
+                            {
+                                Render = new RenderChildCaret(),
+                                Width = "5",
+                                Searchable = false,
+                                ClassName =  NopColumnClassDefaults.ChildControl
+                            },
+                            new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
+                            {
+                                Title = T("Admin.CurrentCarts.Customer").Text,
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(ShoppingCartModel.CustomerId)))
+                            },
+                            new ColumnProperty(nameof(ShoppingCartModel.TotalItems))
+                            {
+                                Title = T("Admin.CurrentCarts.TotalItems").Text,
+                                Width = "150"
+                            }
+                        },
+                        ChildTable = new DataTablesModel
+                        {
+                            Name = "products-grid",
+                            UrlRead = new DataUrl("GetCartDetails", "ShoppingCart", null),
+                            UrlDelete = new DataUrl("DeleteItem", "ShoppingCart", null),
+                            IsChildTable = true,
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.CustomerId), nameof(ShoppingCartItemSearchModel.CustomerId), true),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.ShoppingCartType)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.StoreId)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.BillingCountryId)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.ProductId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+                                {
+                                    Title = T("Admin.CurrentCarts.Product").Text,
+                                    Width = "400",
+                                    Render = new RenderCustom("renderProductName")
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+                                {
+                                    Title = T("Admin.CurrentCarts.Quantity").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
+                                {
+                                    Title = T("Admin.CurrentCarts.UnitPrice").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.Total))
+                                {
+                                    Title = T("Admin.CurrentCarts.Total").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.Store))
+                                {
+                                    Title = T("Admin.CurrentCarts.Store").Text,
+                                    Width = "150",
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
+                                {
+                                    Title = T("Admin.CurrentCarts.UpdatedOn").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(ShoppingCartItemModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    ClassName =  NopColumnClassDefaults.Button
+                                }
+                            }
+                        }
+                    })
+                </div>
+                <script>
+                    function renderProductName(data, type, row, meta) {
+                        var link = '@Url.Content("~/Admin/Product/Edit/")' + row.ProductId;
+                        var div = "";
+        
+                        if (row.AttributeInfo && row.AttributeInfo.length > 0)
+                            div = "<div>" + row.AttributeInfo + "</div>";
+
+                        return '<a href="' + link + '">' + data + '</a>'+div;
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

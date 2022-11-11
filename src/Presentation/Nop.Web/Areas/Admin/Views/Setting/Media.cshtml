@@ -1,0 +1,53 @@
+@model MediaSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Media").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Media settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "MediaSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideProductBlockAttributeName = "MediaSettingsPage.HideProductBlock";
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
+
+    const string hideOtherPagesBlockAttributeName = "MediaSettingsPage.HideOtherPagesBlock";
+    var hideOtherPagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOtherPagesBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Media" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Media")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MediaSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="mediasettings-cards">
+                    <nop-card asp-name="mediasettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Media.Common", Model)</nop-card>
+                    <nop-card asp-name="mediasettings-product" asp-icon="fas fa-cube" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock" asp-advanced="true">@await Html.PartialAsync("_Media.Product", Model)</nop-card>
+                    <nop-card asp-name="mediasettings-other-pages" asp-icon="fas fa-file" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.OtherPages")" asp-hide-block-attribute-name="@hideOtherPagesBlockAttributeName" asp-hide="@hideOtherPagesBlock" asp-advanced="true">@await Html.PartialAsync("_Media.OtherPages", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MediaSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

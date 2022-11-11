@@ -1,0 +1,195 @@
+﻿@model MeasureSearchModel
+
+<div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "measuredimension-grid",
+            UrlRead = new DataUrl("Dimensions", "Measure", null),
+            UrlUpdate = new DataUrl("DimensionUpdate", "Measure", null),
+            UrlDelete = new DataUrl("DimensionDelete", "Measure", null),
+            SearchButtonId = "search-resources",
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(MeasureDimensionModel.Name))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name").Text,
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.SystemKeyword))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword").Text,
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.Ratio))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio").Text,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.IsPrimaryDimension))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.Id))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text,
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text)
+                    {
+                        OnClickFunctionName = "markAsPrimaryDimension"
+                    }
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(MeasureDimensionModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none"></button>
+
+        <script>
+            var selectedId;
+
+            function markAsPrimaryDimension(id) {
+                selectedId = id;
+                $("#btnMarkAsPrimaryDimension").click();
+            };
+
+            $(document).ready(function () {
+                $("#btnMarkAsPrimaryDimension-action-confirmation-submit-button").bind("click", function () {
+                    var postData = {
+                        id: selectedId
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            updateTable('#measuredimension-grid');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#markAsPrimaryDimensionAlert").click();
+                        }
+                    });
+                    $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
+                });
+            });
+        </script>
+
+        <div class="card card-default">
+            <div class="card-header">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.Name" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.SystemKeyword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.SystemKeyword" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.SystemKeyword"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.Ratio" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.Ratio" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.Ratio"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureDimension.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureDimension.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddMeasureDimension.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="button" id="addMeasureDimension" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#addMeasureDimension').click(function () {
+                        $('#addMeasureDimension').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val(),
+                            SystemKeyword: $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val(),
+                            Ratio: $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("DimensionAdd", "Measure", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#measuredimension-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").data("kendoNumericTextBox").value(0);
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").data("kendoNumericTextBox").value(0);
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
+                                }
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                $('#addMeasureDimension').attr('disabled', false);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+<nop-alert asp-alert-id="markAsPrimaryDimensionAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate")" />

@@ -1,0 +1,396 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Button
+.k-button {
+    margin: 0;
+    padding: @button-padding;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    background-repeat: repeat-x;
+    background-position: 0 center;
+    font: inherit;
+    line-height: @button-line-height;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    position: relative;
+
+    // No flexbox
+    .k-no-flexbox & {
+        display: inline-block;
+    }
+
+    &::-moz-focus-inner {
+        padding: 0;
+        border: 0;
+        outline: 0;
+    }
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: 0;
+    }
+
+    .k-text {
+        overflow: hidden;
+    }
+
+    .k-icon,
+    .k-image,
+    .k-sprite {
+        color: inherit;
+        align-self: center;
+        pointer-events: none;
+    }
+
+
+    // Button variants
+    &-icontext {
+        overflow: visible; // IE9
+
+        .k-icon,
+        .k-image,
+        .k-sprite {
+            margin-right: 3px;
+            margin-right: .1875em;
+            margin-left: -2px;
+            margin-left: -.125em;
+        }
+    }
+
+    // Disabled state
+    &[disabled],
+    .k-state-disabled &,
+    &.k-state-disabled {
+        cursor: default;
+        outline: 0;
+        box-shadow: none;
+        opacity: @disabled-button-opacity;
+    }
+
+}
+
+.k-ie9 .k-button {
+    display: inline-block;
+}
+
+a.k-button-expand {
+    display: block;
+}
+
+button.k-button-expand,
+input[type="submit"].k-button-expand,
+input[type="button"].k-button-expand,
+input[type="reset"].k-button-expand {
+    width: 100%;
+}
+
+// TODO improve elastic behavior
+.k-button-icon {
+    height: ~"calc(@{button-line-height}em + (2*@{button-padding-y}) + 2px)"; // proper vertical alignment for elastic behavior
+}
+.k-split-button-arrow {
+    display: inline-block; // fix height
+}
+.k-button-icon,
+.k-split-button-arrow {
+    width: ~"calc(@{button-line-height}em + (2*@{button-padding-y}) + 2px)";
+    padding: @button-padding-y calc(@button-padding-x/2);
+}
+.k-overflow-group .k-button-icon {
+    width: auto;
+}
+
+
+
+
+// Flat button and bare
+.k-button.k-flat,
+.k-button.k-bare {
+    border-color: transparent !important; // sass-lint:disable-line no-important
+    color: inherit;
+    background: none !important; // sass-lint:disable-line no-important
+    box-shadow: none !important; // sass-lint:disable-line no-important
+    transition: color .2s ease-in-out;
+
+    &:hover,
+    &.k-state-hover,
+    &:active,
+    &.k-state-active,
+    &:hover:active,
+    &:hover.k-state-active {
+        color: inherit;
+    }
+
+    &::before {
+        display: block;
+    }
+
+    &::after {
+        display: block;
+    }
+
+    &:focus,
+    &.k-state-focused {
+
+        &::after {
+            box-shadow: inset 0 0 0 2px currentColor;
+            opacity: .12;
+        }
+    }
+
+    &[disabled],
+    .k-state-disabled &,
+    &.k-state-disabled {
+        pointer-events: none;
+    }
+}
+
+
+
+
+// Thin background
+@flat-button-hover-opacity: .08;
+@flat-button-focused-opacity: null;
+@flat-button-active-opacity: .16;
+@flat-button-selected-opacity: .2;
+.k-button {
+
+    &::before {
+        .border-radius(inherit);
+        content: "";
+        background: currentColor;
+        opacity: 0;
+        display: none;
+        pointer-events: none;
+        position: absolute;
+        // left: -@button-border-width;
+        // right: -@button-border-width;
+        // top: -@button-border-width;
+        // bottom: -@button-border-width;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 0;
+        transition: opacity .2s ease-in-out;
+    }
+
+    // Hovered state
+    &:hover,
+    &.k-state-hover {
+        &::before {
+            // .opacity( @flat-button-hover-opacity );
+            opacity: @flat-button-hover-opacity;
+        }
+    }
+
+    // Focused state
+    &:focus,
+    &.k-state-focused {
+        &::before {
+            // .opacity( @flat-button-focused-opacity );
+            // opacity: @flat-button-focused-opacity;
+        }
+    }
+    &.k-no-focus:not(:hover),
+    &.k-no-focus:not(.k-state-hover) {
+        &::before {
+            // .opacity( 0 );
+            opacity: 0;
+        }
+    }
+
+    // Pressed state
+    &:active,
+    &.k-state-active {
+        &::before {
+            // opacity( @flat-button-active-opacity );
+            opacity: @flat-button-active-opacity;
+        }
+    }
+
+    // Selected state
+    &.k-state-selected {
+        &::before {
+            // .opacity( @flat-button-selected-opacity );
+            opacity: @flat-button-selected-opacity;
+        }
+    }
+}
+
+
+
+
+// Focus ring
+.k-button {
+
+    &::after {
+        .border-radius(inherit);
+        content: "";
+        opacity: 0;
+        display: none;
+        pointer-events: none;
+        position: absolute;
+        // left: -@button-border-width;
+        // right: -@button-border-width;
+        // top: -@button-border-width;
+        // bottom: -@button-border-width;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 0;
+        transition: opacity .2s ease-in-out;
+    }
+}
+
+
+
+
+// Button group
+.k-button-group {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    list-style: none;
+    white-space: nowrap;
+    display: inline-flex;
+    flex-direction: row;
+    vertical-align: middle;
+    position: relative;
+    flex-wrap: nowrap;
+
+    .k-button {
+        // .border-radius( 0 );
+        position: relative;
+    }
+    .k-button + .k-button {
+        margin-left: -1px;
+    }
+
+    // stretched button group
+    &.k-button-group-stretched {
+
+        .k-button {
+            flex: 1 0 auto;
+        }
+    }
+
+    .k-button:active,
+    .k-button.k-state-active {
+        z-index: 2;
+    }
+    .k-button:hover,
+    .k-button.k-state-hover {
+        z-index: 3;
+    }
+    .k-button.k-state-disabled,
+    &.k-state-disabled .k-button {
+        z-index: auto;
+    }
+    .k-button:focus,
+    .k-button.k-state-focused {
+        z-index: 4;
+    }
+
+    .k-group-start,
+    .k-button:first-child {
+        // .border-left-radius();
+    }
+    .k-group-end,
+    .k-button:last-child {
+        // .border-right-radius();
+    }
+    .k-group-start.k-group-end,
+    .k-button:first-child:last-child {
+        // .border-radius();
+    }
+
+    > input[type="radio"],
+    > input[type="checkbox"],
+    label input[type="radio"],
+    label input[type="checkbox"] {
+        margin: 0;
+        padding: 0;
+        clip: rect(0, 0, 0, 0);
+        position: absolute;
+        pointer-events: none;
+    }
+
+}
+
+.k-overflow-container .k-overflow-tool-group {
+    display: block;
+}
+
+.k-rtl .k-button-group {
+
+    .k-button {
+        margin-left: 0;
+    }
+    .k-button + .k-button {
+        margin-right: -1px;
+    }
+
+}
+.k-no-flexbox .k-button-group {
+    display: inline-block;
+
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .k-button {
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
+
+
+
+// Action buttons
+.k-action-buttons {
+    margin: 1em 0 0;
+    padding: 6px 8px;
+    text-align: right;
+    position: relative;
+    clear: both;
+
+    .k-button {
+        min-width: 75px;
+    }
+    .k-button + .k-button {
+        margin-left: 6px;
+    }
+    .k-button.k-left {
+        float: left;
+        margin: 0 0 0 1em;
+    }
+}

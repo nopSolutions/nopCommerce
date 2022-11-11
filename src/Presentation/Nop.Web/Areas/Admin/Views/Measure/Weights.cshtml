@@ -1,0 +1,194 @@
+﻿@model MeasureSearchModel
+
+<div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "measureweight-grid",
+            UrlRead = new DataUrl("Weights", "Measure", null),
+            UrlUpdate = new DataUrl("WeightUpdate", "Measure", null),
+            UrlDelete = new DataUrl("WeightDelete", "Measure", null),
+            SearchButtonId = "search-resources",
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(MeasureWeightModel.Name))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Name").Text,
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.SystemKeyword))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword").Text,
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.Ratio))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio").Text,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.IsPrimaryWeight))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.Id))
+                {
+                    Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text,
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                    {
+                        OnClickFunctionName = "markAsPrimaryWeight"
+                    }
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(MeasureWeightModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <button type="submit" class="btn btn-default" id="btnMarkAsPrimaryWeight" style="display:none"></button>
+        <script>
+            var selectedId;
+
+            function markAsPrimaryWeight(id) {
+                selectedId = id;
+                $("#btnMarkAsPrimaryWeight").click();
+            };
+
+            $(document).ready(function () {
+                $("#btnMarkAsPrimaryWeight-action-confirmation-submit-button").bind("click", function () {
+                    var postData = {
+                        id: selectedId
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            updateTable('#measureweight-grid');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#markAsPrimaryWeightAlert").click();
+                        }
+                    });
+                    $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
+                });
+            });
+        </script>
+
+        <div class="card card-default">
+            <div class="card-header">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureWeight.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureWeight.Name" />
+                        <span asp-validation-for="@Model.AddMeasureWeight.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureWeight.SystemKeyword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureWeight.SystemKeyword" />
+                        <span asp-validation-for="@Model.AddMeasureWeight.SystemKeyword"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureWeight.Ratio" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureWeight.Ratio" />
+                        <span asp-validation-for="@Model.AddMeasureWeight.Ratio"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddMeasureWeight.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddMeasureWeight.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddMeasureWeight.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="button" id="addMeasureWeight" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#addMeasureWeight').click(function () {
+                        $('#addMeasureWeight').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddMeasureWeight.Name)").val(),
+                            SystemKeyword: $("#@Html.IdFor(model => model.AddMeasureWeight.SystemKeyword)").val(),
+                            Ratio: $("#@Html.IdFor(model => model.AddMeasureWeight.Ratio)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddMeasureWeight.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("WeightAdd", "Measure", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#measureweight-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Ratio)").data("kendoNumericTextBox").value(0);
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.DisplayOrder)").data("kendoNumericTextBox").value(0);
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
+                                }
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                $('#addMeasureWeight').attr('disabled', false);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+<nop-alert asp-alert-id="markAsPrimaryWeightAlert" asp-alert-message="@T(" Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate")" />

@@ -1,0 +1,37 @@
+@model ForumGroupModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Manage forums");
+}
+
+<form asp-controller="Forum" asp-action="EditForumGroup" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.ContentManagement.Forums.ForumGroup.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="forumgroup-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumGroupDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateForumGroup", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="forumgroup-delete" asp-action="DeleteForumGroup"/>

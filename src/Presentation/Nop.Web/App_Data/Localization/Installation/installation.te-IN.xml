@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="ఆంగ్ల" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>నిర్వాహక వినియోగదారు ఇమెయిల్</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>నిర్వాహక ఇమెయిల్‌ను నమోదు చేయండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>నిర్వాహక వినియోగదారు పాస్‌వర్డ్</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>నిర్వాహక పాస్‌వర్డ్‌ను నమోదు చేయండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{1}' ఫోల్డర్‌లో సవరించు అనుమతితో '{0}' ఖాతా మంజూరు చేయబడలేదు. దయచేసి ఈ అనుమతులను కాన్ఫిగర్ చేయండి.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{1}' ఫైల్‌లో సవరించు అనుమతితో '{0}' ఖాతా మంజూరు చేయబడలేదు. దయచేసి ఈ అనుమతులను కాన్ఫిగర్ చేయండి.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>పాస్వర్డ్ను నిర్ధారించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>పాస్వర్డ్ను నిర్ధారించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>కనెక్షన్ స్ట్రింగ్</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL కనెక్షన్ స్ట్రింగ్ అవసరం</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>తప్పు SQL కనెక్షన్ స్ట్రింగ్ ఆకృతి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>డేటాబేస్ ఉనికిలో లేకపోతే దాన్ని సృష్టించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>నమూనా డేటాను సృష్టించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>అనుకూల కలయికను పేర్కొనండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>డేటాబేస్</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>డేటాబేస్ను సృష్టించేటప్పుడు లోపం సంభవించింది: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>డేటాబేస్ సమాచారం</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>డేటాబేస్ పేరు</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>డేటాబేస్ ఉనికిలో లేదు లేదా దానికి కనెక్ట్ చేయడానికి మీకు అనుమతులు లేవు</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>డేటా ప్రొవైడర్‌ను ఎంచుకోండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>నోప్ కామర్స్ ఎలా ఉపయోగించాలో మీకు సమాచారం అవసరమైతే, సందర్శించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com లోని డాక్యుమెంటేషన్ విభాగం</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>ఉదాహరణ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>ఇన్స్టాల్</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>నోప్‌కామర్స్ ఇన్‌స్టాల్ చేస్తోంది ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>ఇంటిగ్రేటెడ్ విండోస్ ప్రామాణీకరణను ఉపయోగించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>పాస్వర్డ్స్ సరిపోలుట లేదు</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>ముడి కనెక్షన్ స్ట్రింగ్ (అధునాతన) నమోదు చేయండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>సంస్థాపనను పున art ప్రారంభించండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>సంస్థాపనా విధానాన్ని పున art ప్రారంభించడానికి క్లిక్ చేయండి (కాష్ చేసిన అన్ని విలువలను క్లియర్ చేయండి)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>పునఃప్రారంభించి ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>సర్వర్ పేరు</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>సర్వర్ పేరు అవసరం</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>సెటప్ విఫలమైంది: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL పాస్‌వర్డ్</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL పాస్‌వర్డ్ అవసరం</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL సర్వర్</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL వినియోగదారు పేరు</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL వినియోగదారు పేరు అవసరం</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>సమాచారాన్ని నిల్వ చేయండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce సంస్థాపన</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>ఈ విజర్డ్ పూర్తి చేయడానికి, మీ డేటాబేస్ సర్వర్ ("కనెక్షన్ స్ట్రింగ్") గురించి మీకు కొంత సమాచారం తెలుసుకోవాలి. అవసరమైతే దయచేసి మీ ISP ని సంప్రదించండి. మీరు స్థానిక మెషీన్ లేదా సర్వర్‌లో ఇన్‌స్టాల్ చేస్తుంటే, మీకు మీ సిస్టమ్ అడ్మిన్ నుండి సమాచారం అవసరం కావచ్చు.</Value>
+  </LocaleResource>
+</Language>

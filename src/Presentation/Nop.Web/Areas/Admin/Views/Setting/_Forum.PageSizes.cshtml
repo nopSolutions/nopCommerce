@@ -1,0 +1,44 @@
+@model ForumSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TopicsPageSize_OverrideForStore" asp-input="TopicsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="TopicsPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TopicsPageSize" />
+            <span asp-validation-for="TopicsPageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PostsPageSize_OverrideForStore" asp-input="PostsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PostsPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PostsPageSize" />
+            <span asp-validation-for="PostsPageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SearchResultsPageSize_OverrideForStore" asp-input="SearchResultsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SearchResultsPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SearchResultsPageSize" />
+            <span asp-validation-for="SearchResultsPageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ActiveDiscussionsPageSize_OverrideForStore" asp-input="ActiveDiscussionsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ActiveDiscussionsPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ActiveDiscussionsPageSize" />
+            <span asp-validation-for="ActiveDiscussionsPageSize"></span>
+        </div>
+    </div>
+</div>

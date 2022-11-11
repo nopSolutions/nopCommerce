@@ -1,0 +1,33 @@
+﻿@model HomepageNewsItemsModel
+
+@using Nop.Core.Domain.News
+
+@if (Model.NewsItems.Count > 0)
+{
+    <div class="news-list-homepage">
+        <div class="title">
+            <strong>@T("News")</strong>
+        </div>
+        <div class="news-items">
+            @foreach (var item in Model.NewsItems)
+            {
+                <div class="news-item">
+                    <div class="news-head">
+                        <a class="news-title" href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))">@item.Title</a>
+                        <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+                    </div>
+                    <div class="news-body">
+                        @Html.Raw(item.Short)
+                    </div>
+                    <div class="buttons">
+                        <a href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))" class="read-more">@T("News.MoreInfo")</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="view-all">
+            <a href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</a>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,116 @@
+@model ForumGroupSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Forums").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Manage forums");
+}
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.ContentManagement.Forums")
+    </h1>
+    <div class="float-right">
+        <a asp-action="CreateForumGroup" class="btn btn-primary">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
+        <a asp-action="CreateForum" class="btn btn-primary">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Forums", Docs.Forums + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "forumgroup-grid",
+                            UrlRead = new DataUrl("ForumGroupList", "Forum", null),
+                            PrimaryKeyColumn = nameof(ForumGroupModel.Id),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(null)
+                                {
+                                    Render = new RenderChildCaret(),
+                                    Width = "5",
+                                    Searchable = false,
+                                    ClassName =  NopColumnClassDefaults.ChildControl
+                                },
+                                new ColumnProperty(nameof(ForumGroupModel.Name))
+                                {
+                                    Title = T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(ForumGroupModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(ForumGroupModel.CreatedOn))
+                                {
+                                    Title = T("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn").Text,
+                                    Width = "200",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(ForumGroupModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("EditForumGroup"))
+                                }
+                            },
+                            ChildTable = new DataTablesModel
+                            {
+                                Name = "forumdetails-grid",
+                                UrlRead = new DataUrl("ForumList", "Forum", null),
+                                IsChildTable = true,
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(ForumModel.ForumGroupId), nameof(ForumGroupModel.Id), true)
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ForumModel.Name))
+                                    {
+                                        Title = T("Admin.ContentManagement.Forums.Forum.Fields.Name").Text,
+                                        Width = "300"
+                                    },
+                                    new ColumnProperty(nameof(ForumModel.DisplayOrder))
+                                    {
+                                        Title = T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.CenterAll
+                                    },
+                                    new ColumnProperty(nameof(ForumModel.CreatedOn))
+                                    {
+                                        Title = T("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn").Text,
+                                        Width = "150",
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(ForumModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "50",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("EditForum"))
+                                    }
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

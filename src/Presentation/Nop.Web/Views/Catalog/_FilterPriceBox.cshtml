@@ -1,0 +1,55 @@
+﻿@model PriceRangeFilterModel
+
+<script asp-exclude-from-bundle="true" src="~/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js" asp-location="Footer"></script>
+
+<div class="product-filter price-range-filter">
+    <div class="filter-title">
+        <strong>@T("Filtering.PriceRangeFilter")</strong>
+    </div>
+    <div class="filter-content">
+        <div class="selected-price-range">
+            <span class="from"></span>
+            <span class="to"></span>
+        </div>
+        <div id="price-range-slider"></div>
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var $priceRangeEl = $("#price-range-slider");
+                $priceRangeEl.slider({
+                    range: true,
+                    min: @Model.AvailablePriceRange.From,
+                    max: @Model.AvailablePriceRange.To,
+                    values: [
+                        @Model.SelectedPriceRange.From,
+                        @Model.SelectedPriceRange.To
+                    ],
+                    slide: function (event, ui) {
+                        setSelectedPriceRange(ui.values[0], ui.values[1]);
+                    },
+                    stop: function () {
+                        CatalogProducts.getProducts();
+                    }
+                });
+
+                setSelectedPriceRange(
+                    $priceRangeEl.slider("values", 0),
+                    $priceRangeEl.slider("values", 1)
+                );
+
+                $(CatalogProducts).on('before', function (e) {
+                    var priceRange = $priceRangeEl.slider('values');
+                    if (priceRange && priceRange.length > 0) {
+                        e.payload.urlBuilder
+                            .addParameter('price', priceRange.join('-'));
+                    }
+                });
+            });
+
+            function setSelectedPriceRange(from, to) {
+                var $selectedPriceRangeEl = $('.selected-price-range');
+                $('.from', $selectedPriceRangeEl).html(from);
+                $('.to', $selectedPriceRangeEl).html(to);
+            }
+        </script>
+    </div>
+</div>

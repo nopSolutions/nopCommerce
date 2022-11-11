@@ -1,0 +1,133 @@
+@model ProductReviewModel
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewDetailsTop, additionalData = Model })
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ProductName" />
+                            </div>
+                            <div class="col-md-9">
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">@Model.ProductName</a>
+                            </div>
+                        </div>
+                        @if (Model.ShowStoreName) 
+                        { 
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="StoreName" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.StoreName</div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CustomerInfo" />
+                            </div>
+                            <div class="col-md-9">
+                                <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@Model.CustomerInfo</a>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Title" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.IsLoggedInAsVendor)
+                                {
+                                    <div class="form-text-row">@Model.Title</div>
+                                }
+                                else
+                                {
+                                    <nop-editor asp-for="Title" asp-required="true" />
+                                    <span asp-validation-for="Title"></span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ReviewText" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.IsLoggedInAsVendor)
+                                {
+                                    @Html.Raw(htmlFormatter.FormatText(Model.ReviewText, false, true, false, false, false, false))
+                                }
+                                else
+                                {
+                                    <nop-textarea asp-for="ReviewText" asp-required="true" />
+                                    <span asp-validation-for="ReviewText"></span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ReplyText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="ReplyText" />
+                                <span asp-validation-for="ReplyText"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Rating" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Rating</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsApproved" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.IsLoggedInAsVendor)
+                                {
+                                    <div class="form-text-row">
+                                        @if (Model.IsApproved)
+                                        {
+                                            <i class="fas fa-check true-icon"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times false-icon"></i>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <nop-editor asp-for="IsApproved" />
+                                    <span asp-validation-for="IsApproved"></span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedOn" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedOn</div>
+                            </div>
+                        </div>
+                        @if (Model.ProductReviewReviewTypeMappingSearchModel.IsAnyReviewTypes)
+                        {
+                            @await Html.PartialAsync("_ProductReviewReviewTypeMappingList", Model.ProductReviewReviewTypeMappingSearchModel)
+                        }
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</section>

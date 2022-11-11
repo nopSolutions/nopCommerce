@@ -1,0 +1,424 @@
+﻿@model DataTablesModel
+
+@using System.Net;
+
+@functions
+{
+    string GetUrl(DataUrl dataUrl)
+    {
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+                ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
+                : string.Empty;
+    }
+
+    string ReplaceName(string str)
+    {
+        return str.Replace("-", "_");
+    }
+
+    void GetAllModels(DataTablesModel model, List<DataTablesModel> models)
+    {
+        models.Add(model);
+        if (!string.IsNullOrEmpty(model.ChildTable?.Name))
+        {
+            GetAllModels(model.ChildTable, models);
+        }
+    }
+}
+
+<script src="~/js/admin.table.js" asp-location="Footer"></script>
+
+<table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name">
+    @if (Model.FooterColumns > 0)
+    {
+        //You need to add the footer before you create the table
+        //as DataTables doesn't provide a method for creating a footer at the moment
+        <tfoot>
+            <tr>
+                @for (int i = 0; i < Model.FooterColumns; i++)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tfoot>
+    }
+</table>
+
+@{
+    //check using MasterCheckBox
+    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
+
+    var listOfTables = new List<DataTablesModel>();
+    GetAllModels(Model, listOfTables);
+}
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('#@Model.Name').DataTable({
+            @await Html.PartialAsync("_Table.Definition", Model)
+        });
+
+        @if (!string.IsNullOrEmpty(Model.SearchButtonId))
+        {
+            <text>
+            $('#@Model.SearchButtonId').click(function() {
+                $('#@Model.Name').DataTable().ajax.reload();
+                $('#@Model.Name .checkboxGroups').prop('checked', false).change();
+                selectedIds = [];
+                return false;
+            });
+            </text>
+        }
+        @if (isMasterCheckBoxUsed)
+        {
+            <text>
+            $('.mastercheckbox', $('#@Model.Name').parents('.dataTables_scroll').first()).first().click(function () {
+                $('#@Model.Name .checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            $('#@Model.Name').on('change', 'input[type=checkbox][class!=mastercheckbox][class=checkboxGroups]', function (e) {
+                var $check = $(this);
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if ($check.is(':checked') == true) {
+                    if (checked == -1) {
+                        selectedIds.push($check.val());
+                    }
+                } else if (checked > -1) {
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
+                }
+                updateMasterCheckbox($('#@Model.Name').parents('.dataTables_scroll').first());
+            });
+            </text>
+        }
+        $('#@Model.Name').DataTable().columns.adjust();
+
+    });
+</script>
+
+@if ((Model.UrlDelete != null) || (Model.ChildTable?.UrlDelete != null))
+{
+    foreach (var curModel in listOfTables)
+    {
+        var tableName = ReplaceName(curModel.Name);
+        <text>
+        <script asp-location="Footer">
+            function table_deletedata_@(tableName)(dataId) {
+                if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
+                    var postData = {
+                        @if (!string.IsNullOrEmpty(Model.BindColumnNameActionDelete))
+                        {
+                            <text>
+                            @Model.BindColumnNameActionDelete: dataId
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                            id: dataId
+                            </text>
+                        }
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))",
+                        type: "POST",
+                        dataType: "json",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            //display error if returned
+                            if (data) {
+                                display_nop_error(data);
+                            }
+                            //refresh grid
+                            $('#@Model.Name').DataTable().draw(false);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 409) {
+                                showAlert('@(Model.Name)_deleteConflict', jqXHR.responseText);
+                                return;
+                            }
+                            showAlert('@(Model.Name)_deleteCommonFailed', errorThrown);
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
+            }
+        </script>
+        <nop-alert asp-alert-id="@(Model.Name)_deleteConflict" />
+        <nop-alert asp-alert-id="@(Model.Name)_deleteCommonFailed" />
+        </text>
+        }
+    }
+
+@if (Model.UrlUpdate != null || Model.ChildTable?.UrlUpdate != null)
+{
+    var currentCulture = CultureInfo.CurrentCulture.Name;
+    foreach (var curModel in listOfTables)
+    {
+        var tableName = ReplaceName(curModel.Name);
+        <text>
+        <script>
+            var editIndexTable_@(tableName) = -1;
+            var editRowData_@(tableName) = [];
+            var columnData_@(tableName) = [];
+            @foreach (var column in Model.ColumnCollection.Where(x => x.Editable))
+            {
+                <text>
+                var obj = {
+                    'Data': '@column.Data',
+                    'Editable': @column.Editable.ToString().ToLowerInvariant(),
+                    'Type': '@column.EditType.ToString().ToLowerInvariant()'
+                }
+                columnData_@(tableName).push(obj);
+                </text>
+            }
+
+            function editData_@(tableName)(dataId, data) {
+                var modData = data;
+                if (typeof data == 'string') {
+                    modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                }
+                $('#buttonEdit_@(tableName)' + modData).hide();
+                $('#buttonConfirm_@(tableName)' + modData).show();
+                $('#buttonCancel_@(tableName)' + modData).show();
+                rowEditMode_@(tableName)(dataId);
+            }
+
+            function rowEditMode_@(tableName)(rowid) {
+                var prevRow;
+                var rowIndexVlaue = parseInt(rowid[0].rowIndex);
+                if (editIndexTable_@(tableName) == -1) {
+                    saveRowIntoArray_@(tableName)(rowid);
+                    rowid.attr("editState", "editState");
+                    editIndexTable_@(tableName) = rowid.rowIndex;
+                    setEditStateValue_@(tableName)(rowid);
+                }
+                else {
+                    prevRow = $("[editState=editState]");
+                    prevRow.attr("editState", "");
+                    rowid.attr("editState", "editState");
+                    editIndexTable_@(tableName) = rowIndexVlaue;
+                    saveArrayIntoRow_@(tableName)(prevRow);
+                    saveRowIntoArray_@(tableName)(rowid);
+                    setEditStateValue_@(tableName)(rowid);
+                }
+            }
+
+            function escapeQuotHtml (value) {
+                return String(value).replace(/["]/g, function (s) {
+                    return '&quot;';
+                });
+            }
+
+            function setEditStateValue_@(tableName)(curRow) {
+                for (var cellName in editRowData_@(tableName)) {
+                    var columnType = 'string';
+
+                    $.each(columnData_@(tableName), function (index, element) {
+                        if (element.Data == cellName) {
+                            columnType = element.Type;
+                        }
+                    });
+
+                    if (columnType == 'number') {
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
+                    }
+                    if (columnType == 'checkbox') {
+                        var cellValue = editRowData_@(tableName)[cellName];
+                        if ($(cellValue).attr('nop-value') === 'true') {
+                            $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="true" checked class="userinput" type="checkbox" onclick="checkBoxClick_@(tableName)(this)"/>');
+                        }
+                        else {
+                            $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="false" class="userinput" type="checkbox" onclick="checkBoxClick_@(tableName)(this)"/>');
+                        }
+                    }
+                    if (columnType == 'string') {
+                        var strValue = editRowData_@(tableName)[cellName];
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
+                    }
+                    $('#@Model.Name').DataTable().columns.adjust();
+                }
+            }
+
+            function checkBoxClick_@(tableName)(checkBox) {
+                var input = $(checkBox);
+                if ($(input).val() === 'true') {
+                    $(input).val('false');
+                    $(input).removeAttr('checked');
+                } else {
+                    $(input).val('true');
+                    $(input).attr('checked', 'checked');
+                }
+            }
+
+            function confirmEditData_@(tableName)(dataId, data, nameData) {
+                var origData = data;
+                var modData = data;
+                if (typeof data == 'string') {
+                    modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                }
+                $('#buttonEdit_@(tableName)' + modData).show();
+                $('#buttonConfirm_@(tableName)' + modData).hide();
+                $('#buttonCancel_@(tableName)' + modData).hide();
+
+                updateRowData_@(tableName)(dataId, origData, nameData);
+            }
+
+            function updateRowData_@(tableName)(currentCells, data, nameData) {
+                var updateRowData = [];
+                updateRowData.push({ 'pname': nameData, 'pvalue': data });
+                $.each(columnData_@(tableName), function (index, element) {
+                    if (element.Editable == true) {
+                        var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                        updateRowData.push({
+                            'pname': element.Data, 'pvalue': value
+                        });
+                    }
+                });
+                var postData = {};
+                for (i = 0; i < updateRowData.length; i++) {
+                    postData[updateRowData[i].pname] = updateRowData[i].pvalue;
+                }
+                var tokenInput = $('input[name=__RequestVerificationToken]').val();
+                postData['__RequestVerificationToken'] = tokenInput;
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))",
+                    type: "POST",
+                    dataType: "json",
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        //display error if returned
+                        if (data) {
+                            display_nop_error(data);
+                        }
+                        //refresh grid
+                         $('#@Model.Name').DataTable().draw(false);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+
+            function cancelEditData_@(tableName)(dataId, data) {
+                var modData = data;
+                if (typeof data == 'string') {
+                    modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                }
+                $('#buttonEdit_@(tableName)' + modData).show();
+                $('#buttonConfirm_@(tableName)' + modData).hide();
+                $('#buttonCancel_@(tableName)' + modData).hide();
+
+                var prevRow = $("[editState=editState]");
+                prevRow.attr("editState", "");
+                if (prevRow.length > 0) {
+                    saveArrayIntoRow_@(tableName)($(prevRow));
+                }
+                editIndexTable_@(tableName) = -1;
+            }
+
+            function saveArrayIntoRow_@(tableName)(cureentCells) {
+                for (var cellName in editRowData_@(tableName)) {
+                    $($(cureentCells).children("[data-columnname='" + cellName + "']")[0]).html(editRowData_@(tableName)[cellName]);
+                }
+            }
+
+            function saveRowIntoArray_@(tableName)(cureentCells) {
+                $.each(columnData_@(tableName), function (index, element) {
+                    if (element.Editable == true) {
+                        var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();
+                        editRowData_@(tableName)[element.Data] = htmlVal;
+                    }
+                });
+            }
+            </script>
+            </text>
+        }
+    }
+
+@if (Model.ChildTable != null)
+{
+    foreach (var curModel in listOfTables)
+    {
+        var tableName = ReplaceName(curModel.Name);
+        if (curModel.ChildTable != null)
+        {
+            var footerHtml = "";
+            if (curModel.ChildTable.FooterColumns > 0)
+            {
+                //You need to add the footer before you create the table
+                //as DataTables doesn't provide a method for creating a footer at the moment
+                for (int i = 0; i < curModel.ChildTable.FooterColumns; i++)
+                {
+                    footerHtml = string.Concat(footerHtml, "<td></td>");
+                }
+
+                footerHtml = string.Concat("<tfoot><tr>", footerHtml, "</tr></tfoot>");
+            }
+            <text>
+            <script asp-location="Footer">
+                function getchild_@(tableName)(d) {
+                    return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '_@(tableName)' + '" class="table table-bordered table-hover dataTable" width="100%">@(Html.Raw(footerHtml))</table>';
+                }
+                $(document).ready(function () {
+                    // Add event listener for opening and closing childs
+                    $('#@curModel.Name tbody').on('click', 'td.child-control', function () {
+                        var tr = $(this).closest('tr');
+                        var tdi = tr.find('i.fa');
+                        var row = $('#@curModel.Name').DataTable().row(tr);
+
+                        if (row.child.isShown()) {
+                            // This row is already open - close it
+                            row.child.hide();
+                            tr.removeClass('shown');
+                            tdi.first().removeClass('fa-caret-down');
+                            tdi.first().addClass('fa-caret-right');
+                        }
+                        else {
+                            // Open this row
+                            row.child(getchild_@(tableName)(row.data())).show();
+                            var classid = '#child' + row.data().@(curModel.PrimaryKeyColumn) + '_@(tableName)';
+                            $(classid).DataTable({
+                                @await Html.PartialAsync("_Table.Definition", curModel.ChildTable)
+                            }).draw;
+                            tr.addClass('shown');
+                            tdi.first().removeClass('fa-caret-right');
+                            tdi.first().addClass(' fa-caret-down');
+                            ///
+                            $('.mastercheckbox', $(classid).parents('.dataTables_scroll').first()).first().click(function () {
+                                $(classid + ' .checkboxGroups').prop('checked', $(this).is(':checked')).change();
+                            });
+
+                            $(classid).on('change', 'input[type=checkbox][class!=mastercheckbox][class=checkboxGroups]', function (e) {
+                                var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
+                                if ($check.is(':checked') == true) {
+                                    if (checked == -1) {
+                                        selectedIds.push($check.val());
+                                    }
+                                } else if (checked > -1) {
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
+                                }
+                                updateMasterCheckbox($(classid).parents('.dataTables_scroll').first());
+                            });
+                            ///
+                        }
+                        $('#@curModel.Name').DataTable().columns.adjust();
+                    });
+                });
+            </script>
+            </text>
+        }
+    }
+}

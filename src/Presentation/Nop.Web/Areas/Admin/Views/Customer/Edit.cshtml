@@ -1,0 +1,225 @@
+@model CustomerModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Customers.Customers.EditCustomerDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
+}
+
+<form asp-controller="Customer" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Customers.Customers.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendemail-window">
+                <i class="far fa-envelope"></i>
+                @T("Admin.Customers.Customers.SendEmail")
+            </button>
+             @if (Model.AllowSendingOfPrivateMessage)
+             {
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendprivatemessage-window">
+                    <i class="fas fa-at"></i>
+                    @T("Admin.Customers.Customers.SendPM")
+                </button>
+             }
+            @if (Model.AllowSendingOfWelcomeMessage)
+            {
+                <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn btn-success">
+                    <i class="far fa-smile"></i>
+                    @T("Admin.Customers.Customers.SendWelcomeMessage")
+                </button>
+                <nop-action-confirmation asp-button-id="send-welcome-message" />
+            }
+            @if (Model.AllowReSendingOfActivationMessage)
+            {
+                <button type="submit" id="resend-activation-message" name="resend-activation-message" class="btn btn-success">
+                    <i class="fas fa-check-circle"></i>
+                    @T("Admin.Customers.Customers.ReSendActivationMessage")
+                </button>
+                <nop-action-confirmation asp-button-id="resend-activation-message" />
+            }
+            @if (Model.GdprEnabled)
+            {
+                
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success">
+                        <i class="fas fa-download"></i>
+                        @T("Admin.Customers.Customers.Gdpr")
+                    </button>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">&nbsp;</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-item">
+                            <a asp-action="GdprExport" asp-route-id="@Model.Id">
+                                <i class="far fa-file-code"></i>
+                                @T("Admin.Customers.Customers.Gdpr.Export")
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a id="customer-gdpr-delete" href="#">
+                                <i class="far fa-trash-alt"></i>
+                                @T("Admin.Customers.Customers.Gdpr.Delete")
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            <span id="customer-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="customer-delete" />
+@if (Model.GdprEnabled)
+{
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="GdprDelete" asp-button-id="customer-gdpr-delete" />
+}
+@if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
+{
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="RemoveBindMFA" asp-button-id="mfa-bind-delete" />
+}
+
+@*send email form*@
+<div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+            </div>
+            <form asp-controller="Customer" asp-action="SendEmail" method="post">
+                <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendEmail.Subject" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmail.Subject" />
+                                <span asp-validation-for="SendEmail.Subject"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendEmail.Body" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (adminAreaSettings.UseRichEditorForCustomerEmails)
+                                {
+                                    <nop-editor asp-for="SendEmail.Body" asp-template="RichEditor" />
+                                }
+                                else
+                                {
+                                    <nop-textarea asp-for="SendEmail.Body" />
+                                }
+                                <span asp-validation-for="SendEmail.Body"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendEmail.SendImmediately" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmail.SendImmediately" />
+                                <span asp-validation-for="SendEmail.SendImmediately"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="pnl-send-date">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendEmail.DontSendBeforeDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmail.DontSendBeforeDate" />
+                                <span asp-validation-for="SendEmail.DontSendBeforeDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.SendEmail")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#sendemail-window').on('show.bs.modal', function (e) {
+        $("#@Html.IdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
+        sendImmediately();
+    });
+
+    function sendImmediately() {
+        if ($('#@Html.IdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
+            $('#pnl-send-date').hideElement();
+        else
+            $('#pnl-send-date').showElement();
+    }
+</script>
+
+@*send PM form*@
+<div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form asp-controller="Customer" asp-action="SendPm" method="post">
+                <input type="hidden" asp-for="Id" id="SendPm_Id"/>
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendPm.Subject" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendPm.Subject" />
+                                <span asp-validation-for="SendPm.Subject"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendPm.Message" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="SendPm.Message"></nop-textarea>
+                                <span asp-validation-for="SendPm.Message"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.SendPM")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

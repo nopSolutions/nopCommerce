@@ -1,0 +1,44 @@
+@model MessageTemplateModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Message templates");
+}
+
+<form asp-controller="MessageTemplate" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.ContentManagement.MessageTemplates.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+
+            <button type="submit" id="message-template-copy" name="message-template-copy" class="btn btn-success">
+                <i class="far fa-clone"></i>
+                @T("Admin.ContentManagement.MessageTemplates.Copy")
+            </button>
+            <nop-action-confirmation asp-button-id="message-template-copy" />
+            <span id="message-template-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="message-template-delete" />

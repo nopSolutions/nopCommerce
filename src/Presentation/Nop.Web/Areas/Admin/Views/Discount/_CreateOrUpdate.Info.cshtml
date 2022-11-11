@@ -1,0 +1,263 @@
+﻿@model DiscountModel
+@using Nop.Core.Domain.Discounts
+@using Nop.Services
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
+        $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+        $("#@Html.IdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+        $("#@Html.IdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+
+        toggleDiscountType();
+        toggleLimitation();
+        toggleUsePercentage();
+        toggleRequiresCouponCode();
+
+        if ('@Model.CouponCode') {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: '@Model.CouponCode' });
+        }
+
+        $('#@Html.IdFor(model => model.CouponCode)').on('input change', function () {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: $(this).val() });
+        });
+    });
+
+    function toggleDiscountType() {
+        var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
+        if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
+            $('[data-card-name=discount-applied-to-categories]').showElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').showElement();
+    } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').showElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
+    } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').showElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
+    } else {
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').hideElement();
+            $('#pnlAppliedToSubCategories').hideElement();
+    }
+    }
+
+    function toggleLimitation() {
+        var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
+        if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
+            //'N Times Only' or 'N Times Per Customer'
+            $('#pnlLimitationTimes').showElement();
+    } else {
+            $('#pnlLimitationTimes').hideElement();
+    }
+    }
+
+    function toggleUsePercentage() {
+        if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
+            $('#pnlDiscountPercentage').showElement();
+            $('#pnlDiscountAmount').hideElement();
+            $('#pnlMaximumDiscountAmount').showElement();
+        } else {
+            $('#pnlDiscountPercentage').hideElement();
+            $('#pnlDiscountAmount').showElement();
+            $('#pnlMaximumDiscountAmount').hideElement();
+        }
+    }
+
+    function toggleRequiresCouponCode() {
+        if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
+            $('#pnlCouponCode').showElement();
+            @if (!string.IsNullOrEmpty(Model.DiscountUrl))
+            {
+                <text>$('#pnlDiscountUrl').showElement();</text>
+            }
+            else
+            {
+                <text>$('#pnlDiscountUrl').hideElement();</text>
+            }
+        } else {
+            $('#pnlCouponCode').hideElement();
+            $('#pnlDiscountUrl').hideElement();
+        }
+    }
+</script>
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsActive" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsActive" />
+            <span asp-validation-for="IsActive"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DiscountTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DiscountTypeId" asp-items="@await ((DiscountType) Model.DiscountTypeId).ToSelectListAsync()" />
+            <span asp-validation-for="DiscountTypeId"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlAppliedToSubCategories">
+        <div class="col-md-3">
+            <nop-label asp-for="AppliedToSubCategories" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AppliedToSubCategories" />
+            <span asp-validation-for="AppliedToSubCategories"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="UsePercentage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="UsePercentage" />
+            <span asp-validation-for="UsePercentage"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="UsePercentage" disable-auto-generation="true">
+        <div class="form-group row" id="pnlDiscountPercentage">
+            <div class="col-md-3">
+                <nop-label asp-for="DiscountPercentage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DiscountPercentage" />
+                <span asp-validation-for="DiscountPercentage"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting row" id="pnlMaximumDiscountAmount">
+            <div class="col-md-3">
+                <nop-label asp-for="MaximumDiscountAmount" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MaximumDiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="MaximumDiscountAmount"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row" id="pnlDiscountAmount">
+        <div class="col-md-3">
+            <nop-label asp-for="DiscountAmount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+            <span asp-validation-for="DiscountAmount"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="RequiresCouponCode" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RequiresCouponCode" />
+            <span asp-validation-for="RequiresCouponCode"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="RequiresCouponCode" disable-auto-generation="true">
+        <div class="form-group row" id="pnlCouponCode">
+            <div class="col-md-3">
+                <nop-label asp-for="CouponCode" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CouponCode" />
+                <span asp-validation-for="CouponCode"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <nop-nested-setting asp-for="RequiresCouponCode" disable-auto-generation="true">
+        <div class="form-group row" id="pnlDiscountUrl">
+            <div class="col-md-3">
+                <nop-label asp-for="DiscountUrl" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.DiscountUrl</div>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="StartDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StartDateUtc" />
+            <span asp-validation-for="StartDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="EndDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EndDateUtc" />
+            <span asp-validation-for="EndDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsCumulative" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsCumulative" />
+            <span asp-validation-for="IsCumulative"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="DiscountLimitationId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DiscountLimitationId" asp-items="@await (((DiscountLimitationType)Model.DiscountLimitationId).ToSelectListAsync())" />
+            <span asp-validation-for="DiscountLimitationId"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlLimitationTimes">
+        <div class="col-md-3">
+            <nop-label asp-for="LimitationTimes" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LimitationTimes" />
+            <span asp-validation-for="LimitationTimes"></span> @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+        </div>
+    </div>
+    <div class="form-group row" id="pnlMaximumDiscountedQuantity">
+        <div class="col-md-3">
+            <nop-label asp-for="MaximumDiscountedQuantity" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MaximumDiscountedQuantity" />
+            <span asp-validation-for="MaximumDiscountedQuantity"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="AdminComment" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="AdminComment" />
+            <span asp-validation-for="AdminComment"></span>
+        </div>
+    </div>
+</div>

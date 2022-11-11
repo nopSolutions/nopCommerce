@@ -1,0 +1,91 @@
+﻿@model CheckoutAttributeModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "checkoutattributevalues-grid",
+            UrlRead = new DataUrl("ValueList", "CheckoutAttribute", new RouteValueDictionary { [nameof(CheckoutAttributeValueSearchModel.CheckoutAttributeId)] = Model.CheckoutAttributeValueSearchModel.CheckoutAttributeId }),
+            UrlDelete = new DataUrl("ValueDelete", "CheckoutAttribute", null),
+            Length = Model.CheckoutAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.CheckoutAttributeValueSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.PriceAdjustment))
+                {
+                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.WeightAdjustment))
+                {
+                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(CheckoutAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName = NopColumnClassDefaults.Button
+                }
+            }
+       })
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewValue"
+                onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;"
+                class="btn btn-primary">
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
+        </button>
+        <button type="submit" id="btnRefresh" style="display: none"></button>
+        <script>
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    updateTable('#checkoutattributevalues-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}           
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
+    </div>
+}
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=checkoutattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+    }
+</script>

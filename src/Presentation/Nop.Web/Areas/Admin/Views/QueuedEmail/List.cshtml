@@ -1,0 +1,258 @@
+@model QueuedEmailSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.System.QueuedEmails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Queued emails");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "QueuedEmailsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="QueuedEmail" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.System.QueuedEmails")
+        </h1>
+        <div class="float-right">
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.System.QueuedEmails.DeleteSelected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
+            <button type="button" id="delete-all" name="delete-all" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.System.QueuedEmails.DeleteAll")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-all" />
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.QueuedEmailListButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchStartDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchStartDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchEndDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchEndDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchFromEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchFromEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchToEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchToEmail" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchLoadNotSent" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchLoadNotSent" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchMaxSentTries" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchMaxSentTries" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="GoDirectlyToNumber" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="custom-input-group input-group-short">
+                                                <nop-editor asp-for="GoDirectlyToNumber" />
+                                                <span class="custom-input-group-btn text-sm">
+                                                    <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
+                                                        @T("Admin.Common.Go")
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-queuedemails" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.MessageQueue", Docs.MessageQueue + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "queuedEmails-grid",
+                            UrlRead = new DataUrl("QueuedEmailList", "QueuedEmail", null),
+                            SearchButtonId = "search-queuedemails",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchFromEmail)),
+                                new FilterParameter(nameof(Model.SearchToEmail)),
+                                new FilterParameter(nameof(Model.SearchLoadNotSent), typeof(bool)),
+                                new FilterParameter(nameof(Model.SearchMaxSentTries))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_queuedemails"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Subject))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Subject").Text
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.From))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text,
+                                    Width = "100",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.To))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text,
+                                    Width = "100",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.CreatedOn").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.SentOn))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.SentOn").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
+                                {
+                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text,
+                                    Width = "120",
+                                },
+                                new ColumnProperty(nameof(QueuedEmailModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "50",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
+
+                        <script>
+                            $(document).ready(function() {
+                                $("#@Html.IdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-email-by-number").click();
+                                        return false;
+                                    }
+                                });
+
+                                //"delete selected" button
+                                $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('deleteSelectedFailed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
+                                            updateTable('#queuedEmails-grid');
+                                        }
+                                    });
+                                    $('#delete-selected-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+</form>
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

@@ -1,0 +1,37 @@
+@model ReviewTypeModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Settings.ReviewType.EditDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Catalog settings");
+}
+
+<form asp-controller="ReviewType" asp-action="Edit" method="post" id="reviewtype-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Settings.ReviewType.EditDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Settings.ReviewType.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="reviewtype-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewTypeButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="reviewtype-delete" />

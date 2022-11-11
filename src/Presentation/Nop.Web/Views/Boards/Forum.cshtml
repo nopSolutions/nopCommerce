@@ -1,0 +1,199 @@
+﻿@model ForumPageModel
+@using Nop.Core.Domain.Forums
+@using Nop.Services.Localization
+@inject ILocalizationService localizationService
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.Name);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-page");
+}
+<div class="page forum-page">
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
+    <div class="forum-info">
+        <div class="forum-name">
+            @if (Model.ForumFeedsEnabled)
+            {
+                <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
+            }
+            <h1>@Model.Name</h1>
+        </div>
+        <div class="forum-description">
+            <p>@Model.Description</p>
+        </div>
+    </div>
+    <div class="forum-actions">
+        <div class="actions">
+            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
+                <script asp-location="Footer">
+                    $(document).ready(function() {
+                        $('#watch-forum').on('click', function () {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@Url.RouteUrl("ForumWatch", new {id = Model.Id})",
+                                data: postData,
+                                dataType: "json",
+                                success: function (data, textStatus, jqXHR) {
+                                    $('#watch-forum').text(data.Text);
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert('Failed to watch');
+                                }
+                            });
+                        });
+                    });
+                </script>
+            }
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
+        @{
+            var pager = await Html.PagerAsync(new PagerModel(localizationService)
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ForumSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
+            });
+        }
+        @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+        {
+            <div class="pager upper">
+                @pager
+            </div>
+        }
+    </div>
+    <div class="forums-table-section topic-group">
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="forum-table">
+                    <colgroup>
+                        <col width="1" />
+                        <col />
+                        <col width="1" />
+                        @if (Model.AllowPostVoting)
+                        {
+                            <col width="1" />
+                        }
+                        <col width="1" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="topic-details" colspan="2">
+                                @T("Forum.TopicTitle")
+                            </th>
+                            <th class="replies">
+                                @T("Forum.Replies")
+                            </th>
+                            <th class="views">
+                                @T("Forum.Views")
+                            </th>
+                            @if (Model.AllowPostVoting)
+                            {
+                                <th class="votes">
+                                    @T("Forum.Votes")
+                                </th>
+                            }
+                            <th class="latest-post">
+                                @T("Forum.LatestPost")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var topic in @Model.ForumTopics)
+                        {
+                            var topicType = "post";
+                            var topicText = string.Empty;
+                            switch (topic.ForumTopicType)
+                            {
+                                case ForumTopicType.Normal:
+                                    topicType = "post";
+                                    break;
+                                case ForumTopicType.Sticky:
+                                    topicType = "sticky";
+                                    topicText = $"[{T("Forum.Sticky")}]";
+                                    break;
+                                case ForumTopicType.Announcement:
+                                    topicType = "announcement";
+                                    topicText = $"[{T("Forum.Announcement")}]";
+                                    break;
+                                default:
+                                    topicType = "post";
+                                    break;
+                            }
+                            <tr>
+                                <td class="image">
+                                    <div class="@topicType"></div>
+                                </td>
+                                <td class="topic-details">
+                                    <div class="topic-title">
+                                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
+                                        @if (!string.IsNullOrEmpty(topicText))
+                                        {
+                                            <span class="topic-type">@topicText</span>
+                                        }
+                                    </div>
+                                    @if (topic.NumPosts > Model.PostsPageSize)
+                                    {
+                                        <div class="topic-pager">
+                                            @await Html.ForumTopicSmallPagerAsync(topic)
+                                        </div>
+                                    }
+                                    <div class="topic-starter">
+                                        @if (topic.CustomerId > 0)
+                                        {
+                                            <label>@T("Forum.Author"):</label>
+                                            if (topic.AllowViewingProfiles)
+                                            {
+                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                            }
+                                            else
+                                            {
+                                                @topic.CustomerName
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                                <td class="replies">
+                                    @topic.NumReplies
+                                </td>
+                                <td class="views">
+                                    @topic.Views
+                                </td>
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <td class="votes">
+                                        @topic.Votes
+                                    </td>
+                                }
+                                <td class="latest-post">
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+    {
+        <div class="pager lower">
+            @pager
+        </div>
+    }
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
+</div>

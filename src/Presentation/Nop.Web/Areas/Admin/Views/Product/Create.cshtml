@@ -1,0 +1,42 @@
+@model ProductModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.AddNew").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.Product;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Products");
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<form asp-controller="Product" asp-action="Create" method="post" id="product-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Products.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+@if (!Model.IsLoggedInAsVendor)
+{
+    //product editor settings modal
+    @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
+}

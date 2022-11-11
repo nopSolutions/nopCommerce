@@ -1,0 +1,52 @@
+﻿@model DiscountModel
+
+@{
+    const string hideInfoBlockAttributeName = "DiscountPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideRequirementsBlockAttributeName = "DiscountPage.HideRequirementsBlock";
+    var hideRequirementsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRequirementsBlockAttributeName, defaultValue: true);
+
+    const string hideUsageHistoryBlockAttributeName = "DiscountPage.HideUsageHistoryBlock";
+    var hideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsageHistoryBlockAttributeName, defaultValue: true);
+
+    const string hideAppliedToProductsBlockAttributeName = "DiscountPage.HideAppliedToProductsBlock";
+    var hideAppliedToProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToProductsBlockAttributeName, defaultValue: true);
+
+    const string hideAppliedToCategoriesBlockAttributeName = "DiscountPage.HideAppliedToCategoriesBlock";
+    var hideAppliedToCategoriesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToCategoriesBlockAttributeName, defaultValue: true);
+
+    const string hideAppliedToManufacturersBlockAttributeName = "DiscountPage.HideAppliedToManufacturersBlock";
+    var hideAppliedToManufacturersBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAppliedToManufacturersBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "discount-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+            <nop-cards id="discount-cards">
+                <nop-card asp-name="discount-info" asp-icon="fas fa-info" asp-title="@T("Admin.Promotions.Discounts.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="discount-requirements" asp-icon="fas fa-list" asp-title="@T("Admin.Promotions.Discounts.Requirements")" asp-hide-block-attribute-name="@hideRequirementsBlockAttributeName" asp-hide="@hideRequirementsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Requirements", Model)</nop-card>
+                <nop-card asp-name="discount-applied-to-products" asp-icon="fas fa-object-group" asp-title="@T("Admin.Promotions.Discounts.AppliedToProducts")" asp-hide-block-attribute-name="@hideAppliedToProductsBlockAttributeName" asp-hide="@hideAppliedToProductsBlock">@await Html.PartialAsync("_CreateOrUpdate.AppliedToProducts", Model)</nop-card>
+                <nop-card asp-name="discount-applied-to-categories" asp-icon="fas fa-list-alt" asp-title="@T("Admin.Promotions.Discounts.AppliedToCategories")" asp-hide-block-attribute-name="@hideAppliedToCategoriesBlockAttributeName" asp-hide="@hideAppliedToCategoriesBlock">@await Html.PartialAsync("_CreateOrUpdate.AppliedToCategories", Model)</nop-card>
+                <nop-card asp-name="discount-applied-to-manufacturers" asp-icon="fas fa-industry" asp-title="@T("Admin.Promotions.Discounts.AppliedToManufacturers")" asp-hide-block-attribute-name="@hideAppliedToManufacturersBlockAttributeName" asp-hide="@hideAppliedToManufacturersBlock">@await Html.PartialAsync("_CreateOrUpdate.AppliedToManufacturers", Model)</nop-card>
+                @if (Model.Id > 0)
+                {
+                    <nop-card asp-name="discount-usage-history" asp-icon="fas fa-history" asp-title="@T("Admin.Promotions.Discounts.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@hideUsageHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
+                }
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DiscountDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

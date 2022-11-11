@@ -1,0 +1,199 @@
+@model ReturnRequestSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ReturnRequests").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Return requests");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "ReturnRequestsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.ReturnRequests")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestListButtons, additionalData = Model })
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="StartDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="EndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="EndDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CustomNumber" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CustomNumber" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ReturnRequestStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="ReturnRequestStatusId" asp-items="Model.ReturnRequestStatusList" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-returnrequests" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    <p>
+                        @T("Admin.ReturnRequests.Description")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ReturnRequests", Docs.ReturnRequests + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                    </p>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "returnrequests-grid",
+                        UrlRead = new DataUrl("List", "ReturnRequest", null),
+                        SearchButtonId = "search-returnrequests",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.CustomNumber)),
+                            new FilterParameter(nameof(Model.ReturnRequestStatusId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomNumber))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CustomNumber").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.ProductName))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Product").Text,
+                                Width = "350",
+                                Render = new RenderCustom("renderColumnProductName")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.Quantity))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Quantity").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.ReturnedQuantity))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.ReturnedQuantity").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomerId))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Customer").Text,
+                                Width = "350",
+                                Render = new RenderCustom("renderColumnCustomerInfo")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CustomOrderNumber))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CustomOrderNumber").Text,
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Width = "200",
+                                Render = new RenderCustom("renderColumnOrderInfo")
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.ReturnRequestStatusStr))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.Status").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.CreatedOn))
+                            {
+                                Title = T("Admin.ReturnRequests.Fields.CreatedOn").Text,
+                                Width = "100",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(ReturnRequestModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+
+                    <script asp-location="Footer">
+                        function renderColumnProductName(data, type, row, meta) {
+                            if (row.ProductId > 0) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                var productInfo = '<a href="@Url.Content("~/Admin/Product/Edit/")' + row.ProductId + '">' + textRenderer(row.ProductName) + '</a>';
+                                var attributeInfo = '';
+                                if (row.AttributeInfo && row.AttributeInfo.length > 0) {
+                                    attributeInfo = '<div>' + row.AttributeInfo +'</div>';
+                                }
+                                return productInfo + attributeInfo;
+                            } else {
+                                return 'order item is deleted';
+                            }
+                        }
+
+                        function renderColumnCustomerInfo(data, type, row, meta) {
+                            var textRenderer = $.fn.dataTable.render.text().display;
+                            return '<a href="@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId + '">' + textRenderer(row.CustomerInfo) + '</a>';
+                        }
+
+                        function renderColumnOrderInfo(data, type, row, meta) {
+                            if (row.OrderId > 0) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="far fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';
+                            } else {
+                                return 'order item is deleted';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

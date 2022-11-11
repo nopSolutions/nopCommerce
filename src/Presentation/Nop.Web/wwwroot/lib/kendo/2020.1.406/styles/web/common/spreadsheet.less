@@ -1,0 +1,1053 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@spreadsheet-first-tool-offset: .3em;
+@spreadsheet-popup-button-padding: .3em 1.5em .3em .9em;
+.force-font() {
+    font-size: 12px;
+    font-family: Arial, Verdana, sans-serif;
+}
+
+.k-spreadsheet {
+    width: 800px;
+    height: 600px;
+    position: relative;
+
+    border-width: 1px;
+    border-style: solid;
+
+    cursor: default;
+
+
+
+    .k-spreadsheet-pane {
+        padding-right: 1px;
+        position: absolute;
+        border-width: 1px;
+        border-bottom-width: 0;
+        border-right-width: 0;
+        border-style: solid;
+        box-sizing: border-box;
+        overflow: hidden;
+
+
+        &.k-top {
+            border-top-width: 0;
+        }
+        &.k-left {
+            border-left-width: 0;
+        }
+
+        .k-spreadsheet-cell {
+            position: absolute;
+            white-space: pre;
+            box-sizing: border-box;
+            overflow: hidden;
+            padding: 1px 3px;
+            background-clip: padding-box;
+
+            &.k-spreadsheet-has-comment::after {
+                content: "";
+                display: block;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: auto;
+                border-width: 3px;
+                border-style: solid;
+            }
+        }
+
+        .k-spreadsheet-cell-comment {
+            position: absolute;
+            white-space: pre-wrap;
+            text-align: left;
+            border-width: 1px;
+            border-style: solid;
+        }
+    }
+
+    .k-spreadsheet-vaxis,
+    .k-spreadsheet-haxis {
+      position: absolute;
+      border-style: solid;
+    }
+
+    .k-spreadsheet-vaxis {
+      top: 0;
+      border-width: 0 0 0 1px;
+    }
+
+    .k-spreadsheet-haxis {
+      left: 0;
+      border-width: 1px 0 0;
+    }
+
+    .k-filter-range,
+    .k-spreadsheet-selection {
+        border-width: 1px;
+        border-style: solid;
+        position: absolute;
+        box-sizing: border-box;
+    }
+
+    .k-spreadsheet-active-cell {
+        position: absolute;
+        outline-color: transparent !important;
+        box-sizing: border-box;
+        z-index: 10;
+    }
+
+    @formula-bar-height: 26px;
+    @formula-input-height: (@formula-bar-height / 1.3);
+    @formula-input-padding: ((@formula-bar-height - @formula-input-height) / 2);
+
+    .k-spreadsheet-action-bar {
+        border-width: 0 0 1px;
+        border-style: solid;
+        position: relative;
+
+        display: table;
+        width: 100%;
+
+        .k-spreadsheet-name-editor,
+        .k-spreadsheet-formula-bar {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .k-spreadsheet-name-editor {
+            position: relative;
+            vertical-align: top;
+            border-width: 0 1px 0 0;
+            border-style: solid;
+
+            .k-combobox {
+                width: 9.5em;
+                border-radius: 0;
+                border-color: transparent;
+
+                .k-dropdown-wrap {
+                    border-radius: 0;
+                    border-color: transparent;
+                    background-image: none;
+                    box-shadow: none;
+                    border-width: 0;
+
+                    .k-input {
+                        border-radius: 0;
+                    }
+
+                    .k-select {
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+
+        .k-spreadsheet-formula-bar {
+            width: 100%;
+            padding-left: 31px; // XXX: Move to code
+
+            &::before {
+                .use-font-icon();
+                content: "\e691";
+                display: block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                border-width: 0 1px 0 0;
+                border-style: solid;
+                width: 24px;
+                margin-left: -24px;
+            }
+
+            .k-spreadsheet-formula-input.k-spreadsheet-array-formula {
+                &:before {
+                    content: "{";
+                    font-weight: bold;
+                }
+                &:after {
+                    content: "}";
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .k-spreadsheet-formula-input {
+            overflow: hidden;
+            text-indent: @input-indent;
+            border: 0;
+            margin: 0;
+        }
+
+        .k-state-border-down {
+            padding-bottom: 0;
+        }
+    }
+
+    .k-spreadsheet-formula-input {
+        outline: none;
+        border-width: 0;
+        height: @formula-bar-height;
+        line-height: @formula-input-height;
+        width: 100%;
+        box-sizing: border-box;
+        white-space: pre;
+        padding: @formula-input-padding .5em;
+    }
+
+    .k-spreadsheet-cell-editor {
+        position: absolute;
+        display: none;
+        padding: 0 3px;
+        line-height: @formula-input-height;
+        z-index: 2000;
+        overflow: hidden;
+    }
+
+    > .k-spreadsheet-view {
+        position: relative;
+        .force-font();
+
+        // disabled cells in the Spreadsheet should allow navigation if link is used
+        .k-state-disabled {
+            pointer-events: auto;
+        }
+    }
+
+    .k-tabstrip-wrapper {
+        position: relative;
+        line-height: 1.7em;
+
+        .k-tabstrip-items {
+            padding: @spreadsheet-first-tool-offset 0 0;
+        }
+    }
+
+    .k-spreadsheet-quick-access-toolbar {
+        display: inline-block;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        padding: @spreadsheet-first-tool-offset @spreadsheet-first-tool-offset 0;
+
+        .k-button {
+            padding: .3em;
+            line-height: 1.4em;
+            height: auto;
+        }
+    }
+
+    .k-merged-cells-wrapper,
+    .k-selection-wrapper,
+    .k-filter-wrapper,
+    .k-spreadsheet-row-header {
+        position: relative;
+    }
+
+    .k-spreadsheet-column-header {
+        position: absolute;
+    }
+
+    .k-filter-wrapper {
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    .k-spreadsheet-sheets-bar {
+        border-width: 1px 0 0;
+    }
+
+    .k-vertical-align-top {}
+
+    .k-vertical-align-center {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .k-vertical-align-bottom {
+      position: relative;
+      top: 100%;
+      transform: translateY(-100%);
+    }
+
+    .k-dirty {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: unset;
+    }
+
+    .k-single-selection {
+        cursor: crosshair;
+    }
+
+    .k-single-selection::after {
+        content: " ";
+        height: 6px;
+        width: 6px;
+        position: absolute;
+        display: block;
+        bottom: 0;
+        right: 0;
+        border-radius: 50%;
+        margin-bottom: -4px;
+        margin-right: -4px;
+        border-width: 1px;
+        border-style: solid;
+        z-index: 100;
+    }
+
+    .k-spreadsheet-edit-container {
+        .k-single-selection::after {
+            display: none;
+        }
+    }
+
+    .k-auto-fill,
+    .k-auto-fill-punch,
+    .k-auto-fill-br-hint,
+    .k-auto-fill-tr-hint,
+    .k-auto-fill-bl-hint {
+        position: absolute;
+        box-sizing: border-box;
+    }
+
+    .k-auto-fill {
+        border-width: 1px;
+        border-style: solid;
+        cursor: crosshair;
+    }
+
+    .k-auto-fill-wrapper {
+        position: relative;
+
+    }
+
+    .k-spreadsheet-vborder {
+      position: absolute;
+      border-left-style: solid;
+      border-left-width: 1px;
+    }
+
+    .k-spreadsheet-hborder {
+      position: absolute;
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+}
+
+.k-spreadsheet-names-popup {
+    .k-item {
+        position: relative;
+    }
+    .k-icon {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.k-horizontal-resize {
+    cursor: col-resize;
+}
+
+.k-vertical-resize {
+    cursor: row-resize;
+}
+
+.k-spreadsheet-data,
+.k-merged-cells-wrapper,
+.k-selection-wrapper,
+.k-spreadsheet-active-cell {
+    cursor: cell;
+
+    .k-horizontal-resize & {
+        cursor: col-resize;
+    }
+
+    .k-vertical-resize & {
+        cursor: row-resize;
+    }
+}
+
+.k-spreadsheet .k-colorpicker .k-tool-icon {
+    overflow: visible;
+}
+
+.k-button.k-reset-color, .k-button.k-custom-color {
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    text-align: left;
+    line-height: 2em;
+}
+
+.k-spreadsheet-colorpicker .k-colorpalette {
+    border: 1px solid #dbdbdb;
+    border-left: none;
+    border-right: none;
+    padding: 0.4em;
+}
+
+.k-spreadsheet-filter {
+    position: absolute;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.k-spreadsheet-sample {
+    float: right;
+}
+
+.k-spreadsheet-clipboard-paste,
+.k-spreadsheet-clipboard {
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 1px;
+    height: 1px;
+    box-sizing: border-box;
+}
+
+textarea.k-spreadsheet-clipboard {
+    position: fixed;
+}
+
+.k-spreadsheet-top-corner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    border-width: 0 1px 1px 0;
+    border-style: solid;
+
+    &:after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border-width: 6px;
+        border-style: solid;
+    }
+}
+
+.k-spreadsheet-scroller {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    z-index: 1;
+}
+
+.k-spreadsheet-fixed-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 2;
+    user-select: none;
+    overflow: hidden;
+}
+
+.k-spreadsheet-view-size {
+    position: relative;
+}
+
+.k-spreadsheet-column-header,
+.k-spreadsheet-row-header {
+    text-align: center;
+    z-index: 100;
+
+    .k-spreadsheet-cell {
+        border-style: solid;
+        border-width: 0 1px 1px 0;
+    }
+}
+
+div.k-spreadsheet-window {
+    padding: 1.167em .75em .75em;
+}
+
+.k-spreadsheet-window {
+    .k-edit-form-container {
+        width: 100%;
+    }
+
+    .k-root-tabs {
+        border-width: 0;
+        margin: -1em -1em 0;
+        padding: .5em 1em 0;
+
+        .k-loading {
+            display: none;
+        }
+    }
+
+    .k-list-wrapper {
+        padding: .15em 0;
+        height: 190px;
+    }
+
+    .k-list {
+        .k-item {
+            border-radius: 0;
+            padding: .5em .6em .4em .6em;
+            cursor: pointer;
+            line-height: 1.1em;
+        }
+    }
+
+    .k-format-filter {
+        width: 100%;
+
+        + .k-group-header + .k-list-wrapper {
+            margin-top: 1em;
+        }
+    }
+
+    .k-action-buttons {
+        top: 10px;
+        padding: 10px;
+        margin-bottom: calc(10px - 1em);
+    }
+
+    .k-edit-label {
+        width: 25%;
+        margin: 0 0 0 .75em;
+    }
+
+    .k-edit-field {
+        width: 67%;
+        margin: 0 .917em 0 0;
+    }
+
+    .k-edit-label,
+    .k-edit-field {
+        padding: 0;
+        line-height: 3em;
+    }
+
+    .k-edit-field .k-textbox,
+    .k-edit-field .k-dropdown {
+        width: 100%;
+    }
+
+    .k-export-config {}
+    .k-export-config .k-hr {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .k-export-config .k-edit-field {
+        width: 40%;
+        float: left;
+        margin-left: 30px;
+    }
+
+    .k-page-orientation {
+        position: absolute;
+        right: 2em;
+        top: 25%;
+
+        .k-icon {
+            font-size: 6em;
+        }
+    }
+
+    .k-export-config:after,
+    > div:after {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+    }
+}
+
+.k-spreadsheet-format-cells {
+    .k-spreadsheet-preview {
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.16em;
+        line-height: 3.64em;
+        margin: 0 -.863em .72em;
+
+        border-style: solid;
+        border-width: 1px 0;
+    }
+}
+
+.k-spreadsheet-border-palette {
+    width: 153px;
+
+    .k-spreadsheet-border-type-palette .k-button {
+        box-sizing: border-box;
+        width: 20%;
+    }
+
+    .k-colorpalette {
+        vertical-align: bottom;
+    }
+}
+
+.k-spreadsheet-popup {
+    .k-separator {
+        width: 1px;
+        height: 1.8em;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    .k-colorpalette {
+        vertical-align: top;
+    }
+
+    .k-button.k-button-icon {
+        padding: 0.6em;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    .k-button.k-button-icontext {
+        display: block;
+        text-align: left;
+        text-transform: initial;
+        padding: @spreadsheet-popup-button-padding;
+        border-width: 0;
+        border-radius: 0;
+    }
+}
+
+.k-spreadsheet-filter-menu {
+    width: 280px;
+
+    > .k-menu {
+        border-width: 0;
+
+        .k-link {
+            padding-left: 26px;
+        }
+
+        .k-link .k-icon {
+            margin-left: -26px;
+            width: 26px;
+        }
+    }
+
+    .k-spreadsheet-value-treeview-wrapper {
+        height: 200px;
+        overflow-y: scroll;
+        overflow-x: auto;
+        border-width: 1px;
+        border-style: solid;
+
+        .k-treeview {
+            overflow: visible;
+            padding: 6px 7px;
+        }
+    }
+
+    .k-details {
+        border-top-width: 1px;
+        border-top-style: solid;
+        padding: 4px 0;
+    }
+
+    .k-details-summary {
+        cursor: pointer;
+        line-height: 26px;
+
+        .k-icon {
+            margin: 0 5px;
+        }
+    }
+
+    .k-details-content {
+        padding: 0 8px 0 26px;
+
+        > .k-textbox,
+        > .k-widget {
+            width: 100%;
+            margin-bottom: 3px;
+        }
+
+        .k-space-right {
+            background-image: none;
+        }
+
+        .k-filter-and {
+            width: 75px;
+            margin: 8px 0;
+        }
+    }
+
+    .k-action-buttons {
+        border-top-width: 0;
+        margin: 8px;
+        padding: 0;
+        position: static;
+    }
+}
+
+.k-resize-handle,
+.k-resize-hint {
+    position: absolute;
+    z-index: 200;
+}
+
+.k-resize-hint-handle {
+    width: 100%;
+    height: 20px;
+}
+
+.k-resize-hint-marker {
+    width: 2px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.k-resize-hint-vertical .k-resize-hint-handle {
+    height: 100%;
+    width: 20px;
+    float: left;
+}
+
+.k-resize-hint-vertical .k-resize-hint-marker {
+    height: 2px;
+    width: 100%;
+}
+
+.k-spreadsheet-quick-access-toolbar .k-button,
+.k-button.k-spreadsheet-sheets-bar-add {
+    border-color: transparent;
+    background-color: transparent;
+    background-image: none;
+}
+
+// top TabStrip
+
+.k-spreadsheet-tabstrip {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+
+    > .k-content {
+        border-left-width: 0;
+        border-right-width: 0;
+        border-bottom-width: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .k-loading {
+        display: none;
+    }
+}
+
+.k-spreadsheet-toolbar {
+    &.k-toolbar {
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+
+        .k-overflow-anchor + * {
+            margin-left: @spreadsheet-first-tool-offset;
+        }
+
+        > .k-button-group {
+            border-width: 0;
+        }
+    }
+
+    // hide button/widget default state
+    > .k-widget,
+    .k-button,
+    > .k-button-group,
+    > .k-widget .k-state-default:not(.k-state-hover):not(.k-state-active) {
+        margin: 0;
+        border-color: transparent;
+        background-color: transparent;
+        background-image: none;
+    }
+
+    > .k-widget {
+        &[data-property='fontSize'] { width: 75px; }
+        &[data-property='format'] { width: 100px; }
+        &[data-property='fontFamily'] { width: 130px; }
+    }
+
+    > .k-combobox .k-state-default:not(.k-state-hover):not(.k-state-active) .k-input {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    > .k-widget .k-state-default:not(.k-state-hover):not(.k-state-active) .k-select {
+        border-color: transparent;
+    }
+
+    [data-tool=alignment],
+    [data-tool=backgroundColor],
+    [data-tool=borders],
+    [data-tool=freeze],
+    [data-tool=merge],
+    [data-tool=textColor] {
+        width: auto;
+    }
+
+    .k-separator {
+        margin: 0 3px;
+        width: 0;
+        overflow: hidden;
+        height: 1.8em;
+        vertical-align: middle;
+        display: inline-block;
+    }
+}
+
+.k-spreadsheet-formula-input {
+    > .k-syntax-func.k-syntax-at-point,
+    > .k-syntax-bool.k-syntax-at-point,
+    > .k-syntax-ref.k-syntax-at-point,
+    > .k-syntax-str.k-syntax-at-point,
+    > .k-syntax-num.k-syntax-at-point {
+        text-decoration: underline;
+    }
+
+    > .k-series-a,
+    > .k-series-b,
+    > .k-series-c,
+    > .k-series-d {
+        background-color: transparent;
+    }
+}
+
+.k-spreadsheet-selection-highlight {
+    border-width: 1px;
+    border-style: solid;
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.k-spreadsheet-formula-list {
+    min-width: 100px;
+
+    .k-item {
+        padding: 0 .3em;
+        box-shadow: none;
+    }
+}
+
+// bottom TabStrip
+
+.k-spreadsheet-sheets-bar {
+    position: relative;
+}
+
+.k-button.k-spreadsheet-sheets-bar-add {
+    position: absolute;
+    bottom: .2em;
+    left: .4em;
+    z-index: 1;
+}
+
+.k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove {
+    padding: 0;
+    margin: .5em .5em .5em -.5em;
+    vertical-align: middle;
+
+    .k-button-icon {
+        padding: 2px;
+        line-height: normal;
+    }
+
+    .k-icon {
+        margin: 0;
+    }
+}
+
+.k-spreadsheet-sheets-items-hint {
+    margin-top: .1em;
+    background: none !important;
+    border-width: 0 !important;
+}
+
+.k-spreadsheet-editor-button {
+    position: absolute;
+    width: 20px;
+    z-index: 10;
+    margin-left: 2px;
+    padding: 0 !important;
+
+    &.k-spreadsheet-last-column {
+        margin-left: -21px;
+    }
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.hint-wrapper {
+    margin-top: 1em;
+}
+
+.k-edit-form-container > div:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+.k-spreadsheet-filter-menu .k-i-arrow-45-down-right
+{
+    cursor: pointer;
+}
+
+.k-spreadsheet-import-errors {
+    .k--header-message {
+        font-weight: bold;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #888;
+        margin-bottom: 5px;
+    }
+    .k--errors {
+        max-height: 350px;
+        overflow: auto;
+
+        table {
+            border-collapse: collapse;
+            font-size: 90%;
+
+            td, th {
+                padding: 2px 4px;
+                border-bottom: 1px solid #bbb;
+            }
+            th {
+                text-align: left;
+                border-bottom: 1px solid #000;
+            }
+        }
+    }
+}
+
+// Insert image dialog
+.k-spreadsheet-insert-image-dialog {
+    margin: @spreadsheet-insert-image-dialog-margin;
+    border-style: @spreadsheet-insert-image-dialog-border-style;
+    border-width: @spreadsheet-insert-image-dialog-border-width;
+
+    label {
+        position: relative;
+        display: block;
+        width:  @spreadsheet-insert-image-dialog-preview-width;
+        height: @spreadsheet-insert-image-dialog-preview-height;
+        padding: @spreadsheet-insert-image-dialog-preview-padding;
+        background-image: url("../textures/image-default.png");
+        background-size: auto 70%;
+        background-repeat: no-repeat;
+        background-position: 50% 30%;
+
+        div {
+            position: relative;
+            top: 75%;
+            padding: @spreadsheet-insert-image-dialog-text-padding;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        input {
+            display: none;
+        }
+    }
+
+    .k-spreadsheet-has-image {
+        background-size: auto 90%;
+        background-position: 50% 50%;
+
+        &:hover div,
+        &.k-state-hovered div {
+            opacity: 1;
+            top: 50%;
+        }
+
+        div {
+            opacity: 0;
+        }
+    }
+}
+
+// Images
+.k-spreadsheet-drawing {
+    position: absolute;
+    box-sizing: border-box;
+    z-index: 101;
+
+    &.k-spreadsheet-active-drawing {
+        outline-style: @spreadsheet-drawing-outline-style;
+        outline-width: @spreadsheet-drawing-outline-width;
+    }
+
+    .k-spreadsheet-drawing-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-position: 50% 50%;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        cursor: move;
+    }
+
+    .k-spreadsheet-drawing-handle {
+        position: absolute;
+        width: @spreadsheet-drawing-handle-width;
+        height: @spreadsheet-drawing-handle-height;
+        border-style: @spreadsheet-drawing-handle-border-style;
+        border-width: @spreadsheet-drawing-handle-border-width;
+        transform: translate(-50%, -50%);
+
+        &.N { left: 50%; top: 0; cursor: ns-resize; }
+        &.NE { left: 100%; top: 0; cursor: nesw-resize; }
+        &.E { left: 100%; top: 50%; cursor: ew-resize; }
+        &.SE { left: 100%; top: 100%; cursor: nwse-resize; }
+        &.S { left: 50%; top: 100%; cursor: ns-resize; }
+        &.SW { left: 0; top: 100%; cursor: nesw-resize; }
+        &.W { left: 0; top: 50%; cursor: ew-resize; }
+        &.NW { left: 0; top: 0; cursor: nwse-resize; }
+    }
+}

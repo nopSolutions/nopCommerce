@@ -1,0 +1,120 @@
+@model NewsItemModel
+
+<div class="card-body">
+    <div class="form-group row" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+        <div class="col-md-3">
+            <nop-label asp-for="LanguageId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
+            <span asp-validation-for="LanguageId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Title" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Title" asp-required="true" />
+            <span asp-validation-for="Title"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Short" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="Short" asp-required="true" />
+            <span asp-validation-for="Short"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Full" />
+        </div>
+        <div class="col-md-9">
+            
+            <div class="input-group-append input-group-required">                
+                <div class="input-group">
+                    <nop-editor asp-for="Full" asp-template="RichEditor" />
+                </div>
+                <div class="input-group-btn">
+                    <nop-required />
+                </div>
+            </div>
+            <span asp-validation-for="Full"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AllowComments" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowComments" />
+            <span asp-validation-for="AllowComments"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StartDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StartDateUtc" />
+            <span asp-validation-for="StartDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EndDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EndDateUtc" />
+            <span asp-validation-for="EndDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                        $(document).ready(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                            storesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
+
+                            @if (Model.AvailableStores.Count == 0)
+                            {
+                                <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                </text>
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+</div>

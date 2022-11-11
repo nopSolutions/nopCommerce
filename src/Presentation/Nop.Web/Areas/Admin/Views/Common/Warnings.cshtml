@@ -1,0 +1,86 @@
+@model IList<SystemWarningModel>
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.System.Warnings").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Warnings");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.System.Warnings")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.WarningsButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.WarningsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        @foreach (var warning in Model)
+                        {
+                            switch (warning.Level)
+                            {
+                                case SystemWarningLevel.Pass:
+                                    {
+                                        <p class="text-green">
+                                            <i class="icon fas fa-check"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.CopyrightRemovalKey:
+                                case SystemWarningLevel.Recommendation:
+                                case SystemWarningLevel.Warning:
+                                    {
+                                        <p class="text-yellow">
+                                            <i class="icon fas fa-exclamation-triangle"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.Fail:
+                                    {
+                                        <p class="text-red">
+                                            <i class="icon fas fa-ban"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                            }
+                        }
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.WarningsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

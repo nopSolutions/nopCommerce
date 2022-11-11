@@ -1,0 +1,41 @@
+﻿@model CatalogProductsModel
+
+@if (!Model.PriceRangeFilter.Enabled &&
+     !Model.SpecificationFilter.Enabled &&
+     !Model.ManufacturerFilter.Enabled)
+{
+    return;
+}
+
+<div class="block product-filters">
+    @if (Model.PriceRangeFilter.Enabled)
+    {
+        @await Html.PartialAsync("_FilterPriceBox", Model.PriceRangeFilter)
+    }
+
+    @if (Model.SpecificationFilter.Enabled)
+    {
+        @await Html.PartialAsync("_FilterSpecsBox", Model.SpecificationFilter)
+    }
+
+    @if (Model.ManufacturerFilter.Enabled)
+    {
+        @await Html.PartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter)
+    }
+</div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .filter-title').on('click', function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1001) {
+                $(this).siblings('.filter-content').slideToggle('slow');
+            }
+        });
+    });
+</script>

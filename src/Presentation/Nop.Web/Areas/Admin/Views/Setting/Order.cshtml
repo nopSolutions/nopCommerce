@@ -1,0 +1,65 @@
+@model OrderSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Order").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Order settings");
+}
+
+@{
+    const string hideCheckoutBlockAttributeName = "OrderSettingsPage.HideCheckoutBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCheckoutBlockAttributeName);
+
+    const string hideOrderTotalsBlockAttributeName = "OrderSettingsPage.HideOrderTotalsBlock";
+    var hideOrderTotalsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOrderTotalsBlockAttributeName);
+
+    const string hideCommonBlockAttributeName = "OrderSettingsPage.HideCommonBlock";
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hidePdfInvoiceBlockAttributeName = "OrderSettingsPage.HidePdfInvoiceBlock";
+    var hidePdfInvoiceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePdfInvoiceBlockAttributeName);
+
+    const string hideGiftCardsBlockAttributeName = "OrderSettingsPage.HideGiftCardsBlock";
+    var hideGiftCardsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideGiftCardsBlockAttributeName);
+
+    const string hideReturnRequestBlockAttributeName = "OrderSettingsPage.HideReturnRequestBlock";
+    var hideReturnRequestBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideReturnRequestBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Order" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Order")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="ordersettings-cards">
+                    <nop-card asp-name="ordersettings-checkout" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.Checkout")" asp-hide-block-attribute-name="@hideCheckoutBlockAttributeName" asp-hide="@hideCheckoutBlock" asp-advanced="false">@await Html.PartialAsync("_Order.Checkout", Model)</nop-card>
+                    <nop-card asp-name="ordersettings-order-totals" asp-icon="far fa-money-bill-alt" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.OrderTotals")" asp-hide-block-attribute-name="@hideOrderTotalsBlockAttributeName" asp-hide="@hideOrderTotalsBlock" asp-advanced="true">@await Html.PartialAsync("_Order.OrderTotals", Model)</nop-card>
+                    <nop-card asp-name="ordersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="true">@await Html.PartialAsync("_Order.Common", Model)</nop-card>
+                    <nop-card asp-name="ordersettings-pdf-invoice" asp-icon="far fa-file-pdf" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice")" asp-hide-block-attribute-name="@hidePdfInvoiceBlockAttributeName" asp-hide="@hidePdfInvoiceBlock" asp-advanced="true">@await Html.PartialAsync("_Order.PdfInvoice", Model)</nop-card>
+                    <nop-card asp-name="ordersettings-gift-cards" asp-icon="fas fa-gift" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")" asp-hide-block-attribute-name="@hideGiftCardsBlockAttributeName" asp-hide="@hideGiftCardsBlock" asp-advanced="true">@await Html.PartialAsync("_Order.GiftCards", Model)</nop-card>
+                    <nop-card asp-name="ordersettings-return-request" asp-icon="fas fa-backward" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")" asp-hide-block-attribute-name="@hideReturnRequestBlockAttributeName" asp-hide="@hideReturnRequestBlock" asp-advanced="false">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

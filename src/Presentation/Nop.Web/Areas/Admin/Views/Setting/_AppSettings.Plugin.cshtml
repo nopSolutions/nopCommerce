@@ -1,0 +1,13 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PluginConfigModel.UseUnsafeLoadAssembly" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PluginConfigModel.UseUnsafeLoadAssembly" />
+            <span asp-validation-for="PluginConfigModel.UseUnsafeLoadAssembly"></span>
+        </div>
+    </div>
+</div>

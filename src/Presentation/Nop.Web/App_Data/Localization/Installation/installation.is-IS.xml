@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Netfang stjórnanda</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Sláðu inn netfang stjórnanda</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Lykilorð stjórnanda</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Sláðu inn lykilorð stjórnanda</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta möppunni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta skránni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Staðfesta lykilorð</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Sláðu inn staðfest lykilorð</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Tengistrengur</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL tengistrengs er krafist</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Rangt snið á SQL tengistreng</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Stofna gagnagrunn ef hann er ekki til</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Búa til sýnishornagögn</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specify custom collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Gagnagrunnur</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Villa kom upp við gerð gagnagrunnsins: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Upplýsingar um gagnagrunn</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Gagnagrunnsheiti</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Gagnagrunnur er ekki til eða þú hefur ekki réttindi til að tengjast honum</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Veldu gagnaveitu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Ef þú þarft upplýsingar um hvernig á að nota nopCommerce skaltu fara á</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>skjalahlutann á nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Dæmi</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Setja upp</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Er að setja upp nopCommerce ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Nota samþætta Windows auðkenningu</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Það er ekki samræmi í lykilorðunum</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Sláðu inn hráan tengistreng (lengra komnir)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Endurræsa uppsetningu</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Smelltu til að endurræsa uppsetningarferlið (hreinsaðu skyndiminni)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Endurræsi...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Heiti vefþjóns</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Heiti vefþjóns er krafist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Uppsetning mistókst: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL lykilorð</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL lykilorðs er krafist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL netþjónn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL notandanafn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL notandanafns er krafist</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Vista upplýsingar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce uppsetning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Til að nota þetta leiðsagnarforrit verður þú að vita upplýsingar varðandi gagnagrunnsmiðlarann („tengirstrengur“). Vinsamlegast hafðu samband við hýsingaraðilann þinn ef þörf krefur. Ef þú ert að setja upp á staðbundna vél eða netþjón gætirðu þurft upplýsingar frá kerfisstjóranum þínum.</Value>
+  </LocaleResource>
+</Language>

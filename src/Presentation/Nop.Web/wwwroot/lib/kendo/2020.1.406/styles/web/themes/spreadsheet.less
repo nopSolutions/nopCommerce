@@ -1,0 +1,380 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@spreadsheet-header-border: @spreadsheet-pane-border;
+@spreadsheet-header-background: @base;
+@spreadsheet-pane-border: darken(@base, 20%);
+@spreadsheet-cell-border: darken(@base, 10%);
+@spreadsheet-selection-background: fadeout(@selected-background, 80%);
+@spreadsheet-selection-border: @selected-background;
+@spreadsheet-header-selection-border: fadein(@spreadsheet-selection-background, 80%);
+@spreadsheet-page-orientation-background: @normal-background;
+@spreadsheet-page-orientation-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
+@spreadsheet-page-orientation-gradient: @normal-gradient;
+
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
+    background-color: @background;
+}
+
+.k-spreadsheet-top-corner,
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
+    background-color: @spreadsheet-header-background;
+    background-image: none;
+    color: contrast(@spreadsheet-header-background);
+    border-color: @spreadsheet-header-border;
+}
+
+.k-spreadsheet-top-corner {
+    border-color: @spreadsheet-header-border;
+
+    &:after {
+        border-color: transparent @spreadsheet-header-border @spreadsheet-header-border transparent;
+    }
+}
+
+.k-spreadsheet-pane {
+    border-color: @spreadsheet-pane-border;
+
+    .k-spreadsheet-vaxis,
+    .k-spreadsheet-haxis {
+        border-color: @spreadsheet-cell-border;
+    }
+
+    .k-spreadsheet-column-header,
+    .k-spreadsheet-row-header {
+        border-color: @spreadsheet-header-border;
+    }
+
+    .k-spreadsheet-merged-cell {
+        background-color: @background;
+    }
+
+    .k-selection-partial,
+    .k-selection-full {
+        border-color: @spreadsheet-selection-background;
+        background-color: @spreadsheet-selection-background;
+    }
+
+    .k-filter-range {
+        border-color: @spreadsheet-selection-border;
+    }
+
+    .k-spreadsheet-column-header .k-selection-partial,
+    .k-spreadsheet-column-header .k-selection-full {
+        border-bottom-color: @spreadsheet-header-selection-border;
+    }
+
+    .k-spreadsheet-row-header .k-selection-partial,
+    .k-spreadsheet-row-header .k-selection-full {
+        border-right-color: @spreadsheet-header-selection-border;
+    }
+}
+
+.k-auto-fill,
+.k-spreadsheet-selection {
+    border-color: @spreadsheet-selection-border;
+    box-shadow: inset 0 0 0 1px @spreadsheet-selection-border;
+}
+
+.k-auto-fill-wrapper .k-tooltip {
+    background: @widget-background-color;
+}
+
+.k-spreadsheet-selection {
+    background-color: @spreadsheet-selection-background;
+}
+
+.k-spreadsheet-active-cell {
+    box-shadow: inset 0 0 0 1px @spreadsheet-selection-border;
+    background-color: @background;
+
+        &.k-right {
+            box-shadow: inset 0 0 0 1px @spreadsheet-selection-border, inset -1px 0 0 1px @spreadsheet-selection-border;
+        }
+
+        &.k-bottom {
+            box-shadow: inset 0 0 0 1px @spreadsheet-selection-border, inset 0 -1px 0 1px @spreadsheet-selection-border;
+        }
+
+        &.k-bottom.k-right {
+            box-shadow: inset 0 0 0 1px @spreadsheet-selection-border, inset -1px -1px 0 1px @spreadsheet-selection-border;
+        }
+}
+
+.k-spreadsheet-active-cell.k-single {
+    color: @normal-text-color;
+    background-color: @background;
+}
+
+.k-spreadsheet {
+    .k-spreadsheet-action-bar {
+        background-color: @background;
+        border-color: @widget-border-color;
+
+        .k-spreadsheet-name-editor {
+            border-color: @spreadsheet-header-border;
+        }
+
+        .k-spreadsheet-formula-bar::before {
+            border-color: @spreadsheet-header-border;
+        }
+    }
+
+    .k-spreadsheet-formula-input {
+        background-color: @background;
+        color: @normal-text-color;
+    }
+
+    .k-resize-handle,
+    .k-resize-hint-handle,
+    .k-resize-hint-marker {
+        background-color: @selected-background;
+    }
+
+    .k-resize-hint-vertical .k-resize-hint-handle,
+    .k-resize-hint-vertical .k-resize-hint-marker {
+        background-color: @selected-background;
+    }
+
+    .k-single-selection::after {
+        background-color: @spreadsheet-selection-border;
+        border-color: @background;
+    }
+
+    .k-auto-fill-punch {
+        background-color: fadeout(@background, 50%);
+    }
+
+    .k-single-selection.k-dim-auto-fill-handle::after {
+        background-color: fadeout(@spreadsheet-selection-border, 50%);
+    }
+
+    .k-spreadsheet-cell-comment {
+        color: @tooltip-text-color;
+        background-color: @tooltip-background-color;
+        border-color: @tooltip-border-color;
+    }
+
+    .k-spreadsheet-has-comment:after {
+        border-color: @spreadsheet-selection-border @spreadsheet-selection-border transparent transparent;
+    }
+
+    .k-dirty {
+        border-color: @input-validation-error transparent transparent @input-validation-error;
+    }
+}
+
+.k-spreadsheet-format-cells .k-spreadsheet-preview {
+    border-color: @widget-border-color;
+}
+
+.k-spreadsheet-filter {
+    border-radius: @border-radius;
+    background-color: @background;
+
+    box-shadow: inset 0 0 0 1px @spreadsheet-cell-border;
+
+    &.k-state-active {
+        color: @selected-text-color;
+        background-color: @selected-background;
+    }
+
+    &:hover {
+        color: @hover-text-color;
+        background: @hover-background;
+        border-color: darken(@hover-background, 8%);
+    }
+}
+
+.k-action-window .k-action-buttons {
+    border-color: @widget-border-color;
+    background: @header-background-color;
+}
+
+.k-spreadsheet-sample {
+    color: lighten(@normal-text-color, 30%);
+
+    .k-state-selected & {
+        color: inherit;
+    }
+}
+
+.k-spreadsheet-window .k-list {
+    border-color: @widget-border-color;
+    border-radius: @border-radius;
+}
+
+.k-spreadsheet-toolbar {
+
+    &.k-toolbar .k-button-group .k-button:not(.k-toggle-button) {
+        border-radius: @border-radius;
+    }
+
+    > .k-widget,
+    > .k-button,
+    > .k-button-group {
+        border-radius: @border-radius;
+    }
+
+    > .k-separator {
+        border-color: @widget-border-color;
+    }
+
+    .k-overflow-anchor {
+        border-radius: 0;
+    }
+}
+
+.k-spreadsheet-popup {
+    border-radius: @border-radius;
+
+    .k-separator {
+        background-color: @widget-border-color;
+    }
+
+    .k-button {
+        background-color: transparent;
+
+        &:hover {
+            background-color: @hover-background;
+        }
+    }
+
+    .k-state-active {
+        background-color: @selected-background;
+        color: contrast(@selected-text-color);
+
+        &:hover {
+            background-color: darken(@selected-background, 10%);
+        }
+    }
+}
+
+.k-spreadsheet-filter-menu {
+    .k-details {
+        border-color: @widget-border-color;
+    }
+
+    .k-details-content .k-space-right {
+        background-color: @background;
+    }
+
+    .k-spreadsheet-value-treeview-wrapper {
+        background-color: @background;
+        border-color: @widget-border-color;
+        border-radius: @border-radius 0 0 @border-radius;
+    }
+}
+
+.k-syntax-ref { color: #ff8822; }
+.k-syntax-num { color: #0099ff; }
+.k-syntax-func { font-weight: bold; }
+.k-syntax-str { color: #38b714; }
+.k-syntax-error { color: red; }
+.k-syntax-bool { color: #a9169c; }
+.k-syntax-startexp { font-weight: bold; }
+.k-syntax-paren-match { background-color: #caf200; }
+
+.k-series-a {
+    border-color: @series-a;
+    background-color: fade(@series-a, 15%);
+}
+
+.k-series-b {
+    border-color: @series-b;
+    background-color: fade(@series-b, 15%);;
+}
+
+.k-series-c {
+    border-color: @series-c;
+    background-color: fade(@series-c, 15%);;
+}
+
+.k-series-d {
+    border-color: @series-d;
+    background-color: fade(@series-d, 15%);;
+}
+
+.k-series-e {
+    border-color: @series-e;
+    background-color: fade(@series-e, 15%);;
+}
+
+.k-series-f {
+    border-color: @series-f;
+    background-color: fade(@series-f, 15%);;
+}
+
+
+.k-spreadsheet-sheets-remove:hover .k-icon {
+    color: #cc2222;
+}
+
+.k-spreadsheet-formula-list {
+    .k-state-focused {
+        background-color: @selected-background;
+        color: @selected-text-color;
+    }
+}
+
+
+// Images
+.k-spreadsheet-insert-image-dialog {
+    border-color: @widget-border-color;
+    border-radius: @border-radius;
+
+    .k-spreadsheet-has-image {
+        &:hover,
+        &.k-state-hovered {
+            box-shadow: @spreadsheet-insert-image-dialog-preview-overlay;
+            border-radius: @border-radius;
+        }
+
+        &:hover div,
+        &.k-state-hovered div {
+            color: @spreadsheet-insert-image-dialog-hovered-text;
+        }
+    }
+}
+
+.k-spreadsheet-drawing {
+    &.k-spreadsheet-active-drawing {
+        outline-color: @spreadsheet-drawing-handle-outline;
+    }
+
+    .k-spreadsheet-drawing-handle {
+        border-color: @spreadsheet-drawing-handle-border-color;
+        background-color: @spreadsheet-drawing-handle-bg;
+        border-radius: @spreadsheet-drawing-handle-border-radius;
+    }
+}
+
+.k-spreadsheet-drawing-anchor-cell {
+    background: @spreadsheet-drawing-anchor-bg;
+}
+
+
+// RTL
+.k-rtl .k-spreadsheet {
+    .k-spreadsheet-has-comment::after {
+        border-color: @spreadsheet-selection-border transparent transparent @spreadsheet-selection-border;
+    }
+
+    .k-dirty {
+        border-color: @input-validation-error @input-validation-error transparent transparent;
+    }
+}

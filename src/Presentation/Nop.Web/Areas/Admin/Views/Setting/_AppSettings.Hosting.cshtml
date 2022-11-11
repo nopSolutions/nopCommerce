@@ -1,0 +1,40 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="HostingConfigModel.UseProxy" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HostingConfigModel.UseProxy" />
+            <span asp-validation-for="HostingConfigModel.UseProxy"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="HostingConfigModel.ForwardedForHeaderName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HostingConfigModel.ForwardedForHeaderName" />
+            <span asp-validation-for="HostingConfigModel.ForwardedForHeaderName"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
+            <span asp-validation-for="HostingConfigModel.ForwardedProtoHeaderName"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="HostingConfigModel.KnownProxies" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HostingConfigModel.KnownProxies" />
+            <span asp-validation-for="HostingConfigModel.KnownProxies"></span>
+        </div>
+    </div>
+</div>

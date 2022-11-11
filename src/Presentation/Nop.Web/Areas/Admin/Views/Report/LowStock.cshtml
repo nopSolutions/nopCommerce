@@ -1,0 +1,130 @@
+﻿@model LowStockProductSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Reports.LowStock").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Low stock");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "LowStockPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="Report" asp-action="LowStock" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Reports.LowStock")
+        </h1>
+        <div class="float-right">
+            &nbsp;
+        </div>
+    </div>
+
+    <section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchPublishedId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 offset-md-4">
+                                    <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "products-grid",
+                            UrlRead = new DataUrl("LowStockList", "Report", null),
+                            SearchButtonId = "search-products",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchPublishedId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LowStockProductModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
+                                    Width = "300",
+                                    Render = new RenderCustom("renderColumnName")
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.ManageInventoryMethod))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.ManageInventoryMethod").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.StockQuantity))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(LowStockProductModel.Id))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                                }
+                            }
+                        })
+
+                        <script asp-location="Footer">
+                            function renderColumnName(data, type, row, meta) {
+                                var textRenderer = $.fn.dataTable.render.text().display;
+                                var res = data;
+                                if (row.Attributes !== null) {
+                                    return textRenderer(res) + '<div><i>' + textRenderer(row.Attributes) + '</i></div>';
+                                }
+                                else {
+                                    return textRenderer(res);
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+</form>

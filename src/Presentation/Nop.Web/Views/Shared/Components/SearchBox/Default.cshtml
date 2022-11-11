@@ -1,0 +1,61 @@
+﻿@model SearchBoxModel
+<form asp-route="ProductSearch" method="get" id="small-search-box-form">
+    @if (Model.ShowSearchBox)
+    {
+        <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
+        <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
+        @if (Model.SearchTermMinimumLength > 0)
+        {
+            <script asp-location="Footer">
+                $("#small-search-box-form").on("submit", function(event) {
+                    if ($("#small-searchterms").val() == "") {
+                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                        $("#small-searchterms").focus();
+                        event.preventDefault();
+                    }
+                });
+            </script>
+        }
+
+        @if (Model.AutoCompleteEnabled)
+        {
+            <script asp-location="Footer">
+                $(document).ready(function() {
+                    var showLinkToResultSearch;
+                    var searchText;
+                    $('#small-searchterms').autocomplete({
+                            delay: 500,
+                            minLength: @(Model.SearchTermMinimumLength.ToString()),
+                            source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                            appendTo: '.search-box',
+                            select: function(event, ui) {
+                                $("#small-searchterms").val(ui.item.label);
+                                setLocation(ui.item.producturl);
+                                return false;
+                        },
+                        //append link to the end of list
+                        open: function(event, ui) {
+                            //display link to search page
+                            if (showLinkToResultSearch) {
+                                searchText = document.getElementById("small-searchterms").value;
+                                $(".ui-autocomplete").append("<li class=\"ui-menu-item\" role=\"presentation\"><a href=\"/search?q=" + searchText + "\">@T("Search.SearchBox.SearchPageLink")</a></li>");
+                            }
+                        }
+                    })
+                    .data("ui-autocomplete")._renderItem = function(ul, item) {
+                        var t = item.label;
+                        showLinkToResultSearch = item.showlinktoresultsearch;
+                        //html encode
+                        t = htmlEncode(t);
+                        return $("<li></li>")
+                            .data("item.autocomplete", item)
+                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                            .appendTo(ul);
+                    };
+                });
+            </script>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
+    }
+</form>

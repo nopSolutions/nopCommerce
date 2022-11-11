@@ -1,0 +1,47 @@
+﻿@model CustomerReportsSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Reports.Customers.RegisteredCustomers").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Registered customers");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Reports.Customers.RegisteredCustomers")
+    </h1>
+</div>
+<section class="content">
+    <div class="container-fluid">    
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "registered-customers-grid",
+                            UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
+                            Length = Model.RegisteredCustomers.PageSize,
+                            LengthMenu = Model.RegisteredCustomers.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                                {
+                                    Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period").Text
+                                },
+                                new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
+                                {
+                                    Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers").Text,
+                                    Width = "150"
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

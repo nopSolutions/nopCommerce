@@ -1,0 +1,107 @@
+@model TaxProviderSearchModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Tax.Providers").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.TaxProviders;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Tax providers");
+
+    string editQueryString = string.Empty;
+    var showTour = ViewBag.ShowTour ?? false;
+    if (showTour)
+    {
+        editQueryString = "?showtour=true";
+    }
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<form asp-controller="Tax" asp-action="Providers" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Tax.Providers")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxProviderListButtons, additionalData = Model })
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TaxProviders", Docs.TaxProviders + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                                @T("Admin.Configuration.Tax.Providers.DownloadMorePlugins", OfficialSite.TaxPlugins + Utm.OnAdminTaxPlugins.Replace('?', '&'))
+                            </p>
+
+                            <div id="tax-providers-area">
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                                {
+                                    Name = "tax-providers-grid",
+                                    RowIdBasedOnField = nameof(PaymentMethodModel.SystemName),
+                                    UrlRead = new DataUrl("Providers", "Tax", null),
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
+                                            Width = "100",
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
+                                            Width = "200",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-primary",
+                                            Render = new RenderCustom("renderColumnSystemName")
+                                        },
+                                        new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
+                                            Width = "150",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-configure",
+                                            Render = new RenderCustom("renderColumnConfigure")
+                                        }
+                                    }
+                                })
+                            </div>
+
+                            <script>
+                            function renderColumnSystemName(data, type, row, meta) {
+                                return '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text</a>';
+                            }
+
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '@(editQueryString)"><i class="fas fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure").Text</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+

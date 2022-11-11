@@ -1,0 +1,438 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Upload
+
+html .k-upload
+{
+    position: relative;
+}
+
+.k-dropzone .k-dropzone-hint,
+.k-upload-button
+{
+    vertical-align: middle;
+}
+
+.k-dropzone,
+.k-file
+{
+    position: relative;
+}
+
+.k-dropzone
+{
+    border-style: solid;
+    border-width: 0;
+    padding: .8em;
+    background-color: transparent;
+}
+
+.k-dropzone .k-dropzone-hint
+{
+    display: none;
+    margin-left: .6em;
+}
+
+.k-dropzone-active {
+
+    .k-dropzone-hint {
+        display: inline-block;
+    }
+
+    .k-upload-status {
+        display: none;
+    }
+}
+
+.k-upload-button
+{
+    position: relative;
+    overflow: hidden;
+    direction: ltr;
+}
+
+.k-upload .k-upload-button
+{
+    min-width: 7.167em;
+    margin-right: 1.6em;
+}
+
+.k-upload-button input {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    font: 170px monospace !important; // critical for correct operation; larger values lead to ignoring or text layout problems in IE
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.k-upload-files
+{
+    line-height: 2.66;
+    border-style: solid;
+    border-width: 1px 0 0;
+}
+
+.k-upload-files .k-button
+{
+    padding: 0;
+}
+
+.k-upload-status .k-i-warning {
+    display: none;
+}
+
+.k-upload-status-total .k-icon {
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: text-bottom;
+}
+
+.k-dropzone .k-upload-status-total {
+    top: 50%;
+    transform: translateY(-50%);
+}
+.k-ie .k-dropzone .k-upload-status-total {
+    transform: none;
+}
+
+.k-upload .k-clear-selected ,
+.k-upload .k-upload-selected {
+    display: inline-block;
+    width: 50%;
+    margin: 0;
+    line-height: 1em;
+    padding: 1.214em 0;
+    border: 0;
+}
+
+.k-upload .k-upload-selected {
+    border-left-width: 1px;
+    border-left-style: solid;
+    margin-left: -1px;
+}
+
+.k-upload .k-clear-selected {
+    border-radius: 0 0 0 4px;
+}
+
+.k-upload .k-upload-selected {
+    border-radius: 0 0 4px 0;
+}
+
+.k-upload-files ~ .k-clear-selected,
+.k-upload-files ~ .k-upload-selected {
+    margin-top: -5px;
+}
+
+.k-upload .k-fail
+{
+    background-position: -161px -111px;
+}
+
+.k-file {
+    border-style: solid;
+    border-width: 0 0 1px;
+    padding: .65em .17em .65em 1em;
+    white-space: nowrap;
+
+    .k-upload-action {
+        background: 0 0;
+        border-width: 0;
+        box-shadow: none;
+        margin-right: 3px;
+    }
+}
+.k-file:last-child {
+    border-bottom-width: 0;
+}
+
+.k-file .k-icon
+{
+    display: inline-block;
+    position: relative;
+}
+
+.k-file-extension-wrapper,
+.k-file-name-size-wrapper,
+.k-file-group-wrapper,
+.k-multiple-files-group-wrapper,
+.k-multiple-files-extension-wrapper,
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    display: inline-block;
+}
+
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper,
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    position: relative;
+    width: 24px;
+    height: 34px;
+    border-width: 2px;
+    border-style: solid;
+    vertical-align: top;
+    font-size: .57em;
+    text-transform: uppercase;
+}
+
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    font-size: 1.2em;
+}
+
+.k-multiple-files-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    margin-top: 4px;
+}
+
+.k-file-group-wrapper,
+.k-file-invalid-group-wrapper,
+.k-multiple-files-group-wrapper,
+.k-multiple-files-invalid-group-wrapper {
+    .k-file-group {
+        font-size: 32px;
+    }
+
+    .k-file-state {
+        position: absolute;
+    }
+}
+
+.k-multiple-files-group-wrapper,
+.k-multiple-files-invalid-group-wrapper {
+    vertical-align: top;
+}
+
+.k-file-state {
+    visibility: hidden;
+}
+
+.k-file-name-size-wrapper {
+    vertical-align: middle;
+    margin-left: 1em;
+    max-width: calc(100% - 24px - 1em - 6em);
+}
+
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:after,
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:after {
+    position: absolute;
+    content: "";
+    display: inline-block;
+    border-style: solid;
+}
+
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before,
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+    top: -1px;
+    right: -1px;
+    width: 0;
+    height: 0;
+    border-width: 6px;
+    margin-top: -1px;
+    margin-right: -1px;
+}
+
+.k-multiple-files-extension-wrapper:after,
+.k-multiple-files-invalid-extension-wrapper:after {
+    top: -6px;
+    left: -6px;
+    width: 15px;
+    height: 35px;
+    border-width: 2px 0 0 2px;
+}
+
+.k-file-extension,
+.k-file-invalid-icon {
+    position: absolute;
+    bottom: 0;
+    line-height: normal;
+}
+
+.k-file-extension {
+    margin-left: .4em;
+    margin-bottom: .3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.k-file-invalid-icon {
+    margin-left: 5px;
+}
+
+.k-file-name,
+.k-file-size,
+.k-file-validation-message,
+.k-file-information {
+    display: block;
+}
+
+.k-file-name {
+    position: relative;
+    max-width: 100%;
+    vertical-align: middle;
+    line-height: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+    font-size: .78em;
+    line-height: 1.5em;
+}
+
+.k-file-information,
+.k-file-validation-message {
+    line-height: 1.5em;
+}
+
+.k-file-size {
+    line-height: 1.2em;
+}
+
+.k-upload-files .k-upload-status
+{
+    line-height: 1;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.65;
+}
+
+.k-upload-action,
+.k-button.k-upload-action:hover,
+.k-button.k-upload-action:active:hover,
+.k-button.k-upload-action.k-state-active:hover {
+    color: inherit;
+    background: transparent;
+    border: 0;
+}
+
+    .k-upload-action {
+        opacity: 0.6;
+    }
+
+    .k-upload-action:hover {
+        opacity: 1;
+    }
+
+.k-upload-action .k-icon {
+    vertical-align: top;
+}
+.k-file .k-upload-status .k-button,
+.k-file .k-upload-status > .k-icon {
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.k-dropzone .k-upload-status
+{
+    position: static;
+    margin-left: 10px;
+}
+
+.k-upload-pct {
+    margin-right: .75em;
+}
+
+.k-ie9 {
+    .k-upload-status-total {
+        top: 1.5em;
+
+        > .k-icon {
+            margin-top: -3px;
+        }
+    }
+}
+
+.k-upload-action {
+    line-height: normal;
+}
+
+.k-progress
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+}
+
+.k-file-invalid > .k-progress {
+    width: 100%;
+}
+
+.k-upload-selected
+{
+    min-width: 7.167em;
+    margin: 0.25em 0 0;
+
+    .box-sizing(content-box);
+}
+
+.k-upload-selected,
+.k-upload-cancel
+{
+    margin-bottom: .8em;
+}
+
+.k-upload-selected
+{
+    margin-left: .8em;
+    margin-right: .2em;
+}
+
+.k-rtl .k-file-extension-wrapper {
+    margin-left: 14px;
+}
+
+.k-upload .k-action-buttons {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    clear: both;
+
+    .k-button {
+        flex: 1 1 auto;
+        margin: 0;
+    }
+
+    .k-button + .k-button {
+        margin: 0;
+    }
+}
+
+.k-no-flexbox .k-upload .k-action-buttons .k-button {
+    border-width: 0;
+}
+
+
+
+

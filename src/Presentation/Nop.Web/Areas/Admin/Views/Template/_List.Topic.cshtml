@@ -1,0 +1,132 @@
+@model TemplatesModel
+
+<div class="card-body">
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TopicTemplateListButtons, additionalData = Model })
+
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "templates-topic-grid",
+            UrlRead = new DataUrl("TopicTemplates", "Template", null),
+            UrlUpdate = new DataUrl("TopicTemplateUpdate", "Template", null),
+            UrlDelete = new DataUrl("TopicTemplateDelete", "Template", null),
+
+            Length = Model.TemplatesTopic.PageSize,
+            LengthMenu = Model.TemplatesTopic.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(TopicTemplateModel.Name))
+                {
+                    Title = T("Admin.System.Templates.Topic.Name").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(TopicTemplateModel.ViewPath))
+                {
+                    Title = T("Admin.System.Templates.Topic.ViewPath").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(TopicTemplateModel.DisplayOrder))
+                {
+                    Title = T("Admin.System.Templates.Topic.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(TopicTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(TopicTemplateModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <div class="card card-default">
+            <div class="card-header">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddTopicTemplate.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddTopicTemplate.Name" />
+                        <span asp-validation-for="@Model.AddTopicTemplate.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddTopicTemplate.ViewPath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddTopicTemplate.ViewPath" />
+                        <span asp-validation-for="@Model.AddTopicTemplate.ViewPath"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddTopicTemplate.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddTopicTemplate.DisplayOrder" />
+                        <span asp-validation-for="@Model.AddTopicTemplate.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="button" id="addTopicTemplate" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#addTopicTemplate').click(function () {
+                        $('#addTopicTemplate').attr('disabled', true);
+                        var postData = {
+                            Name: $("#@Html.IdFor(model => model.AddTopicTemplate.Name)").val(),
+                            ViewPath: $("#@Html.IdFor(model => model.AddTopicTemplate.ViewPath)").val(),
+                            DisplayOrder: $("#@Html.IdFor(model => model.AddTopicTemplate.DisplayOrder)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("TopicTemplateAdd", "Template", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#templates-topic-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.ViewPath)").val('');
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.DisplayOrder)").data("kendoNumericTextBox").value(0);
+
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
+                                }
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                $('#addTopicTemplate').attr('disabled', false);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+</div>

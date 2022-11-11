@@ -1,0 +1,27 @@
+﻿@model ProductDetailsModel
+@if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping || !string.IsNullOrWhiteSpace(Model.DeliveryDate))
+{
+    <div class="delivery">
+        <script asp-location="Footer">
+            $(document).on("product_attributes_changed", function (data) {
+                if (data.changedData.isFreeShipping) {
+                    $("#free-shipping-"+data.changedData.productId).removeClass("invisible");
+                } else {
+                    $("#free-shipping-"+data.changedData.productId).addClass("invisible");
+                }
+            });
+        </script>
+
+        @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
+        {
+            <div id="free-shipping-@Model.Id" class="free-shipping">@T("Products.FreeShipping")</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
+        {
+            <div class="delivery-date">
+                <span class="label">@T("Products.DeliveryDate"):</span>
+                <span class="value">@Model.DeliveryDate</span>
+            </div>
+        }
+    </div>
+}

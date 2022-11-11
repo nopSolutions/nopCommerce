@@ -1,0 +1,44 @@
+﻿@model ProductModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsRecurring" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsRecurring" />
+            <span asp-validation-for="IsRecurring"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="IsRecurring">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="RecurringCycleLength" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RecurringCycleLength" />
+                <span asp-validation-for="RecurringCycleLength"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="RecurringCyclePeriodId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="RecurringCyclePeriodId" asp-items="@await (((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectListAsync())" />
+                <span asp-validation-for="RecurringCyclePeriodId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="RecurringTotalCycles" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RecurringTotalCycles" />
+                <span asp-validation-for="RecurringTotalCycles"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

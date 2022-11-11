@@ -1,0 +1,56 @@
+﻿@model ReviewTypeSearchModel
+
+<div class="card-body">
+    <p>
+        @T("Admin.Settings.ReviewType.Description")
+        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductReviews", Docs.ProductReviews + Utm.OnAdmin)" asp-add-wrapper="false"/>
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "reviewtypes-grid",
+        UrlRead = new DataUrl("List", "ReviewType", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ReviewTypeModel.Name))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.Name").Text,
+                Width = "300"
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.IsRequired))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.IsRequired").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.DisplayOrder").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
+            }
+        }
+    })
+</div>    
+<div class="card-footer">
+    <a class="btn btn-primary" href="@Url.Action("Create", "ReviewType")">
+        <i class="fas fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
+</div>

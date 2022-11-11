@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="සිංහල" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>පරිපාලක පරිශීලක විද්‍යුත් තැපෑල</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>පරිපාලක විද්‍යුත් තැපෑල ඇතුළත් කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>පරිපාලක පරිශීලක මුරපදය</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>පරිපාලක මුරපදය ඇතුළත් කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>මෙම '{0}' ගිණුම් ෆෝල්ඩරය මත Modify අවසරය ලබා නැත '{1}' '. කරුණාකර මෙම අවසරයන් වින්‍යාස කරන්න.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>මෙම '{0}' ගිණුම් ගොනුව මත Modify අවසරය ලබා නැත '{1}' '. කරුණාකර මෙම අවසරයන් වින්‍යාස කරන්න.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>මුරපදය සනාථ කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>තහවුරු කරන මුරපදය ඇතුළත් කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>සම්බන්ධතා යෙදුම</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL සම්බන්ධක යෙදුමක් අවශ්‍ය වේ</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>වැරදි SQL සම්බන්ධතා යෙදුම් ආකෘතියක්</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>රට</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>ඔබගේ රට තෝරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>නොපවතී නම් දත්ත ගබඩාව සාදන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>නියැදි දත්ත සාදන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>අභිරුචි එකතුව සදහන් කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>දත්ත සංචිතය</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>දත්ත බැංකුව නිර්මාණය කිරීමේදී දෝෂයක් ඇතිවිය: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>දත්ත සංචිතයේ තොරතුරු</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>දත්ත සංචිතයේ නාමය</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>දත්ත සංචිතය නොපවතී හෝ එයට සම්බන්ධ වීමට ඔබට අවසර නොමැත</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>දත්ත ගබඩා සේවා සපයන්නා තෝරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>ඔබට nopCommerce භාවිතා කරන්නේ කෙසේද යන්න පිළිබඳ තොරතුරු අවශ්‍ය නම්, පිවිසෙන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com හි ප්‍රලේඛන අංශය</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>උදාහරණයක්</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>ස්ථාපනය කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce ස්ථාපනය කරමින් පවතී...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>ඒකාබද්ධ වින්ඩෝස් සත්‍යාපනය භාවිතා කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>මුරපද නොගැලපේ</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>අතින් කරනලද සම්බන්ධතා යෙදුම ඇතුළත් කරන්න (සංකීර්ණ)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>ස්ථාපනය නැවත ආරම්භ කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>ස්ථාපන ක්‍රියාවලිය නැවත ආරම්භ කිරීමට ක්ලික් කරන්න (සියලු මතක තබාගත් අගයන් ඉවත් කරන්න)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>නැවත ආරම්භ කිරීම ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL සේවාදායකයේ නම</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>SQL සේවාදායකයේ නම අවශ්‍යයි</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>සැකසුම අසාර්ථක විය: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL මුරපදය</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL මුරපදය අවශ්‍යයි</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL සේවාදායකය</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL පරිශීලක නාමය</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL පරිශීලක නාමය අවශ්‍ය වේ</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>වෙලඳසැලේ තොරතුරු</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce ස්ථාපනය</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>මෙම Wizard යෙදුම සම්පූර්ණ කිරීම සඳහා, ඔබේ දත්ත සමුදා සේවාදායකය ("සම්බන්ධතා නූල") පිළිබඳ යම් තොරතුරු ඔබ දැන සිටිය යුතුය. අවශ්‍ය නම් කරුණාකර ඔබේ සේවා සැපයුම්කරු අමතන්න. ඔබ දේශීය(Local) යන්ත්‍රයක හෝ සර්වරයක ස්ථාපනය කරන්නේ නම්, ඔබට ඔබේ පද්ධති පරිපාලකගෙන් තොරතුරු අවශ්‍ය විය හැකිය.</Value>
+  </LocaleResource>
+</Language>

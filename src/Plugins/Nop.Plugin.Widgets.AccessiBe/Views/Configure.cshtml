@@ -1,0 +1,49 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="AccessiBe" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    1. Go to <a href="https://accessibe.com/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_content=plugin&utm_campaign=plugin" target="_blank">accessibe.com</a><br />
+                    2. Click "<b>Start Free Trial</b>" and enter your details<br />
+                    3. Click "Go to installation" and copy-paste the script into the site's body tag.<br />
+                    <br />
+                </p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="Enabled">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="Script_OverrideForStore" asp-input="Script" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="Script" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="Script" asp-required="true" />
+                            <span asp-validation-for="Script"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

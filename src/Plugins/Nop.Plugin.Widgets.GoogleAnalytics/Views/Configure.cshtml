@@ -1,0 +1,90 @@
+﻿@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                @T("Plugins.Widgets.GoogleAnalytics.Instructions")              
+            </div>
+        </div>
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GoogleId_OverrideForStore" asp-input="GoogleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GoogleId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GoogleId" />
+                        <span asp-validation-for="GoogleId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="TrackingScript_OverrideForStore" asp-input="TrackingScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TrackingScript" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-textarea asp-for="TrackingScript" />
+                        <span asp-validation-for="TrackingScript"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="EnableEcommerce_OverrideForStore" asp-input="EnableEcommerce" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableEcommerce" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableEcommerce" />
+                        <span asp-validation-for="EnableEcommerce"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="EnableEcommerce">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseJsToSendEcommerceInfo_OverrideForStore" asp-input="UseJsToSendEcommerceInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseJsToSendEcommerceInfo" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseJsToSendEcommerceInfo" />
+                            <span asp-validation-for="UseJsToSendEcommerceInfo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="IncludingTax_OverrideForStore" asp-input="IncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="IncludingTax" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="IncludingTax" />
+                            <span asp-validation-for="IncludingTax"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IncludeCustomerId_OverrideForStore" asp-input="IncludeCustomerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IncludeCustomerId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IncludeCustomerId" />
+                        <span asp-validation-for="IncludeCustomerId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,69 @@
+﻿@model BackInStockSubscribeModel
+<div class="page back-in-stock-subscription-page">
+    <div class="page-title">
+        <h1>
+            @if (Model.AlreadySubscribed)
+            {
+                @T("BackInStockSubscriptions.AlreadySubscribed")
+            }
+            else
+            {
+                @T("BackInStockSubscriptions.PopupTitle")
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @if (!Model.SubscriptionAllowed)
+            {
+            <div>
+                @T("BackInStockSubscriptions.NotAllowed")
+            </div>
+        }
+        else if (!Model.IsCurrentCustomerRegistered)
+        {
+            <div>
+                @T("BackInStockSubscriptions.OnlyRegistered")
+            </div>
+        }
+        else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+        {
+            <div>
+                @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)
+            </div>
+        }
+        else
+        {
+            if (!Model.AlreadySubscribed)
+            {
+                <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
+            }
+            <button type="submit" id="back-in-stock-notify-me" class="button-1 notify-me-button">
+                @(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)
+            </button>
+            <nop-antiforgery-token />
+            <script>
+                $(document).ready(function () {
+                    $("#back-in-stock-notify-me").on('click', function () {
+                        var subscribeButton = this;
+                        var postData = {};
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            data: postData,
+                            url: "@(Url.RouteUrl("BackInStockSubscribeSend", new { productId = Model.ProductId }))",
+                            success: function (data, textStatus, jqXHR) {
+                                $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
+                                location.reload();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert('Failed to change subscription.');
+                            }
+                        });
+
+                    });
+                });
+            </script>
+        }
+    </div>
+</div>

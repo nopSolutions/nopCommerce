@@ -1,0 +1,172 @@
+﻿@model OfficialFeedPluginSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Plugins.OfficialFeed").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("All plugins and themes");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "OfficialFeedPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="Plugin" asp-action="OfficialFeed" id="plugins-form-official-feed">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Plugins.OfficialFeed")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default card-search">
+                            <div class="card-body">
+                                <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                    <div class="search-text">@T("Admin.Common.Search")</div>
+                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                </div>
+
+                                <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                    <p>
+                                        @T("Admin.Configuration.Plugins.OfficialFeed.Instructions", OfficialSite.Marketplace + Utm.OnAdminPluginsFeed)
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchName" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchName" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchCategoryId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchPriceId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchPriceId" asp-items="Model.AvailablePrices" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchVersionId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchVersionId" asp-items="Model.AvailableVersions" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="text-center col-12">
+                                            <button type="button" id="search-plugins" class="btn btn-primary btn-search">
+                                                <i class="fas fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
+
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                           {
+                               Name = "plugins-grid",
+                               UrlRead = new DataUrl("OfficialFeedSelect", "Plugin", null),
+                               SearchButtonId = "search-plugins",
+                               Length = Model.PageSize,
+                               LengthMenu = Model.AvailablePageSizes,
+                               Filters = new List<FilterParameter>
+                                    {
+                                        new FilterParameter(nameof(Model.SearchName)),
+                                        new FilterParameter(nameof(Model.SearchVersionId)),
+                                        new FilterParameter(nameof(Model.SearchCategoryId)),
+                                        new FilterParameter(nameof(Model.SearchPriceId))
+                                    },
+                               ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.PictureUrl))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Picture").Text,
+                                            Render = new RenderPicture(width: 120)
+                                        },
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Name))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Name").Text,
+                                            Width = "600"
+                                        },
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Price))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Price").Text,
+                                            Width = "70"
+                                        },
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.Url))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Download").Text,
+                                            Width = "150",
+                                            ClassName =  NopColumnClassDefaults.Button,
+                                            Render = new RenderCustom("renderColumnUrl")
+                                        },
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.Category").Text,
+                                            Width = "200"
+                                        },
+                                        new ColumnProperty(nameof(OfficialFeedPluginModel.SupportedVersions))
+                                        {
+                                            Title = T("Admin.Configuration.Plugins.OfficialFeed.SupportedVersions").Text,
+                                            Width = "200"
+                                        }
+                                    }
+                           })
+
+                                <script>
+                            function renderColumnUrl(data, type, row, meta) {
+                                return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fas fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download").Text</a>';
+                            }
+                                </script>
+                            </div>
+
+                            <div>
+                                <button type="submit" id="btnRefresh" style="display: none"></button>
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#btnRefresh').click(function () {
+                                            //refresh grid
+                                            updateTable('#plugins-grid');
+                                            //return false to don't reload a page
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+

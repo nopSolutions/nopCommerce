@@ -1,0 +1,81 @@
+@model GdprSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="GdprEnabled_OverrideForStore" asp-input="GdprEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="GdprEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="GdprEnabled" />
+            <span asp-validation-for="GdprEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="GdprEnabled" disable-auto-generation="true">
+        <div class="form-group row advanced-setting" id="pnlLogPrivacyPolicyConsent">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="LogPrivacyPolicyConsent_OverrideForStore" asp-input="LogPrivacyPolicyConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="LogPrivacyPolicyConsent" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LogPrivacyPolicyConsent" />
+                <span asp-validation-for="LogPrivacyPolicyConsent"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlLogNewsletterConsent">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="LogNewsletterConsent_OverrideForStore" asp-input="LogNewsletterConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="LogNewsletterConsent" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LogNewsletterConsent" />
+                <span asp-validation-for="LogNewsletterConsent"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlLogUserProfileChanges">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="LogUserProfileChanges_OverrideForStore" asp-input="LogUserProfileChanges" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="LogUserProfileChanges" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LogUserProfileChanges" />
+                <span asp-validation-for="LogUserProfileChanges"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlDeleteInactiveCustomersAfterMonths">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="DeleteInactiveCustomersAfterMonths_OverrideForStore" asp-input="DeleteInactiveCustomersAfterMonths" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="DeleteInactiveCustomersAfterMonths" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeleteInactiveCustomersAfterMonths" />
+                <span asp-validation-for="DeleteInactiveCustomersAfterMonths"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.GdprEnabled)").click(toggleGdprEnabled);
+
+        toggleGdprEnabled();
+    });
+
+    function toggleGdprEnabled() {
+        if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
+            $('#pnlLogPrivacyPolicyConsent').showElement();
+            $('#pnlLogNewsletterConsent').showElement();
+            $('#pnlLogUserProfileChanges').showElement();
+            $('#pnlDeleteInactiveCustomersAfterMonths').showElement();
+
+            $('[data-card-name=gdprsettings-consents]').showElement();
+            ensureDataTablesRendered();
+        } else {
+            $('#pnlLogPrivacyPolicyConsent').hideElement();
+            $('#pnlLogNewsletterConsent').hideElement();
+            $('#pnlLogUserProfileChanges').hideElement();
+            $('#pnlDeleteInactiveCustomersAfterMonths').hideElement();
+            $('[data-card-name=gdprsettings-consents]').hideElement();
+        }
+    }
+</script>

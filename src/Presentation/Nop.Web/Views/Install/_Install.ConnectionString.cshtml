@@ -1,0 +1,67 @@
+@model InstallModel
+
+    <div id="sqlDatabaseInfo">
+        <div class="credentials">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                    @ILS.GetResource("ServerName")
+                </label>
+                <div class="col-sm-8">
+                    <input asp-for="ServerName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                    @ILS.GetResource("DatabaseName")
+                </label>
+                <div class="col-sm-8">
+                    <input asp-for="DatabaseName" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="IntegratedSecurity" asp-value="@true" />
+                    <label class="form-check-label" for="@Html.IdFor(m => m.IntegratedSecurity)">
+                        @ILS.GetResource("IntegratedAuthentication")
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="credentials" id="pnlSqlServerCredentials">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                    @ILS.GetResource("SqlUsername")
+                </label>
+                <div class="col-sm-8">
+                    <input asp-for="Username" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                    @ILS.GetResource("SqlPassword")
+                </label>
+                <div class="col-sm-8">
+                    <input asp-for="Password" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $('#@Html.IdFor(x => x.IntegratedSecurity)').click(toggleSqlAuthenticationType);
+
+        toggleSqlAuthenticationType();
+    })
+
+    function toggleSqlAuthenticationType() {
+        var sqlAuthentication = $("#@Html.IdFor(x => x.IntegratedSecurity)").is(':checked');
+        if (sqlAuthentication) {
+            $('#pnlSqlServerCredentials').hide();
+        } else {
+            $('#pnlSqlServerCredentials').show();
+        }
+    }
+</script>

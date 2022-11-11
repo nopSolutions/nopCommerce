@@ -1,0 +1,77 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Radio
+.k-radio {
+    .fill(
+        @radio-text,
+        @radio-bg,
+        @radio-border
+    );
+    .border-radius( @radio-radius );
+
+    &::before {
+        .border-radius( @radio-radius );
+    }
+}
+
+
+// Hover state
+.k-radio:hover {
+    .fill(
+        @radio-hovered-text,
+        @radio-hovered-bg,
+        @radio-hovered-border
+    );
+}
+
+
+// Focus state
+.k-radio:focus {
+    .box-shadow( @radio-focused-shadow );
+    border-color: @radio-focused-border;
+}
+
+
+// Checked
+.k-radio:checked {
+    .fill(
+        @radio-checked-text,
+        @radio-checked-bg,
+        @radio-checked-border
+    );
+}
+
+.k-radio:checked:focus {
+    .box-shadow( @radio-focused-checked-shadow );
+    border-color: @radio-focused-checked-border;
+}
+
+
+// Disabled
+.k-radio:disabled {
+    .fill(
+        @radio-disabled-text,
+        @radio-disabled-bg,
+        @radio-disabled-border
+    );
+}
+.k-radio:checked:disabled {
+    .fill(
+        @radio-disabled-checked-text,
+        @radio-disabled-checked-bg,
+        @radio-disabled-checked-border
+    );
+}

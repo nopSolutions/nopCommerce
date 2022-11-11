@@ -1,0 +1,37 @@
+@model SpecificationAttributeGroupModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.EditAttributeGroupDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Specification attributes");
+}
+
+<form asp-controller="SpecificationAttribute" asp-action="EditSpecificationAttributeGroup" method="post" id="specificationattributegroup-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.EditAttributeGroupDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="specificationattributegroup-delete" class="btn bg-red">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeGroupDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttributeGroup", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="specificationattributegroup-delete" asp-action="DeleteSpecificationAttributeGroup" />

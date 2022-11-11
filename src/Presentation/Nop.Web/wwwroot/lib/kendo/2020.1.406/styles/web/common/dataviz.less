@@ -1,0 +1,596 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-chart,
+.k-gauge,
+.k-sparkline,
+.k-stockchart
+{
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.k-chart,
+.k-stockchart
+{
+    height: 400px;
+}
+
+.k-chart > canvas {
+    vertical-align: top;
+}
+
+div.k-chart,
+div.k-gauge,
+span.k-sparkline,
+.k-stockchart
+{
+    background-color: transparent;
+}
+
+.k-gauge
+{
+    text-align: left;
+    position: relative;
+}
+
+.k-arcgauge {
+    display: inline-block;
+}
+
+.k-arcgauge-label {
+    position: absolute;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.k-baseline-marker {
+    zoom: 1;
+}
+
+.k-chart-tooltip {
+    border-radius: 4px;
+    padding: 6px;
+    white-space: nowrap;
+    z-index: 12000;
+    line-height: normal;
+    background-repeat: repeat-x;
+    background-position: 0 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADNJREFUeNpi/P//vwMDFQELEP8beQb+HTWQYgP/DHoD/466cAR4edRAyg38P6hLbIAAAwCnWhhVsxvdCAAAAABJRU5ErkJggg==);
+    color: #fff;
+}
+
+.k-chart-tooltip-inverse {
+    color: #000;
+}
+
+.k-chart-tooltip table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.k-chart-tooltip th {
+    width: auto;
+    text-align: center;
+    padding: 1px;
+}
+
+.k-chart-tooltip td {
+    width: auto;
+    text-align: left;
+    padding: .1em .2em;
+}
+
+.k-chart-shared-tooltip-marker {
+    display: block;
+    width: 15px;
+    height: 3px;
+}
+
+// Stock Charts
+
+// Selection
+.k-selector {
+    position: absolute;
+    -webkit-transform: translateZ(0);
+}
+
+.k-selection {
+    border-bottom: 0;
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d2d2d2;
+    border-bottom: 0;
+    height: 100%;
+}
+
+.k-selection-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.01);
+    filter: alpha(opacity=1);
+}
+
+.k-handle {
+    background: #d2d2d2;
+    width: 7px;
+    height: 26px;
+    cursor: e-resize;
+    z-index: 1;
+    border-radius: 6px;
+    position: absolute;
+}
+
+.k-handle div {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+.k-left-handle {
+    left: -4px;
+}
+
+.k-right-handle {
+    right: -4px;
+}
+
+.k-left-handle div {
+    margin: -20px 0 0 -15px;
+    padding: 40px 30px 0 0;
+}
+
+.k-left-handle.k-handle-active div {
+    margin-left: -40px;
+    padding-right: 55px;
+}
+
+.k-right-handle div {
+    margin: -20px 0 0 -15px;
+    padding: 40px 0 0 30px;
+}
+
+.k-right-handle.k-handle-active div {
+    padding-left: 55px;
+}
+
+.k-mask {
+    position: absolute;
+    height: 100%;
+    background-color: #fff;
+    filter: alpha(opacity=80);
+    opacity: 0.80;
+}
+
+.k-border {
+    background: #d2d2d2;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+}
+
+// Navigator hint
+.k-navigator-hint {
+}
+
+.k-navigator-hint div {
+    position: absolute;
+}
+
+.k-navigator-hint .k-scroll {
+    position: absolute;
+    height: 4px;
+    border-radius: 4px;
+    background: #d2d2d2;
+}
+
+.k-navigator-hint .k-tooltip {
+    margin-top: 20px;
+    min-width: 160px;
+    opacity: 1;
+    text-align: center;
+    border: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    background: #fff;
+}
+
+
+// Sparklines
+
+.k-sparkline,
+.k-sparkline span {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.k-sparkline span {
+    height: 100%;
+    width: 100%;
+}
+
+// Map
+
+.k-map,
+.k-diagram {
+    height: 600px;
+}
+
+.k-map .km-scroll-wrapper,
+.k-diagram .km-scroll-wrapper {
+    padding-bottom: 0;
+    user-select: none;
+}
+
+.k-map .km-scroll-wrapper,
+.k-diagram .km-scroll-wrapper,
+.k-map .km-scroll-container,
+.k-diagram .km-scroll-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.k-map .k-layer,
+.k-diagram .k-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.k-map .km-touch-scrollbar,
+.k-diagram .km-touch-scrollbar {
+    display: none;
+}
+
+
+
+
+// Map
+.k-map {
+    border-width: 0;
+    border-style: solid;
+    box-sizing: border-box;
+
+
+    // Controls
+    .k-map-controls {
+        position: absolute;
+    }
+    .k-pos-top { top: 0; }
+    .k-pos-bottom { bottom: 0; }
+    .k-pos-left { left: 0; }
+    .k-pos-right { right: 0; }
+
+
+    // Navigator
+    .k-navigator {
+        margin: 1em;
+        width: 50px;
+        height: 50px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 80px;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+
+        .k-pdf-export & { display: none; }
+    }
+
+
+    // Zoom control
+    .k-zoom-control {
+        margin: 1em;
+        vertical-align: middle;
+
+        .k-button {
+            width: auto;
+            height: auto;
+        }
+
+        .k-pdf-export & { display: none; }
+    }
+
+
+    // Attribution
+    .k-attribution {
+        padding: 2px 4px;
+        font-size: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+    }
+
+
+    // Marker
+    .k-marker {
+        width: 28px;
+        height: 40px;
+        margin: -40px 0 0 -14px;
+        font-size: 28px;
+        position: absolute;
+        // width: 1em;
+        // height: 1em;
+        // transform: translate(-50%, -100%);
+        cursor: pointer;
+        overflow: visible;
+    }
+}
+
+
+// Navigator
+.k-navigator {
+
+
+    // Buttons
+    > .k-button {
+        margin: 0;
+        padding: 0;
+        border-color: transparent;
+        border-radius: 16px;
+        line-height: 10px;
+        background: none;
+        position: absolute;
+    }
+
+    .k-navigator-n,
+    .k-navigator-up {
+        top: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .k-navigator-e,
+    .k-navigator-right {
+        right: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .k-navigator-s,
+    .k-navigator-down {
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .k-navigator-w,
+    .k-navigator-left {
+        left: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .k-pdf-export & { display: none; }
+}
+
+// Zoom
+
+.k-button-wrap
+{
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.k-button-wrap .k-button
+{
+    position: relative;
+    padding: 4px;
+    line-height: 16px;
+
+    .k-icon {
+        vertical-align: top;
+    }
+}
+
+.k-buttons-horizontal :first-child
+{
+    border-radius: 4px 0 0 4px;
+}
+
+.k-buttons-horizontal :first-child + .k-zoom-in
+{
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+.k-buttons-horizontal .k-zoom-out
+{
+    border-radius: 0 4px 4px 0;
+    margin-left: -1px;
+}
+
+.k-button-wrap .k-button:hover
+{
+    z-index:1;
+}
+
+.k-buttons-vertical .k-button
+{
+    display: block;
+}
+
+.k-buttons-vertical :first-child
+{
+    border-radius: 4px 4px 0 0;
+}
+
+.k-buttons-vertical .k-zoom-out
+{
+    border-radius: 0 0 4px 4px;
+    margin-top: -1px;
+}
+
+.k-zoom-text
+{
+    margin: 0;
+    width: 4.3em;
+    vertical-align: top;
+}
+
+// RTL
+
+.k-rtl .k-buttons-horizontal :first-child
+{
+    border-radius: 0 4px 4px 0;
+}
+
+.k-rtl .k-buttons-horizontal :first-child + .k-zoom-in
+{
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: -1px;
+}
+
+.k-rtl .k-buttons-horizontal .k-zoom-out
+{
+    border-radius: 4px 0 0 4px;
+    margin-left: 0;
+    margin-right: -1px;
+}
+
+// Diagram
+.k-diagram
+{
+    height: 600px;
+}
+
+.k-diagram .km-scroll-wrapper
+{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.k-diagram .km-scroll-wrapper
+{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.k-canvas-container {
+    width: 100%;
+    height: 100%;
+}
+
+// IE8-
+.k-diagram img
+{
+    box-sizing: content-box;
+}
+
+// TreeMap start
+
+.k-treemap
+{
+    overflow: hidden;
+    height: 400px;
+}
+
+.k-treemap-tile
+{
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 1px;
+    position: absolute;
+    margin: -1px 0 0 -1px;
+    overflow: hidden;
+}
+
+.k-treemap-tile.k-leaf
+{
+    padding: .6em;
+}
+
+.k-treemap-wrap.k-last > .k-treemap-tile
+{
+    padding: .3em;
+}
+
+.k-treemap-tile.k-state-hover {
+    z-index: 2;
+    background-image: none;
+}
+
+.k-treemap > .k-treemap-tile
+{
+    position: relative;
+    height: 100%;
+}
+
+.k-treemap-title
+{
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 2.42em;
+    height: 2.42em;
+    padding: 0 .6em;
+    white-space: nowrap;
+}
+
+.k-treemap-wrap .k-treemap-title
+{
+    border-width: 0 0 1px;
+    border-style: solid;
+}
+
+.k-treemap-wrap
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.k-treemap-title + .k-treemap-wrap
+{
+    top: 2.42em;
+}
+
+.k-treemap-title-vertical
+{
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2.42em;
+    line-height: 2.42em;
+    overflow: hidden;
+    padding: .6em 0;
+    white-space: nowrap;
+}
+
+.k-treemap-title-vertical > div
+{
+    position: absolute;
+    top: 0;
+    right: 1.23em;
+    transform-origin: right;
+    transform: rotate(-90deg);
+}
+
+.k-treemap-title-vertical + .k-treemap-wrap
+{
+    left: 2.42em;
+}
+
+// TreeMap end

@@ -1,0 +1,41 @@
+﻿@model ManufacturerFilterModel
+
+<div class="product-filter product-manufacturer-filter">
+    <div class="filter-title">
+        <strong>@T("Filtering.ManufacturerFilter")</strong>
+    </div>
+    <div class="filter-content">
+        <ul class="group product-manufacturer-group">
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+                <li class="item">
+                    <input id="attribute-manufacturer-@manufacturer.Value" type="checkbox" data-manufacturer-id="@manufacturer.Value" checked="@manufacturer.Selected" />
+                    <label for="attribute-manufacturer-@manufacturer.Value">
+                        @manufacturer.Text
+                    </label>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var $msEls = $('[data-manufacturer-id]');
+        $msEls.on('change', function () {
+            CatalogProducts.getProducts();
+        });
+
+        $(CatalogProducts).on('before', function (e) {
+            var selectedMs = $.map($msEls, function (el) {
+                var $mEl = $(el);
+                if ($mEl.is(':checked')) return $mEl.data('manufacturer-id')
+                return null;
+            });
+
+            if (selectedMs && selectedMs.length > 0) {
+                e.payload.urlBuilder
+                    .addParameter('ms', selectedMs.join(','));
+            }
+        });
+    });
+</script>

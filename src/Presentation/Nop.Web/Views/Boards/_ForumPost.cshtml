@@ -1,0 +1,154 @@
+﻿@model ForumPostModel
+@using Nop.Core
+@inject IWebHelper webHelper;
+@{
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
+}
+<div class="topic-post" id="@Html.Encode($"post{Model.Id}")">
+    <div class="post-info">
+        <div class="user-info">
+            @if (Model.AllowViewingProfiles)
+            {
+                @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
+            }
+            else
+            {
+                <span class="username">@Model.CustomerName</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.CustomerAvatarUrl))
+            {
+                <div class="avatar">
+                    @if (Model.AllowViewingProfiles)
+                    {
+                        <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })" class="avatar-img-link">
+                            <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                        </a>
+                    }
+                    else
+                    {
+                        <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                    }
+                </div>
+            }
+        </div>
+        <ul class="user-stats">
+            @if (Model.IsCustomerForumModerator)
+            {
+                <li class="status">
+                    <label>@T("Forum.Status"):</label>
+                    <span>@T("Forum.Moderator")</span>
+                </li>
+            }
+            @if (Model.ShowCustomersPostCount)
+            {
+                <li class="total-posts">
+                    <label>@T("Forum.TotalPosts"):</label>
+                    <span>@Model.ForumPostCount</span>
+                </li>
+            }
+            @if (Model.ShowCustomersJoinDate)
+            {
+                <li class="joined">
+                    <label>@T("Forum.Joined"):</label>
+                    <span>@Model.CustomerJoinDate.ToString("d")</span>
+                </li>
+            }
+            @if (Model.ShowCustomersLocation && !string.IsNullOrEmpty(Model.CustomerLocation))
+            {
+                <li class="location">
+                    <label>@T("Forum.Location"):</label>
+                    <span>@Model.CustomerLocation</span>
+                </li>
+            }
+        </ul>
+        @if (Model.AllowPrivateMessages)
+        {
+            <div class="send-pm">
+                @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-button" })
+            </div>
+        }
+    </div>
+    <div class="post-content">
+        <div class="post-head">
+            <div class="post-time">
+                <label>@T("Forum.Posted"):</label>
+                <span class="stat-value">@Model.PostCreatedOnStr</span>
+            </div>
+            <div class="post-actions">
+                <div class="manage-post">
+                    @if (Model.IsCurrentCustomerAllowedToEditPost)
+                    {
+                        @Html.RouteLink(T("Forum.EditPost").Text, "PostEdit", new {id = Model.Id}, new {@class = "edit-post-button"})
+                    }
+                    @if (Model.IsCurrentCustomerAllowedToDeletePost)
+                    {
+                        <a href="#" class="delete-post-button" onclick="return deletepost(@(Model.Id))">@T("Forum.DeletePost").Text</a>
+                    }
+                </div>
+                <div class="quote-post">
+                    <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="post-link-button" href="@(thisPageUrl)#@(Model.Id)">#@(Model.Id)</a>
+                    @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new {id = Model.ForumTopicId, quote = Model.Id}, new {@class = "quote-post-button"})
+                </div>
+            </div>
+        </div>
+        <div class="post-body">
+            <div class="post-text">
+                @Html.Raw(Model.FormattedText)
+            </div>
+            @if (Model.AllowPostVoting)
+            {
+                <script asp-location="Footer">
+                    $(document).ready(function () {
+                        var post = '#post-vote-' + @Model.Id;
+                        $(post + ' span.vote').on('click', function () {
+                            var postData = {
+                                postId: @Model.Id,
+                                IsUp: $(this).hasClass('up')
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@Url.Action("PostVote", "Boards")",
+                                data: postData,
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.Error) {
+                                        alert(data.Error);
+                                    }
+                                    else {
+                                        $(post + ' div.vote-count-post').html(data.VoteCount);
+                                        $(post + ' span.up').removeClass('selected');
+                                        $(post + ' span.down').removeClass('selected');
+                                        if (data.IsUp) {
+                                            $(post + ' span.up').addClass('selected');
+                                        }
+                                        if (data.IsUp == false) {
+                                            $(post + ' span.down').addClass('selected');
+                                        }
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert('Failed to vote');
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <div class="post-vote" id="@($"post-vote-{Model.Id}")">
+                    <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
+                          title="@T("Forum.Post.IsUseful")"></span>
+                    <div class="vote-count-post"> @Model.VoteCount </div>
+                    <span class="vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
+                          title="@T("Forum.Post.IsNotUseful")"></span>
+                </div>
+            }
+        </div>
+        @if (Model.SignaturesEnabled & !string.IsNullOrEmpty(Model.FormattedSignature))
+        {
+            <div class="signature">
+                @Html.Raw(Model.FormattedSignature)
+            </div>
+        }
+    </div>
+</div>

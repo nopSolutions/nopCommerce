@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Slovensky" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admin user email</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Zadajte email administrátora</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Heslo administrátora</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Zadajte heslo administrátora</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Účet '{0}' nemá oprávnenie ku zmenám v adresári '{1}'. Prosím, nastavte oprávnenie.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Účet '{0}' nemá oprávnenie ku zmenám v súbore '{1}'. Prosím, nastavte oprávnenie </Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Potvrďte heslo</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Musíte potvrdiť heslo</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Databázové spojenie</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Musíte zadať databázové spojenie s SQL Serverom.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Zlý formát databázového spojenia s SQL Serverom.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Vytvoriť databázu, ak neexistuje.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Vytvoriť vzorové údaje</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Zadajte vlastné zoradenie</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Databáza</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Prišlo k chybe pri vytváraní databázy: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Informácie o databáze</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Názov databázy</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Databáza neexistuje alebo nemáte práva k spojeniu s databázou.</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Vyberte poskytovateľa dát (data provider)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Ak potrebujete informácie o tom, ako používať nopCommerce (v angličtine), navštívte</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>sekciu documentation na nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Príklad</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Inštalácia</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Inštalujem nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Integrované overovanie Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Heslá niesú zhodné</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Zadajte databázové spojenie ručne (pre pokročilých)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Reštartovať inštaláciu</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Kliknite pre obnovenie - reštart procesu inštalácie (všetky dočasné hodnoty budú zmazané)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Reštartovanie ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Názov servera</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Názov servera je povinný</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Nastavenie sa nepodarilo: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL - heslo</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL - heslo je povinné</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL - užívateľské meno</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL - užívateľské meno je povinné</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informácie o obchode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Inštalácia nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>K úspešnému dokončeniu inštalácie a nastaveniu musíte mať k dispozicii informácie o databázovom serveri a databázy (databázové spojenie - "connection string"). Ak ich budete potrebovať, spýtajte sa Vášho poskytovateľa internetových služeb (ISP). Ak inštalujete na miestny počítač alebo server, pravdepodobne získate požadované informacie od vašeho systémového administrátora.</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,57 @@
+﻿@model AddressAttributeSearchModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Admin.Address.AddressAttributes")
+    </div>
+    <div class="card-body">
+        <p>
+            <em>@T("Admin.Address.AddressAttributes.Description")</em>
+        </p>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "addressattributes-grid",
+            UrlRead = new DataUrl("List", "AddressAttribute", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(AddressAttributeModel.Name))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(AddressAttributeModel.AttributeControlTypeName))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Fields.AttributeControlType").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(AddressAttributeModel.IsRequired))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Fields.IsRequired").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(AddressAttributeModel.DisplayOrder))
+                {
+                    Title = T("Admin.Address.AddressAttributes.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(AddressAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "80",
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/AddressAttribute/Edit/"))
+                }
+            }
+        })
+    </div>
+    <div class="card-footer">
+        <a asp-action="Create" asp-controller="AddressAttribute" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

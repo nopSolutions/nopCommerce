@@ -1,0 +1,22 @@
+﻿@model Int32?
+<input asp-for="@Model" />
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+    var culture = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
+}
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdForModel()").kendoNumericTextBox({
+            value: "@Model?.ToString(culture)",
+            min: @int.MinValue.ToString(culture),
+            max: @int.MaxValue.ToString(culture),
+            decimals: 0,
+            restrictDecimals: true,
+            format: "# @Html.Raw(postfix)"
+        });
+    });
+</script>

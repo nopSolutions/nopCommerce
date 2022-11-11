@@ -1,0 +1,129 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Calendar
+.k-calendar {
+    .fill(
+        @calendar-text,
+        @calendar-bg,
+        @calendar-border
+    );
+
+
+    // Header
+    > .k-header {
+        .fill(
+            @calendar-header-text,
+            @calendar-header-bg,
+            @calendar-header-border
+        );
+        .composite-background(@calendar-header-gradient);
+
+        .k-link.k-state-hover when (@theme-name = material) {
+            color: inherit;
+            background-color: shade(@calendar-header-bg, 20);
+            box-shadow: none;
+        }
+        .k-nav-fast when (@theme-name = material) {
+            border-radius: 0;
+        }
+    }
+
+
+    // Header cell
+    th {
+        .fill(
+            @calendar-header-cell-text,
+            @calendar-header-cell-bg,
+            @calendar-header-cell-border
+        );
+    }
+
+
+    // Week cell
+    .k-alt {
+        .fill(
+            @calendar-week-cell-text,
+            @calendar-week-cell-bg,
+            @calendar-week-cell-border
+        );
+    }
+
+
+    // Weekend
+    .k-weekend {
+        background-color: @calendar-weekend-cell-bg;
+    }
+
+
+    // Other month
+    .k-other-month {
+        color: @calendar-othermonth-cell-text;
+        background-color: transparent;
+    }
+
+    // Out of range
+    .k-out-of-range {
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    // Today
+    .k-today {
+        .k-link {
+            color: @accent;
+            box-shadow: inset 0 0 0 1px @accent;
+        }
+    }
+
+
+    // States
+    td.k-state-hover {
+        .k-link {
+            .fill(
+                @calendar-cell-hovered-text,
+                @calendar-cell-hovered-bg,
+                @calendar-cell-hovered-border
+            );
+            .composite-background(@hover-gradient);
+        }
+    }
+    td.k-state-selected {
+        .k-link {
+            .fill(
+                @calendar-cell-selected-text,
+                @calendar-cell-selected-bg,
+                @calendar-cell-selected-border
+            );
+            .composite-background(@selected-gradient);
+        }
+    }
+    td.k-state-focused {
+        .k-link {
+            box-shadow: @calendar-cell-focused-shadow;
+        }
+    }
+
+
+    // Footer
+    .k-footer {
+        .k-nav-today {
+            color: @link-text;
+        }
+        .k-nav-today:hover {
+            color: @link-hovered-text;
+        }
+    }
+}

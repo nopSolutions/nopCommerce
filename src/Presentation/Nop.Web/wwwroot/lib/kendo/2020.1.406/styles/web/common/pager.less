@@ -1,0 +1,259 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-pager-wrap {
+    padding: @pager-padding-y @pager-padding-x;
+    border-width: @pager-border-width;
+    border-style: solid;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    cursor: default;
+    flex: 0 0 auto;
+
+    .k-link {
+        color: inherit;
+        text-decoration: none;
+        outline: 0;
+    }
+
+    .k-widget,
+    select.k-dropdown {
+        font-size: inherit;
+    }
+
+    .k-rtl &,
+    &[dir="rtl"],
+    [dir="rtl"] & {
+        .k-i-arrow-end-left,
+        .k-i-arrow-60-left,
+        .k-i-arrow-60-right,
+        .k-i-arrow-end-right,
+        .k-i-seek-w,
+        .k-i-arrow-w,
+        .k-i-arrow-e,
+        .k-i-seek-e {
+            transform: scaleX(-1);
+        }
+    }
+}
+
+
+// Base pager section
+.base-pager-section() {
+    margin-left: @pager-section-spacing;
+    margin-right: @pager-section-spacing;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+// Base pager item
+.base-pager-item() {
+    .border-radius( @pager-item-border-radius );
+    padding: @pager-item-padding-y @pager-item-padding-x;
+    min-width: @pager-item-width;
+    height: @pager-item-height;
+    border-width: @pager-item-border-width;
+    border-style: solid;
+    outline: 0;
+    box-sizing: border-box;
+    color: inherit;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &:hover {
+        z-index: 2;
+    }
+    &.k-state-disabled {
+        color: inherit;
+    }
+}
+
+
+// Pager items
+.k-pager-nav {
+    .base-pager-item();
+}
+
+
+// Pager numbers
+.k-pager-numbers-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+
+    select.k-dropdown {
+        height: 100%;
+        display: none;
+        cursor: pointer;
+    }
+}
+.k-pager-numbers {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    li {
+        display: inline-flex;
+        flex-direction: row;
+    }
+
+
+    // Links
+    .k-link {
+        .base-pager-item();
+    }
+
+
+    // Selected state
+    .k-state-selected {
+        cursor: inherit;
+        z-index: 2;
+    }
+}
+
+
+// Spacing between items
+.k-pager-nav + .k-pager-nav,
+.k-pager-nav + .k-pager-numbers-wrap,
+.k-pager-numbers-wrap + .k-pager-nav,
+.k-pager-numbers li + li {
+    margin-left: @pager-item-spacing;
+
+    .k-rtl &,
+    [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: @pager-item-spacing;
+    }
+}
+
+
+// Pager input
+.k-pager-input {
+    .base-pager-section();
+
+    .k-textbox {
+        margin: 0 1ex;
+        width: @pager-input-width;
+    }
+}
+
+
+// Pager sizes
+.k-pager-sizes {
+    .base-pager-section();
+
+    .k-dropdown,
+    > select {
+        margin-right: 1ex;
+        width: @pager-page-size-dropdown-width;
+    }
+
+    .k-rtl &,
+    [dir="rtl"] & {
+        .k-dropdown,
+        > select {
+            margin-left: 1ex;
+            margin-right: 0;
+        }
+    }
+}
+
+
+// Pager info
+.k-pager-info {
+    .base-pager-section();
+    text-align: right;
+    justify-content: flex-end;
+    flex: 1 1 0%;
+    order: 9;
+}
+
+
+// Pager refresh
+.k-pager-refresh {
+    .base-pager-item();
+    margin-left: auto;
+    order: 10;
+
+    .k-rtl &,
+    [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: auto;
+    }
+}
+
+
+
+
+// Responsive
+.k-pager-lg,
+.k-pager-md,
+.k-pager-sm {
+    overflow: visible;
+
+    &.k-pager-wrap {
+        .k-pager-numbers-wrap {
+            margin-top: 0;
+            margin-bottom:0;
+            align-self: center;
+        }
+    }
+    .k-pager-numbers-wrap {
+        margin-left: @pager-section-spacing;
+        margin-right: @pager-section-spacing;
+        width: 5em;
+        height: @pager-item-height;
+        box-sizing: border-box;
+        border-color: inherit;
+
+        // Show native select
+        select.k-dropdown {
+            width: 100%;
+            display: flex;
+        }
+    }
+
+    .k-rtl &,
+    &[dir="rtl"],
+    [dir="rtl"] & {
+        .k-pager-numbers-wrap {
+            margin-left: @pager-section-spacing;
+            margin-right: @pager-section-spacing;
+        }
+    }
+
+}
+
+
+// Hide components
+.k-pager-md .k-pager-info,
+.k-pager-sm .k-pager-info,
+.k-pager-sm .k-pager-sizes,
+.k-pager-lg .k-pager-numbers,
+.k-pager-md .k-pager-numbers,
+.k-pager-sm .k-pager-numbers {
+    display: none;
+}

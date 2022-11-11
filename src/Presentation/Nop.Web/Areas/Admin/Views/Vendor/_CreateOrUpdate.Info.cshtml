@@ -1,0 +1,129 @@
+@model VendorModel
+
+<div class="card-body">
+    @(await Html.LocalizedEditorAsync<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Description" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                <span asp-validation-for="@Model.Locales[item].Description"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
+    ,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Description" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Description" asp-template="RichEditor" />
+                <span asp-validation-for="Description"></span>
+            </div>
+        </div>
+    </div>))
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Email" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Email" asp-required="true" />
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
+
+        @if (Model.Id > 0)
+        {
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AssociatedCustomers" />
+                </div>
+                <div class="col-md-9">
+                    @if (Model.AssociatedCustomers.Count > 0)
+                    {
+                        for (var i = 0; i < Model.AssociatedCustomers.Count; i++)
+                        {
+                            <a asp-action="Edit" asp-controller="Customer" asp-route-id="@Model.AssociatedCustomers[i].Id">
+                                @Model.AssociatedCustomers[i].Email
+                            </a>
+                            if (i != Model.AssociatedCustomers.Count - 1)
+                            {
+                                <text>, </text>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="form-text-row">@T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")</div>
+                    }
+                </div>
+            </div>
+        }
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Active" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Active" />
+            <span asp-validation-for="Active"></span>
+        </div>
+    </div>
+
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PictureId" />
+            <span asp-validation-for="PictureId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="AdminComment" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="AdminComment"></nop-textarea>
+            <span asp-validation-for="AdminComment"></span>
+        </div>
+    </div>
+
+    @if (Model.VendorAttributes.Count > 0)
+    {
+        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+    }
+
+    <div class="card card-default advanced-setting">
+        <div class="card-header">
+            @T("Admin.Vendors.Address")
+        </div>
+        <div class="card-body">
+            <nop-editor asp-for="Address" asp-template="Address" />
+        </div>
+    </div>
+</div>

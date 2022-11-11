@@ -1,0 +1,99 @@
+﻿@model BlogPostListModel
+
+@using Nop.Core.Domain.Blogs
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Blog").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-blog-page");
+}
+@section left {
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnBlogBefore, additionalData = Model })
+    @await Component.InvokeAsync(typeof(BlogMonthsViewComponent))
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnAfterBlogArchive, additionalData = Model })
+    @await Component.InvokeAsync(typeof(BlogTagsViewComponent))
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnBlogAfter, additionalData = Model })
+}
+<div class="page blog-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <h1>
+            @if (string.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                {
+                    @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                }
+                else
+                {
+                    @T("Blog")
+                }
+            }
+            else
+            {
+                @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePosts, additionalData = Model })
+        <div class="blog-posts">
+            @foreach (var item in Model.BlogPosts)
+            {
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
+                <div class="post">
+                    <div class="post-head">
+                        <a class="post-title" href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
+                        <span class="post-date">@item.CreatedOn.ToString("D")</span>
+                    </div>
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
+                    <div class="post-body">
+                        @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+                    </div>
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPostBody, additionalData = item })
+                    <div class="blog-details">
+                        @if (item.Tags.Count > 0)
+                        {
+                            <div class="tags">
+                                <label>@T("Blog.Tags"):</label>
+                                <ul>
+                                    @for (var i = 0; i < item.Tags.Count; i++)
+                                    {
+                                        var tag = item.Tags[i];
+                                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                                        if (i != item.Tags.Count - 1)
+                                        {
+                                            <li class="separator">,</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        <div class="buttons">
+                            @if (item.AllowComments)
+                            {
+                                <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            }
+                            <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })
+                </div>
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPost, additionalData = item })
+            }
+        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!(await pager.IsEmpty()))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPosts, additionalData = Model })
+    </div>
+</div>

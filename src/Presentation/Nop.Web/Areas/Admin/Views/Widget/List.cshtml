@@ -1,0 +1,95 @@
+﻿@model WidgetSearchModel
+
+@{    
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Widgets").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Widgets");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.ContentManagement.Widgets")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.WidgetListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "widgets-grid",
+                        UrlRead = new DataUrl("List", "Widget", null),
+                        UrlUpdate = new DataUrl("WidgetUpdate", "Widget", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(WidgetModel.FriendlyName))
+                                {
+                                    Title = T("Admin.ContentManagement.Widgets.Fields.FriendlyName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(WidgetModel.SystemName))
+                                {
+                                    Title = T("Admin.ContentManagement.Widgets.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(WidgetModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.ContentManagement.Widgets.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(WidgetModel.IsActive))
+                                {
+                                    Title = T("Admin.ContentManagement.Widgets.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(WidgetModel.SystemName))
+                                {
+                                    Title = T("Admin.ContentManagement.Widgets.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                },
+                                new ColumnProperty(nameof(WidgetModel.SystemName))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+
+                    <script>
+                        function renderColumnConfigure(data, type, row, meta) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.ContentManagement.Widgets.Configure").Text</a>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

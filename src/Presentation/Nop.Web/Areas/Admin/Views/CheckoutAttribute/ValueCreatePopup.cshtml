@@ -1,0 +1,27 @@
+@model CheckoutAttributeValueModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew").Text;
+}
+
+<form asp-controller="CheckoutAttribute" asp-action="ValueCreatePopup"
+      asp-route-checkoutAttributeId="@Context.Request.Query["checkoutAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateValue", Model)
+</form>

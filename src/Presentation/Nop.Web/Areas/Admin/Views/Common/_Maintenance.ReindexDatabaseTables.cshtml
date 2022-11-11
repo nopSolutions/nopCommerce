@@ -1,0 +1,26 @@
+﻿@model MaintenanceModel
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div>
+                <p>
+                    @T("Admin.System.Maintenance.ReIndexTables.Lable")
+                </p>
+            </div>
+            <div>
+                <button type="submit" name="re-index" class="btn btn-default">
+                    <i class="fas fa-cogs"></i>
+                    @T("Admin.System.Maintenance.ReIndexTables.ReIndexNow")
+                </button>
+                <script>
+                    $(document).ready(function() {
+                        $("button[name='re-index']").on("click", function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

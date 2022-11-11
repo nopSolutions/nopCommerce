@@ -1,0 +1,150 @@
+@model SpecificationAttributeGroupSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Specification attributes");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Catalog.Attributes.SpecificationAttributes")
+    </h1>
+    <div class="float-right">
+        <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
+        </a>
+        <a asp-action="CreateSpecificationAttribute" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons, additionalData = Model })
+        <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
+            <i class="far fa-trash-alt"></i>
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SpecificationAttributes", Docs.SpecificationAttributes + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                </p>
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "specificationattributegroups-grid",
+                    UrlRead = new DataUrl("SpecificationAttributeGroupList", "SpecificationAttribute", null),
+                    PrimaryKeyColumn = nameof(SpecificationAttributeGroupModel.Id),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(null)
+                        {
+                            Render = new RenderChildCaret(),
+                            Width = "5",
+                            Searchable = false,
+                            ClassName =  NopColumnClassDefaults.ChildControl
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeGroupModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name").Text,
+                            Render = new RenderCustom("renderColumnNameSpecificationAttributeGroup")
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeGroupModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.CenterAll
+                        }
+                    },
+                    ChildTable = new DataTablesModel
+                    {
+                        Name = "specificationattributes-grid",
+                        UrlRead = new DataUrl("SpecificationAttributeList", "SpecificationAttribute", null),
+                        IsChildTable = true,
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(SpecificationAttributeModel.SpecificationAttributeGroupId), nameof(SpecificationAttributeGroupModel.Id), true)
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_specificationattributes"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                            {
+                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text,
+                                    Width = "300"
+                            },
+                            new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
+                            }
+                        }
+                    }
+                })
+
+                <script>
+                function renderColumnNameSpecificationAttributeGroup(name, type, row, meta) {
+                    return row.Id ? '<a href="@Url.Action("EditSpecificationAttributeGroup", "SpecificationAttribute")/' + row.Id +'">' + name + '</a>' : name;
+                }
+
+                $(document).ready(function () {
+                    $('#delete-selected-specification-attributes-action-confirmation-submit-button').bind('click', function () {
+                        var postData = {
+                            selectedIds: selectedIds
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
+                            data: postData,
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showAlert('delete-selected-specification-attributes-alert', errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                if (jqXHR.status === 204)
+                                {
+                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                    return;
+                                }
+                                updateTable('#specificationattributegroups-grid');
+                            }
+                        });
+                        $('#delete-selected-specification-attributes-action-confirmation').modal('toggle');
+                        return false;
+                    });
+                });
+                </script>
+                <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
+                <nop-alert asp-alert-id="nothingSelectedAlert" />
+            </div>
+        </div>
+    </div>
+</div>
+</section>

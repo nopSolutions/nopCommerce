@@ -1,0 +1,86 @@
+﻿@model CategoryNavigationModel
+
+@using Nop.Core.Domain.Catalog
+
+@functions {
+    bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
+    {
+        if (Model.CurrentCategoryId == 0)
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    async Task CategoryLine(CategoryNavigationModel.CategoryLineModel lineModel)
+    {
+        var active = lineModel.Category.Id == lineModel.CurrentCategoryId || lineModel.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+        var last = lineModel.Category.Id == lineModel.CurrentCategoryId;
+        var liClass = active ? "active" : "inactive";
+        if (last)
+        {
+            liClass += " last";
+        }
+
+        <li class="@liClass">
+            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
+                @if (lineModel.Category.NumberOfProducts.HasValue)
+                {
+                    <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
+                }
+            </a>
+            @{
+                if (lineModel.Category.Id == lineModel.CurrentCategoryId ||
+                    lineModel.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
+                {
+                    if (lineModel.Category.SubCategories.Count > 0)
+                    {
+                        <ul class="sublist">
+                            @foreach (var subCategory in lineModel.Category.SubCategories)
+                            {
+                                var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                                {
+                                    CurrentCategoryId = lineModel.CurrentCategoryId,
+                                    Category = subCategory
+                                };
+                                await CategoryLine(categoryLineModel);
+                            }
+                        </ul>
+                    }
+                }
+            }
+        </li>
+    }
+}
+
+@if (Model.Categories.Count > 0)
+{
+    <div class="block block-category-navigation">
+        <div class="title">
+            <strong>@T("Categories")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="list">
+                @foreach (var category in Model.Categories)
+                {
+                    var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                    {
+                        CurrentCategoryId = Model.CurrentCategoryId,
+                        Category = category
+                    };
+                    await CategoryLine(categoryLineModel);
+                }
+            </ul>
+        </div>
+    </div>
+}

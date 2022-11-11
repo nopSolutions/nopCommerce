@@ -1,0 +1,160 @@
+@model OrderModel
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "ordernotes-grid",
+        UrlRead = new DataUrl("OrderNotesSelect", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
+        UrlDelete = new DataUrl("OrderNoteDelete", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
+        Length = Model.OrderNoteSearchModel.PageSize,
+        LengthMenu = Model.OrderNoteSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(OrderNoteModel.CreatedOn))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            },
+            new ColumnProperty(nameof(OrderNoteModel.Note))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.Note").Text,
+                Encode = false
+            },
+            new ColumnProperty(nameof(OrderNoteModel.DownloadId))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.Download").Text,
+                Width = "200",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderCustom("renderColumnDownloadId")
+            },
+            new ColumnProperty(nameof(OrderNoteModel.DisplayToCustomer))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer").Text,
+                Width = "150",
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(OrderNoteModel.Id))
+            {
+                Title = T("Admin.Common.Delete").Text,
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                ClassName =  NopColumnClassDefaults.Button
+            }
+        }
+    })
+
+    <script>
+        function renderColumnDownloadId(data, type, row, meta) {
+            return (row.DownloadId > 0) ? '<a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=' + row.DownloadGuid + '"><i class="fas fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link").Text</a>' : '@T("Admin.Orders.OrderNotes.Fields.Download.Link.No").Text';
+        }
+    </script>
+
+    <div class="card card-default">
+        <script>
+            $(document).ready(function () {
+                $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
+                toggleAddOrderNoteHasDownload();
+            });
+
+            function toggleAddOrderNoteHasDownload() {
+                if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                    $('#pnlAddOrderNoteDownloadId').showElement();
+                }
+                else {
+                    $('#pnlAddOrderNoteDownloadId').hideElement();
+                }
+            }
+        </script>
+
+        <div class="card-header">
+            @T("Admin.Orders.OrderNotes.AddTitle")
+        </div>
+
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteMessage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="AddOrderNoteMessage" />
+                    <span asp-validation-for="AddOrderNoteMessage"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteDownloadId" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" asp-for="AddOrderNoteHasDownload" />
+                            @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                        </label>
+                    </div>
+                    <div id="pnlAddOrderNoteDownloadId">
+                        <nop-editor asp-for="AddOrderNoteDownloadId" />
+                        <span asp-validation-for="AddOrderNoteDownloadId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteDisplayToCustomer" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddOrderNoteDisplayToCustomer" />
+                    <span asp-validation-for="AddOrderNoteDisplayToCustomer"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="button" id="addOrderNote" class="btn btn-primary">@T("Admin.Orders.OrderNotes.AddButton")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#addOrderNote').click(function() {
+            var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
+            var orderNoteDownloadId = 0;
+            if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                orderNoteDownloadId = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)").val();
+            }
+            var orderNoteDisplayToCustomer =
+                $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+            $('#addOrderNote').attr('disabled', true);
+
+            var postData = {
+                DisplayToCustomer: orderNoteDisplayToCustomer,
+                message: orderNoteMessage,
+                downloadId: orderNoteDownloadId,
+                orderId: '@Model.Id'
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("OrderNoteAdd", "Order"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    if (data.Result) {
+                        //reload grid
+                        updateTable('#ordernotes-grid');
+                    } else {
+                        //display errors if returned
+                        display_nop_error(data);
+                    }
+                },
+               complete: function (jqXHR, textStatus) {
+                    $('#addOrderNote').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>

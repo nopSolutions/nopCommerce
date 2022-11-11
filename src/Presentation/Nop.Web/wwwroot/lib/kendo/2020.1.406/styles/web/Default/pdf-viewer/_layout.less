@@ -1,0 +1,164 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-pdf-viewer {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    // Toolbar
+    .k-toolbar {
+        border-top-width: 0;
+        border-right-width: 0;
+        border-left-width: 0;
+        border-color: inherit;
+        flex: 0 0 auto;
+        z-index: 2;
+    }
+
+    // Pager
+    .k-pager-wrap {
+        display: flex;
+        flex: 0 0 auto;
+        padding: 0;
+        min-height: auto;
+        align-items: center;
+        background: none;
+        color: inherit;
+    }
+
+    // Canvas
+    .k-list-scroller {
+        flex: 1 1 auto;
+        outline: none;
+
+        .k-enable-text-select {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+            cursor: text;
+        }
+
+        .k-enable-panning {
+            cursor: grab;
+        }
+        .k-enable-panning span::selection {
+            background-color: transparent;
+        }
+    }
+
+    // Page
+    .k-page {
+        position: relative;
+        margin: @pdf-viewer-page-spacing auto;
+
+        canvas {
+            direction: ltr;
+        }
+
+        .k-text-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: .2;
+            overflow: hidden;
+
+            > span {
+                position: absolute;
+                transform-origin: 0% 0%;
+                color: transparent;
+            }
+
+            mark {
+                color: transparent;
+            }
+        }
+    }
+
+}
+
+// Window
+.k-pdf-viewer-window {
+    flex: 1 1 auto;
+
+    .k-edit-field {
+        .k-textbox,
+        .k-file-format {
+            width: 100%;
+        }
+    }
+
+    .k-action-buttons {
+        top: @pdf-viewer-action-buttons-top-offset;
+        padding: @pdf-viewer-action-buttons-padding;
+        margin-bottom: calc(@pdf-viewer-action-buttons-padding - 1em);
+    }
+}
+
+// Search
+.k-pdf-viewer-search-dialog {
+    padding: @pdf-viewer-search-dialog-spacing;
+
+    .k-search-container {
+        display: flex;
+        flex: 0 0 auto;
+        justify-content: flex-start;
+        align-items: center;
+
+        .k-textbox {
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            padding-right: @pdf-viewer-search-dialog-textbox-padding-x;
+            margin: 0 @pdf-viewer-search-dialog-spacing;
+
+            .k-icon {
+                position: relative;
+                top: auto;
+                margin: 0;
+                font-size: inherit;
+            }
+
+            .k-search-dialog-input::-ms-clear {
+                display: none;
+            }
+
+            &:after {
+                content: "";
+            }
+        }
+
+        .k-match-case-button {
+            height: @pdf-viewer-search-dialog-input-button-height;
+        }
+
+        .k-search-matches {
+            display: inline-block;
+            min-width: @pdf-viewer-search-dialog-matches-width;
+            margin: 0 @pdf-viewer-search-dialog-spacing 0 @pdf-viewer-search-dialog-button-spacing;
+            vertical-align: middle;
+        }
+
+        > .k-button {
+            margin-left: @pdf-viewer-search-dialog-button-spacing;
+        }
+
+        .k-search-dialog-draghandle  {
+            cursor: move;
+            margin-left: 0;
+        }
+    }
+}

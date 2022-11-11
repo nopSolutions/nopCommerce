@@ -1,0 +1,66 @@
+@model UploadLicenseModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Orders.Products.License.UploadFile").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<form asp-controller="Order" asp-action="UploadLicenseFilePopup"
+      asp-route-orderItemId="@Context.Request.Query["orderItemId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Orders.Products.License.UploadFile")
+        </h1>
+        <div class="float-right">
+            &nbsp;
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+        <div asp-validation-summary="All"></div>
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-popup">
+                    <div class="card-body">
+                        <input asp-for="OrderId" type="hidden" />
+                        <input asp-for="OrderItemId" type="hidden" />
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <nop-editor asp-for="LicenseDownloadId" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <button type="submit" name="uploadlicense" id="uploadlicense" class="btn btn-primary">
+                                    @T("Admin.Common.Save")
+                                </button>
+                                @if (Model.LicenseDownloadId > 0)
+                                {
+                                    <button type="submit" name="deletelicense" id="deletelicense" class="btn btn-danger">
+                                        @T("Admin.Common.Delete")
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+</form>

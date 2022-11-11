@@ -1,0 +1,34 @@
+@model ShippingSettingsModel
+
+<div class="card-body">    
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HideShippingTotal" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HideShippingTotal" />
+            <span asp-validation-for="HideShippingTotal"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShipToSameAddress_OverrideForStore" asp-input="ShipToSameAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShipToSameAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShipToSameAddress" />
+            <span asp-validation-for="ShipToSameAddress"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BypassShippingMethodSelectionIfOnlyOne_OverrideForStore" asp-input="BypassShippingMethodSelectionIfOnlyOne" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+            <span asp-validation-for="BypassShippingMethodSelectionIfOnlyOne"></span>
+        </div>
+    </div>
+</div>

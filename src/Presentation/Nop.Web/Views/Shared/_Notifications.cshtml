@@ -1,0 +1,81 @@
+﻿@using Newtonsoft.Json
+@using Nop.Core.Domain.Messages
+@using Nop.Services.Messages
+@inject MessagesSettings messagesSettings
+@{
+    var successMessages = new List<string>();
+    var errorMessages = new List<string>();
+    var warningMessages = new List<string>();
+
+    //Get messages from TempData
+    var notes = TempData.ContainsKey(NopMessageDefaults.NotificationListKey)
+        ? JsonConvert.DeserializeObject<IList<NotifyData>>(TempData[NopMessageDefaults.NotificationListKey].ToString())
+        : null;
+
+    if (notes != null)
+    {
+        foreach (var note in notes)
+        {
+            switch (note.Type)
+            {
+                case NotifyType.Success:
+                    successMessages.Add(note.Message);
+                    break;
+                case NotifyType.Error:
+                    errorMessages.Add(note.Message);
+                    break;
+                case NotifyType.Warning:
+                    warningMessages.Add(note.Message);
+                    break;
+
+            }
+        }
+    }
+}
+@if (successMessages.Any() || warningMessages.Any() || errorMessages.Any())
+{
+    if (messagesSettings.UsePopupNotifications)
+    {
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var notes = {
+                    'success': [
+                        @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' ")))],
+                    'warning': [
+                        @Html.Raw(string.Join(", ", warningMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' ")))],
+                    'error': [
+                        @Html.Raw(string.Join(", ", errorMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' ")))]
+                };
+
+                displayJoinedPopupNotifications(notes);
+            });
+        </script>
+    }
+    else
+    {
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var successMsg = [ @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' "))) ];
+                displayBarNotification(successMsg, 'success', false);
+
+                var errorMsg = [ @Html.Raw(string.Join(", ", errorMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' "))) ];
+                displayBarNotification(errorMsg, 'error', false);
+
+                var warningMsg = [ @Html.Raw(string.Join(", ", warningMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' "))) ];
+                displayBarNotification(warningMsg, 'warning', false);
+            });
+        </script>
+    }
+}
+
+<div class="ajax-loading-block-window" style="display: none">
+</div>
+<div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
+</div>
+<div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
+</div>
+<div id="dialog-notifications-warning" title="@T("Common.Warning")" style="display:none;">
+</div>
+<div id="bar-notification" class="bar-notification-container" data-close="@T("Common.Close")">
+</div>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Notifications })

@@ -1,0 +1,92 @@
+@model MediaSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="PicturesStoredIntoDatabase" />
+        </div>
+        <div class="col-md-1">
+            <div class="form-text-row">
+                @if (Model.PicturesStoredIntoDatabase)
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
+                }
+            </div>
+        </div>
+        <div class="col-md-8">
+            <button type="submit" id="change-picture-storage" name="change-picture-storage" class="btn btn-primary">
+                @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")
+            </button>
+            <nop-action-confirmation asp-button-id="change-picture-storage" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-9 offset-md-3">
+            <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MaximumImageSize_OverrideForStore" asp-input="MaximumImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MaximumImageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MaximumImageSize" />
+            <span asp-validation-for="MaximumImageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MultipleThumbDirectories_OverrideForStore" asp-input="MultipleThumbDirectories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MultipleThumbDirectories" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MultipleThumbDirectories" />
+            <span asp-validation-for="MultipleThumbDirectories"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultImageQuality_OverrideForStore" asp-input="DefaultImageQuality" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultImageQuality" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DefaultImageQuality" />
+            <span asp-validation-for="DefaultImageQuality"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ImportProductImagesUsingHash_OverrideForStore" asp-input="ImportProductImagesUsingHash" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ImportProductImagesUsingHash" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ImportProductImagesUsingHash" />
+            <span asp-validation-for="ImportProductImagesUsingHash"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultPictureZoomEnabled_OverrideForStore" asp-input="DefaultPictureZoomEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultPictureZoomEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DefaultPictureZoomEnabled" />
+            <span asp-validation-for="DefaultPictureZoomEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowSVGUploads_OverrideForStore" asp-input="AllowSVGUploads" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowSVGUploads" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowSVGUploads" />
+            <span asp-validation-for="AllowSVGUploads"></span>
+        </div>
+    </div>
+</div>

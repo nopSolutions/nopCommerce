@@ -1,0 +1,70 @@
+﻿@model NopCommerceNewsModel
+@inject IWorkContext workContext
+
+@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+
+@{
+    const string cardId = "nopcommerce-news-box";
+    const string hideCardAttributeName = "HideNopCommerceNewsCard";
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
+}
+
+    <div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">
+        <div class="card-header with-border clearfix">
+            <div class="card-title">
+                <i class="far fa-newspaper"></i>
+                @T("Admin.NopCommerceNews")
+                @if (Model.HasNewItems)
+                {
+                    <div class="new-item-notification"><span>+1</span></div>
+                }
+            </div>
+            <div class="card-tools float-right">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    @if (hideCard)
+                    {
+                        <text><i class="fas fa-plus"></i></text>
+                    }
+                    else
+                    {
+                        <text><i class="fas fa-minus"></i></text>
+                    }
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-md-4">
+                        <div class="card card-info">
+                            <div class="card-header clearfix">
+                                @if (!string.IsNullOrEmpty(item.Url))
+                                {
+                                    <a class="float-left" href='@(item.Url)'>@item.Title</a>
+                                }
+                                else
+                                {
+                                    <div class="float-left">@item.Title</div>
+                                }
+                                @*<div class="float-right">@item.PublishDate.ToString("d")</div>*@
+                            </div>
+                            <div class="card-body">
+                                @Html.Raw(item.Summary)
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <script>
+            $(document).ready(function () {
+                $('#@cardId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@cardId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                });
+            });
+            </script>
+        </div>
+    </div>

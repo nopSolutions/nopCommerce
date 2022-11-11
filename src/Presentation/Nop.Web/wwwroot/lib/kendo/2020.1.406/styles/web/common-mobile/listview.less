@@ -1,0 +1,217 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@import "../../mobile/common/icons.less";
+@import "../../mobile/common/listview.less";
+@import "base.less";
+
+// ListView
+
+.km-list > li
+{
+    border-style: solid;
+    border-width: 0 0 @mobile-border-width 0;
+}
+
+.km-listinset > li:first-child,
+.km-listgroupinset .km-list > li:first-child
+{
+    border-style: solid;
+    border-width: @mobile-border-width;
+}
+
+.km-listinset > li,
+.km-listgroupinset .km-list > li
+{
+    border-width: 0 @mobile-border-width @mobile-border-width @mobile-border-width;
+}
+
+.km-listinset > li:last-child,
+.km-listgroupinset .km-list > li:last-child
+{
+    border-style: solid;
+    border-width: 0 @mobile-border-width @mobile-border-width @mobile-border-width;
+}
+
+.km-listinset > li:first-child:last-child,
+.km-listgroupinset .km-list > li:first-child:last-child
+{
+    border-width: @mobile-border-width;
+}
+
+.km-listview-link:after
+{
+    border-color: currentcolor;
+    border-width: .2rem .2rem 0 0;
+}
+
+.km-pane:not(.km-on-android) .km-listview-link:after
+{
+    width: .66rem;
+    height: .64rem;
+    border-width: 0;
+    box-shadow: inset -.2rem .2rem 0;
+}
+
+.km-listinset li:first-child > .km-listview-link,
+.km-listgroupinset li:first-child > .km-listview-link,
+.km-listinset li:first-child > .km-listview-label,
+.km-listgroupinset li:first-child > .km-listview-label
+{
+    border-radius: @mobile-inline-border-radius @mobile-inline-border-radius 0 0;
+}
+
+.km-listinset li:last-child > .km-listview-link,
+.km-listgroupinset li:last-child > .km-listview-link,
+.km-listinset li:last-child > .km-listview-label,
+.km-listgroupinset li:last-child > .km-listview-label
+{
+    border-radius: 0 0 @mobile-inline-border-radius @mobile-inline-border-radius;
+}
+
+.km-listinset li:first-child:last-child > .km-listview-link,
+.km-listgroupinset li:first-child:last-child > .km-listview-link,
+.km-listinset li:first-child:last-child > .km-listview-label,
+.km-listgroupinset li:first-child:last-child > .km-listview-label
+{
+    border-radius: @mobile-inline-border-radius;
+}
+
+.km-group-title
+{
+    border-style: solid;
+    border-width: @mobile-border-width 0;
+}
+
+.km-scroll-header .km-group-title
+{
+    border-width: 0 0 @mobile-border-width;
+}
+
+.km-listgroupinset .km-group-title
+{
+    border: 0;
+    background: none;
+}
+
+.km-listview .km-switch
+{
+    margin-top: -.9rem;
+}
+
+// Filter box
+
+.km-listview-wrapper form .km-filter-wrap > input
+{
+    font-size: 1.2em;
+    padding: .3em 1.8em;
+}
+
+.km-widget .km-filter-wrap:before
+{
+    margin: .05em -1.2em 0 .2em;
+}
+
+.km-filter-reset
+{
+    margin: .05em 0 0 -2em;
+}
+
+.km-filter-reset .km-clear:after
+{
+    content: "\e038";
+}
+
+.km-filter-wrap > input
+{
+    border-width: @mobile-border-width;
+    border-style: solid;
+}
+
+.km-load-more
+{
+    height: 3.4em;
+}
+
+.km-load-more .km-button
+{
+    margin: 0 .8em;
+    display: block;
+}
+
+.km-scroller-refresh.km-load-more
+{
+    padding: 0;
+    position: relative;
+    margin: auto;
+}
+
+.km-scroller-refresh.km-load-more,
+.km-scroller-pull
+{
+    font-size: 1em;
+    width: 2.5em;
+    height: 2.5em;
+    top: .25em;
+    white-space: nowrap;
+}
+
+.km-scroller-pull
+{
+    left: 50%;
+    margin: 0 0 0 -90px;
+}
+
+.km-scroller-pull .km-template
+{
+    position: absolute;
+    line-height: 2em;
+    font-size: 1.2em;
+    min-width: 0;
+    top: 0;
+    left: 3em;
+}
+
+.km-scroller-pull .km-icon
+{
+    margin-right: 0;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -1rem;
+    margin-top: -1rem;
+}
+
+.km-scroller-pull .km-icon:after
+{
+    content: "\e012";
+    margin-left: -3px;
+}
+
+.km-scroller-refresh .km-icon:after
+{
+    display: none;
+}
+
+.km-scroller-refresh .km-loading-left
+{
+    margin-left: -.18em;
+}
+
+.km-scroller-refresh .km-loading-right
+{
+    margin-left: .28em;
+}

@@ -1,0 +1,136 @@
+﻿@model CategoryModel
+
+<div class="card-body">
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="ShowOnHomepage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowOnHomepage" />
+            <span asp-validation-for="ShowOnHomepage"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="IncludeInTopMenu" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IncludeInTopMenu" />
+            <span asp-validation-for="IncludeInTopMenu"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="AllowCustomersToSelectPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomersToSelectPageSize" />
+            <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AllowCustomersToSelectPageSize" disable-auto-generation="true">
+        <div id="pnlPageSize" class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="PageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PageSize" />
+                <span asp-validation-for="PageSize"></span>
+            </div>
+        </div>
+        <div id="pnlPageSizeOptions" class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="PageSizeOptions" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PageSizeOptions" />
+                <span asp-validation-for="PageSizeOptions"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PriceRangeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PriceRangeFiltering" />
+            <span asp-validation-for="PriceRangeFiltering"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="PriceRangeFiltering">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="ManuallyPriceRange" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ManuallyPriceRange" />
+                <span asp-validation-for="ManuallyPriceRange"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ManuallyPriceRange">
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="PriceFrom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="PriceFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="PriceTo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="PriceTo"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+    <div class="form-group row" @(Model.AvailableCategoryTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+        <div class="col-md-3">
+            <nop-label asp-for="CategoryTemplateId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="CategoryTemplateId" asp-items="Model.AvailableCategoryTemplates" />
+            <span asp-validation-for="CategoryTemplateId"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hideElement();
+            $('#pnlPageSizeOptions').showElement();
+        } else {
+            $('#pnlPageSize').showElement();
+            $('#pnlPageSizeOptions').hideElement();
+        }
+    }
+</script>

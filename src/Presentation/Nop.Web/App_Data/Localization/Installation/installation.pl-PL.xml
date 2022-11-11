@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Polski" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Wprowadź email administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Hasło administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Wprowadź hasło administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' konto nie posiada uprawnień do modyfikacji folderu '{1}'. Proszę zmienić uprawnienia.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' konto nie posiada uprawnień do modyfikacji pliku '{1}'. Proszę zmienić uprawnienia.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Potwierdź hasło</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Wprowadź hasło</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Połączenie - Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Połączenie SQL connection string jest wymagane</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Błędny format SQL connection string </Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Czy utworzyć bazę jeśli nie istnieje</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Załaduj przykładowe dane</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Określ domyślną collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Baza danych</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Wystąpił błąd podczas tworzenia bazy danych: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Informacje o bazie danych</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Nazwa bazy danych</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Baza danych nie istnieje lub nie masz uprawnień aby się do niej podłączyć</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Wybierz dostawcę danych </Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Jeżeli potrzebujesz więcej informacji na temat korzystania z nopCommerce, zobacz</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentację na stronie nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Przykład</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Instalacja</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Instalacja nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Hasło nie pasuje</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Wprowadź raw connection string (zaawansowane)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Restart instalacji</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Kliknij, aby ponownie uruchomić proces instalacji</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restartowanie...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nazwa serwera</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Nazwa serwera jest wymagana</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Błąd instalacji: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>Hasło SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>Hasło SQL jest wymagane</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>Użytkownik SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>Użytkownik SQL jest wymagany</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informacje o sklepie</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce instalacja</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Aby ukończyć kreatora należy znać kilka informacji na temat serwera bazy danych ("Connection string - ciąg połączenia"). Proszę skontaktować się z usługodawcą hostingu w razie potrzeby. Jeżeli instalujesz na komputerze lokalnym lub serwerze mogą być potrzebne informacje od administratora systemu.</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,313 @@
+﻿@model MessageTemplateModel
+@inject AdminAreaSettings adminAreaSettings
+@using Nop.Core.Domain.Messages;
+@using Nop.Services
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "messagetemplate-advanced-mode" })
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="margin-bottom">
+                            <em>@T($"Admin.ContentManagement.MessageTemplates.Description.{Model.Name}")</em>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AllowedTokens" />
+                            </div>
+                            <div class="col-md-9">
+                                <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                                <div id="pnlAllowedTokens" class="d-none" style="white-space: pre-line">
+                                    <div class="form-text-row">@Model.AllowedTokens</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Name</div>
+                                <input asp-for="Name" type="hidden" />
+                            </div>
+                        </div>
+                        <script>
+                        function toggleLoadedAllowedTokens() {
+                            $('#pnlAllowedTokens').toggleClass('d-none');
+                            if ($('#pnlAllowedTokens').hasClass('d-none')) {
+                                $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
+                            } else {
+                                $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
+                            }
+                        }
+                        </script>
+
+                        @(await Html.LocalizedEditorAsync<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.Locales[item].Subject" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.Locales[item].Subject" />
+                                            <span asp-validation-for="@Model.Locales[item].Subject"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.Locales[item].Body" />
+                                        </div>
+                                        <div class="col-md-9">
+                                           @if (adminAreaSettings.UseRichEditorInMessageTemplates)
+                                            {
+                                                <nop-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                                            }
+                                            else
+                                            {
+                                                <nop-textarea asp-for="@Model.Locales[item].Body"/>
+                                                <text>
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            $('#@Html.IdFor(model => model.Locales[item].Body)').height('auto');
+                                                        });
+                                                    </script>
+                                                </text>
+                                            }
+                                            <span asp-validation-for="@Model.Locales[item].Body"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row advanced-setting">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.Locales[item].BccEmailAddresses" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.Locales[item].BccEmailAddresses" />
+                                            <span asp-validation-for="@Model.Locales[item].BccEmailAddresses"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row advanced-setting">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.Locales[item].EmailAccountId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="Model.Locales[item].AvailableEmailAccounts" />
+                                            <span asp-validation-for="@Model.Locales[item].EmailAccountId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="col-form-label">
+                                                    @T("Admin.ContentManagement.MessageTemplates.Test")
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id, languageId = Model.Locales[item].LanguageId}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                </div>
+                                ,
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="Subject" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="Subject" asp-required="true" />
+                                            <span asp-validation-for="Subject"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="Body" />
+                                        </div>
+                                        <div class="col-md-9">
+                                       @if (adminAreaSettings.UseRichEditorInMessageTemplates)
+                                        {
+                                            <div class="input-group-append input-group-required">
+                                                <div class="input-group">
+                                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                                                </div>
+                                                <div class="input-group-btn">
+                                                    <nop-required />
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <nop-textarea asp-for="Body" asp-required="true" />
+                                            <text>
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        $('#@Html.IdFor(model => model.Body)').height('auto');
+                                                    });
+                                                </script>
+                                            </text>
+                                        }                                            
+                                            <span asp-validation-for="Body"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row advanced-setting">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="BccEmailAddresses" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="BccEmailAddresses" />
+                                            <span asp-validation-for="BccEmailAddresses"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row advanced-setting">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="EmailAccountId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts" />
+                                            <span asp-validation-for="EmailAccountId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="col-form-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
+                                        </div>
+                                    </div>
+                                </div>
+                      ))
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsActive" />
+                                <span asp-validation-for="IsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendImmediately" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendImmediately" />
+                                <span asp-validation-for="SendImmediately"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting" id="pnl-send-after">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DelayBeforeSend" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <nop-editor asp-for="DelayBeforeSend" />
+                                        <span asp-validation-for="DelayBeforeSend"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <nop-select asp-for="DelayPeriodId" asp-items="@await (((MessageDelayPeriod)Model.DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+                                        <span asp-validation-for="DelayPeriodId"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AttachedDownloadId" />
+                            </div>
+                            <div class="col-md-9">
+                                @{
+                                    //Static file attachments do not support URLs yet
+                                    //A store owner have to upload a file
+                                    //we store a value into "ViewData" and then use it in the Download.cshtml file
+                                    ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                                }
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" asp-for="HasAttachedDownload" />
+                                        @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                                    </label>
+                                </div>
+                                <div id="pnlAttachedDownload">
+                                    <nop-editor asp-for="AttachedDownloadId" />
+                                    <span asp-validation-for="AttachedDownloadId"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedStoreIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                        <script>
+                                        $(document).ready(function() {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
+                                                .data("kendoMultiSelect");
+                                            storesIdsInput.setOptions({
+                                                autoClose: false,
+                                                filter: "contains"
+                                            });
+
+                                            @if (Model.AvailableStores.Count == 0)
+                                            {
+                                                <text>
+                                                    storesIdsInput.setOptions({
+                                                        enable: false,
+                                                        placeholder: 'No stores available'
+                                                    });
+                                                    storesIdsInput._placeholder();
+                                                    storesIdsInput._enable();
+                                                </text>
+                                            }
+                                        });
+                                        </script>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+                    $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
+                    toggleHasAttachedDownload();
+                    sendImmediately();
+                });
+
+                function toggleHasAttachedDownload() {
+                    if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
+                        $('#pnlAttachedDownload').showElement();
+                    } else {
+                        $('#pnlAttachedDownload').hideElement();
+                    }
+                }
+
+                function sendImmediately() {
+                    if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
+                        $('#pnl-send-after').hideElement();
+                    else
+                        $('#pnl-send-after').showElement();
+                }
+            </script>
+        </div>
+    </div>
+</section>

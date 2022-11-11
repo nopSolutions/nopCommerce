@@ -1,0 +1,30 @@
+@model TierPriceModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.TierPrices.Edit").Text;
+}
+
+    <form asp-controller="Product" asp-action="TierPriceEditPopup"
+          asp-route-btnId="@Context.Request.Query["btnId"]"
+          asp-route-formId="@Context.Request.Query["formId"]">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="content-header clearfix">
+                    <h1 class="float-left">
+                        @T("Admin.Catalog.Products.TierPrices.Edit")
+                    </h1>
+                    <div class="float-right">
+                        <button type="submit" name="save" class="btn btn-primary">
+                            <i class="far fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTierPriceDetailsButtons, additionalData = Model })
+                    </div>
+                </div>
+                @await Html.PartialAsync("_CreateOrUpdateTierPrice", Model)
+                </div>
+            </section>
+    </form>

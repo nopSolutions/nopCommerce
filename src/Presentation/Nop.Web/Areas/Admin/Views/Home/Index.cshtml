@@ -1,0 +1,128 @@
+﻿@model DashboardModel
+@inject IPermissionService permissionService
+@using Nop.Services.Security
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Dashboard").Text;
+
+    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests);
+
+    //close configuration steps value
+    const string closeCardAttributeName = "CloseConfigurationSteps";
+    var closeConfigurationStepsCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), closeCardAttributeName);
+
+     //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Dashboard");
+}
+
+<link rel="stylesheet" href="~/lib_npm/ionicons/css/ionicons.min.css" />
+
+<div class="content-header">
+    <h1>
+        @T("Admin.Dashboard")
+    </h1>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if (!closeConfigurationStepsCard)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @await Html.PartialAsync("_ConfigurationSteps")
+                            </div>
+                        </div>
+                    }
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardTop, additionalData = Model })
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @await Component.InvokeAsync(typeof(NopCommerceNewsViewComponent))
+                            </div>
+                        </div>
+                    }
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardNewsAfter, additionalData = Model })
+                    @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @await Component.InvokeAsync(typeof(CommonStatisticsViewComponent))
+                            </div>
+                        </div>
+                    }
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardCommonstatisticsAfter, additionalData = Model })
+                    @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
+                    {
+                        <div class="row">
+                            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+                            {
+                                <div class="col-md-6">
+                                    @await Html.PartialAsync("_OrderStatistics")
+                                </div>
+                            }
+                            @if (!Model.IsLoggedInAsVendor && canManageCustomers)
+                            {
+                                <div class="col-md-6">
+                                    @await Html.PartialAsync("_CustomerStatistics")
+                                </div>
+                            }
+                        </div>
+                    }
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardCustomerorderchartsAfter, additionalData = Model })
+                    @if (!Model.IsLoggedInAsVendor && canManageOrders)
+                    {
+                        <div class="row">
+                            <div class="col-md-8">
+                                @await Html.PartialAsync("_OrderAverageReport")
+                            </div>
+                            <div class="col-md-4">
+                                @await Html.PartialAsync("_OrderIncompleteReport")
+                            </div>
+                        </div>
+                    }
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardOrderreportsAfter, additionalData = Model })
+                    @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
+                    {
+                        <div class="row">
+                            @if (canManageOrders)
+                            {
+                                <div class="col-md-8">
+                                    @await Html.PartialAsync("_LatestOrders")
+                                </div>
+                            }
+                            <div class="col-md-4">
+                                @if (canManageProducts)
+                                {
+                                    @await Html.PartialAsync("_PopularSearchTermsReport", Model.PopularSearchTerms)
+                                }
+                            </div>
+                        </div>
+                    }
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardLatestordersSearchtermsAfter, additionalData = Model })
+                    @if (canManageOrders)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                @await Html.PartialAsync("_BestsellersBriefReportByQuantity", Model.BestsellersByQuantity)
+                            </div>
+                            <div class="col-md-6">
+                                @await Html.PartialAsync("_BestsellersBriefReportByAmount", Model.BestsellersByAmount)
+                            </div>
+                        </div>
+                    }
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DashboardBottom, additionalData = Model })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <nop-alert asp-alert-id="loadOrderStatisticsAlert" asp-alert-message="@T("Admin.SalesReport.OrderStatistics.Alert.FailedLoad")" />
+    <nop-alert asp-alert-id="loadCustomerStatisticsAlert" asp-alert-message="@T("Admin.Reports.Customers.CustomerStatistics.Alert.FailedLoad")" />

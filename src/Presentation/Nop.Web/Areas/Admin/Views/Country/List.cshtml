@@ -1,0 +1,248 @@
+@model CountrySearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Countries").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Countries");
+}
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Countries")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="publish-selected" class="btn bg-teal">
+            <i class="fas fa-check-square"></i>
+            @T("Admin.Configuration.Countries.PublishSelected")
+        </button>
+        <button type="button" id="unpublish-selected" class="btn btn-secondary">
+            <i class="fas fa-minus-square"></i>
+            @T("Admin.Configuration.Countries.UnpublishSelected")
+        </button>
+        <a asp-action="ExportCsv" class="btn btn-success">
+            <i class="fas fa-download"></i>
+            @T("Admin.Configuration.Countries.ExportToCsv")
+        </a>
+        <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+            <i class="fas fa-upload"></i>
+            @T("Admin.Configuration.Countries.ImportFromCsv")
+        </button>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates", Docs.CountriesStates + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "countries-grid",
+                        UrlRead = new DataUrl("CountryList", "Country", null),
+                        SearchButtonId = "search-categories",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CountryModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_countries"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(CountryModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(CountryModel.AllowsBilling))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.AllowsBilling").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.AllowsShipping))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.AllowsShipping").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.TwoLetterIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.ThreeLetterIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(CountryModel.NumericIsoCode))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.NumericIsoCode").Text,
+                                Width = "120"
+                            },
+                            new ColumnProperty(nameof(CountryModel.SubjectToVat))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.SubjectToVat").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.NumberOfStates))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.NumberOfStates").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(CountryModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(CountryModel.Published))
+                            {
+                                Title = T("Admin.Configuration.Countries.Fields.Published").Text,
+                                Width = "80",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(CountryModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "50",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+
+
+                    <script>
+                        $(document).ready(function () {
+                            //"publish selected" button
+                            $('#publish-selected').click(function (e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("PublishSelected", "Country"))",
+                                    data: postData,
+                                    traditional: true,
+                                    complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
+                                        updateTable('#countries-grid');
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        showAlert('publishSelectedFailed', errorThrown);
+                                    }
+                                });
+                                return false;
+                            });
+
+                            //"unpublish selected" button
+                            $('#unpublish-selected').click(function (e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("UnpublishSelected", "Country"))",
+                                    data: postData,
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        showAlert('unpublishSelectedFailed', errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
+                                        updateTable('#countries-grid');
+                                    }
+                                });
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<nop-alert asp-alert-id="publishSelectedFailed" />
+<nop-alert asp-alert-id="unpublishSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+
+@*import states form*@
+<div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+            </div>
+            <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Configuration.Countries.ImportTip")</em>
+                            </li>
+                            <li>
+                                <em><a href="@(OfficialSite.StatesPackage + Utm.OnAdminCountries)" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
+                            </li>
+                        </ul>
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="col-form-label">
+                                        @T("Admin.Common.CsvFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="importcsvfile" name="importcsvfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

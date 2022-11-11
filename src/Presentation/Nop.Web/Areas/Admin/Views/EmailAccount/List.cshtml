@@ -1,0 +1,101 @@
+@model EmailAccountSearchModel
+@inject Nop.Services.Messages.IEmailAccountService emailAccountService
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+  //page title
+  ViewBag.PageTitle = T("Admin.Configuration.EmailAccounts").Text;
+  //tour step
+  ViewBag.TourStep = TourStep.EmailAccountList;
+  //active menu item (system name)
+  NopHtml.SetActiveMenuItemSystemName("Email accounts");
+
+  string editQueryString = string.Empty;
+  var showTour = ViewBag.ShowTour ?? false;
+  if (showTour)
+  {
+      editQueryString = "?showtour=true";
+  }
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.EmailAccounts")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.EmailAccountListButtons, additionalData = Model })
+    </div>
+</div>
+
+  <section class="content">
+   <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div id="email-accounts-area">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.EmailAccounts", Docs.EmailAccounts + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "email-accounts-grid",
+                            RowIdBasedOnField = nameof(EmailAccountModel.Email),
+                            UrlRead = new DataUrl("List", "EmailAccount", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(EmailAccountModel.Email))
+                                {
+                                    Title = T("Admin.Configuration.EmailAccounts.Fields.Email").Text
+                                },
+                                new ColumnProperty(nameof(EmailAccountModel.DisplayName))
+                                {
+                                    Title = T("Admin.Configuration.EmailAccounts.Fields.DisplayName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(EmailAccountModel.IsDefaultEmailAccount))
+                                {
+                                    Title = T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(EmailAccountModel.Id))
+                                {
+                                    Title = T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text,
+                                    Width = "300",
+                                    ClassName =  NopColumnClassDefaults.CenterAll + " column-default",
+                                    Render = new RenderButtonCustom(NopButtonClassDefaults.Success, T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text)
+                                    {
+                                        Url = Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")
+                                    }
+                                },
+                                new ColumnProperty(nameof(EmailAccountModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button + " column-edit",
+                                    Render = new RenderCustom("renderColumnEdit")
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<a href="@Url.Content("~/Admin/EmailAccount/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+    }
+</script>

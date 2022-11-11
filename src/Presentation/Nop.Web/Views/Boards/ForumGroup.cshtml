@@ -1,0 +1,16 @@
+﻿@model ForumGroupModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.Name);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-group-page");
+}
+<div class="page forum-group-page">
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
+    @await Html.PartialAsync("_ForumGroup", Model)
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
+</div>

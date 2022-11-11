@@ -1,0 +1,169 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-drawer-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+.k-drawer {
+    height: 100%;
+    border-width: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    transition: all 300ms ease-in-out; // sass-lint:disable-line no-transition-all
+
+    // Borders
+    &.k-drawer-start,
+    .k-drawer-left.k-drawer-mini &,
+    .k-drawer-left.k-drawer-expanded & {
+        border-right-width: @drawer-border-width;
+    }
+    &.k-drawer-end,
+    .k-drawer-right.k-drawer-mini &,
+    .k-drawer-right.k-drawer-expanded & {
+        border-left-width: @drawer-border-width;
+    }
+
+    // Position
+    .k-drawer-left &,
+    &.k-drawer-start {
+        top: 0;
+        left: 0;
+    }
+    .k-drawer-right &,
+    &.k-drawer-end {
+        top: 0;
+        right: 0;
+    }
+}
+.k-drawer-content {
+    flex: 1 1 auto;
+}
+
+
+// Overlay drawer
+.k-drawer-overlay {
+
+    .k-drawer {
+        max-width: 80vw; // limit width
+        position: fixed;
+        z-index: 10002;
+    }
+    .k-overlay {
+        display: none;
+    }
+
+    // positions
+}
+
+
+// Push drawer
+.k-drawer-push {
+    display: flex;
+    flex-direction: row;
+
+    .k-drawer {
+        height: auto;
+        position: relative;
+        align-self: stretch;
+    }
+
+
+    // right drawer
+    &.k-drawer-right {
+        .k-drawer {
+            order: 1;
+        }
+    }
+
+}
+
+
+// Drawer items
+.k-drawer-wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin; // Scrollbar styles for Mozilla
+    transition: all 300ms ease-in-out; // sass-lint:disable-line no-transition-all
+
+    // Scrollbar styles for Chrome, Safari and Opera
+    &::-webkit-scrollbar {
+        width: @drawer-scrollbar-width;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: @drawer-scrollbar-radius;
+    }
+}
+.k-drawer-items,
+.k-drawer-items ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.k-drawer-item {
+    padding: @drawer-item-padding-y @drawer-item-padding-x;
+    color: inherit;
+    font-size: @drawer-item-font-size;
+    line-height: @drawer-item-line-height;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    cursor: pointer;
+
+    .k-icon {
+        margin: 0 @drawer-item-padding-x;
+        font-size: @drawer-icon-size;
+        flex-shrink: 0;
+    }
+
+    .k-item-text {
+        padding: 0 @drawer-item-padding-x;
+        display: inline-block;
+        white-space: nowrap;
+    }
+}
+.k-drawer-separator {
+    padding: 0;
+    height: 1px;
+}
+
+
+
+// Mini mode
+.k-drawer-mini {
+
+    .k-drawer-wrapper {
+        width: @drawer-mini-initial-width;
+    }
+
+}
+
+
+.k-rtl,
+[dir="rtl"] {
+
+    .k-drawer-left.k-drawer-push .k-drawer {
+        order: 1;
+    }
+    .k-drawer-right.k-drawer-push .k-drawer {
+        order: 0;
+    }
+}

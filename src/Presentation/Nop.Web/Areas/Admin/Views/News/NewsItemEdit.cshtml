@@ -1,0 +1,43 @@
+@model NewsItemModel
+
+@using Nop.Core.Domain.News
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("News items");
+}
+
+<form asp-controller="News" asp-action="NewsItemEdit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails") - @Model.Title
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="NewsItems">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<NewsItem>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
+                <i class="far fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="newsitem-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="newsitem-delete" />

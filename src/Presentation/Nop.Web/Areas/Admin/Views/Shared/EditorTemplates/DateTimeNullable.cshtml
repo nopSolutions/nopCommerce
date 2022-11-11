@@ -1,0 +1,12 @@
+@model DateTime?
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString() : null)" />
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdForModel()").kendoDateTimePicker({
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+    });
+</script>

@@ -1,0 +1,59 @@
+@model DiscountModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "products-grid",
+            UrlRead = new DataUrl("ProductList", "Discount", new RouteValueDictionary { [nameof(Model.DiscountProductSearchModel.DiscountId)] = Model.DiscountProductSearchModel.DiscountId }),
+            UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(Model.DiscountProductSearchModel.DiscountId)] = Model.DiscountProductSearchModel.DiscountId }),
+            BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
+            Length = Model.DiscountProductSearchModel.PageSize,
+            LengthMenu = Model.DiscountProductSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountProductModel.ProductName))
+                {
+                    Title = T("Admin.Promotions.Discounts.AppliedToProducts.Product").Text
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "150",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "150",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+            @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
+        </button>
+        <button type="submit" id="btnRefreshProducts" style="display: none"></button>
+        <script>
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    updateTable('#products-grid');
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+    </div>
+}

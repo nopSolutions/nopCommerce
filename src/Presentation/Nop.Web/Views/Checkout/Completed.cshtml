@@ -1,0 +1,39 @@
+﻿@model CheckoutCompletedModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-checkout-page");
+    NopHtml.AppendPageCssClassParts("html-order-completed-page");
+}
+<div class="page checkout-page order-completed-page">
+    @if (!Model.OnePageCheckoutEnabled)
+    {
+        @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent),  new { step = CheckoutProgressStep.Complete })
+    }
+    <div class="page-title">
+        <h1>@T("Checkout.ThankYou")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutCompletedTop, additionalData = Model })
+        <div class="section order-completed">
+            <div class="title">
+                <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
+            </div>
+            <div class="details">
+                <div class="order-number">
+                    <strong>@T("Checkout.OrderNumber"): @Model.CustomOrderNumber</strong>
+                </div>
+                <div class="details-link">
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="button" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("Homepage")')">@T("Checkout.ThankYou.Continue")</button>
+            </div>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
+    </div>
+</div>

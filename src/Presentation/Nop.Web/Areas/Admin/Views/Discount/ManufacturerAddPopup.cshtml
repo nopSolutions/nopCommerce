@@ -1,0 +1,110 @@
+﻿@model AddManufacturerToDiscountSearchModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+else
+{
+    <form asp-controller="Discount" asp-action="ManufacturerAddPopup"
+          asp-route-discountId="@Context.Request.Query["discountId"]"
+          asp-route-btnId="@Context.Request.Query["btnId"]"
+          asp-route-formId="@Context.Request.Query["formId"]">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
+            </h1>
+            <div class="float-right">
+                &nbsp;
+            </div>
+        </div>
+
+       <section class="content">
+            <div class="container-fluid">
+                    <div class="form-horizontal">
+                        <div class="cards-group">
+                            <div class="card card-default card-search card-popup">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <nop-label asp-for="SearchManufacturerName" />
+                                                </div>
+                                                <div class=" col-sm-8">
+                                                    <nop-editor asp-for="SearchManufacturerName" />
+                                                </div>
+                                            </div>
+                                            <div class=" form-group">
+                                                <div class="col-sm-8 offset-sm-4">
+                                                    <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
+                                                        <i class="fas fa-search"></i>
+                                                        @T("Admin.Common.Search")
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card card-default">
+                                <div class="card-body">
+                                    @await Html.PartialAsync("Table", new DataTablesModel
+                                    {
+                                        Name = "manufacturers-grid",
+                                        UrlRead = new DataUrl("ManufacturerAddPopupList", "Discount", null),
+                                        SearchButtonId = "search-manufacturers",
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
+                                        {
+                                            new FilterParameter(nameof(Model.SearchManufacturerName))
+                                        },
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new ColumnProperty(nameof(ManufacturerModel.Id))
+                                            {
+                                                IsMasterCheckBox = true,
+                                                Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
+                                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                                Width = "50"
+                                            },
+                                            new ColumnProperty(nameof(ManufacturerModel.Name))
+                                            {
+                                                Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                                            },
+                                            new ColumnProperty(nameof(ManufacturerModel.Published))
+                                            {
+                                                Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean()
+                                            }
+                                        }
+                                    })
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" name="save" class="btn btn-primary">
+                                        <i class="far fa-save"></i>
+                                        @T("Admin.Common.Save")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+       </section>
+    </form>
+}

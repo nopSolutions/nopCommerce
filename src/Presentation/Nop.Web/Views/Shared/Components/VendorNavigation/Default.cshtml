@@ -1,0 +1,28 @@
+﻿@model VendorNavigationModel
+
+@using Nop.Core.Domain.Vendors
+
+@if (Model.Vendors.Count > 0)
+{
+    <div class="block block-vendor-navigation">
+        <div class="title">
+            <strong>@T("Vendors")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="list">
+                @foreach (var vendor in Model.Vendors)
+                {
+                    <li>
+                        <a href="@(Url.RouteUrl<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
+                    </li>
+                }
+            </ul>
+            @if (Model.TotalVendors > Model.Vendors.Count)
+            {
+                <div class="view-all">
+                    <a href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
+                </div>
+            }
+        </div>
+    </div>
+}

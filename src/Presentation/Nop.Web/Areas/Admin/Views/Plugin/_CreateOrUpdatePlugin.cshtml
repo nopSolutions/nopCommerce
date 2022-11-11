@@ -1,0 +1,148 @@
+@model PluginModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="SystemName" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PluginDetailsTop, additionalData = Model })
+                <div class="card card-default card-popup">
+                    <div class="card-body">
+                        @(await Html.LocalizedEditorAsync<PluginModel, PluginLocalizedModel>("plugin-localized",
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <nop-label asp-for="@Model.Locales[item].FriendlyName" />
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <nop-editor asp-for="@Model.Locales[item].FriendlyName" />
+                                        <span asp-validation-for="@Model.Locales[item].FriendlyName"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+      ,
+                                            @<div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-3">
+                                                        <nop-label asp-for="FriendlyName" />
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <nop-editor asp-for="FriendlyName" asp-required="true" />
+                                                        <span asp-validation-for="FriendlyName"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                  ))
+
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="DisplayOrder" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                        @if (Model.CanChangeEnabled)
+                        {
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="IsEnabled" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="IsEnabled" />
+                                    <span asp-validation-for="IsEnabled"></span>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="SelectedCustomerRoleIds" />
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                                        <script>
+                                            $(document).ready(function() {
+                                                var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                                rolesIdsInput.setOptions({
+                                                    autoClose: false,
+                                                    filter: "contains"
+                                                });
+
+                                                @if (Model.AvailableCustomerRoles.Count == 0)
+                                                {
+                                                    <text>
+                                                        rolesIdsInput.setOptions({
+                                                            enable: false,
+                                                            placeholder: 'No customer roles available'
+                                                        });
+                                                        rolesIdsInput._placeholder();
+                                                        rolesIdsInput._enable();
+                                                    </text>
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="SelectedStoreIds" />
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                        <script>
+                                        $(document).ready(function() {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                            storesIdsInput.setOptions({
+                                                autoClose: false,
+                                                filter: "contains"
+                                            });
+
+                                            @if (Model.AvailableStores.Count == 0)
+                                            {
+                                                <text>
+                                                    storesIdsInput.setOptions({
+                                                        enable: false,
+                                                        placeholder: 'No stores available'
+                                                    });
+                                                    storesIdsInput._placeholder();
+                                                    storesIdsInput._enable();
+                                                </text>
+                                            }
+                                        });
+                                        </script>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PluginDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,62 @@
+@model TopicModel
+
+<div class="card-body">
+    <div id="info-area">
+    @(await Html.LocalizedEditorAsync<TopicModel, TopicLocalizedModel>("topic-info-localized",
+                                    @<div>
+                                        <div class="form-group row">
+                                            <div class="col-md-3">
+                                                <nop-label asp-for="@Model.Locales[item].Title" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Title" />
+                                                <span asp-validation-for="@Model.Locales[item].Title"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-3">
+                                                <nop-label asp-for="@Model.Locales[item].Body" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                                                <span asp-validation-for="@Model.Locales[item].Body"></span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                    </div>
+                                    ,
+                                        @<div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="Title" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="Title" />
+                                                    <span asp-validation-for="Title"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="Body" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                                                    <span asp-validation-for="Body"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        ))
+    </div>
+
+    @if (Model.Id > 0)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Url" />
+            </div>
+            <div class="col-md-9">
+                <a href="@Model.Url">@Model.Url</a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,19 @@
+version: "3.4"
+services:
+    nopcommerce_web:
+        build: .
+        container_name: nopcommerce
+        ports:
+            - "80:80"
+        depends_on:
+            - nopcommerce_database
+    nopcommerce_database:
+        image: "mysql:latest"
+        container_name: nopcommerce_mysql_server
+        command: "--default-authentication-plugin=mysql_native_password"
+        restart: "always"
+        environment:
+          MYSQL_ROOT_PASSWORD: "nopCommerce_db_password"
+
+volumes:
+  nopcommerce_data:            

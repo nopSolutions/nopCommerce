@@ -1,0 +1,37 @@
+@model ForumModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Forums.Forum.EditForum").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Manage forums");
+}
+
+<form asp-controller="Forum" asp-action="EditForum" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.Forums.Forum.EditForum") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.ContentManagement.Forums.Forum.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="forum-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateForum", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="forum-delete" asp-action="DeleteForum"/>

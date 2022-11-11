@@ -1,0 +1,49 @@
+@model CatalogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IgnoreAcl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IgnoreAcl" />
+            <span asp-validation-for="IgnoreAcl"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IgnoreStoreLimitations" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IgnoreStoreLimitations" />
+            <span asp-validation-for="IgnoreStoreLimitations"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IgnoreDiscounts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IgnoreDiscounts" />
+            <span asp-validation-for="IgnoreDiscounts"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IgnoreFeaturedProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IgnoreFeaturedProducts" />
+            <span asp-validation-for="IgnoreFeaturedProducts"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CacheProductPrices" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CacheProductPrices" />
+            <span asp-validation-for="CacheProductPrices"></span>
+        </div>
+    </div>
+</div>

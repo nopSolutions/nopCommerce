@@ -1,0 +1,46 @@
+﻿@using System.Globalization
+@inject IEventPublisher eventPublisher
+@inject LocalizationSettings localizationSettings
+@using Nop.Core.Domain.Localization
+@using Nop.Web.Framework.UI;
+@{
+    //page title
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
+    adminPageTitle += T("Admin.PageTitle").Text;
+
+    //event
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea)">
+<head>
+    <title>@adminPageTitle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @NopHtml.GenerateHeadCustom()
+
+    @* CSS & Script resources *@
+    @{ await Html.RenderPartialAsync("_AdminScripts");  }
+</head>
+<body class="hold-transition skin-blue sidebar-collapse layout-fixed">
+    <div class="wrapper">
+        <div class="content-wrapper">
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
+            <div>
+                <nop-antiforgery-token />
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            //enable tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)    
+</body>
+</html>

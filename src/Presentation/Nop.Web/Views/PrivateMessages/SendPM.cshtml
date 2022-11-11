@@ -1,0 +1,52 @@
+﻿@model SendPrivateMessageModel
+@{    
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.SendPM").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-send-page");
+}
+<form asp-route="SendPM" method="post">
+    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    <div class="page private-messages private-message-send-page">
+        <div class="page-title">
+            <h1>@T("PrivateMessages.Send.PostMessage")</h1>
+        </div>
+        <div class="page-body">
+            <input type="hidden" asp-for="ToCustomerId" />
+            <input type="hidden" asp-for="ReplyToMessageId"/>
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label>@T("PrivateMessages.Send.To")</label>
+                        @if (Model.AllowViewingToProfile)
+                        {
+                            <a href="@Url.RouteUrl("CustomerProfile", new {id = Model.ToCustomerId})">@(Model.CustomerToName)</a>
+                        }
+                        else
+                        {
+                            <span>@Model.CustomerToName</span>
+                        }
+                    </div>
+                    <div class="inputs">
+                        <label>@T("PrivateMessages.Send.Subject")</label>
+                        <input asp-for="Subject" class="pm-title-text" />
+                        <span asp-validation-for="Subject"></span>
+                    </div>
+                    <div class="inputs message">
+                        <label>@T("PrivateMessages.Send.Message")</label>
+                        <nop-bb-code-editor asp-for="Message" />
+                        <textarea asp-for="Message" class="bb-editor-text" ></textarea>
+                        <span asp-validation-for="Message"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="button-1 send-pm-button">@T("PrivateMessages.Send.SendButton")</button>
+                <button type="button" class="button-2 cancel-pm-button" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.Send.CancelButton")</button>
+            </div>
+        </div>
+    </div>
+</form>

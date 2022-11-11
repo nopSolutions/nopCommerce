@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Català" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Adreça de correu d’usuari administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Introdueix email d'administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Contrasenya d'usuari administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Introdueix contrasenya d'usuari administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>El compte '{0}' no està configurat amb el permís Modificar a la carpeta '{1}'. Si us plau, configureu aquests permisos.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>El compte '{0}' no es concedeix amb el permís de modificació en el fitxer '{1}'. Si us plau, configureu aquests permisos.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Confirma la contrasenya</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Introduïu contrasenya de confirmació</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Cadena de connexió</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>La cadena de connexió és obligatòria</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Format de la cadena de connexió SQL incorrecte</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>País</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Seleccioneu el país</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Crear la base de dades si no existeix</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Crear dades de mostra</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Especifiqueu el joc de caràcters personalitzat (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Base de dades</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>S'ha produït un error en crear la base de dades: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Informació de base de dades</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Nom de la base de dades</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>La base de dades no existeix o no tens permís de connexió</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Seleccioneu el proveïdor de dades:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Si necessites informació de com utilitzar nopCommerce, visita</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>la secció de documentació a nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Exemple</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Instal·lar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Instal·lant nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Utilitzeu l’autenticació integrada de Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Les contrasenyes no coincideixen</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Introdueix la cadena de connexió directament (avançat)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Reinicia l'instal·lació</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Feu clic per reiniciar el procés d'instal·lació (esborreu tots els valors emmagatzemats a la memòria cau)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Reiniciant...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nom del servidor</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Es requereix el nom del servidor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>La configuració ha fallat: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>Contrasenya SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>Es requereix la contrasenya SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>Nom d'usuari SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>Es requereix nom d'usuari SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informació de la botiga</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Instal·lació de nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Per completar aquest assistent, heu de conèixer informació relativa al servidor de base de dades ("cadena de connexió"). Poseu-vos en contacte amb el vostre ISP si cal. Si esteu instal·lant en una màquina o servidor local, és possible que necessiteu informació del vostre administrador del sistema.</Value>
+  </LocaleResource>
+</Language>

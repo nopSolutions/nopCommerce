@@ -1,0 +1,125 @@
+@model PollModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "answers-grid",
+            UrlRead = new DataUrl("PollAnswers", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
+            UrlUpdate = new DataUrl("PollAnswerUpdate", "Poll", new RouteValueDictionary { [nameof(PollAnswerSearchModel.PollId)] = Model.PollAnswerSearchModel.PollId }),
+            UrlDelete = new DataUrl("PollAnswerDelete", "Poll", null),
+            Length = Model.PollAnswerSearchModel.PageSize,
+            LengthMenu = Model.PollAnswerSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PollAnswerModel.Name))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.Name").Text,
+                    Width = "300",
+                    Editable = true,
+                    EditType = EditType.String
+                },
+                new ColumnProperty(nameof(PollAnswerModel.NumberOfVotes))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes").Text,
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(PollAnswerModel.DisplayOrder))
+                {
+                    Title = T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+                new ColumnProperty(nameof(PollAnswerModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+                new ColumnProperty(nameof(PollAnswerModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        })
+
+        <div class="card card-default no-margin">
+            <div class="card-header">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name" />
+                        <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder" />
+                        <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="button" id="addPollAnswer" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+            $(document).ready(function () {
+                $('#addPollAnswer').click(function () {
+                    $('#addPollAnswer').attr('disabled', true);
+                    var postData = {
+                        Name: $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val(),
+                        DisplayOrder: $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val()
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
+                        data: postData,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.Result) {
+                                //reload grid
+                                updateTable('#answers-grid');
+
+                                //clear input value
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").data("kendoNumericTextBox").value(0);
+
+                            } else {
+                                //display errors if returned
+                                display_nop_error(data);
+                            }
+                        },
+                        complete: function (jqXHR, textStatus) {
+                            $('#addPollAnswer').attr('disabled', false);
+                        }
+                    });
+                });
+            });
+            </script>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+    </div>
+}

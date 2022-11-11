@@ -1,0 +1,10 @@
+﻿@using Nop.Core
+@inject Nop.Services.Localization.ILocalizationService localizationService 
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@{
+    var link = Url.RouteUrl("NewsRSS", new { languageId = (await workContext.GetWorkingLanguageAsync()).Id }, webHelper.GetCurrentRequestProtocol());
+    var storeName = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), x => x.Name);
+}
+<link href="@link" rel="alternate" type="application/rss+xml" title="@storeName: News" />

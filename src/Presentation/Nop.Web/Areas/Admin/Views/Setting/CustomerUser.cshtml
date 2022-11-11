@@ -1,0 +1,77 @@
+@model CustomerUserSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.CustomerUser").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Customer and user settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideSecurityBlockAttributeName = "CustomerUserSettingsPage.HideSecurityBlock";
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSecurityBlockAttributeName);
+
+    const string hideAccountBlockAttributeName = "CustomerUserSettingsPage.HideAccountBlock";
+    var hideAccountBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAccountBlockAttributeName);
+
+    const string hideProfileBlockAttributeName = "CustomerUserSettingsPage.HideProfileBlock";
+    var hideProfileBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProfileBlockAttributeName);
+
+    const string hideCustomerFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideCustomerFormFieldsBlock";
+    var hideCustomerFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCustomerFormFieldsBlockAttributeName);
+
+    const string hideAddressFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideAddressFormFieldsBlock";
+    var hideAddressFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAddressFormFieldsBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="CustomerUser" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.CustomerUser")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+    <div asp-validation-summary="All"></div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <nop-cards id="customersettings-cards">
+                    <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-card>
+                    <nop-card asp-name="customersettings-security" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
+                    <nop-card asp-name="customersettings-account" asp-icon="fas fa-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")" asp-hide-block-attribute-name="@hideAccountBlockAttributeName" asp-hide="@hideAccountBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Account", Model)</nop-card>
+                    <nop-card asp-name="customersettings-profile" asp-icon="fas fa-user-circle" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-card>
+                    <nop-card asp-name="customersettings-customerformfields" asp-icon="fas fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-card>
+                    <nop-card asp-name="customersettings-addressformfields" asp-icon="far fa-address-book" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)").click(toggleForceMultifactorAuthentication);
+            toggleForceMultifactorAuthentication();
+        });
+
+        function toggleForceMultifactorAuthentication() {
+            warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "Setting")',
+                '@Html.NameFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)',
+                {
+                    forceMultifactorAuthentication: $('#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)').is(':checked')
+                });
+        }
+    </script>
+</form>

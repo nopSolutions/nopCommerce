@@ -1,0 +1,90 @@
+﻿@model SiteMapNode
+@using Nop.Core.Domain.Localization
+@using Nop.Web.Framework.Menu
+@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    string url = null;
+    if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
+    {
+        url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
+    }
+    else if (!string.IsNullOrEmpty(Model.Url))
+    {
+        url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
+    }
+    var isActive = Model.ContainsSystemName(NopHtml.GetActiveMenuItemSystemName());
+}
+@if (!string.IsNullOrEmpty(url))
+{
+    <li class="nav-item">
+
+        <a href="@url" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\"")) @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
+            @if (!string.IsNullOrEmpty(Model.IconClass))
+            {
+                <text>
+                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
+                </text>
+            }
+
+            <p> @Model.Title</p>
+
+        </a>
+    </li>
+}
+else
+{
+    var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
+    var hasChildNodes = childNodes.Any();
+    var liCssClass = "";
+
+
+    if (hasChildNodes)
+    {
+        liCssClass = "nav-item has-treeview";
+    }
+
+    if (isActive)
+    {
+        if (!String.IsNullOrEmpty(liCssClass))
+        {
+            liCssClass += " ";
+        }
+        liCssClass += "menu-open";
+    }
+
+    <li @(!String.IsNullOrEmpty(liCssClass) ? Html.Raw("class=\"" + liCssClass + "\"") : null)>
+
+        <a href="#" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\""))>
+            @if (!string.IsNullOrEmpty(Model.IconClass))
+            {
+                <text>
+                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
+                </text>
+            }
+            <p>
+                @Model.Title
+                @if (supportRtl)
+                {
+                    <i class="right fas fa-angle-right"></i>
+                }
+                else
+                {
+                    <i class="right fas fa-angle-left "></i>
+                }
+            </p>
+        </a>
+        @if (hasChildNodes)
+        {
+
+            <ul class="nav nav-treeview">
+                @foreach (var childItem in childNodes)
+                {
+                    @await Html.PartialAsync("_MenuItem", childItem)
+                }
+            </ul>
+
+        }
+    </li>
+}

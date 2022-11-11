@@ -1,0 +1,121 @@
+@model CheckoutAttributeSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Checkout attributes");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Catalog.Attributes.CheckoutAttributes")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CheckoutAttributeListButtons, additionalData = Model })
+        <button type="button" id="delete-selected" class="btn btn-danger">
+            <i class="far fa-trash-alt"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <p>
+                            @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CheckoutAttributes", Docs.CheckoutAttributes + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                        </p>
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "checkoutattributes-grid",
+                            UrlRead = new DataUrl("List", "CheckoutAttribute", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                 new ColumnProperty(nameof(ProductAttributeModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_checkoutattributes"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(CheckoutAttributeModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name").Text
+                                },
+                                new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(CheckoutAttributeModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
+
+                        <script>
+                    $(document).ready(function () {
+                        $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                            var postData = {
+                                selectedIds: selectedIds
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@(Url.Action("DeleteSelected", "CheckoutAttribute"))",
+                                data: postData,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    showAlert('deleteSelectedFailed', errorThrown);
+                                },
+                                complete: function (jqXHR, textStatus) {
+                                    if (jqXHR.status === 204)
+                                    {
+                                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                        return;
+                                    }
+                                    updateTable('#checkoutattributes-grid');
+                                }
+                            });
+                            $('#delete-selected-action-confirmation').modal('toggle');
+                            return false;
+                        });
+                    });
+                        </script>
+                        <nop-alert asp-alert-id="deleteSelectedFailed" />
+                        <nop-alert asp-alert-id="nothingSelectedAlert" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,274 @@
+﻿@model ProductAttributeValueModel
+
+@using Nop.Core.Domain.Catalog
+@using Nop.Services
+
+<link rel="stylesheet" href="~/lib_npm/farbstastic/farbtastic.css" />
+<script src="~/lib_npm/farbstastic/farbtastic.min.js" asp-location="Head"></script>
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="ProductAttributeMappingId" type="hidden" />
+<input asp-for="DisplayColorSquaresRgb" type="hidden" />
+<input asp-for="DisplayImageSquaresPicture" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
+        $("#@Html.IdFor(model => model.CustomerEntersQty)").change(toggleCustomerEntersQty);
+        toggleProductType();
+    });
+
+    function toggleProductType() {
+        var selectedProductTypeId = $("#@Html.IdFor(model => model.AttributeValueTypeId)").val();
+        if (selectedProductTypeId == @(((int) AttributeValueType.Simple).ToString())) {
+            $('#group-associated-product').hideElement();
+        $('#group-customer-enters-qty').hideElement();
+        $('#group-quantity').hideElement();
+        $('#group-price-adjustment').showElement();
+        $('#group-price-adjustment-percentage').showElement();
+        $('#group-weight-adjustment').showElement();
+        $('#group-cost').showElement();
+    } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
+        $('#group-associated-product').showElement();
+        $('#group-customer-enters-qty').showElement();
+        $('#group-price-adjustment').hideElement();
+        $('#group-price-adjustment-percentage').hideElement();
+        $('#group-weight-adjustment').hideElement();
+        $('#group-cost').hideElement();
+        toggleCustomerEntersQty();
+    }
+    };
+
+    function toggleCustomerEntersQty() {
+        if ($("#@Html.IdFor(model => model.CustomerEntersQty)").is(':checked')) {
+            $('#group-quantity').hideElement();
+        }
+        else {
+            $('#group-quantity').showElement();
+        }
+    }
+</script>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsTop, additionalData = Model })
+                    <div class="card card-default card-popup card-popup">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="AttributeValueTypeId" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-select asp-for="AttributeValueTypeId" asp-items="@await (((AttributeValueType)Model.AttributeValueTypeId).ToSelectListAsync())" />
+                                    <span asp-validation-for="AttributeValueTypeId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-associated-product">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="AssociatedProductId" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <input asp-for="AssociatedProductId" type="hidden" />
+                                    <span id="associate-product-name">@Model.AssociatedProductName</span>
+                                    <span asp-validation-for="AssociatedProductId"></span>
+                                    <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.IdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary">
+                                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
+                                    </button>
+                                    <script>
+                                $(document).ready(function () {
+                                    if (@Model.AssociatedProductId > 0) {
+                                        warningValidation('@Url.Action("AssociatedProductGetWarnings", "Product")', '@Html.NameFor(model => model.AssociatedProductId)', { productId: '@Model.AssociatedProductId' });
+                                    }
+
+                                    $('#@Html.IdFor(model => model.AssociatedProductId)').on('change', function () {
+                                        warningValidation('@Url.Action("AssociatedProductGetWarnings", "Product")', '@Html.NameFor(model => model.AssociatedProductId)', { productId: $(this).val() });
+                                    });
+                                });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-customer-enters-qty">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="CustomerEntersQty" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="CustomerEntersQty" />
+                                    <span asp-validation-for="CustomerEntersQty"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-quantity">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="Quantity" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="Quantity" />
+                                    <span asp-validation-for="Quantity"></span>
+                                </div>
+                            </div>
+
+                            @(await Html.LocalizedEditorAsync<ProductAttributeValueModel, ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+                                    @<div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">
+                                                <nop-label asp-for="@Model.Locales[item].Name" />
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Name" />
+                                                <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                    </div>
+          ,
+                                                    @<div>
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-3">
+                                                                <nop-label asp-for="Name" />
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <nop-editor asp-for="Name" asp-required="true" />
+                                                                <span asp-validation-for="Name"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                          ))
+                            @if (Model.DisplayColorSquaresRgb)
+                            {
+                                //ensure "ColorSquaresRgb" has some default value. Otherwise farbtastic won't set a selected value
+                                if (string.IsNullOrEmpty(Model.ColorSquaresRgb))
+                                {
+                                    Model.ColorSquaresRgb = "#000000";
+                                }
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <nop-label asp-for="ColorSquaresRgb" />
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <nop-editor asp-for="ColorSquaresRgb" />
+                                        <div id="color-picker"></div>
+                                        <script>
+                                    $(document).ready(function(){
+                                        $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
+                                    });
+                                        </script>
+                                        <span asp-validation-for="ColorSquaresRgb"></span>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.DisplayImageSquaresPicture)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <nop-label asp-for="ImageSquaresPictureId" />
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <nop-editor asp-for="ImageSquaresPictureId" />
+                                        <span asp-validation-for="ImageSquaresPictureId"></span>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row" id="group-price-adjustment">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="PriceAdjustment" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="PriceAdjustment" />
+                                    <span asp-validation-for="PriceAdjustment"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-price-adjustment-percentage">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="PriceAdjustmentUsePercentage" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="PriceAdjustmentUsePercentage" />
+                                    <span asp-validation-for="PriceAdjustmentUsePercentage"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-weight-adjustment">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="WeightAdjustment" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="WeightAdjustment" />
+                                    <span asp-validation-for="WeightAdjustment"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="group-cost">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="Cost" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="Cost" />
+                                    <span asp-validation-for="Cost"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="IsPreSelected" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="IsPreSelected" />
+                                    <span asp-validation-for="IsPreSelected"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="DisplayOrder" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <nop-editor asp-for="DisplayOrder" />
+                                    <span asp-validation-for="DisplayOrder"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <nop-label asp-for="PictureId" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="attribute-picture-selection-block clearfix">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="@Html.NameFor(x => x.PictureId)" value="0" id="id_image_0"
+                                                   @if (Model.PictureId == 0)
+                                                   {
+                                                       <text> checked="checked" </text>
+                                                   }>
+                                                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture")
+                                            </label>
+                                        </div>
+                                        @foreach (var picture in Model.ProductPictureModels)
+                                        {
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="@Html.NameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
+                                                           @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text> }>
+                                                    <img src="@picture.PictureUrl" alt="" title="" width="75"class="mb-1" >
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                    <span asp-validation-for="PictureId"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsBottom, additionalData = Model })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

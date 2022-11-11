@@ -1,0 +1,32 @@
+﻿@model GiftCardModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string hideInfoBlockAttributeName = "GiftCardPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideUsageHistoryBlockAttributeName = "GiftCardPage.HideUsageHistoryBlock";
+    var HideUsageHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsageHistoryBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="gift-card-cards">
+                <nop-card asp-name="gift-card-info" asp-icon="fas fa-info" asp-title="@T("Admin.GiftCards.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+
+                @if (Model.Id > 0)
+                {
+                    <nop-card asp-name="gift-card-usage-history" asp-icon="fas fa-history" asp-title="@T("Admin.GiftCards.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@HideUsageHistoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
+                }
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GiftCardDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

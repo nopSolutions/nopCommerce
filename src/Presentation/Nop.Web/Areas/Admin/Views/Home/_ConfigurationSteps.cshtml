@@ -1,0 +1,258 @@
+﻿@using Nop.Core.Domain.Customers
+@using Nop.Services.Stores
+
+@inject IStoreService storeService
+
+@{
+    const string cardId = "configuration-steps-card";
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    //hide value
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+    //close value
+    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+    var defaultStoreId = (await storeService.GetAllStoresAsync()).FirstOrDefault()?.Id ?? 0;
+}
+
+@if(await workContext.GetCurrentVendorAsync() is null)
+{
+<div class="card card-primary card-outline configuration-steps @if (hideCard){<text>collapsed-card</text>}" id="@cardId">
+    <div class="card-header with-border">
+        <h3 class="card-title">
+            <i class="far fa-star"></i>
+            @T("Admin.ConfigurationSteps")
+        </h3>
+        <div class="card-tools float-right">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                @if (hideCard)
+                {
+                    <text><i class="fas fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fas fa-minus"></i></text>
+                }
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <text><i class="fas fa-times"></i></text>
+            </button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
+                var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@NopCustomerDefaults.HideConfigurationStepsAttribute', collapsed);
+            });
+
+            $('#@cardId').on('click', 'button[data-card-widget="remove"]', function () {
+                var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@NopCustomerDefaults.CloseConfigurationStepsAttribute', collapsed);
+            });
+        });
+    </script>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <h4>
+                    @T("Admin.ConfigurationSteps.Welcome.Title")
+                </h4>
+            </div>
+            <p class="intro text-center">
+                @T("Admin.ConfigurationSteps.Welcome.Text")
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <a class="configuration-step-link theme-step" asp-action="GeneralCommon" asp-controller="Setting" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        1. &nbsp; @T("Admin.ConfigurationSteps.PersonalizeStore.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.PersonalizeStore.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link store-info-step" asp-action="Edit" asp-controller="Store" asp-route-id="@defaultStoreId" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        2. &nbsp; @T("Admin.ConfigurationSteps.AddStoreInfo.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.AddStoreInfo.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link shipping-step" asp-action="Providers" asp-controller="Shipping" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        3. &nbsp; @T("Admin.ConfigurationSteps.SetUpShipping.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.SetUpShipping.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <a class="configuration-step-link payments-step" asp-action="Methods" asp-controller="Payment" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="far fa-credit-card"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        4. &nbsp; @T("Admin.ConfigurationSteps.SetUpPayments.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.SetUpPayments.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link taxes-step" asp-action="Providers" asp-controller="Tax" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-percent"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        5. &nbsp; @T("Admin.ConfigurationSteps.SetUpTaxes.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.SetUpTaxes.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link products-step" asp-action="Create" asp-controller="Product" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-shopping-cart "></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        6. &nbsp; @T("Admin.ConfigurationSteps.CreateProducts.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.CreateProducts.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-4">
+                        <a class="configuration-step-link email-step" asp-action="List" asp-controller="EmailAccount" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="far fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        7. &nbsp; @T("Admin.ConfigurationSteps.CreateEmailAccounts.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.CreateEmailAccounts.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link service-step" asp-action="List" asp-controller="Topic" asp-route-showtour="@true">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="fas fa-info"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        8. &nbsp; @T("Admin.ConfigurationSteps.EditServicesInfo.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.EditServicesInfo.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <a class="configuration-step-link copyright-step" href="@(OfficialSite.CopyrightRemovalKey)@Utm.OnAdminConfigurationSteps" target="_blank">
+                            <div class="row">
+                                <div class="col-12 col-xl-3">
+                                    <div class="configuration-step-icon">
+                                        <i class="far fa-copyright"></i>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-9">
+                                    <h5>
+                                        9. &nbsp; @T("Admin.ConfigurationSteps.PoweredBy.Title")
+                                        <small class="text-muted">
+                                            @T("Admin.ConfigurationSteps.PoweredBy.Description")
+                                        </small>
+                                    </h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

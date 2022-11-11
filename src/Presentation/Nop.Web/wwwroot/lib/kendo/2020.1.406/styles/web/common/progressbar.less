@@ -1,0 +1,264 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Progressbar
+
+.k-progressbar
+{
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+.k-progressbar
+{
+    border-radius: 4px;
+}
+
+.k-progressbar-horizontal
+{
+    width: 27em;
+    height: 1.9em;
+}
+
+.k-progressbar-vertical
+{
+    width: 1.9em;
+    height: 27em;
+}
+
+.k-progressbar > .k-state-selected
+{
+    position: absolute;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+}
+
+.k-progressbar-horizontal > .k-state-selected,
+.k-rtl .k-progressbar-horizontal.k-progressbar-reverse > .k-state-selected
+{
+    left: -1px;
+    right: auto;
+    top: -1px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+}
+
+.k-progressbar-horizontal.k-progressbar-reverse > .k-state-selected,
+.k-rtl .k-progressbar-horizontal > .k-state-selected
+{
+    left: auto;
+    right: -1px;
+    border-radius: 0 4px 4px 0;
+}
+
+.k-progressbar-vertical > .k-state-selected
+{
+    left: -1px;
+    bottom: -1px;
+    width: 100%;
+    border-radius: 0 0 4px 4px;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse > .k-state-selected
+{
+    bottom: auto;
+    top: -1px;
+    border-radius: 4px 4px 0 0;
+}
+
+.k-progressbar > .k-state-selected.k-complete,
+.k-rtl .k-progressbar > .k-state-selected.k-complete
+{
+    border-radius: 4px;
+}
+
+.k-progressbar > .k-reset
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.k-progressbar-horizontal .k-item
+{
+    display: inline-block;
+    height: 100%;
+    border-style: solid;
+    margin-left: -1px;
+}
+
+.k-progressbar-horizontal .k-item.k-first
+{
+    margin-left: 0;
+}
+
+.k-progressbar-horizontal .k-item.k-last
+{
+    border-right-width: 0;
+}
+
+.k-progressbar-horizontal .k-item,
+.k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-item
+{
+    border-width: 1px 0 1px 1px;
+}
+
+.k-progressbar-horizontal.k-progressbar-reverse .k-item,
+.k-rtl .k-progressbar-horizontal .k-item
+{
+    border-width: 1px 0 1px 1px;
+}
+
+.k-progressbar-horizontal .k-first,
+.k-rtl .k-progressbar-horizontal .k-last,
+.k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-last
+{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-left-width: 1px;
+}
+
+.k-progressbar-horizontal .k-last,
+.k-rtl .k-progressbar-horizontal .k-first
+{
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.k-progressbar-horizontal.k-progressbar-reverse .k-last,
+.k-rtl .k-progressbar-horizontal .k-first
+{
+    border-right-width: 1px;
+}
+
+.k-progressbar-horizontal .k-last.k-state-selected
+{
+    border-right-width: 1px;
+}
+
+.k-progressbar-vertical .k-item
+{
+    width: 100%;
+    border-style: solid;
+    border-width: 1px 1px 0 1px;
+    margin-top: -1px;
+}
+
+.k-progressbar-vertical .k-item.k-first
+{
+    margin-top: 0;
+}
+
+.k-progressbar-vertical li.k-item.k-last
+{
+    border-bottom-width: 0;
+}
+
+.k-progressbar-vertical .k-first
+{
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.k-progressbar-vertical .k-last
+{
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-width: 1px;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse .k-item
+{
+    border-width: 0 1px 1px 1px;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse .k-first
+{
+    border-top-width: 1px;
+}
+
+.k-progress-status-wrap
+{
+    position: absolute;
+    top: -1px;
+    border: 1px solid transparent;
+    line-height: 2em;
+    width: 100%;
+    height: 100%;
+}
+
+.k-progress-status-wrap,
+.k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-progress-status-wrap
+{
+    left: -1px;
+    right: auto;
+    text-align: right;
+}
+
+.k-progressbar-horizontal.k-progressbar-reverse .k-progress-status-wrap,
+.k-rtl .k-progressbar-horizontal .k-progress-status-wrap
+{
+    left: auto;
+    right: -1px;
+    text-align: left;
+}
+
+.k-progressbar-vertical .k-progress-status-wrap
+{
+    top: auto;
+    bottom: -1px;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse .k-progress-status-wrap
+{
+    bottom: auto;
+    top: -1px;
+}
+
+.k-progress-status
+{
+    display: inline-block;
+    padding: 0 .5em;
+    min-width: 10px;
+    white-space: nowrap;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse .k-progress-status
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.k-progressbar-vertical .k-progress-status
+{
+    transform: rotate(-90deg) translateX(-100%);
+    transform-origin: 0 0;
+}
+
+.k-progressbar-vertical.k-progressbar-reverse .k-progress-status
+{
+    transform: rotate(90deg) translateX(-100%);
+    transform-origin: 0 100%;
+}

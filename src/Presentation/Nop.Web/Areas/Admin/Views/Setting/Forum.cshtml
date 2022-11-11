@@ -1,0 +1,57 @@
+@model ForumSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Forums").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Forums settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "ForumSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hidePermissionsBlockAttributeName = "ForumSettingsPage.HidePermissionsBlock";
+    var hidePermissionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePermissionsBlockAttributeName);
+
+    const string hidePageSizesBlockAttributeName = "ForumSettingsPage.HidePageSizesBlock";
+    var hidePageSizesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePageSizesBlockAttributeName);
+
+    const string hideFeedsBlockAttributeName = "ForumSettingsPage.HideFeedsBlock";
+    var hideFeedsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFeedsBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Forum" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Forums")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="forumsettings-cards">
+                    <nop-card asp-name="forumsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Forum.Common", Model)</nop-card>
+                    <nop-card asp-name="forumsettings-permissions" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Permissions")" asp-hide-block-attribute-name="@hidePermissionsBlockAttributeName" asp-hide="@hidePermissionsBlock" asp-advanced="false">@await Html.PartialAsync("_Forum.Permissions", Model)</nop-card>
+                    <nop-card asp-name="forumsettings-page-sizes" asp-icon="fas fa-file" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.PageSizes")" asp-hide-block-attribute-name="@hidePageSizesBlockAttributeName" asp-hide="@hidePageSizesBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.PageSizes", Model)</nop-card>
+                    <nop-card asp-name="forumsettings-feeds" asp-icon="fas fa-rss" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Feeds")" asp-hide-block-attribute-name="@hideFeedsBlockAttributeName" asp-hide="@hideFeedsBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.Feeds", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

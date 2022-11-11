@@ -1,0 +1,72 @@
+﻿@using Nop.Services.Stores
+@model CustomerModel
+@inject IStoreService storeService
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "order-grid",
+        UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerOrderSearchModel.CustomerId)] = Model.CustomerOrderSearchModel.CustomerId }),
+        Length = Model.CustomerOrderSearchModel.PageSize,
+        LengthMenu = Model.CustomerOrderSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CustomerOrderModel.CustomOrderNumber))
+            {
+                Title = T("Admin.Customers.Customers.Orders.CustomOrderNumber").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.OrderTotal))
+            {
+                Title = T("Admin.Customers.Customers.Orders.OrderTotal").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.OrderStatus))
+            {
+                Title = T("Admin.Customers.Customers.Orders.OrderStatus").Text,
+                Width = "200",
+                Render = new RenderCustom("renderColumnOrderStatus")
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.PaymentStatus))
+            {
+                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.ShippingStatus))
+            {
+                Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.StoreName))
+            {
+                Title = T("Admin.Orders.Fields.Store").Text,
+                Width = "200",
+                Visible = (await storeService.GetAllStoresAsync()).Count > 1
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.CreatedOn))
+            {
+                Title = T("Admin.System.Log.Fields.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            },
+            new ColumnProperty(nameof(CustomerOrderModel.Id))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
+            }
+        }
+    })
+    <script>
+        function renderColumnOrderStatus(data, type, row, meta) {
+            var color; 
+            switch (row.OrderStatusId) {
+            case 10: color = 'yellow'; break;
+            case 20: color = 'blue'; break;
+            case 30: color = 'green'; break;
+            case 40: color = 'red'; break;
+            }
+            return '<span class="grid-report-item ' + color + '">' + data + '</span >';
+        }
+    </script>
+</div>

@@ -1,0 +1,88 @@
+﻿@using Nop.Core.Configuration
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Security
+@using Nop.Core.Events
+
+@inject CatalogSettings catalogSettings
+@inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
+@inject IPermissionService permissionService
+@inject SeoSettings seoSettings
+@inject AppSettings appSettings
+
+@{
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
+    //custom tag(s);
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+
+    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+
+    //event
+    await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
+<head>
+    <title>@NopHtml.GenerateTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@NopHtml.GenerateMetaDescription()" />
+    <meta name="keywords" content="@NopHtml.GenerateMetaKeywords()" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @NopHtml.GenerateHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+
+    @NopHtml.GenerateCssFiles()
+
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @NopHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
+    <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    
+    @Html.Raw(commonSettings.HeaderCustomHtml)
+</head>
+<body>
+    <nop-antiforgery-token />
+    @RenderBody()
+
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+    
+    @Html.Raw(commonSettings.FooterCustomHtml)
+</body>
+</html>

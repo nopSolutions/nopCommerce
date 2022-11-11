@@ -1,0 +1,15 @@
+﻿@model ProductDetailsModel
+@if (Model.DisplayBackInStockSubscription)
+{
+<div class="back-in-stock-subscription">
+    <button type="button" id="back-in-stock-subscribe-@Model.Id" class="button-2 subscribe-button">@T("BackInStockSubscriptions.NotifyMeWhenAvailable")</button>
+
+    <script asp-location="Footer">
+            $(document).ready(function () {
+                $("#back-in-stock-subscribe-@Model.Id").on('click', function() {
+                    displayPopupContentFromUrl('@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })', '@T("BackInStockSubscriptions.NotifyMeWhenAvailable")');
+                });
+            });
+    </script>
+</div>
+}

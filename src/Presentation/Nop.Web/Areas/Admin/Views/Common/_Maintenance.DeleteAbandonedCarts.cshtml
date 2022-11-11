@@ -1,0 +1,31 @@
+﻿@model MaintenanceModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-6">
+            <nop-label asp-for="DeleteAbandonedCarts.OlderThan" />
+        </div>
+        <div class="col-md-6">
+            <nop-editor asp-for="DeleteAbandonedCarts.OlderThan" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6 offset-md-6">
+            <button type="submit" name="delete-abondoned-carts" class="btn btn-default">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </button>
+        </div>
+    </div>
+    @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
+                            {
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div class="alert alert-success alert-dismissible no-margin">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                @string.Format(T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)
+            </div>
+        </div>
+    </div>
+                            }
+</div>

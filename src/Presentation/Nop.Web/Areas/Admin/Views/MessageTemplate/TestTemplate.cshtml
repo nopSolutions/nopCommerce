@@ -1,0 +1,69 @@
+@model TestMessageTemplateModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.MessageTemplates.TestDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Message templates");
+}
+
+<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="specificationattribute-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.MessageTemplates.TestDetails")
+            <small>
+                <a asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")</a>
+                <i class="fas fa-arrow-circle-left"></i>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="send-test" class="btn btn-primary">
+                @T("Admin.ContentManagement.MessageTemplates.Test.Send")
+            </button>
+        </div>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
+    </div>
+    <input asp-for="Id" type="hidden" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SendTo" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SendTo" asp-required="true" />
+                                    <span asp-validation-for="SendTo"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-9 offset-md-3">
+                                    @T("Admin.ContentManagement.MessageTemplates.Test.Tokens.Description")
+                                </div>
+                            </div>
+                            @foreach (var token in Model.Tokens)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="label-wrapper">
+                                            <label class="col-form-label">
+                                                @token
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" name="token_@(token)" class="form-control" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

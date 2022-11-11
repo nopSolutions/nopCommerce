@@ -1,0 +1,103 @@
+﻿@model CommonStatisticsModel
+@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string cardId = "nopcommerce-common-statistics-card";
+    const string hideCardAttributeName = "HideCommonStatisticsCard";
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
+}
+
+    <div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">
+        <div class="card-header with-border clearfix">
+            <div class="card-title">
+                <i class="far fa-chart-bar"></i>
+                @T("Admin.Dashboard.CommonStatistics")
+            </div>
+            <div class="card-tools float-right">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    @if (hideCard)
+                    {
+                        <text><i class="fas fa-plus"></i></text>
+                    }
+                    else
+                    {
+                        <text><i class="fas fa-minus"></i></text>
+                    }
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>@Model.NumberOfOrders</h3>
+                            <p>@T("Admin.Dashboard.NumberOfOrders")</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a asp-controller="Order" asp-action="List" class="small-box-footer">
+                            @T("Admin.Dashboard.MoreInfo")
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>@Model.NumberOfPendingReturnRequests</h3>
+                            <p>@T("Admin.Dashboard.NumberOfPendingReturnRequests")</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-refresh"></i>
+                        </div>
+                        <a asp-controller="ReturnRequest" asp-action="List" class="small-box-footer">
+                            @T("Admin.Dashboard.MoreInfo")
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>@Model.NumberOfCustomers</h3>
+                            <p>@T("Admin.Dashboard.NumberOfCustomers")</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a asp-controller="Customer" asp-action="List" class="small-box-footer">
+                            @T("Admin.Dashboard.MoreInfo")
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>@Model.NumberOfLowStockProducts</h3>
+                            <p>@T("Admin.Dashboard.NumberOfLowStockProducts")</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a asp-controller="Report" asp-action="LowStock" class="small-box-footer">
+                            @T("Admin.Dashboard.MoreInfo")
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <script>
+            $(document).ready(function () {
+                $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
+                    var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                });
+            });
+                </script>
+            </div>
+        </div>
+    </div>

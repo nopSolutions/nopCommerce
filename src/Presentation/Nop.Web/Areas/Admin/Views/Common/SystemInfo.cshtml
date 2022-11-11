@@ -1,0 +1,201 @@
+@model SystemInfoModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.System.SystemInfo").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("System information");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.System.SystemInfo")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SystemInfoButtons, additionalData = Model })
+    </div>
+</div>
+
+<script>
+    function toggleLoadedAssemblies() {
+        $('#pnlLoadedAssemblies').toggleClass('d-none');
+        if ($('#pnlLoadedAssemblies').hasClass('d-none')) {
+            $('#loadedAssembliesShowHide').text('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#loadedAssembliesShowHide').text('@T("Admin.Common.Hide")');
+        }
+    }
+
+    function toggleLoadedHeaders() {
+        $('#pnlHeaders').toggleClass('d-none');
+        if ($('#pnlHeaders').hasClass('d-none')) {
+            $('#headersShowHide').text('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#headersShowHide').html('@T("Admin.Common.Hide")');
+        }
+    }
+</script>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SystemInfoTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="NopVersion" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.NopVersion</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OperatingSystem" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.OperatingSystem</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AspNetInfo" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.AspNetInfo</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsFullTrust" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@T(Model.IsFullTrust ? "Admin.Common.Yes" : "Admin.Common.No")</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ServerTimeZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ServerTimeZone</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ServerLocalTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ServerLocalTime.ToString("F")</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UtcTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.UtcTime.ToString("F")</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CurrentUserTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CurrentUserTime.ToString("F")</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="HttpHost" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.HttpHost</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Headers" />
+                            </div>
+                            <div class="col-md-9">
+                                <a id="headersShowHide" href="javascript:toggleLoadedHeaders();">@T("Admin.Common.Show")</a>
+                                <div id="pnlHeaders" class="d-none" style="word-break: break-all">
+                                    <ul>
+                                        @foreach (var header in Model.Headers)
+                                        {
+                                            <li>
+                                                <strong>@header.Name</strong>: @header.Value
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LoadedAssemblies" />
+                            </div>
+                            <div class="col-md-9">
+                                <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
+                                <div id="pnlLoadedAssemblies" class="d-none">
+                                    <ul>
+                                        @foreach (var assembly in Model.LoadedAssemblies)
+                                        {
+                                            <li>
+                                                <div>
+                                                    <strong>@assembly.FullName</strong>
+                                                    @if (assembly.IsDebug)
+                                                    {
+                                                        <span class="label label-warning">Debug</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="label label-success">Release</span>
+                                                    }
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(assembly.Location))
+                                                {
+                                                    <div style="white-space:nowrap;overflow:auto;">
+                                                        @assembly.Location
+                                                    </div>
+                                                }
+                                                @if (assembly.BuildDate.HasValue)
+                                                {
+                                                    <div>
+                                                        @assembly.BuildDate.Value.ToString("s")
+                                                    </div>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CurrentStaticCacheManager" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CurrentStaticCacheManager</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AzureBlobStorageEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@T(Model.AzureBlobStorageEnabled ? "Admin.Common.Yes" : "Admin.Common.No")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SystemInfoBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

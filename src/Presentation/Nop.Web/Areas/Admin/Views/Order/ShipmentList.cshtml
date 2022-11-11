@@ -1,0 +1,398 @@
+@model ShipmentSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Orders.Shipments.List").Text;
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Shipments");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "ShipmentsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="Order" asp-action="ShipmentList" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Orders.Shipments.List")
+        </h1>
+        <div class="float-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-info">
+                    <i class="far fa-file-pdf"></i>
+                    @T("Admin.Orders.Shipments.PrintPackagingSlips")
+                </button>
+                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-item">
+                        <button type="submit" name="exportpackagingslips-all">
+                            @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
+                        </button>
+                    </li>
+                    <li class="dropdown-item">
+                        <button type="button" id="exportpackagingslips-selected">
+                            @T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" id="ship-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsShippedSelected", "Order"))', 'setAsShippedSelectedFailed');return false;">
+                <i class="fas fa-truck"></i>
+                @T("Admin.Orders.Shipments.ShipSelected")
+            </button>
+            <button type="button" id="ready-for-pickup-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsReadyForPickupSelected", "Order"))', 'setAsReadyForPickupSelectedFailed');return false;">
+                <i class="fas fa-cube"></i>
+                @T("Admin.Orders.Shipments.ReadyForPickupSelected")
+            </button>
+            <button type="button" id="deliver-selected" class="btn btn-success" onclick="uploadSelectedShipments('@(Url.Action("SetAsDeliveredSelected", "Order"))', 'setAsDeliveredSelectedFailed');return false;">
+                <i class="fas fa-check-square"></i>
+                @T("Admin.Orders.Shipments.DeliverySelected")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default card-search">
+                            <div class="card-body">
+                                <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                    <div class="search-text">@T("Admin.Common.Search")</div>
+                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                </div>
+
+                                <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="StartDate" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="StartDate" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="EndDate" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="EndDate" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="TrackingNumber" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="TrackingNumber" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="WarehouseId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="LoadNotDelivered" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="LoadNotDelivered" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="CountryId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="StateProvinceId" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="County" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="County" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="City" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="City" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="LoadNotShipped" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="LoadNotShipped" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="LoadNotReadyForPickup" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="LoadNotReadyForPickup" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="text-center col-12">
+                                            <button type="button" id="search-shipments" class="btn btn-primary btn-search">
+                                                <i class="fas fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingManagement", Docs.ShippingManagement + Utm.OnAdmin)" />
+
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                                {
+                                    Name = "shipments-grid",
+                                    UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
+                                    SearchButtonId = "search-shipments",
+                                    PrimaryKeyColumn = nameof(ShipmentModel.Id),
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
+                                    {
+                                        new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                        new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                        new FilterParameter(nameof(Model.TrackingNumber)),
+                                        new FilterParameter(nameof(Model.CountryId)),
+                                        new FilterParameter(nameof(Model.StateProvinceId)),
+                                        new FilterParameter(nameof(Model.County)),
+                                        new FilterParameter(nameof(Model.City)),
+                                        new FilterParameter(nameof(Model.WarehouseId)),
+                                        new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool)),
+                                        new FilterParameter(nameof(Model.LoadNotReadyForPickup), typeof(bool)),
+                                        new FilterParameter(nameof(Model.LoadNotDelivered),typeof(bool))
+                                    },
+                                    ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(null)
+                                        {
+                                            Render = new RenderChildCaret(),
+                                            Width = "5",
+                                            Searchable = false,
+                                            ClassName =  NopColumnClassDefaults.ChildControl,
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.Id))
+                                        {
+                                            IsMasterCheckBox = true,
+                                            Render = new RenderCheckBox("checkbox_shipments"),
+                                            Searchable = false,
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Width = "50"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.Id))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.ID").Text,
+                                            Width = "80"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                                            Width = "100"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.PickupInStore))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.PickupInStore").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.TrackingNumber").Text
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                                            Width = "100"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                            Width = "150"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
+                                            Width = "150"
+                                        },
+                                        new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                                        {
+                                            Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
+                                            Width = "150"
+                                        },
+                                        new ColumnProperty(nameof(OrderModel.Id))
+                                        {
+                                            Title = T("Admin.Common.View").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+                                        }
+                                    },
+                                    ChildTable = new DataTablesModel
+                                    {
+                                        Name = "products-grid",
+                                        UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                                        IsChildTable = true,
+                                        Paging = false,
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
+                                        {
+                                            new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(OrderModel.Id), true)
+                                        },
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                                            {
+                                                Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
+                                                Width = "400"
+                                            },
+                                            new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                                            {
+                                                Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
+                                                Width = "150"
+                                            },
+                                            new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                                            {
+                                                Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
+                                                Width = "150"
+                                            },
+                                            new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                                            {
+                                                Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
+                                                Width = "150"
+                                            },
+                                            new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                                            {
+                                                Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
+                                                Width = "150"
+                                            }
+                                        }
+                                    }
+                                })
+                            </div>
+                        </div>
+                        <script>
+                            $(document).ready(function() {
+                                //load states when changing a country dropdownlist
+                                $("#@Html.IdFor(model => model.CountryId)").change(function() {
+                                    var selectedItem = $(this).val();
+                                    var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+                                    $.ajax({
+                                        cache: false,
+                                        type: "GET",
+                                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                                        data: {
+                                            "countryId": selectedItem,
+                                            "addAsterisk": "true"
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
+                                            ddlStates.html('');
+                                            $.each(data, function(id, option) {
+                                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                                            });
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $("#statesAlert").click();
+                                        }
+                                    });
+                                });
+                            });
+
+                            function uploadSelectedShipments(url, alertId) {
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: url,
+                                    data: addAntiForgeryToken({ selectedIds }),
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        showAlert(alertId, errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
+                                        updateTable('#shipments-grid');
+                                    }
+                                });
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="setAsShippedSelectedFailed" />
+<nop-alert asp-alert-id="setAsReadyForPickupSelectedFailed" />
+<nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+<form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#exportpackagingslips-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            if (!ids) {
+                $('#exportPackagingSlipsSelected-info').text("@T("Admin.Orders.Shipments.NoShipmentsSelected")");
+                $("#exportPackagingSlipsSelected").click();
+            }
+            else {
+                $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+                $('#pdf-packaging-slip-selected-form').submit();
+                updateTable('#shipments-grid');
+            }
+            return false;
+        });
+    });
+</script>
+<nop-alert asp-alert-id="exportPackagingSlipsSelected" />

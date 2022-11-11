@@ -1,0 +1,229 @@
+﻿@model SalesSummarySearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Reports.SalesSummary").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Sales summary");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "SalesSummaryPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Reports.SalesSummary")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StartDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="StartDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="EndDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="EndDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StoreId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="OrderStatusId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="PaymentStatusId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CategoryId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ManufacturerId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="ManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="BillingCountryId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="VendorId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ProductId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
+                                        <span id="search-product-friendly-name"></span>
+                                        <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                        <input asp-for="ProductId" autocomplete="off" style="display: none;" />
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('#search-product-name').autocomplete({
+                                                    delay: 500,
+                                                    minLength: 3,
+                                                    source: '@Url.Action("SearchAutoComplete", "SearchComplete")',
+                                                    select: function(event, ui) {
+                                                        $('#@Html.IdFor(model => model.ProductId)').val(ui.item.productid);
+                                                        $('#search-product-friendly-name').text(ui.item.label);
+
+                                                        $('#search-product-clear').show();
+                                                        return false;
+                                                    }
+                                                });
+
+                                                //remove button
+                                                $('#search-product-clear').click(function() {
+                                                    $('#@Html.IdFor(model => model.ProductId)').val('0');
+                                                    $('#search-product-friendly-name').text('');
+                                                    $('#search-product-clear').hide();
+                                                    return false;
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchGroupId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchGroupId" asp-items="Model.GroupByOptions" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-salessummary" class="btn btn-primary btn-search">
+                                        <i class="fas fa-chart-line"></i>
+                                        @T("Admin.Reports.SalesSummary.RunReport")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "salessummary-grid",
+                            UrlRead = new DataUrl("SalesSummaryList", "Report", null),
+                            SearchButtonId = "search-salessummary",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.StoreId)),
+                                new FilterParameter(nameof(Model.OrderStatusId)),
+                                new FilterParameter(nameof(Model.PaymentStatusId)),
+                                new FilterParameter(nameof(Model.CategoryId)),
+                                new FilterParameter(nameof(Model.ManufacturerId)),
+                                new FilterParameter(nameof(Model.BillingCountryId)),
+                                new FilterParameter(nameof(Model.ProductId)),
+                                new FilterParameter(nameof(Model.SearchGroupId)),
+                                new FilterParameter(nameof(Model.VendorId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SalesSummaryModel.Summary))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.Summary").Text
+                                },
+                                new ColumnProperty(nameof(SalesSummaryModel.NumberOfOrders))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.NumberOfOrders").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(SalesSummaryModel.ProfitStr))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.Profit").Text
+                                },
+                                new ColumnProperty(nameof(SalesSummaryModel.Shipping))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.Shipping").Text
+                                },
+                                new ColumnProperty(nameof(SalesSummaryModel.Tax))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.Tax").Text
+                                },
+                                new ColumnProperty(nameof(SalesSummaryModel.OrderTotal))
+                                {
+                                    Title = T("Admin.Reports.SalesSummary.Fields.OrderTotal").Text
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,192 @@
+@model DiscountSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Discounts");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Promotions.Discounts")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DiscountListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchStartDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchEndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchEndDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountTypeId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountCouponCode" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchDiscountCouponCode" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchDiscountName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchDiscountName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IsActiveId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-discounts" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Discounts", Docs.Discounts + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+               {
+                   Name = "discounts-grid",
+                   UrlRead = new DataUrl("List", "Discount", null),
+                   SearchButtonId = "search-discounts",
+                   Length = Model.PageSize,
+                   LengthMenu = Model.AvailablePageSizes,
+                   Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchDiscountTypeId)),
+                            new FilterParameter(nameof(Model.SearchDiscountCouponCode)),
+                            new FilterParameter(nameof(Model.SearchDiscountName)),
+                            new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.IsActiveId))
+                        },
+                   ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(DiscountModel.Name))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.Name").Text,
+                                Width = "350"
+                            },
+                            new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text,
+                                Width = "250"
+                            },
+                            new ColumnProperty(nameof(DiscountModel.DiscountAmount))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.Discount").Text,
+                                Width = "200",
+                                Render = new RenderCustom("renderColumnDiscount")
+                            },
+                            new ColumnProperty(nameof(DiscountModel.StartDateUtc))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.StartDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(DiscountModel.EndDateUtc))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.EndDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(DiscountModel.TimesUsed))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
+                                Width = "200",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(DiscountModel.IsActive))
+                            {
+                                Title = T("Admin.Promotions.Discounts.Fields.IsActive").Text,
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(DiscountModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+               })
+                    <script>
+                        function renderColumnDiscount(data, type, row, meta) {
+                            return (row.UsePercentage) ? row.DiscountPercentage + '%' : row.DiscountAmount + ' ' + row.PrimaryStoreCurrencyCode;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

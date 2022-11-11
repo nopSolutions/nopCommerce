@@ -1,0 +1,6 @@
+When .NET Core builds a project, it copies all referenced libraries to the output folder.
+For plugins it creates too many unnecessary files that just take up space.
+At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories.
+      
+ClearPluginAssemblies.proj file contains preparation steps for delete unnecessary files.
+ClearPluginAssemblies.dll file contains the code for deleting unnecessary files. This file is compiled from the project code from the src directory.

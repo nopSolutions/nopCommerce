@@ -1,0 +1,39 @@
+﻿@model ProductAttributeModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+
+	const string hideInfoBlockAttributeName = "ProductAttributePage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+	const string hideUsedByProductsBlockAttributeName = "ProductAttributePage.HideUsedByProductsBlock";
+	var hideUsedByProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsedByProductsBlockAttributeName, defaultValue: true);
+
+	const string hidePredefinedValuesBlockAttributeName = "ProductAttributePage.HidePredefinedValuesBlock";
+	var hidePredefinedValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePredefinedValuesBlockAttributeName, defaultValue: true);
+
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div id="product-attribute-edit">
+                <nop-cards id="product-attribute-cards">
+                    <nop-card asp-name="product-attribute-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>                   
+                    <nop-card asp-name="product-attribute-predefined-values" asp-icon="fas fa-check-square" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")" asp-hide-block-attribute-name="@hidePredefinedValuesBlockAttributeName" asp-hide="@hidePredefinedValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.PredefinedValues", Model)</nop-card>
+                    @if (Model.Id > 0)
+                    {
+                        <nop-card asp-name="product-attribute-used-by-products" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-card>
+                    }
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </div>
+</section>
