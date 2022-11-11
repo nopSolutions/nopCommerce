@@ -1507,7 +1507,7 @@ namespace Nop.Services.Orders
             }
 
             //clear shopping cart
-            details.Cart.ToList().ForEach(async sci => await _shoppingCartService.DeleteShoppingCartItemAsync(sci, false));
+            await Task.WhenAll(details.Cart.ToList().Select(sci => _shoppingCartService.DeleteShoppingCartItemAsync(sci, false)));
         }
 
         /// <summary>
@@ -2127,7 +2127,11 @@ namespace Nop.Services.Orders
                 if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
                 {
                     //cancel recurring payment
-                    (await CancelRecurringPaymentAsync(recurringPayment)).ToList().ForEach(error => _logger.ErrorAsync(error));
+                    var errors = (await CancelRecurringPaymentAsync(recurringPayment)).ToList();
+                    foreach(var error in errors)
+                    {
+                        await _logger.ErrorAsync(error);
+                    }
 
                     //notify a customer about cancelled payment
                     await _workflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);

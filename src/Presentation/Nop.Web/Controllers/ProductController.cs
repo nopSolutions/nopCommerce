@@ -671,9 +671,12 @@ namespace Nop.Web.Controllers
             .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             //prepare model
-            (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
-                .ToList()
-                .ForEach(model.Products.Add);
+            var poModels = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
+                .ToList();
+            foreach(var poModel in poModels)
+            {
+                model.Products.Add(poModel);
+            }
 
             return View(model);
         }
