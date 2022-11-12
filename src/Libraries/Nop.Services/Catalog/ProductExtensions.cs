@@ -19,9 +19,9 @@ namespace Nop.Services.Catalog
         /// If <paramref name="orderBy"/> is set to <c>Position</c> and passed <paramref name="productsQuery"/> is
         /// ordered sorting rule will be skipped
         /// </remarks>
-        public static IQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, IRepository<LocalizedProperty> localizedPropertyRepository, Language currentLanguage, ProductSorting orderBy)
+        public static IQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, IRepository<LocalizedProperty> localizedPropertyRepository, Language currentLanguage, ProductSortingEnum orderBy)
         {
-            if (orderBy == ProductSorting.NameAsc || orderBy == ProductSorting.NameDesc)
+            if (orderBy == ProductSortingEnum.NameAsc || orderBy == ProductSortingEnum.NameDesc)
             {
                 var currentLanguageId = currentLanguage.Id;
                 
@@ -44,7 +44,7 @@ namespace Nop.Services.Catalog
                     from localizedProperty in localizedProperties.DefaultIfEmpty(new LocalizedProperty { LocaleValue = product.Name })
                     select new { localizedProperty, product };
 
-                if (orderBy == ProductSorting.NameAsc)
+                if (orderBy == ProductSortingEnum.NameAsc)
                     productsQuery = from item in query
                         orderby item.localizedProperty.LocaleValue, item.product.Name
                         select item.product;
@@ -58,10 +58,10 @@ namespace Nop.Services.Catalog
             
             return orderBy switch
             {
-                ProductSorting.PriceAsc => productsQuery.OrderBy(p => p.Price),
-                ProductSorting.PriceDesc => productsQuery.OrderByDescending(p => p.Price),
-                ProductSorting.CreatedOn => productsQuery.OrderByDescending(p => p.CreatedOnUtc),
-                ProductSorting.Position when productsQuery is IOrderedQueryable => productsQuery,
+                ProductSortingEnum.PriceAsc => productsQuery.OrderBy(p => p.Price),
+                ProductSortingEnum.PriceDesc => productsQuery.OrderByDescending(p => p.Price),
+                ProductSortingEnum.CreatedOn => productsQuery.OrderByDescending(p => p.CreatedOnUtc),
+                ProductSortingEnum.Position when productsQuery is IOrderedQueryable => productsQuery,
                 _ => productsQuery.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Id)
             };
         }

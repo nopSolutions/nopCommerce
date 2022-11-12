@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 ﻿@model ForumGroupModel
 @{
     Layout = "_ColumnsOne";
@@ -16,50 +14,3 @@
     @await Html.PartialAsync("_ForumGroup", Model)
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
 </div>
-=======
-=======
-=======
-<<<<<<< HEAD
-﻿@model ForumGroupModel
-@{
-    Layout = "_ColumnsOne";
-
-    //title
-    NopHtml.AddTitleParts(Model.Name);
-    //page class
-    NopHtml.AppendPageCssClassParts("html-forum-group-page");
-}
-<div class="page forum-group-page">
-    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
-    @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
-    @await Html.PartialAsync("_ForumGroup", Model)
-    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
-</div>
-=======
->>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
->>>>>>> 974287325803649b246516d81982b95e372d09b9
-﻿@model ForumGroupModel
-@{
-    Layout = "_ColumnsOne";
-
-    //title
-    NopHtml.AddTitleParts(Model.Name);
-    //page class
-    NopHtml.AppendPageCssClassParts("html-forum-group-page");
-}
-<div class="page forum-group-page">
-    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
-    @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
-    @await Html.PartialAsync("_ForumGroup", Model)
-    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
-</div>
-<<<<<<< HEAD
->>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
->>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
->>>>>>> 974287325803649b246516d81982b95e372d09b9

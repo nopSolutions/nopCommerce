@@ -1336,7 +1336,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeId);
 
             //get sort options
-            var sortOptions = Enum.GetValues(typeof(ProductSorting)).OfType<ProductSorting>().ToList().ToPagedList(searchModel);
+            var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = await new SortOptionListModel().PrepareToGridAsync(searchModel, sortOptions, () =>
