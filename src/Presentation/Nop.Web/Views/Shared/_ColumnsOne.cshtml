@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@{
     Layout = "_Root";
 }
@@ -9,3 +10,16 @@
     @RenderBody()
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnAfter })
 </div>
+=======
+﻿@{
+    Layout = "_Root";
+}
+
+@await RenderSectionAsync("Breadcrumb", false)
+
+<div class="center-1">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnBefore })
+    @RenderBody()
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnAfter })
+</div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@using Nop.Core.Http.Extensions
 @using Nop.Services.Authentication
 
@@ -21,4 +22,29 @@
             }
         </ul>
     </div>
+=======
+﻿@using Nop.Core.Http.Extensions
+@using Nop.Services.Authentication
+
+@{
+
+    var session = Context.Session;
+
+    var errors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+
+    if (errors != null)
+        session.Remove(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+}
+
+@if (errors != null && errors.Count > 0)
+{
+    <div class="external-auth-errors">
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
 }

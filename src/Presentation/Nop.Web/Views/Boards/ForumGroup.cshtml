@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model ForumGroupModel
 @{
     Layout = "_ColumnsOne";
@@ -14,3 +15,21 @@
     @await Html.PartialAsync("_ForumGroup", Model)
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
 </div>
+=======
+﻿@model ForumGroupModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.Name);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-group-page");
+}
+<div class="page forum-group-page">
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
+    @await Html.PartialAsync("_ForumGroup", Model)
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
+</div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

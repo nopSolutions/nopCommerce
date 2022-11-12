@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model ActiveDiscussionsModel
 @{
     Layout = "_ColumnsOne";
@@ -14,3 +15,21 @@
     @await Html.PartialAsync("_ActiveTopics", Model)
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics, additionalData = Model })
 </div>
+=======
+﻿@model ActiveDiscussionsModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-active-discussions-page");
+}
+<div class="page active-discussions-page">
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent))
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterHeader, additionalData = Model })
+    @await Html.PartialAsync("_ActiveTopics", Model)
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics, additionalData = Model })
+</div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

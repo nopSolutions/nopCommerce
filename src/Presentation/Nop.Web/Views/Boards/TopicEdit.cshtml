@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model EditForumTopicModel
 @{
     Layout = "_ColumnsOne";
@@ -9,3 +10,16 @@
     @await Html.PartialAsync("_CreateUpdateTopic", Model)
 </form>
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })
+=======
+﻿@model EditForumTopicModel
+@{
+    Layout = "_ColumnsOne";
+
+    NopHtml.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);
+}
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditBefore, additionalData = Model })
+<form asp-route="TopicEdit" method="post">
+    @await Html.PartialAsync("_CreateUpdateTopic", Model)
+</form>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

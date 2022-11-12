@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 1. Open the solution in Visual Studio
 2. Re-build the entire solution
 3. Publish the "Nop.Web" project from Visual Studio
 
+=======
+1. Open the solution in Visual Studio
+2. Re-build the entire solution
+3. Publish the "Nop.Web" project from Visual Studio
+
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
 P.S. When publishing ensure that configuration is set to "Release"

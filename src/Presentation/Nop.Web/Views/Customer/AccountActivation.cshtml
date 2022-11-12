@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model AccountActivationModel
 @{
     Layout = "_ColumnsOne";
@@ -19,4 +20,27 @@
             <a href="@Model.ReturnUrl" class="button-1">@T("Common.Continue")</a>
         </div>
     </div>
+=======
+﻿@model AccountActivationModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-activation-page");
+}
+<div class="page account-activation-page">
+    <div class="page-title">
+        <h1>@T("Account.AccountActivation")</h1>
+    </div>
+    <div class="page-body">
+        <div class="result">
+            @Model.Result
+        </div>
+        <div class="buttons">
+            <a href="@Model.ReturnUrl" class="button-1">@T("Common.Continue")</a>
+        </div>
+    </div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
 </div>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
@@ -21,3 +22,28 @@ namespace Nop.Core.Domain.Catalog
         AllowQtyBelow0AndNotifyCustomer = 2,
     }
 }
+=======
+namespace Nop.Core.Domain.Catalog
+{
+    /// <summary>
+    /// Represents a backorder mode
+    /// </summary>
+    public enum BackorderMode
+    {
+        /// <summary>
+        /// No backorders
+        /// </summary>
+        NoBackorders = 0,
+
+        /// <summary>
+        /// Allow qty below 0
+        /// </summary>
+        AllowQtyBelow0 = 1,
+
+        /// <summary>
+        /// Allow qty below 0 and notify customer
+        /// </summary>
+        AllowQtyBelow0AndNotifyCustomer = 2,
+    }
+}
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 ﻿.facebook-btn {
   display: inline-block;
   width: 150px;
   height: 23px;
   background-image: url('images/facebook_logo.png');
   background-repeat: no-repeat;
+=======
+﻿.facebook-btn {
+  display: inline-block;
+  width: 150px;
+  height: 23px;
+  background-image: url('images/facebook_logo.png');
+  background-repeat: no-repeat;
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
 }

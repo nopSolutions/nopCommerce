@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model SubscriptionActivationModel
 @{
     Layout = "_ColumnsOne";
@@ -15,3 +16,22 @@
         </strong>
     </div>
 </div>
+=======
+﻿@model SubscriptionActivationModel
+@{
+    Layout = "_ColumnsOne";
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-newsletter-page");
+}
+<div class="page newsletter-page">
+    <div class="page-title">
+        <h1>@T("Newsletter.Title")</h1>
+    </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
+    </div>
+</div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855

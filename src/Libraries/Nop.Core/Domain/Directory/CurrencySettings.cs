@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Directory
@@ -32,4 +33,40 @@ namespace Nop.Core.Domain.Directory
         /// </summary>
         public bool AutoUpdateEnabled { get; set; }
     }
+=======
+﻿using Nop.Core.Configuration;
+
+namespace Nop.Core.Domain.Directory
+{
+    /// <summary>
+    /// Currency settings
+    /// </summary>
+    public partial class CurrencySettings : ISettings
+    {
+        /// <summary>
+        /// A value indicating whether to display currency labels
+        /// </summary>
+        public bool DisplayCurrencyLabel { get; set; }
+
+        /// <summary>
+        /// Primary store currency identifier
+        /// </summary>
+        public int PrimaryStoreCurrencyId { get; set; }
+
+        /// <summary>
+        ///  Primary exchange rate currency identifier
+        /// </summary>
+        public int PrimaryExchangeRateCurrencyId { get; set; }
+
+        /// <summary>
+        /// Active exchange rate provider system name (of a plugin)
+        /// </summary>
+        public string ActiveExchangeRateProviderSystemName { get; set; }
+
+        /// <summary>
+        /// A value indicating whether to enable automatic currency rate updates
+        /// </summary>
+        public bool AutoUpdateEnabled { get; set; }
+    }
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
 }

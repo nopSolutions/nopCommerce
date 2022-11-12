@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@model PopularProductTagsModel
 
 @using Nop.Core.Domain.Catalog
@@ -30,3 +31,37 @@
         }
     </div>
 </div>
+=======
+﻿@model PopularProductTagsModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AllProductTags").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-product-tags-all-page");
+}
+<div class="page product-tags-all-page">
+    <div class="page-title">
+        <h1>@T("Products.Tags.All")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Tags.Count > 0)
+        {
+            <ul class="product-tags-list">
+                @foreach (var item in Model.Tags)
+                {
+                    <li>
+                        <a href="@(Url.RouteUrl<ProductTag>(new { SeName = item.SeName }))" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
+                            @item.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
