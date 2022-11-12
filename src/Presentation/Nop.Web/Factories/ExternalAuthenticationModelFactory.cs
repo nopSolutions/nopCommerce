@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,6 +60,10 @@ namespace Nop.Web.Factories
         #endregion
     }
 =======
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,5 +123,73 @@ namespace Nop.Web.Factories
 
         #endregion
     }
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Nop.Core;
+using Nop.Services.Authentication.External;
+using Nop.Web.Models.Customer;
+
+namespace Nop.Web.Factories
+{
+    /// <summary>
+    /// Represents the external authentication model factory
+    /// </summary>
+    public partial class ExternalAuthenticationModelFactory : IExternalAuthenticationModelFactory
+    {
+        #region Fields
+
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public ExternalAuthenticationModelFactory(IAuthenticationPluginManager authenticationPluginManager,
+            IStoreContext storeContext,
+            IWorkContext workContext)
+        {
+            _authenticationPluginManager = authenticationPluginManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare the external authentication method model
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the external authentication method model
+        /// </returns>
+        public virtual async Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync()
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+
+            return (await _authenticationPluginManager
+                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id))
+                .Select(authenticationMethod => new ExternalAuthenticationMethodModel
+                {
+                    ViewComponent = authenticationMethod.GetPublicViewComponent()
+                })
+                .ToList();
+        }
+
+        #endregion
+    }
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 }

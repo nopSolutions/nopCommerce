@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿@model WishlistEmailAFriendModel
 @{
     Layout = "_ColumnsOne";
@@ -54,6 +55,9 @@
     </div>
 </div>
 =======
+=======
+=======
+<<<<<<< HEAD
 ﻿@model WishlistEmailAFriendModel
 @{
     Layout = "_ColumnsOne";
@@ -108,4 +112,68 @@
         }
     </div>
 </div>
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
+﻿@model WishlistEmailAFriendModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-email-a-friend-page");
+}
+<div class="page email-a-friend-page">
+    <div class="page-title">
+        <h1>@T("Wishlist.EmailAFriend.Title")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="EmailWishlist" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="FriendEmail" asp-postfix=":"></label>
+                            <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")"/>
+                            <span asp-validation-for="FriendEmail"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="YourEmailAddress" asp-postfix=":"></label>
+                            <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")"/>
+                            <span asp-validation-for="YourEmailAddress"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="PersonalMessage" asp-postfix=":"></label>
+                            <textarea asp-for="PersonalMessage" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")" class="personal-message"></textarea>
+                            <span asp-validation-for="PersonalMessage"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="submit" name="send-email" class="button-1 send-email-a-friend-button">@T("Wishlist.EmailAFriend.Button")</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9

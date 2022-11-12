@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Web.Framework.Models;
@@ -58,6 +59,9 @@ namespace Nop.Web.Models.Catalog
         #endregion
     }
 =======
+=======
+=======
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Web.Framework.Models;
@@ -116,5 +120,73 @@ namespace Nop.Web.Models.Catalog
 
         #endregion
     }
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
+﻿using System.Collections.Generic;
+using System.Linq;
+using Nop.Web.Framework.Models;
+
+namespace Nop.Web.Models.Catalog
+{
+    public partial record TopMenuModel : BaseNopModel
+    {
+        public TopMenuModel()
+        {
+            Categories = new List<CategorySimpleModel>();
+            Topics = new List<TopicModel>();
+        }
+
+        public IList<CategorySimpleModel> Categories { get; set; }
+        public IList<TopicModel> Topics { get; set; }
+
+        public bool BlogEnabled { get; set; }
+        public bool NewProductsEnabled { get; set; }
+        public bool ForumEnabled { get; set; }
+
+        public bool DisplayHomepageMenuItem { get; set; }
+        public bool DisplayNewProductsMenuItem { get; set; }
+        public bool DisplayProductSearchMenuItem { get; set; }
+        public bool DisplayCustomerInfoMenuItem { get; set; }
+        public bool DisplayBlogMenuItem { get; set; }
+        public bool DisplayForumsMenuItem { get; set; }
+        public bool DisplayContactUsMenuItem { get; set; }
+
+        public bool UseAjaxMenu { get; set; }
+
+        public bool HasOnlyCategories => Categories.Any()
+                       && !Topics.Any()
+                       && !DisplayHomepageMenuItem
+                       && !(DisplayNewProductsMenuItem && NewProductsEnabled)
+                       && !DisplayProductSearchMenuItem
+                       && !DisplayCustomerInfoMenuItem
+                       && !(DisplayBlogMenuItem && BlogEnabled)
+                       && !(DisplayForumsMenuItem && ForumEnabled)
+                       && !DisplayContactUsMenuItem;
+
+        #region Nested classes
+
+        public partial record TopicModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+            public string SeName { get; set; }
+        }
+
+        public partial record CategoryLineModel : BaseNopModel
+        {
+            public int Level { get; set; }
+            public bool ResponsiveMobileMenu { get; set; }
+            public CategorySimpleModel Category { get; set; }
+        }
+
+        #endregion
+    }
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 }

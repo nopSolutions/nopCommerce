@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
@@ -44,6 +45,9 @@ namespace Nop.Core.Domain.Common
         public string InvoiceFooterTextColumn2 { get; set; }
     }
 =======
+=======
+=======
+<<<<<<< HEAD
 ﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
@@ -88,5 +92,59 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public string InvoiceFooterTextColumn2 { get; set; }
     }
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
+﻿using Nop.Core.Configuration;
+
+namespace Nop.Core.Domain.Common
+{
+    /// <summary>
+    /// PPDF settings
+    /// </summary>
+    public partial class PdfSettings : ISettings
+    {
+        /// <summary>
+        /// PDF logo picture identifier
+        /// </summary>
+        public int LogoPictureId { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether letter page size is enabled
+        /// </summary>
+        public bool LetterPageSizeEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to render order notes in PDf reports
+        /// </summary>
+        public bool RenderOrderNotes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to disallow customers to print PDF invoices for pedning orders
+        /// </summary>
+        public bool DisablePdfInvoicesForPendingOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font file name that will be used
+        /// </summary>
+        public string FontFileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text that will appear at the bottom of invoices (column 1)
+        /// </summary>
+        public string InvoiceFooterTextColumn1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text that will appear at the bottom of invoices (column 1)
+        /// </summary>
+        public string InvoiceFooterTextColumn2 { get; set; }
+    }
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 }

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿@model EditForumTopicModel
 @{
     Layout = "_ColumnsOne";
@@ -11,6 +12,10 @@
 </form>
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })
 =======
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 ﻿@model EditForumTopicModel
 @{
     Layout = "_ColumnsOne";
@@ -22,4 +27,24 @@
     @await Html.PartialAsync("_CreateUpdateTopic", Model)
 </form>
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+﻿@model EditForumTopicModel
+@{
+    Layout = "_ColumnsOne";
+
+    NopHtml.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);
+}
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditBefore, additionalData = Model })
+<form asp-route="TopicEdit" method="post">
+    @await Html.PartialAsync("_CreateUpdateTopic", Model)
+</form>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9

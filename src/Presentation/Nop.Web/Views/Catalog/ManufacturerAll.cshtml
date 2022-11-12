@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿@model IList<ManufacturerModel>
 
 @using Nop.Core.Domain.Catalog
@@ -40,6 +41,9 @@
     </div>
 </div>
 =======
+=======
+=======
+<<<<<<< HEAD
 ﻿@model IList<ManufacturerModel>
 
 @using Nop.Core.Domain.Catalog
@@ -80,4 +84,54 @@
         </div>
     </div>
 </div>
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
+﻿@model IList<ManufacturerModel>
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-manufacturer-list-page");
+}
+<div class="page manufacturer-list-page">
+    <div class="page-title">
+        <h1>@T("Manufacturers.List")</h1>
+    </div>
+    <div class="page-body">
+        <div class="manufacturer-grid">
+            <div class="item-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="manufacturer-item">
+                            <h2 class="title">
+                                <a href="@(Url.RouteUrl<Manufacturer>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                            <div class="picture">
+                                <a href="@(Url.RouteUrl<Manufacturer>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9

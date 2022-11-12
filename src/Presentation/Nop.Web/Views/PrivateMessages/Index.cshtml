@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿@model PrivateMessageIndexModel
 @{    
     Layout = "_ColumnsOne";
@@ -37,6 +38,10 @@
     </div>
 </div>
 =======
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
 ﻿@model PrivateMessageIndexModel
 @{    
     Layout = "_ColumnsOne";
@@ -74,4 +79,50 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 >>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+=======
+=======
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+﻿@model PrivateMessageIndexModel
+@{    
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-messages-page");
+}
+<div class="page private-messages private-messages-page">
+    <div class="page-title">
+        <h1>@T("PrivateMessages.PrivateMessages")</h1>
+    </div>
+    <div class="page-body">
+        @{
+            var selectSentTab = Model.SentItemsTabSelected ? ".tabs( 'option', 'active', 1 )" : "";
+        }
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                $("#tabs").tabs()@Html.Raw(selectSentTab);
+            });
+        </script>
+        <div class="tabs inbox-tabs" id="tabs">
+            <ul class="tabs-header">
+                <li><a href="#tabs-1">@T("PrivateMessages.Inbox")</a></li>
+                <li><a href="#tabs-2">@T("PrivateMessages.SentItems")</a></li>
+            </ul>
+            <div id="tabs-1" class="tab-content">
+                @await Component.InvokeAsync(typeof(PrivateMessagesInboxViewComponent), new { pageNumber = Model.InboxPage, tab = "inbox" })
+            </div>
+            <div id="tabs-2" class="tab-content">
+                @await Component.InvokeAsync(typeof(PrivateMessagesSentItemsViewComponent), new { pageNumber = Model.SentItemsPage, tab = "sent" })
+            </div>
+        </div>
+    </div>
+</div>
+<<<<<<< HEAD
+=======
+>>>>>>> 174426a8e1a9c69225a65c26a93d9aa871080855
+>>>>>>> cf758b6c548f45d8d46cc74e51253de0619d95dc
+>>>>>>> 974287325803649b246516d81982b95e372d09b9
