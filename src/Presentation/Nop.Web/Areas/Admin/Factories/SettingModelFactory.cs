@@ -1741,7 +1741,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare PDF settings model
             model.PdfSettings = await PreparePdfSettingsModelAsync();
 
-            //prepare PDF settings model
+            //prepare localization settings model
             model.LocalizationSettings = await PrepareLocalizationSettingsModelAsync();
 
             //prepare admin area settings model
