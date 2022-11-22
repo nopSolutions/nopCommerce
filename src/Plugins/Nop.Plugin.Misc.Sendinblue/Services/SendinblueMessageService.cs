@@ -55,6 +55,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             IStoreService storeService,
             IQueuedEmailService queuedEmailService,
             ITokenizer tokenizer,
+            MessagesSettings messagesSettings,
             SendinblueManager sendinblueEmailManager)
             : base(commonSettings,
                 emailAccountSettings,
@@ -72,7 +73,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 queuedEmailService,
                 storeContext,
                 storeService,
-                tokenizer)
+                tokenizer,
+                messagesSettings)
         {
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
