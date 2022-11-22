@@ -49,6 +49,7 @@ namespace Nop.Services.Messages
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITokenizer _tokenizer;
+        private readonly MessagesSettings _messagesSettings;
 
         #endregion
 
@@ -70,7 +71,8 @@ namespace Nop.Services.Messages
             IQueuedEmailService queuedEmailService,
             IStoreContext storeContext,
             IStoreService storeService,
-            ITokenizer tokenizer)
+            ITokenizer tokenizer,
+            MessagesSettings messagesSettings)
         {
             _commonSettings = commonSettings;
             _emailAccountSettings = emailAccountSettings;
@@ -89,6 +91,7 @@ namespace Nop.Services.Messages
             _storeContext = storeContext;
             _storeService = storeService;
             _tokenizer = tokenizer;
+            _messagesSettings = messagesSettings;
         }
 
         #endregion
@@ -172,6 +175,19 @@ namespace Nop.Services.Messages
             return language.Id;
         }
 
+        /// <summary>
+        /// Get email and name to send email for store owner
+        /// </summary>
+        /// <param name="messageTemplateEmailAccount">Message template email account</param>
+        /// <returns>Email address and name to send email fore store owner</returns>
+        protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
+        {
+            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ?  await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
+            storeOwnerEmailAccount ??= messageTemplateEmailAccount;
+
+            return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
+        }
+
         #endregion
 
         #region Methods
@@ -214,8 +230,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail,toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -483,8 +498,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -577,8 +591,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1118,8 +1131,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1268,8 +1280,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1614,8 +1625,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1930,8 +1940,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -1973,8 +1982,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2063,8 +2071,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2159,8 +2166,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2204,8 +2210,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2251,8 +2256,7 @@ namespace Nop.Services.Messages
 
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2295,8 +2299,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2339,8 +2342,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
