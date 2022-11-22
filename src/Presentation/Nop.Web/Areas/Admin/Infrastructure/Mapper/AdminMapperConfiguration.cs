@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -111,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateWarehouseMaps();
 
             //add some generic mapping rules
-            ForAllMaps((mapConfiguration, map) =>
+            this.Internal().ForAllMaps((mapConfiguration, map) =>
             {
                 //exclude Form and CustomProperties from mapping BaseNopModel
                 if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
