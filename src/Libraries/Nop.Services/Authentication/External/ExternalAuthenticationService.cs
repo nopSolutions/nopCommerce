@@ -184,7 +184,7 @@ namespace Nop.Services.Authentication.External
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
-                await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(customer, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendCustomerRegisteredStoreOwnerNotificationMessageAsync(customer, _localizationSettings.DefaultAdminLanguageId);
 
             //associate external account with registered user
             await AssociateExternalAccountWithUserAsync(customer, parameters);
