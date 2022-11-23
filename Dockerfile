@@ -27,6 +27,8 @@ WORKDIR /src/Plugins/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
 RUN dotnet build Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Payments.CyberSource
+RUN dotnet build Nop.Plugin.Payments.CyberSource.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
 RUN dotnet build Nop.Plugin.Payments.Manual.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalCommerce
