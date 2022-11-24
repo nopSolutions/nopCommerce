@@ -310,6 +310,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6411
                 ["Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"] = "The stock quantity has been reduced when an order item of the order #{0} became a ready for pickup by customer",
+
+                //5701
+                ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
+                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container, if set to false then the .Net IoC container will be use"
             }, languageId).Wait();
 
             #endregion

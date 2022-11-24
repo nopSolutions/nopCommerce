@@ -48,7 +48,13 @@
         /// <summary>
         /// Get or set a value indicating whether to serve files that don't have a recognized content-type
         /// </summary>
-        /// <value></value>
         public bool ServeUnknownFileTypes { get; private set; } = false;
+
+        /// <summary>
+        /// Get or set a value indicating whether to use Autofac IoC container
+        ///
+        /// If value is set to false then the default .Net IoC container will be use
+        /// </summary>
+        public bool UseAutofac { get; set; } = true;
     }
 }
