@@ -78,8 +78,8 @@ namespace Nop.Plugin.Shipping.EasyPost.Factories
             {
                 var (pickup, _) = await _easyPostService.GetPickupAsync(pickupId);
                 model.Created = pickup is not null;
-                model.Status = pickup?.status ?? "not found";
-                model.Purchased = string.Equals(pickup?.status, "scheduled", StringComparison.InvariantCultureIgnoreCase);
+                model.Status = pickup?.Status ?? "not found";
+                model.Purchased = string.Equals(pickup?.Status, "scheduled", StringComparison.InvariantCultureIgnoreCase);
                 if (model.Created && !model.Purchased)
                 {
                     var (pickupRates, _) = await _easyPostService.GetPickupRatesAsync(pickup);

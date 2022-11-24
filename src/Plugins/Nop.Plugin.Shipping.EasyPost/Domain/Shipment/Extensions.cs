@@ -1,4 +1,6 @@
-﻿using EasyPost;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EasyPost.Models.API;
 
 namespace Nop.Plugin.Shipping.EasyPost.Domain.Shipment
 {
@@ -10,92 +12,157 @@ namespace Nop.Plugin.Shipping.EasyPost.Domain.Shipment
         /// <summary>
         /// Check whether two object instances are matches
         /// </summary>
+        /// <param name="parameters">Parcel parameters</param>
         /// <param name="parcel">Parcel</param>
-        /// <param name="parcel1">Parcel</param>
         /// <returns>Result</returns>
-        public static bool Matches(this Parcel parcel, Parcel parcel1)
+        public static bool Matches(this Dictionary<string, object> parameters, Parcel parcel)
         {
-            if (parcel1 is null)
+            if (parcel is null)
                 return false;
 
-            return parcel.weight == parcel1.weight &&
-                parcel.width == parcel1.width &&
-                parcel.length == parcel1.length &&
-                parcel.height == parcel1.height &&
-                string.Equals(parcel.predefined_package, parcel1.predefined_package, System.StringComparison.InvariantCultureIgnoreCase);
+            var parameters1 = parcel.ToDictionary();
+            return parameters.Keys.All(key => parameters1.TryGetValue(key, out var value) &&
+                string.Equals(parameters[key]?.ToString(), value?.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
         /// Check whether two object instances are matches
+        /// </summary>
+        /// <param name="parameters">Address parameters</param>
+        /// <param name="address">Address</param>
+        /// <returns>Result</returns>
+        public static bool Matches(this Dictionary<string, object> parameters, Address address)
+        {
+            if (address is null)
+                return false;
+
+            var parameters1 = address.ToDictionary();
+            return parameters.Keys.All(key => parameters1.TryGetValue(key, out var value) &&
+                string.Equals(parameters[key]?.ToString(), value?.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Check whether two object instances are matches
+        /// </summary>
+        /// <param name="parameters">Options parameters</param>
+        /// <param name="options">Options</param>
+        /// <returns>Result</returns>
+        public static bool Matches(this Dictionary<string, object> parameters, Options options)
+        {
+            if (options is null)
+                return false;
+
+            var parameters1 = options.ToDictionary();
+            return parameters.Keys.All(key => parameters1.TryGetValue(key, out var value) &&
+                string.Equals(parameters[key]?.ToString(), value?.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Check whether two object instances are matches
+        /// </summary>
+        /// <param name="parameters">Customs info parameters</param>
+        /// <param name="customsInfo">Customs info</param>
+        /// <returns>Result</returns>
+        public static bool Matches(this Dictionary<string, object> parameters, CustomsInfo customsInfo)
+        {
+            if (customsInfo is null)
+                return false;
+
+            var parameters1 = customsInfo.ToDictionary();
+            return parameters.Keys.Where(key => key != "customs_items").All(key => parameters1.TryGetValue(key, out var value) &&
+                string.Equals(parameters[key]?.ToString(), value?.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Convert object to dictionary
+        /// </summary>
+        /// <param name="parcel">Parcel</param>
+        /// <returns>Result</returns>
+        public static Dictionary<string, object> ToDictionary(this Parcel parcel)
+        {
+            return new()
+            {
+                ["weight"] = parcel.Weight,
+                ["width"] = parcel.Width,
+                ["length"] = parcel.Length,
+                ["height"] = parcel.Height,
+                ["predefined_package"] = parcel.PredefinedPackage
+            };
+        }
+
+        /// <summary>
+        /// Convert object to dictionary
         /// </summary>
         /// <param name="address">Address</param>
-        /// <param name="address1">Address</param>
         /// <returns>Result</returns>
-        public static bool Matches(this Address address, Address address1)
+        public static Dictionary<string, object> ToDictionary(this Address address)
         {
-            if (address1 is null)
-                return false;
-
-            return string.Equals(address.street1, address1.street1, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(address.city, address1.city, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(address.state, address1.state, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(address.country, address1.country, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(address.zip, address1.zip, System.StringComparison.InvariantCultureIgnoreCase);
+            return new()
+            {
+                ["name"] = address.Name,
+                ["email"] = address.Email,
+                ["phone"] = address.Phone,
+                ["company"] = address.Company,
+                ["street1"] = address.Street1,
+                ["street2"] = address.Street2,
+                ["city"] = address.City,
+                ["state"] = address.State,
+                ["country"] = address.Country,
+                ["zip"] = address.Zip
+            };
         }
 
         /// <summary>
-        /// Check whether two object instances are matches
+        /// Convert object to dictionary
         /// </summary>
         /// <param name="options">Options</param>
-        /// <param name="options1">Options</param>
         /// <returns>Result</returns>
-        public static bool Matches(this Options options, Options options1)
+        public static Dictionary<string, object> ToDictionary(this Options options)
         {
-            if (options1 is null)
-                return false;
-
-            return options.additional_handling == options1.additional_handling &&
-                options.alcohol == options1.alcohol &&
-                options.by_drone == options1.by_drone &&
-                options.carbon_neutral == options1.carbon_neutral &&
-                string.Equals(options.delivery_confirmation, options1.delivery_confirmation, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.endorsement, options1.endorsement, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.handling_instructions, options1.handling_instructions, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.hazmat, options1.hazmat, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.invoice_number, options1.invoice_number, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.machinable, options1.machinable, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_1, options1.print_custom_1, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_1_code, options1.print_custom_1_code, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_2, options1.print_custom_2, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_2_code, options1.print_custom_2_code, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_3, options1.print_custom_3, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.print_custom_3_code, options1.print_custom_3_code, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(options.special_rates_eligibility, options1.special_rates_eligibility, System.StringComparison.InvariantCultureIgnoreCase) &&
-                options.certified_mail == options1.certified_mail &&
-                options.registered_mail == options1.registered_mail &&
-                options.registered_mail_amount == options1.registered_mail_amount &&
-                options.return_receipt == options1.return_receipt;
+            return new()
+            {
+                ["additional_handling"] = options.AdditionalHandling,
+                ["alcohol"] = options.Alcohol,
+                ["by_drone"] = options.ByDrone,
+                ["carbon_neutral"] = options.CarbonNeutral,
+                ["delivery_confirmation"] = options.DeliveryConfirmation,
+                ["endorsement"] = options.Endorsement,
+                ["handling_instructions"] = options.HandlingInstructions,
+                ["hazmat"] = options.Hazmat,
+                ["invoice_number"] = options.InvoiceNumber,
+                ["machinable"] = options.Machinable,
+                ["print_custom_1"] = options.PrintCustom1,
+                ["print_custom_1_code"] = options.PrintCustom1Code,
+                ["print_custom_2"] = options.PrintCustom2,
+                ["print_custom_2_code"] = options.PrintCustom2Code,
+                ["print_custom_3"] = options.PrintCustom3,
+                ["print_custom_3_code"] = options.PrintCustom3Code,
+                ["special_rates_eligibility"] = options.SpecialRatesEligibility,
+                ["certified_mail"] = options.CertifiedMail,
+                ["registered_mail"] = options.RegisteredMail,
+                ["registered_mail_amount"] = options.RegisteredMailAmount,
+                ["return_receipt"] = options.ReturnReceipt
+            };
         }
 
         /// <summary>
-        /// Check whether two object instances are matches
+        /// Convert object to dictionary
         /// </summary>
         /// <param name="customsInfo">Customs info</param>
-        /// <param name="customsInfo1">Customs info</param>
         /// <returns>Result</returns>
-        public static bool Matches(this CustomsInfo customsInfo, CustomsInfo customsInfo1)
+        public static Dictionary<string, object> ToDictionary(this CustomsInfo customsInfo)
         {
-            if (customsInfo1 is null)
-                return false;
-
-            return string.Equals(customsInfo.contents_type, customsInfo1.contents_type, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.restriction_type, customsInfo1.restriction_type, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.non_delivery_option, customsInfo1.non_delivery_option, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.contents_explanation, customsInfo1.contents_explanation, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.restriction_comments, customsInfo1.restriction_comments, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.customs_certify, customsInfo1.customs_certify, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.customs_signer, customsInfo1.customs_signer, System.StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(customsInfo.eel_pfc, customsInfo1.eel_pfc, System.StringComparison.InvariantCultureIgnoreCase);
+            return new()
+            {
+                ["contents_type"] = customsInfo.ContentsType,
+                ["restriction_type"] = customsInfo.RestrictionType,
+                ["non_delivery_option"] = customsInfo.NonDeliveryOption,
+                ["contents_explanation"] = customsInfo.ContentsExplanation,
+                ["restriction_comments"] = customsInfo.RestrictionComments,
+                ["customs_certify"] = customsInfo.CustomsCertify,
+                ["customs_signer"] = customsInfo.CustomsSigner,
+                ["eel_pfc"] = customsInfo.EelPfc
+            };
         }
     }
 }

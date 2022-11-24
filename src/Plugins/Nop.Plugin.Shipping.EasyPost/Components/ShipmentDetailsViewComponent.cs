@@ -123,24 +123,24 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
                 return View("~/Plugins/Shipping.EasyPost/Views/Shipment/ShipmentDetails.cshtml", model);
             }
 
-            model.ShipmentId = shipment.id;
+            model.ShipmentId = shipment.Id;
 
             //whether the shipment has already been created and purchased
-            if (shipment.selected_rate is not null)
+            if (shipment.SelectedRate is not null)
             {
-                model.Status = shipment.status;
-                model.RefundStatus = shipment.refund_status;
-                model.InvoiceExists = shipment.forms
-                    ?.FirstOrDefault(form => string.Equals(form.form_type, "commercial_invoice", StringComparison.InvariantCultureIgnoreCase))
+                model.Status = shipment.Status;
+                model.RefundStatus = shipment.RefundStatus;
+                model.InvoiceExists = shipment.Forms
+                    ?.FirstOrDefault(form => string.Equals(form.FormType, "commercial_invoice", StringComparison.InvariantCultureIgnoreCase))
                     is not null;
 
-                var rateValue = await _easyPostService.ConvertRateAsync(shipment.selected_rate.rate, shipment.selected_rate.currency);
+                var rateValue = await _easyPostService.ConvertRateAsync(shipment.SelectedRate.Price, shipment.SelectedRate.Currency);
                 model.RateValue = await _priceFormatter.FormatShippingPriceAsync(rateValue, true);
-                model.RateName = $"{shipment.selected_rate.carrier} {shipment.selected_rate.service}".TrimEnd(' ');
+                model.RateName = $"{shipment.SelectedRate.Carrier} {shipment.SelectedRate.Service}".TrimEnd(' ');
 
-                if (!string.IsNullOrEmpty(shipment.insurance))
+                if (!string.IsNullOrEmpty(shipment.Insurance))
                 {
-                    var insurance = await _easyPostService.ConvertRateAsync(shipment.insurance, null);
+                    var insurance = await _easyPostService.ConvertRateAsync(shipment.Insurance, null);
                     model.InsuranceValue = await _priceFormatter.FormatShippingPriceAsync(insurance, true);
                 }
 
@@ -180,42 +180,42 @@ namespace Nop.Plugin.Shipping.EasyPost.Components
                 model.AvailableRates.Add(new SelectListItem(locale, string.Empty));
             }
 
-            if (shipment.options is not null)
+            if (shipment.Options is not null)
             {
-                model.AdditionalHandling = shipment.options.additional_handling ?? false;
-                model.Alcohol = shipment.options.alcohol ?? false;
-                model.ByDrone = shipment.options.by_drone ?? false;
-                model.CarbonNeutral = shipment.options.carbon_neutral ?? false;
-                model.DeliveryConfirmation = (int)getEnumValue<DeliveryConfirmation>(shipment.options.delivery_confirmation);
-                model.Endorsement = (int)getEnumValue<Endorsement>(shipment.options.endorsement);
-                model.HandlingInstructions = shipment.options.handling_instructions;
-                model.Hazmat = (int)getEnumValue<HazmatType>(shipment.options.hazmat);
-                model.InvoiceNumber = shipment.options.invoice_number;
-                model.Machinable = bool.TryParse(shipment.options.machinable, out var machinable) && machinable;
-                model.PrintCustom1 = shipment.options.print_custom_1;
-                model.PrintCustomCode1 = (int)getEnumValue<CustomCode>(shipment.options.print_custom_1_code);
-                model.PrintCustom2 = shipment.options.print_custom_2;
-                model.PrintCustomCode2 = (int)getEnumValue<CustomCode>(shipment.options.print_custom_2_code);
-                model.PrintCustom3 = shipment.options.print_custom_3;
-                model.PrintCustomCode3 = (int)getEnumValue<CustomCode>(shipment.options.print_custom_3_code);
-                model.SpecialRatesEligibility = (int)getEnumValue<SpecialRate>(shipment.options.special_rates_eligibility);
-                model.CertifiedMail = shipment.options.certified_mail ?? false;
-                model.RegisteredMail = shipment.options.registered_mail ?? false;
-                model.RegisteredMailAmount = Convert.ToDecimal(shipment.options.registered_mail_amount);
-                model.ReturnReceipt = shipment.options.return_receipt ?? false;
+                model.AdditionalHandling = shipment.Options.AdditionalHandling ?? false;
+                model.Alcohol = shipment.Options.Alcohol ?? false;
+                model.ByDrone = shipment.Options.ByDrone ?? false;
+                model.CarbonNeutral = shipment.Options.CarbonNeutral ?? false;
+                model.DeliveryConfirmation = (int)getEnumValue<DeliveryConfirmation>(shipment.Options.DeliveryConfirmation);
+                model.Endorsement = (int)getEnumValue<Endorsement>(shipment.Options.Endorsement);
+                model.HandlingInstructions = shipment.Options.HandlingInstructions;
+                model.Hazmat = (int)getEnumValue<HazmatType>(shipment.Options.Hazmat);
+                model.InvoiceNumber = shipment.Options.InvoiceNumber;
+                model.Machinable = bool.TryParse(shipment.Options.Machinable, out var machinable) && machinable;
+                model.PrintCustom1 = shipment.Options.PrintCustom1;
+                model.PrintCustomCode1 = (int)getEnumValue<CustomCode>(shipment.Options.PrintCustom1Code);
+                model.PrintCustom2 = shipment.Options.PrintCustom2;
+                model.PrintCustomCode2 = (int)getEnumValue<CustomCode>(shipment.Options.PrintCustom2Code);
+                model.PrintCustom3 = shipment.Options.PrintCustom3;
+                model.PrintCustomCode3 = (int)getEnumValue<CustomCode>(shipment.Options.PrintCustom3Code);
+                model.SpecialRatesEligibility = (int)getEnumValue<SpecialRate>(shipment.Options.SpecialRatesEligibility);
+                model.CertifiedMail = shipment.Options.CertifiedMail ?? false;
+                model.RegisteredMail = shipment.Options.RegisteredMail ?? false;
+                model.RegisteredMailAmount = Convert.ToDecimal(shipment.Options.RegisteredMailAmount);
+                model.ReturnReceipt = shipment.Options.ReturnReceipt ?? false;
             }
 
-            if (shipment.customs_info is not null)
+            if (shipment.CustomsInfo is not null)
             {
                 model.UseCustomsInfo = true;
-                model.ContentsType = (int)getEnumValue<ContentsType>(shipment.customs_info.contents_type);
-                model.RestrictionType = (int)getEnumValue<RestrictionType>(shipment.customs_info.restriction_type);
-                model.NonDeliveryOption = (int)getEnumValue<NonDeliveryOption>(shipment.customs_info.non_delivery_option);
-                model.ContentsExplanation = shipment.customs_info.contents_explanation;
-                model.RestrictionComments = shipment.customs_info.restriction_comments;
-                model.CustomsCertify = bool.TryParse(shipment.customs_info.customs_certify, out var customsCertify) && customsCertify;
-                model.CustomsSigner = shipment.customs_info.customs_signer;
-                model.EelPfc = shipment.customs_info.eel_pfc;
+                model.ContentsType = (int)getEnumValue<ContentsType>(shipment.CustomsInfo.ContentsType);
+                model.RestrictionType = (int)getEnumValue<RestrictionType>(shipment.CustomsInfo.RestrictionType);
+                model.NonDeliveryOption = (int)getEnumValue<NonDeliveryOption>(shipment.CustomsInfo.NonDeliveryOption);
+                model.ContentsExplanation = shipment.CustomsInfo.ContentsExplanation;
+                model.RestrictionComments = shipment.CustomsInfo.RestrictionComments;
+                model.CustomsCertify = bool.TryParse(shipment.CustomsInfo.CustomsCertify, out var customsCertify) && customsCertify;
+                model.CustomsSigner = shipment.CustomsInfo.CustomsSigner;
+                model.EelPfc = shipment.CustomsInfo.EelPfc;
             }
 
             model.AvailableDeliveryConfirmations = await prepareSelectList(DeliveryConfirmation.None);
