@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -111,14 +108,14 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="path">Path to the image</param>
         /// <returns>Image format</returns>
-        protected virtual ImageFormat GetImageFormat(string path)
+        protected virtual SKEncodedImageFormat GetImageFormat(string path)
         {
             var fileExtension = _fileProvider.GetFileExtension(path).ToLowerInvariant();
             return fileExtension switch
             {
-                ".png" => ImageFormat.Png,
-                ".gif" => ImageFormat.Gif,
-                _ => ImageFormat.Jpeg,
+                ".png" => SKEncodedImageFormat.Png,
+                ".gif" => SKEncodedImageFormat.Gif,
+                _ => SKEncodedImageFormat.Jpeg,
             };
         }
 
@@ -148,7 +145,8 @@ namespace Nop.Services.Media.RoxyFileman
                 return;
 
             using var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
-            using var image = Image.FromStream(stream);
+            using var image = SKBitmap.Decode(stream);
+
             var ratio = image.Width / (float)image.Height;
             if (image.Width <= width && image.Height <= height)
                 return;
@@ -164,13 +162,17 @@ namespace Nop.Services.Media.RoxyFileman
                 newWidth = Convert.ToInt16(Math.Floor(newHeight * ratio));
             }
 
-            using var newImage = new Bitmap(newWidth, newHeight);
-            using var graphics = Graphics.FromImage(newImage);
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            using var resizedBitmap = image.Resize(new SKImageInfo(newWidth, newHeight), SKFilterQuality.High);
+            using var cropImage = SKImage.FromBitmap(resizedBitmap);
+
+            //In order to exclude saving pictures in low quality at the time of installation, we will set the value of this parameter to 80 (as by default)
+            var data = cropImage.Encode(GetImageFormat(destinstionPath), _mediaSettings.DefaultImageQuality > 0 ? _mediaSettings.DefaultImageQuality : 80).ToArray();
+
             //close the stream to prevent access error if sourcePath and destinstionPath match
             stream.Close();
-            newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
+
+            using var outStream = new FileStream(destinstionPath, FileMode.OpenOrCreate|FileMode.Truncate, FileAccess.Write);
+            outStream.Write(data);
         }
 
         /// <summary>
