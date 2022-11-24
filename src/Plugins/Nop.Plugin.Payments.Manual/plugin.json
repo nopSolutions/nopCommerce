@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "Credit Card",
   "SystemName": "Payments.Manual",
-  "Version": "1.59",
+  "Version": "1.60",
   "SupportedVersions": [ "4.60" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
