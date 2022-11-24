@@ -396,7 +396,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
 
                 //prepare purchase unit details
                 var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotalAsync(shoppingCart, false)).taxTotal, 2);
-                var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart) ?? decimal.Zero, 2);
+                var (cartShippingTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart, false);
+                var shippingTotal = Math.Round(cartShippingTotal ?? decimal.Zero, 2);
                 var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService
                     .GetShoppingCartTotalAsync(shoppingCart, usePaymentMethodAdditionalFee: false);
                 var orderTotal = Math.Round(shoppingCartTotal ?? decimal.Zero, 2);
