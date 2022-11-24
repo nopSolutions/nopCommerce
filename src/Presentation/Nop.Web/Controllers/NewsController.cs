@@ -201,7 +201,7 @@ namespace Nop.Web.Controllers
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)
-                    await _workflowMessageService.SendNewsCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendNewsCommentStoreOwnerNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddNewsComment",

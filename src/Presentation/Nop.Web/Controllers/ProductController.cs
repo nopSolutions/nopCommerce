@@ -438,7 +438,7 @@ namespace Nop.Web.Controllers
 
                 //notify store owner
                 if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendProductReviewStoreOwnerNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",

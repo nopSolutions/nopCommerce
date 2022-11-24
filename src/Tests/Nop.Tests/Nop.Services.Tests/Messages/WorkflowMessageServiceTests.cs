@@ -150,7 +150,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         public async Task CanSendCustomerRegisteredNotificationMessage()
         {
             await CheckData(async () =>
-                await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(_customer, 1));
+                await _workflowMessageService.SendCustomerRegisteredStoreOwnerNotificationMessageAsync(_customer, 1));
         }
 
         [Test]
@@ -414,14 +414,14 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         public async Task CanSendVendorInformationChangeNotification()
         {
             await CheckData(async () =>
-                await _workflowMessageService.SendVendorInformationChangeNotificationAsync(_vendor, 1));
+                await _workflowMessageService.SendVendorInformationChangeStoreOwnerNotificationAsync(_vendor, 1));
         }
 
         [Test]
         public async Task CanSendProductReviewNotificationMessage()
         {
             await CheckData(async () =>
-                await _workflowMessageService.SendProductReviewNotificationMessageAsync(_productReview, 1));
+                await _workflowMessageService.SendProductReviewStoreOwnerNotificationMessageAsync(_productReview, 1));
         }
 
         [Test]
@@ -456,14 +456,14 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         public async Task CanSendBlogCommentNotificationMessage()
         {
             await CheckData(async () =>
-                await _workflowMessageService.SendBlogCommentNotificationMessageAsync(_blogComment, 1));
+                await _workflowMessageService.SendBlogCommentStoreOwnerNotificationMessageAsync(_blogComment, 1));
         }
 
         [Test]
         public async Task CanSendNewsCommentNotificationMessage()
         {
             await CheckData(async () =>
-                await _workflowMessageService.SendNewsCommentNotificationMessageAsync(_newsComment, 1));
+                await _workflowMessageService.SendNewsCommentStoreOwnerNotificationMessageAsync(_newsComment, 1));
         }
 
         [Test]

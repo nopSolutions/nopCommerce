@@ -307,6 +307,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6336
                 ["Admin.Customers.Customers.RewardPoints.Fields.AddNegativePointsValidity"] = "Points validity is not allowed for point reduction.",
+
+                //#6411
+                ["Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"] = "The stock quantity has been reduced when an order item of the order #{0} became a ready for pickup by customer",
             }, languageId).Wait();
 
             #endregion

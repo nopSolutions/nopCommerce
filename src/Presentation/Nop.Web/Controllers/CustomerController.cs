@@ -1067,7 +1067,7 @@ namespace Nop.Web.Controllers
 
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)
-                        await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(customer,
+                        await _workflowMessageService.SendCustomerRegisteredStoreOwnerNotificationMessageAsync(customer,
                             _localizationSettings.DefaultAdminLanguageId);
 
                     //raise event       

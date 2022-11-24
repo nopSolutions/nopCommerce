@@ -215,7 +215,7 @@ namespace Nop.Web.Controllers
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)
-                    await _workflowMessageService.SendBlogCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendBlogCommentStoreOwnerNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddBlogComment",
