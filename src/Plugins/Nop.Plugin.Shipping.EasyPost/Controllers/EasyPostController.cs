@@ -133,9 +133,9 @@ namespace Nop.Plugin.Shipping.EasyPost.Controllers
 
                 model.AvailableCarrierAccounts = accounts?.Select(account => new SelectListItem
                 {
-                    Value = account.id,
-                    Text = account.readable ?? account.type,
-                    Selected = _easyPostSettings.CarrierAccounts?.Contains(account.id) ?? false
+                    Value = account.Id,
+                    Text = account.Readable ?? account.Type,
+                    Selected = _easyPostSettings.CarrierAccounts?.Contains(account.Id) ?? false
                 }).ToList() ?? new();
             }
 
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Controllers
                 var errorMessage = string.Format(locale, webhookError, Url.Action("List", "Log"));
                 _notificationService.ErrorNotification(errorMessage, false);
             }
-            await _settingService.SetSettingAsync($"{nameof(EasyPostSettings)}.{nameof(EasyPostSettings.WebhookUrl)}", webhook?.url);
+            await _settingService.SetSettingAsync($"{nameof(EasyPostSettings)}.{nameof(EasyPostSettings.WebhookUrl)}", webhook?.Url);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
