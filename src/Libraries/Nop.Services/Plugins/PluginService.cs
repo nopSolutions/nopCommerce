@@ -481,10 +481,8 @@ namespace Nop.Services.Plugins
 
             //display all plugins on the plugin list page
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.ToList();
-            foreach (var pluginDescriptor in pluginDescriptors)
-            {
+            foreach (var pluginDescriptor in pluginDescriptors) 
                 pluginDescriptor.pluginDescriptor.ShowInPluginsList = true;
-            }
 
             //clear the uploaded directory
             foreach (var directory in _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath)))
