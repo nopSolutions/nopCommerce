@@ -7,23 +7,31 @@
 @inject IThemeContext themeContext
 @inject IUserAgentHelper userAgentHelper
 @{
-	Layout ="";
+    Layout ="";
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var supportRtl = await Html.ShouldUseRtlThemeAsync();
 
     //add main CSS file
-	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-responsive{(supportRtl ? ".rtl" : "")}.css");
-	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-style{(supportRtl ? ".rtl" : "")}.css");
-	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
-	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
-	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css");
+    //NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-responsive{(supportRtl ? ".rtl" : "")}.css");
+    //NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-style{(supportRtl ? ".rtl" : "")}.css");
+    //NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
+    //NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
+    //NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css");
+
+
+    //resources to avoid bundling
+    <link rel="stylesheet" href="https://onjobsupport.blob.core.windows.net/nop-cdn/css/noble-responsive.css" />
+    <link rel="stylesheet" href="https://onjobsupport.blob.core.windows.net/nop-cdn/css/noble-style.css" />
+    <link rel="stylesheet" href="https://onjobsupport.blob.core.windows.net/nop-cdn/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://onjobsupport.blob.core.windows.net/nop-cdn/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://onjobsupport.blob.core.windows.net/nop-cdn/css/owl.carousel.min.css" />
 
     //add swiper css file
     if (catalogSettings.DisplayAllPicturesOnCatalogPages)
     {
         NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
     }
-		
+
     //add jQuery UI css file
     NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
 }
