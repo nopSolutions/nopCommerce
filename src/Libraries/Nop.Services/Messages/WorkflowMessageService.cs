@@ -2014,7 +2014,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddGiftCardTokensAsync(commonTokens, giftCard);
+            await _messageTokenProvider.AddGiftCardTokensAsync(commonTokens, giftCard, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
