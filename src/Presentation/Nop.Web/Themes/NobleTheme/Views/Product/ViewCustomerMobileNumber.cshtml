@@ -1,0 +1,32 @@
+﻿@model ProductEmailAFriendModel
+
+@{
+    Layout = null;
+}
+
+<div class="email-a-friend">
+    <div class="result">
+        <br />
+
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            @Html.Raw(Model.Result)
+        }
+        else
+        {
+            <div class="price-inclusive-text" style="font-weight:100">
+                Mobile Number :
+                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                    @Model.TargetCustomerMobileNumber
+                </span>
+            </div>
+            <div class="price-inclusive-text" style="font-weight:100">
+                Email Id :
+                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                    @Model.TargetCustomerEmailId
+                </span>
+            </div>
+        }
+
+    </div>
+</div>

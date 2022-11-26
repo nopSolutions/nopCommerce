@@ -19,7 +19,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
     </div>
     <fieldset class="page-body panel-body from-panel">
-        <form asp-route="CustomerInfo" method="post">
+        <form id="registrationform" asp-route="CustomerInfo" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <fieldset>
                 <div><h3>@T("Account.YourPersonalDetails")</h3></div>
@@ -205,7 +205,7 @@
                      Model.CountryEnabled)
             {
                 <fieldset>
-                    <div><h3>@T("Account.YourAddress")</h3></div>
+                    @*<div><h3>@T("Account.YourAddress")</h3></div>*@
                     <div class="form-horizontal">
                         @if (Model.StreetAddressEnabled)
                         {
@@ -338,7 +338,7 @@
             @if (Model.PhoneEnabled || Model.FaxEnabled)
             {
                 <fieldset>
-                    <div><h3>@T("Account.YourContactInformation")</h3></div>
+                    @*<div><h3>@T("Account.YourContactInformation")</h3></div>*@
                     <div class="form-horizontal">
                         @if (Model.PhoneEnabled)
                         {

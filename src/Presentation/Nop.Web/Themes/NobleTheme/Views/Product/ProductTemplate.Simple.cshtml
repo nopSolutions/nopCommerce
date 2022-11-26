@@ -1,8 +1,11 @@
 ﻿@model ProductDetailsModel
 @using Nop.Core.Domain.Seo;
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Customers
 @inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
+@inject CustomerSettings customerSettings
 @{
     Layout = "_ColumnsTwoRight";
 
@@ -44,6 +47,7 @@
         NopHtml.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         NopHtml.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + webHelper.GetThisPageUrl(false) + "\" />");
     }
+    Model.PrivateMessageModel.ProductId = Model.AddToCart.ProductId;
 }
 <!--product breadcrumb-->
 <div class="breadcrumb-wrapper">
@@ -56,25 +60,60 @@
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             @if (seoSettings.MicrodataEnabled)
             {
-                @await Html.PartialAsync("_Microdata", Model)
+                @awaitHtml.PartialAsync("_Microdata", Model)
             }
             <div data-productid="@Model.Id">
                 <div class="product-name panel-heading">
-                    <h1>
-                        @Model.Name
-                    </h1>
+                    <div itemprop="name" class="row">
+                        <div class="col-md-12">
+                            <h1 itemprop="name">
+                                @Model.Name
+                                <span class="profile-last-online">Last Online: @Model.LastLoginDateTime</span>
+                            </h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="product-essential from-panel">
+                <div class="">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })
                                 <!--product pictures-->
                                 @await Html.PartialAsync("_ProductDetailsPictures", Model)
                             </div>
-                            <div class="col-md-6">
-                                @await Html.PartialAsync("_Discontinued", Model)
+                            <div class="col-md-9">
+                                @*@await Html.PartialAsync("_Discontinued", Model)*@
                                 <div class="overview">
+                                    <div class="email-compare-button">
+                                        <!--wishlist, compare, email a friend-->
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsBefore, additionalData = Model })
+                                        @{
+                                            var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                            @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                        }
+                                        @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
+
+                                        @{
+                                            var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                            @*@await Html.PartialAsync("_AddToCart", Model.AddToCart, dataDictAddToCart)*@
+                                        }
+                                    </div>
+                                    @if (@Model.AddToCart.ProfileShortListed)
+                                    {
+                                        <div class="email-compare-button private-message-read">
+                                            <span class="profile-shortlisted">
+                                                Short Listed On : @Model.AddToCart.ProfileShortListedOn
+                                            </span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.PrivateMessageModel.Message))
+                                    {
+                                        <div class="email-compare-button private-message-read">
+                                            @await Html.PartialAsync("_PrivateMessage", Model.PrivateMessageModel)
+                                        </div>
+                                    }
                                     @if (!string.IsNullOrEmpty(Model.ShortDescription))
                                     {
                                         <div class="short-description">
@@ -100,48 +139,147 @@
                                     }
                                     <!--gift card-->
                                     @{
-                                        var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                                                                                var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
                                         @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                     }
-                                    <!--rental info-->
-                                    @{
-                                        var dataDictRental = new ViewDataDictionary(ViewData);
-                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = $"rental_{Model.Id}";
-                                        @await Html.PartialAsync("_RentalInfo", Model, dataDictRental)
-                                    }
-                                    <!--price & add to cart & estimate shipping-->
+                                    <!--Profile Information-->
                                     <div class="price-availability">
-                                        @{
-                                            var dataDictPrice = new ViewDataDictionary(ViewData);
-                                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{Model.Id}";
-                                            @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
- <!--availability-->
-                                            @await Html.PartialAsync("_Availability", Model)
-                                            var dataDictAddToCart = new ViewDataDictionary(ViewData);
-                                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
-                                            @await Html.PartialAsync("_AddToCart", Model.AddToCart, dataDictAddToCart)
-
-                                            @await Html.PartialAsync("_ProductEstimateShipping", Model.ProductEstimateShipping)
-                                        }
-                                    </div>
-                                    @await Html.PartialAsync("_ProductTierPrices", Model.TierPrices)
-                                    <div class="form-group email-friend-btn">
-                                        <div class="email-compare-button">
-                                            <!--wishlist, compare, email a friend-->
-                                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsBefore, additionalData = Model })
-                                            @{
-                                                var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
-                                                dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
-                                                @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                        <div class="prices">
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        @*<i class="fa fa-user fa-sm icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-person icon-color icon-size"></i>
+                                                    </span>
+                                                    Profile Type :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        He/She ready to  @Model.ProfileType
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        @*<i class="fa fa-star icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-cpu icon-color icon-size"></i>
+                                                    </span>
+                                                    Primary Technology :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.PrimaryTechnology
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @if (customerSettings.ShowSecondaryTechnologySpecificationAttribute)
+                                            {
+                                                <div class="product-price">
+                                                    <div class="price-inclusive-text">
+                                                        Secondary Technology :
+                                                        <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                            @Model.SecondaryTechnology
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             }
-                                            @await Html.PartialAsync("_CompareProductsButton", Model)
-                                            @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
-                                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsAfter, additionalData = Model })
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        @*<i class="fa fa-bookmark icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-bookmark icon-color icon-size"></i>
+                                                    </span>
+                                                    Relavent Experiance :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.RelaventExperiance
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        @*<i class="fa fa-stop-circle fa-xs icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-check-circle icon-color icon-size"></i>
+                                                    </span>
+                                                    Current Avalibility :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.CurrentAvalibility
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        <i class="bi bi-translate icon-color icon-size"></i>
+                                                    </span>
+                                                    Mother Tongue :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.MotherTongue
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span>
+                                                        @*<i class="fa fa-map-marker fa-xs icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-geo-alt icon-color icon-size"></i>
+                                                    </span>
+                                                    Location :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.Location
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price">
+                                                <div class="price-inclusive-text">
+                                                    <span style="margin-top:5px;">
+                                                        <i class="bi bi-clock icon-color icon-size"></i>
+                                                    </span>
+                                                    Last Online :
+                                                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                        @Model.LastLoginDateTime
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="product-price" style="font-weight:100;">
+                                                <div class="price-inclusive-text" style="height:30px !important;">
+                                                    <div id="product-@Model.Id" class="email-a-friend">
+                                                        @*<i class="fa fa-envelope fa-1x icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-envelope icon-color icon-size"></i>
+                                                        EmailId :
+                                                        <a class="product-item-links profile-info-links" href="#" onclick="ShowMobileNumber();">
+                                                            example@outlook.com
+                                                        </a>
+                                                        <i class="fa fa-lock fa-lg icon-color" title="click to unlock"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="product-price" style="font-weight:100;">
+                                                <div class="price-inclusive-text" style="height:30px !important;">
+                                                    <div id="product-@Model.Id" class="email-a-friend">
+                                                        @*<i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>*@
+                                                        <i class="bi bi-phone icon-color icon-size"></i>
+                                                        Mobile Number :
+                                                        <a class="profile-info-links" href="#" onclick="ShowMobileNumber();">
+                                                            (123)456789
+                                                        </a>
+                                                        <i class="fa fa-lock fa-lg icon-color" title="click to unlock"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*<div class="product-price" style="font-weight:100;">
+            <div class="price-inclusive-text" style="height:30px !important;">
+                <div id="product-@Model.Id" class="email-a-friend">
+                    <i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>
+                    Joined Date :
+                    <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                        @Model.LastLoginDateTime
+                    </span>
+                </div>
+            </div>
+        </div>*@
                                         </div>
                                     </div>
-                                    @await Html.PartialAsync("_ShareButton", Model)
-                                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })
+                                    @*@await Html.PartialAsync("_ShareButton", Model)*@
+                                    @*@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })*@
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -149,23 +287,23 @@
                                     <ul class="nav nav-tabs">
                                         @if (!string.IsNullOrEmpty(Model.FullDescription))
                                         {
-                                        <li class="active"><a href="#description" data-toggle="tab">@T("products.compare.fulldescription")</a></li>
+                                            <li class="active"><a href="#description" data-toggle="tab">Profile Description</a></li>
                                         }
                                         @if (!string.IsNullOrEmpty(@Html.PartialAsync("_ProductTags", Model).ToString()))
                                         {
-                                        <li><a href="#tags" data-toggle="tab">@T("Products.Tags")</a></li>
+                                            <li><a href="#tags" data-toggle="tab">@T("Products.Tags")</a></li>
                                         }
                                         @if (!string.IsNullOrEmpty(@Html.PartialAsync("_ProductSpecifications", Model).ToString()))
                                         {
-                                        <li><a href="#specification" data-toggle="tab">@T("Products.Specs")</a></li>
+                                            <li><a href="#specification" data-toggle="tab">@T("Products.Specs")</a></li>
                                         }
                                     </ul>
                                     <div class="tab-content">
                                         @if (!string.IsNullOrEmpty(Model.FullDescription))
                                         {
-                                        <div class="full-description tab-pane fade in active" id="description">
-                                            @Html.Raw(Model.FullDescription)
-                                        </div>
+                                            <div class="full-description tab-pane fade in active" id="description">
+                                                @Html.Raw(Model.FullDescription)
+                                            </div>
                                         }
                                         <div class="product-tags tab-pane fade" id="tags">
                                             @await Html.PartialAsync("_ProductTags", Model.ProductTags)

@@ -24,7 +24,7 @@
                 @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <div class="image">
-                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                        <img src="@(Model.AvatarUrl)" alt="avatar" style="max-height:250px;max-width:250px;"/>
                     </div>
                 }
                 <input name="uploadedFile" accept="image/jpeg, image/gif" type="file" class="btn btn-default" />

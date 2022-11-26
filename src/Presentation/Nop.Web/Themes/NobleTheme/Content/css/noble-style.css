@@ -8245,12 +8245,6 @@ button {
   font-weight: lighter; /*border-bottom: 1px solid #000000; padding-bottom: 5px; */
 }
 
-body {
-  font-family: 'Open Sans', sans-serif; /* background: #f6f6f6; */
-  background: #E8E8E8;
-  color: #646464;
-}
-
 .account-page .form-group, .registration-page .form-group { /*margin-bottom: 30px; */
 }
 
@@ -8678,13 +8672,6 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
   font-weight: lighter;
   /*border-bottom: 1px solid #000000;
     padding-bottom: 5px;*/
-}
-
-body {
-  font-family: 'Open Sans', sans-serif;
-  /* background: #f6f6f6;*/
-  background: #E8E8E8;
-  color: #646464;
 }
 
 .account-page .form-group, .registration-page .form-group {

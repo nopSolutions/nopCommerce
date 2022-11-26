@@ -125,7 +125,7 @@
                             </address>
                             <div class="buttons">
                                 <button type="button" class="btn  btn-default edit-address-button" onclick="location.href = '@(Url.RouteUrl("CustomerAddressEdit", new {addressId = address.Id}))'">@T("Common.Edit")</button>
-                                <button type="button" class="btn  btn-default delete-address-button" onclick="deletecustomeraddress(@(address.Id))">@T("Common.Delete")</button>
+                                @*<button type="button" class="btn  btn-default delete-address-button" onclick="deletecustomeraddress(@(address.Id))">@T("Common.Delete")</button>*@
                             </div>
                         </div>
                     }
@@ -162,7 +162,7 @@
             </div>
         }
         <div class="add-button">
-            <button type="button" class="btn btn-primary  add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">@T("Common.AddNew")</button>
+            @*<button type="button" class="btn btn-primary  add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">@T("Common.AddNew")</button>*@
         </div>
     </div>
 </div>

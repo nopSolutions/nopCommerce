@@ -14,9 +14,9 @@
     var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
 }
 <div class="page login-page">
-    <div class="page-title">
+    @*<div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
-    </div>
+    </div>*@
     @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
         <div class="customer-blocks">
@@ -118,7 +118,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     @if (Model.DisplayCaptcha)
                                     {
                                         <div class="form-group">
@@ -127,11 +126,14 @@
                                             </div>
                                         </div>
                                     }
-                                    <div class="form-group">
-                                        <div class="controls col-md-2">
-                                            <button class="btn btn-default login-button" type="submit">@T("Account.Login.LoginButton")</button>
-                                        </div>
+                                <div class="form-group">
+                                    <div class="controls col-md-2 col-xs-3">
+                                        <button class="btn btn-default login-button" type="submit">@T("Account.Login.LoginButton")</button>
                                     </div>
+                                    <div class="controls col-xs-4">
+                                        <button type="button" class="btn btn-default register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                                    </div>
+                                </div>
                                 </div>
                             </fieldset>
                         </div>

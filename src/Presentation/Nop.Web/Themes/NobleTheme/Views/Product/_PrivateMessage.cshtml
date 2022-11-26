@@ -1,0 +1,36 @@
+﻿@model PrivateMessageModel
+@using Nop.Core.Domain.Orders;
+@{
+    //Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-private-messages");
+    Html.AppendPageCssClassParts("html-private-message-view-page");
+
+    var acceptinterestlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.AcceptedByMe, quantity = 1 });
+    var declineinterestlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.DeclinedByMe, quantity = 1 });
+
+}
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="page-body panel-body from-panel" style="background-color: lightyellow; border: 1px solid black;margin-bottom: 0px !important;margin-left:0px !important;">
+        <div class="view-message">
+            <div class="message" style="padding-bottom:10px;">
+                <span>@Html.Raw(Model.Message)</span>
+            </div>
+            @*<div class="options" style="border-top: 1px solid gray;padding-top:5px;">
+                    <input type="button" class="btn btn-default reply-pm-button" value="View" onclick="AjaxCart.addproducttocart_catalog('@acceptinterestlink')" />
+                    <input type="button" class="btn btn-default delete-pm-button" value="Reply" onclick="AjaxCart.addproducttocart_catalog('@declineinterestlink')" />
+                </div>*@
+            <div class="options" style="border-top: 1px solid gray;padding-top:10px;">
+                @*@Html.RouteLink("ViewPM", "ViewPM", new { privateMessageId = Model.Id }, new { @class = "btn btn-default reply-pm-button" })*@
+                <button type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("viewpm", new { privateMessageId = Model.Id })')">View</button>
+                <button type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+            </div>
+        </div>
+    </div>
+}
+

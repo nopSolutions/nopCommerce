@@ -1,6 +1,6 @@
 ﻿@model RegisterModel
 @{
-    Layout = "_ColumnsTwo";
+    Layout = "_ColumnsOne";
 
     //title
     NopHtml.AddTitleParts(T("PageTitle.Register").Text);
@@ -180,9 +180,9 @@
                 Model.CountryEnabled)
             {
                 <div class="fieldset">
-                    <div>
+                    @*<div>
                         <h3>@T("Account.YourAddress")</h3>
-                    </div>
+                    </div>*@
                     @if (Model.StreetAddressEnabled)
                     {
                         <div class="form-group row">
@@ -531,6 +531,7 @@
         </form>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip()

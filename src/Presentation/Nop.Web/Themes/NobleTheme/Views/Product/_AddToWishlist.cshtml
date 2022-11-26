@@ -2,16 +2,27 @@
 @using Nop.Core.Domain.Orders
 @if (!Model.DisableWishlistButton)
 {
-    var addToWishlistText = "";
-    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.Wishlist)
-    {
-        addToWishlistText = T("Products.Wishlist.AddToWishlist.Update").Text;
-    }
-    else
-    {
-        addToWishlistText = T("Products.Wishlist.AddToWishlist").Text;
-    }
-    <div class="add-to-wishlist">
-        <button type="button" id="add-to-wishlist-button-@Model.ProductId" class="btn btn-default add-to-wishlist-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist})', '#product-details-form');return false;">@addToWishlistText</button>
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = 1 });
+    var sendinterestlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.InterestSent, quantity = 1 });
+
+    <div id="product-@Model.ProductId" class="email-a-friend">
+        <i class="fa fa-heart fa-lg @(Model.ProfileShortListed ? Html.Raw("icon-selected-color") : Html.Raw("icon-color"))"></i>
+        <a class="product-item-links" href="#" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;">
+            @(Model.ProfileShortListed ? "ShortListed" : "ShortList")
+        </a>
+    </div>
+
+    <div id="product-interest-@Model.ProductId" class="product-add-button col-md-3">
+        <i class="fa fa-star fa-lg icon-color @(Model.InterestSent ? Html.Raw("icon-selected-color") : Html.Raw("icon-color"))"></i>
+        @if (Model.InterestSent)
+        {
+            <span class="product-item-links">Interest Sent</span>
+        }
+        else
+        {
+            <a class="product-item-links" href="#" onclick="AjaxCart.addproducttocart_catalog('@sendinterestlink');return false;">
+                Send Interest
+            </a>
+        }
     </div>
 }

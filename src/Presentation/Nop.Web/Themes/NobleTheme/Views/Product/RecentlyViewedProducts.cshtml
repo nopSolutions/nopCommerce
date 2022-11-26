@@ -18,11 +18,11 @@
             {
                 foreach (var product in Model)
                 {
-                    <div class="item-box col-xs-12 col-sm-4 col-md-4">
-                        <div class="thumbnail">
-                            @await Html.PartialAsync("_ProductBox", product)
-                        </div>
-                    </div>
+            <div class="item-box product-grid col-xs-12 col-sm-4 col-md-4 product-align clearfix">
+                <div class="thumbnail">
+                    @await Html.PartialAsync("_ProductBox", product)
+                </div>
+            </div>
                 }
             }
         </div>
