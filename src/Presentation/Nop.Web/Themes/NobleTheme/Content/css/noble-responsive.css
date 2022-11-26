@@ -1984,3 +1984,56 @@
 }
 
 /*customization : End  */
+/*media queries copied from noble style css as part of clean up process  */
+
+@media (max-width:640px) {
+  .category-grid.home-page-category-grid a img {
+    width: 85% !important;
+  }
+
+  .category-grid.home-page-category-grid .item-box {
+    width: 33.33% !important;
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+  }
+
+  .category-grid.home-page-category-grid {
+    margin-left: -15px;
+    margin-right: -12px;
+  }
+
+  .product-list .description {
+    line-height: 1.1em;
+  }
+
+  .header-lower {
+    display: none;
+  }
+}
+
+@media (min-width:640px) {
+  #menu-list-icon {
+    display: none;
+  }
+
+  #menu-close-icon {
+    display: none;
+  }
+
+  .header-logo-on-menu {
+    display: none;
+  }
+}
+
+@media (max-width:991px) {
+  .header-selectors-wrapper {
+    border-bottom: 0px solid #ddd !important;
+    padding-bottom: 0px !important;
+  }
+}
+
+@media (max-width:767px) {
+  .item-box.product-list .picture {
+    height: auto !important;
+  }
+}
