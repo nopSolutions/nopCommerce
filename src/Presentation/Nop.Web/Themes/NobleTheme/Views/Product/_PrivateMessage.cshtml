@@ -4,10 +4,10 @@
     //Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+    NopHtml.AddTitleParts(T("PageTitle.ViewPM").Text);
     //page class
-    Html.AppendPageCssClassParts("html-private-messages");
-    Html.AppendPageCssClassParts("html-private-message-view-page");
+    NopHtml.AppendPageCssClassParts("html-private-messages");
+    NopHtml.AppendPageCssClassParts("html-private-message-view-page");
 
     var acceptinterestlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.AcceptedByMe, quantity = 1 });
     var declineinterestlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.DeclinedByMe, quantity = 1 });

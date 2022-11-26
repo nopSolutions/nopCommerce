@@ -60,7 +60,7 @@
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             @if (seoSettings.MicrodataEnabled)
             {
-                @awaitHtml.PartialAsync("_Microdata", Model)
+                @await Html.PartialAsync("_Microdata", Model)
             }
             <div data-productid="@Model.Id">
                 <div class="product-name panel-heading">
