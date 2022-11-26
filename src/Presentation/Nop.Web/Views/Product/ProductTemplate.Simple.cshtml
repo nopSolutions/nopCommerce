@@ -121,7 +121,9 @@
                         @{
                             var dataDictPrice = new ViewDataDictionary(ViewData);
                             dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{Model.Id}";
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductPriceTop, additionalData = Model })
                             @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductPriceBottom, additionalData = Model })
 
                             @await Html.PartialAsync("_ProductTierPrices", Model.TierPrices)
 

@@ -183,6 +183,8 @@
         public static string ProductsByTagBeforeProductList => "productsbytag_before_product_list";
         public static string ProductsByTagBottom => "productsbytag_bottom";
         public static string ProductsByTagTop => "productsbytag_top";
+        public static string ProductPriceTop => "product_price_top";
+        public static string ProductPriceBottom => "product_price_bottom";
         public static string ProductSearchPageAdvanced => "productsearch_page_advanced";
         public static string ProductSearchPageAfterResults => "productsearch_page_after_results";
         public static string ProductSearchPageBasic => "productsearch_page_basic";
@@ -195,6 +197,8 @@
         public static string SearchBoxBeforeSearchButton => "searchbox_before_search_button";
         public static string SitemapAfter => "sitemap_after";
         public static string SitemapBefore => "sitemap_before";
+        public static string TopicDetailsTop => "topic_details_top";
+        public static string TopicDetailsBottom => "topic_details_bottom";
         public static string VendorDetailsBottom => "vendordetails_bottom";
         public static string VendorDetailsTop => "vendordetails_top";
         public static string WishlistBottom => "wishlist_bottom";

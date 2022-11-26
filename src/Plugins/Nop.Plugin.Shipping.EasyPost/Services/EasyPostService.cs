@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyPost;
+using EasyPost.Exceptions.API;
+using EasyPost.Models.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -14,7 +16,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Plugin.Shipping.EasyPost.Domain;
 using Nop.Plugin.Shipping.EasyPost.Domain.Batch;
 using Nop.Plugin.Shipping.EasyPost.Domain.Shipment;
 using Nop.Services.Catalog;
@@ -63,7 +64,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         private readonly MeasureSettings _measureSettings;
         private readonly Nop.Core.Domain.Shipping.ShippingSettings _shippingSettings;
 
-        private static bool? _isConfigured;
+        private static Client _client;
 
         #endregion
 
@@ -130,15 +131,14 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// <returns>Result</returns>
         private static bool IsConfigured()
         {
-            if (!_isConfigured.HasValue)
+            if (_client is null)
             {
                 var settings = EngineContext.Current.Resolve<EasyPostSettings>();
                 var key = settings.UseSandbox ? settings.TestApiKey : settings.ApiKey;
-                ClientManager.SetCurrent(key);
-                _isConfigured = !string.IsNullOrEmpty(key);
+                _client = new Client(key);
             }
 
-            return _isConfigured.Value;
+            return _client is not null;
         }
 
         /// <summary>
@@ -162,33 +162,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 var errorMessage = exception.Message;
 
                 //log error details
-                if (exception is HttpException httpException)
+                if (exception is ApiError apiError)
                 {
-                    try
-                    {
-                        //for some reason, sometimes we need to manually get exception details from its message
-                        var tmpException = JsonConvert.DeserializeObject<EasyPostException>(exception.Message)?.Exception;
-                        if (tmpException is not null)
-                        {
-                            httpException = new HttpException(httpException.StatusCode, tmpException.Code, tmpException.Message,
-                                tmpException.Errors?.Select(error => new Error { message = string.Join("; ", error.Message) }).ToList());
-                        }
-                    }
-                    catch { }
-
-                    errorMessage = httpException.Message;
-                    var fullMessage = $"Message: {httpException.Message}";
-                    if (!string.IsNullOrEmpty(httpException.Code))
-                        fullMessage = $"{fullMessage}{Environment.NewLine}Code: {httpException.Code}";
-
-                    if (httpException.Errors?.Any() ?? false)
-                    {
-                        var details = httpException.Errors
-                            .Aggregate(string.Empty, (text, error) => $"{text}{error.message} ({error.field}); ");
-                        fullMessage = $"{fullMessage}{Environment.NewLine}Details: {details.TrimEnd(' ')}";
-                    }
-
-                    fullMessage = $"{fullMessage}{Environment.NewLine}{Environment.NewLine}{exception}";
+                    errorMessage = apiError.Message;
+                    var fullMessage = $"Message: {apiError.PrettyPrint}";
                     await _logger.InsertLogAsync(LogLevel.Error, $"{EasyPostDefaults.SystemName} error. {errorMessage}", fullMessage, customer);
                 }
                 else
@@ -205,9 +182,9 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// <param name="adminRequest">Whether this is a request from the admin area</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the parcel
+        /// The task result contains the parcel parameters
         /// </returns>
-        private async Task<Parcel> PrepareParcelAsync(GetShippingOptionRequest request, bool adminRequest)
+        private async Task<Dictionary<string, object>> PrepareParcelAsync(GetShippingOptionRequest request, bool adminRequest)
         {
             var measureWeight = await _measureService.GetMeasureWeightBySystemKeywordAsync(EasyPostDefaults.MeasureWeightSystemName)
                 ?? throw new NopException($"'{EasyPostDefaults.MeasureWeightSystemName}' measure weight is not found");
@@ -215,7 +192,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
             var measureDimension = await _measureService.GetMeasureDimensionBySystemKeywordAsync(EasyPostDefaults.MeasureDimensionSystemName)
                 ?? throw new NopException($"'{EasyPostDefaults.MeasureDimensionSystemName}' measure dimension is not found");
 
-            var parcel = new Parcel();
+            var parcel = new Dictionary<string, object>();
 
             //get total weight
             var weight = await _shippingService.GetTotalWeightAsync(request, !adminRequest, !adminRequest);
@@ -223,7 +200,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 throw new NopException("Parcel weight cannot be zero");
 
             weight = await _measureService.ConvertFromPrimaryMeasureWeightAsync(weight, measureWeight);
-            parcel.weight = Convert.ToDouble(Math.Max(Math.Round(weight, 1, MidpointRounding.ToPositiveInfinity), 0.1M));
+            parcel.Add("weight", Convert.ToDouble(Math.Max(Math.Round(weight, 1, MidpointRounding.ToPositiveInfinity), 0.1M)));
 
             //if there is a single item, try to get a predefined package for this
             if (request.Items.Count == 1 && request.Items.FirstOrDefault().GetQuantity() == 1)
@@ -233,22 +210,22 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     .GetAttributeAsync<string>(product, EasyPostDefaults.ProductPredefinedPackageAttribute) ?? string.Empty;
                 var predefinedPackage = predefinedPackageValue.Split('.').LastOrDefault();
                 if (!string.IsNullOrEmpty(predefinedPackage))
-                    parcel.predefined_package = predefinedPackage;
+                    parcel.Add("predefined_package", predefinedPackage);
             }
 
-            if (string.IsNullOrEmpty(parcel.predefined_package))
+            if (!parcel.TryGetValue("predefined_package", out _))
             {
                 //get dimensions
                 var (width, length, height) = await _shippingService.GetDimensionsAsync(request.Items, !adminRequest);
 
                 width = await _measureService.ConvertFromPrimaryMeasureDimensionAsync(width, measureDimension);
-                parcel.width = Convert.ToDouble(Math.Max(Math.Round(width, 1, MidpointRounding.ToPositiveInfinity), 0.1M));
+                parcel.Add("width", Convert.ToDouble(Math.Max(Math.Round(width, 1, MidpointRounding.ToPositiveInfinity), 0.1M)));
 
                 length = await _measureService.ConvertFromPrimaryMeasureDimensionAsync(length, measureDimension);
-                parcel.length = Convert.ToDouble(Math.Max(Math.Round(length, 1, MidpointRounding.ToPositiveInfinity), 0.1M));
+                parcel.Add("length", Convert.ToDouble(Math.Max(Math.Round(length, 1, MidpointRounding.ToPositiveInfinity), 0.1M)));
 
                 height = await _measureService.ConvertFromPrimaryMeasureDimensionAsync(height, measureDimension);
-                parcel.height = Convert.ToDouble(Math.Max(Math.Round(height, 1, MidpointRounding.ToPositiveInfinity), 0.1M));
+                parcel.Add("height", Convert.ToDouble(Math.Max(Math.Round(height, 1, MidpointRounding.ToPositiveInfinity), 0.1M)));
             }
 
             return parcel;
@@ -331,24 +308,24 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// <param name="request">A request for getting shipping options</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the address
+        /// The task result contains the address parameters
         /// </returns>
-        private async Task<Address> PrepareAddressToAsync(GetShippingOptionRequest request)
+        private async Task<Dictionary<string, object>> PrepareAddressToAsync(GetShippingOptionRequest request)
         {
-            return new Address
+            return new Dictionary<string, object>
             {
-                name = !string.IsNullOrEmpty(request.ShippingAddress.FirstName)
+                ["name"] = !string.IsNullOrEmpty(request.ShippingAddress.FirstName)
                     ? $"{request.ShippingAddress.FirstName} {request.ShippingAddress.LastName}"
                     : null,
-                email = request.ShippingAddress.Email,
-                phone = request.ShippingAddress.PhoneNumber,
-                company = request.ShippingAddress.Company,
-                street1 = request.ShippingAddress.Address1,
-                street2 = request.ShippingAddress.Address2,
-                city = request.ShippingAddress.City,
-                state = (await _stateProvinceService.GetStateProvinceByAddressAsync(request.ShippingAddress))?.Abbreviation,
-                country = (await _countryService.GetCountryByAddressAsync(request.ShippingAddress))?.TwoLetterIsoCode,
-                zip = request.ShippingAddress.ZipPostalCode
+                ["email"] = request.ShippingAddress.Email,
+                ["phone"] = request.ShippingAddress.PhoneNumber,
+                ["company"] = request.ShippingAddress.Company,
+                ["street1"] = request.ShippingAddress.Address1,
+                ["street2"] = request.ShippingAddress.Address2,
+                ["city"] = request.ShippingAddress.City,
+                ["state"] = (await _stateProvinceService.GetStateProvinceByAddressAsync(request.ShippingAddress))?.Abbreviation,
+                ["country"] = (await _countryService.GetCountryByAddressAsync(request.ShippingAddress))?.TwoLetterIsoCode,
+                ["zip"] = request.ShippingAddress.ZipPostalCode
             };
         }
 
@@ -358,63 +335,67 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// <param name="request">A request for getting shipping options</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the address
+        /// The task result contains the address parameters
         /// </returns>
-        private async Task<Address> PrepareAddressFromAsync(GetShippingOptionRequest request)
+        private async Task<Dictionary<string, object>> PrepareAddressFromAsync(GetShippingOptionRequest request)
         {
             var store = await _storeService.GetStoreByIdAsync(request.StoreId);
-            return new Address
+            return new Dictionary<string, object>
             {
-                company = store.CompanyName,
-                phone = store.CompanyPhoneNumber,
-                street1 = request.AddressFrom,
-                city = request.CityFrom,
-                state = request.StateProvinceFrom?.Abbreviation,
-                country = request.CountryFrom?.TwoLetterIsoCode,
-                zip = request.ZipPostalCodeFrom
+                ["company"] = store.CompanyName,
+                ["phone"] = store.CompanyPhoneNumber,
+                ["street1"] = request.AddressFrom,
+                ["city"] = request.CityFrom,
+                ["state"] = request.StateProvinceFrom?.Abbreviation,
+                ["country"] = request.CountryFrom?.TwoLetterIsoCode,
+                ["zip"] = request.ZipPostalCodeFrom
             };
         }
 
         /// <summary>
         /// Create a shipment
         /// </summary>
-        /// <param name="addressTo">Destination address</param>
-        /// <param name="addressFrom">Origin address</param>
-        /// <param name="parcel">Parcel</param>
+        /// <param name="addressTo">Destination address parameters</param>
+        /// <param name="addressFrom">Origin address parameters</param>
+        /// <param name="parcel">Parcel parameters</param>
         /// <param name="adminRequest">Whether this is a request from the admin area</param>
-        /// <param name="customsInfo">Customs info</param>
-        /// <param name="options">Options</param>
+        /// <param name="customsInfo">Customs info parameters</param>
+        /// <param name="options">Options parameters</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the created shipment
         /// </returns>
-        private async Task<Shipment> CreateShipmentAsync(Address addressTo, Address addressFrom, Parcel parcel, bool? adminRequest,
-            CustomsInfo customsInfo = null, Options options = null)
+        private async Task<Shipment> CreateShipmentAsync(Dictionary<string, object> addressTo,
+            Dictionary<string, object> addressFrom,
+            Dictionary<string, object> parcel,
+            bool? adminRequest,
+            Dictionary<string, object> customsInfo = null,
+            Dictionary<string, object> options = null)
         {
+            if (addressTo is null || addressFrom is null || parcel is null)
+                throw new NopException("No initial data to create a shipment");
+
             //set address verification (ignore estimate requests)
             if (adminRequest.HasValue &&
                 _easyPostSettings.AddressVerification &&
                 !_actionContextAccessor.ActionContext.HttpContext.Request.Path.Value.Contains("estimate"))
             {
-                var verificationParameters = new List<string>() { "delivery" };
-
                 //always non-strictly check origin address
-                addressFrom.verify = verificationParameters;
+                addressFrom.Add("verify", true);
 
                 //set strict or regular check of destination address in public store
                 if (adminRequest == false)
                 {
                     if (_easyPostSettings.StrictAddressVerification)
-                        addressTo.verify_strict = verificationParameters;
+                        addressTo.Add("verify_strict", true);
                     else
-                        addressTo.verify = verificationParameters;
+                        addressTo.Add("verify", true);
                 }
             }
 
             //set currency
             options ??= new();
-            if (string.IsNullOrEmpty(options.currency))
-                options.currency = EasyPostDefaults.CurrencyCode;
+            options.TryAdd("currency", EasyPostDefaults.CurrencyCode);
 
             //create shipment
             var shipmentParameters = new Dictionary<string, object>()
@@ -427,15 +408,18 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
             };
 
             if (!_easyPostSettings.UseSandbox && !_easyPostSettings.UseAllAvailableCarriers)
-                shipmentParameters.Add("carrier_accounts", _easyPostSettings.CarrierAccounts?.Select(value => new CarrierAccount { id = value }).ToList());
+            {
+                var carrierAccounts = _easyPostSettings.CarrierAccounts?.Select(value => new Dictionary<string, object> { ["id"] = value });
+                shipmentParameters.Add("carrier_accounts", carrierAccounts);
+            }
 
-            var shipment = await Shipment.Create(shipmentParameters);
+            var shipment = await _client.Shipment.Create(shipmentParameters);
 
             //log warning messages if any
-            if (_easyPostSettings.LogShipmentMessages && shipment.messages?.Any() == true)
+            if (_easyPostSettings.LogShipmentMessages && shipment.Messages?.Any() == true)
             {
-                var warning = shipment.messages
-                    .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
+                var warning = shipment.Messages
+                    .Aggregate(string.Empty, (text, message) => $"{text}{message.Carrier}: {message.Text};{Environment.NewLine}");
                 await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
             }
 
@@ -444,26 +428,26 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
             {
                 async Task addressWarning(Address address, bool log)
                 {
-                    if (address.verifications?.delivery?.success != false)
+                    if (address.Verifications?.Delivery?.Success != false)
                         return;
 
-                    var errors = address.verifications.delivery.errors;
+                    var errors = address.Verifications.Delivery.Errors;
                     if (log)
-                        throw new HttpException(422, "ADDRESS.VERIFY.FAILURE", "Unable to verify the origin address", errors);
+                        throw new NopException($"Unable to verify the origin address. {errors}");
 
                     var details = errors
-                        .Aggregate(string.Empty, (text, error) => $"{text}{error.message} ({error.field}); ")
+                        .Aggregate(string.Empty, (text, error) => $"{text}{error.Message} ({error.Field}); ")
                         .TrimEnd(' ').TrimEnd(';');
                     var warning = await _localizationService.GetResourceAsync("Plugins.Shipping.EasyPost.Checkout.AddressVerification.Warning");
                     _notificationService.WarningNotification(string.Format(warning, details));
                 }
 
                 if (adminRequest == true)
-                    await addressWarning(shipment.from_address, false);
+                    await addressWarning(shipment.FromAddress, false);
                 else
                 {
-                    await addressWarning(shipment.from_address, true);
-                    await addressWarning(shipment.to_address, false);
+                    await addressWarning(shipment.FromAddress, true);
+                    await addressWarning(shipment.ToAddress, false);
                 }
             }
 
@@ -477,7 +461,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// <returns>Batch status</returns>
         private BatchStatus GetBatchStatus(Batch batch)
         {
-            return batch.state?.ToLower() switch
+            return batch.State?.ToLower() switch
             {
                 "creating" => BatchStatus.Creating,
                 "creation_failed" => BatchStatus.CreationFailed,
@@ -502,8 +486,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
         /// </summary>
         public static void ResetClientConfiguration()
         {
-            _isConfigured = null;
-            ClientManager.Unconfigure();
+            _client = null;
         }
 
         /// <summary>
@@ -518,7 +501,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
             return await HandleFunctionAsync(async () =>
             {
                 //no need to log configuration errors here
-                return IsConfigured() ? await CarrierAccount.All() : new List<CarrierAccount>();
+                return IsConfigured() ? await _client.CarrierAccount.All() : new List<CarrierAccount>();
             });
         }
 
@@ -586,13 +569,13 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 var url = $"{store.Url.TrimEnd('/')}{urlHelper.RouteUrl(EasyPostDefaults.WebhookRouteName)}".ToLowerInvariant();
 
                 //check whether the webhook already exists
-                var webhook = (await Webhook.All())
-                    ?.FirstOrDefault(webhook => webhook.url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false);
+                var webhook = (await _client.Webhook.All())
+                    ?.FirstOrDefault(webhook => webhook.Url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false);
                 if (webhook is not null)
                     return webhook;
 
                 //try to create new one if doesn't exist
-                return await Webhook.Create(new() { [nameof(url)] = url })
+                return await _client.Webhook.Create(new() { [nameof(url)] = url })
                     ?? throw new NopException("No response from the service");
             });
         }
@@ -613,11 +596,14 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(url))
                     return false;
 
-                var webhook = (await Webhook.All())
-                    ?.FirstOrDefault(webhook => webhook.url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false);
-                var deleteResult = webhook is not null && await webhook.Delete();
+                var webhook = (await _client.Webhook.All())
+                    ?.FirstOrDefault(webhook => webhook.Url?.Equals(url, StringComparison.InvariantCultureIgnoreCase) ?? false);
+                if (webhook is null)
+                    return false;
 
-                return deleteResult;
+                await webhook.Delete();
+
+                return true;
             });
         }
 
@@ -641,25 +627,25 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(_easyPostSettings.WebhookUrl))
                     throw new NopException("Webhook is not set");
 
-                var webhook = (await Webhook.All())
-                    ?.FirstOrDefault(webhook => webhook.url?.Equals(_easyPostSettings.WebhookUrl, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                var webhook = (await _client.Webhook.All())
+                    ?.FirstOrDefault(webhook => webhook.Url?.Equals(_easyPostSettings.WebhookUrl, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     ?? throw new NopException($"No webhook configured for URL '{_easyPostSettings.WebhookUrl}'");
 
                 try
                 {
                     var eventEntry = JsonConvert.DeserializeObject<Event>(rawRequestString);
-                    var eventResult = JsonConvert.SerializeObject(eventEntry.result, Formatting.Indented);
-                    switch (eventEntry.description?.ToLower())
+                    var eventResult = JsonConvert.SerializeObject(eventEntry.Result, Formatting.Indented);
+                    switch (eventEntry.Description?.ToLower())
                     {
                         case "tracker.created":
                         case "tracker.updated":
                             {
                                 var tracker = JsonConvert.DeserializeObject<Tracker>(eventResult);
-                                if (string.IsNullOrEmpty(tracker?.tracking_code))
+                                if (string.IsNullOrEmpty(tracker?.TrackingCode))
                                     break;
 
                                 //try to get a shipment by the tracking number
-                                var shipments = await _shipmentService.GetAllShipmentsAsync(trackingNumber: tracker.tracking_code);
+                                var shipments = await _shipmentService.GetAllShipmentsAsync(trackingNumber: tracker.TrackingCode);
                                 if (shipments.Count != 1)
                                     break;
 
@@ -684,15 +670,15 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                         case "batch.updated":
                             {
                                 var batch = JsonConvert.DeserializeObject<Batch>(eventResult);
-                                if (string.IsNullOrEmpty(batch?.id) || string.IsNullOrEmpty(batch?.reference))
+                                if (string.IsNullOrEmpty(batch?.Id) || string.IsNullOrEmpty(batch?.Reference))
                                     break;
 
-                                var batchEntry = (await GetAllBatchesAsync(batchId: batch.id)).FirstOrDefault();
+                                var batchEntry = (await GetAllBatchesAsync(batchId: batch.Id)).FirstOrDefault();
                                 if (batchEntry is null)
                                     break;
 
                                 //match reference to prevent sending fraudulent data
-                                if (!string.Equals(batch.reference, batchEntry.BatchGuid.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                                if (!string.Equals(batch.Reference, batchEntry.BatchGuid.ToString(), StringComparison.InvariantCultureIgnoreCase))
                                     break;
 
                                 //update the batch status
@@ -703,14 +689,14 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                                 //log errors if any
                                 if (batchEntry.StatusId == (int)BatchStatus.CreationFailed ||
                                     batchEntry.StatusId == (int)BatchStatus.PurchaseFailed ||
-                                    !string.IsNullOrEmpty(batch.error))
+                                    !string.IsNullOrEmpty(batch.Error))
                                 {
-                                    var warning = !string.IsNullOrEmpty(batch.error) ? batch.error : string.Empty;
-                                    var failedShipments = batch.shipments.Where(shipment => !string.IsNullOrEmpty(shipment.batch_message));
+                                    var warning = !string.IsNullOrEmpty(batch.Error) ? batch.Error : string.Empty;
+                                    var failedShipments = batch.Shipments.Where(shipment => !string.IsNullOrEmpty(shipment.BatchMessage));
                                     if (failedShipments.Any())
                                     {
                                         warning += failedShipments
-                                            .Aggregate(string.Empty, (text, shipment) => $"{text}{shipment.id}: {shipment.batch_message};{Environment.NewLine}");
+                                            .Aggregate(string.Empty, (text, shipment) => $"{text}{shipment.Id}: {shipment.BatchMessage};{Environment.NewLine}");
                                     }
                                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. Batch '#{batchEntry.Id}': {warning}");
                                 }
@@ -722,23 +708,23 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                         case "scan_form.updated":
                             {
                                 var scanForm = JsonConvert.DeserializeObject<ScanForm>(eventResult);
-                                if (string.IsNullOrEmpty(scanForm?.batch_id))
+                                if (string.IsNullOrEmpty(scanForm?.BatchId))
                                     break;
 
-                                var batchEntry = (await GetAllBatchesAsync(batchId: scanForm.batch_id)).FirstOrDefault();
+                                var batchEntry = (await GetAllBatchesAsync(batchId: scanForm.BatchId)).FirstOrDefault();
                                 if (batchEntry is null)
                                     break;
 
                                 //set manifest URL
-                                if (!string.IsNullOrEmpty(scanForm.form_url))
+                                if (!string.IsNullOrEmpty(scanForm.FormUrl))
                                 {
-                                    batchEntry.ManifestUrl = scanForm.form_url;
+                                    batchEntry.ManifestUrl = scanForm.FormUrl;
                                     await UpdateBatchAsync(batchEntry);
                                 }
 
                                 //log errors if any
-                                if (!string.IsNullOrEmpty(scanForm.message))
-                                    await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. Batch '#{batchEntry.Id}': {scanForm.message}");
+                                if (!string.IsNullOrEmpty(scanForm.Message))
+                                    await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. Batch '#{batchEntry.Id}': {scanForm.Message}");
 
                                 break;
                             }
@@ -808,21 +794,24 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(shipmentId))
                     throw new NopException($"Shipment for the order '{order.CustomOrderNumber}' is not found");
 
-                var orderShipment = await Shipment.Retrieve(shipmentId)
+                var orderShipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
-                if (orderShipment.to_address is null || orderShipment.from_address is null || orderShipment.parcel is null)
+                if (orderShipment.ToAddress is null || orderShipment.FromAddress is null || orderShipment.Parcel is null)
                     throw new NopException("Failed to get the shipment details");
 
                 //whether the origin address and parcel details are matched
                 var request = await PrepareShippingOptionRequestAsync(shipmentEntry, order);
-                var addressFrom = await PrepareAddressFromAsync(request);
-                var parcel = await PrepareParcelAsync(request, true);
-                if (!parcel.Matches(orderShipment.parcel) || !addressFrom.Matches(orderShipment.from_address))
+                var addressFromParameters = await PrepareAddressFromAsync(request);
+                var parcelParameters = await PrepareParcelAsync(request, true);
+                if (!parcelParameters.Matches(orderShipment.Parcel) || !addressFromParameters.Matches(orderShipment.FromAddress))
                 {
                     //if details are not matched, create a specific shipment from the common order shipment
-                    var shipment = await CreateShipmentAsync(orderShipment.to_address, addressFrom, parcel, true);
-                    shipmentId = shipment.id;
+                    var shipment = await CreateShipmentAsync(orderShipment.ToAddress?.ToDictionary(),
+                        addressFromParameters,
+                        parcelParameters,
+                        true);
+                    shipmentId = shipment.Id;
                 }
 
                 //save the shipment id
@@ -851,7 +840,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(shipmentId))
                     throw new NopException("Shipment id is not set");
 
-                var shipment = await Shipment.Retrieve(shipmentId)
+                var shipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
                 return shipment;
@@ -881,26 +870,26 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     ?? throw new NopException("Primary store currency is not set");
 
                 //log warning messages if any
-                if (_easyPostSettings.LogShipmentMessages && shipment.messages?.Any() == true)
+                if (_easyPostSettings.LogShipmentMessages && shipment.Messages?.Any() == true)
                 {
-                    var warning = shipment.messages
-                        .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
+                    var warning = shipment.Messages
+                        .Aggregate(string.Empty, (text, message) => $"{text}{message.Carrier}: {message.Text};{Environment.NewLine}");
                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
                 }
 
-                if (!shipment?.rates?.Any() ?? true)
+                if (!shipment?.Rates?.Any() ?? true)
                     throw new NopException("Failed to get rates");
 
                 //get rates from the created shipment
-                var rates = await shipment.rates.SelectAwait(async rate => new ShippingRate
+                var rates = await shipment.Rates.SelectAwait(async rate => new ShippingRate
                 {
-                    Id = rate.id,
-                    Carrier = rate.carrier,
-                    Service = rate.service,
-                    Rate = await ConvertRateAsync(rate.rate, rate.currency, storeCurrency),
-                    //Rate = await ConvertRateAsync(rate.rate, rate.currency, storeCurrency) + _easyPostSettings.AdditionalHandlingCharge,
-                    DeliveryDays = rate.delivery_days,
-                    Currency = rate.currency
+                    Id = rate.Id,
+                    Carrier = rate.Carrier,
+                    Service = rate.Service,
+                    Rate = await ConvertRateAsync(rate.Price, rate.Currency, storeCurrency),
+                    //Rate = await ConvertRateAsync(rate.Price, rate.Currency, storeCurrency) + _easyPostSettings.AdditionalHandlingCharge,
+                    DeliveryDays = rate.DeliveryDays,
+                    Currency = rate.Currency
                 }).ToListAsync();
 
                 if (!useSmartRates || !_easyPostSettings.UseSmartRates)
@@ -915,17 +904,17 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     foreach (var rate in rates)
                     {
                         var expectedDays = smartRates
-                            .FirstOrDefault(smartRate => smartRate.carrier == rate.Carrier && smartRate.service == rate.Service)
-                            ?.time_in_transit;
+                            .FirstOrDefault(smartRate => smartRate.Carrier == rate.Carrier && smartRate.Service == rate.Service)
+                            ?.TimeInTransit;
                         if (expectedDays is not null)
                         {
-                            rate.TimeInTransit.Add((50, expectedDays.percentile_50));
-                            rate.TimeInTransit.Add((75, expectedDays.percentile_75));
-                            rate.TimeInTransit.Add((85, expectedDays.percentile_85));
-                            rate.TimeInTransit.Add((90, expectedDays.percentile_90));
-                            rate.TimeInTransit.Add((95, expectedDays.percentile_95));
-                            rate.TimeInTransit.Add((97, expectedDays.percentile_97));
-                            rate.TimeInTransit.Add((99, expectedDays.percentile_99));
+                            rate.TimeInTransit.Add((50, expectedDays.Percentile50));
+                            rate.TimeInTransit.Add((75, expectedDays.Percentile75));
+                            rate.TimeInTransit.Add((85, expectedDays.Percentile85));
+                            rate.TimeInTransit.Add((90, expectedDays.Percentile90));
+                            rate.TimeInTransit.Add((95, expectedDays.Percentile95));
+                            rate.TimeInTransit.Add((97, expectedDays.Percentile97));
+                            rate.TimeInTransit.Add((99, expectedDays.Percentile99));
                         }
                     }
 
@@ -960,40 +949,40 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(shipmentId))
                     throw new NopException($"Shipment '#{shipmentEntry.Id}'is not found");
 
-                var shipment = await Shipment.Retrieve(shipmentId)
+                var shipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
-                if (shipment.to_address is null || shipment.from_address is null || shipment.parcel is null)
+                if (shipment.ToAddress is null || shipment.FromAddress is null || shipment.Parcel is null)
                     throw new NopException("Failed to get shipment details");
 
-                var options = new Options
+                var optionsParameters = new Dictionary<string, object>
                 {
-                    additional_handling = request.OptionsDetails.AdditionalHandling,
-                    alcohol = request.OptionsDetails.Alcohol,
-                    by_drone = request.OptionsDetails.ByDrone,
-                    carbon_neutral = request.OptionsDetails.CarbonNeutral,
-                    delivery_confirmation = request.OptionsDetails.DeliveryConfirmation,
-                    endorsement = request.OptionsDetails.Endorsement,
-                    handling_instructions = request.OptionsDetails.HandlingInstructions,
-                    hazmat = request.OptionsDetails.Hazmat,
-                    invoice_number = request.OptionsDetails.InvoiceNumber,
-                    machinable = request.OptionsDetails.Machinable.ToString().ToLower(),
-                    print_custom_1 = request.OptionsDetails.PrintCustom1,
-                    print_custom_1_code = request.OptionsDetails.PrintCustomCode1,
-                    print_custom_2 = request.OptionsDetails.PrintCustom2,
-                    print_custom_2_code = request.OptionsDetails.PrintCustomCode2,
-                    print_custom_3 = request.OptionsDetails.PrintCustom3,
-                    print_custom_3_code = request.OptionsDetails.PrintCustomCode3,
-                    special_rates_eligibility = request.OptionsDetails.SpecialRatesEligibility,
-                    certified_mail = request.OptionsDetails.CertifiedMail,
-                    registered_mail = request.OptionsDetails.RegisteredMail,
-                    registered_mail_amount = request.OptionsDetails.RegisteredMail
+                    ["additional_handling"] = request.OptionsDetails.AdditionalHandling,
+                    ["alcohol"] = request.OptionsDetails.Alcohol,
+                    ["by_drone"] = request.OptionsDetails.ByDrone,
+                    ["carbon_neutral"] = request.OptionsDetails.CarbonNeutral,
+                    ["delivery_confirmation"] = request.OptionsDetails.DeliveryConfirmation,
+                    ["endorsement"] = request.OptionsDetails.Endorsement,
+                    ["handling_instructions"] = request.OptionsDetails.HandlingInstructions,
+                    ["hazmat"] = request.OptionsDetails.Hazmat,
+                    ["invoice_number"] = request.OptionsDetails.InvoiceNumber,
+                    ["machinable"] = request.OptionsDetails.Machinable.ToString().ToLower(),
+                    ["print_custom_1"] = request.OptionsDetails.PrintCustom1,
+                    ["print_custom_1_code"] = request.OptionsDetails.PrintCustomCode1,
+                    ["print_custom_2"] = request.OptionsDetails.PrintCustom2,
+                    ["print_custom_2_code"] = request.OptionsDetails.PrintCustomCode2,
+                    ["print_custom_3"] = request.OptionsDetails.PrintCustom3,
+                    ["print_custom_3_code"] = request.OptionsDetails.PrintCustomCode3,
+                    ["special_rates_eligibility"] = request.OptionsDetails.SpecialRatesEligibility,
+                    ["certified_mail"] = request.OptionsDetails.CertifiedMail,
+                    ["registered_mail"] = request.OptionsDetails.RegisteredMail,
+                    ["registered_mail_amount"] = request.OptionsDetails.RegisteredMail
                         ? Convert.ToDouble(request.OptionsDetails.RegisteredMailAmount)
                         : null,
-                    return_receipt = request.OptionsDetails.ReturnReceipt
+                    ["return_receipt"] = request.OptionsDetails.ReturnReceipt
                 };
 
-                CustomsInfo customsInfo = null;
+                var customsInfoParameters = new Dictionary<string, object>();
                 if (request.CustomsInfoDetails is not null)
                 {
                     var storeCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)
@@ -1025,40 +1014,44 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                             itemValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(itemValue, usdCurrency);
                         }
                         var itemWeight = (orderItem.ItemWeight ?? decimal.Zero) * item.Quantity;
-                        return new CustomsItem
+                        return new Dictionary<string, object>
                         {
-                            code = code,
-                            description = description,
-                            hs_tariff_number = hsNumber,
-                            origin_country = originCountry,
-                            quantity = item.Quantity,
-                            value = Convert.ToDouble(itemValue),
-                            weight = Convert.ToDouble(itemWeight),
-                            currency = EasyPostDefaults.CurrencyCode
+                            ["code"] = code,
+                            ["description"] = description,
+                            ["hs_tariff_number"] = hsNumber,
+                            ["origin_country"] = originCountry,
+                            ["quantity"] = item.Quantity,
+                            ["value"] = Convert.ToDouble(itemValue),
+                            ["weight"] = Convert.ToDouble(itemWeight),
+                            ["currency"] = EasyPostDefaults.CurrencyCode
                         };
                     }).ToListAsync();
 
-                    customsInfo = new CustomsInfo
+                    customsInfoParameters = new()
                     {
-                        customs_items = customsItems,
-                        contents_type = request.CustomsInfoDetails.ContentsType,
-                        restriction_type = request.CustomsInfoDetails.RestrictionType,
-                        non_delivery_option = request.CustomsInfoDetails.NonDeliveryOption,
-                        contents_explanation = request.CustomsInfoDetails.ContentsExplanation,
-                        restriction_comments = request.CustomsInfoDetails.RestrictionComments,
-                        customs_certify = request.CustomsInfoDetails.CustomsCertify.ToString().ToLower(),
-                        customs_signer = request.CustomsInfoDetails.CustomsSigner,
-                        eel_pfc = request.CustomsInfoDetails.EelPfc
+                        ["customs_items"] = customsItems,
+                        ["contents_type"] = request.CustomsInfoDetails.ContentsType,
+                        ["restriction_type"] = request.CustomsInfoDetails.RestrictionType,
+                        ["non_delivery_option"] = request.CustomsInfoDetails.NonDeliveryOption,
+                        ["contents_explanation"] = request.CustomsInfoDetails.ContentsExplanation,
+                        ["restriction_comments"] = request.CustomsInfoDetails.RestrictionComments,
+                        ["customs_certify"] = request.CustomsInfoDetails.CustomsCertify.ToString().ToLower(),
+                        ["customs_signer"] = request.CustomsInfoDetails.CustomsSigner,
+                        ["eel_pfc"] = request.CustomsInfoDetails.EelPfc
                     };
                 }
 
                 //whether the shipment details are matched
-                if (!options.Matches(shipment.options) || (customsInfo is not null && !customsInfo.Matches(shipment.customs_info)))
+                if (!optionsParameters.Matches(shipment.Options) || (customsInfoParameters.Any() && !customsInfoParameters.Matches(shipment.CustomsInfo)))
                 {
                     //if details are not matched, create new shipment, since there is no update method
-                    var newShipment = await CreateShipmentAsync(shipment.to_address,
-                        shipment.from_address, shipment.parcel, null, customsInfo, options);
-                    await _genericAttributeService.SaveAttributeAsync(shipmentEntry, EasyPostDefaults.ShipmentIdAttribute, newShipment.id);
+                    var newShipment = await CreateShipmentAsync(shipment.ToAddress?.ToDictionary(),
+                        shipment.FromAddress?.ToDictionary(),
+                        shipment.Parcel?.ToDictionary(),
+                        null,
+                        customsInfoParameters,
+                        optionsParameters);
+                    await _genericAttributeService.SaveAttributeAsync(shipmentEntry, EasyPostDefaults.ShipmentIdAttribute, newShipment.Id);
                 }
 
                 return true;
@@ -1093,11 +1086,11 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(rateId))
                     throw new NopException($"Rate is not selected");
 
-                var shipment = await Shipment.Retrieve(shipmentId)
+                var shipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
                 //whether the shipment has already been created and purchased
-                if (shipment.selected_rate is not null)
+                if (shipment.SelectedRate is not null)
                     return false;
 
                 string insuranceValue = null;
@@ -1121,9 +1114,9 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 await shipment.Buy(rateId, insuranceValue);
 
                 //set tracking number
-                if (!string.IsNullOrEmpty(shipment.tracker?.tracking_code))
+                if (!string.IsNullOrEmpty(shipment.Tracker?.TrackingCode))
                 {
-                    shipmentEntry.TrackingNumber = shipment.tracker.tracking_code;
+                    shipmentEntry.TrackingNumber = shipment.Tracker.TrackingCode;
                     await _shipmentService.UpdateShipmentAsync(shipmentEntry);
                 }
 
@@ -1157,20 +1150,20 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
 
                 var format = labelFormat ?? "png";
 
-                var shipment = await Shipment.Retrieve(shipmentId)
+                var shipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
                 (string DownloadUrl, string ContentType) getLabelDetails() =>
                     format.ToLowerInvariant() switch
                     {
-                        "pdf" => !string.IsNullOrEmpty(shipment.postage_label.label_pdf_url)
-                            ? (shipment.postage_label.label_pdf_url, MimeTypes.ApplicationPdf)
+                        "pdf" => !string.IsNullOrEmpty(shipment.PostageLabel.LabelPdfUrl)
+                            ? (shipment.PostageLabel.LabelPdfUrl, MimeTypes.ApplicationPdf)
                             : (default, default),
-                        "zpl" => !string.IsNullOrEmpty(shipment.postage_label.label_zpl_url)
-                            ? (shipment.postage_label.label_zpl_url, "application/zpl")
+                        "zpl" => !string.IsNullOrEmpty(shipment.PostageLabel.LabelZplUrl)
+                            ? (shipment.PostageLabel.LabelZplUrl, "application/zpl")
                             : (default, default),
-                        _ => !string.IsNullOrEmpty(shipment.postage_label.label_url)
-                            ? (shipment.postage_label.label_url, shipment.postage_label.label_file_type)
+                        _ => !string.IsNullOrEmpty(shipment.PostageLabel.LabelUrl)
+                            ? (shipment.PostageLabel.LabelUrl, shipment.PostageLabel.LabelFileType)
                             : (default, default),
                     };
 
@@ -1210,18 +1203,18 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(shipmentId))
                     throw new NopException("Shipment is not yet purchased");
 
-                var shipment = await Shipment.Retrieve(shipmentId)
+                var shipment = await _client.Shipment.Retrieve(shipmentId)
                     ?? throw new NopException("No response from the service");
 
                 //try to get a commercial invoice from the shipment forms
-                if (shipment.forms
-                    ?.FirstOrDefault(form => string.Equals(form.form_type, "commercial_invoice", StringComparison.InvariantCultureIgnoreCase)) is not Form form ||
-                    string.IsNullOrEmpty(form.form_url))
+                if (shipment.Forms
+                    ?.FirstOrDefault(form => string.Equals(form.FormType, "commercial_invoice", StringComparison.InvariantCultureIgnoreCase)) is not Form form ||
+                    string.IsNullOrEmpty(form.FormUrl))
                 {
                     throw new NopException("Commercial invoice is not found");
                 }
 
-                return (form.form_url, MimeTypes.ApplicationPdf);
+                return (form.FormUrl, MimeTypes.ApplicationPdf);
             });
         }
 
@@ -1274,12 +1267,12 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                         //no need to log errors here
                         try
                         {
-                            var shipment = await Shipment.Retrieve(shipmentId);
-                            if (!string.IsNullOrEmpty(shipment?.tracker?.id))
+                            var shipment = await _client.Shipment.Retrieve(shipmentId);
+                            if (!string.IsNullOrEmpty(shipment?.Tracker?.Id))
                             {
-                                var shipmentTracker = await Tracker.Retrieve(shipment.tracker.id);
-                                if (!string.IsNullOrEmpty(shipmentTracker?.public_url))
-                                    return shipmentTracker.public_url;
+                                var shipmentTracker = await _client.Tracker.Retrieve(shipment.Tracker.Id);
+                                if (!string.IsNullOrEmpty(shipmentTracker?.PublicUrl))
+                                    return shipmentTracker.PublicUrl;
                             }
                         }
                         catch { }
@@ -1287,10 +1280,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 }
 
                 //or find one by the number from the common list
-                var trackerList = await Tracker.All(new() { ["tracking_code"] = trackingNumber })
+                var trackerList = await _client.Tracker.All(new() { ["tracking_code"] = trackingNumber })
                     ?? throw new NopException("No response from the service");
 
-                return trackerList.trackers?.FirstOrDefault()?.public_url
+                return trackerList.Trackers?.FirstOrDefault()?.PublicUrl
                     ?? throw new NopException($"No tracker found with number '{trackingNumber}'");
             });
         }
@@ -1314,13 +1307,13 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
 
                 List<ShipmentStatusEvent> getEvents(Tracker tracker)
                 {
-                    return tracker?.tracking_details?.Select(details => new ShipmentStatusEvent
+                    return tracker?.TrackingDetails?.Select(details => new ShipmentStatusEvent
                     {
-                        Date = details.datetime,
-                        EventName = details.message,
-                        CountryCode = details.tracking_location?.country,
-                        Location = $"{details.tracking_location?.city} {details.tracking_location?.state} " +
-                            $"{details.tracking_location?.country} {details.tracking_location?.zip}".TrimEnd(' ')
+                        Date = details.Datetime,
+                        EventName = details.Message,
+                        CountryCode = details.TrackingLocation?.Country,
+                        Location = $"{details.TrackingLocation?.City} {details.TrackingLocation?.State} " +
+                            $"{details.TrackingLocation?.Country} {details.TrackingLocation?.Zip}".TrimEnd(' ')
                     }).ToList();
                 }
 
@@ -1333,11 +1326,11 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                         //no need to log errors here
                         try
                         {
-                            var shipment = await Shipment.Retrieve(shipmentId);
-                            if (!string.IsNullOrEmpty(shipment?.tracker?.id))
+                            var shipment = await _client.Shipment.Retrieve(shipmentId);
+                            if (!string.IsNullOrEmpty(shipment?.Tracker?.Id))
                             {
-                                var shipmentTracker = await Tracker.Retrieve(shipment.tracker.id);
-                                if (shipmentTracker?.tracking_details?.Any() ?? false)
+                                var shipmentTracker = await _client.Tracker.Retrieve(shipment.Tracker.Id);
+                                if (shipmentTracker?.TrackingDetails?.Any() ?? false)
                                     return getEvents(shipmentTracker);
                             }
                         }
@@ -1346,10 +1339,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 }
 
                 //or find one by the number from the common list
-                var trackerList = await Tracker.All(new() { ["tracking_code"] = trackingNumber })
+                var trackerList = await _client.Tracker.All(new() { ["tracking_code"] = trackingNumber })
                     ?? throw new NopException("No response from the service");
 
-                return getEvents(trackerList.trackers?.FirstOrDefault())
+                return getEvents(trackerList.Trackers?.FirstOrDefault())
                     ?? throw new NopException($"No tracker found with number '{trackingNumber}'");
             });
         }
@@ -1383,7 +1376,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     if (string.IsNullOrEmpty(shipmentId))
                         throw new NopException("Shipment is not yet purchased");
 
-                    shipment = await Shipment.Retrieve(shipmentId)
+                    shipment = await _client.Shipment.Retrieve(shipmentId)
                         ?? throw new NopException("No response from the service");
                 }
 
@@ -1393,50 +1386,51 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     if (string.IsNullOrEmpty(batchEntry.BatchId))
                         throw new NopException("Batch is not yet purchased");
 
-                    batch = await Batch.Retrieve(batchEntry.BatchId)
+                    batch = await _client.Batch.Retrieve(batchEntry.BatchId)
                         ?? throw new NopException("No response from the service");
                 }
 
                 //create new pickup with the passed details
-                var parameters = new Pickup
+                var addressParameters = new Dictionary<string, object>
                 {
-                    address = new Address
-                    {
-                        company = request.Address.Company,
-                        email = request.Address.Email,
-                        phone = request.Address.PhoneNumber,
-                        street1 = request.Address.Address1,
-                        street2 = request.Address.Address2,
-                        city = request.Address.City,
-                        state = (await _stateProvinceService.GetStateProvinceByIdAsync(request.Address.StateProvinceId ?? 0))?.Abbreviation,
-                        country = (await _countryService.GetCountryByIdAsync(request.Address.CountryId ?? 0))?.TwoLetterIsoCode,
-                        zip = request.Address.ZipPostalCode
-                    },
-                    instructions = request.Instructions,
-                    max_datetime = request.MaxDate,
-                    min_datetime = request.MinDate,
-                }.AsDictionary();
+                    ["company"] = request.Address.Company,
+                    ["email"] = request.Address.Email,
+                    ["phone"] = request.Address.PhoneNumber,
+                    ["street1"] = request.Address.Address1,
+                    ["street2"] = request.Address.Address2,
+                    ["city"] = request.Address.City,
+                    ["state"] = (await _stateProvinceService.GetStateProvinceByIdAsync(request.Address.StateProvinceId ?? 0))?.Abbreviation,
+                    ["country"] = (await _countryService.GetCountryByIdAsync(request.Address.CountryId ?? 0))?.TwoLetterIsoCode,
+                    ["zip"] = request.Address.ZipPostalCode
+                };
+                var pickupParameters = new Dictionary<string, object>
+                {
+                    ["address"] = addressParameters,
+                    ["instructions"] = request.Instructions,
+                    ["max_datetime"] = request.MaxDate,
+                    ["min_datetime"] = request.MinDate,
+                };
                 if (shipment is not null)
-                    parameters.Add(nameof(shipment), shipment);
+                    pickupParameters.Add(nameof(shipment), shipment);
                 if (batch is not null)
-                    parameters.Add(nameof(batch), batch);
+                    pickupParameters.Add(nameof(batch), batch);
 
-                var pickup = await Pickup.Create(parameters);
+                var pickup = await _client.Pickup.Create(pickupParameters);
 
                 //log warning messages if any
-                if (_easyPostSettings.LogShipmentMessages && pickup.messages?.Any() == true)
+                if (_easyPostSettings.LogShipmentMessages && pickup.Messages?.Any() == true)
                 {
-                    var warning = pickup.messages
-                        .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
+                    var warning = pickup.Messages
+                        .Aggregate(string.Empty, (text, message) => $"{text}{message.Carrier}: {message.Text};{Environment.NewLine}");
                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
                 }
 
                 //save the pickup id
                 if (shipmentEntry is not null)
-                    await _genericAttributeService.SaveAttributeAsync(shipmentEntry, EasyPostDefaults.PickupIdAttribute, pickup.id);
+                    await _genericAttributeService.SaveAttributeAsync(shipmentEntry, EasyPostDefaults.PickupIdAttribute, pickup.Id);
                 if (batchEntry is not null)
                 {
-                    batchEntry.PickupId = pickup.id;
+                    batchEntry.PickupId = pickup.Id;
                     await UpdateBatchAsync(batchEntry);
                 }
 
@@ -1462,7 +1456,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(pickupId))
                     throw new NopException("Pickup id is not set");
 
-                var pickup = await Pickup.Retrieve(pickupId)
+                var pickup = await _client.Pickup.Retrieve(pickupId)
                     ?? throw new NopException("No response from the service");
 
                 return pickup;
@@ -1491,25 +1485,25 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     ?? throw new NopException("Primary store currency is not set");
 
                 //log warning messages if any
-                if (_easyPostSettings.LogShipmentMessages && pickup.messages?.Any() == true)
+                if (_easyPostSettings.LogShipmentMessages && pickup.Messages?.Any() == true)
                 {
-                    var warning = pickup.messages
-                        .Aggregate(string.Empty, (text, message) => $"{text}{message.carrier}: {message.message};{Environment.NewLine}");
+                    var warning = pickup.Messages
+                        .Aggregate(string.Empty, (text, message) => $"{text}{message.Carrier}: {message.Text};{Environment.NewLine}");
                     await _logger.WarningAsync($"{EasyPostDefaults.SystemName} warning. {warning}");
                 }
 
-                if (!pickup?.pickup_rates?.Any() ?? true)
+                if (!pickup?.PickupRates?.Any() ?? true)
                     throw new NopException("Failed to get rates");
 
                 //get rates from the pickup
-                return await pickup.pickup_rates.SelectAwait(async rate => new ShippingRate
+                return await pickup.PickupRates.SelectAwait(async rate => new ShippingRate
                 {
-                    Id = rate.id,
-                    Carrier = rate.carrier,
-                    Service = rate.service,
-                    Rate = await ConvertRateAsync(rate.rate, rate.currency, storeCurrency),
-                    DeliveryDays = rate.delivery_days,
-                    Currency = rate.currency
+                    Id = rate.Id,
+                    Carrier = rate.Carrier,
+                    Service = rate.Service,
+                    Rate = await ConvertRateAsync(rate.Price, rate.Currency, storeCurrency),
+                    DeliveryDays = rate.DeliveryDays,
+                    Currency = rate.Currency
                 }).ToListAsync();
             });
         }
@@ -1541,18 +1535,18 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(pickupId))
                     throw new NopException("Pickup id is not set");
 
-                var pickup = await Pickup.Retrieve(pickupId)
+                var pickup = await _client.Pickup.Retrieve(pickupId)
                     ?? throw new NopException("No response from the service");
 
                 //whether the pickup has already been purchased and scheduled
-                if (string.Equals(pickup.status, "scheduled", StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(pickup.Status, "scheduled", StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
                 //purchase the pickup with the selected rate
-                var selectedRate = pickup.pickup_rates?.FirstOrDefault(rate => rate.id == rateId)
+                var selectedRate = pickup.PickupRates?.FirstOrDefault(rate => rate.Id == rateId)
                     ?? throw new NopException($"Selected rate is not available");
 
-                await pickup.Buy(selectedRate.carrier, selectedRate.service);
+                await pickup.Buy(selectedRate.Carrier, selectedRate.Service);
 
                 return true;
             });
@@ -1580,7 +1574,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if (string.IsNullOrEmpty(pickupId))
                     throw new NopException("Pickup id is not set");
 
-                var pickup = await Pickup.Retrieve(pickupId)
+                var pickup = await _client.Pickup.Retrieve(pickupId)
                     ?? throw new NopException("No response from the service");
 
                 //cancel the pickup and clear the pickup id
@@ -1627,10 +1621,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     throw new NopException(ratesError);
 
                 //save shipment as a customer attribute during the checkout, move it to an order entry after placing
-                if (!string.IsNullOrEmpty(shipment?.id))
+                if (!string.IsNullOrEmpty(shipment?.Id))
                 {
                     await _genericAttributeService
-                        .SaveAttributeAsync(request.Customer, EasyPostDefaults.ShipmentIdAttribute, shipment.id, request.StoreId);
+                        .SaveAttributeAsync(request.Customer, EasyPostDefaults.ShipmentIdAttribute, shipment.Id, request.StoreId);
                 }
 
                 //whether this is a free shipping
@@ -1759,21 +1753,21 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 {
                     //create new batch
                     var reference = Guid.NewGuid();
-                    batch = await Batch.Create(new() { [nameof(reference)] = reference.ToString().ToLower() });
+                    batch = await _client.Batch.Create(new() { [nameof(reference)] = reference.ToString().ToLower() });
 
                     batchEntry.BatchGuid = reference;
-                    batchEntry.BatchId = batch.id;
+                    batchEntry.BatchId = batch.Id;
                     await UpdateBatchAsync(batchEntry);
                 }
                 else
                 {
                     //or get the existing one
-                    batch = await Batch.Retrieve(batchEntry.BatchId)
+                    batch = await _client.Batch.Retrieve(batchEntry.BatchId)
                         ?? throw new NopException("No response from the service");
                 }
 
                 //update associated shipments
-                var batchShipmentIds = batch.shipments.Select(shipment => shipment.id).ToList();
+                var batchShipmentIds = batch.Shipments.Select(shipment => shipment.Id).ToList();
                 var idsToAdd = currentShipmentIds.Where(pair => !batchShipmentIds.Contains(pair.ShipmentId)).ToList();
                 var idsToRemove = batchShipmentIds.Where(id => !currentShipmentIds.Any(pair => id == pair.ShipmentId)).ToList();
                 if (idsToAdd.Any())
@@ -1852,7 +1846,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if ((BatchStatus)batchEntry.StatusId != BatchStatus.Purchased)
                     throw new NopException("Batch is not yet purchased");
 
-                var batch = await Batch.Retrieve(batchEntry.BatchId)
+                var batch = await _client.Batch.Retrieve(batchEntry.BatchId)
                     ?? throw new NopException("No response from the service");
 
                 await batch.GenerateLabel((labelFormat ?? "pdf").ToUpper());
@@ -1884,10 +1878,10 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                 if ((BatchStatus)batchEntry.StatusId != BatchStatus.LabelGenerated)
                     throw new NopException("Batch label is not yet generated");
 
-                var batch = await Batch.Retrieve(batchEntry.BatchId)
+                var batch = await _client.Batch.Retrieve(batchEntry.BatchId)
                     ?? throw new NopException("No response from the service");
 
-                if (string.IsNullOrEmpty(batch.label_url))
+                if (string.IsNullOrEmpty(batch.LabelUrl))
                     throw new NopException("Batch label is not found");
 
                 var fileType = batchEntry.LabelFormat?.ToLower() switch
@@ -1896,7 +1890,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     _ => MimeTypes.ApplicationPdf
                 };
 
-                return (batch.label_url, fileType);
+                return (batch.LabelUrl, fileType);
             });
         }
 
@@ -1925,7 +1919,7 @@ namespace Nop.Plugin.Shipping.EasyPost.Services
                     throw new NopException("Batch is not yet created");
                 }
 
-                var batch = await Batch.Retrieve(batchEntry.BatchId)
+                var batch = await _client.Batch.Retrieve(batchEntry.BatchId)
                     ?? throw new NopException("No response from the service");
 
                 await batch.GenerateScanForm();
