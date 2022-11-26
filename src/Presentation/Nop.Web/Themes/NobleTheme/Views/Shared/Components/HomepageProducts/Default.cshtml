@@ -10,7 +10,7 @@
         {
              foreach (var item in Model)
             {
-                <div class="item-box col-xs-12 col-sm-4 col-md-4">
+                <div class="item-box product-grid col-xs-12 col-sm-4 col-md-4 product-align clearfix">
                     <div class="thumbnail">
                         @await Html.PartialAsync("_ProductBox", item)
                     </div>
@@ -22,7 +22,7 @@
             <div id="home-features-slider" class="home-features-slider owl-carousel owl-theme">
                 @foreach (var item in Model)
                 {
-                    <div class="item-box col-xs-12 col-sm-12 col-md-12">
+                    <div class="item-box product-grid col-xs-12 col-sm-12 col-md-12 product-align clearfix">
                         <div class="thumbnail">
                             @await Html.PartialAsync("_ProductBox", item)
                         </div>

@@ -20,7 +20,7 @@
             {
                 @foreach (var product in Model)
                 {
-                    <div class="item-box col-xs-12 col-sm-3 col-md-3">
+                    <div class="item-box product-grid col-xs-12 col-sm-3 col-md-3 product-align clearfix">
                         <div class="thumbnail">
                             @await Html.PartialAsync("_ProductBox", product)
                         </div>
@@ -32,7 +32,7 @@
                 <div id="crosssell-products-slider" class="crosssell-products-slider owl-carousel owl-theme">
                     @foreach (var product in Model)
                     {
-                        <div class="item-box col-xs-12 col-sm-12 col-md-12">
+                        <div class="item-box product-grid col-xs-12 col-sm-12 col-md-12 product-align clearfix">
                             <div class="thumbnail">@await Html.PartialAsync("_ProductBox", product)</div>
                         </div>
                     }

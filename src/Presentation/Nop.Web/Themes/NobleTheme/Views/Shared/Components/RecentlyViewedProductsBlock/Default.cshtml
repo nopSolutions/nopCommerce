@@ -14,15 +14,32 @@
                 {
                     var product = Model[i];
                     var picture = product.PictureModels.FirstOrDefault();
-                    <li @(i == Model.Count - 1 ? @Html.Raw(" class=\"last\"") : null)>
-                        @if (picture != null && !string.IsNullOrEmpty(picture.ImageUrl))
-                        {
-                            <a class="product-picture" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))" title="@picture.Title">
+                <li @(i == Model.Count - 1 ? @Html.Raw(" class=\"last\"") : null)>
+                    @if (picture != null && !string.IsNullOrEmpty(picture.ImageUrl))
+                    {
+                        <div class="product-picture">
+                            <a href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))" title="@picture.Title">
                                 <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
                             </a>
-                        }
-                        <a class="product-name" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>
-                    </li>
+                        </div>
+                    }
+
+                    <a class="product-name" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>
+                    <div class="customer-info">
+                        <ul>
+                            <li>Primary Technology: @Html.Raw(product.PrimaryTechnology)</li>
+                            @if (customerSettings.ShowSecondaryTechnologySpecificationAttribute)
+                            {
+                                <li>Secondary Tech: @Html.Raw(product.SecondaryTechnology)</li>
+                            }
+                            <li>Location: @Html.Raw(product.Location)</li>
+                            <li>@Html.Raw(product.CurrentAvalibility)</li>
+                            <li>Exp: : @Html.Raw(product.WorkExperience)</li>
+                            <li>Online : @Html.Raw(product.LastLoginDateTime)</li>
+                            <li hidden>@Html.Raw(product.ProfileType)</li>
+                        </ul>
+                    </div>
+                </li>
                 }
             </ul>
         </div>

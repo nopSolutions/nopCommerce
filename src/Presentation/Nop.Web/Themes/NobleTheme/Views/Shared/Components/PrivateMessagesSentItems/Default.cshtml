@@ -59,7 +59,14 @@
                                     }
                                 </td>
                                 <td class="a-left subject">
-                                    @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                                    @if (!string.IsNullOrEmpty(item.SenderSubject))
+                                    {
+                                        @Html.RouteLink(item.SenderSubject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                                    }
                                 </td>
                                 <td class="a-left date">
                                     @item.CreatedOn

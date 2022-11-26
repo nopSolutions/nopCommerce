@@ -35,13 +35,13 @@
                         {
                             <col width="1" />
                         }
-                        <col />
+                        <col width="1" />
                         @if (Model.ShowVendorName)
                         {
                             <col width="1" />
                         }
                         <col width="1" />
-                        <col />
+                        <col width="1" />
                         <col width="1" />
                         @if (Model.IsEditable)
                         {
@@ -61,7 +61,7 @@
                                 <th class="picture"></th>
                                 @*@T("ShoppingCart.Image")*@
                             }
-                            <th class="products-title product">
+                            <th class="products-title">
                                 @T("ShoppingCart.Product(s)")
                             </th>
                             @if (Model.ShowVendorName)
@@ -73,7 +73,7 @@
                             <th>
                                 @T("ShoppingCart.UnitPrice")
                             </th>
-                            <th class="qty">
+                            <th class="qty" hidden>
                                 @T("ShoppingCart.Quantity")
                             </th>
                             <th class="end">
@@ -104,7 +104,7 @@
                                 </td>
                             }
                             <td class="product">
-                                <a href="@Url.RouteUrl("Product", new {SeName = item.ProductSeName})">@item.ProductName</a>
+                                <a href="#">@item.ProductName</a>
                                 @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                 {
                                     <div class="attributes">
@@ -153,7 +153,7 @@
                             <td class="unit-price prices-alignment-right">
                                 <span class="product-unit-price">@item.UnitPrice</span>
                             </td>
-                            <td class="qty nobr">
+                            <td class="qty nobr" hidden>
                                 <label class="td-title" for="itemquantity@(item.Id)">@T("ShoppingCart.Quantity"):</label>
                                 @if (Model.IsEditable)
                                 {
@@ -212,10 +212,14 @@
                 </table>
                 @if (Model.IsEditable)
                 {
-                    <div class="update-continue-button">
+                    <div class="update-continue-button" hidden>
                         <div class="common-buttons pull-right">
-                            <div class="update-cart"><button type="submit" name="updatecart" id="updatecart" class="btn btn-primary update-cart-button">@T("ShoppingCart.UpdateCart")</button></div>
-                            <div class="continue-shopping"><button type="submit" name="continueshopping" class="btn btn-primary continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button></div>
+                            <div class="update-cart">
+                                <button type="submit" name="updatecart" id="updatecart" class="btn btn-primary update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+                            </div>
+                            <div class="continue-shopping">
+                                <button type="submit" name="continueshopping" class="btn btn-primary continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
+                            </div>
                             @await Component.InvokeAsync(typeof(ShoppingCartEstimateShippingViewComponent))
                         </div>
                     </div>
@@ -230,7 +234,7 @@
                     @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
                 </div>
             }
-            <div class="buttons checkout-attribute">
+            <div class="buttons checkout-attribute" hidden>
                 @if (Model.IsEditable)
                 {
                     @await Html.PartialAsync("_CheckoutAttributes", Model)
