@@ -23,11 +23,26 @@ namespace Nop.Services.Configuration
         Task<Setting> GetSettingByIdAsync(int settingId);
 
         /// <summary>
+        /// Gets a setting by identifier
+        /// </summary>
+        /// <param name="settingId">Setting identifier</param>
+        /// <returns>
+        /// The setting
+        /// </returns>
+        Setting GetSettingById(int settingId);
+
+        /// <summary>
         /// Deletes a setting
         /// </summary>
         /// <param name="setting">Setting</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteSettingAsync(Setting setting);
+
+        /// <summary>
+        /// Deletes a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        void DeleteSetting(Setting setting);
 
         /// <summary>
         /// Deletes settings
@@ -49,6 +64,17 @@ namespace Nop.Services.Configuration
         Task<Setting> GetSettingAsync(string key, int storeId = 0, bool loadSharedValueIfNotFound = false);
 
         /// <summary>
+        /// Get setting by key
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
+        /// <returns>
+        /// The setting
+        /// </returns>
+        Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false);
+
+        /// <summary>
         /// Get setting value by key
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -64,6 +90,20 @@ namespace Nop.Services.Configuration
             int storeId = 0, bool loadSharedValueIfNotFound = false);
 
         /// <summary>
+        /// Get setting value by key
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">Key</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
+        /// <returns>
+        /// Setting value
+        /// </returns>
+        T GetSettingByKey<T>(string key, T defaultValue = default,
+            int storeId = 0, bool loadSharedValueIfNotFound = false);
+
+        /// <summary>
         /// Set setting value
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -75,6 +115,16 @@ namespace Nop.Services.Configuration
         Task SetSettingAsync<T>(string key, T value, int storeId = 0, bool clearCache = true);
 
         /// <summary>
+        /// Set setting value
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true);
+
+        /// <summary>
         /// Gets all settings
         /// </summary>
         /// <returns>
@@ -82,6 +132,14 @@ namespace Nop.Services.Configuration
         /// The task result contains the settings
         /// </returns>
         Task<IList<Setting>> GetAllSettingsAsync();
+
+        /// <summary>
+        /// Gets all settings
+        /// </summary>
+        /// <returns>
+        /// Settings
+        /// </returns>
+        IList<Setting> GetAllSettings();
 
         /// <summary>
         /// Determines whether a setting exists
@@ -93,9 +151,24 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue -setting exists; false - does not exist
+        /// The task result contains the true -setting exists; false - does not exist
         /// </returns>
         Task<bool> SettingExistsAsync<T, TPropType>(T settings,
+            Expression<Func<T, TPropType>> keySelector, int storeId = 0)
+            where T : ISettings, new();
+
+        /// <summary>
+        /// Determines whether a setting exists
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="settings">Settings</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>
+        /// The true -setting exists; false - does not exist
+        /// </returns>
+        bool SettingExists<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector, int storeId = 0)
             where T : ISettings, new();
 
@@ -110,10 +183,26 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Load settings
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
+        /// <returns>Settings</returns>
+        T LoadSetting<T>(int storeId = 0) where T : ISettings, new();
+
+        /// <summary>
+        /// Load settings
+        /// </summary>
         /// <param name="type">Type</param>
         /// <param name="storeId">Store identifier for which settings should be loaded</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task<ISettings> LoadSettingAsync(Type type, int storeId = 0);
+
+        /// <summary>
+        /// Load settings
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
+        /// <returns>Settings</returns>
+        ISettings LoadSetting(Type type, int storeId = 0);
 
         /// <summary>
         /// Save settings object
@@ -127,6 +216,14 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Save settings object
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="settings">Setting instance</param>
+        void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new();
+
+        /// <summary>
+        /// Save settings object
+        /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="settings">Settings</param>
@@ -135,6 +232,19 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task SaveSettingAsync<T, TPropType>(T settings,
+            Expression<Func<T, TPropType>> keySelector,
+            int storeId = 0, bool clearCache = true) where T : ISettings, new();
+
+        /// <summary>
+        /// Save settings object
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="settings">Settings</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="storeId">Store ID</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
             int storeId = 0, bool clearCache = true) where T : ISettings, new();
 
@@ -152,6 +262,36 @@ namespace Nop.Services.Configuration
         Task SaveSettingOverridablePerStoreAsync<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
             bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new();
+
+        /// <summary>
+        /// Adds a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertSettingAsync(Setting setting, bool clearCache = true);
+
+        /// <summary>
+        /// Adds a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void InsertSetting(Setting setting, bool clearCache = true);
+
+        /// <summary>
+        /// Updates a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateSettingAsync(Setting setting, bool clearCache = true);
+
+        /// <summary>
+        /// Updates a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void UpdateSetting(Setting setting, bool clearCache = true);
 
         /// <summary>
         /// Delete all settings
@@ -177,6 +317,11 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ClearCacheAsync();
+
+        /// <summary>
+        /// Clear cache
+        /// </summary>
+        void ClearCache();
 
         /// <summary>
         /// Get setting key (stored into database)

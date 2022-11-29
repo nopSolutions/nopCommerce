@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Collections.Generic;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Migrations.UpgradeTo460
 {
@@ -24,18 +22,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Migrations.UpgradeTo460
                 return;
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
+            var (languageId, _) = this.GetLanguageData();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.GoogleAnalytics.Instructions"] = "<p>Google Analytics is a free website stats tool from Google. It keeps track of statistics about the visitors and eCommerce conversion on your website.<br /><br />Follow the next steps to enable Google Analytics integration:<br /><ul><li><a href=\"http://www.google.com/analytics/\" target=\"_blank\">Create a Google Analytics account</a> and follow the wizard to add your website</li><li>Copy the Tracking ID into the 'ID' box below</li><li>Click the 'Save' button below and Google Analytics will be integrated into your store</li></ul><br /></p>"
 
-            }, languageId).Wait();
+            }, languageId);
         }
     }
 }

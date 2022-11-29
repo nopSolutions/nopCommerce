@@ -37,10 +37,10 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
                 return;
             
             //settings
-            if (!_settingService.SettingExistsAsync(_ecbExchangeRateSettings, settings => settings.EcbLink).Result)
+            if (!_settingService.SettingExists(_ecbExchangeRateSettings, settings => settings.EcbLink))
                 _ecbExchangeRateSettings.EcbLink = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
 
-            _settingService.SaveSettingAsync(_ecbExchangeRateSettings).Wait();
+            _settingService.SaveSetting(_ecbExchangeRateSettings);
         }
 
         /// <summary>

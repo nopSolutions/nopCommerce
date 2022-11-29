@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
@@ -22,16 +20,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
+            var (languageId, languages) = this.GetLanguageData();
 
             #region Delete locales
 
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            localizationService.DeleteLocaleResources(new List<string>
             {
                 //#6102
                 "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
@@ -50,7 +43,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
-            }).Wait();
+            });
 
             #endregion
 
@@ -90,11 +83,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
                     if (lsr is not null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                        localizationService.UpdateLocaleStringResource(lsr);
                     }
                 }
             }
@@ -103,7 +96,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
             #region Add or update locales
 
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 //#3075
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName"] = "Allow customers to search with category name",
@@ -310,7 +303,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6411
                 ["Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"] = "The stock quantity has been reduced when an order item of the order #{0} became a ready for pickup by customer",
-            }, languageId).Wait();
+            }, languageId);
 
             #endregion
         }
