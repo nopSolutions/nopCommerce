@@ -1167,7 +1167,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.SenderEmail", giftCard.SenderEmail));
             tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
             tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
-            tokens.Add(new Token("GiftCard.Amount", await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false)));
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            tokens.Add(new Token("GiftCard.Amount", await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, primaryStoreCurrency.CurrencyCode, false, language.Id)));
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
