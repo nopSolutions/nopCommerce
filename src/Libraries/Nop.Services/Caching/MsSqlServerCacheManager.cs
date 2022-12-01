@@ -49,6 +49,24 @@ namespace Nop.Services.Caching
             }
         }
 
+        protected void PerformAction(SqlCommand command, params SqlParameter[] parameters)
+        {
+            var conn = new SqlConnection(_distributedCacheConfig.ConnectionString);
+            try
+            {
+                conn.Open();
+                command.Connection = conn;
+                if (parameters.Any())
+                    command.Parameters.AddRange(parameters);
+
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -70,6 +88,24 @@ namespace Nop.Services.Caching
             await PerformActionAsync(command, new SqlParameter("Prefix", SqlDbType.NVarChar) { Value = prefix });
 
             await RemoveByPrefixInstanceDataAsync(prefix);
+        }
+
+        /// <summary>
+        /// Remove items by cache key prefix
+        /// </summary>
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public override void RemoveByPrefix(string prefix, params object[] prefixParameters)
+        {
+            prefix = PrepareKeyPrefix(prefix, prefixParameters);
+
+            var command =
+                new SqlCommand(
+                    $"DELETE FROM {_distributedCacheConfig.SchemaName}.{_distributedCacheConfig.TableName} WHERE Id LIKE @Prefix + '%'");
+
+            PerformAction(command, new SqlParameter("Prefix", SqlDbType.NVarChar) { Value = prefix });
+
+            RemoveByPrefixInstanceData(prefix);
         }
 
         /// <summary>

@@ -123,8 +123,8 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.DateOfBirth = getAttributeValue(customerAttributes, nameof(Customer.DateOfBirth), castToDateTime);
                 }
 
-                _dataProvider.UpdateEntitiesAsync(customers);
-                _dataProvider.BulkDeleteEntitiesAsync(genericAttributes);
+                _dataProvider.UpdateEntities(customers);
+                _dataProvider.BulkDeleteEntities(genericAttributes);
             }
 
             //#3777 new activity log types
@@ -280,7 +280,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (paRange is not null)
             {
                 paRange.Name = "2 weeks";
-                _dataProvider.UpdateEntityAsync(paRange).Wait();
+                _dataProvider.UpdateEntity(paRange);
             }
         }
 

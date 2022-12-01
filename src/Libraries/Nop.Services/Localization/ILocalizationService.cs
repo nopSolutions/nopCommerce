@@ -47,6 +47,18 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true);
 
         /// <summary>
+        /// Gets a locale string resource
+        /// </summary>
+        /// <param name="resourceName">A string representing a resource name</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
+        /// <returns>
+        /// The locale string resource
+        /// </returns>
+        LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
+            bool logIfNotFound = true);
+
+        /// <summary>
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
@@ -59,6 +71,12 @@ namespace Nop.Services.Localization
         /// <param name="localeStringResource">Locale string resource</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateLocaleStringResourceAsync(LocaleStringResource localeStringResource);
+
+        /// <summary>
+        /// Updates the locale string resource
+        /// </summary>
+        /// <param name="localeStringResource">Locale string resource</param>
+        void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Gets all locale string resources by language identifier
@@ -222,6 +240,13 @@ namespace Nop.Services.Localization
         Task AddOrUpdateLocaleResourceAsync(IDictionary<string, string> resources, int? languageId = null);
 
         /// <summary>
+        /// Add locale resources
+        /// </summary>
+        /// <param name="resources">Resource name-value pairs</param>
+        /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
+        void AddOrUpdateLocaleResource(IDictionary<string, string> resources, int? languageId = null);
+
+        /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
@@ -235,6 +260,13 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteLocaleResourcesAsync(IList<string> resourceNames, int? languageId = null);
+
+        /// <summary>
+        /// Delete locale resources
+        /// </summary>
+        /// <param name="resourceNames">Resource names</param>
+        /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
+        void DeleteLocaleResources(IList<string> resourceNames, int? languageId = null);
 
         /// <summary>
         /// Delete locale resources by the passed name prefix

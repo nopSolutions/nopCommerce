@@ -74,7 +74,7 @@ namespace Nop.Services.Directory
             catch (Exception exc)
             {
                 //do not throw exceptions
-                _logger.WarningAsync("Cannot load MaxMind record", exc).Wait();
+                _logger.Warning("Cannot load MaxMind record", exc);
                 return null;
             }
         }
