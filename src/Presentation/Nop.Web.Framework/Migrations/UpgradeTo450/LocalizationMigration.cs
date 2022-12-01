@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
@@ -23,7 +21,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            localizationService.DeleteLocaleResources(new List<string>
             {
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps",
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint",
@@ -33,15 +31,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint",
                 //#5042
                 "Admin.Help.Topics"
-            }).Wait();
+            });
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
+            var (languageId, languages) = this.GetLanguageData();
 
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
@@ -180,7 +174,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
                 ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
                 ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
-            }, languageId).Wait();
+            }, languageId);
 
             // rename locales
             var localesToRename = new[]
@@ -196,11 +190,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             {
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
                     if (lsr != null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                        localizationService.UpdateLocaleStringResource(lsr);
                     }
                 }
             }
