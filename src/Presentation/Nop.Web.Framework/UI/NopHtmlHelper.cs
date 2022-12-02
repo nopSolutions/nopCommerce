@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,8 @@ namespace Nop.Web.Framework.UI
         private readonly HtmlEncoder _htmlEncoder;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAssetPipeline _assetPipeline;
+        private readonly ILocalizationService _localizationService;
+        private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly SeoSettings _seoSettings;
@@ -65,6 +68,8 @@ namespace Nop.Web.Framework.UI
             HtmlEncoder htmlEncoder,
             IActionContextAccessor actionContextAccessor,
             IAssetPipeline assetPipeline,
+            ILocalizationService localizationService,
+            IStoreContext storeContext,
             IUrlHelperFactory urlHelperFactory,
             IWebHostEnvironment webHostEnvironment,
             SeoSettings seoSettings)
@@ -72,7 +77,9 @@ namespace Nop.Web.Framework.UI
             _appSettings = appSettings;
             _htmlEncoder = htmlEncoder;
             _actionContextAccessor = actionContextAccessor;
+            _localizationService = localizationService;
             _assetPipeline = assetPipeline;
+            _storeContext = storeContext;
             _urlHelperFactory = urlHelperFactory;
             _webHostEnvironment = webHostEnvironment;
             _seoSettings = seoSettings;
@@ -192,16 +199,19 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Insert(0, part);
         }
-
+        
         /// <summary>
         /// Generate all title parts
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated HTML string</returns>
-        public virtual IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "")
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        public virtual async Task<IHtmlContent> GenerateTitleAsync(bool addDefaultTitle = true, string part = "")
         {
             AppendTitleParts(part);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var defaultTitle = await _localizationService.GetLocalizedAsync(store, s => s.DefaultTitle);
 
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             string result;
@@ -213,13 +223,13 @@ namespace Nop.Web.Framework.UI
                     {
                         case PageTitleSeoAdjustment.PagenameAfterStorename:
                             {
-                                result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
+                                result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
                             }
                             break;
                         case PageTitleSeoAdjustment.StorenameAfterPagename:
                         default:
                             {
-                                result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
+                                result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
                             }
                             break;
                     }
@@ -229,9 +239,9 @@ namespace Nop.Web.Framework.UI
             }
             else
                 //store name only
-                result = _seoSettings.DefaultTitle;
+                result = defaultTitle;
 
-            return new HtmlString(_htmlEncoder.Encode(result));
+            return new HtmlString(_htmlEncoder.Encode(result ?? string.Empty));
         }
 
         /// <summary>
@@ -262,15 +272,19 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated HTML string</returns>
-        public virtual IHtmlContent GenerateMetaDescription(string part = "")
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        public virtual async Task<IHtmlContent> GenerateMetaDescriptionAsync(string part = "")
         {
             AppendMetaDescriptionParts(part);
 
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
-            var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
+            var result = !string.IsNullOrEmpty(metaDescription)
+                ? metaDescription
+                : await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
+                    s => s.DefaultMetaDescription);
 
-            return new HtmlString(_htmlEncoder.Encode(result));
+            return new HtmlString(_htmlEncoder.Encode(result ?? string.Empty));
         }
 
         /// <summary>
@@ -301,15 +315,19 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated HTML string</returns>
-        public virtual IHtmlContent GenerateMetaKeywords(string part = "")
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        public virtual async Task<IHtmlContent> GenerateMetaKeywordsAsync(string part = "")
         {
             AppendMetaKeywordParts(part);
 
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
-            var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
+            var result = !string.IsNullOrEmpty(metaKeyword)
+                ? metaKeyword
+                : await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
+                    s => s.DefaultMetaKeywords);
 
-            return new HtmlString(_htmlEncoder.Encode(result));
+            return new HtmlString(_htmlEncoder.Encode(result ?? string.Empty));
         }
 
         /// <summary>

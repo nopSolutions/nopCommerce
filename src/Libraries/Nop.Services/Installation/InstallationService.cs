@@ -308,6 +308,11 @@ namespace Nop.Services.Installation
                 new Store
                 {
                     Name = "Your store name",
+                    DefaultTitle = "Your store",
+                    DefaultMetaKeywords = string.Empty,
+                    DefaultMetaDescription = string.Empty,
+                    HomepageTitle = "Home page title",
+                    HomepageDescription = "Home page description",
                     Url = storeUrl,
                     SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
@@ -2812,11 +2817,6 @@ namespace Nop.Services.Installation
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
-                HomepageTitle = "Home page title",
-                HomepageDescription = "Home page description",
-                DefaultTitle = "Your store",
-                DefaultMetaKeywords = string.Empty,
-                DefaultMetaDescription = string.Empty,
                 GenerateProductMetaDescription = true,
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,

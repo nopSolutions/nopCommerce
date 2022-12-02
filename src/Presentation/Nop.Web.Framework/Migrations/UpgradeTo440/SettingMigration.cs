@@ -63,19 +63,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                     seoSettings.ReservedUrlRecordSlugs.Add(slug);
             }
             settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
-
+            
             //#3015
-            if (!settingService.SettingExists(seoSettings, settings => settings.HomepageTitle))
-            {
-                seoSettings.HomepageTitle = seoSettings.DefaultTitle;
-                settingService.SaveSetting(seoSettings, settings => settings.HomepageTitle);
-            }
+            var homepageTitleKey = $"{nameof(SeoSettings)}.HomepageTitle".ToLower();
+            if (settingService.GetSettingByKey<string>(homepageTitleKey) == null) 
+                settingService.SetSetting(homepageTitleKey, settingService.GetSettingByKey<string>($"{nameof(SeoSettings)}.DefaultTitle"));
 
-            if (!settingService.SettingExists(seoSettings, settings => settings.HomepageDescription))
-            {
-                seoSettings.HomepageDescription = "Your home page description";
-                settingService.SaveSetting(seoSettings, settings => settings.HomepageDescription);
-            }
+            var homepageDescriptionKey = $"{nameof(SeoSettings)}.HomepageDescription".ToLower();
+            if (settingService.GetSettingByKey<string>(homepageDescriptionKey) == null) 
+                settingService.SetSetting(homepageDescriptionKey, "Your home page description");
 
             //#5210
             var adminAreaSettings = settingService.LoadSetting<AdminAreaSettings>();

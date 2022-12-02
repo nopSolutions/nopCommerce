@@ -2,20 +2,24 @@
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
+using Nop.Services.Stores;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-08 00:00:00", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopMigration("2022-12-01 14:00:03", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -331,6 +335,48 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails = false;
                 settingService.SaveSetting(messagesSettings, settings => settings.UseDefaultEmailAccountForSendStoreOwnerEmails);
             }
+
+            //#43
+            var metaTitleKey = $"{nameof(SeoSettings)}.DefaultTitle".ToLower();
+            var metaKeywordsKey = $"{nameof(SeoSettings)}.DefaultMetaKeywords".ToLower();
+            var metaDescriptionKey = $"{nameof(SeoSettings)}.DefaultMetaDescription".ToLower();
+            var homepageTitleKey = $"{nameof(SeoSettings)}.HomepageTitle".ToLower();
+            var homepageDescriptionKey = $"{nameof(SeoSettings)}.HomepageDescription".ToLower();
+
+            var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
+            var storeService = EngineContext.Current.Resolve<IStoreService>();
+
+            foreach (var store in storeService.GetAllStores())
+            {
+                var metaTitle = settingService.GetSettingByKey<string>(metaTitleKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(metaTitleKey);
+                var metaKeywords = settingService.GetSettingByKey<string>(metaKeywordsKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(metaKeywordsKey);
+                var metaDescription = settingService.GetSettingByKey<string>(metaDescriptionKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(metaDescriptionKey);
+                var homepageTitle = settingService.GetSettingByKey<string>(homepageTitleKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(homepageTitleKey);
+                var homepageDescription = settingService.GetSettingByKey<string>(homepageDescriptionKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(homepageDescriptionKey);
+
+                if (metaTitle != null) 
+                    store.DefaultTitle = metaTitle;
+
+                if (metaKeywords != null) 
+                    store.DefaultMetaKeywords = metaKeywords;
+
+                if (metaDescription != null) 
+                    store.DefaultMetaDescription = metaDescription;
+
+                if (homepageTitle != null)
+                    store.HomepageTitle = homepageTitle;
+
+                if (homepageDescription != null)
+                    store.HomepageDescription = homepageDescription;
+
+                storeService.UpdateStore(store);
+            }
+
+            settingRepository.Delete(setting => setting.Name == metaTitleKey);
+            settingRepository.Delete(setting => setting.Name == metaKeywordsKey);
+            settingRepository.Delete(setting => setting.Name == metaDescriptionKey);
+            settingRepository.Delete(setting => setting.Name == homepageTitleKey);
+            settingRepository.Delete(setting => setting.Name == homepageDescriptionKey);
         }
 
         public override void Down()
