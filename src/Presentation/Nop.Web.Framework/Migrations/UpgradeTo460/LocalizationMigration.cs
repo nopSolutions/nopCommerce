@@ -43,6 +43,58 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
+
+				//4622
+                "PDFInvoice.OrderDate",
+                "PDFInvoice.Company",
+                "PDFInvoice.Name",
+                "PDFInvoice.Phone",
+                "PDFInvoice.Fax",
+                "PDFInvoice.Address",
+                "PDFInvoice.Address2",
+                "PDFInvoice.VATNumber",
+                "PDFInvoice.PaymentMethod",
+                "PDFInvoice.ShippingMethod",
+                "PDFInvoice.BillingInformation",
+                "PDFInvoice.ShippingInformation",
+                "PDFInvoice.OrderNotes",
+                "PDFInvoice.OrderNotes.CreatedOn",
+                "PDFInvoice.OrderNotes.Note",
+                "PDFPackagingSlip.Shipment",
+                "PDFInvoice.Order#",
+                "PDFInvoice.ProductName",
+                "PDFInvoice.ProductPrice",
+                "PDFInvoice.ProductQuantity",
+                "PDFInvoice.ProductTotal",
+                "PDFInvoice.Discount",
+                "PDFInvoice.Sub-Total",
+                "PDFInvoice.Shipping",
+                "PDFInvoice.OrderTotal",
+                "PDFInvoice.PaymentMethodAdditionalFee",
+                "PDFInvoice.Pickup",
+                "PDFInvoice.Product(s)",
+                "PDFInvoice.SKU",
+                "PDFInvoice.Tax",
+                "PDFInvoice.TaxRate",
+                "PDFInvoice.RewardPoints",
+                "PDFInvoice.GiftCardInfo",
+
+                "PDFPackagingSlip.Address",
+                "PDFPackagingSlip.Address2",
+                "PDFPackagingSlip.Company",
+                "PDFPackagingSlip.Name",
+                "PDFPackagingSlip.Order",
+                "PDFPackagingSlip.Phone",
+                "PDFPackagingSlip.ProductName",
+                "PDFPackagingSlip.QTY",
+                "PDFPackagingSlip.Shipment",
+                "PDFPackagingSlip.ShippingMethod",
+                "PDFPackagingSlip.SKU",
+                "PDFProductCatalog.Price",
+                "PDFProductCatalog.SKU",
+                "PDFProductCatalog.StockQuantity",
+                "PDFProductCatalog.Weight",
+
             });
 
             #endregion
@@ -227,7 +279,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.Product"] = "/Product",
 
                 //#5261
-                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt"] ="robots.txt",
+                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt"] = "robots.txt",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"] = "You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules"] = "Additions rules",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint"] = "Put here an additional rules for robots.txt file",
@@ -246,7 +298,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage.Hint"] = "Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.",
 
                 ["Admin.Help.Training"] = "Training",
-                
+
                 //5607
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).",
                 ["Permission.Authentication.EnableMultiFactorAuthentication"] = "Security. Enable Multi-factor authentication",
@@ -292,7 +344,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //#6396
                 ["Admin.Catalog.Products.Fields.MinStockQuantity.Hint"] = "If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.",
                 ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you track inventory by product attributes, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
-                
                 //#6213
                 ["Admin.System.Maintenance.DeleteMinificationFiles"] = "Delete minification files",
                 ["Admin.System.Maintenance.DeleteMinificationFiles.Text"] = "Clear the bundles directory.",
@@ -303,6 +354,42 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6411
                 ["Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"] = "The stock quantity has been reduced when an order item of the order #{0} became a ready for pickup by customer",
+
+                //4622
+                ["Pdf.OrderDate"] = "Date",
+                ["Pdf.Address.Company"] = "Company",
+                ["Pdf.Address.Name"] = "Name",
+                ["Pdf.Address.Phone"] = "Phone",
+                ["Pdf.Address.Fax"] = "Fax",
+                ["Pdf.Address"] = "Address",
+                ["Pdf.Address2"] = "Address 2",
+                ["Pdf.Address.VATNumber"] = "VAT number",
+                ["Pdf.BillingInformation"] = "Billing Information",
+                ["Pdf.ShippingInformation"] = "Shipping Information",
+                ["Pdf.OrderNotes"] = "Order notes",
+                ["Pdf.Address.PaymentMethod"] = "Payment method",
+                ["Pdf.Address.ShippingMethod"] = "Shipping method",
+                ["Pdf.Shipment"] = "Shipment",
+                ["Pdf.Order"] = "Order",
+                ["Pdf.Product.Name"] = "Name",
+                ["Pdf.Product.Sku"] = "SKU",
+                ["Pdf.Product.VendorName"] = "Vendor name",
+                ["Pdf.Product.Price"] = "Price",
+                ["Pdf.Product.Quantity"] = "Qty",
+                ["Pdf.Product.Total"] = "Total",
+                ["Pdf.Shipping"] = "Shipping",
+                ["Pdf.SubTotal"] = "Sub-total",
+                ["Pdf.Discount"] = "Discount",
+                ["Pdf.OrderTotal"] = "Order total",
+                ["Pdf.PaymentMethodAdditionalFee"] = "Payment Method Additional Fee",
+                ["Pdf.PickupPoint"] = "Pickup point",
+                ["Pdf.Tax"] = "Tax",
+                ["Pdf.TaxRate"] = "Tax {0}%",
+                ["Pdf.RewardPoints"] = "{0} reward points",
+                ["Pdf.GiftCardInfo"] = "Gift card ({0})",
+                ["Pdf.Product.StockQuantity"] = "Stock quantity",
+                ["Pdf.Product.Weight"] = "Weight",
+
             }, languageId);
 
             #endregion

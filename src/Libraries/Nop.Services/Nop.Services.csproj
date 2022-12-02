@@ -16,9 +16,9 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.13.1" />
     <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.1.0" />
+    <PackageReference Include="QuestPDF" Version="2022.11.0" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.9.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
