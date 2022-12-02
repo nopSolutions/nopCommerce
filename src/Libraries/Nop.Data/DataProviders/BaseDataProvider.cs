@@ -36,17 +36,6 @@ namespace Nop.Data.DataProviders
         #region Utils
 
         /// <summary>
-        /// Gets an additional mapping schema
-        /// </summary>
-        private MappingSchema GetMappingSchema()
-        {
-            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
-            {
-                MetadataReader = new FluentMigratorMetadataReader(this)
-            };
-        }
-
-        /// <summary>
         /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
@@ -238,6 +227,17 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Get or create mapping schema with specified configuration name (<see cref="ConfigurationName"/>) and base mapping schema
+        /// </summary>
+        public MappingSchema GetMappingSchema()
+        {
+            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
+            {
+                MetadataReader = new FluentMigratorMetadataReader(this)
+            };
+        }
+
+        /// <summary>
         /// Returns queryable source for specified mapping class for current connection,
         /// mapped to database table or view.
         /// </summary>
@@ -246,10 +246,10 @@ namespace Nop.Data.DataProviders
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
             return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
-                {
-                    MappingSchema = GetMappingSchema(),
-                    CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-                }
+            {
+                MappingSchema = GetMappingSchema(),
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+            }
                 .GetTable<TEntity>();
         }
 

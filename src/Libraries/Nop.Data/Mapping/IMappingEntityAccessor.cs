@@ -1,4 +1,5 @@
 using System;
+using LinqToDB.Mapping;
 
 namespace Nop.Data.Mapping
 {
@@ -13,5 +14,10 @@ namespace Nop.Data.Mapping
         /// <param name="entityType">Type of entity</param>
         /// <returns>Mapped entity descriptor</returns>
         NopEntityDescriptor GetEntityDescriptor(Type entityType);
+
+        /// <summary>
+        /// Get or create mapping schema with specified configuration name (<see cref="ConfigurationName"/>) and base mapping schema
+        /// </summary>
+        MappingSchema GetMappingSchema();
     }
 }
