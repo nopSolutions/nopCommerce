@@ -21,6 +21,8 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using SevenSpikes.Nop.Plugins.HtmlWidgets.Domain;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Tasks;
+using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Misc.AbcCore
 {
@@ -28,6 +30,10 @@ namespace Nop.Plugin.Misc.AbcCore
         IConsumer<EntityDeletedEvent<ProductPicture>>,
         IConsumer<EntityUpdatedEvent<HtmlWidget>>
     {
+        private readonly string TaskType =
+            $"{typeof(UpdateProductTagsTask).Namespace}.{typeof(UpdateProductTagsTask).Name}, " +
+            $"{typeof(UpdateProductTagsTask).Assembly.GetName().Name}";
+
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -35,6 +41,7 @@ namespace Nop.Plugin.Misc.AbcCore
         private readonly INopFileProvider _nopFileProvider;
         private readonly IPictureService _pictureService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
+        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IStaticCacheManager _cacheManager;
 
@@ -46,6 +53,7 @@ namespace Nop.Plugin.Misc.AbcCore
             INopFileProvider nopFileProvider,
             IPictureService pictureService,
             IProductAbcDescriptionService productAbcDescriptionService,
+            IScheduleTaskService scheduleTaskService,
             IWebHostEnvironment webHostEnvironment,
             IStaticCacheManager cacheManager
         )
@@ -57,6 +65,7 @@ namespace Nop.Plugin.Misc.AbcCore
             _nopFileProvider = nopFileProvider;
             _pictureService = pictureService;
             _productAbcDescriptionService = productAbcDescriptionService;
+            _scheduleTaskService = scheduleTaskService;
             _webHostEnvironment = webHostEnvironment;
             _cacheManager = cacheManager;
         }
@@ -89,7 +98,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock, AdminWidgetZones.HeaderBefore });
+            return System.Threading.Tasks.Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock, AdminWidgetZones.HeaderBefore });
         }
 
         public string GetWidgetViewComponentName(string widgetZone)
@@ -104,34 +113,61 @@ namespace Nop.Plugin.Misc.AbcCore
             return $"{_webHelper.GetStoreLocation()}Admin/AbcCore/Configure";
         }
 
-        public override async Task InstallAsync()
+        public override async System.Threading.Tasks.Task InstallAsync()
         {
             await InstallStoredProcs();
             await UpdateLocales();
+            await AddTasksAsync();
 
             await base.InstallAsync();
         }
 
-        public override async Task UninstallAsync()
+        public override async System.Threading.Tasks.Task UninstallAsync()
         {
             await _localizationService.DeleteLocaleResourcesAsync(CoreLocales.Base);
             await DeleteStoredProcs();
+            await RemoveTasksAsync();
 
             await base.UninstallAsync();
         }
 
-        public override async Task UpdateAsync(string oldVersion, string currentVersion)
+        public override async System.Threading.Tasks.Task UpdateAsync(string oldVersion, string currentVersion)
         {
             await InstallStoredProcs();
             await UpdateLocales();
+            await AddTasksAsync();
         }
 
-        private async Task DeleteStoredProcs()
+        private async System.Threading.Tasks.Task AddTasksAsync()
+        {
+            // Clear all previous instances first
+            await RemoveTasksAsync();
+            
+            ScheduleTask task = new ScheduleTask();
+            task.Name = $"Update Product Tags with ABC Item Number";
+            task.Seconds = 14400;
+            task.Type = TaskType;
+            task.Enabled = false;
+            task.StopOnError = false;
+
+            await _scheduleTaskService.InsertTaskAsync(task);
+        }
+
+        private async System.Threading.Tasks.Task RemoveTasksAsync()
+        {
+            var task = await _scheduleTaskService.GetTaskByTypeAsync(TaskType);
+            if (task != null)
+            {
+                await _scheduleTaskService.DeleteTaskAsync(task);
+            }
+        }
+
+        private async System.Threading.Tasks.Task DeleteStoredProcs()
         {
             await _nopDataProvider.ExecuteNonQueryAsync("DROP PROCEDURE IF EXISTS dbo.UpdateAbcPromos");
         }
 
-        private async Task InstallStoredProcs()
+        private async System.Threading.Tasks.Task InstallStoredProcs()
         {
             await DeleteStoredProcs();
             string updateAbcPromosStoredProcScript = File.ReadAllText(
@@ -140,7 +176,7 @@ namespace Nop.Plugin.Misc.AbcCore
             await _nopDataProvider.ExecuteNonQueryAsync(updateAbcPromosStoredProcScript);
         }
 
-        private async Task UpdateLocales()
+        private async System.Threading.Tasks.Task UpdateLocales()
         {
             await _localizationService.AddLocaleResourceAsync(
                 new Dictionary<string, string>
@@ -158,14 +194,16 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.MobilePhoneNumber] = "Mobile Phone Header",
                     [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header.",
                     [CoreLocales.GoogleMapsGeocodingAPIKey] = "Google Maps Geocoding API Key",
-                    [CoreLocales.GoogleMapsGeocodingAPIKeyHint] = "API key for handling geocoding services, including delivery options/pickup in store."
+                    [CoreLocales.GoogleMapsGeocodingAPIKeyHint] = "API key for handling geocoding services, including delivery options/pickup in store.",
+                    [CoreLocales.IsPickupOnlyMode] = "Pickup Only Mode",
+                    [CoreLocales.IsPickupOnlyModeHint] = "Turns on pick-up only mode."
                 }
             );
         }
 
-        public Task ManageSiteMapAsync(SiteMapNode rootNode)
+        public System.Threading.Tasks.Task ManageSiteMapAsync(SiteMapNode rootNode)
         {
-            return Task.Run(() => 
+            return System.Threading.Tasks.Task.Run(() => 
             {
                 var rootMenuItem = new SiteMapNode()
                 {

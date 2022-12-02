@@ -21,7 +21,7 @@ namespace Nop.Plugin.Misc.AbcCore
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAbcDescription> _productAbcRepository;
         private readonly IPictureService _pictureService;
-        private readonly ICustomProductService _customProductService;
+        private readonly IAbcProductService _customProductService;
 
         private static class ProductTable
         {
@@ -35,7 +35,7 @@ namespace Nop.Plugin.Misc.AbcCore
             IRepository<Product> productRepository,
             IRepository<ProductAbcDescription> productAbcRepository,
             IPictureService pictureService,
-            ICustomProductService customProductService
+            IAbcProductService customProductService
         )
         {
             _productRepository = productRepository;

@@ -42,6 +42,7 @@
     <None Remove="Images\BackButtonHAWclearance.png" />
     <None Remove="Images\clearance_banner.png" />
     <None Remove="Images\ClearanceTagButton.png" />
+    <None Remove="Images\CreditIcon.png" />
     <None Remove="Images\Default.png" />
     <None Remove="Images\deferredPricing.PNG" />
     <None Remove="Images\HawthHome.png" />
@@ -135,6 +136,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ClearanceTagButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CreditIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Default.png">

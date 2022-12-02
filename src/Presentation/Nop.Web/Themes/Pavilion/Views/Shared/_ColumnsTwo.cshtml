@@ -111,11 +111,14 @@
         {
             @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
         }
-
+        
+        @*
+        ABC: Hiding since we use product tags for InstantSearch
         if (!isPopularTagsPage)
         {
             @await Component.InvokeAsync("PopularProductTags")
         }
+        *@
 
         @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })

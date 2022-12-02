@@ -18,6 +18,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Orders
 {
@@ -51,6 +52,8 @@ namespace Nop.Services.Orders
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
 
+        private readonly ILogger _logger;
+
         #endregion
 
         #region Ctor
@@ -76,7 +79,8 @@ namespace Nop.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ILogger logger)
         {
             _catalogSettings = catalogSettings;
             _addressService = addressService;
@@ -100,6 +104,7 @@ namespace Nop.Services.Orders
             _shippingSettings = shippingSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _taxSettings = taxSettings;
+            _logger = logger;
         }
 
         #endregion

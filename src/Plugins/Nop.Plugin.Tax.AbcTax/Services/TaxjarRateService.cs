@@ -47,6 +47,8 @@ namespace Nop.Plugin.Tax.AbcTax.Services
             return await _staticCacheManager.GetAsync(cacheKey, () =>
             {
                 var taxjarApi = new TaxjarApi(_abcTaxSettings.TaxJarAPIToken);
+                // Look into the following for providing From information
+                // https://github.com/taxjar/taxjar.net#calculate-sales-tax-for-an-order-api-docs
                 var rates = taxjarApi.RatesForLocation(zip, new {
                     street = street,
                     city = city,

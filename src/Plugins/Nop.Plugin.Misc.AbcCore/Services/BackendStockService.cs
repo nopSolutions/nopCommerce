@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Nop.Services.Stores;
 
 namespace Nop.Plugin.Misc.AbcCore.Services
 {
@@ -42,6 +43,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
         private IRepository<ProductAbcDescription> _backendIdRepository;
         private CoreSettings _settings;
         private ILogger _logger;
+        private IStoreService _storeService;
 
         public BackendStockService(IShopService shopService,
             IProductService productService,
@@ -49,7 +51,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             IRepository<ShopAbc> shopAbcRepository,
             IRepository<ProductAbcDescription> backendIdRepository,
             ILogger logger,
-            CoreSettings settings)
+            CoreSettings settings,
+            IStoreService storeService)
         {
             _shopService = shopService;
             _productService = productService;
@@ -58,6 +61,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             _backendIdRepository = backendIdRepository;
             _logger = logger;
             _settings = settings;
+            _storeService = storeService;
         }
 
         public async Task<Dictionary<int, int>> GetStockAsync(int productId)
@@ -142,7 +146,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             }
 
             // call backend service
-            string xmlRequestString = BuildXmlRequestString(backendId);
+            string xmlRequestString = await BuildXmlRequestStringAsync(backendId);
             using (var client = new HttpClient())
             {
                 StringContent content = new StringContent(xmlRequestString, Encoding.UTF8, "text/xml");
@@ -270,11 +274,15 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             }
             return false;
         }
-        private string BuildXmlRequestString(string backendId)
+        private async Task<string> BuildXmlRequestStringAsync(string backendId)
         {
+            // Mickey Shorr needs a specific code. ABC/Haw doesn't need it, so A is default.
+            var company = (await _storeService.GetAllStoresAsync()).Any(s => s.Name.ToLower().Contains("mickey")) ? "S" : "A";
+
             XElement xml = new XElement("Request",
                 new XElement("InventoryPickup",
-                    new XElement("ItemNumber", backendId)
+                    new XElement("ItemNumber", backendId),
+                    new XElement("Company", company)
                 )
             );
             return xml.ToString();

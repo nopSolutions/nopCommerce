@@ -92,5 +92,18 @@
     @await Component.InvokeAsync("Footer")
 </div>
 
+@* ABC: move the search box if required  *@
+<script>
+    $(document).ready(function() {
+        const isMobile = window.innerWidth <= 1000;
+
+        if (isMobile) {
+            $("#small-search-box-form").appendTo(".mobile-header-content-row");
+        } else {
+            $("#small-search-box-form").appendTo(".store-search-box");
+        }
+    });
+</script>
+
 @await Component.InvokeAsync("EuCookieLaw")
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })

@@ -43,7 +43,6 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
         private readonly PickupInStoreSettings _pickupInStoreSettings;
         private readonly StoreLocatorSettings _storeLocatorSettings;
 
-
         public AbcPickupInStoreViewComponent(
             ILogger logger,
             IStoreContext storeContext,

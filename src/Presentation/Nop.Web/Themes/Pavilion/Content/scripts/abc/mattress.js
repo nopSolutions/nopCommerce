@@ -124,8 +124,6 @@ function updateSizeUrl(selectedSize) {
   url.searchParams.delete("base");
   window.history.replaceState({}, '', url);
   ResetOtherDropdowns();
-
-  updateFinancing();
 }
 
 function getElementsByXPath(xpath) {
@@ -146,7 +144,9 @@ function ResetOtherDropdowns() {
   // Change the values and kick off change events
   matchingElements.forEach(element => {
       element.parentNode.value = element.value;
-      element.parentNode.dispatchEvent(new Event('change'));
+      // TODO: Delete after 2022.07.15
+      // this was calling change events, I don't think it's necessary
+      // element.parentNode.dispatchEvent(new Event('change'));
   });
 }
 
@@ -163,15 +163,6 @@ function updateBaseUrl(selectedBase) {
   url.searchParams.set(key, convertBaseToSlug(selectedBase));
   
   window.history.replaceState({}, '', url);
-}
-
-function updateFinancing() {
-  // var financingText = document.getElementsByClassName('synchrony-payment-detail')[0];
-  // financingText.style.display = "block";
-
-  // // now change values in the modal to make sense
-  // var minFullPrice = document.getElementsByClassName('min-payment-full-price')[0];
-  // minFullPrice.text = "$999";
 }
 
 // Adds event listeners to changes for sizes and bases

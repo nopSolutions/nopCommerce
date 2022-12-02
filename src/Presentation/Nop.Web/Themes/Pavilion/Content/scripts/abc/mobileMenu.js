@@ -12,7 +12,7 @@ var closeButton = $(".header-menu .close-menu");
 
 var index = 0;
 var heightArray = new Array();
-var imageArray = new Array('Default.png', 'HomeButton.png', 'LocationsButton.png', 'ClearanceTagButton.png', 'SaleAdButton.png', 'HawthStore.png', 'HawthWeeklyAD.png', 'HawthHome.png', 'BackButtonABCclearance.png', 'BackButtonHAWclearance.png');
+var imageArray = new Array('Default.png', 'HomeButton.png', 'LocationsButton.png', 'ClearanceTagButton.png', 'SaleAdButton.png', 'HawthStore.png', 'HawthWeeklyAD.png', 'HawthHome.png', 'BackButtonABCclearance.png', 'BackButtonHAWclearance.png', 'CreditIcon.png');
 var element;
 var elementArray = new Array();
 var categoryArray = new Array();
@@ -178,6 +178,9 @@ function menuSetting() {
         } else if (str == "Store Locations") {
             img = isAbc ? imageArray[2] : imageArray[5];
             path = 'url(/Plugins/Misc.AbcFrontend/Images/' + img + ')';
+        } else if (str == "Financing") {
+            img = imageArray[10];
+            path = 'url(/Plugins/Misc.AbcFrontend/Images/' + img + ')';
         } else if (str == "Weekly Ad") {
             path = 'url(/Plugins/Misc.AbcFrontend/Images/' + imageArray[6] + ')';
         } else if (str.indexOf("Back") !== -1) {
@@ -191,6 +194,23 @@ function menuSetting() {
     }
     $(menu_array[len]).append("<div class='phone-line'></div>");
     $(menu_array[len]).find('span').css('line-height', '0px');
+
+    // hardcode for Mickey, since the menu items don't match
+    if (window.location.href.indexOf("mickeyshorr.com") > -1) {
+        $(menu_array[0]).css('width', "33.3%");
+        $(menu_array[0]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/LocationsButton.png')");
+        $(menu_array[0]).find('a').attr("href", '/AllShops')
+        $(menu_array[0]).find('a').find('span').text('Locations')
+        $(menu_array[1]).css('width', "33.3%");
+        $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/HawthWeeklyAD.png')");
+        $(menu_array[1]).find('a').attr("href", '/sale-ad-3')
+        $(menu_array[1]).find('a').find('span').text('Sale Ad')
+        $(menu_array[2]).css('width', "33.3%");
+        $(menu_array[2]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/CreditIcon.png')");
+        $(menu_array[2]).find('a').attr("href", '/special-financing-options-2')
+        $(menu_array[2]).find('a').find('span').text('Financing')
+        $(menu_array[3]).remove();
+    }
 }
 
 function removeNonLeafLinks() {

@@ -17,6 +17,16 @@
 .abc-cart-attribute-info__section {
     margin-bottom: 1rem;
 }
+/* InstantSearch changes */
+
+@media (max-width: 1000px)
+{
+    div.instantSearch {
+        top: 100px !important;
+    }
+}
+
+/* end InstantSearch changes
 
 .header-middle {
     padding: 10px 0;

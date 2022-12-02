@@ -19,6 +19,7 @@
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Models.ShoppingCart
 @using Nop.Plugin.Misc.AbcCore.Infrastructure
+@using Nop.Services.Configuration
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
@@ -31,6 +32,7 @@
 @inject IRepository<Product> productRepository
 @inject IRepository<ProductAbcDescription> productAbcDescriptionRepository
 @inject IStoreContext storeContext
+@inject ISettingService settingService
 
 
 @* ABC: custom *@
@@ -44,6 +46,7 @@
                                     Model.Items.FirstOrDefault(i => i.Warnings.Contains("Please remove item from cart to continue.")) != null;
 
     Html.AddCssFileParts("~/Plugins/AbcWarehouse.HomeDeliveryStatusWidget/Content/loading.css");
+    var isPickupModeOnly = await settingService.GetSettingByKeyAsync<bool>("coresettings.ispickuponlymode");
 }
 <style>
    .spinner > div {

@@ -32,7 +32,9 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             }
             var mattressSizeIndex = oi.AttributeDescription.IndexOf("Mattress Size:");
             var mattressSizeString = oi.AttributeDescription.Substring(mattressSizeIndex);
-            mattressSizeString = mattressSizeString.Substring(14, mattressSizeString.IndexOf("<br />") - 14);
+            var nextBreakPointIndex = mattressSizeString.IndexOf("<br />") == -1 ? mattressSizeString.Length : mattressSizeString.IndexOf("<br />");
+
+            mattressSizeString = mattressSizeString.Substring(14, nextBreakPointIndex - 14);
             var sizeAdjustIndex = mattressSizeString.IndexOf("[");
             if (sizeAdjustIndex > 0)
             {
@@ -50,9 +52,15 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             }
             var baseIndex = oi.AttributeDescription.IndexOf("Base (");
             var baseString = oi.AttributeDescription.Substring(baseIndex);
-            baseString = baseString.Substring(6, baseString.IndexOf("<br />") - 6);
-            baseString = baseString.Substring(0, baseString.IndexOf("["));
-            baseString = baseString.Substring(baseString.IndexOf(":") + 1);
+
+            var nextBreakPointIndex = baseString.IndexOf("<br />") == -1 ? baseString.Length : baseString.IndexOf("<br />");
+            baseString = baseString.Substring(6, nextBreakPointIndex - 6);
+
+            nextBreakPointIndex = baseString.IndexOf("[") == -1 ? baseString.Length : baseString.IndexOf("[");
+            baseString = baseString.Substring(0, nextBreakPointIndex);
+
+            nextBreakPointIndex = baseString.IndexOf(":") == -1 ? baseString.Length : baseString.IndexOf(":");
+            baseString = baseString.Substring(nextBreakPointIndex + 1);
 
             return baseString.Replace("&quot;", "\"").Replace("&amp;", "&").Trim();
         }
@@ -65,7 +73,8 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             }
             var freeGiftIndex = oi.AttributeDescription.IndexOf("Free Gift:");
             var freeGiftString = oi.AttributeDescription.Substring(freeGiftIndex);
-            freeGiftString = freeGiftString.Substring(10, freeGiftString.IndexOf("<br />") - 10);
+            var nextBreakPointIndex = freeGiftString.IndexOf("<br />") == -1 ? freeGiftString.Length : freeGiftString.IndexOf("<br />");
+            freeGiftString = freeGiftString.Substring(10, nextBreakPointIndex - 10);
 
             return freeGiftString.Replace("&quot;", "\"")
                                  .Replace("&amp;", "&")
@@ -81,7 +90,9 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             }
             var protectorIndex = oi.AttributeDescription.IndexOf("Mattress Protector (");
             var protectorString = oi.AttributeDescription.Substring(protectorIndex);
-            protectorString = protectorString.Substring(20, protectorString.IndexOf("<br />") - 20);
+            var nextBreakPointIndex = protectorString.IndexOf("<br />") == -1 ? protectorString.Length : protectorString.IndexOf("<br />");
+
+            protectorString = protectorString.Substring(20, nextBreakPointIndex - 20);
             protectorString = protectorString.Substring(0, protectorString.IndexOf("["));
             protectorString = protectorString.Substring(protectorString.IndexOf(":") + 1);
 
@@ -94,13 +105,15 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             {
                 return null;
             }
-            var protectorIndex = oi.AttributeDescription.IndexOf("Frame (");
-            var protectorString = oi.AttributeDescription.Substring(protectorIndex);
-            protectorString = protectorString.Substring(7, protectorString.IndexOf("<br />") - 7);
-            protectorString = protectorString.Substring(0, protectorString.IndexOf("["));
-            protectorString = protectorString.Substring(protectorString.IndexOf(":") + 1);
+            var frameIndex = oi.AttributeDescription.IndexOf("Frame (");
+            var frameString = oi.AttributeDescription.Substring(frameIndex);
+            var nextBreakPointIndex = frameString.IndexOf("<br />") == -1 ? frameString.Length : frameString.IndexOf("<br />");
 
-            return protectorString.Replace("&quot;", "\"").Replace("&amp;", "&").Trim();
+            frameString = frameString.Substring(7, nextBreakPointIndex - 7);
+            frameString = frameString.Substring(0, frameString.IndexOf("["));
+            frameString = frameString.Substring(frameString.IndexOf(":") + 1);
+
+            return frameString.Replace("&quot;", "\"").Replace("&amp;", "&").Trim();
         }
 
         public static (List<OrderItem> pickupItems, List<OrderItem> shippingItems) SplitByPickupAndShipping(this IList<OrderItem> ois)

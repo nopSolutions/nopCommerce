@@ -181,4 +181,6 @@
   <WidgetZone>mega_menu_categories_before_dropdown_end_furniture</WidgetZone>
   <WidgetZone>mega_menu_categories_before_dropdown_end_mattresses</WidgetZone>
   <WidgetZone>promo_products_below_banner</WidgetZone>
+  <WidgetZone>topic_page_before_body</WidgetZone>
+  <WidgetZone>topic_page_after_body</WidgetZone>
 </SupportedWidgetZones>

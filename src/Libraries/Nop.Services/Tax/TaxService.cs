@@ -298,7 +298,9 @@ namespace Nop.Services.Tax
             //active tax provider
             var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
+            {
                 return (taxRate, true);
+            }
 
             //tax request
             var taxRateRequest = await PrepareTaxRateRequestAsync(product, taxCategoryId, customer, price);
@@ -331,6 +333,7 @@ namespace Nop.Services.Tax
             else if (_taxSettings.LogErrors)
                 foreach (var error in taxRateResult.Errors)
                     await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+
 
             return (taxRate, isTaxable);
         }

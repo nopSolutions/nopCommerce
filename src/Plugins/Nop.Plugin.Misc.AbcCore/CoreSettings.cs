@@ -13,6 +13,8 @@ namespace Nop.Plugin.Misc.AbcCore
         public string MobilePhoneNumber { get; private set; }
         public string GoogleMapsGeocodingAPIKey { get; private set; }
 
+        public bool IsPickupOnlyMode { get; private set; }
+
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(BackendDbConnectionString) &&
@@ -28,7 +30,8 @@ namespace Nop.Plugin.Misc.AbcCore
                 AreExternalCallsSkipped = model.AreExternalCallsSkipped,
                 IsDebugMode = model.IsDebugMode,
                 MobilePhoneNumber = model.MobilePhoneNumber,
-                GoogleMapsGeocodingAPIKey = model.GoogleMapsGeocodingAPIKey
+                GoogleMapsGeocodingAPIKey = model.GoogleMapsGeocodingAPIKey,
+                IsPickupOnlyMode = model.IsPickupOnlyMode
             };
         }
 
@@ -40,7 +43,8 @@ namespace Nop.Plugin.Misc.AbcCore
                 AreExternalCallsSkipped = AreExternalCallsSkipped,
                 IsDebugMode = IsDebugMode,
                 MobilePhoneNumber = MobilePhoneNumber,
-                GoogleMapsGeocodingAPIKey = GoogleMapsGeocodingAPIKey
+                GoogleMapsGeocodingAPIKey = GoogleMapsGeocodingAPIKey,
+                IsPickupOnlyMode = IsPickupOnlyMode
             };
         }
         public OdbcConnection GetBackendDbConnection()

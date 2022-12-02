@@ -33,5 +33,9 @@ namespace Nop.Plugin.Misc.AbcCore
             Base + "GoogleMapsGeocodingAPIKey";
         public const string GoogleMapsGeocodingAPIKeyHint =
             GoogleMapsGeocodingAPIKey + ".Hint";
+        public const string IsPickupOnlyMode =
+            Base + "IsPickupOnlyMode";
+        public const string IsPickupOnlyModeHint =
+            IsPickupOnlyMode + ".Hint";
     }
 }

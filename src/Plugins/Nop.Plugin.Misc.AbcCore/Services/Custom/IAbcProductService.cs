@@ -5,8 +5,10 @@ using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Misc.AbcCore.Services.Custom
 {
-    public interface ICustomProductService : IProductService
+    public interface IAbcProductService : IProductService
     {
+        Task<IList<Product>> GetAllPublishedProductsAsync();
+
         Task<IList<Product>> GetProductsWithoutImagesAsync();
     }
 }
