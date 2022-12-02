@@ -34,7 +34,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using WebMarkupMin.AspNetCore6;
+using WebMarkupMin.AspNetCore7;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
