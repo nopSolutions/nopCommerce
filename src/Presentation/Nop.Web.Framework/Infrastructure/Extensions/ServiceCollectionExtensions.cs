@@ -34,7 +34,7 @@ using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Framework.WebOptimizer;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore6;
+using WebMarkupMin.AspNetCore7;
 using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 
