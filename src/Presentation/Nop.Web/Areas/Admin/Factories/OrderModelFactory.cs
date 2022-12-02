@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -20,6 +21,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -81,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly ISettingService _settingService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -90,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopHttpClient _nopHttpClient;
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly IUrlRecordService _urlRecordService;
@@ -129,6 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IReturnRequestService returnRequestService,
             IRewardPointService rewardPointService,
+            ISettingService settingService,
             IShipmentService shipmentService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
@@ -138,6 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
+            NopHttpClient nopHttpClient,
             OrderSettings orderSettings,
             ShippingSettings shippingSettings,
             IUrlRecordService urlRecordService,
@@ -173,6 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _productService = productService;
             _returnRequestService = returnRequestService;
             _rewardPointService = rewardPointService;
+            _settingService = settingService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
@@ -182,6 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _vendorService = vendorService;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopHttpClient = nopHttpClient;
             _orderSettings = orderSettings;
             _shippingSettings = shippingSettings;
             _urlRecordService = urlRecordService;
@@ -924,6 +932,20 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
+
+            var licenseCheckModel = new LicenseCheckModel();
+            try
+            {
+                var result = await _nopHttpClient.GetLicenseCheckDetailsAsync();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    licenseCheckModel = JsonConvert.DeserializeObject<LicenseCheckModel>(result);
+                    if (licenseCheckModel.DisplayWarning == false && licenseCheckModel.BlockPages == false)
+                        await _settingService.SetSettingAsync($"{nameof(AdminAreaSettings)}.{nameof(AdminAreaSettings.CheckLicense)}", false);
+                }
+            }
+            catch { }
+            searchModel.LicenseCheckModel = licenseCheckModel;
 
             //prepare available order, payment and shipping statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);

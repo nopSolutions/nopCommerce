@@ -34,7 +34,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         public override void Up()
         {
             //#4601 customer attribute values to customer table column values
-            var attributeKeys = new [] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
+            var attributeKeys = new[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
                 nameof(Customer.TimeZoneId), nameof(Customer.CustomCustomerAttributesXML), nameof(Customer.CountryId),
@@ -46,7 +46,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var customerRole = _dataProvider.GetTable<CustomerRole>().FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
             var customerRoleId = customerRole?.Id ?? 0;
 
-            var query = 
+            var query =
                 from c in _dataProvider.GetTable<Customer>()
                 join crm in _dataProvider.GetTable<CustomerCustomerRoleMapping>() on c.Id equals crm.CustomerId
                 where !c.Deleted && (customerRoleId == 0 || crm.CustomerRoleId == customerRoleId)
@@ -258,6 +258,20 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         }
                     );
                 }
+            }
+
+            var lastEnabledUtc = DateTime.UtcNow;
+            if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                _dataProvider.InsertEntity(new ScheduleTask
+                {
+                    Name = "ResetLicenseCheckTask",
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                });
             }
 
             //#3651

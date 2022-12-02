@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 catalogSettings.DisplayAllPicturesOnCatalogPages = false;
                 settingService.SaveSetting(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages);
             }
-            
+
             //#3511
             var newProductsNumber = settingService.GetSetting("catalogsettings.newproductsnumber");
             if (newProductsNumber is not null && int.TryParse(newProductsNumber.Value, out var newProductsPageSize))
@@ -135,6 +135,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSetting(mediaSettings, settings => settings.OrderThumbPictureSize);
             }
 
+            var adminSettings = settingService.LoadSetting<AdminAreaSettings>();
+            if (!settingService.SettingExists(adminSettings, settings => settings.CheckLicense))
+            {
+                adminSettings.CheckLicense = true;
+                settingService.SaveSetting(adminSettings, settings => settings.CheckLicense);
+            }
+
             var gdprSettings = settingService.LoadSetting<GdprSettings>();
 
             //#5809
@@ -152,7 +159,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 captchaSettings.ShowOnCheckoutPageForGuests = false;
                 settingService.SaveSetting(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests);
             }
-            
+
             //#7
             if (!settingService.SettingExists(mediaSettings, settings => settings.VideoIframeAllow))
             {
@@ -273,9 +280,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSetting(robotsTxtSettings, settings => settings.LocalizableDisallowPaths);
             }
 
-            if (!settingService.SettingExists(robotsTxtSettings, settings => settings.DisallowLanguages)) 
+            if (!settingService.SettingExists(robotsTxtSettings, settings => settings.DisallowLanguages))
                 settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowLanguages);
-            
+
             if (!settingService.SettingExists(robotsTxtSettings, settings => settings.AdditionsRules))
                 settingService.SaveSetting(robotsTxtSettings, settings => settings.AdditionsRules);
 
@@ -361,13 +368,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 var homepageTitle = settingService.GetSettingByKey<string>(homepageTitleKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(homepageTitleKey);
                 var homepageDescription = settingService.GetSettingByKey<string>(homepageDescriptionKey, storeId: store.Id) ?? settingService.GetSettingByKey<string>(homepageDescriptionKey);
 
-                if (metaTitle != null) 
+                if (metaTitle != null)
                     store.DefaultTitle = metaTitle;
 
-                if (metaKeywords != null) 
+                if (metaKeywords != null)
                     store.DefaultMetaKeywords = metaKeywords;
 
-                if (metaDescription != null) 
+                if (metaDescription != null)
                     store.DefaultMetaDescription = metaDescription;
 
                 if (homepageTitle != null)
