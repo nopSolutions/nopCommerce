@@ -33,8 +33,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalCommerce
 RUN dotnet build Nop.Plugin.Payments.PayPalCommerce.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Shipping.EasyPost
-RUN dotnet build Nop.Plugin.Shipping.EasyPost.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
 RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.UPS
