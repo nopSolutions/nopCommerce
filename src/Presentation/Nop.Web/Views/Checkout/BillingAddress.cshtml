@@ -55,7 +55,7 @@
                                     <div class="address-item">
                                         <div class="address-list-page">
                                             <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id), '@T("Checkout.EditAddress")'); return false;">@T("Common.Edit")</button>
-                                            <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;">@T("Common.Delete")</button>
+                                            <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditBillingAddress/', @(item.Id)); return false;">@T("Common.Delete")</button>
                                         </div>
                                         <ul class="address-box">
                                             <li class="name">
@@ -212,7 +212,7 @@
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom, additionalData = Model })
             </div>
             <div class="buttons">
-                <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
+                <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
                 <button id="billingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')">@T("Common.Cancel")</button>
 
@@ -220,11 +220,9 @@
             </div>
         </form>
         <script asp-location="Footer">
-            CheckoutBilling.init('#billing-form');
-            if (@((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant())) {
-                $('button.edit-address-button').show();
-                $('button.delete-address-button').show();
-            }
+            CheckoutBilling.init('#billing-form');            
+            $('#edit-billing-address-button').show();
+            $('#delete-billing-address-button').show();
         </script>
         <div class="section order-summary">
             <div class="title">

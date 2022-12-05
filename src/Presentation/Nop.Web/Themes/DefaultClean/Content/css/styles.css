@@ -4800,13 +4800,11 @@ label, label + * {
 .checkout-page .edit-address-button {
   float: right; 
   margin: 20px 10px 10px 12px;
-  display: none;
 }
 
 .checkout-page .delete-address-button {
   float: right; 
   margin: 20px 0 10px 0;
-  display: none;
 }
 
 .shipping-method .method-list,
