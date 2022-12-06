@@ -23,6 +23,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
 RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
 RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Misc.Zettle
+RUN dotnet build Nop.Plugin.Misc.Zettle.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
 RUN dotnet build Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
