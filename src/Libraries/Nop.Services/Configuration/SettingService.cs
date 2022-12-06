@@ -552,7 +552,7 @@ namespace Nop.Services.Configuration
             var setting = GetSettingByKey<string>(key, storeId: storeId);
             return setting != null;
         }
-
+        
         /// <summary>
         /// Load settings
         /// </summary>

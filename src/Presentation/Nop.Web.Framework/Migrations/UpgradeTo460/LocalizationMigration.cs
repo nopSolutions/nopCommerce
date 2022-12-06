@@ -129,6 +129,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint"},
                 new { Name = "Admin.Catalog.Products.Copy.CopyImages", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia"},
                 new { Name = "Admin.Catalog.Products.Copy.CopyImages.Hint", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint"},
+
+                //#43
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint" },
             };
 
             foreach (var lang in languages)
@@ -390,6 +402,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.Product.StockQuantity"] = "Stock quantity",
                 ["Pdf.Product.Weight"] = "Weight",
 
+                //#43
+                ["admin.configuration.stores.info"] = "Info",
             }, languageId);
 
             #endregion

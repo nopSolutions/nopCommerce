@@ -1,0 +1,104 @@
+﻿@model StoreModel
+
+<div class="card-body">
+    <div id="store-name-area">
+        @(await Html.LocalizedEditorAsync<StoreModel, StoreLocalizedModel>("store-localized-seo",
+            @<div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].DefaultTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].DefaultTitle" />
+                        <span asp-validation-for="@Model.Locales[item].DefaultTitle"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].DefaultMetaDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].DefaultMetaDescription" />
+                        <span asp-validation-for="@Model.Locales[item].DefaultMetaDescription"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].DefaultMetaKeywords" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].DefaultMetaKeywords" />
+                        <span asp-validation-for="@Model.Locales[item].DefaultMetaKeywords"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].HomepageDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].HomepageDescription" />
+                        <span asp-validation-for="@Model.Locales[item].HomepageDescription"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].HomepageTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].HomepageTitle" />
+                        <span asp-validation-for="@Model.Locales[item].HomepageTitle"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+            ,
+            @<div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DefaultTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DefaultTitle" />
+                        <span asp-validation-for="DefaultTitle"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DefaultMetaDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DefaultMetaDescription" />
+                        <span asp-validation-for="DefaultMetaDescription"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DefaultMetaKeywords" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DefaultMetaKeywords" />
+                        <span asp-validation-for="DefaultMetaKeywords"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="HomepageDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="HomepageDescription" />
+                        <span asp-validation-for="HomepageDescription"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="HomepageTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="HomepageTitle" />
+                        <span asp-validation-for="HomepageTitle"></span>
+                    </div>
+                </div>
+            </div>
+            ))
+    </div>
+</div>

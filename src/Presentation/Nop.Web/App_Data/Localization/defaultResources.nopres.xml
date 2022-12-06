@@ -7317,18 +7317,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
     <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription">
-    <Value>Default meta description</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint">
-    <Value>The default meta description for pages in your store. You can override this for individual categories / products / manufacturer pages.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords">
-    <Value>Default meta keywords</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint">
-    <Value>The default meta keywords for pages in your store. You can override these for individual categories / products / manufacturer pages.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme">
     <Value>Default store theme</Value>
   </LocaleResource>
@@ -7337,12 +7325,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
     <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
-    <Value>Default page title</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint">
-    <Value>The default title for pages in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders">
     <Value>Disable PDF invoices for pending orders</Value>
@@ -7548,19 +7530,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml.Hint">
       <Value>Enter custom HTML here for header section.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
-    <Value>Home page meta description</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint">
-    <Value>The description for the home page in your store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle">
-    <Value>Home page title</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint">
-    <Value>The title for the home page in your store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
@@ -9588,11 +9558,41 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultMetaDescription">
+    <Value>Default meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint">
+    <Value>The default meta description for pages in your store. You can override this for individual categories / products / manufacturer pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultMetaKeywords">
+    <Value>Default meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint">
+    <Value>The default meta keywords for pages in your store. You can override these for individual categories / products / manufacturer pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultTitle">
+    <Value>Default page title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultTitle.Hint">
+    <Value>The default title for pages in your store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder.Hint">
     <Value>The display order for this store. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.HomepageDescription">
+    <Value>Home page meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.HomepageDescription.Hint">
+    <Value>The description for the home page in your store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.HomepageTitle">
+    <Value>Home page title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.HomepageTitle.Hint">
+    <Value>The title for the home page in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Hosts">
     <Value>HOST values</Value>
@@ -9626,6 +9626,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
     <Value>Please provide a store URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Info">
+    <Value>Info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Ssl.Disable">
     <Value>Disable SSL</Value>
