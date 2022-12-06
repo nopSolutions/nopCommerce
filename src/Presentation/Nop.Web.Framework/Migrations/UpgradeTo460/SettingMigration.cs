@@ -331,6 +331,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails = false;
                 settingService.SaveSetting(messagesSettings, settings => settings.UseDefaultEmailAccountForSendStoreOwnerEmails);
             }
+
+            //#228
+            if (!settingService.SettingExists(catalogSettings, settings => settings.ActiveSearchProviderSystemName))
+            {
+                catalogSettings.ActiveSearchProviderSystemName = string.Empty;
+                settingService.SaveSetting(catalogSettings, settings => settings.ActiveSearchProviderSystemName);
+            }
         }
 
         public override void Down()

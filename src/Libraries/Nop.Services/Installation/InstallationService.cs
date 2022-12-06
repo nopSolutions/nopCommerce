@@ -2969,7 +2969,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToSearchWithCategoryName = true,
                 AllowCustomersToSearchWithManufacturerName = true,
                 DisplayAllPicturesOnCatalogPages = false,
-                ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product
+                ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
+                ActiveSearchProviderSystemName = string.Empty
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
