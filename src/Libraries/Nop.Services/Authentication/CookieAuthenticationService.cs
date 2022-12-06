@@ -130,6 +130,14 @@ namespace Nop.Services.Authentication
             if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegisteredAsync(customer))
                 return null;
 
+            //get the latest password
+            var customerPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
+            //required a customer to re-login after password changing
+            if (customerPassword.CreatedOnUtc.CompareTo(authenticateResult.Properties.IssuedUtc.HasValue 
+                ? authenticateResult.Properties.IssuedUtc.Value.DateTime 
+                : DateTime.UtcNow) > 0)
+                return null;
+
             //cache authenticated customer
             _cachedCustomer = customer;
 
