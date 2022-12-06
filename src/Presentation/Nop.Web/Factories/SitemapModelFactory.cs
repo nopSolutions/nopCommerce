@@ -495,9 +495,11 @@ namespace Nop.Web.Factories
             var sitemapUrls = await GenerateUrlsAsync();
 
             //split URLs into separate lists based on the max size 
+            var numberOfParts = (int)Math.Ceiling((decimal)sitemapUrls.Sum(x => (x.AlternateLocations?.Count ?? 0) + 1) / NopSeoDefaults.SitemapMaxUrlNumber);
+
             var sitemaps = sitemapUrls
                 .Select((url, index) => new { Index = index, Value = url })
-                .GroupBy(group => group.Index / NopSeoDefaults.SitemapMaxUrlNumber)
+                .GroupBy(group => group.Index % numberOfParts)
                 .Select(group => group
                     .Select(url => url.Value)
                     .ToList()).ToList();
@@ -530,6 +532,10 @@ namespace Nop.Web.Factories
                     await WriteSitemapAsync(stream, sitemaps.First());
                 }
             }
+
+            if (_nopFileProvider.FileExists(fullPath))
+                _nopFileProvider.DeleteFile(fullPath);
+
 
             using var fileStream = _nopFileProvider.GetOrCreateFile(fullPath);
             stream.Position = 0;
@@ -824,7 +830,7 @@ namespace Nop.Web.Factories
                 ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
                 : null;
 
-            if (languages == null)
+            if (languages == null || languages.Count == 1)
                 return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;

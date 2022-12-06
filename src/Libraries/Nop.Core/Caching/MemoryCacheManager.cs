@@ -269,13 +269,23 @@ namespace Nop.Core.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
+            RemoveByPrefix(prefix, prefixParameters);
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Remove items by cache key prefix
+        /// </summary>
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public void RemoveByPrefix(string prefix, params object[] prefixParameters)
+        {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
 
             _prefixes.TryRemove(prefix, out var tokenSource);
             tokenSource?.Cancel();
             tokenSource?.Dispose();
-
-            return Task.CompletedTask;
         }
 
         /// <summary>

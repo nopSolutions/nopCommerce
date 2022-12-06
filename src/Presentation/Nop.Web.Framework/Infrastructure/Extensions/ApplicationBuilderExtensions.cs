@@ -34,7 +34,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using WebMarkupMin.AspNetCore6;
+using WebMarkupMin.AspNetCore7;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //log application start
-                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
+                engine.Resolve<ILogger>().Information("Application started");
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();

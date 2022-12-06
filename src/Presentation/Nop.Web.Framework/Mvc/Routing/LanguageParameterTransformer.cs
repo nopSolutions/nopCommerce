@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                 var code = routeValue?.ToString();
                 var storeContext = EngineContext.Current.Resolve<IStoreContext>();
                 var store = storeContext.GetCurrentStore();
-                var languages = _languageService.GetAllLanguagesAsync(storeId: store.Id).Result;
+                var languages = _languageService.GetAllLanguages(storeId: store.Id);
                 var language = languages
                     .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(code, StringComparison.InvariantCultureIgnoreCase));
                 if (language is not null)

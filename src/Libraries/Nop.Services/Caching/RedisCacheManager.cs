@@ -76,6 +76,25 @@ namespace Nop.Services.Caching
         }
 
         /// <summary>
+        /// Remove items by cache key prefix
+        /// </summary>
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public override void RemoveByPrefix(string prefix, params object[] prefixParameters)
+        {
+            prefix = PrepareKeyPrefix(prefix, prefixParameters);
+
+            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            {
+                var keys = GetKeys(endPoint, prefix);
+
+                _db.KeyDelete(keys.ToArray());
+            }
+
+            RemoveByPrefixInstanceData(prefix);
+        }
+
+        /// <summary>
         /// Clear all cache data
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>

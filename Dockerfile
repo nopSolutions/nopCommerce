@@ -23,18 +23,20 @@ WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
 RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
 RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Misc.Zettle
+RUN dotnet build Nop.Plugin.Misc.Zettle.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
 RUN dotnet build Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Payments.CyberSource
+RUN dotnet build Nop.Plugin.Payments.CyberSource.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
 RUN dotnet build Nop.Plugin.Payments.Manual.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalCommerce
 RUN dotnet build Nop.Plugin.Payments.PayPalCommerce.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Shipping.EasyPost
-RUN dotnet build Nop.Plugin.Shipping.EasyPost.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
 RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.UPS

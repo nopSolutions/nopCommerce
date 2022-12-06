@@ -98,10 +98,29 @@ namespace Nop.Tests
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
                 await UpdateEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override void UpdateEntities<TEntity>(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+                UpdateEntity(entity);
         }
 
         /// <summary>
@@ -249,6 +268,11 @@ namespace Nop.Tests
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
         public string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
@@ -327,9 +351,19 @@ namespace Nop.Tests
             }
         }
 
-        public override Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query)
+        /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
+        public override Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
         {
-            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
+            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, DataContext));
         }
 
         public Task<bool> DatabaseExistsAsync()
