@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-    <PackageReference Include="ClosedXML" Version="0.96.0" />
+    <PackageReference Include="ClosedXML" Version="0.97.0" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.1.0" />
     <PackageReference Include="QuestPDF" Version="2022.11.0" />
