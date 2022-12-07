@@ -344,7 +344,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
                     RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                     OnPrepareResponse = staticFileResponse
                 });

@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -39,7 +38,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
@@ -78,8 +76,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ISettingModelFactory _settingModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
@@ -108,8 +104,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IOrderService orderService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IRoxyFilemanService roxyFilemanService,
-            IServiceScopeFactory serviceScopeFactory,
             ISettingModelFactory settingModelFactory,
             ISettingService settingService,
             IStoreContext storeContext,
@@ -134,8 +128,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _orderService = orderService;
             _permissionService = permissionService;
             _pictureService = pictureService;
-            _roxyFilemanService = roxyFilemanService;
-            _serviceScopeFactory = serviceScopeFactory;
             _settingModelFactory = settingModelFactory;
             _settingService = settingService;
             _storeContext = storeContext;
@@ -1131,18 +1123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            await _roxyFilemanService.FlushAllImagesOnDiskAsync();
-
             await _pictureService.SetIsStoreInDbAsync(!await _pictureService.IsStoreInDbAsync());
-
-            //use "Resolve" to load the correct service
-            //we do it because the IRoxyFilemanService service is registered for
-            //a scope and in the usual way to get a new instance there is no possibility
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var newRoxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>(scope);
-                await newRoxyFilemanService.ConfigureAsync();
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
