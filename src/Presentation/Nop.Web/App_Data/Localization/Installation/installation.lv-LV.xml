@@ -1,141 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
+<Language Name="Latvian" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Netfang stjórnanda</Value>
+    <Value>Administratora lietotāja e-pasta adrese</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Sláðu inn netfang stjórnanda</Value>
+    <Value>Administratora lietotāja e-pasts ir obligāts</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Lykilorð stjórnanda</Value>
+    <Value>Administratora lietotāja parole</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Sláðu inn lykilorð stjórnanda</Value>
+    <Value>Administratora lietotāja parole ir obligāta</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta möppunni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+    <Value>Kontam '{0}' nav piešķirta atļauja modificēt mapi '{1}'. Lūdzu, konfigurējiet šīs atļaujas.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta skránni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+    <Value>Kontam '{0}' nav piešķirta atļauja modificēt failu '{1}'. Lūdzu, konfigurējiet šīs atļaujas.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Staðfesta lykilorð</Value>
+    <Value>Apstipriniet paroli</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Sláðu inn staðfest lykilorð</Value>
+    <Value>Paroles apstiprināšana ir obligāta</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Tengistrengur</Value>
+    <Value>Savienojuma virkne</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL tengistrengs er krafist</Value>
+    <Value>SQL savienojuma virkne ir obligāta</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Rangt snið á SQL tengistreng</Value>
+    <Value>Nepareizs SQL savienojuma virknes formāts</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Land</Value>
+    <Value>Valsts</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Veldu þitt land...</Value>
+    <Value>Izvēlies savu valsti...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Stofna gagnagrunn ef hann er ekki til</Value>
+    <Value>Izveidot datubāzi, ja tā neeksistē</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Búa til sýnishornagögn</Value>
+    <Value>Izveidot parauga datus</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Norādīet pielāgoto kārtošanas kolāciju</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>Gagnagrunnur</Value>
+    <Value>Datubāze</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Villa kom upp við gerð gagnagrunnsins: {0}</Value>
+    <Value>Veidojot datubāzi, radās kļūda: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Upplýsingar um gagnagrunn</Value>
+    <Value>Datubāzes informācija</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Gagnagrunnsheiti</Value>
+    <Value>Datubāzes nosaukums</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Gagnagrunnur er ekki til eða þú hefur ekki réttindi til að tengjast honum</Value>
+    <Value>Datu bāze neeksistē vai jums nav atļauju tai pieslēgties.</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Veldu gagnaveitu</Value>
+    <Value>Izvēlieties datu sniedzēju</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Ef þú þarft upplýsingar um hvernig á að nota nopCommerce skaltu fara á</Value>
+    <Value>Ja jums nepieciešama informācija par to, kā lietot nopCommerce, apmeklējiet</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>skjalahlutann á nopCommerce.com</Value>
+    <Value>nopCommerce.com dokumentācijas sadaļu</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Dæmi</Value>
+    <Value>Piemērs</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Setja upp</Value>
+    <Value>Uzstādīt</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Er að setja upp nopCommerce ...</Value>
+    <Value>Uzstāda nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Nota samþætta Windows auðkenningu</Value>
+    <Value>Izmantot integrēto Windows autentifikāciju</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>Það er ekki samræmi í lykilorðunum</Value>
+    <Value>Paroles nesakrīt</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Sláðu inn hráan tengistreng (lengra komnir)</Value>
+    <Value>Ievadiet neapstrādātu savienojuma virkni (padziļināti)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Endurræsa uppsetningu</Value>
+    <Value>Uzstādīšanas procesa atkārtota palaišana</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Smelltu til að endurræsa uppsetningarferlið (hreinsaðu skyndiminni)</Value>
+    <Value>Noklikšķiniet, lai atkārtoti uzsāktu uzstādīšanas procesu (notīriet visas kešatmiņā saglabātās vērtības).</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Endurræsi...</Value>
+    <Value>Notiek restartēšana...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Heiti vefþjóns</Value>
+    <Value>Servera Nosaukums</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Heiti vefþjóns er krafist</Value>
+    <Value>Servera nosaukums ir obligāts</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Uppsetning mistókst: {0}</Value>
+    <Value>Iestatīšana neizdevās: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL lykilorð</Value>
+    <Value>SQL parole</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL lykilorðs er krafist</Value>
+    <Value>SQL parole ir obligāta</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Microsoft SQL netþjónn</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL notandanafn</Value>
+    <Value>SQL lietotājvārds</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL notandanafns er krafist</Value>
+    <Value>SQL lietotājvārds ir obligāts</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Vista upplýsingar</Value>
+    <Value>Veikala informācija</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce uppsetning</Value>
+    <Value>nopCommerce uzstādīšana</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Til að nota þetta leiðsagnarforrit verður þú að vita upplýsingar varðandi gagnagrunnsmiðlarann („tengirstrengur“). Vinsamlegast hafðu samband við hýsingaraðilann þinn ef þörf krefur. Ef þú ert að setja upp á staðbundna vél eða netþjón gætirðu þurft upplýsingar frá kerfisstjóranum þínum.</Value>
+    <Value>Lai pabeigtu šo vedni, ir jāzina informācija par datubāzes serveri ("savienojuma virkne"). Ja nepieciešams, sazinieties ar savu interneta pakalpojumu sniedzēju. Ja instalāciju veicat vietējā datorā vai serverī, iespējams, jums būs nepieciešama informācija no sistēmas administratora.</Value>
   </LocaleResource>
 </Language>

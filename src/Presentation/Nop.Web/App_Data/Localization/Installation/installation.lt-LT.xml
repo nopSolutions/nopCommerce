@@ -1,141 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
+<Language Name="Lietuviu" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Netfang stjórnanda</Value>
+    <Value>Administratoriaus el. pašto adresas</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Sláðu inn netfang stjórnanda</Value>
+    <Value>Įveskite administratoriaus vartotojo slaptažodį</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Lykilorð stjórnanda</Value>
+    <Value>Administratoriaus vartotojo slaptažodis</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Sláðu inn lykilorð stjórnanda</Value>
+    <Value>Įveskite administratoriaus slaptažodį</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta möppunni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+    <Value>Vartotojas  '{0}' neturi teisių keisti katalogą  '{1}'. Prašome pakeisti teisių nustatymus.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Aðgangurinn '{0}' er ekki með tilheyrandi réttindi til að breyta skránni '{1}'. Vinsamlegast stilla þessar heimildir.</Value>
+    <Value>Vartotojas '{0}' neturi teisių keisti bylą '{1}'. Prašome pakeisti teisių nustatymus.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Staðfesta lykilorð</Value>
+    <Value>Patvirtinkite slaptažodį</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Sláðu inn staðfest lykilorð</Value>
+    <Value>Pakartokite slaptažodį</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Tengistrengur</Value>
+    <Value>Prisijungimo eilutė</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL tengistrengs er krafist</Value>
+    <Value>A SQL connection string is required</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Rangt snið á SQL tengistreng</Value>
+    <Value>Neteisinga SQL prisijungimo struktūra</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Land</Value>
+    <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Veldu þitt land...</Value>
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Stofna gagnagrunn ef hann er ekki til</Value>
+    <Value>Sukurti duomenų bazė jei tokia neegzistuoja</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Búa til sýnishornagögn</Value>
+    <Value>Sukurti pavyzdinius duomenis</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
     <Value>Specify custom collation</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>Gagnagrunnur</Value>
+    <Value>Duomenų bazė</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Villa kom upp við gerð gagnagrunnsins: {0}</Value>
+    <Value>Įvyko klaida kuriant kalbą:{0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Upplýsingar um gagnagrunn</Value>
+    <Value>Duomenų bazės informacija</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Gagnagrunnsheiti</Value>
+    <Value>Duomenų bazės pavadinimas</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Gagnagrunnur er ekki til eða þú hefur ekki réttindi til að tengjast honum</Value>
+    <Value>Duomenų bazės nėra arba jūs neturite leidimų prisijungti prie jos</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Veldu gagnaveitu</Value>
+    <Value>Pasirinkite duomenų teikėją</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Ef þú þarft upplýsingar um hvernig á að nota nopCommerce skaltu fara á</Value>
+    <Value>Jei jums reikia informacijos, kaip naudotis nopCommerce, apsilankykite</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>skjalahlutann á nopCommerce.com</Value>
+    <Value>the documentation section on nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Dæmi</Value>
+    <Value>Example</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Setja upp</Value>
+    <Value>Install</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Er að setja upp nopCommerce ...</Value>
+    <Value>Installing nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Nota samþætta Windows auðkenningu</Value>
+    <Value>Use integrated Windows authentication</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>Það er ekki samræmi í lykilorðunum</Value>
+    <Value>The passwords do not match</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Sláðu inn hráan tengistreng (lengra komnir)</Value>
+    <Value>Enter raw connection string (advanced)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Endurræsa uppsetningu</Value>
+    <Value>Restart installation</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Smelltu til að endurræsa uppsetningarferlið (hreinsaðu skyndiminni)</Value>
+    <Value>Click to restart the installation process (clear all cached values)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Endurræsi...</Value>
+    <Value>Restarting...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Heiti vefþjóns</Value>
+    <Value>Server name</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Heiti vefþjóns er krafist</Value>
+    <Value>Server name is required</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Uppsetning mistókst: {0}</Value>
+    <Value>Setup failed: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL lykilorð</Value>
+    <Value>SQL Password</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL lykilorðs er krafist</Value>
+    <Value>SQL Password is required</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Microsoft SQL netþjónn</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL notandanafn</Value>
+    <Value>SQL Username</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL notandanafns er krafist</Value>
+    <Value>SQL Username is required</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Vista upplýsingar</Value>
+    <Value>Store information</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce uppsetning</Value>
+    <Value>nopCommerce installation</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Til að nota þetta leiðsagnarforrit verður þú að vita upplýsingar varðandi gagnagrunnsmiðlarann („tengirstrengur“). Vinsamlegast hafðu samband við hýsingaraðilann þinn ef þörf krefur. Ef þú ert að setja upp á staðbundna vél eða netþjón gætirðu þurft upplýsingar frá kerfisstjóranum þínum.</Value>
+    <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
 </Language>
