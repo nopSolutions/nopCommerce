@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -264,16 +266,9 @@ namespace Nop.Web.Framework.Infrastructure
             else
                 services.AddScoped<IPictureService, PictureService>();
 
-            //roxy file manager service
-            services.AddTransient<DatabaseRoxyFilemanService>();
-            services.AddTransient<FileRoxyFilemanService>();
-
-            services.AddScoped<IRoxyFilemanService>(serviceProvider =>
-            {
-                return serviceProvider.GetRequiredService<IPictureService>().IsStoreInDbAsync().Result
-                    ? serviceProvider.GetRequiredService<DatabaseRoxyFilemanService>()
-                    : serviceProvider.GetRequiredService<FileRoxyFilemanService>();
-            });
+            //roxy file manager
+            services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
+            services.AddScoped<IRoxyFilemanFileProvider, RoxyFilemanFileProvider>();
 
             //installation service
             services.AddScoped<IInstallationService, InstallationService>();
