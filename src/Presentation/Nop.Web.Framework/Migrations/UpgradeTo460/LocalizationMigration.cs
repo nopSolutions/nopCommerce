@@ -62,10 +62,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFInvoice.OrderNotes.Note",
                 "PDFPackagingSlip.Shipment",
                 "PDFInvoice.Order#",
-                "PDFInvoice.ProductName",
-                "PDFInvoice.ProductPrice",
-                "PDFInvoice.ProductQuantity",
-                "PDFInvoice.ProductTotal",
                 "PDFInvoice.Discount",
                 "PDFInvoice.Sub-Total",
                 "PDFInvoice.Shipping",
@@ -73,12 +69,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFInvoice.PaymentMethodAdditionalFee",
                 "PDFInvoice.Pickup",
                 "PDFInvoice.Product(s)",
-                "PDFInvoice.SKU",
                 "PDFInvoice.Tax",
-                "PDFInvoice.TaxRate",
-                "PDFInvoice.RewardPoints",
-                "PDFInvoice.GiftCardInfo",
-
                 "PDFPackagingSlip.Address",
                 "PDFPackagingSlip.Address2",
                 "PDFPackagingSlip.Company",
@@ -87,13 +78,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFPackagingSlip.Phone",
                 "PDFPackagingSlip.ProductName",
                 "PDFPackagingSlip.QTY",
-                "PDFPackagingSlip.Shipment",
                 "PDFPackagingSlip.ShippingMethod",
                 "PDFPackagingSlip.SKU",
                 "PDFProductCatalog.Price",
                 "PDFProductCatalog.SKU",
-                "PDFProductCatalog.StockQuantity",
-                "PDFProductCatalog.Weight",
 
             });
 
@@ -141,6 +129,20 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint" },
                 new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle" },
                 new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint" },
+
+                //4622
+                new { Name = "PDFInvoice.ProductName", NewName = "Pdf.Product.Name" },
+                new { Name = "PDFInvoice.SKU", NewName = "Pdf.Product.Sku" },
+                new { Name = "PDFInvoice.VendorName", NewName = "Pdf.Product.VendorName" },
+                new { Name = "PDFProductCatalog.Weight", NewName = "Pdf.Product.Weight" },
+                new { Name = "PDFInvoice.ProductPrice", NewName = "Pdf.Product.Price" },
+                new { Name = "PDFInvoice.ProductQuantity", NewName = "Pdf.Product.Quantity" },
+                new { Name = "PDFProductCatalog.StockQuantity", NewName = "Pdf.Product.StockQuantity" },
+                new { Name = "PDFInvoice.ProductTotal", NewName = "Pdf.Product.Total" },
+                new { Name = "PDFInvoice.RewardPoints", NewName = "Pdf.RewardPoints" },
+                new { Name = "PDFInvoice.TaxRate", NewName = "Pdf.TaxRate" },
+                new { Name = "PDFInvoice.GiftCardInfo", NewName = "Pdf.GiftCardInfo" },
+
             };
 
             foreach (var lang in languages)
@@ -383,12 +385,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.Address.ShippingMethod"] = "Shipping method",
                 ["Pdf.Shipment"] = "Shipment",
                 ["Pdf.Order"] = "Order",
-                ["Pdf.Product.Name"] = "Name",
-                ["Pdf.Product.Sku"] = "SKU",
-                ["Pdf.Product.VendorName"] = "Vendor name",
-                ["Pdf.Product.Price"] = "Price",
-                ["Pdf.Product.Quantity"] = "Qty",
-                ["Pdf.Product.Total"] = "Total",
                 ["Pdf.Shipping"] = "Shipping",
                 ["Pdf.SubTotal"] = "Sub-total",
                 ["Pdf.Discount"] = "Discount",
@@ -396,11 +392,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.PaymentMethodAdditionalFee"] = "Payment Method Additional Fee",
                 ["Pdf.PickupPoint"] = "Pickup point",
                 ["Pdf.Tax"] = "Tax",
-                ["Pdf.TaxRate"] = "Tax {0}%",
-                ["Pdf.RewardPoints"] = "{0} reward points",
-                ["Pdf.GiftCardInfo"] = "Gift card ({0})",
-                ["Pdf.Product.StockQuantity"] = "Stock quantity",
-                ["Pdf.Product.Weight"] = "Weight",
 
                 //#43
                 ["admin.configuration.stores.info"] = "Info",
