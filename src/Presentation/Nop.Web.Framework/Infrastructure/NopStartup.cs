@@ -298,9 +298,14 @@ namespace Nop.Web.Framework.Infrastructure
 
             //XML sitemap
             services.AddScoped<IXmlSiteMap, XmlSiteMap>();
+
+            //register the Lazy resolver for .Net IoC
+            var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
+            if (!useAutofac)
+                services.AddScoped(typeof(Lazy<>), typeof(LazyInstance<>));
         }
 
-        // <summary>
+        /// <summary>
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>

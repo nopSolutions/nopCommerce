@@ -395,6 +395,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#43
                 ["admin.configuration.stores.info"] = "Info",
+
+                //5701
+                ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
+                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container, if set to false then the .Net IoC container will be use",
             }, languageId);
 
             #endregion
