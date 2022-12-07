@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.UI
         private readonly HtmlEncoder _htmlEncoder;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAssetPipeline _assetPipeline;
-        private readonly ILocalizationService _localizationService;
+        private readonly Lazy<ILocalizationService> _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.UI
             HtmlEncoder htmlEncoder,
             IActionContextAccessor actionContextAccessor,
             IAssetPipeline assetPipeline,
-            ILocalizationService localizationService,
+            Lazy<ILocalizationService> localizationService,
             IStoreContext storeContext,
             IUrlHelperFactory urlHelperFactory,
             IWebHostEnvironment webHostEnvironment,
@@ -211,7 +211,7 @@ namespace Nop.Web.Framework.UI
         {
             AppendTitleParts(part);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var defaultTitle = await _localizationService.GetLocalizedAsync(store, s => s.DefaultTitle);
+            var defaultTitle = await _localizationService.Value.GetLocalizedAsync(store, s => s.DefaultTitle);
 
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             string result;
@@ -281,7 +281,7 @@ namespace Nop.Web.Framework.UI
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaDescription)
                 ? metaDescription
-                : await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
+                : await _localizationService.Value.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
                     s => s.DefaultMetaDescription);
 
             return new HtmlString(_htmlEncoder.Encode(result ?? string.Empty));
@@ -324,7 +324,7 @@ namespace Nop.Web.Framework.UI
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaKeyword)
                 ? metaKeyword
-                : await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
+                : await _localizationService.Value.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(),
                     s => s.DefaultMetaKeywords);
 
             return new HtmlString(_htmlEncoder.Encode(result ?? string.Empty));
