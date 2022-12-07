@@ -1,0 +1,128 @@
+﻿@model Nop.Plugin.Payments.Iyzico.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<link rel="stylesheet" href="~/Plugins/Payments.Iyzico/Content/css/iyzicoAdminStyle.min.css" />
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="PaymentIyzico" asp-action="Configure" method="post" autocomplete="off">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    <h5>@T("Plugins.Payments.Iyzico.Instructions")</h5>
+                    <br />
+                </p>
+                <hr />
+                <p>@T("Plugins.Payments.Iyzico.AccountInfo")</p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiKey" asp-required="true" />
+                        <span asp-validation-for="ApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiSecret_OverrideForStore" asp-input="ApiSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiSecret" asp-required="true" />
+                        <span asp-validation-for="ApiSecret"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiUrl_OverrideForStore" asp-input="ApiUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiUrl" asp-required="true" />
+                        <span asp-validation-for="ApiUrl"></span>
+                    </div>
+                </div>
+                <hr />
+                <p>@T("Plugins.Payments.Iyzico.VirtualPosInfo")</p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IsCardStorage_OverrideForStore" asp-input="IsCardStorage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IsCardStorage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IsCardStorage" />
+                        <span asp-validation-for="IsCardStorage"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PaymentSuccessUrl_OverrideForStore" asp-input="PaymentSuccessUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PaymentSuccessUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PaymentSuccessUrl" asp-required="true" />
+                        <span asp-validation-for="PaymentSuccessUrl"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PaymentErrorUrl_OverrideForStore" asp-input="PaymentErrorUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PaymentErrorUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PaymentErrorUrl" asp-required="true" />
+                        <span asp-validation-for="PaymentErrorUrl"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="InstallmentNumbers_OverrideForStore" asp-input="InstallmentNumbers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="InstallmentNumbers" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <nop-editor asp-for="InstallmentNumber2" />
+                            <nop-label class="form-check-label" asp-for="InstallmentNumber2" />
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <nop-editor asp-for="InstallmentNumber3" />
+                            <nop-label class="form-check-label" asp-for="InstallmentNumber3"  />
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <nop-editor asp-for="InstallmentNumber6" />
+                            <nop-label class="form-check-label" asp-for="InstallmentNumber6" />
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <nop-editor asp-for="InstallmentNumber9" />
+                            <nop-label class="form-check-label" asp-for="InstallmentNumber9" />
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <nop-editor asp-for="InstallmentNumber12" />
+                            <nop-label class="form-check-label" asp-for="InstallmentNumber12" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseToPaymentPopup_OverrideForStore" asp-input="UseToPaymentPopup" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseToPaymentPopup" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseToPaymentPopup" />
+                        <span asp-validation-for="UseToPaymentPopup"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

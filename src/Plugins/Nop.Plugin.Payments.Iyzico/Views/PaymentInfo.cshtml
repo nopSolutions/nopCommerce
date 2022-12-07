@@ -1,0 +1,74 @@
+﻿@model Nop.Plugin.Payments.Iyzico.Models.PaymentInfoModel
+@{
+	Layout = "";
+}
+
+@if (Model.UseToPaymentPopup)
+{
+	<div id="iyzipay-checkout-form" class="popup"></div>
+
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				<p><b>@T("Plugins.Payments.Iyzico.Fields.PopupTip")</b></p>
+			</td>
+		</tr>
+	</table>
+}
+else
+{
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				<p><b>@T("Plugins.Payments.Iyzico.Fields.RedirectionTip")</b></p>
+			</td>
+		</tr>
+	</table>
+}
+
+<script>
+
+	window.getCookie = function(name) {
+		var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+		if (match) return match[2];
+	}
+
+	$(document).on('ajaxComplete', function(event, request, settings) {
+
+		if (getCookie('iyzicoMessage') !== "undefined" && getCookie('iyzicoMessage') !== undefined) {
+
+			displayPopupNotification(decodeURIComponent(getCookie('iyzicoMessage')), "error", false);
+			document.cookie = 'iyzicoMessage=; Max-Age=0; path=/;';
+		}
+
+		if (settings.type === 'POST') {
+
+			if (settings.url.includes('/checkout/OpcSaveBilling')) {
+
+				if (request.status === 200) {
+
+					PaymentInfo.save();
+				}
+			}
+
+			if (settings.url.includes('/checkout/OpcSaveShippingMethod')) {
+
+				if (request.status === 200) {
+
+					PaymentInfo.save();
+				}
+			}
+
+	@if (Model.UseToPaymentPopup)
+	{
+		<text>
+							if (settings.url.includes('/checkout/OpcConfirmOrder')) {
+					if (request.status === 200) {
+						$('head').append(request.responseText);
+					}
+				}
+		</text>
+	}
+			}
+	});
+</script>

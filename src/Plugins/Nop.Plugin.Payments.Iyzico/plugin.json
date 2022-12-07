@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Iyzico",
+  "SystemName": "Payments.Iyzico",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Silver Bilgi Teknolojileri | silverteknoloji.com.tr",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Iyzico.dll",
+  "Description": "Iyzico sanal pos entegrasyonudur."
+}

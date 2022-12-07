@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "Content/iyzicoAdminStyle.css",
+    "inputFile": "Content/iyzicoAdminStyle.less"
+  },
+  {
+    "outputFile": "Content/css/iyzicoAdminStyle.css",
+    "inputFile": "Content/css/iyzicoAdminStyle.less"
+  }
+]
