@@ -12,6 +12,13 @@ namespace Nop.Plugin.Payments.Manual.Components
     [ViewComponent(Name = "PaymentManual")]
     public class PaymentManualViewComponent : NopViewComponent
     {
+        public readonly ManualPaymentSettings _manualPaymentSettings;
+
+        public PaymentManualViewComponent(
+            ManualPaymentSettings manualPaymentSettings)
+        {
+            _manualPaymentSettings = manualPaymentSettings;
+        }
         public IViewComponentResult Invoke()
         {
             var model = new PaymentInfoModel()
@@ -24,6 +31,12 @@ namespace Nop.Plugin.Payments.Manual.Components
                     new SelectListItem { Text = "Amex", Value = "Amex" },
                 }
             };
+
+            if (!string.IsNullOrWhiteSpace(_manualPaymentSettings.AbcCustomCardName))
+            {
+                var name = _manualPaymentSettings.AbcCustomCardName;
+                model.CreditCardTypes.Add(new SelectListItem { Text = name, Value = name });
+            }
 
             //years
             for (var i = 0; i < 15; i++)
