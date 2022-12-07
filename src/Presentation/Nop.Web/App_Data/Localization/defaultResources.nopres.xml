@@ -4131,6 +4131,20 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription">
+        <Value>Meta Description</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription.Hint">
+        <Value>The content of the product tag Meta Description.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords">
+        <Value>Meta Keywords</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeyword.Hint">
+        <Value>The content of the product tag Meta Keyword.</Value>
+    </LocaleResource>
+  
+    
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
   </LocaleResource>
