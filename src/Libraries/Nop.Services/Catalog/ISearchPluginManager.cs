@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Plugins;
 
@@ -16,7 +16,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the ax provider
+        /// The task result contains the search provider
         /// </returns>
         Task<ISearchProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0);
 
