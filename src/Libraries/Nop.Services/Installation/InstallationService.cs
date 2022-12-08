@@ -2792,7 +2792,9 @@ namespace Nop.Services.Installation
                 SitemapXmlIncludeProducts = true,
                 SitemapXmlIncludeProductTags = true,
                 SitemapXmlIncludeCustomUrls = true,
-                SitemapXmlIncludeTopics = true
+                SitemapXmlIncludeTopics = true,
+                RebuildSitemapXmlAfterHours = 2 * 24,
+                SitemapBuildOperationDelay = 60
             });
 
             await settingService.SaveSettingAsync(new CommonSettings
