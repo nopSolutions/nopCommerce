@@ -180,9 +180,9 @@ src/Presentation/Nop.Web/App_Data/DataProtectionKeys/*
 !src/Presentation/Nop.Web/App_Data/DataProtectionKeys/Index.htm
 src/Presentation/Nop.Web/node_modules/*
 src/Presentation/Nop.Web/Plugins/*
-!src/Presentation/Nop.Web/Plugins/bin
-src/Presentation/Nop.Web/Plugins/bin/*
-!src/Presentation/Nop.Web/Plugins/bin/placeholder.txt
+!src/Presentation/Nop.Web/Plugins/Uploaded
+src/Presentation/Nop.Web/Plugins/Uploaded/*
+!src/Presentation/Nop.Web/Plugins/Uploaded/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/.well-known/*
 !src/Presentation/Nop.Web/wwwroot/.well-known/Index.htm
 src/Presentation/Nop.Web/wwwroot/bundles/*
