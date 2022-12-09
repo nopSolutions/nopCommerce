@@ -3570,6 +3570,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd">
     <Value>Failed to add product video.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate">
+     <Value>Failed to update product video.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

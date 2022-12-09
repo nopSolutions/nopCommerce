@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -44,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly HttpClient _httpClient;
         private readonly IAclService _aclService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICategoryService _categoryService;
@@ -77,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVideoService _videoService;
+        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
 
@@ -84,7 +88,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public ProductController(IAclService aclService,
+        public ProductController(HttpClient httpClient,
+            IAclService aclService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             ICategoryService categoryService,
             ICopyProductService copyProductService,
@@ -117,9 +122,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IVideoService videoService,
+            IWebHelper webHelper,
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
+            _httpClient = httpClient;
             _aclService = aclService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _categoryService = categoryService;
@@ -153,6 +160,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _videoService = videoService;
+            _webHelper = webHelper;
             _workContext = workContext;
             _vendorSettings = vendorSettings;
         }
@@ -731,6 +739,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
             }
+        }
+
+        protected virtual async Task PingVideoUrlAsync(string videoUrl)
+        {
+            var path = videoUrl.StartsWith("/") ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}" : videoUrl;
+
+            _httpClient.BaseAddress = new Uri(path);
+            _httpClient.Timeout = TimeSpan.FromSeconds(5);
+            _httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
+
+            await _httpClient.GetStringAsync("/");
         }
 
         #endregion
@@ -1794,10 +1813,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
-            if (!ModelState.IsValid)
+            var videoUrl = model.VideoUrl.TrimStart('~');
+
+            try
             {
-                return ErrorJson(ModelState.SerializeErrors());
+                await PingVideoUrlAsync(videoUrl);
             }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                });
+            }
+
+            if (!ModelState.IsValid) 
+                return ErrorJson(ModelState.SerializeErrors());
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1807,7 +1839,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var video = new Video
                 {
-                    VideoUrl = model.VideoUrl
+                    VideoUrl = videoUrl
                 };
 
                 //insert video
@@ -1825,7 +1857,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
                 });
             }
 
@@ -1876,7 +1908,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             var video = await _videoService.GetVideoByIdAsync(productVideo.VideoId)
                 ?? throw new ArgumentException("No video found with the specified id");
 
-            video.VideoUrl = model.VideoUrl;
+            var videoUrl = model.VideoUrl.TrimStart('~');
+
+            try
+            {
+                await PingVideoUrlAsync(videoUrl);
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate")} {exc.Message}",
+                });
+            }
+
+            video.VideoUrl = videoUrl;
 
             await _videoService.UpdateVideoAsync(video);
 

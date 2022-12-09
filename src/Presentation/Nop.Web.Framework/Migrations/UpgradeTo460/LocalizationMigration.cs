@@ -260,6 +260,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit"] = "You need to save the product before you can upload videos for this product page.",
                 ["Admin.Catalog.Products.Multimedia.Videos.AddNew"] = "Add a new video",
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd"] = "Failed to add product video.",
+                ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate"] = "Failed to update product video.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder"] = "Display order",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder.Hint"] = "Display order of the video. 1 represents the top of the list.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.Preview"] = "Preview",
