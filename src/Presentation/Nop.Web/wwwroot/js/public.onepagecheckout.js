@@ -133,6 +133,7 @@ var Billing = {
       $('#delete-billing-address-button').show();
     }
     $(document).trigger({ type: "onepagecheckout_billing_address_new" });
+    Billing.initializeCountrySelect();
   },
 
   resetSelectedAddress: function() {
