@@ -632,7 +632,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 lastActivityToUtc: lastActivityToUtc,
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
-                ipAddress: searchModel.SearchIpAddress,
+                ipAddress: searchModel.SearchIpAddress?.Trim(),
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
