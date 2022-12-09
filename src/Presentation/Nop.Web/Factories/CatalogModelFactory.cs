@@ -306,7 +306,7 @@ namespace Nop.Web.Factories
             if (selectedPriceRange.From < availablePriceRange.From)
                 selectedPriceRange.From = availablePriceRange.From;
 
-            if (selectedPriceRange.To > availablePriceRange.To || selectedPriceRange.To < availablePriceRange.From)
+            if (selectedPriceRange.To > availablePriceRange.To)
                 selectedPriceRange.To = availablePriceRange.To;
 
             var workingCurrency = await _workContext.GetWorkingCurrencyAsync();
