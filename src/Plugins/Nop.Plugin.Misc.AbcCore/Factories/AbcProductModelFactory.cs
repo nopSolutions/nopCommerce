@@ -134,7 +134,8 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
                 "Home Delivery",
                 "Warranty",
                 "Delivery/Pickup Options",
-                "Pickup"
+                "Pickup",
+                "FedEx"
             }.Contains(m.Name)).ToList();
         }
 

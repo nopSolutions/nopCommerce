@@ -130,6 +130,15 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                 var pamsWithPickup = await pams.WhereAwait(
                     async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "Pickup"
                 ).ToListAsync();
+                var pamsWithFedex = await pams.WhereAwait(
+                    async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "FedEx"
+                ).ToListAsync();
+
+                if (pamsWithFedex.Any())
+                {
+                    model.IsFedExMode = true;
+                }
+
                 if (pamsWithPickup.Any())
                 {
                     string url = "";

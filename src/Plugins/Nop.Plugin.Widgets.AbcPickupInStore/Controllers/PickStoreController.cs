@@ -163,7 +163,19 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
                 };
             }
 
-            stockResponse.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode;
+            ProductAttribute fedExProductAttribute = null;
+            var productAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(productId);
+            foreach (var pam in productAttributeMappings)
+            {
+                var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (pa.Name == "FedEx")
+                {
+                    fedExProductAttribute = pa;
+                    break;
+                }
+            }
+
+            stockResponse.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode && fedExProductAttribute == null;
 
             return PartialView("~/Plugins/Widgets.AbcPickupInStore/Views/SelectStoreForPickup.cshtml", stockResponse);
         }

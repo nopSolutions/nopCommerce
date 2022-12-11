@@ -27,6 +27,8 @@
     {
         storeText = ": " + Model.SelectedShop.Name;
     }
+
+	var isPickupInitiallyChecked = Model.IsPickupOnlyMode && !Model.IsFedExMode;
 }
 
 <style>
@@ -119,7 +121,7 @@
 			border-color: #c3c3c3;
 		}
 </style>
-@if (!Model.IsPickupOnlyMode)
+@if (!Model.IsPickupOnlyMode || Model.IsFedExMode)
 {
 	<style>
 		div#zipcode-input-container {
@@ -146,6 +148,11 @@
 				$('#zipcode-input-container').hide();
 			});
 
+			$('#fedex-radio').on('click', function () {
+				$('#store_selector_widget').hide();
+				$('#zipcode-input-container').hide();
+			});
+
 			$('#pickup-radio').on('click', function() {
 				$('#zipcode-input-container').show();
 			});
@@ -162,8 +169,17 @@
 			</label>
 		</div>
 	}
+	@if (Model.IsFedExMode)
+	{
+		<div class="radio-row">
+			<input id="fedex-radio" type="radio" class="radio-input" name="delivery-method" checked="checked" />
+			<label class="radio-label" for="fedex-radio">
+				FedEx Shipping
+			</label>
+		</div>
+	}
 	<div class="radio-row">
-        <input id="pickup-radio" type="radio" class="radio-input" name="delivery-method" checked="@Model.IsPickupOnlyMode" />
+        <input id="pickup-radio" type="radio" class="radio-input" name="delivery-method" checked="@isPickupInitiallyChecked" />
         <label class="radio-label" for="pickup-radio">
             <span id="display_store_pretext">@Model.PickupInStoreText</span><span id="display_store_text">@storeText</span>
         </label>
