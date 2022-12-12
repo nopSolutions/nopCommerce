@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -46,7 +46,6 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
         private readonly IAclService _aclService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICategoryService _categoryService;
@@ -57,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IExportManager _exportManager;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IImportManager _importManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -88,8 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public ProductController(HttpClient httpClient,
-            IAclService aclService,
+        public ProductController(IAclService aclService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             ICategoryService categoryService,
             ICopyProductService copyProductService,
@@ -99,6 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDownloadService downloadService,
             IExportManager exportManager,
             IGenericAttributeService genericAttributeService,
+            IHttpClientFactory httpClientFactory,
             IImportManager importManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -126,7 +126,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
-            _httpClient = httpClient;
             _aclService = aclService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _categoryService = categoryService;
@@ -137,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _downloadService = downloadService;
             _exportManager = exportManager;
             _genericAttributeService = genericAttributeService;
+            _httpClientFactory = httpClientFactory;
             _importManager = importManager;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -745,11 +745,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var path = videoUrl.StartsWith("/") ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}" : videoUrl;
 
-            _httpClient.BaseAddress = new Uri(path);
-            _httpClient.Timeout = TimeSpan.FromSeconds(5);
-            _httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
-
-            await _httpClient.GetStringAsync("/");
+            var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+            await client.GetStringAsync(path);
         }
 
         #endregion
