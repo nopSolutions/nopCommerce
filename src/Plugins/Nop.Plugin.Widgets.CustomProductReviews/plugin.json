@@ -1,11 +1,11 @@
 ﻿{
-  "Group": "",
-  "FriendlyName": "",
-  "SystemName": "",
+  "Group": "Genius Software",
+  "FriendlyName": "Custom Product Reviews",
+  "SystemName": "Nop.Plugin.Widgets.CustomProductReviews",
   "Version": "1.00",
   "SupportedVersions": [ "4.50" ],
-  "Author": "Author Name",
+  "Author": "Genius Software",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Widgets.CustomProductReviews.dll",
-  "Description": ""
+  "Description": "This plugin allows add customized product reviews"
 }
