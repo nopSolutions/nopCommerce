@@ -4,7 +4,7 @@ using Nop.Plugin.Widgets.CustomProductReviews.Domains;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
 {
-    public class PluginBuilder : NopEntityBuilder<CustomTable>
+    public class PluginBuilder : NopEntityBuilder<CustomProductReviewMapping>
     {
         #region Methods
 
