@@ -42,6 +42,10 @@ namespace Nop.Plugin.Payments.Iyzico.Services
 
         public virtual async Task<Buyer> GetBuyer(int customerId)
         {
+            try
+            {
+
+          
             var customer = await _customerService.GetCustomerByIdAsync(customerId);
 
             var customerName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
@@ -76,8 +80,13 @@ namespace Nop.Plugin.Payments.Iyzico.Services
                 RegistrationDate = IyzicoHelper.ToIyzicoDateFormat(customer.CreatedOnUtc),
                 LastLoginDate = IyzicoHelper.ToIyzicoDateFormat(customer.LastLoginDateUtc)
             };
-
             return buyer;
+            }
+            catch (Exception e)
+            {
+                throw new NopException(e.Message);
+            }
+           
         }
 
         public virtual async Task<Address> GetAddress(Core.Domain.Common.Address address)
