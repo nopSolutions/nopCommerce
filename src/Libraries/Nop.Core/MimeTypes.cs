@@ -51,6 +51,11 @@
         /// <summary>
         /// Type
         /// </summary>
+        public static string ApplicationZip => "application/zip";
+
+        /// <summary>
+        /// Type
+        /// </summary>
         public static string ApplicationXZipCo => "application/x-zip-co";
 
         #endregion

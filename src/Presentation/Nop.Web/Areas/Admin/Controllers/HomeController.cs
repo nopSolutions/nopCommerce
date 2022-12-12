@@ -68,14 +68,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if ((hideCard || closeCard) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
             {
                 var warnings = await _commonModelFactory.PrepareSystemWarningModelsAsync();
-                if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
-                                            warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
-                                            warning.Level == SystemWarningLevel.Warning))
-                    _notificationService.WarningNotification(
-                        string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.Errors"),
-                        Url.Action("Warnings", "Common")),
-                        //do not encode URLs
-                        false);
+                if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail || warning.Level == SystemWarningLevel.Warning))
+                {
+                    var locale = await _localizationService.GetResourceAsync("Admin.System.Warnings.Errors");
+                    _notificationService.WarningNotification(string.Format(locale, Url.Action("Warnings", "Common")), false); //do not encode URLs
+                }
             }
 
             //progress of localization 

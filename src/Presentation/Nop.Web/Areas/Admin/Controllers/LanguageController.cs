@@ -224,6 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //notification
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Updated"));
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");

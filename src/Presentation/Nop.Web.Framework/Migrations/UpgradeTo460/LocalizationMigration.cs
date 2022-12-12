@@ -62,10 +62,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFInvoice.OrderNotes.Note",
                 "PDFPackagingSlip.Shipment",
                 "PDFInvoice.Order#",
-                "PDFInvoice.ProductName",
-                "PDFInvoice.ProductPrice",
-                "PDFInvoice.ProductQuantity",
-                "PDFInvoice.ProductTotal",
                 "PDFInvoice.Discount",
                 "PDFInvoice.Sub-Total",
                 "PDFInvoice.Shipping",
@@ -73,12 +69,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFInvoice.PaymentMethodAdditionalFee",
                 "PDFInvoice.Pickup",
                 "PDFInvoice.Product(s)",
-                "PDFInvoice.SKU",
                 "PDFInvoice.Tax",
-                "PDFInvoice.TaxRate",
-                "PDFInvoice.RewardPoints",
-                "PDFInvoice.GiftCardInfo",
-
                 "PDFPackagingSlip.Address",
                 "PDFPackagingSlip.Address2",
                 "PDFPackagingSlip.Company",
@@ -87,13 +78,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFPackagingSlip.Phone",
                 "PDFPackagingSlip.ProductName",
                 "PDFPackagingSlip.QTY",
-                "PDFPackagingSlip.Shipment",
                 "PDFPackagingSlip.ShippingMethod",
                 "PDFPackagingSlip.SKU",
                 "PDFProductCatalog.Price",
                 "PDFProductCatalog.SKU",
-                "PDFProductCatalog.StockQuantity",
-                "PDFProductCatalog.Weight",
 
             });
 
@@ -129,6 +117,32 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint"},
                 new { Name = "Admin.Catalog.Products.Copy.CopyImages", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia"},
                 new { Name = "Admin.Catalog.Products.Copy.CopyImages.Hint", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint"},
+
+                //#43
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint" },
+
+                //4622
+                new { Name = "PDFInvoice.ProductName", NewName = "Pdf.Product.Name" },
+                new { Name = "PDFInvoice.SKU", NewName = "Pdf.Product.Sku" },
+                new { Name = "PDFInvoice.VendorName", NewName = "Pdf.Product.VendorName" },
+                new { Name = "PDFProductCatalog.Weight", NewName = "Pdf.Product.Weight" },
+                new { Name = "PDFInvoice.ProductPrice", NewName = "Pdf.Product.Price" },
+                new { Name = "PDFInvoice.ProductQuantity", NewName = "Pdf.Product.Quantity" },
+                new { Name = "PDFProductCatalog.StockQuantity", NewName = "Pdf.Product.StockQuantity" },
+                new { Name = "PDFInvoice.ProductTotal", NewName = "Pdf.Product.Total" },
+                new { Name = "PDFInvoice.RewardPoints", NewName = "Pdf.RewardPoints" },
+                new { Name = "PDFInvoice.TaxRate", NewName = "Pdf.TaxRate" },
+                new { Name = "PDFInvoice.GiftCardInfo", NewName = "Pdf.GiftCardInfo" },
+
             };
 
             foreach (var lang in languages)
@@ -246,6 +260,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit"] = "You need to save the product before you can upload videos for this product page.",
                 ["Admin.Catalog.Products.Multimedia.Videos.AddNew"] = "Add a new video",
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd"] = "Failed to add product video.",
+                ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate"] = "Failed to update product video.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder"] = "Display order",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder.Hint"] = "Display order of the video. 1 represents the top of the list.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.Preview"] = "Preview",
@@ -371,12 +386,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.Address.ShippingMethod"] = "Shipping method",
                 ["Pdf.Shipment"] = "Shipment",
                 ["Pdf.Order"] = "Order",
-                ["Pdf.Product.Name"] = "Name",
-                ["Pdf.Product.Sku"] = "SKU",
-                ["Pdf.Product.VendorName"] = "Vendor name",
-                ["Pdf.Product.Price"] = "Price",
-                ["Pdf.Product.Quantity"] = "Qty",
-                ["Pdf.Product.Total"] = "Total",
                 ["Pdf.Shipping"] = "Shipping",
                 ["Pdf.SubTotal"] = "Sub-total",
                 ["Pdf.Discount"] = "Discount",
@@ -384,12 +393,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.PaymentMethodAdditionalFee"] = "Payment Method Additional Fee",
                 ["Pdf.PickupPoint"] = "Pickup point",
                 ["Pdf.Tax"] = "Tax",
-                ["Pdf.TaxRate"] = "Tax {0}%",
-                ["Pdf.RewardPoints"] = "{0} reward points",
-                ["Pdf.GiftCardInfo"] = "Gift card ({0})",
-                ["Pdf.Product.StockQuantity"] = "Stock quantity",
-                ["Pdf.Product.Weight"] = "Weight",
 
+                //#43
+                ["admin.configuration.stores.info"] = "Info",
+
+                //5701
+                ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
+                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container, if set to false then the .Net IoC container will be use",
             }, languageId);
 
             #endregion

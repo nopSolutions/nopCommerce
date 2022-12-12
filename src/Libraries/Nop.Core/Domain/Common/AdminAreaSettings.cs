@@ -53,9 +53,9 @@ namespace Nop.Core.Domain.Common
         public bool HideAdvertisementsOnAdminArea { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should display a recommendation about copyright removal key
+        /// Gets or sets a value indicating whether we should check the store for license compliance
         /// </summary>
-        public bool CheckCopyrightRemovalKey { get; set; }
+        public bool CheckLicense { get; set; }
 
         /// <summary>
         /// Gets or sets title of last news (admin area)

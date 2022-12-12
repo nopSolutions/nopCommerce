@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
+using Nop.Services.Common;
 
 namespace Nop.Services.ScheduleTasks
 {
@@ -35,6 +36,9 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="task">Task</param>
         public virtual async Task DeleteTaskAsync(ScheduleTask task)
         {
+            if (string.Equals(task.Name, nameof(ResetLicenseCheckTask), StringComparison.InvariantCultureIgnoreCase))
+                return;
+
             await _taskRepository.DeleteAsync(task, false);
         }
 
@@ -85,13 +89,32 @@ namespace Nop.Services.ScheduleTasks
         {
             var tasks = await _taskRepository.GetAllAsync(query =>
             {
-                if (!showHidden)
-                    query = query.Where(t => t.Enabled);
-
                 query = query.OrderByDescending(t => t.Seconds);
-
                 return query;
             });
+
+            var licenseCheckTask = tasks
+                .FirstOrDefault(task => string.Equals(task.Name, nameof(ResetLicenseCheckTask), StringComparison.InvariantCultureIgnoreCase));
+            if (licenseCheckTask is null)
+            {
+                await InsertTaskAsync(new()
+                {
+                    Name = nameof(ResetLicenseCheckTask),
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
+                    StopOnError = false
+                });
+            }
+            else if (!licenseCheckTask.Enabled)
+            {
+                licenseCheckTask.Enabled = true;
+                await UpdateTaskAsync(licenseCheckTask);
+            }
+
+            if (!showHidden)
+                tasks = tasks.Where(task => task.Enabled).ToList();
 
             return tasks;
         }
@@ -117,6 +140,9 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="task">Task</param>
         public virtual async Task UpdateTaskAsync(ScheduleTask task)
         {
+            if (string.Equals(task.Name, nameof(ResetLicenseCheckTask), StringComparison.InvariantCultureIgnoreCase) && !task.Enabled)
+                return;
+
             await _taskRepository.UpdateAsync(task, false);
         }
 

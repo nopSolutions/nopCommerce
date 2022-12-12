@@ -80,7 +80,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Create, eventMessage.Entity.Id);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Create, eventMessage.Entity.Id);
         }
 
         /// <summary>
@@ -97,14 +97,14 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 return;
 
             if (!eventMessage.Entity.Deleted)
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.Id);
             else
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
                 var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.Id);
                 foreach (var combination in combinations)
                 {
-                    _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
+                    await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
                 }
             }
         }
@@ -122,11 +122,11 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.Id);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!_zettleSettings.CategorySyncEnabled)
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!_zettleSettings.CategorySyncEnabled)
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             var mappings = await _categoryService.GetProductCategoriesByCategoryIdAsync(eventMessage.Entity.Id, showHidden: true);
             foreach (var mapping in mappings)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
             }
         }
 
@@ -210,7 +210,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             var mappings = await _categoryService.GetProductCategoriesByCategoryIdAsync(eventMessage.Entity.Id, showHidden: true);
             foreach (var mapping in mappings)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
             }
         }
 
@@ -229,7 +229,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
 
             var pictures = await _productService.GetProductPicturesByProductIdAsync(eventMessage.Entity.ProductId);
             if (eventMessage.Entity.DisplayOrder <= pictures.Min(picture => picture.DisplayOrder))
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
 
             var pictures = await _productService.GetProductPicturesByProductIdAsync(eventMessage.Entity.ProductId);
             if (eventMessage.Entity.DisplayOrder <= pictures.Min(picture => picture.DisplayOrder))
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.ImageChanged, eventMessage.Entity.ProductId);
         }
 
         /// <summary>
@@ -282,11 +282,11 @@ namespace Nop.Plugin.Misc.Zettle.Services
             var products = await _productService.GetProductsByProductAttributeIdAsync(eventMessage.Entity.Id);
             foreach (var product in products)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, product.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, product.Id);
                 var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
                 foreach (var combination in combinations)
                 {
-                    _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                    await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
                 }
             }
         }
@@ -307,15 +307,15 @@ namespace Nop.Plugin.Misc.Zettle.Services
             var products = await _productService.GetProductsByProductAttributeIdAsync(eventMessage.Entity.Id);
             foreach (var product in products)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, product.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, product.Id);
                 var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
                 foreach (var combination in combinations)
                 {
                     var mappings = await _productAttributeParser.ParseProductAttributeMappingsAsync(combination.AttributesXml);
                     if (mappings.Any(mapping => mapping.ProductAttributeId == eventMessage.Entity.Id))
-                        _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
+                        await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
                     else
-                        _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                        await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
                 }
             }
         }
@@ -337,11 +337,11 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (mapping is null)
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(mapping.ProductId);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
             }
         }
 
@@ -362,11 +362,11 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (mapping is null)
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(mapping.ProductId);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
             }
         }
 
@@ -383,12 +383,12 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Create, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Create, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
             }
         }
 
@@ -405,11 +405,11 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
             }
         }
 
@@ -426,12 +426,12 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (!ZettleService.IsConfigured(_zettleSettings))
                 return;
 
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
-            _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
+            await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
             foreach (var combination in combinations)
             {
-                _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
+                await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
             }
         }
 
@@ -454,7 +454,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             if (eventMessage.Entity.Message.StartsWith(ZettleDefaults.SystemName))
                 return;
 
-            _zettleService.ChangeInventoryBalanceAsync(eventMessage.Entity.ProductId,
+            await _zettleService.ChangeInventoryBalanceAsync(eventMessage.Entity.ProductId,
                 eventMessage.Entity.CombinationId ?? 0, eventMessage.Entity.QuantityAdjustment);
         }
 

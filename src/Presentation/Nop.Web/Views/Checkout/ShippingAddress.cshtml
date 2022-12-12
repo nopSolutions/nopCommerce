@@ -29,11 +29,18 @@
                 @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
                 <script asp-location="Footer">
                     $(document).ready(function () {
-                        $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                        $(document).unbind('checkout_toggle_pickup_in_store');
+                        $(document).on('checkout_toggle_pickup_in_store', function (e) {                            
                             if (e.checked)
+                            {
                                 $('#shipping-addresses-form').hide();
+                                $('#shippingaddress-new-form').hide();
+                            }
                             else
+                            {
                                 $('#shipping-addresses-form').show();
+                                $('#shippingaddress-new-form').show();
+                            }
                         });
                     });
                 </script>

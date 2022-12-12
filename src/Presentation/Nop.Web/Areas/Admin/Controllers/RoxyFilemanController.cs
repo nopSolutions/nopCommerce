@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
+using Nop.Core;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Models.Media;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -18,17 +22,31 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly IPermissionService _permissionService;
         private readonly IRoxyFilemanService _roxyFilemanService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public RoxyFilemanController(
-            IPermissionService permissionService,
-            IRoxyFilemanService roxyFilemanService)
+        public RoxyFilemanController(IPermissionService permissionService, IRoxyFilemanService roxyFilemanService, IWebHelper webHelper)
         {
             _permissionService = permissionService;
             _roxyFilemanService = roxyFilemanService;
+            _webHelper = webHelper;
+        }
+
+        #endregion
+
+        #region Utils
+
+        protected virtual JsonResult JsonOk()
+        {
+            return Json(new { res = "ok" });
+        }
+
+        protected virtual JsonResult JsonError(string message)
+        {
+            return Json(new { res = "error", msg = message });
         }
 
         #endregion
@@ -40,100 +58,287 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// </summary>
         public virtual async Task CreateConfiguration()
         {
-            await _roxyFilemanService.CreateConfigurationAsync();
+            var currentPathBase = Request.PathBase.ToString();
+            await _roxyFilemanService.ConfigureAsync(currentPathBase);
         }
 
-        /// <summary>
-        /// Process request
-        /// </summary>
         [IgnoreAntiforgeryToken]
-        public virtual void ProcessRequest()
+        public virtual async Task<IActionResult> DirectoriesList(string type)
         {
-            //async requests are disabled in the js code, so use .Wait() method here
-            ProcessRequestAsync().Wait();
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Process the incoming request
-        /// </summary>
-        /// <returns>A task that represents the completion of the operation</returns>
-        [IgnoreAntiforgeryToken]
-        protected virtual async Task ProcessRequestAsync()
-        {
-            var action = "DIRLIST";
             try
             {
                 if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
-                if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
-                    action = HttpContext.Request.Query["a"];
-
-                switch (action.ToUpperInvariant())
-                {
-                    case "DIRLIST":
-                        await _roxyFilemanService.GetDirectoriesAsync(HttpContext.Request.Query["type"]);
-                        break;
-                    case "FILESLIST":
-                        await _roxyFilemanService.GetFilesAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["type"]);
-                        break;
-                    case "COPYDIR":
-                        await _roxyFilemanService.CopyDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "COPYFILE":
-                        await _roxyFilemanService.CopyFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "CREATEDIR":
-                        await _roxyFilemanService.CreateDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "DELETEDIR":
-                        await _roxyFilemanService.DeleteDirectoryAsync(HttpContext.Request.Query["d"]);
-                        break;
-                    case "DELETEFILE":
-                        await _roxyFilemanService.DeleteFileAsync(HttpContext.Request.Query["f"]);
-                        break;
-                    case "DOWNLOAD":
-                        await _roxyFilemanService.DownloadFileAsync(HttpContext.Request.Query["f"]);
-                        break;
-                    case "DOWNLOADDIR":
-                        await _roxyFilemanService.DownloadDirectoryAsync(HttpContext.Request.Query["d"]);
-                        break;
-                    case "MOVEDIR":
-                        await _roxyFilemanService.MoveDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "MOVEFILE":
-                        await _roxyFilemanService.MoveFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "RENAMEDIR":
-                        await _roxyFilemanService.RenameDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "RENAMEFILE":
-                        await _roxyFilemanService.RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
-                        break;
-                    case "GENERATETHUMB":
-                        await _roxyFilemanService.CreateImageThumbnailAsync(HttpContext.Request.Query["f"]);
-                        break;
-                    case "UPLOAD":
-                        await _roxyFilemanService.UploadFilesAsync(HttpContext.Request.Form["d"]);
-                        break;
-                    default:
-                        await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse("This action is not implemented."));
-                        break;
-                }
+                var directories = _roxyFilemanService.GetDirectoryList(type);
+                return Json(directories);
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !_roxyFilemanService.IsAjaxRequest())
-                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(await _roxyFilemanService.GetLanguageResourceAsync("E_UploadNoFiles"))});</script>");
-                else
-                    await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse(ex.Message));
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> FilesList(string d, string type)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                var directories = _roxyFilemanService.GetFiles(d, type);
+
+                return Json(directories);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        public virtual async Task<IActionResult> DownloadFile(string f)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                var (stream, name) = _roxyFilemanService.GetFileStream(f);
+
+                if (!new FileExtensionContentTypeProvider().TryGetContentType(f, out var contentType))
+                    contentType = MimeTypes.ApplicationOctetStream;
+
+                return File(stream, contentType, name);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> CopyDirectory(string d, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.CopyDirectory(d, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> CopyFile(string f, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.CopyFile(f, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> CreateDirectory(string d, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.CreateDirectory(d, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> DeleteDirectory(string d)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.DeleteDirectory(d);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> DeleteFile(string f)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.DeleteFile(f);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        public virtual async Task<IActionResult> DownloadDirectory(string d)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                throw new Exception("You don't have required permission");
+
+            var fileContents = _roxyFilemanService.DownloadDirectory(d);
+
+            return File(fileContents, MimeTypes.ApplicationZip);
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> MoveDirectory(string d, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.MoveDirectory(d, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> MoveFile(string f, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.MoveFile(f, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> RenameDirectory(string d, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.RenameDirectory(d, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> RenameFile(string f, string n)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                _roxyFilemanService.RenameFile(f, n);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        public virtual async Task<IActionResult> CreateImageThumbnail(string f)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                var provider = new FileExtensionContentTypeProvider();
+                if (!provider.TryGetContentType(f, out var contentType))
+                    contentType = MimeTypes.ImageJpeg;
+
+                var fileContents = _roxyFilemanService.CreateImageThumbnail(f, contentType);
+
+                return File(fileContents, contentType);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        [IgnoreAntiforgeryToken]
+        [HttpPost]
+        public virtual async Task<IActionResult> UploadFiles([FromForm]RoxyFilemanUploadModel uploadModel)
+        {
+            try
+            {
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+                    throw new Exception("You don't have required permission");
+
+                if (HttpContext.Request.Form.Files.Count == 0)
+                    throw new RoxyFilemanException("E_UploadNoFiles");
+
+                await _roxyFilemanService.UploadFilesAsync(uploadModel.D, HttpContext.Request.Form.Files);
+
+                return JsonOk();
+            }
+            catch (Exception ex)
+            {
+                if (!_webHelper.IsAjaxRequest(Request))
+                {
+                    var roxyError = new { res = "error", msg = ex.Message };
+                    return Content($"<script>parent.fileUploaded({JsonConvert.SerializeObject(roxyError)});</script>");
+                }
+
+                return JsonError(ex.Message);
             }
         }
 
         #endregion
+
     }
 }
