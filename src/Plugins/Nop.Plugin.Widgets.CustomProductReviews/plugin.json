@@ -1,0 +1,11 @@
+﻿{
+  "Group": "",
+  "FriendlyName": "",
+  "SystemName": "",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Author Name",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.CustomProductReviews.dll",
+  "Description": ""
+}
