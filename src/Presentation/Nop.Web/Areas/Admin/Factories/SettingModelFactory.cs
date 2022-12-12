@@ -820,11 +820,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 LocalizableDisallowPaths =
                     string.Join(Environment.NewLine, robotsTxtSettings.LocalizableDisallowPaths),
                 DisallowLanguages = robotsTxtSettings.DisallowLanguages.ToList(),
-                AdditionsRules = string.Join(Environment.NewLine, robotsTxtSettings.AdditionsRules)
+                AdditionsRules = string.Join(Environment.NewLine, robotsTxtSettings.AdditionsRules),
+                AvailableLanguages = new List<SelectListItem>()
             };
 
             if (!model.AvailableLanguages.Any())
-                model.AvailableLanguages.AddRange((await _languageService.GetAllLanguagesAsync(storeId: storeId)).Select(p => new SelectListItem
+                (model.AvailableLanguages as List<SelectListItem>)?.AddRange((await _languageService.GetAllLanguagesAsync(storeId: storeId)).Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
                     Text = p.Name
