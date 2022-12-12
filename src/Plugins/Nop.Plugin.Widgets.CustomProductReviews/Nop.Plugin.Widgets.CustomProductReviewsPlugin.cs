@@ -86,7 +86,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));
 
-            return "";
+            return "CustomProductReviews";
         }
 
         /// <summary>
