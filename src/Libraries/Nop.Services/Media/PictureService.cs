@@ -595,13 +595,13 @@ namespace Nop.Services.Media
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
 
             var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
-            string thumbFileName;
-            if (targetSize == 0)
-            {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+            
+            var thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                     : $"{picture.Id:0000000}.{lastPart}";
 
+            if (targetSize == 0)
+            {
                 var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
                 if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
                     return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
@@ -625,55 +625,45 @@ namespace Nop.Services.Media
             }
             else
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                //There is no need to resize the svg image as the browser will take care of it
+                if (picture.MimeType != MimeTypes.ImageSvg)
+                {
+                    thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
 
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+                    var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+                    if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                        return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
-                pictureBinary ??= await LoadPictureBinaryAsync(picture);
+                    pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                //the named mutex helps to avoid creating the same files in different threads,
-                //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
-                {
-                    if (pictureBinary != null)
+                    //the named mutex helps to avoid creating the same files in different threads,
+                    //and does not decrease performance significantly, because the code is blocked only for the specific file.
+                    //you should be very careful, mutexes cannot be used in with the await operation
+                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+                    using var mutex = new Mutex(false, thumbFileName);
+                    mutex.WaitOne();
+                    try
                     {
-                        try
+                        if (pictureBinary != null)
                         {
-                            if (picture.MimeType == MimeTypes.ImageSvg)
-                            {
-                                using var memStream = new MemoryStream(pictureBinary);
-                                var svgDocument = SvgDocument.Open<SvgDocument>(memStream);
-                                svgDocument.Height = targetSize;
-                                svgDocument.Width = targetSize;
-                                using var stream = new MemoryStream();
-                                svgDocument.Write(stream);
-                                pictureBinary = stream.ToArray();
-                            }
-                            else
+                            try
                             {
                                 using var image = SKBitmap.Decode(pictureBinary);
                                 var format = GetImageFormatByMimeType(picture.MimeType);
                                 pictureBinary = ImageResize(image, format, targetSize);
+                                SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
+                            }
+                            catch
+                            {
                             }
                         }
-                        catch
-                        {
-                        }
                     }
-
-                    SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
             }
 
