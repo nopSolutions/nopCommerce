@@ -73,7 +73,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { _customProdutReviewSettings.WidgetZone });
+            return Task.FromResult<IList<string>>(new List<string> { _customProdutReviewSettings.WidgetZone,PublicWidgetZones.ProductDetailsBottom });
         }
 
         /// <summary>

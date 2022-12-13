@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Html;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Nop.Plugin.Widgets.CustomCustomProductReviews.Models;
 using Nop.Web.Framework.Components;
+using Nop.Web.Models.Catalog;
+using Nop.Services.Catalog;
+using Nop.Web.Factories;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 {
@@ -15,15 +19,18 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 
         //private readonly CustomProductReviewsService _customProductReviewsServiceService;
         private readonly CustomProductReviewsSettings _customProductReviewsSettings;
-
+        private readonly IProductService _productService;
+        private readonly IProductModelFactory _productModelFactory;
         #endregion
 
         #region Ctor
 
-        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings)
+        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings,IProductService productService, IProductModelFactory productModelFactory)
         {
             //_accessiBeService = accessiBeService;
             _customProductReviewsSettings = customProductReviewsSettings;
+            _productService = productService;
+            _productModelFactory = productModelFactory;
         }
 
         #endregion
@@ -41,8 +48,21 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
+            var model = new ProductReviewsModel();
+            var productDetailModel = new ProductDetailsModel();
+            if (additionalData.GetType()== model.GetType())
+            {
+                model = (ProductReviewsModel)additionalData;
+            }
+            else
+            {
+                productDetailModel = (ProductDetailsModel)additionalData;
+                int productId=productDetailModel.Id;
+                var product = await _productService.GetProductByIdAsync(productId);
+                model = await _productModelFactory.PrepareProductReviewsModelAsync(new ProductReviewsModel(), product);
+            }
 
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml");
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
 
         }
 
