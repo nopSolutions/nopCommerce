@@ -95,11 +95,16 @@ namespace Nop.Services.Catalog
         /// <param name="value">Product attribute value</param>
         /// <param name="customer">Customer</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the price adjustment
         /// </returns>
-        Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null);
+        Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product,
+            ProductAttributeValue value,
+            Customer customer,
+            decimal? productPrice = null,
+            int quantity = 1);
 
         /// <summary>
         /// Round a product or order total for the currency
