@@ -17,10 +17,10 @@ namespace Nop.Services.Customers.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(CustomerAddressMapping entity, EntityEventType entityEventType)
         {
-            await RemoveAsync(NopCustomerServicesDefaults.CustomerAddressesCacheKey, entity.CustomerId.ToString());
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerAddressesCacheKey, entity.CustomerId);
 
             if (entityEventType == EntityEventType.Delete)
-                await RemoveAsync(NopCustomerServicesDefaults.CustomerAddressCacheKey, entity.CustomerId.ToString(), entity.AddressId.ToString());
+                await RemoveAsync(NopCustomerServicesDefaults.CustomerAddressCacheKey, entity.CustomerId, entity.AddressId);
 
             await base.ClearCacheAsync(entity, entityEventType);
         }
