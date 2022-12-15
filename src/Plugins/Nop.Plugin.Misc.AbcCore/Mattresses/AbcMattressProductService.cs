@@ -831,6 +831,7 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
                 case "king-flexhead":
                     return "king";
                 case "california king-flexhead":
+                case "cal/king-flexhead":
                     return "california king";
                 default:
                     return loweredSize;
