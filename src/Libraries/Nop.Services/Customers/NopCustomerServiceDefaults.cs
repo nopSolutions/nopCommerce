@@ -135,7 +135,7 @@ namespace Nop.Services.Customers
         /// {0} : customer identifier
         /// {1} : address identifier
         /// </remarks>
-        public static CacheKey CustomerAddressCacheKey => new("Nop.customer.addresses.address.{0}-{1}", CustomerAddressesByCustomerPrefix, CustomerAddressesPrefix);
+        public static CacheKey CustomerAddressCacheKey => new("Nop.customer.addresses.{0}-{1}", CustomerAddressesByCustomerPrefix, CustomerAddressesPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
