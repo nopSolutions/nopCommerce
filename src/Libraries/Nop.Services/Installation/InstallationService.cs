@@ -2764,7 +2764,7 @@ namespace Nop.Services.Installation
                 LogoPictureId = 0,
                 LetterPageSizeEnabled = false,
                 RenderOrderNotes = true,
-                FontFileName = "FreeSerif.ttf",
+                FontFamily = "FreeSerif",
                 InvoiceFooterTextColumn1 = null,
                 InvoiceFooterTextColumn2 = null
             });
