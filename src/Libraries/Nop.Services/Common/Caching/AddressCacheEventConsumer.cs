@@ -11,17 +11,13 @@ namespace Nop.Services.Common.Caching
     public partial class AddressCacheEventConsumer : CacheEventConsumer<Address>
     {
         /// <summary>
-        /// Clear cache by entity event type
+        /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="entityEventType">Entity event type</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected override async Task ClearCacheAsync(Address entity, EntityEventType entityEventType)
+        protected override async Task ClearCacheAsync(Address entity)
         {
-            if (entityEventType != EntityEventType.Insert)
-                await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesPrefix);
-
-            await base.ClearCacheAsync(entity, entityEventType);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesPrefix);
         }
     }
 }
