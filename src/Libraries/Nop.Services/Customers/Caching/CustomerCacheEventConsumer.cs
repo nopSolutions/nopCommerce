@@ -24,6 +24,23 @@ namespace Nop.Services.Customers.Caching
         }
 
         /// <summary>
+        /// Clear cache by entity event type
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Customer entity, EntityEventType entityEventType)
+        {
+            if (entityEventType == EntityEventType.Delete)
+            {
+                await RemoveAsync(NopCustomerServicesDefaults.CustomerAddressesCacheKey, entity);
+                await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesByCustomerPrefix, entity);
+            }
+
+            await base.ClearCacheAsync(entity, entityEventType);
+        }
+
+        /// <summary>
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -31,7 +48,6 @@ namespace Nop.Services.Customers.Caching
         protected override async Task ClearCacheAsync(Customer entity)
         {
             await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesByCustomerPrefix, entity);
-            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesByCustomerPrefix, entity);
             await RemoveByPrefixAsync(NopOrderDefaults.ShoppingCartItemsByCustomerPrefix, entity);
             await RemoveAsync(NopCustomerServicesDefaults.CustomerByGuidCacheKey, entity.CustomerGuid);
 
