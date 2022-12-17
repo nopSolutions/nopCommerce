@@ -4506,6 +4506,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint">
     <Value>Specify a value of "Cache-Control" header value for static content (in seconds).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseAutofac">
+    <Value>Use Autofac IoC</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseAutofac.Hint">
+    <Value>The value indicating whether to use Autofac IoC container. If disabled, then the default .Net IoC container will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
   </LocaleResource>
@@ -5698,13 +5704,13 @@
     <Value>Allow customers to search with category name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint">
-    <Value>Check to allow customer to search with category name.</Value>
+    <Value>Check to allow customers to search with category name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName">
     <Value>Allow customers to search with manufacturer name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint">
-    <Value>Check to allow customer to search with manufacturer name.</Value>
+    <Value>Check to allow customers to search with manufacturer name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowProductSorting">
     <Value>Allow product sorting</Value>
@@ -7654,19 +7660,19 @@
     <Value>Select a reCAPTCHA v3 score threshold (1.0 is very likely a good interaction, 0.0 is very likely a bot). By default, you can use a threshold of 0.5.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction">
-    <Value><![CDATA[You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.]]></Value>
+    <Value><![CDATA[You also may extend the robots.txt data by adding the {0} file to the wwwroot directory of your site.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules">
     <Value>Additions rules</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint">
-    <Value>Put here an additional rules for robots.txt file</Value>
+    <Value>Enter additional rules for the robots.txt file.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml">
     <Value>Allow sitemap.xml</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint">
-    <Value>Check to allow robots use the sitemap.xml file</Value>
+    <Value>Check to allow robots to access the sitemap.xml file.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists">
     <Value>robots.txt file data overridden by {0} file in site root.</Value>
@@ -7675,19 +7681,19 @@
     <Value>Disallow languages</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint">
-    <Value>The list of languages which prohibit to use by robots</Value>
+    <Value>The list of languages to disallow.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths">
     <Value>Disallow paths</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint">
-    <Value>The list of paths which prohibit to use by robots</Value>
+    <Value>The list of paths to disallow.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths">
     <Value>Localizable disallow paths</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint">
-    <Value>The list of localizable paths which prohibit to use by robots</Value>
+    <Value>The list of localizable paths to disallow.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
@@ -7816,7 +7822,7 @@
     <Value>Allow SVG uploads in admin area</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSVGUploads.Hint">
-    <Value>Check to allow uploading of SVG files in admin area</Value>
+    <Value>Check to allow uploading of SVG files in admin area.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize">
     <Value>Associated product image size</Value>
@@ -13135,7 +13141,7 @@
     <Value>Void (Offline)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Import.CustomersDontExist">
-    <Value>Customers with the following guids don't exist: {0}</Value>
+    <Value>Customers with the following GUIDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Import.ProductsDontExist">
     <Value>Products with the following SKUs don't exist: {0}</Value>
@@ -13183,7 +13189,7 @@
     <Value>Go directly to order #.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.ImportFromExcelTip">
-    <Value>Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.</Value>
+    <Value>Imported orders are distinguished by order GUID. If the order GUID already exists, then its details will be updated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderNotes">
     <Value>Order notes</Value>
