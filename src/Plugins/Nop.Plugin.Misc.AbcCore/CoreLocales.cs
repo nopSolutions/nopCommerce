@@ -29,9 +29,9 @@ namespace Nop.Plugin.Misc.AbcCore
         public const string MobilePhoneNumberHint =
             MobilePhoneNumber + ".Hint";
 
-        public const string IsPickupOnlyMode =
-            Base + "IsPickupOnlyMode";
-        public const string IsPickupOnlyModeHint =
-            IsPickupOnlyMode + ".Hint";
+        public const string IsFedExMode =
+            Base + "IsFedExMode";
+        public const string IsFedExModeHint =
+            IsFedExMode + ".Hint";
     }
 }

@@ -28,7 +28,7 @@
         storeText = ": " + Model.SelectedShop.Name;
     }
 
-	var isPickupInitiallyChecked = Model.IsPickupOnlyMode && !Model.IsFedExMode;
+	var isPickupInitiallyChecked = Model.IsFedExMode && !Model.HasFedExAttribute;
 }
 
 <style>
@@ -121,7 +121,7 @@
 			border-color: #c3c3c3;
 		}
 </style>
-@if (!Model.IsPickupOnlyMode || Model.IsFedExMode)
+@if (!Model.IsFedExMode || Model.HasFedExAttribute)
 {
 	<style>
 		div#zipcode-input-container {
@@ -160,7 +160,7 @@
 </script>
 
 <div class="delivery-method-selection">
-	@if (!Model.IsPickupOnlyMode)
+	@if (!Model.IsFedExMode)
 	{
 		<div class="radio-row">
 			<input id="home-delivery-radio" type="radio" class="radio-input" name="delivery-method" checked="checked" />
@@ -169,7 +169,7 @@
 			</label>
 		</div>
 	}
-	@if (Model.IsFedExMode)
+	@if (Model.IsFedExMode && Model.HasFedExAttribute)
 	{
 		<div class="radio-row">
 			<input id="fedex-radio" type="radio" class="radio-input" name="delivery-method" checked="checked" />

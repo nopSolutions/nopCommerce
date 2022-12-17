@@ -193,8 +193,8 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.PLPDescriptionHint] = "Description displayed for PLP (Product Box).",
                     [CoreLocales.MobilePhoneNumber] = "Mobile Phone Header",
                     [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header.",
-                    [CoreLocales.IsPickupOnlyMode] = "Pickup Only Mode",
-                    [CoreLocales.IsPickupOnlyModeHint] = "Turns on pick-up only mode."
+                    [CoreLocales.IsFedExMode] = "FedEx Mode",
+                    [CoreLocales.IsFedExModeHint] = "Turns on FedEx mode (products require 'FedEx' attribute for delivery, intended for Mickey)."
                 }
             );
         }

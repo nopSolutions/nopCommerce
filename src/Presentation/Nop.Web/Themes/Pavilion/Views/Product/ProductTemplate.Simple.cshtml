@@ -94,7 +94,7 @@
     }
 
     // ABC: For some reason I can't get the typed version, so this is from AbcCoreSettings
-    var isPickupModeOnly = await _settingService.GetSettingByKeyAsync<bool>("coresettings.ispickuponlymode");
+    var isFedExMode = await _settingService.GetSettingByKeyAsync<bool>("coresettings.isfedexmode");
 
     ProductAttribute fedExProductAttribute = null;
     var productAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(Model.Id);
@@ -210,7 +210,7 @@
                     @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductDetailsBeforeAddToCart, additionalData = Model })
 
                     <!--add to cart-->
-                    @if (!isPickupModeOnly || fedExProductAttribute != null)
+                    @if (!isFedExMode || fedExProductAttribute != null)
                     {
                         var dataDictAddToCart = new ViewDataDictionary(ViewData);
                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";

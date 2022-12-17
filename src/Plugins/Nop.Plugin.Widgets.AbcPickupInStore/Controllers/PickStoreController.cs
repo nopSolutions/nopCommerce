@@ -175,7 +175,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
                 }
             }
 
-            stockResponse.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode && fedExProductAttribute == null;
+            stockResponse.IsFedExMode = _coreSettings.IsFedExMode && fedExProductAttribute == null;
 
             return PartialView("~/Plugins/Widgets.AbcPickupInStore/Views/SelectStoreForPickup.cshtml", stockResponse);
         }

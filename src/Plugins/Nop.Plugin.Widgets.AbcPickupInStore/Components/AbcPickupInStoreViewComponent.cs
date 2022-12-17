@@ -136,7 +136,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
 
                 if (pamsWithFedex.Any())
                 {
-                    model.IsFedExMode = true;
+                    model.HasFedExAttribute = true;
                 }
 
                 if (pamsWithPickup.Any())

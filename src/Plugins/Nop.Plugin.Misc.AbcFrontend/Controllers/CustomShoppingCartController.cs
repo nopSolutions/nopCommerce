@@ -239,7 +239,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             }
 
             // ABC: set up for Pickup only mode - force redirect to PDP
-            if (pickupProductAttribute != null && (_coreSettings.IsPickupOnlyMode && fedExProductAttribute == null))
+            if (pickupProductAttribute != null && (_coreSettings.IsFedExMode && fedExProductAttribute == null))
             {
                 return Json(new
                 {

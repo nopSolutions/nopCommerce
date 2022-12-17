@@ -16,6 +16,6 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         public int ProductId;
 
-        public bool IsPickupOnlyMode;
+        public bool IsFedExMode;
     }
 }

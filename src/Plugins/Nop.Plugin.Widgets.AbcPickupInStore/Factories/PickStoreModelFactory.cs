@@ -58,7 +58,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Factories
 
             model.PickupInStoreText = _pickupInStoreSettings.PickupInStoreText;
             model.GoogleMapsAPIKey = _storeLocatorSettings.GoogleApiKey;
-            model.IsPickupOnlyMode = _coreSettings.IsPickupOnlyMode;
+            model.IsFedExMode = _coreSettings.IsFedExMode;
 
             return model;
         }

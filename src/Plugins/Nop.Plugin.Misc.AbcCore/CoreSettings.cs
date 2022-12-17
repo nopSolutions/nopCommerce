@@ -11,7 +11,7 @@ namespace Nop.Plugin.Misc.AbcCore
         public bool AreExternalCallsSkipped { get; private set; }
         public bool IsDebugMode { get; private set; }
         public string MobilePhoneNumber { get; private set; }
-        public bool IsPickupOnlyMode { get; private set; }
+        public bool IsFedExMode { get; private set; }
 
         public static CoreSettings FromModel(ConfigurationModel model)
         {
@@ -21,7 +21,7 @@ namespace Nop.Plugin.Misc.AbcCore
                 AreExternalCallsSkipped = model.AreExternalCallsSkipped,
                 IsDebugMode = model.IsDebugMode,
                 MobilePhoneNumber = model.MobilePhoneNumber,
-                IsPickupOnlyMode = model.IsPickupOnlyMode
+                IsFedExMode = model.IsFedExMode
             };
         }
 
@@ -33,7 +33,7 @@ namespace Nop.Plugin.Misc.AbcCore
                 AreExternalCallsSkipped = AreExternalCallsSkipped,
                 IsDebugMode = IsDebugMode,
                 MobilePhoneNumber = MobilePhoneNumber,
-                IsPickupOnlyMode = IsPickupOnlyMode
+                IsFedExMode = IsFedExMode
             };
         }
         public OdbcConnection GetBackendDbConnection()
