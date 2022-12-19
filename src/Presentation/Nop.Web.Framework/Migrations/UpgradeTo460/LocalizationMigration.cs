@@ -166,9 +166,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             {
                 //#3075
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName"] = "Allow customers to search with category name",
-                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customer to search with category name.",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customers to search with category name.",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
-                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customer to search with manufacturer name.",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customers to search with manufacturer name.",
 
                 //#3997
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink"] = "Instagram URL",
@@ -212,10 +212,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5313
                 ["ActivityLog.ImportOrders"] = "{0} orders were imported",
-                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following guids don't exist: {0}",
+                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following GUIDs don't exist: {0}",
                 ["Admin.Orders.Import.ProductsDontExist"] = "Products with the following SKUs don't exist: {0}",
                 ["Admin.Orders.Imported"] = "Orders have been imported successfully.",
-                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.",
+                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order GUID. If the order GUID already exists, then its details will be updated.",
 
                 //#1933
                 ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages"] = "Display all pictures on catalog pages",
@@ -295,18 +295,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5261
                 ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt"] = "robots.txt",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"] = "You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"] = "You also may extend the robots.txt data by adding the {0} file to the wwwroot directory of your site.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules"] = "Additions rules",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint"] = "Put here an additional rules for robots.txt file",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint"] = "Enter additional rules for the robots.txt file.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml"] = "Allow sitemap.xml",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint"] = "Check to allow robots use the sitemap.xml file",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint"] = "Check to allow robots to access the sitemap.xml file.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists"] = "robots.txt file data overridden by {0} file in site root.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages"] = "Disallow languages",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint"] = "The list of languages which prohibit to use by robots",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint"] = "The list of languages to disallow.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths"] = "Disallow paths",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint"] = "The list of paths which prohibit to use by robots",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint"] = "The list of paths to disallow.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths"] = "Localizable disallow paths",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint"] = "The list of localizable paths which prohibit to use by robots",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint"] = "The list of localizable paths to disallow.",
 
                 //#5753
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage"] = "Default image",
@@ -354,7 +354,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6378
                 ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
-                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area",
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area.",
 
                 //#6396
                 ["Admin.Catalog.Products.Fields.MinStockQuantity.Hint"] = "If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.",
@@ -399,7 +399,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //5701
                 ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
-                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container, if set to false then the .Net IoC container will be use",
+                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container. If disabled, then the default .Net IoC container will be used.",
             }, languageId);
 
             #endregion
