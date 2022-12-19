@@ -394,6 +394,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public IList<ProductLocalizedModel> Locales { get; set; }
 
+        public bool CanPublish { get; set; }
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }

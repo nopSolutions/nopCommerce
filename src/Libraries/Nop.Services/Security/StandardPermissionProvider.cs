@@ -58,7 +58,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord HtmlEditorManagePictures = new() { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new() { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
         public static readonly PermissionRecord ManageAppSettings = new() { Name = "Admin area. Manage App Settings", SystemName = "ManageAppSettings", Category = "Configuration" };
-
+        public static readonly PermissionRecord ManagePublish = new() { Name = "Admin area. Manage Publish ", SystemName = "ManagePublish", Category = "Catalog" };
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new() { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
         public static readonly PermissionRecord EnableShoppingCart = new() { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
@@ -132,7 +132,9 @@ namespace Nop.Services.Security
                 PublicStoreAllowNavigation,
                 AccessClosedStore,
                 AccessProfiling,
-                EnableMultiFactorAuthentication
+                EnableMultiFactorAuthentication,
+                ManagePublish
+
             };
         }
 
@@ -202,7 +204,9 @@ namespace Nop.Services.Security
                         PublicStoreAllowNavigation,
                         AccessClosedStore,
                         AccessProfiling,
-                        EnableMultiFactorAuthentication
+                        EnableMultiFactorAuthentication,
+                        ManagePublish
+
                     }
                 ),
                 (
