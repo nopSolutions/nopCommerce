@@ -361,6 +361,10 @@ namespace Nop.Web.Controllers
             return Content(robotsFileContent, MimeTypes.TextPlain);
         }
 
+        //available even when a store is closed
+        [CheckAccessClosedStore(ignore: true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(ignore: true)]
         public virtual IActionResult GenericUrl()
         {
             //seems that no entity was found

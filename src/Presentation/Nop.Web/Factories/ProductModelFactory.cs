@@ -656,11 +656,19 @@ namespace Nop.Web.Factories
             {
                 async Task<PictureModel> preparePictureModelAsync(Picture picture)
                 {
-                    var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+                    //we use the Task.WhenAll method to control that both image thumbs was created in same time.
+                    //without this method, sometimes there were situations when one of the pictures was not generated on time
+                    //this section of code requires detailed analysis in the future
+                    var picResultTasks = await Task.WhenAll(_pictureService.GetPictureUrlAsync(picture, pictureSize), _pictureService.GetPictureUrlAsync(picture));
+
+                    var (imageUrl, _) = picResultTasks[0];
+                    var (fullSizeImageUrl, _) = picResultTasks[1];
+
+                    //var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
                     //customization
                     //picture = await CustomizeProductPictureAsync(product);
 
-                    var (fullSizeImageUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
+                    //var (fullSizeImageUrl, _) = await _pictureService.GetPictureUrlAsync(picture); //to do : merge conflicts. Test it again
                     return new PictureModel
                     {
                         ImageUrl = imageUrl,
@@ -1014,7 +1022,7 @@ namespace Nop.Web.Factories
                             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
                             var customer = updatecartitem?.CustomerId is null ? currentCustomer : await _customerService.GetCustomerByIdAsync(updatecartitem.CustomerId);
 
-                            var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
+                            var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store, quantity: updatecartitem?.Quantity ?? 1);
                             var (priceAdjustmentBase, _) = await _taxService.GetProductPriceAsync(product, attributeValuePriceAdjustment);
                             var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
 

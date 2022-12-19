@@ -4,12 +4,12 @@
 {
     <div class="video-gallery">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforeVideos, additionalData = Model })
+    <div class="video-thumbs">
     @foreach (var video in Model.VideoModels)
     {
-        <div class="video-thumbs">
-            <iframe class="thumb-item" src="@video.VideoUrl" width="@video.Width" height="@video.Height" frameborder="0" allow="@video.Allow"></iframe>
-        </div>
+        <iframe class="thumb-item" src="@video.VideoUrl" width="@video.Width" height="@video.Height" frameborder="0" allow="@video.Allow"></iframe>
     }
+    </div>
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsAfterVideos, additionalData = Model })
 </div>
 }

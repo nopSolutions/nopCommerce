@@ -22,5 +22,10 @@ namespace Nop.Services.Common.Pdf
         /// Gets or sets a value indicating that the text direction is from right to left
         /// </summary>
         public bool IsRightToLeft => Language.Rtl;
+
+        /// <summary>
+        /// Gets or sets the font name. Loaded from the ~/App_Data/Pdf directory during application start. The default font is Lato (embedded).
+        /// </summary>
+        public string FontFamily { get; set; } = Fonts.Lato;
     }
 }

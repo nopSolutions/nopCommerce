@@ -13,10 +13,10 @@
     <Value>ایڈمن یوزر کا پاس ورڈ سے ضروری ہے</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+    <Value>فولڈر '{1}' پر '{0}' اکاؤنٹ میں ترمیم کی اجازت نہیں دی گئی ہے۔  براہ کرم ان اجازتوں کو ترتیب دیں۔</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.</Value>
+    <Value>'{0}' اکاؤنٹ فائل '{1}' میں ترمیم کی اجازت  نہیں دی گئی۔ براہ کرم ان اجازتوں کو ترتیب دیں۔</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>پاس ورڈ دوبارہ لکھ کر دیں</Value>
@@ -34,10 +34,10 @@
     <Value>غلط ایس کیو ایل کنکشن سٹرنگ فارمیٹ</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>ملک</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>اپنے ملک کا انتخاب کریں</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>ڈیٹا بیس بنائیں اگر وہ موجود نہیں ہے</Value>
@@ -46,7 +46,7 @@
     <Value>نمونہ ڈیٹا بنائیں</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>کسٹم کولیشن کی وضاحت کریں۔</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>ڈیٹا بیس</Value>
@@ -103,13 +103,13 @@
     <Value>انسٹالیشن دوبارہ شروع کرنے کے لئے یہاں کلک کریں (تمام عارضی فیلڈز کو خالی کریں) </Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>دوبارہ شروع ہو رہا ہے ...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>سرور کا نام</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>سرور کا نام درج کرنا لازمی ہے</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>سیٹ اپ ناکام رہا: {0}</Value>

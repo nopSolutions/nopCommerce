@@ -104,6 +104,6 @@ namespace Nop.Services.Common.Pdf
 
         #endregion
 
-        public TextStyle DefaultStyle => TextStyle.Default.FontFamily(Fonts.Tahoma);
+        public TextStyle DefaultStyle => TextStyle.Default.FontFamily(Source.FontFamily);
     }
 }

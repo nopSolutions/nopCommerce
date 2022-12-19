@@ -1,5 +1,8 @@
 ﻿@model ProductDetailsModel
 
+<link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
+
 <div class="picture-gallery">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
     <div class="picture">
@@ -21,8 +24,6 @@
     </div>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
     {
-        <link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
-        <script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
         <div class="picture-thumbs">
             @foreach (var picture in Model.PictureModels)
             {

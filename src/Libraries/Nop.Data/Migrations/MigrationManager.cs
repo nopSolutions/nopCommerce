@@ -64,6 +64,10 @@ namespace Nop.Data.Migrations
                         migrationProcessType != migrationAttribute.TargetMigrationProcess)
                         return false;
 
+                    if (migrationProcessType == MigrationProcessType.NoDependencies &&
+                        migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoDependencies)
+                        return false;
+
                     return assembly == null || t.Assembly == assembly;
 
                 }) ?? Enumerable.Empty<IMigration>();

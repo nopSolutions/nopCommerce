@@ -34,6 +34,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
+using QuestPDF.Drawing;
 using WebMarkupMin.AspNetCore7;
 using WebOptimizer;
 
@@ -344,7 +345,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
                     RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                     OnPrepareResponse = staticFileResponse
                 });
@@ -390,6 +391,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure PDF
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopPdf(this IApplicationBuilder application)
+        {
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
+
+            foreach (var fp in fontPaths)
+            {
+                FontManager.RegisterFont(File.OpenRead(fp));
+            }
         }
 
         /// <summary>

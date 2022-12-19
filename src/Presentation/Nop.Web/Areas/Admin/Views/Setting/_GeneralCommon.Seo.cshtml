@@ -1,16 +1,6 @@
 @model GeneralCommonSettingsModel
 
-    <div class="card-body">        
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SeoSettings.DefaultTitle_OverrideForStore" asp-input="SeoSettings.DefaultTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SeoSettings.DefaultTitle" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SeoSettings.DefaultTitle" />
-                <span asp-validation-for="SeoSettings.DefaultTitle"></span>
-            </div>
-        </div>
+    <div class="card-body">
         <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeoAdjustment_OverrideForStore" asp-input="SeoSettings.PageTitleSeoAdjustment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -29,46 +19,6 @@
             <div class="col-md-9">
                 <nop-editor asp-for="SeoSettings.PageTitleSeparator" />
                 <span asp-validation-for="SeoSettings.PageTitleSeparator"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaKeywords_OverrideForStore" asp-input="SeoSettings.DefaultMetaKeywords" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SeoSettings.DefaultMetaKeywords" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SeoSettings.DefaultMetaKeywords" />
-                <span asp-validation-for="SeoSettings.DefaultMetaKeywords"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaDescription_OverrideForStore" asp-input="SeoSettings.DefaultMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SeoSettings.DefaultMetaDescription" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SeoSettings.DefaultMetaDescription" />
-                <span asp-validation-for="SeoSettings.DefaultMetaDescription"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SeoSettings.HomepageTitle_OverrideForStore" asp-input="SeoSettings.HomepageTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SeoSettings.HomepageTitle" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SeoSettings.HomepageTitle" />
-                <span asp-validation-for="SeoSettings.HomepageTitle"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SeoSettings.HomepageDescription_OverrideForStore" asp-input="SeoSettings.HomepageDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SeoSettings.HomepageDescription" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SeoSettings.HomepageDescription" />
-                <span asp-validation-for="SeoSettings.HomepageDescription"></span>
             </div>
         </div>
         <div class="form-group row advanced-setting">

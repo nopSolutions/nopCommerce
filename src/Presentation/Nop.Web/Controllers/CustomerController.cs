@@ -1722,6 +1722,9 @@ namespace Nop.Web.Controllers
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
+                    //authenticate customer after changing password
+                    await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
+
                     if (string.IsNullOrEmpty(returnUrl))
                         return View(model);
 

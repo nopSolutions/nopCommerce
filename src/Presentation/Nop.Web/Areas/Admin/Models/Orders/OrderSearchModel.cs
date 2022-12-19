@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
@@ -27,6 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             OrderStatusIds = new List<int>();
             PaymentStatusIds = new List<int>();
             ShippingStatusIds = new List<int>();
+            LicenseCheckModel = new();
         }
 
         #endregion
@@ -102,6 +104,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public IList<SelectListItem> AvailablePaymentMethods { get; set; }
 
         public IList<SelectListItem> AvailableCountries { get; set; }
+
+        public LicenseCheckModel LicenseCheckModel { get; set; }
 
         public bool HideStoresList { get; set; }
 

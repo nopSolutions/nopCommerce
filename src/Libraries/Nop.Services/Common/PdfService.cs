@@ -686,6 +686,7 @@ namespace Nop.Services.Common
             {
                 StoreUrl = orderStore.Url?.Trim('/'),
                 Language = language,
+                FontFamily = pdfSettingsByStore.FontFamily,
                 OrderDateUser = date,
                 LogoData = logo,
                 OrderNumberText = order.CustomOrderNumber,
@@ -814,6 +815,7 @@ namespace Nop.Services.Common
             {
                 PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PageSizes.Letter : PageSizes.A4,
                 Language = language,
+                FontFamily = pdfSettingsByStore.FontFamily,
                 ShipmentNumberText = shipment.Id.ToString(),
                 OrderNumberText = order.CustomOrderNumber,
                 Address = await GetShippingAddressAsync(language, order),
@@ -899,6 +901,7 @@ namespace Nop.Services.Common
             {
                 Language = lang,
                 PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PageSizes.Letter : PageSizes.A4,
+                FontFamily = pdfSettingsByStore.FontFamily,
                 Products = productItems
             };
 

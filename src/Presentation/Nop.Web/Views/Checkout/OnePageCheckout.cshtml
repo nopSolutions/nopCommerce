@@ -69,11 +69,11 @@
                         }
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <button id="edit-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+                        <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
 
-                        <button id="delete-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditAddress/'); return false;">@T("Common.Delete")</button>
+                        <button id="delete-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditBillingAddress/'); return false;">@T("Common.Delete")</button>
 
-                        <button id="save-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
+                        <button id="save-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
                         <button type="button" name="save" class="button-1 new-address-next-step-button" onclick="Billing.save()">@T("Common.Continue")</button>
 
@@ -97,7 +97,7 @@
                         <script asp-location="Footer">
                             Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
                             if ($("#shipping-address-select").length > 0) {
-                                Shipping.newAddress(!$('#shipping-address-select').val());
+                                Shipping.newAddress($('#shipping-address-select').val(), @Model.BillingAddress.BillingNewAddress.Id);
                             }
                         </script>
                         <div class="buttons" id="shipping-buttons-container">
@@ -107,6 +107,13 @@
                                     <a href="#" onclick="Checkout.back(); return false; "><small>&laquo; </small>@T("Common.Back")</a>
                                 </p>
                             }
+
+                            <button id="edit-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                            <button id="delete-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.deleteAddress('@(storeLocation)checkout/DeleteEditShippingAddress/'); return false;">@T("Common.Delete")</button>
+
+                            <button id="save-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
+
                             <button type="button" class="button-1 new-address-next-step-button" onclick="Shipping.save()">@T("Common.Continue")</button>
                             <span id="shipping-please-wait" class="please-wait" style="display: none;"> @T("Common.LoadingNextStep")</span>
                         </div>

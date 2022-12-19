@@ -15,7 +15,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -56,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly AppSettings _appSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
@@ -102,8 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public CommonModelFactory(AdminAreaSettings adminAreaSettings,
-            AppSettings appSettings,
+        public CommonModelFactory(AppSettings appSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
@@ -144,7 +141,6 @@ namespace Nop.Web.Areas.Admin.Factories
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
-            _adminAreaSettings = adminAreaSettings;
             _appSettings = appSettings;
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
@@ -221,41 +217,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Level = SystemWarningLevel.Fail,
                 Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
                     currentStoreUrl, _webHelper.GetStoreLocation(false))
-            });
-        }
-
-        /// <summary>
-        /// Prepare copyright removal key warning model
-        /// </summary>
-        /// <param name="models">List of system warning models</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task PrepareRemovalKeyWarningModelAsync(IList<SystemWarningModel> models)
-        {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
-
-            if (!_adminAreaSettings.CheckCopyrightRemovalKey)
-                return;
-
-            //try to get a warning
-            var warning = string.Empty;
-            try
-            {
-                warning = await _nopHttpClient.GetCopyrightWarningAsync();
-            }
-            catch
-            {
-                // ignored
-            }
-
-            if (string.IsNullOrEmpty(warning))
-                return;
-
-            models.Add(new SystemWarningModel
-            {
-                Level = SystemWarningLevel.CopyrightRemovalKey,
-                Text = warning,
-                DontEncode = true //this text could contain links, so don't encode it
             });
         }
 
@@ -469,7 +430,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
-            
+
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
             var overridenServices = _serviceCollection.Where(p =>
@@ -838,9 +799,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //store URL
             await PrepareStoreUrlWarningModelAsync(models);
-
-            //removal key
-            await PrepareRemovalKeyWarningModelAsync(models);
 
             //primary exchange rate currency
             await PrepareExchangeRateCurrencyWarningModelAsync(models);

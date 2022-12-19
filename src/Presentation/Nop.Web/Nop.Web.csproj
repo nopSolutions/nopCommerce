@@ -43,6 +43,11 @@
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <None Remove="Plugins\Uploaded\placeholder.txt" />
+    <Content Include="Plugins\Uploaded\placeholder.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="App_Data\appsettings.json" />
 
     <None Update="Areas\Admin\sitemap.config">
