@@ -409,6 +409,40 @@ namespace Nop.Services.Messages
             }).ToListAsync();
         }
 
+        public virtual async Task<IList<int>> SendTargetCustomerNotificationWhenNewCustomerRegisterd(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+            return await messageTemplates.SelectAwait(async messageTemplate =>
+            {
+                //email account
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+
+                //event notification
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+                var toEmail = customer.Email;
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
+        }
+
         #endregion
 
         #region Order workflow
