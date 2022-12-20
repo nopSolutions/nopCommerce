@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Models
 {
@@ -15,26 +13,16 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Ctor
         /// </summary>
-        [Obsolete]
         public BaseNopModel()
         {
-            CustomProperties = new Dictionary<string, object>();
+            CustomProperties = new Dictionary<string, string>();
             PostInitialize();
         }
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Perform additional actions for binding the model
-        /// </summary>
-        /// <param name="bindingContext">Model binding context</param>
-        /// <remarks>Developers can override this method in custom partial classes in order to add some custom model binding</remarks>
-        public virtual void BindModel(ModelBindingContext bindingContext)
-        {
-        }
-
+        
         /// <summary>
         /// Perform additional actions for the model initialization
         /// </summary>
@@ -46,17 +34,12 @@ namespace Nop.Web.Framework.Models
         #endregion
 
         #region Properties
-
-        ////MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
-        //[XmlIgnore]
-        //public IFormCollection Form { get; set; }
-
+        
         /// <summary>
         /// Gets or sets property to store any custom values for models 
         /// </summary>
         [XmlIgnore]
-        [Obsolete]
-        public Dictionary<string, object> CustomProperties { get; set; }
+        public Dictionary<string, string> CustomProperties { get; set; }
 
         #endregion
 
