@@ -106,26 +106,6 @@ namespace Nop.Web.Factories
             bool excludeProperties);
 
         /// <summary>
-        /// Prepare the sitemap model
-        /// </summary>
-        /// <param name="pageModel">Sitemap page model</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the sitemap model
-        /// </returns>
-        Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel);
-
-        /// <summary>
-        /// Get the sitemap in XML format
-        /// </summary>
-        /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the sitemap as string in XML format
-        /// </returns>
-        Task<string> PrepareSitemapXmlAsync( int? id);
-
-        /// <summary>
         /// Prepare the store theme selector model
         /// </summary>
         /// <returns>

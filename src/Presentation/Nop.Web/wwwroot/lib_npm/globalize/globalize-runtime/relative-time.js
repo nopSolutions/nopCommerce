@@ -1,16 +1,16 @@
 /**
- * Globalize Runtime v1.6.0
+ * Globalize Runtime v1.7.0
  *
- * http://github.com/jquery/globalize
+ * https://github.com/globalizejs/globalize
  *
- * Copyright jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://jquery.org/license
  *
- * Date: 2020-09-08T11:54Z
+ * Date: 2021-08-02T11:53Z
  */
 /*!
- * Globalize Runtime v1.6.0 2020-09-08T11:54Z Released under the MIT license
+ * Globalize Runtime v1.7.0 2021-08-02T11:53Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -71,8 +71,8 @@ var relativeTimeFormat = function( value, numberFormatter, pluralGenerator, prop
 		return message;
 	}
 
-	relativeTime = value <= 0 ? properties[ "relativeTime-type-past" ]
-		: properties[ "relativeTime-type-future" ];
+	relativeTime = value <= 0 ? properties[ "relativeTime-type-past" ] :
+		properties[ "relativeTime-type-future" ];
 
 	value = Math.abs( value );
 

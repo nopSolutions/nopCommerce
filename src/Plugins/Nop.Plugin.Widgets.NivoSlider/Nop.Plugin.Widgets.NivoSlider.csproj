@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -21,8 +21,8 @@
     <None Remove="Content\nivoslider\license.txt" />
     <None Remove="Content\nivoslider\nivo-slider.css" />
     <None Remove="Content\nivoslider\README" />
-    <None Remove="Content\nivoslider\sample-images\banner1.jpg" />
-    <None Remove="Content\nivoslider\sample-images\banner2.jpg" />
+    <None Remove="Content\nivoslider\sample-images\banner_01.webp" />
+    <None Remove="Content\nivoslider\sample-images\banner_02.webp" />
     <None Remove="Content\nivoslider\themes\bar\arrows.png" />
     <None Remove="Content\nivoslider\themes\bar\bar.css" />
     <None Remove="Content\nivoslider\themes\bar\bullets.png" />
@@ -62,10 +62,10 @@
     <Content Include="Content\nivoslider\README">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\nivoslider\sample-images\banner1.jpg">
+    <Content Include="Content\nivoslider\sample-images\banner_01.webp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\nivoslider\sample-images\banner2.jpg">
+    <Content Include="Content\nivoslider\sample-images\banner_02.webp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\nivoslider\themes\bar\arrows.png">
@@ -152,7 +152,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 

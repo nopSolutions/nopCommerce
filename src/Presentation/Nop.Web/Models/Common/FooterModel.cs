@@ -49,7 +49,7 @@ namespace Nop.Web.Models.Common
 
         #region Nested classes
 
-        public record FooterTopicModel : BaseNopEntityModel
+        public partial record FooterTopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

@@ -6,7 +6,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Payments.Manual.Validators
 {
-    public partial class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
+    public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
     {
         public PaymentInfoValidator(ILocalizationService localizationService)
         {

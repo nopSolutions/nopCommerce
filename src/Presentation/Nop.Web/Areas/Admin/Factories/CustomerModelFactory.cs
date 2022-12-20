@@ -264,8 +264,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //set already selected attributes
                 if (customer != null)
                 {
-                    var selectedCustomerAttributes = await _genericAttributeService
-                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    var selectedCustomerAttributes = customer.CustomCustomerAttributesXML;
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -592,6 +591,31 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter customers
             _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
             _ = int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
+            var createdFromUtc = !searchModel.SearchRegistrationDateFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var createdToUtc = !searchModel.SearchRegistrationDateTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+            var lastActivityFromUtc = !searchModel.SearchLastActivityFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var lastActivityToUtc = !searchModel.SearchLastActivityTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+            //exclude guests from the result when filter "by registration date" is used
+            if (createdFromUtc.HasValue || createdToUtc.HasValue)
+            {
+                if (!searchModel.SelectedCustomerRoleIds.Any())
+                {
+                    var customerRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+                    searchModel.SelectedCustomerRoleIds = customerRoles
+                        .Where(cr => cr.SystemName != NopCustomerDefaults.GuestsRoleName).Select(cr => cr.Id).ToList();
+                }
+                else
+                {
+                    var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+                    if (guestRole != null)
+                        searchModel.SelectedCustomerRoleIds.Remove(guestRole.Id);
+                }
+            }
 
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
@@ -602,9 +626,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 dayOfBirth: dayOfBirth,
                 monthOfBirth: monthOfBirth,
                 company: searchModel.SearchCompany,
+                createdFromUtc: createdFromUtc,
+                createdToUtc: createdToUtc,
+                lastActivityFromUtc: lastActivityFromUtc,
+                lastActivityToUtc: lastActivityToUtc,
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
-                ipAddress: searchModel.SearchIpAddress,
+                ipAddress: searchModel.SearchIpAddress?.Trim(),
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -620,10 +648,9 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                     customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
-                    customerModel.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    customerModel.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    customerModel.ZipPostalCode = await _genericAttributeService
-                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                    customerModel.Company = customer.Company;
+                    customerModel.Phone = customer.Phone;
+                    customerModel.ZipPostalCode = customer.ZipPostalCode;
 
                     customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
                     customerModel.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -684,25 +711,23 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
-                    model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                    model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                    model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
-                    model.DateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                    model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                    model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                    model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                    model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-                    model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
-                    model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                    model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                    model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
-                    model.TimeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
-                    model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
-                        .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
-                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+                    model.FirstName = customer.FirstName;
+                    model.LastName = customer.LastName;
+                    model.Gender = customer.Gender;
+                    model.DateOfBirth = customer.DateOfBirth;
+                    model.Company = customer.Company;
+                    model.StreetAddress = customer.StreetAddress;
+                    model.StreetAddress2 = customer.StreetAddress2;
+                    model.ZipPostalCode = customer.ZipPostalCode;
+                    model.City = customer.City;
+                    model.County = customer.County;
+                    model.CountryId = customer.CountryId;
+                    model.StateProvinceId = customer.StateProvinceId;
+                    model.Phone = customer.Phone;
+                    model.Fax = customer.Fax;
+                    model.TimeZoneId = customer.TimeZoneId;
+                    model.VatNumber = customer.VatNumber;
+                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
                     model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
@@ -711,6 +736,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
+                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
 
                     //prepare model affiliate
                     var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);

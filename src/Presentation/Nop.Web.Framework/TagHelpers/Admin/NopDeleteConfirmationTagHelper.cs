@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-delete-confirmation" tag helper
     /// </summary>
     [HtmlTargetElement("nop-delete-confirmation", Attributes = MODEL_ID_ATTRIBUTE_NAME + "," + BUTTON_ID_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopDeleteConfirmationTagHelper : TagHelper
+    public partial class NopDeleteConfirmationTagHelper : TagHelper
     {
         #region Constants
 

@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Common settings
     /// </summary>
-    public class CommonSettings : ISettings
+    public partial class CommonSettings : ISettings
     {
         public CommonSettings()
         {
@@ -85,5 +85,15 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value
         /// </summary>
         public int? RestartTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of header custom HTML
+        /// </summary>
+        public string HeaderCustomHtml { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of footer custom HTML
+        /// </summary>
+        public string FooterCustomHtml { get; set; }
     }
 }

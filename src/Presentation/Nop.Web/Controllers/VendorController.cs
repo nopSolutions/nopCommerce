@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -222,7 +223,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if(!contentType.StartsWith("image/"))
+                    if(!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.Picture.ErrorMessage"));
                     else
                     {
@@ -241,8 +242,11 @@ namespace Nop.Web.Controllers
 
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach(var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             if (ModelState.IsValid)
             {
@@ -257,7 +261,7 @@ namespace Nop.Web.Controllers
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
                     PictureId = pictureId,
-                    Description = description
+                    Description = WebUtility.HtmlEncode(description) 
                 };
                 await _vendorService.InsertVendorAsync(vendor);
                 //search engine name (the same as vendor name)
@@ -322,7 +326,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if (!contentType.StartsWith("image/"))
+                    if (!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.VendorInfo.Picture.ErrorMessage"));
                     else
                     {
@@ -340,8 +344,11 @@ namespace Nop.Web.Controllers
 
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
-            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
-                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+            var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
+            foreach (var warning in warnings)
+            {
+                ModelState.AddModelError(string.Empty, warning);
+            }
 
             if (ModelState.IsValid)
             {
@@ -349,7 +356,7 @@ namespace Nop.Web.Controllers
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;
-                vendor.Description = description;
+                vendor.Description = WebUtility.HtmlEncode(description);
 
                 if (picture != null)
                 {
@@ -369,7 +376,7 @@ namespace Nop.Web.Controllers
 
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                    await _workflowMessageService.SendVendorInformationChangeNotificationAsync(vendor, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendVendorInformationChangeStoreOwnerNotificationAsync(vendor, _localizationSettings.DefaultAdminLanguageId);
 
                 return RedirectToAction("Info");
             }
@@ -400,7 +407,7 @@ namespace Nop.Web.Controllers
 
             //notifications
             if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                await _workflowMessageService.SendVendorInformationChangeNotificationAsync(vendor, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorInformationChangeStoreOwnerNotificationAsync(vendor, _localizationSettings.DefaultAdminLanguageId);
 
             return RedirectToAction("Info");
         }

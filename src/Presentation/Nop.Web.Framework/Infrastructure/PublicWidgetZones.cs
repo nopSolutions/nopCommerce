@@ -104,6 +104,8 @@
         public static string LeftSideColumnBefore => "left_side_column_before";
         public static string LeftSideColumnBlogAfter => "left_side_column_blog_after";
         public static string LeftSideColumnBlogBefore => "left_side_column_blog_before";
+        public static string LoginBottom => "login_bottom";
+        public static string LoginTop => "login_top";
         public static string MainColumnAfter => "main_column_after";
         public static string MainColumnBefore => "main_column_before";
         public static string ManufacturerDetailsAfterFeaturedProducts => "manufacturerdetails_after_featured_products";
@@ -151,7 +153,9 @@
         public static string OrderSummaryContentAfter => "order_summary_content_after";
         public static string OrderSummaryContentBefore => "order_summary_content_before";
         public static string OrderSummaryContentDeals => "order_summary_content_deals";
+        public static string OrderSummaryPaymentMethodInfo => "order_summary_payment_method_info";
         public static string OrderSummaryShippingAddress => "order_summary_shipping_address";
+        public static string OrderSummaryShippingMethodInfo => "order_summary_shipping_method_info";
         public static string OrderSummaryTotals => "order_summary_totals";
         public static string ProductBoxAddinfoAfter => "productbox_addinfo_after";
         public static string ProductBoxAddinfoBefore => "productbox_addinfo_before";
@@ -161,8 +165,10 @@
         public static string ProductDetailsAddInfo => "productdetails_add_info";
         public static string ProductDetailsAfterBreadcrumb => "productdetails_after_breadcrumb";
         public static string ProductDetailsAfterPictures => "productdetails_after_pictures";
+        public static string ProductDetailsAfterVideos => "productdetails_after_videos";
         public static string ProductDetailsBeforeCollateral => "productdetails_before_collateral";
         public static string ProductDetailsBeforePictures => "productdetails_before_pictures";
+        public static string ProductDetailsBeforeVideos => "productdetails_before_videos";
         public static string ProductDetailsBottom => "productdetails_bottom";
         public static string ProductDetailsEssentialBottom => "productdetails_essential_bottom";
         public static string ProductDetailsEssentialTop => "productdetails_essential_top";
@@ -177,17 +183,25 @@
         public static string ProductsByTagBeforeProductList => "productsbytag_before_product_list";
         public static string ProductsByTagBottom => "productsbytag_bottom";
         public static string ProductsByTagTop => "productsbytag_top";
+        public static string ProductPriceTop => "product_price_top";
+        public static string ProductPriceBottom => "product_price_bottom";
         public static string ProductSearchPageAdvanced => "productsearch_page_advanced";
         public static string ProductSearchPageAfterResults => "productsearch_page_after_results";
         public static string ProductSearchPageBasic => "productsearch_page_basic";
         public static string ProductSearchPageBeforeResults => "productsearch_page_before_results";
         public static string ProfilePageInfoUserdetails => "profile_page_info_userdetails";
         public static string ProfilePageInfoUserstats => "profile_page_info_userstats";
+        public static string RegisterBottom => "register_bottom";
+        public static string RegisterTop => "register_top";
         public static string SearchBox => "searchbox";
         public static string SearchBoxBeforeSearchButton => "searchbox_before_search_button";
         public static string SitemapAfter => "sitemap_after";
         public static string SitemapBefore => "sitemap_before";
+        public static string TopicDetailsTop => "topic_details_top";
+        public static string TopicDetailsBottom => "topic_details_bottom";
         public static string VendorDetailsBottom => "vendordetails_bottom";
         public static string VendorDetailsTop => "vendordetails_top";
+        public static string WishlistBottom => "wishlist_bottom";
+        public static string WishlistTop => "wishlist_top";
     }
 }

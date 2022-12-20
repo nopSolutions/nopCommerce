@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentMigrator;
 using FluentMigrator.Runner;
 using Nop.Data.Migrations;
 
@@ -23,7 +24,7 @@ namespace Nop.Tests
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -31,17 +32,35 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="assembly">Assembly to find migrations</param>
         /// <param name="migrationProcessType">Type of migration process</param>
+        /// <param name="commitVersionOnly">Commit only version information</param>
         public void ApplyUpMigrations(Assembly assembly,
-            MigrationProcessType migrationProcessType = MigrationProcessType.Installation)
+            MigrationProcessType migrationProcessType = MigrationProcessType.Installation,
+            bool commitVersionOnly = false)
         {
             _migrationRunner.MigrateUp(637200411689037680);
         }
 
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Executes a Down for all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
+        {
+        }
+
+        /// <summary>
+        /// Executes down expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to rollback</param>
+        public void DownMigration(IMigration migration)
+        {
+        }
+
+        /// <summary>
+        /// Executes up expressions for the passed migration
+        /// </summary>
+        /// <param name="migration">Migration to apply</param>
+        public void UpMigration(IMigration migration)
         {
         }
 

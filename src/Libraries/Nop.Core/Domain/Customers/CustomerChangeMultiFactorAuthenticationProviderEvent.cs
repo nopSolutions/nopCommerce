@@ -3,7 +3,7 @@
     /// <summary>
     /// "Customer is change multi-factor authentication provider" event
     /// </summary>
-    public class CustomerChangeMultiFactorAuthenticationProviderEvent
+    public partial class CustomerChangeMultiFactorAuthenticationProviderEvent
     {
         /// <summary>
         /// Ctor

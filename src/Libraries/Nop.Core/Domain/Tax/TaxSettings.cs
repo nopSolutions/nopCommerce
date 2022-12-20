@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Tax
     /// <summary>
     /// Tax settings
     /// </summary>
-    public class TaxSettings : ISettings
+    public partial class TaxSettings : ISettings
     {
         /// <summary>
         /// Tax based on
@@ -106,6 +106,11 @@ namespace Nop.Core.Domain.Tax
         /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) is enabled
         /// </summary>
         public bool EuVatEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) for guest customers is enabled
+        /// </summary>
+        public bool EuVatEnabledForGuests { get; set; }
 
         /// <summary>
         /// Gets or sets a shop country identifier

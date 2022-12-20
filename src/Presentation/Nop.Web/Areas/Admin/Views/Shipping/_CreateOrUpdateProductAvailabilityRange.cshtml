@@ -6,7 +6,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="form-horizontal">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsTop, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsTop, additionalData = Model })
             <div class="cards-group">
                 <div class="card card-default">
                     <div class="card-body">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsBottom, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsBottom, additionalData = Model })
         </div>
     </div>
 </section>

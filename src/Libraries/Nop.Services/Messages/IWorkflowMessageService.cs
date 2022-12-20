@@ -28,7 +28,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendCustomerRegisteredNotificationMessageAsync(Customer customer, int languageId);
+        Task<IList<int>> SendCustomerRegisteredStoreOwnerNotificationMessageAsync(Customer customer, int languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
@@ -134,7 +134,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendOrderPaidCustomerNotificationAsync(Order order, int languageId, 
+        Task<IList<int>> SendOrderPaidCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendOrderPlacedCustomerNotificationAsync(Order order, int languageId, 
+        Task<IList<int>> SendOrderPlacedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -208,6 +208,20 @@ namespace Nop.Services.Messages
         Task<IList<int>> SendShipmentDeliveredCustomerNotificationAsync(Shipment shipment, int languageId);
 
         /// <summary>
+        /// Sends an order processing notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        Task<IList<int>> SendOrderProcessingCustomerNotificationAsync(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null);
+
+        /// <summary>
         /// Sends an order completed notification to a customer
         /// </summary>
         /// <param name="order">Order instance</param>
@@ -218,7 +232,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendOrderCompletedCustomerNotificationAsync(Order order, int languageId, 
+        Task<IList<int>> SendOrderCompletedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -343,7 +357,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendProductEmailAFriendMessageAsync(Customer customer, int languageId, 
+        Task<IList<int>> SendProductEmailAFriendMessageAsync(Customer customer, int languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage);
 
         /// <summary>
@@ -358,7 +372,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId, 
+        Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
             string customerEmail, string friendsEmail, string personalMessage);
 
         #endregion
@@ -432,7 +446,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, 
+        Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost,
             ForumTopic forumTopic, Forum forum, int friendlyForumTopicPageIndex, int languageId);
 
         /// <summary>
@@ -471,7 +485,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendVendorInformationChangeNotificationAsync(Vendor vendor, int languageId);
+        Task<IList<int>> SendVendorInformationChangeStoreOwnerNotificationAsync(Vendor vendor, int languageId);
 
         /// <summary>
         /// Sends a product review notification message to a store owner
@@ -482,7 +496,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendProductReviewNotificationMessageAsync(ProductReview productReview, int languageId);
+        Task<IList<int>> SendProductReviewStoreOwnerNotificationMessageAsync(ProductReview productReview, int languageId);
 
         /// <summary>
         /// Sends a product review reply notification message to a customer
@@ -550,7 +564,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendBlogCommentNotificationMessageAsync(BlogComment blogComment, int languageId);
+        Task<IList<int>> SendBlogCommentStoreOwnerNotificationMessageAsync(BlogComment blogComment, int languageId);
 
         /// <summary>
         /// Sends a news comment notification message to a store owner
@@ -561,7 +575,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendNewsCommentNotificationMessageAsync(NewsComment newsComment, int languageId);
+        Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId);
 
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer

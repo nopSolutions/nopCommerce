@@ -230,7 +230,8 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets available pickup points
         /// </summary>
-        /// <param name="addressId">Address identifier</param>
+        /// <param name="cart">Shopping Cart</param>
+        /// <param name="address">Address</param>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
@@ -238,7 +239,8 @@ namespace Nop.Services.Shipping
         /// A task that represents the asynchronous operation
         /// The task result contains the pickup points
         /// </returns>
-        Task<GetPickupPointsResponse> GetPickupPointsAsync(int addressId, Customer customer = null, string providerSystemName = null, int storeId = 0);
+        Task<GetPickupPointsResponse> GetPickupPointsAsync(IList<ShoppingCartItem> cart, Address address,
+            Customer customer = null, string providerSystemName = null, int storeId = 0);
 
         /// <summary>
         /// Whether the shopping cart item is ship enabled

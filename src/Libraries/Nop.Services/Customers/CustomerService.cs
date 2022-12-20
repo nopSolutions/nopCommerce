@@ -115,6 +115,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="lastActivityFromUtc">Last activity date from (UTC); null to load all records</param>
+        /// <param name="lastActivityToUtc">Last activity date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
@@ -136,6 +138,7 @@ namespace Nop.Services.Customers
         /// The task result contains the customers
         /// </returns>
         public virtual async Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? lastActivityFromUtc = null, DateTime? lastActivityToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
@@ -148,6 +151,10 @@ namespace Nop.Services.Customers
                     query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
                 if (createdToUtc.HasValue)
                     query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+                if (lastActivityFromUtc.HasValue)
+                    query = query.Where(c => lastActivityFromUtc.Value <= c.LastActivityDateUtc);
+                if (lastActivityToUtc.HasValue)
+                    query = query.Where(c => lastActivityToUtc.Value >= c.LastActivityDateUtc);
                 if (affiliateId > 0)
                     query = query.Where(c => affiliateId == c.AffiliateId);
                 if (vendorId > 0)
@@ -169,109 +176,23 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(username))
                     query = query.Where(c => c.Username.Contains(username));
                 if (!string.IsNullOrWhiteSpace(firstName))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
-                                    z.Attribute.Value.Contains(firstName))
-                        .Select(z => z.Customer);
-                }
-
+                    query = query.Where(c => c.FirstName.Contains(firstName));
                 if (!string.IsNullOrWhiteSpace(lastName))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
-                                    z.Attribute.Value.Contains(lastName))
-                        .Select(z => z.Customer);
-                }
-
-                //date of birth is stored as a string into database.
-                //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
-                //so let's search it as a string
-                if (dayOfBirth > 0 && monthOfBirth > 0)
-                {
-                    //both are specified
-                    var dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" +
-                                         dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-
-                    //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
-                    //dateOfBirthStr.Length = 5
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Substring(5, 5) == dateOfBirthStr)
-                        .Select(z => z.Customer);
-                }
-                else if (dayOfBirth > 0)
-                {
-                    //only day is specified
-                    var dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-
-                    //z.Attribute.Value.Length - dateOfBirthStr.Length = 8
-                    //dateOfBirthStr.Length = 2
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Substring(8, 2) == dateOfBirthStr)
-                        .Select(z => z.Customer);
-                }
-                else if (monthOfBirth > 0)
-                {
-                    //only month is specified
-                    var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Contains(dateOfBirthStr))
-                        .Select(z => z.Customer);
-                }
-
-                //search by company
+                    query = query.Where(c => c.LastName.Contains(lastName));
                 if (!string.IsNullOrWhiteSpace(company))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
-                                    z.Attribute.Value.Contains(company))
-                        .Select(z => z.Customer);
-                }
-
-                //search by phone
+                    query = query.Where(c => c.Company.Contains(company));
                 if (!string.IsNullOrWhiteSpace(phone))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
-                                    z.Attribute.Value.Contains(phone))
-                        .Select(z => z.Customer);
-                }
-
-                //search by zip
+                    query = query.Where(c => c.Phone.Contains(phone));
                 if (!string.IsNullOrWhiteSpace(zipPostalCode))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
-                                    z.Attribute.Value.Contains(zipPostalCode))
-                        .Select(z => z.Customer);
-                }
+                    query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
+
+                if (dayOfBirth > 0 && monthOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
+                        c.DateOfBirth.Value.Month == monthOfBirth);
+                else if (dayOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
+                else if (monthOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
                 //search by IpAddress
                 if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
@@ -441,6 +362,27 @@ namespace Nop.Services.Customers
         public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
             return await _customerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
+        }
+
+        /// <summary>
+        /// Get customers by guids
+        /// </summary>
+        /// <param name="customerGuids">Customer guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
+        public virtual async Task<IList<Customer>> GetCustomersByGuidsAsync(Guid[] customerGuids)
+        {
+            if (customerGuids == null)
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        where customerGuids.Contains(c.CustomerGuid)
+                        select c;
+            var customers = await query.ToListAsync();
+
+            return customers;
         }
 
         /// <summary>
@@ -799,13 +741,13 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer full name
         /// </returns>
-        public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
+        public virtual Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+            var firstName = customer.FirstName;
+            var lastName = customer.LastName;
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
@@ -819,7 +761,7 @@ namespace Nop.Services.Customers
                     fullName = lastName;
             }
 
-            return fullName;
+            return Task.FromResult(fullName);
         }
 
         /// <summary>
@@ -854,7 +796,7 @@ namespace Nop.Services.Customers
                     result = await GetCustomerFullNameAsync(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    result = customer.FirstName;
                     break;
                 default:
                     break;
@@ -1134,6 +1076,29 @@ namespace Nop.Services.Customers
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
+
+        /// <summary>
+        /// Returns a list of guids of not existing customers
+        /// </summary>
+        /// <param name="guids">The guids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of guids not existing customers
+        /// </returns>
+        public virtual async Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids)
+        {
+            if (guids == null)
+                throw new ArgumentNullException(nameof(guids));
+
+            var query = _customerRepository.Table;
+            var queryFilter = guids.Distinct().ToArray();
+            //filtering by guid
+            var filter = await query.Select(c => c.CustomerGuid)
+                .Where(c => queryFilter.Contains(c))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
         }
 
         #endregion

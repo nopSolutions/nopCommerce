@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-doc-reference" tag helper
     /// </summary>
     [HtmlTargetElement("nop-doc-reference", Attributes = STRING_RESOURCE_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopDocReferenceTagHelper : TagHelper
+    public partial class NopDocReferenceTagHelper : TagHelper
     {
         #region Constants
 

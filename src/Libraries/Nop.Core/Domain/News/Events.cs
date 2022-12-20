@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.News
     /// <summary>
     /// News comment approved event
     /// </summary>
-    public class NewsCommentApprovedEvent
+    public partial class NewsCommentApprovedEvent
     {
         /// <summary>
         /// Ctor

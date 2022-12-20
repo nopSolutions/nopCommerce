@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
@@ -24,6 +25,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Nop.Core;
@@ -43,6 +45,7 @@ using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -82,6 +85,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Installation;
@@ -259,9 +263,8 @@ namespace Nop.Tests
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             services.AddSingleton<ILocker, MemoryCacheManager>();
 
-            var distributedCache = new Mock<IDistributedCache>();
-            services.AddSingleton(distributedCache.Object);
-            services.AddSingleton<DistributedCacheManager>();
+            services.AddSingleton<IDistributedCache>(new MemoryDistributedCache(new TestMemoryDistributedCacheoptions()));
+            services.AddTransient<MemoryDistributedCacheManager>();
             
             //services
             services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
@@ -356,7 +359,6 @@ namespace Nop.Tests
             services.AddTransient<ITopicService, TopicService>();
             services.AddTransient<INewsService, NewsService>();
             services.AddTransient<IDateTimeHelper, DateTimeHelper>();
-            services.AddTransient<ISitemapGenerator, SitemapGenerator>();
             services.AddTransient<IScheduleTaskService, ScheduleTaskService>();
             services.AddTransient<IExportManager, ExportManager>();
             services.AddTransient<IImportManager, ImportManager>();
@@ -383,8 +385,11 @@ namespace Nop.Tests
             services.AddTransient<IPickupPluginManager, PickupPluginManager>();
             services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
+            services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
             services.AddTransient<IPictureService, TestPictureService>();
+            services.AddScoped<IVideoService, VideoService>();
+            services.AddScoped<INopUrlHelper, NopUrlHelper>();
 
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
@@ -517,6 +522,7 @@ namespace Nop.Tests
             services.AddTransient<Web.Factories.IProfileModelFactory, Web.Factories.ProfileModelFactory>();
             services.AddTransient<Web.Factories.IReturnRequestModelFactory, Web.Factories.ReturnRequestModelFactory>();
             services.AddTransient<Web.Factories.IShoppingCartModelFactory, Web.Factories.ShoppingCartModelFactory>();
+            services.AddTransient<Web.Factories.ISitemapModelFactory, Web.Factories.SitemapModelFactory>();
             services.AddTransient<Web.Factories.ITopicModelFactory, Web.Factories.TopicModelFactory>();
             services.AddTransient<Web.Factories.IVendorModelFactory, Web.Factories.VendorModelFactory>();
             services.AddTransient<Web.Factories.IWidgetModelFactory, Web.Factories.WidgetModelFactory>();
@@ -539,7 +545,19 @@ namespace Nop.Tests
                 return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
             }
         }
-        
+
+        public static T GetService<T>(IServiceScope scope)
+        {
+            try
+            {
+                return scope.ServiceProvider.GetService<T>();
+            }
+            catch (InvalidOperationException)
+            {
+                return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
+            }
+        }
+
         public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
         {
             baseEntity.Id = 0;
@@ -659,12 +677,12 @@ namespace Nop.Tests
         protected class TestPictureService : PictureService
         {
             public TestPictureService(IDownloadService downloadService,
-                IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider,
+                IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
                 IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
                 IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                downloadService, httpContextAccessor, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {
@@ -782,6 +800,18 @@ namespace Nop.Tests
 
                 return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
             }
+        }
+
+        private class TestMemoryDistributedCache
+        {
+            public TestMemoryDistributedCache()
+            {
+            }
+        }
+
+        private class TestMemoryDistributedCacheoptions : IOptions<MemoryDistributedCacheOptions>
+        {
+            public MemoryDistributedCacheOptions Value => new();
         }
 
         #endregion

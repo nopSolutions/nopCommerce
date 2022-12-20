@@ -26,6 +26,10 @@
 
     const string hideDeleteAlreadySentQueuedEmailsBlockAttributeName = "MaintenancePage.HideDeleteAlreadySentQueuedEmailsBlock";
     var hideDeleteAlreadySentQueuedEmailsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteAlreadySentQueuedEmailsBlockAttributeName);
+
+    const string hideDeleteMinificationFilesBlockAttributeName = "MaintenancePage.HideDeleteMinificationFilesBlock";
+    var hideDeleteMinificationFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteMinificationFilesBlockAttributeName);
+
 }
 
 <div class="content-header clearfix">
@@ -34,7 +38,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MaintenanceButtons, additionalData = Model })
     </div>
 </div>
 
@@ -61,7 +65,10 @@
                         }
                         <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-delete-already-sent-queued-emails" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteAlreadySentQueuedEmails")" asp-hide-block-attribute-name="@hideDeleteAlreadySentQueuedEmailsBlockAttributeName" asp-hide="@hideDeleteAlreadySentQueuedEmailsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteAlreadySentQueuedEmails", Model)</nop-card>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceDetailsBlock, additionalData = Model })
+                    <div class="row">
+                        <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="delete-minification-files" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteMinificationFiles")" asp-hide-block-attribute-name="@hideDeleteMinificationFilesBlockAttributeName" asp-hide="@hideDeleteMinificationFilesBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteMinificationCacheFiles", Model)</nop-card>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MaintenanceDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

@@ -34,10 +34,10 @@
     <Value>Տվյալների բազայի կարգավորումների տողը սխալ է</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Երկիր</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Ընտրել երկիրը</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Ստեղծել տվյալների բազան, եթե այն գոյություն չունի</Value>
@@ -103,7 +103,7 @@
     <Value>Սեղմեք, եթե ցանկանում եք վերսկսել տեղադրման գործընթացը (մաքրում է բոլոր քեշավորված տվյալները)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Վերագործարկում…</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
     <Value>Սերվերի անունը</Value>

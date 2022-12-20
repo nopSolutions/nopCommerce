@@ -29,14 +29,14 @@ namespace Nop.Services.Plugins
         public static string Path => "~/Plugins";
 
         /// <summary>
+        /// Gets the path to plugins folder
+        /// </summary>
+        public static string UploadedPath => "~/Plugins/Uploaded";
+
+        /// <summary>
         /// Gets the plugins folder name
         /// </summary>
         public static string PathName => "Plugins";
-
-        /// <summary>
-        /// Gets the path to plugins shadow copies folder
-        /// </summary>
-        public static string ShadowCopyPath => "~/Plugins/bin";
 
         /// <summary>
         /// Gets the path to plugins refs folder
@@ -52,16 +52,6 @@ namespace Nop.Services.Plugins
         /// Gets the plugins logo filename
         /// </summary>
         public static string LogoFileName => "logo";
-
-        /// <summary>
-        /// Gets the name of reserve folder for plugins shadow copies
-        /// </summary>
-        public static string ReserveShadowCopyPathName => "reserve_bin_";
-
-        /// <summary>
-        /// Gets the name pattern of reserve folder for plugins shadow copies
-        /// </summary>
-        public static string ReserveShadowCopyPathNamePattern => "reserve_bin_*";
 
         /// <summary>
         /// Gets supported extensions of logo file

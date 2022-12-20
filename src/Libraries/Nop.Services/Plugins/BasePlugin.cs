@@ -5,7 +5,7 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Base plugin
     /// </summary>
-    public abstract class BasePlugin : IPlugin
+    public abstract partial class BasePlugin : IPlugin
     {
         /// <summary>
         /// Gets a configuration page URL

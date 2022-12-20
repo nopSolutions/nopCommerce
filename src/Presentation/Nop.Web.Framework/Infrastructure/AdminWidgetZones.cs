@@ -236,6 +236,7 @@
         public static string ReturnRequestReasonSettingsTop => "admin_return_request_reason_settings_top";
         public static string RewardPointsSettingsDetailsBlock => "admin_reward_points_settings_details_block";
         public static string RewardPointsSettingsButtons => "admin_reward_points_settings_buttons";
+        public static string RobotsTxtSettingsButtons => "admin_robots_txt_settings_buttons";
         public static string ScheduleTaskListButtons => "admin_schedule_task_list_buttons";
         public static string SearchBoxBefore => "admin_searchbox_before";
         public static string SenamesBottom => "admin_senames_bottom";

@@ -1,7 +1,7 @@
 ﻿@model CheckoutBillingAddressModel
 
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop, additionalData = Model })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
@@ -61,8 +61,25 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle, additionalData = Model })
     <div class="section new-billing-address" id="billing-new-address-form">
+        @if (Model.EuVatEnabled)
+        {
+            <div class="inputs">
+                <label asp-for="VatNumber" asp-postfix=":"></label>
+                @if (Model.EuVatEnabledForGuests)
+                {
+                    <input asp-for="VatNumber" />
+                    <span asp-validation-for="VatNumber"></span>
+                }
+                else
+                {
+                    <span class="vat-number-warning">
+                        @T("Checkout.VatNumber.Disabled", Url.RouteUrl("CustomerInfo"))
+                    </span>
+                }
+            </div>
+        }
         <div class="enter-address">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             @{
@@ -72,5 +89,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressBottom, additionalData = Model })
 </div>

@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
@@ -23,7 +21,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            localizationService.DeleteLocaleResources(new List<string>
             {
                 "Account.Fields.VatNumber.Status",
                 "Account.Fields.VatNumberStatus",
@@ -159,15 +157,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.SpecificationFilter.CurrentlyFilteredBy",
                 "Filtering.SpecificationFilter.Remove",
                 "Filtering.SpecificationFilter.Separator",
-            }).Wait();
+            });
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
-            
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            var (languageId, languages) = this.GetLanguageData();
+
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -713,7 +707,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
-            }, languageId).Wait();
+            }, languageId);
 
             // rename locales
             var localesToRename = new[]
@@ -773,11 +767,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
                     if (lsr != null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                        localizationService.UpdateLocaleStringResource(lsr);
                     }
                 }
             }

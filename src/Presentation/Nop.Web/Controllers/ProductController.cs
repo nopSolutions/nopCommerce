@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
-using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Html;
@@ -25,8 +24,8 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -45,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -57,7 +57,6 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
@@ -77,6 +76,7 @@ namespace Nop.Web.Controllers
             IEventPublisher eventPublisher,
             IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
+            INopUrlHelper nopUrlHelper,
             IOrderService orderService,
             IPermissionService permissionService,
             IProductAttributeParser productAttributeParser,
@@ -89,7 +89,6 @@ namespace Nop.Web.Controllers
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
@@ -105,6 +104,7 @@ namespace Nop.Web.Controllers
             _eventPublisher = eventPublisher;
             _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
+            _nopUrlHelper = nopUrlHelper;
             _orderService = orderService;
             _permissionService = permissionService;
             _productAttributeParser = productAttributeParser;
@@ -117,7 +117,6 @@ namespace Nop.Web.Controllers
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
-            _webHelper = webHelper;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
@@ -188,26 +187,28 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct) });
+                var seName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
+                return LocalRedirectPermanent(productUrl);
             }
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
+                var seName = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
+                
                 //not found?
                 if (updatecartitem == null)
-                {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
-                }
+                    return LocalRedirect(productUrl);
+
                 //is it this product?
                 if (product.Id != updatecartitem.ProductId)
-                {
-                    return RedirectToRoute("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
-                }
+                    return LocalRedirect(productUrl);
             }
 
             //save as recently viewed
@@ -244,7 +245,7 @@ namespace Nop.Web.Controllers
                 model = new ProductDetailsModel.ProductEstimateShippingModel();
 
             var errors = new List<string>();
-            
+
             if (!_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
@@ -271,7 +272,7 @@ namespace Nop.Web.Controllers
                     Errors = errors
                 });
             }
-            
+
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -305,7 +306,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetProductCombinations(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -335,61 +336,6 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region New (recently added) products page
-
-        public virtual async Task<IActionResult> NewProducts()
-        {
-            if (!_catalogSettings.NewProductsEnabled)
-                return Content("");
-
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-
-            return View(model);
-        }
-
-        [CheckLanguageSeoCode(true)]
-        public virtual async Task<IActionResult> NewProductsRss()
-        {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var feed = new RssFeed(
-                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
-                "Information about products",
-                new Uri(_webHelper.GetStoreLocation()),
-                DateTime.UtcNow);
-
-            if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
-
-            var items = new List<RssItem>();
-
-            var storeId = store.Id;
-            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
-
-            foreach (var product in products)
-            {
-                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
-                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
-                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
-                var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
-                items.Add(item);
-                //uncomment below if you want to add RSS enclosure for pictures
-                //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                //if (picture != null)
-                //{
-                //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
-                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl), new XAttribute("length", picture.PictureBinary.Length)));
-                //}
-
-            }
-            feed.Items = items;
-            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
-        }
-
-        #endregion
-
         #region Product reviews
 
         public virtual async Task<IActionResult> ProductReviews(int productId)
@@ -405,7 +351,7 @@ namespace Nop.Web.Controllers
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-            
+
             //default value for all additional review types
             if (model.ReviewTypeList.Count > 0)
                 foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
@@ -479,7 +425,7 @@ namespace Nop.Web.Controllers
 
                 //notify store owner
                 if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendProductReviewStoreOwnerNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
@@ -690,9 +636,12 @@ namespace Nop.Web.Controllers
             .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             //prepare model
-            (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
-                .ToList()
-                .ForEach(model.Products.Add);
+            var poModels = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
+                .ToList();
+            foreach(var poModel in poModels)
+            {
+                model.Products.Add(poModel);
+            }
 
             return View(model);
         }

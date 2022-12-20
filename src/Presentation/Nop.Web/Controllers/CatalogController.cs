@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -6,16 +8,20 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -33,12 +39,14 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly IPermissionService _permissionService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -57,12 +65,14 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
+            INopUrlHelper nopUrlHelper,
             IPermissionService permissionService,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -77,12 +87,14 @@ namespace Nop.Web.Controllers
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
+            _nopUrlHelper = nopUrlHelper;
             _permissionService = permissionService;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _productTagService = productTagService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
             _vendorService = vendorService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -126,7 +138,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -192,7 +204,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetManufacturerProducts(int manufacturerId, CatalogProductsCommand command)
         {
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -242,7 +254,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetVendorProducts(int vendorId, CatalogProductsCommand command)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -281,7 +293,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> GetTagProducts(int tagId, CatalogProductsCommand command)
         {
             var productTag = await _productTagService.GetProductTagByIdAsync(tagId);
@@ -298,6 +310,74 @@ namespace Nop.Web.Controllers
             var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
 
             return View(model);
+        }
+
+        #endregion
+
+        #region New (recently added) products page
+
+        public virtual async Task<IActionResult> NewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return InvokeHttp404();
+
+            var model = new NewProductsModel
+            {
+                CatalogProductsModel = await _catalogModelFactory.PrepareNewProductsModelAsync(command)
+            };
+
+            return View(model);
+        }
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(ignore: true)]
+        public virtual async Task<IActionResult> GetNewProducts(CatalogProductsCommand command)
+        {
+            if (!_catalogSettings.NewProductsEnabled)
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareNewProductsModelAsync(command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        [CheckLanguageSeoCode(ignore: true)]
+        public virtual async Task<IActionResult> NewProductsRss()
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var feed = new RssFeed(
+                $"{await _localizationService.GetLocalizedAsync(store, x => x.Name)}: New products",
+                "Information about products",
+                new Uri(_webHelper.GetStoreLocation()),
+                DateTime.UtcNow);
+
+            if (!_catalogSettings.NewProductsEnabled)
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+
+            var items = new List<RssItem>();
+
+            var storeId = store.Id;
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId: storeId);
+
+            foreach (var product in products)
+            {
+                var seName = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
+                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
+                var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
+                items.Add(item);
+                //uncomment below if you want to add RSS enclosure for pictures
+                //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                //if (picture != null)
+                //{
+                //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
+                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl), new XAttribute("length", picture.PictureBinary.Length)));
+                //}
+
+            }
+            feed.Items = items;
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         #endregion
@@ -322,7 +402,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
             if (string.IsNullOrWhiteSpace(term))
@@ -351,8 +431,8 @@ namespace Nop.Web.Controllers
                           select new
                           {
                               label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
+                              productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
                               showlinktoresultsearch = showLinkToResultSearch
                           })
                 .ToList();
@@ -360,7 +440,7 @@ namespace Nop.Web.Controllers
         }
 
         //ignore SEO friendly URLs checks
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
         {
             if (searchModel == null)
@@ -377,9 +457,12 @@ namespace Nop.Web.Controllers
 
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
+            if (category is null)
+                return false;
+
             var isAvailable = true;
 
-            if (category == null || category.Deleted)
+            if (category.Deleted)
                 isAvailable = false;
 
             var notAvailable =

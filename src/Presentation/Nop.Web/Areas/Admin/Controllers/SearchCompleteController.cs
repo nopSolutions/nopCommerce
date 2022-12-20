@@ -7,7 +7,7 @@ using Nop.Services.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
-    public class SearchCompleteController : BaseAdminController
+    public partial class SearchCompleteController : BaseAdminController
     {
         #region Fields
 

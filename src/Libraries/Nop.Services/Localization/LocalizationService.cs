@@ -158,6 +158,41 @@ namespace Nop.Services.Localization
                 .ToDictionary(p => p.Key, p => p.Value);
         }
 
+        protected virtual IDictionary<string, string> UpdateLocaleResource(IDictionary<string, string> resources, int? languageId = null, bool clearCache = true)
+        {
+            var localResources = new Dictionary<string, string>(resources, StringComparer.InvariantCultureIgnoreCase);
+            var keys = localResources.Keys.Select(key => key.ToLowerInvariant()).ToArray();
+            var resourcesToUpdate = _lsrRepository.GetAll(query =>
+            {
+                var rez = query.Where(p => !languageId.HasValue || p.LanguageId == languageId)
+                    .Where(p => keys.Contains(p.ResourceName.ToLower()));
+
+                return rez;
+            });
+
+            var existsResources = new List<string>();
+
+            foreach (var localeStringResource in resourcesToUpdate.ToList())
+            {
+                var newValue = localResources[localeStringResource.ResourceName];
+
+                if (localeStringResource.ResourceValue.Equals(newValue))
+                    resourcesToUpdate.Remove(localeStringResource);
+
+                localeStringResource.ResourceValue = newValue;
+                existsResources.Add(localeStringResource.ResourceName);
+            }
+
+            _lsrRepository.Update(resourcesToUpdate);
+
+            //clear cache
+            if (clearCache)
+                _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+
+            return localResources.Where(item => !existsResources.Contains(item.Key, StringComparer.InvariantCultureIgnoreCase))
+                .ToDictionary(p => p.Key, p => p.Value);
+        }
+
         #endregion
 
         #region Methods
@@ -212,6 +247,31 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Gets a locale string resource
+        /// </summary>
+        /// <param name="resourceName">A string representing a resource name</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
+        /// <returns>
+        /// The locale string resource
+        /// </returns>
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
+            bool logIfNotFound = true)
+        {
+            var query = from lsr in _lsrRepository.Table
+                orderby lsr.ResourceName
+                where lsr.LanguageId == languageId && lsr.ResourceName == resourceName.ToLowerInvariant()
+                select lsr;
+
+            var localeStringResource = query.FirstOrDefault();
+
+            if (localeStringResource == null && logIfNotFound)
+                _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");
+
+            return localeStringResource;
+        }
+
+        /// <summary>
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
@@ -232,6 +292,15 @@ namespace Nop.Services.Localization
         public virtual async Task UpdateLocaleStringResourceAsync(LocaleStringResource localeStringResource)
         {
             await _lsrRepository.UpdateAsync(localeStringResource);
+        }
+
+        /// <summary>
+        /// Updates the locale string resource
+        /// </summary>
+        /// <param name="localeStringResource">Locale string resource</param>
+        public virtual void UpdateLocaleStringResource(LocaleStringResource localeStringResource)
+        {
+            _lsrRepository.Update(localeStringResource);
         }
 
         /// <summary>
@@ -757,6 +826,36 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Add locale resources
+        /// </summary>
+        /// <param name="resources">Resource name-value pairs</param>
+        /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
+        public virtual void AddOrUpdateLocaleResource(IDictionary<string, string> resources, int? languageId = null)
+        {
+            //first update all previous locales with the passed names if they exist
+            var resourcesToInsert = UpdateLocaleResource(resources, languageId, false);
+
+            if (resourcesToInsert.Any())
+            {
+                //insert new locale resources
+                var locales = _languageService.GetAllLanguages(true)
+                    .Where(language => !languageId.HasValue || language.Id == languageId.Value)
+                    .SelectMany(language => resourcesToInsert.Select(resource => new LocaleStringResource
+                    {
+                        LanguageId = language.Id,
+                        ResourceName = resource.Key.Trim().ToLowerInvariant(),
+                        ResourceValue = resource.Value
+                    }))
+                    .ToList();
+
+                _lsrRepository.Insert(locales, false);
+            }
+
+            //clear cache
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        }
+
+        /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
@@ -784,6 +883,21 @@ namespace Nop.Services.Localization
 
             //clear cache
             await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        }
+
+        /// <summary>
+        /// Delete locale resources
+        /// </summary>
+        /// <param name="resourceNames">Resource names</param>
+        /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
+        public virtual void DeleteLocaleResources(IList<string> resourceNames, int? languageId = null)
+        {
+            _lsrRepository.Delete(locale =>
+                (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
+                resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
+
+            //clear cache
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>

@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Messages
     /// <summary>
     /// Email unsubscribed event
     /// </summary>
-    public class EmailUnsubscribedEvent
+    public partial class EmailUnsubscribedEvent
     {
         /// <summary>
         /// Ctor

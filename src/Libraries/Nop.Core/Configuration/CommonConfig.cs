@@ -41,11 +41,6 @@
         public string StaticFilesCacheControl { get; private set; } = "public,max-age=31536000";
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance)
-        /// </summary>
-        public bool SupportPreviousNopcommerceVersions { get; private set; } = true;
-
-        /// <summary>
         /// Get or set the blacklist of static file extension for plugin directories
         /// </summary>
         public string PluginStaticFileExtensionsBlacklist { get; private set; } = "";
@@ -53,7 +48,13 @@
         /// <summary>
         /// Get or set a value indicating whether to serve files that don't have a recognized content-type
         /// </summary>
-        /// <value></value>
         public bool ServeUnknownFileTypes { get; private set; } = false;
+
+        /// <summary>
+        /// Get or set a value indicating whether to use Autofac IoC container
+        ///
+        /// If value is set to false then the default .Net IoC container will be use
+        /// </summary>
+        public bool UseAutofac { get; set; } = true;
     }
 }

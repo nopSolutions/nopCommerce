@@ -13,13 +13,13 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-action-confirmation" tag helper
     /// </summary>
     [HtmlTargetElement("nop-action-confirmation", Attributes = BUTTON_ID_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopActionConfirmationTagHelper : TagHelper
+    public partial class NopActionConfirmationTagHelper : TagHelper
     {
         #region Constants
 
         private const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
         private const string ACTION_ATTRIBUTE_NAME = "asp-action";
-        private const string ADDITIONA_CONFIRM_TEXT = "asp-additional-confirm";
+        private const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <summary>
         /// Additional confirm text
         /// </summary>
-        [HtmlAttributeName(ADDITIONA_CONFIRM_TEXT)]
+        [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
         public string ConfirmText { get; set; }
 
         /// <summary>

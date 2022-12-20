@@ -33,14 +33,14 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.StaticFilesCacheControl")]
         public string StaticFilesCacheControl { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions")]
-        public bool SupportPreviousNopcommerceVersions { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist")]
         public string PluginStaticFileExtensionsBlacklist { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes")]
         public bool ServeUnknownFileTypes { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.UseAutofac")]
+        public bool UseAutofac { get; set; }
 
         #endregion
     }

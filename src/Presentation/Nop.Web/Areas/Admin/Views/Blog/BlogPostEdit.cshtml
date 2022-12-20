@@ -1,5 +1,8 @@
 @model BlogPostModel
-@{    
+
+@using Nop.Core.Domain.Blogs
+
+@{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Blog.BlogPosts.EditBlogPostDetails").Text;
     //active menu item (system name)
@@ -16,7 +19,7 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("BlogPost", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<BlogPost>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
@@ -32,7 +35,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

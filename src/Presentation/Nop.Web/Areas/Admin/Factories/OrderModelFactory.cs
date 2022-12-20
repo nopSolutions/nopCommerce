@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using MailKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -19,6 +21,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -80,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly ISettingService _settingService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -89,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopHttpClient _nopHttpClient;
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly IUrlRecordService _urlRecordService;
@@ -128,6 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IReturnRequestService returnRequestService,
             IRewardPointService rewardPointService,
+            ISettingService settingService,
             IShipmentService shipmentService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
@@ -137,6 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
+            NopHttpClient nopHttpClient,
             OrderSettings orderSettings,
             ShippingSettings shippingSettings,
             IUrlRecordService urlRecordService,
@@ -172,6 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _productService = productService;
             _returnRequestService = returnRequestService;
             _rewardPointService = rewardPointService;
+            _settingService = settingService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
@@ -181,6 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _vendorService = vendorService;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopHttpClient = nopHttpClient;
             _orderSettings = orderSettings;
             _shippingSettings = shippingSettings;
             _urlRecordService = urlRecordService;
@@ -719,14 +728,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
+                    var store = await _storeService.GetStoreByIdAsync(order.StoreId);
+                    
                     //values
                     var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         //price adjustment
                         var (priceAdjustment, _) = await _taxService.GetProductPriceAsync(product,
-                            await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer));
+                            await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store));
 
                         var priceAdjustmentStr = string.Empty;
                         if (priceAdjustment != 0)
@@ -923,6 +933,20 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
 
+            var licenseCheckModel = new LicenseCheckModel();
+            try
+            {
+                var result = await _nopHttpClient.GetLicenseCheckDetailsAsync();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    licenseCheckModel = JsonConvert.DeserializeObject<LicenseCheckModel>(result);
+                    if (licenseCheckModel.DisplayWarning == false && licenseCheckModel.BlockPages == false)
+                        await _settingService.SetSettingAsync($"{nameof(AdminAreaSettings)}.{nameof(AdminAreaSettings.CheckLicense)}", false);
+                }
+            }
+            catch { }
+            searchModel.LicenseCheckModel = licenseCheckModel;
+
             //prepare available order, payment and shipping statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
             if (searchModel.AvailableOrderStatuses.Any())
@@ -930,8 +954,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (searchModel.OrderStatusIds?.Any() ?? false)
                 {
                     var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
-                    searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
-                        .ForEach(statusItem => statusItem.Selected = true);
+                    var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
+                    foreach(var statusItem in statusItems)
+                    {
+                        statusItem.Selected = true;
+                    }
                 }
                 else
                     searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
@@ -943,8 +970,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (searchModel.PaymentStatusIds?.Any() ?? false)
                 {
                     var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
-                    searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
-                        .ForEach(statusItem => statusItem.Selected = true);
+                    var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
+                    foreach(var statusItem in statusItems)
+                    {
+                        statusItem.Selected = true;
+                    }
                 }
                 else
                     searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
@@ -956,8 +986,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (searchModel.ShippingStatusIds?.Any() ?? false)
                 {
                     var ids = searchModel.ShippingStatusIds.Select(id => id.ToString());
-                    searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
-                        .ForEach(statusItem => statusItem.Selected = true);
+                    var statusItems = searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
+                    foreach(var statusItem in statusItems)
+                    {
+                        statusItem.Selected = true;
+                    }
                 }
                 else
                     searchModel.AvailableShippingStatuses.FirstOrDefault().Selected = true;
@@ -1346,6 +1379,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId);
 
             model.ProductId = product.Id;
             model.OrderId = order.Id;
@@ -1355,7 +1389,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder;
 
             var presetQty = 1;
-            var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, decimal.Zero, true, presetQty);
+            var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, decimal.Zero, true, presetQty);
+
             var (presetPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, true, customer);
             var (presetPriceExclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, false, customer);
             model.UnitPriceExclTax = presetPriceExclTax;
@@ -1569,7 +1604,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     shipmentItemModel.AllowToChooseWarehouse = true;
                     foreach (var pwi in (await _productService.GetAllProductWarehouseInventoryRecordsAsync(orderItem.ProductId)).OrderBy(w => w.WarehouseId).ToList())
                     {
-                        if (await _productService.GetWarehousesByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
+                        if (await _shippingService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {
@@ -1797,11 +1832,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     var bestsellerModel = new BestsellerModel
                     {
                         ProductId = bestseller.ProductId,
-                        TotalQuantity = bestseller.TotalQuantity
+                        TotalQuantity = bestseller.TotalQuantity,
+                        ProductName = bestseller.ProductName
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
                     bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;

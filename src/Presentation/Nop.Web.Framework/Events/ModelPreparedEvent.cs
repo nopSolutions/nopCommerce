@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Events
     /// Represents an event that occurs after the model is prepared for view
     /// </summary>
     /// <typeparam name="T">Type of the model</typeparam>
-    public class ModelPreparedEvent<T>
+    public partial class ModelPreparedEvent<T>
     {
         #region Ctor
 

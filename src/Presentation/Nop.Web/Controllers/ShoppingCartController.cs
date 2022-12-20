@@ -30,10 +30,12 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Web.Components;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
@@ -59,6 +61,7 @@ namespace Nop.Web.Controllers
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly INopFileProvider _fileProvider;
+        private readonly INopUrlHelper _nopUrlHelper;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
@@ -99,6 +102,7 @@ namespace Nop.Web.Controllers
             IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
             INopFileProvider fileProvider,
+            INopUrlHelper nopUrlHelper,
             INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
@@ -135,6 +139,7 @@ namespace Nop.Web.Controllers
             _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
             _fileProvider = fileProvider;
+            _nopUrlHelper = nopUrlHelper;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _pictureService = pictureService;
@@ -403,7 +408,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? await RenderViewComponentToStringAsync("FlyoutShoppingCart")
+                            ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                             : string.Empty;
 
                         return Json(new
@@ -498,7 +503,7 @@ namespace Nop.Web.Controllers
             await _genericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.SelectedShippingOptionAttribute, selectedShippingOption, store.Id);
 
-            var orderTotalsSectionHtml = await RenderViewComponentToStringAsync("OrderTotals", new { isEditable = true });
+            var orderTotalsSectionHtml = await RenderViewComponentToStringAsync(typeof(OrderTotalsViewComponent), new { isEditable = true });
 
             return Json(new
             {
@@ -524,52 +529,37 @@ namespace Nop.Web.Controllers
                     message = "No product found with the specified ID"
                 });
 
+            var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+
             //we can add only simple products
             if (product.ProductType != ProductType.SimpleProduct)
-            {
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
-            }
+                return Json(new { redirect = redirectUrl });
 
             //products with "minimum order quantity" more than a specified qty
             if (product.OrderMinimumQuantity > quantity)
             {
                 //we cannot add to the cart such products from category pages
                 //it can confuse customers. That's why we redirect customers to the product details page
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             if (product.CustomerEntersPrice)
             {
                 //cannot be added to the cart (requires a customer to enter price)
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             if (product.IsRental)
             {
                 //rental products require start/end dates to be entered
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             var allowedQuantities = _productService.ParseAllowedQuantities(product);
             if (allowedQuantities.Length > 0)
             {
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             //allow a product to be added to the cart when all attributes are with "read-only checkboxes" type
@@ -577,10 +567,7 @@ namespace Nop.Web.Controllers
             if (productAttributes.Any(pam => pam.AttributeControlType != AttributeControlType.ReadonlyCheckboxes))
             {
                 //product has some attributes. let a customer see them
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             //creating XML for "read-only checkboxes" attributes
@@ -633,10 +620,7 @@ namespace Nop.Web.Controllers
             {
                 //cannot be added to the cart
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
-                });
+                return Json(new { redirect = redirectUrl });
             }
 
             //added to the cart/wishlist
@@ -693,7 +677,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? await RenderViewComponentToStringAsync("FlyoutShoppingCart")
+                            ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                             : string.Empty;
 
                         return Json(new
@@ -843,11 +827,15 @@ namespace Nop.Web.Controllers
             var price = string.Empty;
             //base price
             var basepricepangv = string.Empty;
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
+            if (!product.CustomerEntersPrice && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
+                var currentStore = await _storeContext.GetCurrentStoreAsync();
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                
                 //we do not calculate price of "customer enters price" option is enabled
                 var (finalPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(product,
-                    await _workContext.GetCurrentCustomerAsync(),
+                    currentCustomer,
+                    currentStore,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate, true);
@@ -974,8 +962,8 @@ namespace Nop.Web.Controllers
             }
 
             //update blocks
-            var ordetotalssectionhtml = await RenderViewComponentToStringAsync("OrderTotals", new { isEditable });
-            var selectedcheckoutattributesssectionhtml = await RenderViewComponentToStringAsync("SelectedCheckoutAttributes");
+            var ordetotalssectionhtml = await RenderViewComponentToStringAsync(typeof(OrderTotalsViewComponent), new { isEditable });
+            var selectedcheckoutattributesssectionhtml = await RenderViewComponentToStringAsync(typeof(SelectedCheckoutAttributesViewComponent));
 
             return Json(new
             {

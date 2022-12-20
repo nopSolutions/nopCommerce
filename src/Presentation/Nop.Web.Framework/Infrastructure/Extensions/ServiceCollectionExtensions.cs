@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -25,15 +26,16 @@ using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Security;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
+using Nop.Web.Framework.WebOptimizer;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore6;
+using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -44,11 +46,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add services to the application and configure service provider
+        /// Configure base application settings
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="builder">A builder for web applications and services</param>
-        public static void ConfigureApplicationServices(this IServiceCollection services,
+        public static void ConfigureApplicationSettings(this IServiceCollection services,
             WebApplicationBuilder builder)
         {
             //let the operating system decide what TLS protocol version to use
@@ -57,15 +59,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //create default file provider
             CommonHelper.DefaultFileProvider = new NopFileProvider(builder.Environment);
-
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
-
-            //initialize plugins
-            var mvcCoreBuilder = services.AddMvcCore();
-            var pluginConfig = new PluginConfig();
-            builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
-            mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
 
             //register type finder
             var typeFinder = new WebAppTypeFinder();
@@ -77,13 +70,31 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 .FindClassesOfType<IConfig>()
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
-            foreach (var config in configurations)
-            {
+
+            foreach (var config in configurations) 
                 builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
-            }
+
             var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
             services.AddSingleton(appSettings);
+        }
 
+        /// <summary>
+        /// Add services to the application and configure service provider
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="builder">A builder for web applications and services</param>
+        public static void ConfigureApplicationServices(this IServiceCollection services,
+            WebApplicationBuilder builder)
+        {
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
+
+            //initialize plugins
+            var mvcCoreBuilder = services.AddMvcCore();
+            var pluginConfig = new PluginConfig();
+            builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
+            mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
+            
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
@@ -295,6 +306,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
                 options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new CustomPropertiesModelBinderProvider());
                 //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
@@ -304,18 +316,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration =>
-            {
-                //register all available validators from Nop assemblies
-                var assemblies = mvcBuilder.PartManager.ApplicationParts
-                    .OfType<AssemblyPart>()
-                    .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(part => part.Assembly);
-                configuration.RegisterValidatorsFromAssemblies(assemblies);
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
-                //implicit/automatic validation of child properties
-                configuration.ImplicitlyValidateChildProperties = true;
-            });
+            //register all available validators from Nop assemblies
+            var assemblies = mvcBuilder.PartManager.ApplicationParts
+                .OfType<AssemblyPart>()
+                .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
+                .Select(part => part.Assembly);
+            services.AddValidatorsFromAssemblies(assemblies);
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();
@@ -378,6 +386,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 })
                 .AddHtmlMinification(options =>
                 {
+                    options.MinificationSettings.AttributeQuotesRemovalMode = HtmlAttributeQuotesRemovalMode.KeepQuotes;
+
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
                 })

@@ -7,7 +7,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
     /// <summary>
     /// Represents service shipping by weight service
     /// </summary>
-    public partial interface IShippingByWeightByTotalService
+    public interface IShippingByWeightByTotalService
     {
         /// <summary>
         /// Get all shipping by weight records

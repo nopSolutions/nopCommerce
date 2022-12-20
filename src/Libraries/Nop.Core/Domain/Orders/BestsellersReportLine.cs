@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -12,6 +12,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the product identifier
         /// </summary>
         public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product name
+        /// </summary>
+        public string ProductName { get; set; }
 
         /// <summary>
         /// Gets or sets the total amount

@@ -127,9 +127,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
                 {
                     Id = configuration.Id,
                     PixelId = configuration.PixelId,
-                    Enabled = configuration.Enabled,
+                    AccessToken = configuration.AccessToken,
+                    PixelScriptEnabled = configuration.PixelScriptEnabled,
+                    ConversionsApiEnabled = configuration.ConversionsApiEnabled,
                     StoreId = configuration.StoreId,
-
                     StoreName = (await _storeService.GetStoreByIdAsync(configuration.StoreId))?.Name
                 });
             });

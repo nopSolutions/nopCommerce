@@ -803,7 +803,7 @@ label, label + * {
   right: 50%;
   z-index: 1050;
   width: 320px;
-  height: 180px;
+  height: auto;
   margin: -90px -160px 0 0;
   border: 1px solid #ccc;
   box-shadow: 0 0 2px rgba(0,0,0,0.15);
@@ -1194,7 +1194,7 @@ label, label + * {
   background-position: -114px 0;
 }
 
-.follow-us .social .google-plus a {
+.follow-us .social .instagram a {
   background-position: -152px 0;
 }
 
@@ -1778,7 +1778,18 @@ label, label + * {
   margin-right: auto;
 }
 
-.item-box .description {
+.product-grid .item-box .description:not([data-short-description]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin: 0 0 15px;
+  height: 66px;
+  line-height: 22px;
+}
+
+.item-box .description[data-short-description] {
   display: none;
 }
 
@@ -2066,7 +2077,8 @@ label, label + * {
 }
 
 .gallery .picture img,
-.gallery .picture-thumbs img,
+.picture-gallery .picture-thumbs img,
+.video-gallery .video-thumbs iframe,
 .variant-picture img {
   position: absolute;
   top: 0;
@@ -2078,12 +2090,12 @@ label, label + * {
   margin: auto;
 }
 
-.gallery .picture-thumbs {
+.picture-gallery .picture-thumbs {
   overflow: hidden;
   font-size: 0;
 }
 
-.gallery .picture-thumbs .thumb-item {
+.picture-gallery .picture-thumbs .thumb-item {
   display: inline-block;
   position: relative;
   width: 100px;
@@ -2091,6 +2103,13 @@ label, label + * {
   margin: 0 5px 10px;
   overflow: hidden;
   cursor: pointer;
+}
+
+.video-gallery .video-thumbs .thumb-item {
+  display: inline-block;
+  position: relative;
+  margin: 0 5px 10px;
+  overflow: hidden;
 }
 
 .overview {
@@ -4778,6 +4797,17 @@ label, label + * {
   font-weight: bold;
   color: #444;
 }
+
+.vat-number-warning {
+  text-align: center;
+  font-size: 13px;
+  color: #e4434b;
+  margin-top: 5px;
+}
+
+  .vat-number-warning a {
+    text-decoration: underline;
+  }
 
 .checkout-page .pickup-in-store {
   text-align: center;
@@ -8284,7 +8314,12 @@ label, label + * {
     width: 46%;
   }
 
-  .gallery .picture {
+  .picture-gallery .picture {
+    width: auto;
+  }
+
+  .video-gallery {
+    float: right;
     width: auto;
   }
 

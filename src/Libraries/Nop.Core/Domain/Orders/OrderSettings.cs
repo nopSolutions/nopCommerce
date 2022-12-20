@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Order settings
     /// </summary>
-    public class OrderSettings : ISettings
+    public partial class OrderSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether customer can make re-order
@@ -79,22 +79,27 @@ namespace Nop.Core.Domain.Orders
         public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order placed" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order placed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order paid" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order paid" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order processing" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderProcessingEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we PDF invoices should be generated in customer language. Otherwise, use the current one
+        /// Gets or sets a value indicating whether PDF invoices should be generated in customer language. Otherwise, use the current one
         /// </summary>
         public bool GeneratePdfInvoiceInCustomerLanguage { get; set; }
 
@@ -162,6 +167,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether administrators (in impersonation mode) are allowed to buy products marked as "Call for price"
         /// </summary>
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show product thumbnail in order details page"
+        /// </summary>
+        public bool ShowProductThumbnailInOrderDetailsPage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the gift card usage history have to delete when an order is cancelled

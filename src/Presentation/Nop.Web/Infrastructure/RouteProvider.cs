@@ -28,7 +28,7 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{{area:exists}}/{{controller=Home}}/{{action=Index}}/{{id?}}");
 
             //home page
-            endpointRouteBuilder.MapControllerRoute(name: "Homepage", 
+            endpointRouteBuilder.MapControllerRoute(name: "Homepage",
                 pattern: $"{lang}",
                 defaults: new { controller = "Home", action = "Index" });
 
@@ -58,7 +58,7 @@ namespace Nop.Web.Infrastructure
                 defaults: new { controller = "ShoppingCart", action = "Cart" });
 
             //estimate shipping (AJAX)
-            endpointRouteBuilder.MapControllerRoute(name: "EstimateShipping", 
+            endpointRouteBuilder.MapControllerRoute(name: "EstimateShipping",
                 pattern: $"cart/estimateshipping",
                 defaults: new { controller = "ShoppingCart", action = "GetEstimateShipping" });
 
@@ -91,7 +91,7 @@ namespace Nop.Web.Infrastructure
                 defaults: new { controller = "Catalog", action = "Search" });
 
             //autocomplete search term (AJAX)
-            endpointRouteBuilder.MapControllerRoute(name: "ProductSearchAutoComplete", 
+            endpointRouteBuilder.MapControllerRoute(name: "ProductSearchAutoComplete",
                 pattern: $"catalog/searchtermautocomplete",
                 defaults: new { controller = "Catalog", action = "SearchTermAutoComplete" });
 
@@ -118,7 +118,7 @@ namespace Nop.Web.Infrastructure
             //new products
             endpointRouteBuilder.MapControllerRoute(name: "NewProducts",
                 pattern: $"{lang}/newproducts/",
-                defaults: new { controller = "Product", action = "NewProducts" });
+                defaults: new { controller = "Catalog", action = "NewProducts" });
 
             //blog
             endpointRouteBuilder.MapControllerRoute(name: "Blog",
@@ -400,7 +400,7 @@ namespace Nop.Web.Infrastructure
                 defaults: new { controller = "Order", action = "PrintOrderDetails" });
 
             //order downloads (file result)
-            endpointRouteBuilder.MapControllerRoute(name: "GetDownload", 
+            endpointRouteBuilder.MapControllerRoute(name: "GetDownload",
                 pattern: $"download/getdownload/{{orderItemId:guid}}/{{agree?}}",
                 defaults: new { controller = "Download", action = "GetDownload" });
 
@@ -463,10 +463,10 @@ namespace Nop.Web.Infrastructure
             //new RSS (file result)
             endpointRouteBuilder.MapControllerRoute(name: "NewProductsRSS",
                 pattern: $"newproducts/rss",
-                defaults: new { controller = "Product", action = "NewProductsRss" });
+                defaults: new { controller = "Catalog", action = "NewProductsRss" });
 
             //get state list by country ID (AJAX)
-            endpointRouteBuilder.MapControllerRoute(name: "GetStatesByCountryId", 
+            endpointRouteBuilder.MapControllerRoute(name: "GetStatesByCountryId",
                 pattern: $"country/getstatesbycountryid/",
                 defaults: new { controller = "Country", action = "GetStatesByCountryId" });
 
@@ -509,6 +509,10 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "GetVendorProducts",
                 pattern: $"vendor/products",
                 defaults: new { controller = "Catalog", action = "GetVendorProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetNewProducts",
+                pattern: $"newproducts/products/",
+                defaults: new { controller = "Catalog", action = "GetNewProducts" });
 
             //product combinations (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "GetProductCombinations",

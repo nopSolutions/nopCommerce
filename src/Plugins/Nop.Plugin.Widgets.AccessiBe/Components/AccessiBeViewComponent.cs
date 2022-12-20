@@ -10,7 +10,6 @@ namespace Nop.Plugin.Widgets.AccessiBe.Components
     /// <summary>
     /// Represents the view component to place a widget into pages
     /// </summary>
-    [ViewComponent(Name = AccessiBeDefaults.VIEW_COMPONENT)]
     public class AccessiBeViewComponent : NopViewComponent
     {
         #region Fields

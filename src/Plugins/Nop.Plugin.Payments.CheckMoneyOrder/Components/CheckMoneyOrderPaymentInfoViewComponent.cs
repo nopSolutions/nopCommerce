@@ -7,7 +7,6 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
 {
-    [ViewComponent(Name = "CheckMoneyOrder")]
     public class CheckMoneyOrderViewComponent : NopViewComponent
     {
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;

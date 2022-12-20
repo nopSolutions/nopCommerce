@@ -84,12 +84,24 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<IList<Store>> GetAllStoresAsync()
         {
-            var result = await _storeRepository.GetAllAsync(query =>
+            return await _storeRepository.GetAllAsync(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, cache => default);
+            }, _ => default, includeDeleted: false);
+        }
 
-            return result;
+        /// <summary>
+        /// Gets all stores
+        /// </summary>
+        /// <returns>
+        /// The stores
+        /// </returns>
+        public virtual IList<Store> GetAllStores()
+        {
+            return _storeRepository.GetAll(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, _ => default, includeDeleted: false);
         }
 
         /// <summary>
@@ -102,7 +114,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<Store> GetStoreByIdAsync(int storeId)
         {
-            return await _storeRepository.GetByIdAsync(storeId, cache => default);
+            return await _storeRepository.GetByIdAsync(storeId, cache => default, false);
         }
 
         /// <summary>
@@ -123,6 +135,15 @@ namespace Nop.Services.Stores
         public virtual async Task UpdateStoreAsync(Store store)
         {
             await _storeRepository.UpdateAsync(store);
+        }
+
+        /// <summary>
+        /// Updates the store
+        /// </summary>
+        /// <param name="store">Store</param>
+        public virtual void UpdateStore(Store store)
+        {
+            _storeRepository.Update(store);
         }
 
         /// <summary>

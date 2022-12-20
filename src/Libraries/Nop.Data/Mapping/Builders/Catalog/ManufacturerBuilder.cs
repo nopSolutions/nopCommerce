@@ -6,7 +6,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
     /// <summary>
     /// Represents a manufacturer entity builder
     /// </summary>
-    public class ManufacturerBuilder : NopEntityBuilder<Manufacturer>
+    public partial class ManufacturerBuilder : NopEntityBuilder<Manufacturer>
     {
         #region Methods
 

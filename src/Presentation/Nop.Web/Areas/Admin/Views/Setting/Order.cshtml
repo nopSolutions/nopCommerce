@@ -38,15 +38,15 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="ordersettings-cards">
@@ -57,7 +57,7 @@
                     <nop-card asp-name="ordersettings-gift-cards" asp-icon="fas fa-gift" asp-title="@T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")" asp-hide-block-attribute-name="@hideGiftCardsBlockAttributeName" asp-hide="@hideGiftCardsBlock" asp-advanced="true">@await Html.PartialAsync("_Order.GiftCards", Model)</nop-card>
                     <nop-card asp-name="ordersettings-return-request" asp-icon="fas fa-backward" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")" asp-hide-block-attribute-name="@hideReturnRequestBlockAttributeName" asp-hide="@hideReturnRequestBlock" asp-advanced="false">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

@@ -10,7 +10,7 @@ namespace Nop.Core.ComponentModel
     /// Generic List type converted
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    public class GenericListTypeConverter<T> : TypeConverter
+    public partial class GenericListTypeConverter<T> : TypeConverter
     {
         /// <summary>
         /// Type converter
@@ -65,14 +65,14 @@ namespace Nop.Core.ComponentModel
 
             var items = GetStringArray((string)value);
             var result = new List<T>();
-            Array.ForEach(items, s =>
+            foreach (var itemStr in items)
             {
-                var item = typeConverter.ConvertFromInvariantString(s);
+                var item = typeConverter.ConvertFromInvariantString(itemStr);
                 if (item != null)
                 {
                     result.Add((T)item);
                 }
-            });
+            }
 
             return result;
         }

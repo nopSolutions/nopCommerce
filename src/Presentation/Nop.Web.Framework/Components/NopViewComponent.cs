@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Components
     /// <summary>
     /// Base class for ViewComponent in nopCommerce
     /// </summary>
-    public abstract class NopViewComponent : ViewComponent
+    public abstract partial class NopViewComponent : ViewComponent
     {
         private void PublishModelPrepared<TModel>(TModel model)
         {

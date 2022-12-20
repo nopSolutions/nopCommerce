@@ -9,7 +9,7 @@ namespace Nop.Core.ComponentModel
     /// <remarks>
     /// Intended as an infrastructure class.
     /// </remarks>
-    public class ReaderWriteLockDisposable : IDisposable
+    public partial class ReaderWriteLockDisposable : IDisposable
     {
         private bool _disposed = false;
         private readonly ReaderWriterLockSlim _rwLock;

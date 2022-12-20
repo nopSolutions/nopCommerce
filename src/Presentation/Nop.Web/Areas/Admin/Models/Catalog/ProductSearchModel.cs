@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -21,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             AvailableVendors = new List<SelectListItem>();
             AvailableProductTypes = new List<SelectListItem>();
             AvailablePublishedOptions = new List<SelectListItem>();
+            LicenseCheckModel = new();
         }
 
         #endregion
@@ -60,6 +62,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public bool IsLoggedInAsVendor { get; set; }
 
         public bool AllowVendorsToImportProducts { get; set; }
+
+        public LicenseCheckModel LicenseCheckModel { get; set; }
 
         public bool HideStoresList { get; set; }
 

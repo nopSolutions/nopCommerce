@@ -10,7 +10,7 @@
         /// <summary>
         /// Represents system name of notification about new registration
         /// </summary>
-        public const string CustomerRegisteredNotification = "NewCustomer.Notification";
+        public const string CustomerRegisteredStoreOwnerNotification = "NewCustomer.Notification";
 
         /// <summary>
         /// Represents system name of customer welcome message
@@ -90,6 +90,11 @@
         /// Represents system name of notification customer about delivered shipment
         /// </summary>
         public const string ShipmentDeliveredCustomerNotification = "ShipmentDelivered.CustomerNotification";
+
+        /// <summary>
+        /// Represents system name of notification customer about processing order
+        /// </summary>
+        public const string OrderProcessingCustomerNotification = "OrderProcessing.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about completed order
@@ -209,7 +214,7 @@
         /// <summary>
         /// Represents system name of notification vendor about changing information
         /// </summary>
-        public const string VendorInformationChangeNotification = "VendorInformationChange.StoreOwnerNotification";
+        public const string VendorInformationChangeStoreOwnerNotification = "VendorInformationChange.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification about gift card
@@ -244,12 +249,12 @@
         /// <summary>
         /// Represents system name of notification store owner about new blog comment
         /// </summary>
-        public const string BlogCommentNotification = "Blog.BlogComment";
+        public const string BlogCommentStoreOwnerNotification = "Blog.BlogComment";
 
         /// <summary>
         /// Represents system name of notification store owner about new news comment
         /// </summary>
-        public const string NewsCommentNotification = "News.NewsComment";
+        public const string NewsCommentStoreOwnerNotification = "News.NewsComment";
 
         /// <summary>
         /// Represents system name of notification customer about product receipt

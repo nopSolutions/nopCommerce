@@ -7,7 +7,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components
     /// <summary>
     /// Represents view component for verification GoogleAuthenticator
     /// </summary>
-    [ViewComponent(Name = GoogleAuthenticatorDefaults.VERIFICATION_VIEW_COMPONENT_NAME)]
     public class GAVerificationViewComponent : NopViewComponent
     {
         #region Fields

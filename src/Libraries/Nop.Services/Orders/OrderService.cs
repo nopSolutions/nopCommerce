@@ -177,6 +177,27 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Get orders by guids
+        /// </summary>
+        /// <param name="orderGuids">Order guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        public virtual async Task<IList<Order>> GetOrdersByGuidsAsync(Guid[] orderGuids)
+        {
+            if (orderGuids == null)
+                return null;
+
+            var query = from o in _orderRepository.Table
+                        where orderGuids.Contains(o.OrderGuid)
+                        select o;
+            var orders = await query.ToListAsync();
+
+            return orders;
+        }
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
@@ -600,7 +621,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of items in all shipments
+        /// The task result contains the total number of items in all shipments
         /// </returns>
         public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem)
         {
@@ -630,7 +651,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the otal number of already delivered items which can be added to new shipments
+        /// The task result contains the total number of already delivered items which can be added to new shipments
         /// </returns>
         public virtual async Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem)
         {
@@ -653,7 +674,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue if download is allowed; otherwise, false.
+        /// The task result contains the true if download is allowed; otherwise, false.
         /// </returns>
         public virtual async Task<bool> IsDownloadAllowedAsync(OrderItem orderItem)
         {
@@ -725,7 +746,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item to check</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue if license download is allowed; otherwise, false.
+        /// The task result contains the true if license download is allowed; otherwise, false.
         /// </returns>
         public virtual async Task<bool> IsLicenseDownloadAllowedAsync(OrderItem orderItem)
         {

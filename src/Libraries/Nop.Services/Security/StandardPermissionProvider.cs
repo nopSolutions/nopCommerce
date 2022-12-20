@@ -67,6 +67,9 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord AccessClosedStore = new() { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
         public static readonly PermissionRecord AccessProfiling = new() { Name = "Public store. Access MiniProfiler results", SystemName = "AccessProfiling", Category = "PublicStore" };
 
+        //Security
+        public static readonly PermissionRecord EnableMultiFactorAuthentication = new() { Name = "Security. Enable Multi-factor authentication", SystemName = "EnableMultiFactorAuthentication", Category = "Security" };
+
         /// <summary>
         /// Get permissions
         /// </summary>
@@ -128,7 +131,8 @@ namespace Nop.Services.Security
                 EnableWishlist,
                 PublicStoreAllowNavigation,
                 AccessClosedStore,
-                AccessProfiling
+                AccessProfiling,
+                EnableMultiFactorAuthentication
             };
         }
 
@@ -197,7 +201,8 @@ namespace Nop.Services.Security
                         EnableWishlist,
                         PublicStoreAllowNavigation,
                         AccessClosedStore,
-                        AccessProfiling
+                        AccessProfiling,
+                        EnableMultiFactorAuthentication
                     }
                 ),
                 (
@@ -227,7 +232,8 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicStoreAllowNavigation,
+                        EnableMultiFactorAuthentication
                     }
                 ),
                 (

@@ -1,16 +1,16 @@
 /**
- * Globalize v1.6.0
+ * Globalize v1.7.0
  *
- * http://github.com/jquery/globalize
+ * https://github.com/globalizejs/globalize
  *
- * Copyright jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://jquery.org/license
  *
- * Date: 2020-09-08T11:54Z
+ * Date: 2021-08-02T11:53Z
  */
 /*!
- * Globalize v1.6.0 2020-09-08T11:54Z Released under the MIT license
+ * Globalize v1.7.0 2021-08-02T11:53Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -203,15 +203,15 @@ function expandBestMatchFormat( skeletonWithoutFractionalSeconds, bestMatchForma
 	bestMatchFormatParts = bestMatchFormat.match( datePatternRe );
 
 	for ( i = 0; i < bestMatchFormatParts.length; i++ ) {
-		matchedType = bestMatchFormatParts[i].charAt( 0 );
-		matchedLength = bestMatchFormatParts[i].length;
+		matchedType = bestMatchFormatParts[ i ].charAt( 0 );
+		matchedLength = bestMatchFormatParts[ i ].length;
 		for ( j = 0; j < requestedSkeletonParts.length; j++ ) {
-			requestedType = requestedSkeletonParts[j].charAt( 0 );
-			requestedLength = requestedSkeletonParts[j].length;
+			requestedType = requestedSkeletonParts[ j ].charAt( 0 );
+			requestedLength = requestedSkeletonParts[ j ].length;
 			if ( normalizePatternType( matchedType ) === normalizePatternType( requestedType ) &&
 				matchedLength < requestedLength
 			) {
-				bestMatchFormatParts[i] = stringRepeat( matchedType, requestedLength );
+				bestMatchFormatParts[ i ] = stringRepeat( matchedType, requestedLength );
 			}
 		}
 	}
@@ -331,7 +331,7 @@ var dateExpandPatternGetBestMatchPattern = function( cldr, askedSkeleton ) {
 
 		if ( ratedFormats.length ) {
 			decimalSeparator = numberSymbol( "decimal", cldr );
-			pattern = augmentFormat( askedSkeleton, ratedFormats[0].pattern, decimalSeparator );
+			pattern = augmentFormat( askedSkeleton, ratedFormats[ 0 ].pattern, decimalSeparator );
 		}
 	}
 
@@ -1192,7 +1192,7 @@ var outOfRange = function( value, low, high ) {
  *
  * ref: http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
  */
-var dateParse = function( value, tokens, properties ) {
+var dateParse = function( _value, tokens, properties ) {
 	var amPm, day, daysOfYear, month, era, hour, hour12, timezoneOffset, valid,
 		YEAR = 0,
 		MONTH = 1,
@@ -1470,6 +1470,8 @@ var dateParse = function( value, tokens, properties ) {
 	return date;
 };
 
+
+/* eslint-disable no-unused-expressions */
 
 
 
@@ -2215,6 +2217,7 @@ var dateTokenizerProperties = function( pattern, cldr, timeZone ) {
 
 					// Note: if short day names are not explicitly specified, abbreviated day
 					// names are used instead http://www.unicode.org/reports/tr35/tr35-dates.html#months_days_quarters_eras
+					// eslint-disable-next-line no-unused-expressions
 					cldr.main([
 						"dates/calendars/gregorian/days",
 						[ chr === "c" ? "stand-alone" : "format" ],

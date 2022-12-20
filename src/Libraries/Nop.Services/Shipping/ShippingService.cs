@@ -916,7 +916,8 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets available pickup points
         /// </summary>
-        /// <param name="addressId">Address identifier</param>
+        /// <param name="cart">Shopping Cart</param>
+        /// <param name="address">Address</param>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
@@ -924,8 +925,8 @@ namespace Nop.Services.Shipping
         /// A task that represents the asynchronous operation
         /// The task result contains the pickup points
         /// </returns>
-        public virtual async Task<GetPickupPointsResponse> GetPickupPointsAsync(int addressId, Customer customer = null,
-            string providerSystemName = null, int storeId = 0)
+        public virtual async Task<GetPickupPointsResponse> GetPickupPointsAsync(IList<ShoppingCartItem> cart, Address address,
+            Customer customer = null, string providerSystemName = null, int storeId = 0)
         {
             var result = new GetPickupPointsResponse();
 
@@ -936,7 +937,7 @@ namespace Nop.Services.Shipping
             var allPickupPoints = new List<PickupPoint>();
             foreach (var provider in pickupPointsProviders)
             {
-                var pickPointsResponse = await provider.GetPickupPointsAsync(await _addressService.GetAddressByIdAsync(addressId));
+                var pickPointsResponse = await provider.GetPickupPointsAsync(cart, address);
                 if (pickPointsResponse.Success)
                     allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
                 else

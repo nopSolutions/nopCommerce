@@ -396,7 +396,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
 
                 //prepare purchase unit details
                 var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotalAsync(shoppingCart, false)).taxTotal, 2);
-                var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart) ?? decimal.Zero, 2);
+                var (cartShippingTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart, false);
+                var shippingTotal = Math.Round(cartShippingTotal ?? decimal.Zero, 2);
                 var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService
                     .GetShoppingCartTotalAsync(shoppingCart, usePaymentMethodAdditionalFee: false);
                 var orderTotal = Math.Round(shoppingCartTotal ?? decimal.Zero, 2);
@@ -791,8 +792,14 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 if (!Guid.TryParse(orderReference, out var orderGuid))
                     throw new NopException($"Could not recognize an order reference '{orderReference}'");
 
-                var order = await _orderService.GetOrderByGuidAsync(orderGuid)
-                    ?? throw new NopException($"Could not find an order {orderGuid}");
+                var order = await _orderService.GetOrderByGuidAsync(orderGuid);
+                if (order is null)
+                {
+                    if (webhookResource is Order)
+                        return true; //the order may not have been created yet, no need to throw an exception in this case
+
+                    throw new NopException($"Could not find an order {orderGuid}");
+                }
 
                 await _orderService.InsertOrderNoteAsync(new Core.Domain.Orders.OrderNote()
                 {
@@ -897,15 +904,26 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 payPalOrder = webhookResource as Order;
                 switch (payPalOrder?.Status?.ToLowerInvariant())
                 {
-                    case "approved":
-                        if (decimal.TryParse(payPalOrder.PurchaseUnits?.FirstOrDefault()?.AmountWithBreakdown?.Value, out var approvedAmount) && approvedAmount == Math.Round(order.OrderTotal, 2))
+                    case "completed":
+                        if (decimal.TryParse(payPalOrder.PurchaseUnits?.FirstOrDefault()?.AmountWithBreakdown?.Value, out var approvedAmount) &&
+                            approvedAmount == Math.Round(order.OrderTotal, 2))
                         {
-                            //all is ok, so authorize the approved order
-                            if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                            //all is ok, so authorize/capture the approved order
+                            if (string.Equals(payPalOrder.CheckoutPaymentIntent, "authorize", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                order.AuthorizationTransactionResult = payPalOrder.Status;
-                                await _orderService.UpdateOrderAsync(order);
-                                await _orderProcessingService.MarkAsAuthorizedAsync(order);
+                                if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                {
+                                    order.AuthorizationTransactionResult = payPalOrder.Status;
+                                    await _orderProcessingService.MarkAsAuthorizedAsync(order);
+                                }
+                            }
+                            if (string.Equals(payPalOrder.CheckoutPaymentIntent, "capture", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                {
+                                    order.CaptureTransactionResult = payPalOrder.Status;
+                                    await _orderProcessingService.MarkOrderAsPaidAsync(order);
+                                }
                             }
                         }
                         break;

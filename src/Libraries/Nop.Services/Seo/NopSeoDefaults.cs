@@ -25,7 +25,7 @@ namespace Nop.Services.Seo
         public static int SearchEngineNameLength => 200;
 
         /// <summary>
-        /// Gets a default list of slugs (sename) reserved for some other needs
+        /// Gets a default list of slugs (seName) reserved for some other needs
         /// </summary>
         public static List<string> ReservedUrlRecordSlugs => new()
         {
@@ -69,6 +69,21 @@ namespace Nop.Services.Seo
         /// Gets a max number of URLs in the sitemap file. At now each provided sitemap file must have no more than 50000 URLs
         /// </summary>
         public static int SitemapMaxUrlNumber => 50000;
+
+        /// <summary>
+        /// Gets the name of the sitemap directory
+        /// </summary>
+        public static string SitemapXmlDirectory => "sitemaps";
+
+        /// <summary>
+        /// Gets a pattern to build sitemap filename
+        /// </summary>
+        /// <remarks>
+        /// {0} : store Id
+        /// {1} : language Id
+        /// {0} : sitemap index
+        /// </remarks>
+        public static string SitemapXmlFilePattern => "sitemap-{0}-{1}-{2}.xml";
 
         #endregion
 

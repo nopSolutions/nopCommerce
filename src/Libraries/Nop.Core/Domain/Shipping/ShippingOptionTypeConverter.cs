@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Type converted for ShippingOption
     /// </summary>
-    public class ShippingOptionTypeConverter : TypeConverter
+    public partial class ShippingOptionTypeConverter : TypeConverter
     {
         /// <summary>
         /// Gets a value indicating whether this converter can        

@@ -1,12 +1,13 @@
 @model NewsItemModel
 
+@using Nop.Core.Domain.News
+
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails").Text;
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("News items");
 }
-
 
 <form asp-controller="News" asp-action="NewsItemEdit" method="post">
     <div class="content-header clearfix">
@@ -17,8 +18,8 @@
                 <a asp-action="NewsItems">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">            
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("NewsItem", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+        <div class="float-right">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<NewsItem>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
@@ -34,7 +35,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

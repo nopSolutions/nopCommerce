@@ -5,7 +5,7 @@ namespace Nop.Services.Orders
     /// <summary>
     /// Applied gift card
     /// </summary>
-    public class AppliedGiftCard
+    public partial class AppliedGiftCard
     {
         /// <summary>
         /// Gets or sets the used value

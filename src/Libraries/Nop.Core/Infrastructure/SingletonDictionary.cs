@@ -7,7 +7,7 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     /// <typeparam name="TKey">The type of key.</typeparam>
     /// <typeparam name="TValue">The type of value.</typeparam>
-    public class SingletonDictionary<TKey, TValue> : Singleton<IDictionary<TKey, TValue>>
+    public partial class SingletonDictionary<TKey, TValue> : Singleton<IDictionary<TKey, TValue>>
     {
         static SingletonDictionary()
         {

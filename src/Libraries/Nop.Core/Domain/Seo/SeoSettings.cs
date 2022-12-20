@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Seo
     /// <summary>
     /// SEO settings
     /// </summary>
-    public class SeoSettings : ISettings
+    public partial class SeoSettings : ISettings
     {
         /// <summary>
         /// Page title separator
@@ -17,32 +17,7 @@ namespace Nop.Core.Domain.Seo
         /// Page title SEO adjustment
         /// </summary>
         public PageTitleSeoAdjustment PageTitleSeoAdjustment { get; set; }
-
-        /// <summary>
-        /// Home page title
-        /// </summary>
-        public string HomepageTitle { get; set; }
-
-        /// <summary>
-        /// Home page description
-        /// </summary>
-        public string HomepageDescription { get; set; }
-
-        /// <summary>
-        /// Default title
-        /// </summary>
-        public string DefaultTitle { get; set; }
-
-        /// <summary>
-        /// Default META keywords
-        /// </summary>
-        public string DefaultMetaKeywords { get; set; }
-
-        /// <summary>
-        /// Default META description
-        /// </summary>
-        public string DefaultMetaDescription { get; set; }
-
+        
         /// <summary>
         /// A value indicating whether product META descriptions will be generated automatically (if not entered)
         /// </summary>
@@ -84,7 +59,7 @@ namespace Nop.Core.Domain.Seo
         public bool OpenGraphMetaTags { get; set; }
 
         /// <summary>
-        /// Slugs (sename) reserved for some other needs
+        /// Slugs (seName) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }
 

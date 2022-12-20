@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Shipping settings
     /// </summary>
-    public class ShippingSettings : ISettings
+    public partial class ShippingSettings : ISettings
     {
         public ShippingSettings()
         {

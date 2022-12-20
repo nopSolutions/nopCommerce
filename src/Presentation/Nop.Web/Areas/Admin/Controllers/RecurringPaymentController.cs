@@ -174,7 +174,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
                 if (errors.Any())
-                    errors.ForEach(error => _notificationService.ErrorNotification(error));
+                {
+                    foreach(var error in errors)
+                    {
+                        _notificationService.ErrorNotification(error);
+                    }
+                }
                 else
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.NextPaymentProcessed"));
 
@@ -182,9 +187,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);
 
                 //selected card
-                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedCardName("recurringpayment-history");
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = payment.Id });
             }
             catch (Exception exc)
             {
@@ -227,9 +232,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);
 
                 //selected card
-                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedCardName("recurringpayment-history");
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = payment.Id });
             }
             catch (Exception exc)
             {

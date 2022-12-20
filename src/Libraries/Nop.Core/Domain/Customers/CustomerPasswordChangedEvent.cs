@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Customer password changed event
     /// </summary>
-    public class CustomerPasswordChangedEvent
+    public partial class CustomerPasswordChangedEvent
     {
         /// <summary>
         /// Ctor

@@ -1,12 +1,15 @@
 ﻿@model ProductDetailsModel
 
-@inject Nop.Core.IWebHelper webHelper
+@using Nop.Core 
+@using Nop.Core.Domain.Catalog
+
+@inject IWebHelper webHelper
 
 @{ 
     var isAssociatedProduct = ViewData.ContainsKey("isAccessoryOrSparePartFor");
     var productUrl = isAssociatedProduct && ViewData.ContainsKey("parentURL")
         ? ViewData["parentURL"]
-        : Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        : Url.RouteUrl<Product>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
     var productPrice = Model.AssociatedProducts.Any()
         ? Model.AssociatedProducts.Min(associatedProduct => associatedProduct.ProductPrice.PriceValue)
         : Model.ProductPrice.PriceValue;
@@ -22,7 +25,9 @@
     <meta itemprop="image" content="@Model.DefaultPictureModel.ImageUrl"/>
     @foreach (var manufacturer in Model.ProductManufacturers)
     {
-        <meta itemprop="brand" content="@manufacturer.Name"/>
+        <div itemprop="brand" itemtype="https://schema.org/Brand" itemscope>
+            <meta itemprop="name" content="@manufacturer.Name" />
+        </div>
     }
     @if (Model.ProductReviewOverview.TotalReviews > 0)
     {
@@ -41,15 +46,20 @@
     }    
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
         <meta itemprop="url" content="@productUrl"/>
-        <meta itemprop="price" content="@productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
+        <meta itemprop="price" content="@(Model.ProductPrice.CallForPrice ? null : productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))"/>
         <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
         <meta itemprop="availability" content="http://schema.org/@(Model.InStock ? "InStock" : "OutOfStock")" />
     </div>
-    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
-        <meta itemprop="author" content="ALL"/>
-        <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
-    </div>
+    @if (Model.ProductReviewOverview.AllowCustomerReviews)
+    {
+        <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+            <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
+                <meta itemprop="name" content="ALL" />
+            </div>
+            <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
+        </div>
+    }
     @foreach (var product in Model.AssociatedProducts)
     {
         var viewDataDictionary = new ViewDataDictionary(ViewData);

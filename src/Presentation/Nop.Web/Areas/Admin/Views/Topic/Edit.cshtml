@@ -1,4 +1,6 @@
 @model TopicModel
+
+@using Nop.Core.Domain.Topics
 @using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
@@ -22,7 +24,7 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Topic", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info" id="preview-topic-button">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Topic>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info" id="preview-topic-button">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
@@ -38,7 +40,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TopicDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

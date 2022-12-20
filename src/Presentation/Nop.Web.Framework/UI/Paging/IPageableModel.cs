@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.UI.Paging
 	/// <summary>
 	/// A collection of objects that has been split into pages.
 	/// </summary>
-	public interface IPageableModel
+	public partial interface IPageableModel
     {
         /// <summary>
         /// The current page index (starts from 0)
@@ -50,7 +50,7 @@ namespace Nop.Web.Framework.UI.Paging
 	/// Generic form of <see cref="IPageableModel"/>
 	/// </summary>
 	/// <typeparam name="T">Type of object being paged</typeparam>
-	public interface IPagination<T> : IPageableModel
+	public partial interface IPagination<T> : IPageableModel
 	{
 
 	}

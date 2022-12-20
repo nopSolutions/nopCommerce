@@ -8,7 +8,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -30,6 +32,7 @@ namespace Nop.Web.Factories
         #region Fields
 
         private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
@@ -57,12 +60,14 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
         public CheckoutModelFactory(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
             CommonSettings commonSettings,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
@@ -89,9 +94,11 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
         {
             _addressSettings = addressSettings;
+            _captchaSettings = captchaSettings;
             _commonSettings = commonSettings;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
@@ -119,6 +126,7 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -140,7 +148,7 @@ namespace Nop.Web.Factories
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
 
-            if (!model.AllowPickupInStore) 
+            if (!model.AllowPickupInStore)
                 return model;
 
             model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
@@ -151,7 +159,10 @@ namespace Nop.Web.Factories
             if (pickupPointProviders.Any())
             {
                 var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
-                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
+                var address = customer.BillingAddressId.HasValue
+                    ? await _addressService.GetAddressByIdAsync(customer.BillingAddressId.Value)
+                    : null;
+                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
                     customer, storeId: store.Id);
                 if (pickupPointsResponse.Success)
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
@@ -244,8 +255,15 @@ namespace Nop.Web.Factories
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
-            //existing addresses
             var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
+            {
+                model.VatNumber = customer.VatNumber;
+                model.EuVatEnabled = true;
+                model.EuVatEnabledForGuests = _taxSettings.EuVatEnabledForGuests;
+            }
+
+            //existing addresses
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
@@ -283,6 +301,7 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
             return model;
         }
 
@@ -297,7 +316,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the shipping address model
         /// </returns>
-        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel
@@ -347,6 +366,8 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
+            model.SelectedBillingAddress = customer.BillingAddressId ?? 0;
 
             return model;
         }
@@ -548,7 +569,7 @@ namespace Nop.Web.Factories
         {
             return Task.FromResult(new CheckoutPaymentInfoModel
             {
-                PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
+                PaymentViewComponent = paymentMethod.GetPublicViewComponent(),
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             });
         }
@@ -567,7 +588,9 @@ namespace Nop.Web.Factories
             {
                 //terms of service
                 TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage,
-                TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks
+                TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks,
+                DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart))
+                    && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests
             };
             //min order amount validation
             var minOrderTotalAmountOk = await _orderProcessingService.ValidateMinOrderTotalAmountAsync(cart);
@@ -613,7 +636,7 @@ namespace Nop.Web.Factories
         public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
-            
+
             return Task.FromResult(model);
         }
 
@@ -636,7 +659,11 @@ namespace Nop.Web.Factories
             {
                 ShippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
-                BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true)
+                BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true),
+                DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart))
+                    && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests,
+                IsReCaptchaV3 = _captchaSettings.CaptchaType == CaptchaType.ReCaptchaV3,
+                ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey
             };
             return model;
         }

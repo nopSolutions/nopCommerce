@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Nop.Core.Infrastructure
         void CreateDirectory(string path);
 
         /// <summary>
-        /// Creates or overwrites a file in the specified path
+        /// Creates a file in the specified path
         /// </summary>
         /// <param name="path">The path and name of the file to create</param>
         void CreateFile(string path);
@@ -246,6 +247,13 @@ namespace Nop.Core.Infrastructure
         DateTime GetLastWriteTimeUtc(string path);
 
         /// <summary>
+        /// Creates or opens a file at the specified path for read/write access
+        /// </summary>
+        /// <param name="path">The path and name of the file to create</param>
+        /// <returns>A <see cref="FileStream"/> that provides read/write access to the file specified in <paramref name="path"/></returns>
+        FileStream GetOrCreateFile(string path);
+
+        /// <summary>
         /// Retrieves the parent directory of the specified path
         /// </summary>
         /// <param name="directoryPath">The path for which to retrieve the parent directory</param>
@@ -301,7 +309,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="encoding">The encoding applied to the contents of the file</param>
         /// <returns>A string containing all lines of the file</returns>
         string ReadAllText(string path, Encoding encoding);
-        
+
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>
@@ -328,5 +336,10 @@ namespace Nop.Core.Infrastructure
         /// <param name="contents">The string to write to the file</param>
         /// <param name="encoding">The encoding to apply to the string</param>
         void WriteAllText(string path, string contents, Encoding encoding);
+
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
+        /// </summary>
+        string WebRootPath { get; }
     }
 }

@@ -12,8 +12,8 @@
             <span asp-validation-for="CustomerSettings.UsernamesEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled" disable-auto-generation="true">
-        <div class="form-group row advanced-setting" id="pnlAllowUsersToChangeUsernames">
+    <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
             </div>
@@ -22,7 +22,7 @@
                 <span asp-validation-for="CustomerSettings.AllowUsersToChangeUsernames"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlCheckUsernameAvailability">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
             </div>
@@ -31,37 +31,35 @@
                 <span asp-validation-for="CustomerSettings.CheckUsernameAvailabilityEnabled"></span>
             </div>
         </div>
-        <div id="pnlUsernameValidationEnabled">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.UsernameValidationEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.UsernameValidationEnabled" />
+                <span asp-validation-for="CustomerSettings.UsernameValidationEnabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="CustomerSettings.UsernameValidationEnabled">
             <div class="form-group row advanced-setting">
                 <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.UsernameValidationEnabled" />
+                    <nop-label asp-for="CustomerSettings.UsernameValidationRule" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.UsernameValidationEnabled" />
-                    <span asp-validation-for="CustomerSettings.UsernameValidationEnabled"></span>
+                    <nop-editor asp-for="CustomerSettings.UsernameValidationRule" />
+                    <span asp-validation-for="CustomerSettings.UsernameValidationRule"></span>
                 </div>
             </div>
-            <nop-nested-setting asp-for="CustomerSettings.UsernameValidationEnabled" disable-auto-generation="true">
-                <div class="form-group row advanced-setting" id="pnlUsernameValidationRule">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CustomerSettings.UsernameValidationRule" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="CustomerSettings.UsernameValidationRule" />
-                        <span asp-validation-for="CustomerSettings.UsernameValidationRule"></span>
-                    </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.UsernameValidationUseRegex" />
                 </div>
-                <div class="form-group row advanced-setting" id="pnlUsernameValidationUseRegex">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CustomerSettings.UsernameValidationUseRegex" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="CustomerSettings.UsernameValidationUseRegex" />
-                        <span asp-validation-for="CustomerSettings.UsernameValidationUseRegex"></span>
-                    </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.UsernameValidationUseRegex" />
+                    <span asp-validation-for="CustomerSettings.UsernameValidationUseRegex"></span>
                 </div>
-            </nop-nested-setting>
-        </div>
+            </div>
+        </nop-nested-setting>
     </nop-nested-setting>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
@@ -82,8 +80,8 @@
                 <span asp-validation-for="CustomerSettings.PhoneNumberValidationEnabled"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="CustomerSettings.PhoneNumberValidationEnabled" disable-auto-generation="true">
-            <div class="form-group row advanced-setting" id="pnlPhoneNumberValidationRule">
+        <nop-nested-setting asp-for="CustomerSettings.PhoneNumberValidationEnabled">
+            <div class="form-group row advanced-setting">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.PhoneNumberValidationRule" />
                 </div>
@@ -92,7 +90,7 @@
                     <span asp-validation-for="CustomerSettings.PhoneNumberValidationRule"></span>
                 </div>
             </div>
-            <div class="form-group row advanced-setting" id="pnlPhoneNumberValidationUseRegex">
+            <div class="form-group row advanced-setting">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.PhoneNumberValidationUseRegex" />
                 </div>
@@ -112,8 +110,8 @@
             <span asp-validation-for="CustomerSettings.AllowCustomersToUploadAvatars"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars" disable-auto-generation="true">
-        <div class="form-group row" id="pnlDefaultAvatarEnabled">
+    <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />
             </div>

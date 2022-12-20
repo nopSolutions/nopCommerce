@@ -11,7 +11,7 @@ namespace Nop.Core.ComponentModel
     /// </summary>
     /// <typeparam name="K">Key type (simple)</typeparam>
     /// <typeparam name="V">Value type (simple)</typeparam>
-    public class GenericDictionaryTypeConverter<K, V> : TypeConverter
+    public partial class GenericDictionaryTypeConverter<K, V> : TypeConverter
     {
         /// <summary>
         /// Type converter
@@ -65,20 +65,20 @@ namespace Nop.Core.ComponentModel
             var items = string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(';').Select(x => x.Trim()).ToArray();
 
             var result = new Dictionary<K, V>();
-            Array.ForEach(items, s =>
+            foreach(var item in items)
             {
-                var keyValueStr = string.IsNullOrEmpty(s) ? Array.Empty<string>() : s.Split(',').Select(x => x.Trim()).ToArray();
+                var keyValueStr = string.IsNullOrEmpty(item) ? Array.Empty<string>() : item.Split(',').Select(x => x.Trim()).ToArray();
                 if (keyValueStr.Length != 2)
-                    return;
+                    break;
 
                 object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
                 object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
                 if (dictionaryKey == null || dictionaryValue == null)
-                    return;
+                    break;
 
                 if (!result.ContainsKey((K)dictionaryKey))
                     result.Add((K)dictionaryKey, (V)dictionaryValue);
-            });
+            }
 
             return result;
         }

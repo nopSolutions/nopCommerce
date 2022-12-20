@@ -1,5 +1,9 @@
-﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
-@model CustomerProductReviewsModel
+﻿@model CustomerProductReviewsModel
+
+@using Nop.Core.Domain.Catalog
+
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -11,7 +15,7 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.ProductReviews })
 }
 <div class="page account-page my-product-reviews-list-page">
     <div class="page-title">
@@ -58,7 +62,7 @@
                         <div class="review-info">
                             <span class="user">
                                 <label>@T("Account.CustomerProductReviews.ProductReviewFor"):</label>
-                                <a href="@Url.RouteUrl("Product", new {SeName = review.ProductSeName})">@review.ProductName</a>
+                                <a href="@(Url.RouteUrl<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
 
                             </span>
                             <span class="separator">|</span>

@@ -10,8 +10,6 @@ using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Data.Migrations;
 
 namespace Nop.Data.DataProviders
 {
@@ -20,12 +18,6 @@ namespace Nop.Data.DataProviders
     /// </summary>
     public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
-        #region Fields
-
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2012, SqlServerProvider.MicrosoftDataSqlClient), true);
-
-        #endregion
-
         #region Utils
 
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -323,6 +315,23 @@ namespace Nop.Data.DataProviders
                 .MergeAsync();
         }
 
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override void UpdateEntities<TEntity>(IEnumerable<TEntity> entities)
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.GetTable<TEntity>()
+                .Merge()
+                .Using(entities)
+                .OnTargetKey()
+                .UpdateWhenMatched()
+                .Merge();
+        }
+
         #endregion
 
         #region Properties
@@ -330,7 +339,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
+        protected override IDataProvider LinqToDbDataProvider => SqlServerTools.GetDataProvider(SqlServerVersion.v2012, SqlServerProvider.MicrosoftDataSqlClient);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

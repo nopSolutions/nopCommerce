@@ -10,8 +10,8 @@
             <span asp-validation-for="WebOptimizerConfigModel.EnableJavaScriptBundling"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableJavaScriptBundling" disable-auto-generation="true">
-        <div class="form-group row advanced-setting" id="java-script-bundle-suffix">
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableJavaScriptBundling">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="WebOptimizerConfigModel.JavaScriptBundleSuffix" />
             </div>
@@ -30,8 +30,8 @@
             <span asp-validation-for="WebOptimizerConfigModel.EnableCssBundling"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableCssBundling" disable-auto-generation="true">
-        <div class="form-group row advanced-setting" id="css-bundle-suffix">
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableCssBundling">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="WebOptimizerConfigModel.CssBundleSuffix" />
             </div>
@@ -50,8 +50,8 @@
             <span asp-validation-for="WebOptimizerConfigModel.EnableDiskCache"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableDiskCache" disable-auto-generation="true">
-        <div class="form-group row advanced-setting" id="disk-cache-directory">
+    <nop-nested-setting asp-for="WebOptimizerConfigModel.EnableDiskCache">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="WebOptimizerConfigModel.CacheDirectory" />
             </div>
@@ -62,49 +62,3 @@
         </div>
     </nop-nested-setting>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableJavaScriptBundling)").click(toggleJavaScriptBundling);
-        $("#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableCssBundling)").click(toggleCssBundling);
-        $("#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableDiskCache)").click(toggleDiskCache);
-
-        toggleJavaScriptBundling();
-        toggleCssBundling();
-        toggleDiskCache();
-        
-        function toggleJavaScriptBundling()
-        {
-            if ($('#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableJavaScriptBundling)').is(':checked')) {
-                $('#java-script-bundle-suffix').showElement();
-            }
-            else
-            {
-                $('#java-script-bundle-suffix').hideElement();
-            }
-        }
-
-        function toggleCssBundling()
-        {
-            if ($('#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableCssBundling)').is(':checked')) {
-                $('#css-bundle-suffix').showElement();
-            }
-            else
-            {
-                $('#css-bundle-suffix').hideElement();
-            }
-        }
-
-        function toggleDiskCache()
-        {
-            if ($('#@Html.IdFor(model => model.WebOptimizerConfigModel.EnableDiskCache)').is(':checked')) {
-                $('#disk-cache-directory').showElement();
-            }
-            else
-            {
-                $('#disk-cache-directory').hideElement();
-            }
-        }
-
-    });
-</script>

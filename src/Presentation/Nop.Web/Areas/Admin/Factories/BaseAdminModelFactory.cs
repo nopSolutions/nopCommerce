@@ -146,17 +146,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get category list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the category list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetCategoryListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetCategoryListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.CategoriesListKey, async () =>
             {
-                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: showHidden);
+                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true);
                 return await categories.SelectAwait(async c => new SelectListItem
                 {
                     Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
@@ -181,17 +179,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get manufacturer list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.ManufacturersListKey, async () =>
             {
-                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: showHidden);
+                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true);
                 return manufacturers.Select(m => new SelectListItem
                 {
                     Text = m.Name,
@@ -216,17 +212,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get vendor list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the vendor list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetVendorListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetVendorListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.VendorsListKey, async () =>
             {
-                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: showHidden);
+                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: true);
                 return vendors.Select(v => new SelectListItem
                 {
                     Text = v.Name,

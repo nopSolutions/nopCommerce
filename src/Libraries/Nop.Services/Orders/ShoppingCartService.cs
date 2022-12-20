@@ -12,6 +12,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -55,6 +56,7 @@ namespace Nop.Services.Orders
         private readonly IShippingService _shippingService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
@@ -87,6 +89,7 @@ namespace Nop.Services.Orders
             IShippingService shippingService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
@@ -115,6 +118,7 @@ namespace Nop.Services.Orders
             _shippingService = shippingService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _storeService = storeService;
             _storeMappingService = storeMappingService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
@@ -762,6 +766,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
+        /// <param name="ignoreBundledProducts">A value indicating whether we should ignore bundled (associated) products</param>
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <returns>
         /// A task that represents the asynchronous operation
@@ -773,7 +778,9 @@ namespace Nop.Services.Orders
             int quantity = 1,
             string attributesXml = "",
             bool ignoreNonCombinableAttributes = false,
-            bool ignoreConditionMet = false, int shoppingCartItemId = 0)
+            bool ignoreConditionMet = false,
+            bool ignoreBundledProducts = false,
+            int shoppingCartItemId = 0)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -918,7 +925,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Any())
+            if (warnings.Any() || ignoreBundledProducts)
                 return warnings;
 
             //validate bundled products
@@ -1111,7 +1118,7 @@ namespace Nop.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(await GetShoppingCartItemAttributeWarningsAsync(customer, shoppingCartType, product, quantity, attributesXml, false, false, shoppingCartItemId));
+                warnings.AddRange(await GetShoppingCartItemAttributeWarningsAsync(customer, shoppingCartType, product, quantity, attributesXml, false, false, false, shoppingCartItemId));
 
             //gift cards
             if (getGiftCardWarnings)
@@ -1346,9 +1353,11 @@ namespace Nop.Services.Orders
 
             var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
+            var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId);
 
             return await GetUnitPriceAsync(product,
                 customer,
+                store,
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
@@ -1363,6 +1372,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
+        /// <param name="store">Store</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product attributes (XML format)</param>
@@ -1376,6 +1386,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(Product product,
             Customer customer,
+            Store store,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
@@ -1399,6 +1410,7 @@ namespace Nop.Services.Orders
             {
                 (_, finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                         customer,
+                        store,
                         combination.OverriddenPrice.Value,
                         decimal.Zero,
                         includeDiscounts,
@@ -1415,7 +1427,12 @@ namespace Nop.Services.Orders
                 {
                     foreach (var attributeValue in attributeValues)
                     {
-                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
+                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product,
+                            attributeValue,
+                            customer,
+                            store,
+                            product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null,
+                            quantity);
                     }
                 }
 
@@ -1446,6 +1463,7 @@ namespace Nop.Services.Orders
 
                     (_, finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                         customer,
+                        store,
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,

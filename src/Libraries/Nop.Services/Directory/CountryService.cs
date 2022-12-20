@@ -76,11 +76,12 @@ namespace Nop.Services.Directory
                 var countries = await _countryRepository.GetAllAsync(async query =>
                 {
                     if (!showHidden)
+                    {
                         query = query.Where(c => c.Published);
 
-                    //apply store mapping constraints
-                    if (!showHidden)
+                        //apply store mapping constraints
                         query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
+                    }
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });

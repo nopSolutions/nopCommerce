@@ -6,7 +6,7 @@ namespace Nop.Services.Themes
     /// <summary>
     /// Represents a theme descriptor
     /// </summary>
-    public class ThemeDescriptor : IDescriptor
+    public partial class ThemeDescriptor : IDescriptor
     {
         /// <summary>
         /// Gets or sets the theme system name

@@ -16,7 +16,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     /// <summary>
     /// Represents the view component to display buttons
     /// </summary>
-    [ViewComponent(Name = PayPalCommerceDefaults.BUTTONS_VIEW_COMPONENT_NAME)]
     public class ButtonsViewComponent : NopViewComponent
     {
         #region Fields
@@ -91,7 +90,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
             if (productId > 0)
             {
                 var product = await _productServise.GetProductByIdAsync(productId);
-                var finalPrice = (await _priceCalculationService.GetFinalPriceAsync(product, customer)).finalPrice;
+                var finalPrice = (await _priceCalculationService.GetFinalPriceAsync(product, customer, store)).finalPrice;
                 productCost = finalPrice.ToString("0.00", CultureInfo.InvariantCulture);
             }
             return View("~/Plugins/Payments.PayPalCommerce/Views/Buttons.cshtml", (widgetZone, productId, productCost));

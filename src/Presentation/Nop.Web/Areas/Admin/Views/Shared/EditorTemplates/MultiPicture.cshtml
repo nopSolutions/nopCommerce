@@ -1,0 +1,98 @@
+﻿@using Nop.Core.Domain.Media
+@model int
+@inject MediaSettings mediaSettings
+
+@{
+    //other variables
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    var endpoint = ViewData["Endpoint"];
+    var tableSelector = ViewData["TableSelector"];
+}
+
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+
+<div id="@(clientId + "value")">
+    <input type="hidden" asp-for="@Model" />
+</div>
+<div class="upload-picture-block">
+    <div class="upload-button-container">
+        @*fine uploader container*@
+        <div id="@clientId" class="upload-image-button float-left px-md-1">
+            <noscript>
+                <p>Please enable JavaScript to use file uploader.</p>
+            </noscript>
+        </div>
+    </div>
+</div>
+
+@*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+<script type="text/template" id="@(clientId)-qq-template">
+    <div class="qq-uploader-selector qq-uploader">
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+            <span>@T("Common.FileUploader.DropFiles")</span>
+        </div>
+        <div class="qq-upload-button-selector btn bg-gradient-green">
+            <div>@T("Common.FileUploader.Upload.Files")</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+            <span>@T("Common.FileUploader.Processing")</span>
+            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+        </span>
+        <ul class="qq-upload-list-selector qq-upload-list">
+            <li>
+                <div class="qq-progress-bar-container-selector">
+                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                </div>
+                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                <span class="qq-upload-file-selector qq-upload-file"></span>
+                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                <span class="qq-upload-size-selector qq-upload-size"></span>
+                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+            </li>
+        </ul>
+    </div>
+</script>
+<script>
+    $(document).ready(function() {
+        
+        var allowedExtensions = ["bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"];
+        
+        @{
+            if (mediaSettings.AllowSVGUploads)
+            {
+                <text>
+                    allowedExtensions.push("svg");
+                    </text>
+            }
+        }
+
+        $("#@(clientId)").fineUploader({
+            request: {
+                endpoint: '@endpoint'
+            },
+            template: "@(clientId)-qq-template",
+            multiple: true,
+            validation: {
+                    allowedExtensions: allowedExtensions
+            }
+        }).on("complete", function(event, id, name, responseJSON, xhr) {
+            if (responseJSON.success) {
+                if ('@tableSelector'){
+                    updateTable('@tableSelector');
+                }
+            }
+            else {
+                if (responseJSON.message){
+                    $('.qq-upload-status-text').text(responseJSON.message);
+                }
+            }
+        });
+    });
+</script>

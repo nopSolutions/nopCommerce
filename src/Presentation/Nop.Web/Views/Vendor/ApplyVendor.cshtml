@@ -1,4 +1,5 @@
 ﻿@model ApplyVendorModel
+
 @{
     Layout = "_ColumnsOne";
 
@@ -12,8 +13,8 @@
         <h1>@T("PageTitle.Vendors.Apply")</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "ApplyVendor" })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyVendorTop, additionalData = Model })
         @if (Model.DisableFormInput)
         {
             <div class="result">
@@ -28,13 +29,13 @@
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="Name" asp-postfix=":"></label>
-                            <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")"/>
+                            <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
                             <nop-required />
                             <span asp-validation-for="Name"></span>
                         </div>
                         <div class="inputs">
                             <label asp-for="Email" asp-postfix=":"></label>
-                            <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")"/>
+                            <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
                             <nop-required />
                             <span asp-validation-for="Email"></span>
                         </div>
@@ -44,7 +45,7 @@
                         </div>
                         <div class="inputs">
                             <label>@T("Vendors.ApplyAccount.Picture"):</label>
-                            <input name="uploadedFile" type="file" accept="image/*"/>
+                            <input name="uploadedFile" type="file" accept="image/*" />
                         </div>
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
@@ -86,7 +87,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteTopicUrl("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }
@@ -97,6 +98,6 @@
                 </div>
             </form>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })
     </div>
 </div>

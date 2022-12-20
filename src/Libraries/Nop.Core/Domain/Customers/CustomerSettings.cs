@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Customer settings
     /// </summary>
-    public class CustomerSettings : ISettings
+    public partial class CustomerSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether usernames are used instead of emails

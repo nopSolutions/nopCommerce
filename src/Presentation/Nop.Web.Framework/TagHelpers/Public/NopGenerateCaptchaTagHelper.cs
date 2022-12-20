@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "nop-captcha" tag helper
     /// </summary>
     [HtmlTargetElement("nop-captcha", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopGenerateCaptchaTagHelper : TagHelper
+    public partial class NopGenerateCaptchaTagHelper : TagHelper
     {
         #region Properties
 

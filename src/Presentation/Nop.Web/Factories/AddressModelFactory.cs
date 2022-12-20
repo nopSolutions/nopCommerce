@@ -27,7 +27,6 @@ namespace Nop.Web.Factories
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ICountryService _countryService;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IWorkContext _workContext;
@@ -41,7 +40,6 @@ namespace Nop.Web.Factories
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             ICountryService countryService,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             IWorkContext workContext)
@@ -51,7 +49,6 @@ namespace Nop.Web.Factories
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
             _countryService = countryService;
-            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _stateProvinceService = stateProvinceService;
             _workContext = workContext;
@@ -209,16 +206,16 @@ namespace Nop.Web.Factories
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                model.Address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                model.Address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-                model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
-                model.PhoneNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                model.FaxNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
+                model.FirstName = customer.FirstName;
+                model.LastName = customer.LastName;
+                model.Company = customer.Company;
+                model.Address1 = customer.StreetAddress;
+                model.Address2 = customer.StreetAddress2;
+                model.ZipPostalCode = customer.ZipPostalCode;
+                model.City = customer.City;
+                model.County = customer.County;
+                model.PhoneNumber = customer.Phone;
+                model.FaxNumber = customer.Fax;
             }
 
             //countries and states

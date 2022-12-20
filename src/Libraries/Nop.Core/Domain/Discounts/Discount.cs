@@ -90,6 +90,11 @@ namespace Nop.Core.Domain.Discounts
         public bool AppliedToSubCategories { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the discount is active
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount type
         /// </summary>
         public DiscountType DiscountType

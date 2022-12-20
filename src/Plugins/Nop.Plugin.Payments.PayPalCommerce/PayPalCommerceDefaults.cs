@@ -84,26 +84,6 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </summary>
         public static List<string> CurrenciesWithoutDecimals => new() { "HUF", "JPY", "TWD" };
 
-        /// <summary>
-        /// Gets a name of the view component to display payment info in public store
-        /// </summary>
-        public const string PAYMENT_INFO_VIEW_COMPONENT_NAME = "PayPalCommercePaymentInfo";
-
-        /// <summary>
-        /// Gets a name of the view component to add script to pages
-        /// </summary>
-        public const string SCRIPT_VIEW_COMPONENT_NAME = "PayPalCommerceScript";
-
-        /// <summary>
-        /// Gets a name of the view component to display buttons
-        /// </summary>
-        public const string BUTTONS_VIEW_COMPONENT_NAME = "PayPalCommerceButtons";
-
-        /// <summary>
-        /// Gets a name of the view component to display logo
-        /// </summary>
-        public const string LOGO_VIEW_COMPONENT_NAME = "PayPalCommerceLogo";
-
         #region Onboarding
 
         /// <summary>

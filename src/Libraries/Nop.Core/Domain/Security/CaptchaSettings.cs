@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Security
     /// <summary>
     /// CAPTCHA settings
     /// </summary>
-    public class CaptchaSettings : ISettings
+    public partial class CaptchaSettings : ISettings
     {
         /// <summary>
         /// Is CAPTCHA enabled?
@@ -71,6 +71,11 @@ namespace Nop.Core.Domain.Security
         /// A value indicating whether CAPTCHA should be displayed on the Forum
         /// </summary>
         public bool ShowOnForum { get; set; }
+
+        /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the checkout page for guest customers
+        /// </summary>
+        public bool ShowOnCheckoutPageForGuests { get; set; }
 
         /// <summary>
         /// The base reCAPTCHA API URL

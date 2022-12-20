@@ -36,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
+        private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
+            IStoreContext storeContext,
             IWorkContext workContext)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -64,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
+            _storeContext = storeContext;
             _workContext = workContext;
         }
 
@@ -96,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 categoryId: searchModel.CategoryId,
                 productId: searchModel.ProductId,
                 manufacturerId: searchModel.ManufacturerId,
-                vendorId: currentVendor?.Id ?? 0,
+                vendorId: currentVendor?.Id ?? searchModel.VendorId,
                 storeId: searchModel.StoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -177,6 +180,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare "group by" filter
             searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
+
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -296,16 +302,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }).ToListAsync());
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            
             lowStockProductModels.AddRange(await combinations.SelectAwait(async combination =>
             {
                 var product = await _productService.GetProductByIdAsync(combination.ProductId);
+                    
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
 
                     Attributes = await _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), "<br />", true, true, true, false),
+                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, "<br />", true, true, true, false),
                     ManageInventoryMethod = await _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod),
 
                     StockQuantity = combination.StockQuantity,
@@ -393,11 +403,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     var bestsellerModel = new BestsellerModel
                     {
                         ProductId = bestseller.ProductId,
-                        TotalQuantity = bestseller.TotalQuantity
+                        TotalQuantity = bestseller.TotalQuantity,
+                        ProductName = bestseller.ProductName
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
                     bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;

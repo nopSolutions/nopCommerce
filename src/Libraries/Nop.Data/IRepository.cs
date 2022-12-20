@@ -29,6 +29,17 @@ namespace Nop.Data
         Task<TEntity> GetByIdAsync(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true);
 
         /// <summary>
+        /// Get the entity entry
+        /// </summary>
+        /// <param name="id">Entity entry identifier</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
+        /// <returns>
+        /// The entity entry
+        /// </returns>
+        TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true);
+
+        /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
@@ -128,12 +139,26 @@ namespace Nop.Data
         Task InsertAsync(TEntity entity, bool publishEvent = true);
 
         /// <summary>
+        /// Insert the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Insert(TEntity entity, bool publishEvent = true);
+
+        /// <summary>
         /// Insert entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertAsync(IList<TEntity> entities, bool publishEvent = true);
+
+        /// <summary>
+        /// Insert entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Insert(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Update the entity entry
@@ -144,6 +169,13 @@ namespace Nop.Data
         Task UpdateAsync(TEntity entity, bool publishEvent = true);
 
         /// <summary>
+        /// Update the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Update(TEntity entity, bool publishEvent = true);
+
+        /// <summary>
         /// Update entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -152,12 +184,26 @@ namespace Nop.Data
         Task UpdateAsync(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
+        /// Update entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Update(IList<TEntity> entities, bool publishEvent = true);
+
+        /// <summary>
         /// Delete the entity entry
         /// </summary>
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteAsync(TEntity entity, bool publishEvent = true);
+
+        /// <summary>
+        /// Delete the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Delete(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Delete entity entries
@@ -176,6 +222,15 @@ namespace Nop.Data
         /// The task result contains the number of deleted records
         /// </returns>
         Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Delete entity entries by the passed predicate
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition</param>
+        /// <returns>
+        /// The number of deleted records
+        /// </returns>
+        int Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Loads the original copy of the entity entry

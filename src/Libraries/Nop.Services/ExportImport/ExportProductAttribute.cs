@@ -5,7 +5,7 @@
         /// <summary>
         ///  Gets or sets the cell offset
         /// </summary>
-        public static int ProducAttributeCellOffset { get; } = 2;
+        public static int ProductAttributeCellOffset { get; } = 2;
 
         /// <summary>
         /// Gets or sets the attribute identifier
@@ -41,6 +41,11 @@
         /// Gets or sets the attribute control type identifier
         /// </summary>
         public int AttributeControlTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product attribute mapping identifier
+        /// </summary>
+        public int AttributeMappingId { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute value type identifier

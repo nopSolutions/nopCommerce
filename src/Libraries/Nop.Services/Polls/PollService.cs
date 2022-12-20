@@ -80,10 +80,10 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => poll.Published);
                 query = query.Where(poll => !poll.StartDateUtc.HasValue || poll.StartDateUtc <= utcNow);
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
-            }
 
-            //apply store mapping constraints
-            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            }
 
             //load homepage polls only
             if (loadShownOnHomepageOnly)

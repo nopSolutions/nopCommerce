@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -29,9 +30,12 @@ using Nop.Services.Logging;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using WebMarkupMin.AspNetCore6;
+using QuestPDF.Drawing;
+using WebMarkupMin.AspNetCore7;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -58,7 +62,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //log application start
-                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
+                engine.Resolve<ILogger>().Information("Application started");
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
@@ -249,6 +253,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     context.Context.Response.Headers.Append(HeaderNames.CacheControl, appSettings.Get<CommonConfig>().StaticFilesCacheControl);
             }
 
+            //add handling if sitemaps 
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory)),
+                RequestPath = new PathString($"/{NopSeoDefaults.SitemapXmlDirectory}"),
+                OnPrepareResponse = context =>
+                {
+                    if (!DataSettingsManager.IsDatabaseInstalled() ||
+                        !EngineContext.Current.Resolve<SitemapXmlSettings>().SitemapXmlEnabled)
+                    {
+                        context.Context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        context.Context.Response.ContentLength = 0;
+                        context.Context.Response.Body = Stream.Null;
+                    }
+                }
+            });
+
             //common static files
             application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
 
@@ -297,7 +318,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(NopCommonDefaults.DbBackupsPath)),
                 RequestPath = new PathString("/db_backups"),
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
+                OnPrepareResponse = context =>
+                {
+                    if (!DataSettingsManager.IsDatabaseInstalled() ||
+                        !EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.ManageMaintenance).Result)
+                    {
+                        context.Context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        context.Context.Response.ContentLength = 0;
+                        context.Context.Response.Body = Stream.Null;
+                    }
+                }
             });
 
             //add support for webmanifest files
@@ -314,7 +345,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
                     RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                     OnPrepareResponse = staticFileResponse
                 });
@@ -360,6 +391,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure PDF
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopPdf(this IApplicationBuilder application)
+        {
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
+
+            foreach (var fp in fontPaths)
+            {
+                FontManager.RegisterFont(File.OpenRead(fp));
+            }
         }
 
         /// <summary>

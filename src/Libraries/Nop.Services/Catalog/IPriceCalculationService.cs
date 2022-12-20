@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -18,6 +19,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="store">Store</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
@@ -27,6 +29,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
+            Store store,
             decimal additionalCharge = 0,
             bool includeDiscounts = true,
             int quantity = 1);
@@ -36,6 +39,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="store">Store</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
@@ -47,6 +51,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
+            Store store,
             decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
@@ -58,6 +63,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="store">Store</param>
         /// <param name="overriddenProductPrice">Overridden product price. If specified, then it'll be used instead of a product price. For example, used with product attribute combinations</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
@@ -70,6 +76,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
+            Store store,
             decimal? overriddenProductPrice,
             decimal additionalCharge,
             bool includeDiscounts,
@@ -94,12 +101,19 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="value">Product attribute value</param>
         /// <param name="customer">Customer</param>
+        /// <param name="store">Store</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the price adjustment
         /// </returns>
-        Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null);
+        Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product,
+            ProductAttributeValue value,
+            Customer customer,
+            Store store,
+            decimal? productPrice = null,
+            int quantity = 1);
 
         /// <summary>
         /// Round a product or order total for the currency

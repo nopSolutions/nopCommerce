@@ -86,7 +86,7 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Package item
         /// </summary>
-        public class PackageItem
+        public partial class PackageItem
         {
             /// <summary>
             /// Constructor

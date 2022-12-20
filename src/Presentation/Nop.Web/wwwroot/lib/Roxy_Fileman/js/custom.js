@@ -36,9 +36,21 @@ function FileSelected(file){
   //alert('"' + file.fullPath + "\" selected.\n To integrate with CKEditor or TinyMCE change INTEGRATION setting in conf.json. For more details see the Installation instructions at http://www.roxyfileman.com/install.");
   window.parent.postMessage({
     mceAction: 'FileSelected',
-    content: file.fullPath
+    content: getInsertPath(file.fullPath)
   }, '*');
 }
+
+function getInsertPath(insertPath) {
+  if(RoxyFilemanConf.RETURN_URL_PREFIX){
+    var prefix = RoxyFilemanConf.RETURN_URL_PREFIX;
+    if(prefix.substr(-1) == '/')
+      prefix = prefix.substr(0, prefix.length - 1);
+    insertPath = prefix + (insertPath.substr(0, 1) != '/'? '/': '') + insertPath;
+  }
+
+  return insertPath;
+}
+
 function GetSelectedValue(){
   /**
   * This function is called to retrieve selected value when custom integration is used.
