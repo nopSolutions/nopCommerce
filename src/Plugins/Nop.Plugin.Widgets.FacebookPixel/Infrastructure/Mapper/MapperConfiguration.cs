@@ -17,6 +17,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Infrastructure.Mapper
             CreateMap<FacebookPixelConfiguration, FacebookPixelModel>()
                 .ForMember(model => model.AvailableStores, options => options.Ignore())
                 .ForMember(model => model.CustomEventSearchModel, options => options.Ignore())
+                .ForMember(model => model.CustomProperties, options => options.Ignore())
                 .ForMember(model => model.HideCustomEventsSearch, options => options.Ignore())
                 .ForMember(model => model.HideStoresList, options => options.Ignore())
                 .ForMember(model => model.StoreName, options => options.Ignore());
