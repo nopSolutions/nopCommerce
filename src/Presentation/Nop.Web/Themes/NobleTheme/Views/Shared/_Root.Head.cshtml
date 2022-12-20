@@ -124,10 +124,10 @@
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@NopHtml.GenerateTitle()</title>
+    <title>@NopHtml.GenerateTitleAsync()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@NopHtml.GenerateMetaDescription()" />
-    <meta name="keywords" content="@NopHtml.GenerateMetaKeywords()" />
+    <meta name="description" content="@NopHtml.GenerateMetaDescriptionAsync()" />
+    <meta name="keywords" content="@NopHtml.GenerateMetaKeywordsAsync()" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
