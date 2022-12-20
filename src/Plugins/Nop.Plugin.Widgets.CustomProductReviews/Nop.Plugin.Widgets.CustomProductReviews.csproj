@@ -71,6 +71,9 @@
     <None Update="Content\style.min.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Views\_ProductReviewHelpfulness.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
  
   <!-- This target execute after "Build" target -->

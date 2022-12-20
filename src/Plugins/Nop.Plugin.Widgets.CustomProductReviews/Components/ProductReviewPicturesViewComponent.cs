@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Web.Framework.Components;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 {
@@ -41,8 +42,24 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
+            //var model = new ProductReviewsModel();
+            //var productDetailModel = new ProductDetailsModel();
+            //if (additionalData.GetType() == model.GetType())
+            //{
+            //    model = (ProductReviewsModel)additionalData;
+            //}
+            //else
+            //{
+            //    productDetailModel = (ProductDetailsModel)additionalData;
+            //    int productId = productDetailModel.Id;
+            //    var product = await _productService.GetProductByIdAsync(productId);
+            //    model = await _productModelFactory.PrepareProductReviewsModelAsync(new ProductReviewsModel(), product);
+            //}
 
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml");
+            //return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
+
+
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml",additionalData);
 
         }
 
