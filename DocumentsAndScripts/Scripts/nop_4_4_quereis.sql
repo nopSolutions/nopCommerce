@@ -134,7 +134,7 @@ SELECT * FROM [product] where VendorId=263
 
 select * from [SpecificationAttribute] order by DisplayOrder
 select * from [SpecificationAttributeOption]
-select * from [SpecificationAttributeOption] where SpecificationAttributeId=1
+select * from [SpecificationAttributeOption] where SpecificationAttributeId=3
 select * from [SpecificationAttributeOption] where id=2
 
 select * from  [dbo].[Product_SpecificationAttribute_Mapping] Where SpecificationAttributeOptionId in (1,2)

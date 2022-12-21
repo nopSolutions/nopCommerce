@@ -145,9 +145,18 @@ INSERT INTO [dbo].[Product_Category_Mapping] ([CategoryId],[ProductId],[IsFeatur
 
  -------  Start: Pricing Products Category Template  ---------------------------------------------------------------------------------------
 
-INSERT INTO [dbo].[ProductTemplate]([Name],[ViewPath],[DisplayOrder]) VALUES('Product Price','_ProductBox.Price',2)
-INSERT INTO [dbo].[CategoryTemplate]([Name],[ViewPath],[DisplayOrder]) VALUES ('Pricing Category Template','CategoryTemplate.Pricing',3)
+IF NOT EXISTS (SELECT * FROM [CategoryTemplate] WHERE [Name]='Pricing Category Template')
+   BEGIN
+		INSERT INTO [dbo].[CategoryTemplate]([Name],[ViewPath],[DisplayOrder]) 
+        VALUES ('Pricing Category Template','CategoryTemplate.Pricing',3)
+   END
 
+
+IF NOT EXISTS (SELECT * FROM [ProductTemplate] WHERE [Name]='Product Price')
+   BEGIN
+		INSERT INTO [dbo].[ProductTemplate]([Name],[ViewPath],[DisplayOrder]) 
+        VALUES('Product Price','_ProductBox.Price',2)
+   END
 -------------------   [CustomerAttribute]  -----------------------------
 
 SELECT * FROM [CustomerAttribute]
@@ -206,10 +215,19 @@ INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Na
 INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (4,2,'UnAvailable',3);
 
 -- Relavent Experiance
-INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (5,3,'1-3 Years',4);
-INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (6,3,'3-6 Years',5);
-INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (7,3,'6-10 Years',6);
-INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (8,3,'10 + Years',7);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (5,3,'0 ',4);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (6,3,'1+',5);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (7,3,'2+ ',6);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (8,3,'3+',7);
+
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (9,3,'4+',8);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (10,3,'5+',9);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (11,3,'6+',10);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (12,3,'7+',11);
+
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (13,3,'8+',12);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (14,3,'9+',13);
+INSERT INTO [SpecificationAttributeOption] ([Id],[SpecificationAttributeId] ,[Name], [DisplayOrder]) VALUES (15,3,'10+',14);
 
 -- Mother Tounge
 INSERT INTO [SpecificationAttributeOption] ([Id],[Name],[SpecificationAttributeId],[DisplayOrder]) VALUES(9,'English', 4, 8);
@@ -265,6 +283,13 @@ IF NOT EXISTS (SELECT * FROM [ActivityLogType] WHERE SystemKeyword='PublicStore.
 		INSERT INTO [dbo].[ActivityLogType]([SystemKeyword],[Name],[Enabled]) 
 		VALUES('PublicStore.ViewContactDetail','PublicStore.ViewContactDetail',1)
    END
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.EditCustomerAvailabilityToTrue')
+BEGIN
+    INSERT INTO [dbo].[ActivityLogType]([SystemKeyword],[Name],[Enabled])
+    VALUES ('PublicStore.EditCustomerAvailabilityToTrue','PublicStore.EditCustomerAvailabilityToTrue',1)
+END
+GO
 -------------------- Start: [EmailAccount] ------------------------------------------------------------------------
 
 IF NOT EXISTS (SELECT * FROM [EmailAccount] WHERE [Email]='no-reply@Onjobsupport.in')

@@ -30,17 +30,17 @@ DELETE [SpecificationAttribute]
 DBCC CHECKIDENT ('SpecificationAttribute', NORESEED);
 DBCC CHECKIDENT ('SpecificationAttribute', RESEED, 0);
 ----------------------------------------------------
-SELECT * FROM [Category]
+SELECT * FROM [Category] WHERE Id >3
 
-DELETE [Category]
+DELETE [Category] WHERE Id >3
 DBCC CHECKIDENT ('Category', NORESEED);
-DBCC CHECKIDENT ('Category', RESEED, 0);
+DBCC CHECKIDENT ('Category', RESEED, 4);
 ----------------------------------------------------
 SELECT * FROM [UrlRecord] Where EntityName='Category' And EntityId NOT IN (1,2,3)
 
--- DELETE [UrlRecord] Where EntityName='Category' And EntityId NOT IN (1,2,3)
+-- DELETE [UrlRecord] Where EntityName='Category' And Id IN (1,2,3)
 DBCC CHECKIDENT ('UrlRecord', NORESEED);
---DBCC CHECKIDENT ('UrlRecord', RESEED, 87);
+--DBCC CHECKIDENT ('UrlRecord', RESEED, 16);
 ----------------------------------------------------
 SELECT * FROM [Product]
 
@@ -112,6 +112,7 @@ And EntityId NOT IN (SELECT ID FROM Customer)
 -- DELETE Forums_PrivateMessage
 -- DELETE  [Order]
 -- DELETE Customer Where Id > 1402
+--DELETE Customer Where email is null and username is null
 SELECT * FROM Customer
 -----------------------------------
 DELETE [UrlRecord] WHERE EntityName='Category'
@@ -197,3 +198,9 @@ SELECT * FROM [UrlRecord] WHERE EntityName='Category'
 
 SELECT * FROM [product]
 
+
+SELECT * FROM [Store]
+
+--UPDATE [Store] SET [url]='http://localhost:58551/' WHERE Id=1
+-- http://localhost:58551/
+--https://localhost:51796/

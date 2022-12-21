@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32002.185
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32802.440
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -379,6 +379,18 @@ Global
 		{80D363F0-C1C1-41CF-B7E0-11C6F6302D33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{80D363F0-C1C1-41CF-B7E0-11C6F6302D33}.Release|x86.ActiveCfg = Release|Any CPU
 		{80D363F0-C1C1-41CF-B7E0-11C6F6302D33}.Release|x86.Build.0 = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{D5F9D990-1ED2-4B7A-A40D-FCA66AA0F7CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

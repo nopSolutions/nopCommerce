@@ -10,13 +10,55 @@ SELECT * FROM [dbo].[Setting] WHERE [Name] like '%reviews%';
 ---------------------------------------------------------
 -- ***  SCHEMA SCRIPTS ****
 ---------------------------------------------------------
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderSubject [nvarchar](450) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderBodyText [nvarchar](max) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD RecipientBodyText [nvarchar](max) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD IsSystemGenerated Bit NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD ParentMessageId [int] NULL;
 
-ALTER TABLE [dbo].[Customer] ADD CustomerProfileTypeId [int] NULL;
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Customer]') AND NAME = 'CustomerProfileTypeId')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD CustomerProfileTypeId [int] NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'SenderSubject')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD SenderSubject [nvarchar](450) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'SenderBodyText')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD SenderBodyText [nvarchar](max) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'RecipientBodyText')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD RecipientBodyText [nvarchar](max) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'IsSystemGenerated')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD IsSystemGenerated Bit NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'ParentMessageId')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD ParentMessageId [int] NULL
+END
+GO
+
 
 ---------------------------------------------------------
 -- ***  END SCHEMA SCRIPTS ****
@@ -101,6 +143,15 @@ UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Sign In Here'
 WHERE [ResourceName]='account.login.returningcustomer'
 -- Returning Customer
 
+Update [dbo].[LocaleStringResource] SET ResourceValue='Similar Profiles' WHERE ResourceName='products.relatedproducts'	 
+Update [dbo].[LocaleStringResource] SET ResourceValue='You are already subscribed for this profile back in available notification' WHERE ResourceName='backinstocksubscriptions.alreadysubscribed'
+-- You're already subscribed for this product back in stock notification
+Update [dbo].[LocaleStringResource] SET ResourceValue='Receive an email when profile is available' WHERE ResourceName='backinstocksubscriptions.popuptitle'
+--Receive an email when this arrives in stock
+Update [dbo].[LocaleStringResource] SET ResourceValue='You will receive a onetime e-mail when this profile is available' WHERE ResourceName='backinstocksubscriptions.tooltip'
+-- You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!
+Update [dbo].[LocaleStringResource] SET ResourceValue='You will receive an e-mail when a particular profile is back to available.' WHERE ResourceName='account.backinstocksubscriptions.description'
+	-- You will receive an e-mail when a particular product is back in stock.
 
 SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'reviews.productreviewsfor%'
 SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Products.Tags%'
@@ -155,6 +206,37 @@ UPDATE [dbo].[Setting] SET Value='{ID}{YYYY}{MM}{DD}' WHERE Name = 'ordersetting
 UPDATE [dbo].[Setting] SET Value='20, 50, 100' WHERE Name = 'adminareasettings.gridpagesizes';
 UPDATE [dbo].[Setting] SET Value='20' WHERE Name = 'adminareasettings.defaultgridpagesize';
 
+-- Customersettings
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.notifynewcustomerregistration';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.showcustomerslocation';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.showcustomersjoindate';
+
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.allowviewingprofiles';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.hidenewsletterblock';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.storelastvisitedpage';
+
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.genderenabled';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.countryenabled';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.countryrequired';
+
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phoneenabled';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phonerequired';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.companyenabled';
+
+-- Customersettings -- AddressSettings -- Address form fields
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.companyenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.streetaddressenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.streetaddress2enabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.zippostalcodeenabled';
+
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.zippostalcoderequired';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.cityenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.cityrequired';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.countryenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.stateprovinceenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phoneenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phonerequired';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.faxenabled';
 
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingCartSettings.MiniShoppingCartProductNumber%';
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingcartsettings.move%';
@@ -162,13 +244,17 @@ SELECT * FROM [dbo].[Setting] WHERE [Name] like 'CatalogSettings.%';
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%infotab%';
 SELECT * FROM [dbo].[Setting] WHERE [Value] like '%Anonymous%';
 
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'AddressSettings.%';
+
+-- UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = '';
+
 ---------------------	End: [Setting] Table Scripts---------------------------------------------------------------------
 
 ---------Start: [Countries] Tab7, 15, 20, 50, 100le Scripts : Update countries table that we only support ---------------------------------
 
 SELECT * FROM [Country] WHERE Published=1
 
---Update [Country] SET Published=0 WHERE [TwoLetterIsoCode] NOT IN ('US','GB','AU','CA','IN','NZ','DE','IT','SG','FR','AE')
+-- Update [Country] SET Published=0 WHERE [TwoLetterIsoCode] NOT IN ('US','GB','AU','CA','IN','NZ','DE','IT','SG','FR','AE')
 
 Update [Country] SET Published=1 WHERE [TwoLetterIsoCode] IN ('US')
 Update [Country] SET Published=0 WHERE [TwoLetterIsoCode] IN ('AE')
@@ -190,7 +276,7 @@ Update [Country] SET DisplayOrder=80 WHERE [TwoLetterIsoCode]='GB'
 
 SELECT * FROM [CustomerAttribute] Where Id>=7
 
-Delete [CustomerAttribute]
+-- Delete [CustomerAttribute]
 DBCC CHECKIDENT ('[CustomerAttribute]', RESEED, 0);
 GO
 
