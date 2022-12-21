@@ -7,8 +7,8 @@
 /* Web Styles for nopAccelerate Noble Theme */
 
 body {
-  font-family: 'Open Sans', sans-serif;
-  background: #E8E8E8;
+  font-family: 'Open Sans', sans-serif !important;
+  background: #E8E8E8 !important;
   color: #646464;
 }
 
@@ -694,6 +694,7 @@ ul.nav.navbar-nav li {
 .title.main-title {
   background: #dddddd;
   padding: 20px;
+  border-bottom: 1px solid lightgray;
 }
 
   .title.main-title strong {
@@ -709,10 +710,10 @@ ul.nav.navbar-nav li {
   /*margin-bottom: 30px;*/
   float: left;
   width: 100%;
-  padding: 0px;
-  border-radius: 0px;
-  border: none;
-  background: #fff;
+  padding: 0px !important;
+  border-radius: 0px !important;
+  border: none !important;
+  background: #fff !important;
 }
 
   .box-shadow-wrapper .listbox ul li a {
@@ -1860,17 +1861,6 @@ a.eu-cookie-privacyinfo-tag {
   width: 100%;
 }
 
-/* Customization */
-.product-item-footer {
-  display: inline-block;
-  border-width: 0px 1px 1px 1px;
-  border-style: solid;
-  border-color: #e7e7e7;
-  padding: 12px 4px 12px 4px;
-  width: 100%;
-  background: #fff;
-  font-size: 13px;
-}
 
 .product-item-shadow {
   box-shadow: 3px 5px 5px 2px #ccc;
@@ -2104,7 +2094,7 @@ a.eu-cookie-privacyinfo-tag {
 
 .product-list .item-box .product-item .product-title {
   height: auto;
-  padding: 0px 0px 2px 0px
+  padding: 0px 0px 2px 12px
 }
 
 .product-list .item-box .product-border-bottom {
@@ -8332,15 +8322,8 @@ button {
   padding-bottom: 5px;*/
 }
 
-body {
-  font-family: 'Open Sans', sans-serif;
-  /* background: #f6f6f6;*/
-  background: #E8E8E8;
-  color: #646464;
-}
-
-.account-page .form-group, .registration-page .form-group { 
-    /*margin-bottom: 30px;*/
+.account-page .form-group, .registration-page .form-group {
+  /*margin-bottom: 30px;*/
 }
 
 div.block.product-filters.product-filters-wrapper div.product-filter.product-spec-filter {
@@ -8390,7 +8373,7 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 
 .customer-info {
   font-style: normal;
- /* float: left;*/
+  /* float: left;*/
   margin-left: 5px;
 }
 
@@ -8548,11 +8531,6 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
   font-weight: normal;
 }
 
-.panel-heading {
-  padding: 10px 15px 0px 15px;
-}
-
-
 /*is this cusomization? not sure*/
 .estimate-shipping {
   margin: 0px 0px 15px 0px;
@@ -8571,17 +8549,6 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
   float: left;
 }
 
-/* Customization */
-.product-item-footer {
-  display: inline-block;
-  border-width: 0px 1px 1px 1px;
-  border-style: solid;
-  border-color: #e7e7e7;
-  padding: 12px 4px 12px 4px;
-  width: 100%;
-  background: #fff;
-  font-size: 13px;
-}
 
 .product-item-shadow {
   box-shadow: 3px 5px 5px 2px #ccc;
@@ -8637,10 +8604,6 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 .category-page-title-help-text {
   font-size: 12px;
   font-weight: normal;
-}
-
-.panel-heading {
-  padding: 10px 15px 0px 15px;
 }
 
 .estimate-shipping {
@@ -8774,3 +8737,20 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 .account-page .form-group, .registration-page .form-group {
   /*margin-bottom: 30px;*/
 }
+
+
+.sidebar.col-md-3 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.page-title.panel-heading {
+  background: #F5F5F5;
+  padding: 10px 15px 0px 15px;
+}
+
+  .page-title.panel-heading h1 {
+    border-bottom: 0px solid #BF1A1A;
+    padding-top: 15px;
+    margin-bottom: 12px;
+  }

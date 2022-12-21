@@ -62,7 +62,7 @@
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBeforeFilters, additionalData = Model })
     @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
 }
-<div class="page category-page">
+<div class="page category-page block well box-shadow-wrapper">
     <div class="page-title panel-heading">
         <h1>@Model.Name</h1>
     </div>
