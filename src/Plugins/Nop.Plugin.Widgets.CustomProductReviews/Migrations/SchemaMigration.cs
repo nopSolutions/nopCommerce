@@ -1,12 +1,16 @@
-﻿using FluentMigrator;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
+using FluentMigrator;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.CustomProductReviews.Domains;
+using Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
 {
-    [NopMigration("2022/12/12 15:40:55:1687541", "Nop.Plugin.Widgets.CustomProductReviews schema", MigrationProcessType.Installation)]
-    public class SchemaMigration : AutoReversingMigration
+    [NopMigration("2022/12/12 15:40:55:1687541", "Nop.Plugin.Widgets.CustomProductReviews base schema", MigrationProcessType.Installation)]
+    public class SchemaMigration : FluentMigrator.Migration
     {
         private readonly IMigrationManager _migrationManager;
 
@@ -22,6 +26,13 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
         {
             Create.TableFor<Video>();
             Create.TableFor<CustomProductReviewMapping>();
+
+        }     
+        public override void Down()
+        {
+            Delete.Table("Video");
+            Delete.Table("CustomProductReviewMapping");
+
         }
     }
 }
