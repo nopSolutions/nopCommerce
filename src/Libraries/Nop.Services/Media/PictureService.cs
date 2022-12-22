@@ -600,7 +600,7 @@ namespace Nop.Services.Media
                     ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                     : $"{picture.Id:0000000}.{lastPart}";
 
-            if (targetSize == 0)
+            if (targetSize == 0 || picture.MimeType == MimeTypes.ImageSvg)
             {
                 var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
                 if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
