@@ -3943,10 +3943,7 @@
     <Value>You need to save the product attribute before you can add values for this product attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Hint">
-    <Value>
-      Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values).
-      You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog &gt; Attributes &gt; Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that "Inventory method" is set to "Track inventory by product attributes".
-    </Value>
+    <Value><![CDATA[Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values). You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that "Inventory method" is set to "Track inventory by product attributes".]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable">
     <Value>No product attributes available. Create at least one product attribute before mapping.</Value>
@@ -4078,10 +4075,7 @@
     <Value>Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
-    <Value>
-      Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.
-      You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog &gt; Attributes &gt; Specification attributes.
-    </Value>
+    <Value><![CDATA[Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only. You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Specification attributes.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributes">
     <Value>No specification attributes defined.</Value>
@@ -16594,7 +16588,7 @@
     <Value>VAT number</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.VatNumber.Disabled">
-    <Value>VAT number can be entered (on the <a href="{0}">customer info page</a>) and used only after registration</Value>
+    <Value><![CDATA[VAT number can be entered (on the <a href="{0}">customer info page</a>) and used only after registration]]></Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.VatNumber.Warning">
     <Value>VAT number is {0}</Value>
