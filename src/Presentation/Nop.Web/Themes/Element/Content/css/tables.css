@@ -1,0 +1,66 @@
+﻿
+/* FOOTABLE CUSTOM CSS */
+
+.footable-first-column {
+	text-align: center;
+}
+td.footable-first-column {
+	position: relative;
+	background: transparent !important; /*Firefox relative cell bug fix*/
+}
+
+.air-theme .footable-first-column .item-count {
+	font-size: 11px !important;
+}
+.earth-theme .footable-first-column .item-count {
+	font-size: 13px !important;
+}
+
+.footable.breakpoint > tbody > tr > td > span.footable-toggle {
+	position: absolute;
+	/*top: 50%;*/ /*doesn't work in IE*/
+	left: 50%;
+	width: 20px;
+	height: 20px;
+	/*margin: -10px 0 0 -10px;*/
+	border-radius: 50%;
+	overflow: hidden;
+	background: #bbb url('../img/table-sprite.png') no-repeat;
+}
+.air-theme .footable.breakpoint > tbody > tr > td > span.footable-toggle {
+	margin: -1px 0 0 -10px; /*IE hack*/
+}
+.earth-theme .footable.breakpoint > tbody > tr > td > span.footable-toggle {
+	margin: 2px 0 0 -10px; /*IE hack*/
+}
+.footable-toggle {
+	background-position: 0 center !important;
+}
+.footable-detail-show .footable-toggle {
+	background-position: -20px center !important;
+}
+.footable-toggle:before {
+	display: none !important;
+}
+
+.footable-row-detail {
+	text-align: left;
+}
+.footable-row-detail-cell {
+	border-width: 1px 0 !important;
+	border-style: solid !important;
+	border-color: #eee !important;
+	text-align: left !important;
+}
+.footable-row-detail-row {
+	margin: 0 0 10px;
+    display: table-row;
+}
+.footable-row-detail-name {
+    display: table-cell;
+    padding: 10px;
+}
+.footable-row-detail-value {
+    display: table-cell;
+	padding: 10px;
+}

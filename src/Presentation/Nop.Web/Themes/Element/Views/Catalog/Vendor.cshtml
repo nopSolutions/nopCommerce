@@ -1,0 +1,67 @@
+﻿@model VendorModel
+
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-vendor-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        NopHtml.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
+}
+@section CategoryManufacturerVendorMovedPageTitle {
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+}
+<div class="page vendor-page">
+    <div class="page-body">
+        @*description + contact, to be rendered in _ColumnsTwo*@
+        @section CategoryManufacturerVendorMovedContent
+        {
+        	@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.VendorDetailsTop, additionalData = Model })
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <div class="vendor-description">
+                    @Html.Raw(Model.Description)
+                </div>
+            }
+
+            @if (Model.AllowCustomersToContactVendors)
+            {
+                <div class="contact-vendor">
+                    <button type="button" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')">@T("ContactVendor")</button>
+                </div>
+            }
+        }
+
+        @section CatalogFilters {
+            @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+        }
+
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
+        
+        @{
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetVendorProducts", "Catalog", new { vendorId = Model.Id }));
+        }
+
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
+    </div>
+</div>

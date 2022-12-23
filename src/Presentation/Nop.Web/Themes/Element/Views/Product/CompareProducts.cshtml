@@ -1,0 +1,278 @@
+﻿@model CompareProductsModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.CompareProducts").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-compare-products-page");
+
+    var columnWidth = "";
+    if (Model.Products.Count > 0)
+    {
+        columnWidth = Math.Round((decimal)(90M / Model.Products.Count), 0).ToString() + "%";
+    }
+
+    var uniqueGroupes = new List<ProductSpecificationAttributeGroupModel>();
+    foreach (var group in Model.Products.SelectMany(p => p.ProductSpecificationModel.Groups))
+    {
+        if (!uniqueGroupes.Any(g => g.Id == group.Id))
+            uniqueGroupes.Add(group);
+    }
+}
+
+<div class="page compare-products-page">
+    <div class="page-title">
+        <h1>@T("Products.Compare.Title")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Products.Count > 0)
+        {
+            <div class="button-wrapper">
+                <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="clear-list">@T("Products.Compare.Clear")</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="compare-products-table">
+                    <tbody>
+                        <tr class="product-picture">
+                            <td class="empty">&nbsp;</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td style="width: @columnWidth;">
+                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                    <button type="button" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')"><span>@T("Common.Remove")</span></button>
+                                </td>
+                            }
+                        </tr>
+                        <tr class="product-name">
+                            <td>
+                                <label>@T("Products.Compare.Name")</label>
+                            </td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td style="width: @columnWidth;">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
+                                </td>
+                            }
+                        </tr>
+                        <tr class="product-price">
+                            <td>
+                                <label>@T("Products.Compare.Price")</label>
+                            </td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td style="width: @columnWidth;">
+                                    @product.ProductPrice.Price
+                                </td>
+                            }
+                        </tr>
+                        @if (Model.IncludeShortDescriptionInCompareProducts)
+                        {
+                            <tr class="short-description">
+                                <td>
+                                    <label>@T("Products.Compare.ShortDescription")</label>
+                                </td>
+                                @foreach (var product in Model.Products)
+                                {
+                                    <td style="width: @columnWidth;">
+                                        @Html.Raw(product.ShortDescription)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        @if (Model.IncludeFullDescriptionInCompareProducts)
+                        {
+                            <tr class="full-description">
+                                <td>
+                                    <label>@T("Products.Compare.FullDescription")</label>
+                                </td>
+                                @foreach (var product in Model.Products)
+                                {
+                                    <td style="width: @columnWidth;">
+                                        @Html.Raw(product.FullDescription)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        @foreach (var group in uniqueGroupes)
+                        {
+                            if (group.Attributes.Count > 0)
+                            {
+                                var uniqueGroupAttributes = new List<ProductSpecificationAttributeModel>();
+                                foreach (var attribute in Model.Products.SelectMany(p => p.ProductSpecificationModel.Groups.Where(g => g.Id == group.Id).SelectMany(g => g.Attributes)))
+                                {
+                                    if (!uniqueGroupAttributes.Any(sa => sa.Id == attribute.Id))
+                                        uniqueGroupAttributes.Add(attribute);
+                                }
+                                @foreach (var specificationAttribute in uniqueGroupAttributes)
+                                {
+                                    <tr class="specification">
+                                        <td>
+                                            <label>@specificationAttribute.Name</label>
+                                        </td>
+                                        @foreach (var product in Model.Products)
+                                        {
+                                            var foundProductSpec = product.ProductSpecificationModel.Groups
+                                                .Where(g => g.Id == group.Id)
+                                                .SelectMany(g => g.Attributes)
+                                                .FirstOrDefault(sa => sa.Id == specificationAttribute.Id);
+
+                                            <td style="width: @columnWidth;">
+                                                @if (foundProductSpec != null)
+                                                {
+                                                    for (int i = 0; i < foundProductSpec.Values.Count; i++)
+                                                    {
+                                                        var value = foundProductSpec.Values[i];
+
+                                                        if (string.IsNullOrEmpty(value.ColorSquaresRgb))
+                                                        {
+                                                            @Html.Raw(value.ValueRaw)
+                                                            if (i != foundProductSpec.Values.Count - 1)
+                                                            {
+                                                                <text>,&nbsp;</text>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="attribute-squares color-squares">
+                                                                <span class="attribute-square-container" title="@Html.Raw(value.ValueRaw)">
+                                                                    <span class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">&nbsp;</span>
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <text>&nbsp;</text>
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="compare-products-mobile">
+                <div class="compare-section product">
+                    <div class="title">@T("Products.Compare.Name")</div>
+                    <ul>
+                        @foreach (var product in Model.Products)
+                        {
+                            <li class="item">
+                                <div class="picture">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                </div>
+                                <div class="details">
+                                    <div class="product-name">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
+                                    </div>
+                                    <button type="button" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')"><span>@T("Common.Remove")</span></button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="compare-section price">
+                    <div class="title">@T("Products.Compare.Price")</div>
+                    <ul>
+                        @foreach (var product in Model.Products)
+                        {
+                            <li class="item">
+                                <span>@product.ProductPrice.Price</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="compare-section description">
+                    <div class="title">@T("Products.Compare.ShortDescription")</div>
+                    <ul>
+                        @foreach (var product in Model.Products)
+                        {
+                            if (Model.IncludeShortDescriptionInCompareProducts)
+                            {
+                                <li class="item">
+                                    <p>@Html.Raw(product.ShortDescription)</p>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="item">
+                                    <p>@T("Products.Compare.NoDescription")</p>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                @foreach (var group in uniqueGroupes)
+                {
+                    if (group.Attributes.Count > 0)
+                    {
+                        var uniqueGroupAttributes = new List<ProductSpecificationAttributeModel>();
+                        foreach (var attribute in Model.Products.SelectMany(p => p.ProductSpecificationModel.Groups.Where(g => g.Id == group.Id).SelectMany(g => g.Attributes)))
+                        {
+                            if (!uniqueGroupAttributes.Any(sa => sa.Id == attribute.Id))
+                                uniqueGroupAttributes.Add(attribute);
+                        }
+                        @foreach (var specificationAttribute in uniqueGroupAttributes)
+                        {
+                            <div class="compare-section specifications-section">
+                                <div class="title">@specificationAttribute.Name</div>
+                                <ul>
+                                    @foreach (var product in Model.Products)
+                                    {
+                                        var foundProductSpec = product.ProductSpecificationModel.Groups
+                                            .Where(g => g.Id == group.Id)
+                                            .SelectMany(g => g.Attributes)
+                                            .FirstOrDefault(sa => sa.Id == specificationAttribute.Id);
+
+                                        <li class="item">
+                                            @if (foundProductSpec != null)
+                                            {
+                                                for (int i = 0; i < foundProductSpec.Values.Count; i++)
+                                                {
+                                                    var value = foundProductSpec.Values[i];
+
+                                                    if (string.IsNullOrEmpty(value.ColorSquaresRgb))
+                                                    {
+                                                        <span>@Html.Raw(value.ValueRaw)</span>
+                                                        if (i != foundProductSpec.Values.Count - 1)
+                                                        {
+                                                            <text>,&nbsp;</text>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="attribute-squares color-squares">
+                                                            <span class="attribute-square-container" title="@Html.Raw(value.ValueRaw)">
+                                                                <span class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">&nbsp;</span>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="empty">n/a</span>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+                }
+            </div>          
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Products.Compare.NoItems")
+            </div>
+        }
+    </div>
+</div>
