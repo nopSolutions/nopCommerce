@@ -1,0 +1,65 @@
+﻿@model ProductSettingsAdminModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.SmartProductCollections.Admin.Submenus.Settings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.SmartProductCollections.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="cards-group">
+                <div class="card card-default">
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="Enabled" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="Enabled" />
+								<span asp-validation-for="Enabled"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="ProductThumbImageSize_OverrideForStore" asp-input="ProductThumbImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="ProductThumbImageSize" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ProductThumbImageSize" />
+								<span asp-validation-for="ProductThumbImageSize"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="CategoryThumbImageSize_OverrideForStore" asp-input="CategoryThumbImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="CategoryThumbImageSize" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="CategoryThumbImageSize" />
+								<span asp-validation-for="CategoryThumbImageSize"></span>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

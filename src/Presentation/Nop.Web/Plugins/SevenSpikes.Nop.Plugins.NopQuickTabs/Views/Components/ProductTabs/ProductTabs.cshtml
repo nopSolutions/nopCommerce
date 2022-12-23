@@ -1,0 +1,62 @@
+﻿@using Nop.Core;
+@using Nop.Services.Configuration;
+
+@model TabUIModel
+    
+@inject TabSettings settings
+@inject IWorkContext workContext
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+
+@{
+    var themeFolder = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+    var attachmentPluginEnabled = await settingService.GetSettingByKeyAsync("AttachmentsSettings.Enable", false, storeId, true);
+
+    if (attachmentPluginEnabled != false && settings.EnableProductAttachmentsTab && settings.EnableAjax)
+    {
+        var attachmentsThemeFolder = await ThemeHelper.GetPluginThemeAsync("SevenSpikes.Nop.Plugins.Attachments");
+        var attachmentsCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.Attachments/Themes/" + attachmentsThemeFolder + "/Content/Attachments.css";
+
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.Attachments/Styles/common.css" />
+        <link rel="stylesheet" href="@attachmentsCssFilePath" />
+    }
+
+    if (Model.Tabs.Count == 0)
+    {
+        return;
+    }
+
+    //TODO 4.5: jquery-ui.min.js was AppendScriptParts. See if this is OK!
+    <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.NopQuickTabs/Scripts/ProductTabs.min.js" asp-location="Footer"></script>
+
+    var quickTabsCssFilePath = $"~/Plugins/{Plugin.FolderName}/Themes/{themeFolder}/Content/QuickTabs.css";
+
+    <link rel="stylesheet" href="@quickTabsCssFilePath" />
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+        var quickTabsRtlCssFilePath = $"~/Plugins/{Plugin.FolderName}/Themes/{themeFolder}/Content/QuickTabs.rtl.css";
+
+        <link rel="stylesheet" href="@quickTabsRtlCssFilePath" />
+    }
+
+    var additionalClass = "";
+    if (Model.Tabs.Any(x => x.TabKey == "picture"))
+    {
+        additionalClass = "withPicture";
+    }
+
+    var productTabsPartialViewName = settings.EnableAjax ? Views.WithAjaxPartial : Views.WithoutAjaxPartial;
+    string productTabsPartialView = $"~/Plugins/{Plugin.FolderName}/Views/Components/ProductTabs/{productTabsPartialViewName}.cshtml";
+
+    <div id="quickTabs" class="productTabs @additionalClass"
+         data-ajaxEnabled="@settings.EnableAjax.ToString().ToLowerInvariant()"
+         data-productReviewsAddNewUrl="@Url.Action("ProductReviewsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-productContactUsUrl="@Url.Action("ProductContactUsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-couldNotLoadTabErrorMessage="@T("SevenSpikes.NopQuickTabs.Client.Tabs.CouldNotLoadTabErrorMessage").ToString()">
+        @await Html.PartialAsync(productTabsPartialView)
+    </div>
+}

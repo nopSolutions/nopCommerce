@@ -1,0 +1,219 @@
+﻿@model SocialFeedModel
+@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+
+    var adminStylesCssFilePath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.css";
+}
+
+<link rel="stylesheet" href="@adminStylesCssFilePath" />
+
+@if (supportRtl)
+{
+    var adminStylesRtlCssFilePath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.rtl.css";
+
+    <link rel="stylesheet" href="@adminStylesRtlCssFilePath" />
+}
+
+<script>
+    $(document).ready(function () {
+        $('.loader').hide();
+        // http://stackoverflow.com/questions/10136342/perform-validation-on-hidden-fields
+        $.validator.setDefaults({
+            ignore: []
+            // any other default options and/or rules
+        });
+
+        function setDefaultValues() {
+            $('#SubtitleLinkText').val('@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.DefaultSubtitleLinkText")');
+            $('#SubtitleUrl').val("");
+            $('#SubtitleUrlRepresentation').attr("href", "");
+            $('#SubtitleUrlRepresentation').text('@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.DefaultSubtitleLinkText")');
+            $('#SubtitleLabel').text('@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.DefaultSubtitleLabel")');
+            $(".loader").css("display", "none");
+        }
+
+        $("#SocialNetwork").change(function (e) {
+            var selectedOption = $(this).find("option:selected");
+            var socialNetworkTypeName = selectedOption.attr("data-type-name");
+            var socialNetworkId = selectedOption.attr('value');
+            $("#Title").val(socialNetworkTypeName);
+            $('.loader').show();
+            if (socialNetworkId > 0) {
+                $.get('@Url.Action("GetSocialNetworkProfileLink", "SocialFeedAdmin")', { "socialNetworkId": socialNetworkId }, function (data) {
+                    $('.loader').hide();
+                    $(".error").hide();
+                    var json = JSON.parse(data);
+                    if (json.profile_link_text && json.profile_url) {
+
+                        $('#SubtitleLinkText').val(json.profile_link_text);
+                        $('#SubtitleUrl').val(json.profile_url);
+                        $('#SubtitleUrlRepresentation').attr("href", json.profile_url);
+                        $('#SubtitleUrlRepresentation').text(json.profile_link_text);
+                    } else if (json.error) {
+
+                        setDefaultValues();
+                        $(".error").show();
+                        $(".error").text(json.error);
+                    }
+                });
+            } else {
+                setDefaultValues();
+            }
+        });
+    });
+</script>
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StoreId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+            <span asp-validation-for="StoreId"></span>
+            @Html.ValidationMessageFor(model => model.StoreId)
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SocialNetworkId" />
+        </div>
+        <div class="col-md-9">
+            <select id="SocialNetwork" name="SocialNetworkId" class="form-control">
+                @foreach (var socialNetwork in Model.AvailableSocialNetworks)
+                {
+                    <option value="@socialNetwork.Value" selected="@socialNetwork.Selected" data-type-name="@socialNetwork.TypeName">@socialNetwork.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @(await Html.LocalizedEditorAsync<SocialFeedModel, SocialFeedLocalizedModel>("social-feed-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Title" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Title" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].SubtitleLabel" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].SubtitleLabel" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].SubtitleLinkText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].SubtitleLinkText" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SubtitleUrl" />
+            </div>
+            <div class="col-md-9">
+                <a href="@Model.SubtitleUrl" id="SubtitleUrlRepresentation">@Model.Locales[item].SubtitleLinkText</a>
+                <input type="hidden" asp-for="SubtitleUrl" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+        </div>
+    </div>
+    ,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Title" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Title" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SubtitleLabel" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SubtitleLabel" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SubtitleLinkText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SubtitleLinkText" />
+                <div class="loader"></div>
+                <div class="error"></div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SubtitleUrl" />
+            </div>
+            <div class="col-md-9">
+                <a href="@Model.SubtitleUrl" id="SubtitleUrlRepresentation">@Model.SubtitleLinkText</a>
+                <input type="hidden" asp-for="SubtitleUrl" />
+            </div>
+        </div>
+    </div>
+    ))
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Class" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Class" />
+            <span asp-validation-for="Class"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="NumberOfPosts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfPosts" />
+            <span asp-validation-for="NumberOfPosts"></span>
+        </div>
+    </div>
+</div>

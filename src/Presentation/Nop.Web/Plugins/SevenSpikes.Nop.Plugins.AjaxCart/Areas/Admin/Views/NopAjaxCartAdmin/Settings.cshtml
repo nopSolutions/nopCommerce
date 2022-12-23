@@ -1,0 +1,46 @@
+﻿
+@model NopAjaxCartSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.NopAjaxCart.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.NopAjaxCart.Admin.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <nop-tabs id="nop-ajax-cart-settings">
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.NopAjaxCart.Admin.Settings.GeneralSettingsTitle")">
+                    @await Html.PartialAsync("_Settings.General", Model)
+                </nop-tab>
+                <nop-tab asp-name="tab-availability-settings" asp-title="@T("SevenSpikes.NopAjaxCart.Admin.Settings.AjaxCartAvailabilitySettings")">
+                    @await Html.PartialAsync("_Settings.Availability", Model)
+                </nop-tab>
+                @*class="advanced-setting"*@
+                <nop-tab asp-name="tab-selectors-settings" asp-title="@T("SevenSpikes.NopAjaxCart.Admin.Settings.AjaxCartSelectorsSettings")">
+                    @await Html.PartialAsync("_Settings.Selectors", Model)
+                </nop-tab>
+                @*class="advanced-setting"*@
+                <nop-tab asp-name="tab-product-added-to-cart-popup-settings" asp-title="@T("SevenSpikes.NopAjaxCart.Admin.Settings.ProductAddedToCartPopupSettings")">
+                    @await Html.PartialAsync("_Settings.ProductAddedToCartPopup", Model)
+                </nop-tab>
+            </nop-tabs>
+        </div>
+    </section>
+</form>

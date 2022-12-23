@@ -1,0 +1,51 @@
+@model RichBlogCategoryAdminModel
+@inject IWebHelper webHelper
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+
+    var formAction = storeLocation + "/Admin/RichBlogCategoryAdmin/Delete";
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<form method="post" id="rich-blog-category-form">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.RichBlog.Admin.Category.EditCategoryDetails") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ManageRichBlogCategories">@T("SevenSpikes.RichBlog.Admin.Category.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="rich-blog-category-delete" class="btn bg-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @{ await Html.RenderPartialAsync(Views.CategoryCreateOrUpdate, Model); } 
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="rich-blog-category-delete" />

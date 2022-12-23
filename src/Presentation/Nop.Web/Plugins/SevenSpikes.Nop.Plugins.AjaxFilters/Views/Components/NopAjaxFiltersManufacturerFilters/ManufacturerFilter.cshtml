@@ -1,0 +1,102 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model ManufacturerFilterModel7Spikes
+
+@inject NopAjaxFiltersSettings nopAjaxFiltersSettings
+
+@{
+   <script src="~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/ManufacturerFilter.min.js" asp-location="Footer"></script>
+
+    string toggleStateClass = "toggleControl";
+    string toggleStateStyles = string.Empty;
+
+    if (nopAjaxFiltersSettings.CloseManufacturersFilterBox)
+    {
+        toggleStateClass = "toggleControl closed";
+        toggleStateStyles = "display: none;";
+    }
+
+    string filtersPanelClass = nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes ? "filtersCheckboxPanel" : "filtersDropDownPanel";
+}
+
+@functions {
+    string GetOptionAttributes(FilterItemState state)
+    {
+        string optionAttributes = string.Empty;
+
+        if (state == FilterItemState.Checked || state == FilterItemState.CheckedDisabled)
+        {
+            if (nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes)
+            {
+                optionAttributes += "checked=\"checked\"";
+            }
+            else
+            {
+                optionAttributes += "selected=\"selected\"";
+            }
+        }
+
+        if (state == FilterItemState.Disabled || state == FilterItemState.CheckedDisabled)
+        {
+            optionAttributes += " disabled=\"disabled\"";
+        }
+
+        return optionAttributes;
+    }
+
+    IHtmlContent GetListOfOptions(IList<ManufacturerFilterItem> manufacturerFilterItems, FiltersUIMode uiMode)
+    {
+        HtmlContentBuilder result = new HtmlContentBuilder();
+
+        foreach (var filterItem in manufacturerFilterItems)
+        {
+            string optionAttributes = GetOptionAttributes(filterItem.FilterItemState);
+            string inputId = string.Format("manufacturer-input-{0}", filterItem.Id);
+
+            if (uiMode == FiltersUIMode.UseCheckboxes)
+            {
+                result.AppendHtml("<li class=\"checkbox-item\">");
+                result.AppendHtml($"<input {optionAttributes} data-option-ids=\"{filterItem.Id}\" type=\"checkbox\" id=\"{inputId}\" />");
+                result.AppendHtml($"<label class=\"filter-item-name\" for=\"{inputId}\"@* data-originalText=\"{filterItem.Name}\"*@>{filterItem.Name}</label>");
+                result.AppendHtml("</li>");
+            }
+            else
+            {
+                result.AppendHtml($"<option @optionAttributes data-option-ids=\"{filterItem.Id}\" value=\"{filterItem.Name}\">{filterItem.Name}</option>");
+            }
+        }
+
+        return result;
+    }
+}
+
+<div class="block filter-block manufacturerFilterPanel7Spikes">
+    <div class="title">
+        <a class="@toggleStateClass">@T("Manufacturers")</a>
+        <a class="clearFilterOptions">@T("SevenSpikes.NopAjaxFilters.Client.Common.Clear")</a>
+    </div>
+    <div class="filtersGroupPanel @filtersPanelClass" style="@toggleStateStyles">
+        @if (nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes)
+        {
+            @*if (Model.ManufacturerFilterItems.Count > 1)
+            {
+                <div class="filtersGroupSearch">
+                    <input type="text" class="filtersGroupSearchInput" />
+                </div>        
+            }*@
+
+            <ul class="checkbox-list">
+                @GetListOfOptions(Model.ManufacturerFilterItems, nopAjaxFiltersSettings.FiltersUIMode)
+            </ul>
+        }
+        else
+        {
+            <select class="attribute-options-select" id="manufacturerFiltersDropDown">
+                <option value="0">@T("SevenSpikes.NopAjaxFilters.Client.Common.All")</option>
+                @GetListOfOptions(Model.ManufacturerFilterItems, nopAjaxFiltersSettings.FiltersUIMode)
+            </select>
+        }
+    </div>
+</div>

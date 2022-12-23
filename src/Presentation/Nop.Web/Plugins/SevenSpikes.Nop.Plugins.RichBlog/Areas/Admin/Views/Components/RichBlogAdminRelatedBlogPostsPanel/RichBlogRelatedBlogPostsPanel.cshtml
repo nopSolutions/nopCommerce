@@ -1,0 +1,106 @@
+﻿@using Nop.Services.Common;
+
+@model int
+
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var productId = Model;
+
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+
+    const string richBlogRelatedBlogPostsBlockAttributeName = "ProductPage.SS.RichBlogRelatedBlogPosts";
+    var hideRichBlogRelatedBlogPostsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), richBlogRelatedBlogPostsBlockAttributeName, defaultValue: true);
+}
+
+<nop-card asp-name="product-rich-blog-related-blog-posts" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.RichBlog.Admin.Submenus.RelatedBlogPosts")" asp-hide-block-attribute-name="@richBlogRelatedBlogPostsBlockAttributeName" asp-hide="@hideRichBlogRelatedBlogPostsBlock" asp-advanced="false">
+	<div class="card-body">
+		@if (productId > 0)
+		{
+			<div class="content-header clearfix">
+				<div class="float-left">
+					<input type="submit" id="btnAddNewRelatedBlogPost" name="btnAddNewRelatedBlogPost" value="@T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.AddNew")" class="btn bg-blue"
+							onclick="javascript: OpenWindow('@(Url.Action("RelatedBlogPosts", "RelatedBlogPostAdmin", new {blogPostId = Model, btnId = "btnRefreshRelatedBlogPosts"}))', 800, 800, true); return false;" />
+				</div>
+			</div>
+			<section class="content">
+				<div class="form-horizontal">
+					<div class="card-body">
+						@{
+							await Html.RenderPartialAsync("Table", new DataTablesModel
+							{
+								Name = "related-blog-posts-grid",
+								UrlRead = new DataUrl("List", "RelatedBlogPostAdmin", new RouteValueDictionary { [nameof(RelatedBlogPostAdminModel.BlogPostId)] = Model }),
+								UrlDelete = new DataUrl("Delete", "RelatedBlogPostAdmin", null),
+								UrlUpdate = new DataUrl("Edit", "RelatedBlogPostAdmin", null),
+								Length = defaultGridPageSize,
+								LengthMenu = gridPageSizes,
+								ColumnCollection = new List<ColumnProperty>
+								{
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.RelatedBlogPostTitle))
+									{
+										Title = T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.Title").Text,
+										Width = "200",
+										Render = new RenderCustom("renderRelatedBlogPostTile")
+									},
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.DisplayOrder))
+									{
+										Title = T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.DisplayOrder").Text,
+										Editable = true,
+										EditType = EditType.Number,
+										Width = "200"
+									},
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.Id))
+									{
+										Width = "100",
+										ClassName =  NopColumnClassDefaults.Button,
+										//Render = new RenderButtonEdit(new DataUrl("Edit", "RelatedBlogPostAdmin"))
+										Render = new RenderButtonsInlineEdit()
+									},
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.Id))
+									{
+										Width = "100",
+										Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+									}
+								}
+							});
+						}
+
+
+						<script>
+							function renderRelatedBlogPostTile(data, type, row, meta) {
+								var title = data;
+								var id = row.RelatedBlogPostId;
+
+								return '<a href="@Url.Content("~/Admin/Blog/Edit/")' + id + '">' + title +'</a>'
+							}
+
+							$(document).ready(function () {
+
+								$('#btnRefreshRelatedBlogPosts').click(function () {
+
+									updateTable("#related-blog-posts-grid");
+
+									//return false to don't reload a page
+									return false;
+								});
+							});
+						</script>
+					</div>
+				</div>
+			</section>
+
+			<input type="submit" id="btnRefreshRelatedBlogPosts" name="btnRefreshRelatedBlogPosts" style="display: none" />
+		}
+		else
+		{
+			@T("SevenSpikes.RichBlog.Admin.RelatedBlogPost.SaveBeforeEdit")
+		}
+	</div>
+</nop-card>

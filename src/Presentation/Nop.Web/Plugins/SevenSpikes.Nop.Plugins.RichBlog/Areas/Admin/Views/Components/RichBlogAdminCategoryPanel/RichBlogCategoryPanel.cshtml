@@ -1,0 +1,95 @@
+﻿@using Nop.Services.Common;
+
+@model int
+
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var productId = Model;
+
+    var storeLocation = webHelper.GetStoreLocation().TrimEnd('/');
+
+    const string richBlogCategoryBlockAttributeName = "ProductPage.SS.RichBlogCategory";
+    var hiderichBlogCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), richBlogCategoryBlockAttributeName, defaultValue: true);
+}
+
+<nop-card asp-name="product-rich-blog-category" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.RichBlog.Admin.Submenus.ManageCategories")" asp-hide-block-attribute-name="@richBlogCategoryBlockAttributeName" asp-hide="@hiderichBlogCategoryBlock" asp-advanced="false">
+	<div class="card-body">
+
+		@if (productId > 0)
+		{
+			<script type="text/javascript">
+				$(document).ready(function ()
+				{
+					$('#btnRefreshBlogPost').click(function ()
+					{
+						updateTable("#rich-blog-categories-grid");
+
+						return false;
+					});
+				});
+			</script>
+
+			<div class="content-header clearfix">
+				<div class="float-left">
+					<input type="submit" id="btnAddNewCategory" name="btnAddNewCategory"
+							value="@T("SevenSpikes.RichBlog.Admin.Category.AddNew")"
+							onclick="javascript:OpenWindow('@(Url.Action("AvailableCategories", "CategoriesToBlogPostsAdmin", new { postId = Model, refreshBtnId = "btnRefreshBlogPost" }))', 800, 800, true); return false;"
+							class="btn bg-blue" />
+				</div>
+			</div>
+			<section class="content">
+				<div class="form-horizontal">
+					<div class="card-body">
+						@{
+							await Html.RenderPartialAsync("Table", new DataTablesModel
+							{
+								Name = "rich-blog-categories-grid",
+								UrlRead = new DataUrl("List", "RichBlogCategoryAdmin", new RouteValueDictionary(new { postId = Model })),
+								UrlDelete = new DataUrl("Delete", "CategoriesToBlogPostsAdmin",  new RouteValueDictionary(new { postId = Model })),
+								Length = defaultGridPageSize,
+								LengthMenu = gridPageSizes,
+								ColumnCollection = new List<ColumnProperty>
+								{
+									new ColumnProperty(nameof(RichBlogCategoryAdminModel.Name))
+									{
+										Title = T("SevenSpikes.RichBlog.Admin.Category.Name").Text
+									},
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.Id))
+									{
+										Width = "100",
+										ClassName =  NopColumnClassDefaults.Button,
+										Render = new RenderCustom("renderEditButton")
+									},
+									new ColumnProperty(nameof(RelatedBlogPostAdminModel.Id))
+									{
+										Width = "100",
+										Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+									}
+								}
+							});
+						}
+					</div>
+				</div>
+			</section>
+
+			<script>
+				function renderEditButton(data, type, row, meta) {
+
+					return '<a class="btn btn-default" href="/Admin/RichBlogCategoryAdmin/Edit?categoryId=' + data + '"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>';
+				}
+			</script>
+			<input type="submit" id="btnRefreshBlogPost" name="btnRefreshBlogPost" style="display: none" />
+		}
+		else
+		{
+			@T("SevenSpikes.RichBlog.Admin.Category.SaveBeforeEdit")
+		}
+	</div>
+</nop-card>

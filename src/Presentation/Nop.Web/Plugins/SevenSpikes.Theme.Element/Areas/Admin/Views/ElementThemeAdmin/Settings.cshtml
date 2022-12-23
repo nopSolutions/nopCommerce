@@ -1,0 +1,108 @@
+﻿@using Nop.Web.Framework
+@using SevenSpikes.Theme.Element
+@using SevenSpikes.Nop.Framework.MVCExtensions;
+
+@model ElementThemeSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Themes.Admin.SettingsSubmenu.Element");
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Styles/adminstyles.css" />
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Theme.Element/Styles/admin.css" />
+
+<script src="~/Plugins/SevenSpikes.Core/Areas/Admin/Content/Scripts/custom.presets.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Theme.Element/Areas/Admin/Content/Scripts/admin.min.js" asp-location="Footer"></script>
+
+<script type="text/javascript">
+        (function ($) {
+            function logoOverrideChanged() {
+                if ($('#@Html.IdFor(model => model.LogoImageId_OverrideForStore)').length === 0) {
+                    return;
+                }
+
+                if ($('#@Html.IdFor(model => model.LogoImageId_OverrideForStore)').is(':checked')) {
+                    $("#logo-image .upload-image-overlay").remove();
+                } else {
+                    $('#logo-image').append("<div class=\"upload-image-overlay\"></div>");
+                }
+            }
+
+            function colorPreset() {
+                if ($('#@Html.IdFor(model => model.Preset_OverrideForStore)').length == 0) {
+                    return;
+                }
+
+                if ($('#@Html.IdFor(model => model.Preset_OverrideForStore)').is(':checked') == true) {
+                    $(".theme-color .adminData .upload-image-overlay").remove();
+                } else {
+                    $('.theme-color .adminData').append("<div class=\"upload-image-overlay\"></div>");
+                }
+            }
+
+            function pageTitleImageChanged() {
+                if ($('#@Html.IdFor(model => model.PageTitleImageId_OverrideForStore)').length == 0) {
+                    return;
+                }
+
+                if ($('#@Html.IdFor(model => model.PageTitleImageId_OverrideForStore)').is(':checked') == true) {
+                    $("#page-title-image .upload-image-overlay").remove();
+                } else {
+                    $('#page-title-image').append("<div class=\"upload-image-overlay\"></div>");
+                }
+            }
+
+            $(document).ready(function () {
+                $("#@Html.IdFor(model => model.LogoImageId_OverrideForStore)").change(logoOverrideChanged);
+                $("#@Html.IdFor(model => model.Preset_OverrideForStore)").change(colorPreset);
+                $("#@Html.IdFor(model => model.PageTitleImageId_OverrideForStore)").change(pageTitleImageChanged);
+
+
+                $('.store-scope-configuration .checkbox input').change(function () {
+                    logoOverrideChanged();
+                    colorPreset();
+                    pageTitleImageChanged();
+                });
+
+                logoOverrideChanged();
+                colorPreset();
+                pageTitleImageChanged();
+
+                bindBootstrapTabSelectEvent('element-settings-edit');
+
+                var customerPresetObj = new CustomPreset('.theme-color .radionButton:last label', '.theme-color .radionButton label');
+                customerPresetObj.setPresetsBackgroundColor();
+                customerPresetObj.addKendoColorPickerToTheLastRadioButton();
+            });
+
+        })(jQuery);
+</script>
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Themes.Element.Admin.Settings.ThemeSettings")
+        </h1>
+        <div class="float-right">
+            @{ await Html.RenderPartialAsync(AdminViewLocations.AdminResetDefaultSettingsViewPath, Constants.PluginFolderName); }
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <nop-tabs  id="element-settings-edit" data-logoImageId="#@Html.IdFor(model => model.LogoImageId_OverrideForStore)" data-presetfieldId="#@Html.IdFor(model => model.Preset_OverrideForStore)">
+                <nop-tab asp-name="tab-info" asp-title="@T("SevenSpikes.Themes.Element.Admin.TabTitle.GeneralSettings")" asp-default="true">@await Html.PartialAsync("_Settings.General", Model)</nop-tab>
+                <nop-tab asp-name="tab-seo" asp-title="@T("SevenSpikes.Themes.Element.Admin.TabTitle.AdditionalSettings")">@await Html.PartialAsync("_Settings.Additional", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+    </section>
+</form>

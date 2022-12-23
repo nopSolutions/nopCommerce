@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="SmartProductCollectionsSettings.Enabled">
+    <Value>true</Value>
+  </Setting> 
+  <Setting Name="SmartProductCollectionsCategorySettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.DefaultNumberOfProductsPerItem">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.DefaultSelectedWidgetZone">
+    <Value>home_page_before_products</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.DefaultSelectedWidgetZone">
+    <Value>home_page_before_news</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.NumberOfProducts">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.NumberOfSubcategoriesToShow">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.CategoryImagesOrientation">
+	<Value>landscape</Value>
+  </Setting>
+
+  <Setting Name="smartproductcollectionssettings.categorythumbimagesize">
+	<Value>480</Value>
+  </Setting>
+    <Setting Name="smartproductcollectionssettings.productthumbimagesize">
+    <Value>137</Value>
+  </Setting>
+
+  <Setting Name="SmartProductCollectionsSettings.SlickCategorySettings">
+    <Value>{ "infinite": true, "rows":2, "slidesToShow": 2, "arrows": true, "dots": false, "easing": "swing", "draggable": false }</Value>
+  </Setting>         
+  <Setting Name="SmartProductCollectionsSettings.SlickProductSettings">
+    <Value>{ "infinite": true, "rows":1, "slidesToShow": 6, "arrows": true, "dots": false, "easing": "swing", "draggable": false }</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickCategoryResponsiveBreakpoints">
+    <Value>[{"breakpoint":876,"settings":{"slidesToShow":3}},{"breakpoint":648,"settings":{"slidesToShow":2}},{"breakpoint":480,"settings":{"slidesToShow":1}}]</Value>
+  </Setting> 
+  <Setting Name="SmartProductCollectionsSettings.SlickProductResponsiveBreakpoints">
+    <Value>[{"breakpoint":876,"settings":{"slidesToShow":3}},{"breakpoint":648,"settings":{"slidesToShow":2}},{"breakpoint":480,"settings":{"slidesToShow":1}}]</Value>
+  </Setting>
+</Settings>

@@ -1,0 +1,93 @@
+﻿@using Nop.Web.Models.Catalog
+@using System.Globalization
+@using Nop.Core.Domain.Catalog
+
+@model ProductDetailsModel
+@inject CatalogSettings catalogSettings
+
+@if (Model.IsRental)
+{
+    string startDateControlName = string.Format("rental_start_date_{0}", Model.Id);
+    string endDateControlName = string.Format("rental_end_date_{0}", Model.Id);
+    string startDateControlId = string.Format("ajax_cart_{0}", startDateControlName);
+    string endDateControlId = string.Format("ajax_cart_{0}", endDateControlName);
+    //currenly we support only this format
+    //java-script format
+    const string datePickerFormat = "mm/dd/yy";
+    //C# format for ToString method
+    const string datePickerFormat2 = "M/dd/yyyy";
+
+    <text>
+        <div class="attributes rental-attributes">
+            <dl>
+                <dt>
+                    <label class="text-prompt">@T("Products.RentalStartDate"):</label>
+                    <span class="required">*</span>
+                </dt>
+                <dd>
+                    <input id="@(startDateControlId)" name="@(startDateControlName)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                        });
+                    </script>
+                </dd>
+                <dt>
+                    <label class="text-prompt">@T("Products.RentalEndDate"):</label>
+                    <span class="required">*</span>
+                </dt>
+                <dd>
+                    <input id="@(endDateControlId)" name="@(endDateControlName)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                        });
+                    </script>
+                </dd>
+            </dl>
+            <script>
+                function onRentalDatePickerSelect() {
+                    @{
+                        //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
+                        var productId = Model.Id;
+                        if (catalogSettings.AjaxProcessAttributeChange)
+                        {
+                            <text>
+
+                                var closestFormToAnElement = $(this).closest('form');
+                                var formSerialization = closestFormToAnElement.serialize();
+
+                                //Replace all occurrences of ajaxCart_product_attribute with product_attribute so that the "productdetails_attributechange" method would work fine.
+                                formSerialization = formSerialization.replace(new RegExp('ajaxCart_product_attribute', 'g'), 'product_attribute');
+                                $.ajax({
+                                    cache: false,
+                                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))',
+                                    data: formSerialization,
+                                    type: 'post',
+                                    success: function(data) {
+
+                                        if (data.sku) {
+                                            $('.miniProductDetailsView #sku-@productId').text(data.sku);
+                                        }
+                                        if (data.mpn) {
+                                            $('.miniProductDetailsView #mpn-@productId').text(data.mpn);
+                                        }
+                                        if (data.gtin) {
+                                            $('.miniProductDetailsView #gtin-@productId').text(data.gtin);
+                                        }
+                                        if (data.price) {
+                                            $('.miniProductDetailsView .price-value-@productId').text(data.price);
+                                        }
+                                    }
+                                });
+                            </text>
+                        }
+                    }
+                }
+            </script>
+        </div>
+
+        <input type="hidden" class="ajaxCartRentalInfo" data-datePickerFormat="@datePickerFormat"
+               data-startDateControlId="@startDateControlId" data-endDateControlId="@endDateControlId" />
+        </text>
+    }

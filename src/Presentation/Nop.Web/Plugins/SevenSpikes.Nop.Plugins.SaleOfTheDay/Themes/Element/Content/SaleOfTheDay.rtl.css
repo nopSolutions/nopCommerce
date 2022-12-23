@@ -1,0 +1,59 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.sale-of-the-day-offer .timer-info-box:after {
+	left: -20px;
+	right: auto;
+}
+.air-theme .sale-of-the-day-offer .old-product-price:after {
+	right: 0;
+	left: auto;
+}
+.earth-theme .sale-of-the-day-offer .old-product-price:after {
+	right: -5px;
+	left: auto;
+}
+
+
+@media all and (min-width: 780px) {
+	
+.sale-of-the-day-offer .item-gallery {
+	float: right;
+}
+.sale-of-the-day-offer .item-overview {
+	float: left;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+	
+.sale-of-the-day-offer .slick-prev {
+	right: 10px;
+	left: auto;
+	background: url('images/next.png') right center no-repeat;
+	text-align: left;
+}
+.sale-of-the-day-offer .slick-next {
+	left: 10px;
+	right: auto;
+	background: url('images/prev.png') left center no-repeat;
+	text-align: right;
+}
+
+}
+
+@media all and (min-width: 1321px) {
+	
+.sale-of-the-day-offer .slick-prev {
+	right: 0;
+	left: auto;
+}
+.sale-of-the-day-offer .slick-next {
+	left: 0;
+	right: auto;
+}
+
+}

@@ -1,0 +1,131 @@
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Localization
+@using SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums
+@inject ILocalizationService localizationService
+
+@model MenuItemModel
+
+@{
+    Layout = "";
+
+    ILocalizationService localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+    IWorkContext workContext = EngineContext.Current.Resolve<IWorkContext>();
+}
+
+<li id="menu-item-@Model.Id" class="menu-item menu-item-depth-@Model.DepthLevel menu-item-vendors menu-item-edit-inactive"
+    data-menuItemId="@Model.Id">
+    <div class="menu-item-bar">
+        <div class="menu-item-handle ui-sortable-handle">
+            <span class="item-title">
+                <span class="menu-item-title">@Model.Title</span>
+                <span class="item-type" data-itemtype="@((int)Model.Type)">- @Model.TypeName</span>
+                @*<span class="is-submenu" style="display: none;">sub item</span>*@
+                @if (!Model.IncludeInTopMenu)
+                {
+                    <span class="is-added-to-menu" title="@T("SevenSpikes.MegaMenu.Admin.ItemNotInMenu")">@T("SevenSpikes.MegaMenu.Admin.NotInMenu")</span>
+                }
+            </span>
+            <span class="item-controls">
+                <a class="item-edit arrow-down" title="@T("Admin.Common.Edit")" href="#menu-item-settings-@Model.Id">@T("Admin.Common.Edit")</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="menu-item-settings" id="menu-item-settings-@Model.Id">
+        @if (Model.EntityId == 0)
+        {
+            @(await Html.LocalizedEditorAsync<MenuItemModel, MenuItemLocalizedModel>("vendors-info-localized-" + Model.Id,
+            @<div class="clearfix">
+                <p class="field-title description description-wide">
+                    <label>
+                        <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Title")</span>
+                        @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "widefat edit-menu-item-title localized", @id = "" })
+                    </label>
+                </p>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId, new { @class = "edit-menu-item-language-id" })
+            </div>
+            ,
+            @<div class="clearfix">
+                <p class="field-title description description-wide">
+                    <label>
+                        <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Title")</span>
+                        @Html.TextBoxFor(model => model.Title, new { @class = "widefat edit-menu-item-title", @id = "" })
+                    </label>
+                </p>
+            </div>
+            ))
+        }
+        else
+        {
+            <p class="field-link-target description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.OpenLinkInNewTab")</span>
+                    <input type="checkbox" class="edit-menu-item-openinnewwindow" @if (Model.OpenInNewWindow) { <text> checked="checked" </text> } />
+                </label>
+            </p>
+        }
+
+        <p class="field-css-classes description description-wide">
+            <label>
+                <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.CssClasses")</span>
+                <input type="text" class="widefat edit-menu-item-classes" value="@Model.CssClass"/>
+            </label>
+        </p>
+
+        @if (Model.EntityId == 0)
+        {
+            <p class="field-template description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Template")</span>
+                    <select class="widefat edit-menu-item-template">
+                        @foreach (var template in Enum.GetValues(typeof (CatalogTemplate)))
+                        {
+                            var attributes = string.Empty;
+                            var templateType = ((CatalogTemplate) template);
+                            var templateId = (int) template;
+                            var templateName = await localizationService.GetLocalizedEnumAsync(templateType);
+
+                            if (Model.CatalogTemplate == templateType)
+                            {
+                                attributes += "selected=\"selected\"";
+                            }
+
+                            <!option value="@templateId" @attributes>@templateName</!option>
+                        }
+                    </select>
+                </label>
+            </p>
+            <p class="field-maximum-number-of-entities description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.MaximumNumberOfEntities")</span>
+                    <input type="text" class="widefat edit-menu-item-maximum-number-of-entities" value="@Model.MaximumNumberOfEntities" />
+                </label>
+            </p>
+            <p class="field-number-of-boxes-per-row description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.NumberOfBoxesPerRow")</span>
+                    <input type="text" class="widefat edit-menu-item-number-of-boxes-per-row" value="@Model.NumberOfBoxesPerRow"/>
+                </label>
+            </p>
+            <p class="field-image-size description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.ImageSize")</span>
+                    <input type="text" class="widefat edit-menu-item-image-size" value="@Model.ImageSize" />
+                </label>
+            </p>
+        }
+        
+        @{ await Html.RenderPartialAsync(AdminViews.CustomerRolesMultiSelect, Model); }
+
+        <input type="hidden" class="edit-menu-item-entityId" value="@Model.EntityId" />
+
+        <div class="menu-item-actions description-wide submitbox">
+            <a class="item-delete submitdelete deletion" id="menu-item-delete-@Model.Id"><i class="far fa-trash-alt"></i>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Remove")</a>
+            @*<span class="meta-sep hide-if-no-js"> | </span>
+            <a class="item-cancel submitcancel hide-if-no-js">@T("SevenSpikes.MegaMenu.Admin.MenuItem.Cancel")</a>*@
+        </div>
+    </div>
+
+    <ul class="menu-item-transport"></ul>
+</li>

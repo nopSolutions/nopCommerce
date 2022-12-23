@@ -1,0 +1,148 @@
+﻿@** Copyright 2019 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model SpecificationFilterModel7Spikes
+    
+@inject NopAjaxFiltersSettings nopAjaxFiltersSettings
+
+@{
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/SpecificationFilter.min.js" asp-location="Footer"></script>
+
+    string toggleStateClass = "toggleControl";
+    string toggleStateStyles = string.Empty;
+
+    if (nopAjaxFiltersSettings.CloseSpecificationsFilterBox)
+    {
+        toggleStateClass = "toggleControl closed";
+        toggleStateStyles = "display: none;";
+    }
+}
+
+@functions {
+    string GetOptionAttributes(FilterItemState state, bool isUiModeUseCheckboxesOrSpecificationSlider)
+    {
+        string optionAttributes = string.Empty;
+
+        if (state == FilterItemState.Checked || state == FilterItemState.CheckedDisabled)
+        {
+            if (isUiModeUseCheckboxesOrSpecificationSlider)
+            {
+                optionAttributes += "checked=\"checked\"";
+            }
+            else
+            {
+                optionAttributes += "selected=\"selected\"";
+            }
+        }
+
+        if (state == FilterItemState.Disabled || state == FilterItemState.CheckedDisabled)
+        {
+            optionAttributes += " disabled=\"disabled\"";
+        }
+
+        return optionAttributes;
+    }
+
+    IHtmlContent GetListOfOptions(SpecificationFilterGroup specificationFilterGroup, bool isUiModeUseCheckboxesOrSpecificationSlider)
+    {
+        HtmlContentBuilder result = new HtmlContentBuilder();
+
+        bool hasAnyColorSquaresInGroup = specificationFilterGroup.FilterItems.Any(filterItem => filterItem.ColorSquaresRgb != null);
+
+        foreach (var specificationFilterItem in specificationFilterGroup.FilterItems)
+        {
+            string optionAttributes = GetOptionAttributes(specificationFilterItem.FilterItemState, isUiModeUseCheckboxesOrSpecificationSlider);
+            string inputId = $"specification-input-{specificationFilterGroup.Id}-{specificationFilterItem.Id}";
+            bool hasColorSquare = specificationFilterItem.ColorSquaresRgb != null;
+
+            if (isUiModeUseCheckboxesOrSpecificationSlider)
+            {
+                result.AppendHtml("<li class=\"checkbox-item\">");
+
+                if (hasColorSquare)
+                {
+                    result.AppendHtml($"<span class=\"color\" title=\"{specificationFilterItem.Name}\" style=\"background-color: {specificationFilterItem.ColorSquaresRgb}\">{specificationFilterItem.Name}</span>");
+                }
+                else if (hasAnyColorSquaresInGroup)
+                {
+                    result.AppendHtml($"<span class=\"color defaultColor\" title=\"{specificationFilterItem.Name}\">{specificationFilterItem.Name}</span>");
+                }
+
+                result.AppendHtml($"<input {optionAttributes} data-option-ids=\"{specificationFilterItem.Id}\" type=\"checkbox\" id=\"{inputId}\" />");
+                result.AppendHtml($"<label class=\"filter-item-name\" for=\"{inputId}\">{specificationFilterItem.Name}</label>");
+                result.AppendHtml("</li>");
+            }
+            else
+            {
+                result.AppendHtml($"<option @optionAttributes data-option-ids=\"{specificationFilterItem.Id}\" value=\"{specificationFilterItem.Name}\">{specificationFilterItem.Name}</option>");
+            }
+        }
+
+        return result;
+    }
+}
+
+@foreach (SpecificationFilterGroup specificationFilterGroup in Model.SpecificationFilterGroups)
+{
+    bool hasColorOptionsInGroup = specificationFilterGroup.FilterItems.Any(filterItem => filterItem.ColorSquaresRgb != null);
+
+    string colorOptionsClass = hasColorOptionsInGroup ? "colorOptions" : "";
+
+    bool isSpecificationAttributeSlider = nopAjaxFiltersSettings.SpecificationAttributeSliders.Contains(specificationFilterGroup.Id) && specificationFilterGroup.FilterItems.Count > 1;
+
+    string specificationAttributeSliderClass = isSpecificationAttributeSlider ? "has-specification-slider" : "";
+
+    string checkboxListStyle = isSpecificationAttributeSlider ? "display: none;" : "";
+
+    bool isUiModeUseCheckboxesOrSpecificationSlider = nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes || isSpecificationAttributeSlider;
+
+    string filtersPanelClass = string.Empty;
+    if(!isSpecificationAttributeSlider)
+    {
+        filtersPanelClass = nopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes ? "filtersCheckboxPanel" : "filtersDropDownPanel";
+    }
+
+    <div class="block filter-block specificationFilterPanel7Spikes">
+        <div class="title">
+            <a class="@toggleStateClass">@specificationFilterGroup.Name</a>
+            <a class="clearFilterOptions">@T("SevenSpikes.NopAjaxFilters.Client.Common.Clear")</a>
+        </div>
+        <div class="filtersGroupPanel @filtersPanelClass @colorOptionsClass @specificationAttributeSliderClass" data-optionsgroupid="@specificationFilterGroup.Id" id="@string.Concat("specificationFiltersDropDown", specificationFilterGroup.Id)" style="@toggleStateStyles">
+            @if (isUiModeUseCheckboxesOrSpecificationSlider)
+            {
+                <ul class="checkbox-list" style="@checkboxListStyle">
+                    @GetListOfOptions(specificationFilterGroup, isUiModeUseCheckboxesOrSpecificationSlider)
+                </ul>
+
+                if (isSpecificationAttributeSlider)
+                {
+                    <div class="specification-min-max-panel">
+                        <span class="specification-min-panel">
+                            <span>@T("SevenSpikes.NopAjaxFilters.Client.PriceRangeFilter.Min"):</span>
+                            <span class="specification-min-value"></span>
+                        </span>
+                        <span class="specification-max-panel">
+                            <span>@T("SevenSpikes.NopAjaxFilters.Client.PriceRangeFilter.Max"):</span>
+                            <span class="specification-max-value"></span>
+                        </span>
+                    </div>
+
+                    <div class="specification-attribute-slider" data-specification-slider-id="@specificationFilterGroup.Id"></div>
+
+                    <div class="specification-current-value-panel">
+                        <span class="current-min-value"></span>
+                        <span class="current-max-value"></span>
+                    </div>
+                }
+            }
+            else
+            {
+                <select class="attribute-options-select">
+                    <option value="0">@T("SevenSpikes.NopAjaxFilters.Client.Common.All")</option>
+                    @GetListOfOptions(specificationFilterGroup, isUiModeUseCheckboxesOrSpecificationSlider)
+                </select>
+            }
+        </div>
+    </div>
+}

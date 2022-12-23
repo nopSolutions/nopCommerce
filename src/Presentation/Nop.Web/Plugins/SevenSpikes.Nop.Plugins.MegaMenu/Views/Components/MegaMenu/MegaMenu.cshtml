@@ -1,0 +1,134 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+@inject IWorkContext workContext;
+
+@model MegaMenuWidgetModel
+
+@{
+    var megaMenuCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Themes/" + Model.Theme + "/Content/MegaMenu.css";
+
+   var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+}
+
+<link rel="stylesheet" href="@megaMenuCssFilePath" />
+
+@if (supportRtl)
+{
+    var megaMenuRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Themes/" + Model.Theme + "/Content/MegaMenu.rtl.css";
+
+    <link rel="stylesheet" href="@megaMenuRtlCssFilePath" />
+}
+
+<script src="~/Plugins/SevenSpikes.Core/Scripts/perfect-scrollbar.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Scripts/MegaMenu.min.js" asp-location="Footer"></script>
+
+@foreach (var menu in Model.MegaMenus)
+{
+    List<string> responsiveMenuItems = new List<string>();
+
+    <ul class="mega-menu @menu.CssClass"
+        data-isRtlEnabled="@supportRtl.ToString().ToLowerInvariant()"
+        data-enableClickForDropDown="@menu.ShowDropdownsOnClick.ToString().ToLowerInvariant()">
+        @foreach (var item in menu.Items)
+        {
+            var shouldUseCatalogTemplate = (item.Type == MenuItemType.Categories && item.CatalogTemplate != CatalogTemplate.Simple);
+            var shouldUseManufacturerTemplate = (item.Type == MenuItemType.Manufacturers && item.MaximumNumberOfEntities > 0 && item.CatalogTemplate != CatalogTemplate.Simple);
+            var shouldUseVendorTemplate = (item.Type == MenuItemType.Vendors && item.MaximumNumberOfEntities > 0 && item.CatalogTemplate != CatalogTemplate.Simple);
+            var shouldUseTopicTemplate = (item.Type == MenuItemType.Topics && item.MaximumNumberOfEntities > 0 && item.EntityId == 0);
+            var shouldUseProductTagsTemplate = (item.Type == MenuItemType.ProductTags && item.MaximumNumberOfEntities > 0 && item.EntityId == 0);
+
+            if (shouldUseCatalogTemplate)
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuCategory", new { menuItem = item });
+                var responsiveMenu = await menuItemHtml.RenderHtmlContentAsync();
+
+                @menuItemHtml                
+
+                if (item.CatalogTemplate == CatalogTemplate.WithPictures)
+                {
+                    MenuItemModel responsiveMenuItem = item.Copy();
+
+                    responsiveMenuItem.CatalogTemplate = CatalogTemplate.List;
+
+                    var responsiveMenuHtml = await Component.InvokeAsync("MegaMenuCategory", new { menuItem = responsiveMenuItem, isResponsive = true });
+                    responsiveMenu = await responsiveMenuHtml.RenderHtmlContentAsync();
+                }
+
+                responsiveMenuItems.Add(responsiveMenu);
+            }
+            else if (shouldUseManufacturerTemplate)
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuManufacturer", new { menuItem = item });
+                var responsiveMenu = await menuItemHtml.RenderHtmlContentAsync();
+
+                @menuItemHtml                
+
+                if (item.CatalogTemplate == CatalogTemplate.WithPictures)
+                {
+                    MenuItemModel responsiveMenuItem = item.Copy();
+
+                    responsiveMenuItem.CatalogTemplate = CatalogTemplate.List;
+
+                    var responsiveMenuHtml = await Component.InvokeAsync("MegaMenuManufacturer", new { menuItem = responsiveMenuItem });
+                    responsiveMenu = await responsiveMenuHtml.RenderHtmlContentAsync();
+                }
+
+                responsiveMenuItems.Add(responsiveMenu);
+            }
+            else if (shouldUseVendorTemplate)
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuVendor", new { menuItem = item });
+                var responsiveMenu = await menuItemHtml.RenderHtmlContentAsync();
+
+                @menuItemHtml                
+
+                if (item.CatalogTemplate == CatalogTemplate.WithPictures)
+                {
+                    MenuItemModel responsiveMenuItem = item.Copy();
+
+                    responsiveMenuItem.CatalogTemplate = CatalogTemplate.List;
+
+                    var responsiveMenuHtml = await Component.InvokeAsync("MegaMenuVendor", new { menuItem = responsiveMenuItem });
+                    responsiveMenu = await responsiveMenuHtml.RenderHtmlContentAsync();
+                }
+
+                responsiveMenuItems.Add(responsiveMenu);
+            }
+            else if (shouldUseTopicTemplate)
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuTopic", new { menuItem = item });                
+                responsiveMenuItems.Add(await menuItemHtml.RenderHtmlContentAsync());
+
+                @menuItemHtml
+            }
+            else if (shouldUseProductTagsTemplate)
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuProductTags", new { menuItem = item });
+                responsiveMenuItems.Add(await menuItemHtml.RenderHtmlContentAsync());
+
+                @menuItemHtml
+            }
+            else
+            {
+                var menuItemHtml = await Component.InvokeAsync("MegaMenuMenuItem", new { menuItem = item });                
+                responsiveMenuItems.Add(await menuItemHtml.RenderHtmlContentAsync());
+
+                @menuItemHtml
+            }
+        }
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+    </ul>
+
+    <div class="menu-title"><span>@T("SevenSpikes.MegaMenu.ResponsiveMenuTitle")</span></div>
+    <ul class="mega-menu-responsive @menu.CssClass">
+        @foreach (var responsiveMenuItem in responsiveMenuItems)
+        {
+            @Html.Raw(responsiveMenuItem)
+        }
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+    </ul>
+}

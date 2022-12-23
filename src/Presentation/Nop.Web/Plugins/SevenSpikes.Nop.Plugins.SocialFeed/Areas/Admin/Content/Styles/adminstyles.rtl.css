@@ -1,0 +1,32 @@
+﻿* {
+	direction: rtl;
+}
+.error {
+	padding-right: 5px;
+	padding-left: 0;
+}
+.adminHint ul {
+	padding-right: 15px !important;
+	padding-left: 0 !important;
+}
+.authorize-btn {
+	padding: 10px 18px 10px 20px;
+}
+.ss-info {
+	padding: 10px 45px 10px 15px;
+}
+.ss-info i {
+	right: 16px;
+	left: auto;
+}
+.ss-info .ss-info-arrow {
+	background-position: top right;
+}
+.ss-info .ss-info-arrow.down {
+	right: 16px;
+	left: auto;
+}
+.ss-info .ss-info-arrow.up {
+	right: 16px;
+	left: auto;
+}

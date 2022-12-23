@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Element Theme",
+  "SystemName": "SevenSpikes.Theme.Element",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 10,
+  "FileName": "SevenSpikes.Theme.Element.dll",
+  "Description": "This plugin allows you to configure the Element theme settings"
+}

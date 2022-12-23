@@ -1,0 +1,40 @@
+﻿@model ProductRibbonModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+}
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.ProductRibbons.Admin.Submenus.ProductRibbons");
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Areas/Admin/Content/Styles/adminstyles.css" />
+
+<script src="~/js/admin.table.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Areas/Admin/Content/Scripts/ProductRibbonsAdmin.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/jquery.livequery.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+
+<form method="post" id="ribbon-form">
+    <nop-antiforgery-token />
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.ProductRibbons.Admin.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @{ await Html.RenderPartialAsync("_CreateOrUpdate", Model); }
+</form>
+
+<div id="ribbon-data" data-setRibbonPictureUrl="@Url.Action("SelectRibbonPicture", "ProductRibbonsAdmin")" data-noPictureLabelText="@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.NoPicture")"></div>

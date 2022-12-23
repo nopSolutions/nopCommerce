@@ -1,0 +1,84 @@
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.RichBlog.Admin.Submenus.ManageCategories");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.RichBlog.Admin.ManageCategories.Title")
+    </h1>
+    <div class="float-right">
+
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{ 
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "rich-blog-categories-grid",
+                            UrlRead = new DataUrl("List", "RichBlogCategoryAdmin", null),
+                            UrlDelete = new DataUrl("DeleteBlogCategory", "RichBlogCategoryAdmin", null ),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(RichBlogCategoryAdminModel.Name))
+                                {
+                                    Title = T("SevenSpikes.RichBlog.Admin.Category.Name").Text
+                                },
+                                new ColumnProperty(nameof(RichBlogCategoryAdminModel.LanguageName))
+                                {
+                                    Title = T("SevenSpikes.RichBlog.Admin.Category.LanguageId").Text
+                                },
+                                new ColumnProperty(nameof(RichBlogCategoryAdminModel.DisplayOrder))
+                                {
+                                    Title = T("SevenSpikes.RichBlog.Admin.Category.DisplayOrder").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(RichBlogCategoryAdminModel.Id))
+                                {
+                                    Width = "100",
+                                    Render = new RenderCustom("renderEditButton")
+                                },
+                                new ColumnProperty(nameof(RichBlogCategoryAdminModel.Id))
+                                {
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit?categoryId=' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

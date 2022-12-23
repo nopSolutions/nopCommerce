@@ -1,0 +1,144 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model CloudZoomModel
+@inject IWorkContext workContext
+@inject IStoreContext storeContext
+@inject ISettingService settingService
+
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+}
+
+@if (!string.IsNullOrEmpty(Model.DefaultPicture.FullSizeImageUrl))
+{
+    var cloudZoomCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Themes/" + Model.Theme + "/Content/cloud-zoom/CloudZoom.css";
+
+    <link rel="stylesheet" href="@cloudZoomCssFilePath" />
+
+    if (supportRtl)
+    {
+        var cloudZoomRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Themes/" + Model.Theme + "/Content/cloud-zoom/CloudZoom.rtl.css";
+        
+        <link rel="stylesheet" href="@cloudZoomRtlCssFilePath" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/cloudzoom.core.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Scripts/CloudZoom.min.js" asp-location="Footer"></script>
+
+    if (Model.SettingsModel.EnablePictureThumbnailsInCarousel)
+    {
+
+        int storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+
+        var carouselCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Themes/" + Model.Theme + "/Content/carousel/carousel.css";
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Styles/Carousel/slick-slider-1.6.0.css" />
+        <link rel="stylesheet" href="@carouselCssFilePath" />
+        
+        <script src="~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Scripts/Carousel/slick-slider-1.6.0.min.js" asp-location="Footer"></script>
+
+        if (supportRtl)
+        {
+            var carouselRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/Themes/" + Model.Theme + "/Content/carousel/carousel.rtl.css";
+            
+            <link rel="stylesheet" href="@carouselRtlCssFilePath" />
+        }
+
+        var settingKeyDefaultResponsiveBreakpoints = "CloudZoomSettings.DefaultResponsiveBreakpointsForThumbnailsCarousel";
+
+        // Theme specific settings
+        var settingKeyIsCarouselVertical = string.Format("CloudZoomSettings.IsPictureThumbnailsCarouselVertical-{0}", Model.Theme);
+        var settingKeyForThemeResponsiveBreakpoints = string.Format("CloudZoomSettings.ResponsiveBreakpointsForThumbnailsCarousel-{0}", Model.Theme);
+        var settingKeyNumberOfVisibleItemsInCarousel = string.Format("CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-{0}", Model.Theme);
+        var settingKeyNumberOfScrollableItemsInCarousel = string.Format("CloudZoomSettings.NumberOfScrollablePictureThumbnailsInCarousel-{0}", Model.Theme);
+
+        int numberOfPictureThumbnailsInCarousel = await settingService.GetSettingByKeyAsync(settingKeyNumberOfVisibleItemsInCarousel, 5, storeId, true);
+        int numberOfScrollablePictureThumbnailsInCarousel = await settingService.GetSettingByKeyAsync(settingKeyNumberOfScrollableItemsInCarousel, 5, storeId, true);
+        bool enableSliderArrows = await settingService.GetSettingByKeyAsync("CloudZoomSettings.EnableSliderArrows", true, storeId, true);
+        bool enableSliderDots = await settingService.GetSettingByKeyAsync("CloudZoomSettings.EnableSliderDots", false, storeId, true);
+        bool isPictureThumbnailsCarouselVertical = await settingService.GetSettingByKeyAsync(settingKeyIsCarouselVertical, false, storeId, true);
+        string responsiveBreakpointsForThumbnails = await settingService.GetSettingByKeyAsync(settingKeyForThemeResponsiveBreakpoints, "", storeId, true);
+
+        if (string.IsNullOrWhiteSpace(responsiveBreakpointsForThumbnails))
+        {
+            responsiveBreakpointsForThumbnails = await settingService.GetSettingByKeyAsync(settingKeyDefaultResponsiveBreakpoints, "", storeId, true);
+        }
+
+        <input type="hidden" class="cloudZoomPictureThumbnailsInCarouselData"
+               data-vertical="@isPictureThumbnailsCarouselVertical.ToString().ToLowerInvariant()"
+               data-numvisible="@numberOfPictureThumbnailsInCarousel"
+               data-numScrollable="@numberOfScrollablePictureThumbnailsInCarousel"
+               data-enable-slider-arrows="@enableSliderArrows.ToString().ToLowerInvariant()"
+               data-enable-slider-dots="@enableSliderDots.ToString().ToLowerInvariant()"
+               data-size="@Model.Pictures.Count"
+               data-rtl="@supportRtl.ToString().ToLowerInvariant()"
+               data-responsive-breakpoints-for-thumbnails="@responsiveBreakpointsForThumbnails"
+               data-magnificpopup-counter="@T("Media.MagnificPopup.Counter")"
+               data-magnificpopup-prev="@T("Media.MagnificPopup.Previous")"
+               data-magnificpopup-next="@T("Media.MagnificPopup.Next")"
+               data-magnificpopup-close="@T("Media.MagnificPopup.Close")"
+               data-magnificpopup-loading="@T("Media.MagnificPopup.Loading")" />
+    }
+
+    <input type="hidden" class="cloudZoomAdjustPictureOnProductAttributeValueChange"
+           data-productid="@Model.ProductId"
+           data-isintegratedbywidget="@Model.IsIntegratedByWidget.ToString().ToLowerInvariant()" />
+
+    if (Model.EnableClickToZoom)
+    {
+        <link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
+        <script src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
+
+        <input type="hidden" class="cloudZoomEnableClickToZoom" />
+    }
+
+    <div class="gallery sevenspikes-cloudzoom-gallery">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model.ProductDetailsModel })
+        <div class="picture-wrapper">
+            <div class="picture" id="sevenspikes-cloud-zoom" data-zoomwindowelementid="@Model.ElementId"
+                 data-selectoroftheparentelementofthecloudzoomwindow="@Model.SettingsModel.SelectorOfTheParentElementOfTheCloudZoomWindow"
+                 data-defaultimagecontainerselector="@Model.SettingsModel.DefaultImageContainerSelector"
+                 data-zoom-window-width="@Model.SettingsModel.ZoomWidth"
+                 data-zoom-window-height="@Model.SettingsModel.ZoomHeight">
+                <a href="@Model.DefaultPicture.FullSizeImageUrl" data-full-image-url="@Model.DefaultPicture.FullSizeImageUrl" class="picture-link" id="zoom1">
+                    <img src="@Model.DefaultPicture.SmallImageUrl" alt="@Model.DefaultPicture.AlternateText" class="cloudzoom" id="cloudZoomImage"
+                         itemprop="image" data-cloudzoom="@Model.DefaultPicture.DefaultRelation"
+                         @if (Model.SettingsModel.ShowTitle) { <text> title="@Model.DefaultPicture.Title" </text>      } />
+                </a>
+            </div>
+        </div>
+        @if (Model.Pictures.Count > 1)
+        {
+            var pictureThumbsInCarouselClass = Model.SettingsModel.EnablePictureThumbnailsInCarousel ? "in-carousel" : string.Empty;
+            
+            <div class="picture-thumbs @pictureThumbsInCarouselClass">
+	            @if (Model.SettingsModel.EnablePictureThumbnailsInCarousel)
+	            {
+	                    <div class="picture-thumbs-list" id="picture-thumbs-carousel">
+	                        @foreach (var picture in Model.Pictures)
+	                        {
+	                            <div class="picture-thumbs-item">
+	                                <a class="cloudzoom-gallery thumb-item" data-full-image-url="@picture.FullSizeImageUrl" data-cloudzoom="@picture.GalleryRelation"
+	                                   @if (Model.SettingsModel.ShowTitle) { <text> title="@picture.Title" </text>         }>
+	                                    <img class="cloud-zoom-gallery-img" src="@picture.TinyImageUrl" alt="@picture.AlternateText" />
+	                                </a>
+	                            </div>
+	                        }
+	                    </div>
+                }
+                else
+                {
+                    foreach (var picture in Model.Pictures)
+                    {
+                        <a class="cloudzoom-gallery thumb-item" data-full-image-url="@picture.FullSizeImageUrl" data-cloudzoom="@picture.GalleryRelation"
+                           @if (Model.SettingsModel.ShowTitle) { <text> title="@picture.Title" </text>  }>
+                            <img class="cloud-zoom-gallery-img" src="@picture.TinyImageUrl" alt="@picture.AlternateText" />
+                        </a>
+                    }
+                }
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model.ProductDetailsModel })
+    </div>
+}

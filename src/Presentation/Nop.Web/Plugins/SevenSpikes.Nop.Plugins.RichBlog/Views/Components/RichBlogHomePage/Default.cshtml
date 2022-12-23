@@ -1,0 +1,48 @@
+﻿@model IList<BlogPostModel7Spikes>
+@inject IViewComponentSelector viewComponentSelector
+
+<div class="rich-blog-homepage">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.LatestFromBlog")</strong>
+    </div>
+    <div class="blog-posts">
+        @foreach (var post in Model)
+        {
+            <div class="blog-post">
+                <div class="post-primary">
+                    @if (!string.IsNullOrWhiteSpace(post.HomePagePictureUrl))
+                    {
+                        <a class="post-picture" href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">
+                            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                            {
+                                @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                {
+                                    ("src", post.HomePagePictureUrl),
+                                    ("alt", post.Title),
+                                    ("title", post.Title)
+                                })
+                            }
+                            else
+                            {
+                                <img src="@post.HomePagePictureUrl" alt="@post.Title" title="@post.Title" />
+                            }
+                        </a>
+                    }
+                    <a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">@post.Title</a>
+                </div>
+                <div class="post-details">
+					<span class="post-date">@post.CreatedOn.ToString("D")</span>
+
+                    <div class="post-description">
+                        @Html.Raw(!string.IsNullOrEmpty(post.BodyOverview) ? post.BodyOverview : post.Body)
+                    </div>
+
+                    <a class="read-more" href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">@T("SevenSpikes.RichBlog.Public.ReadMore")</a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="view-all">
+        <a href="@Url.RouteUrl("Blog")">@T("SevenSpikes.RichBlog.Public.ViewAllBlogPosts")</a>
+    </div>
+</div>

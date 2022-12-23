@@ -1,0 +1,47 @@
+﻿@inject TabSettings tabSettings
+
+@{
+    Layout = "";
+}
+
+<style>
+    @if (tabSettings.EnableProductFullDescriptionTab)
+    {
+    <text>
+    .product-details-page .full-description {
+        display: none;
+    }
+    .product-details-page .ui-tabs .full-description {
+        display: block;
+    }
+    .product-details-page .tabhead-full-description {
+        display: none;
+    }
+    </text>
+    }
+
+    @if (tabSettings.EnableProductSpecificationsTab)
+    {
+    <text>
+    .product-details-page .product-specs-box {
+        display: none;
+    }
+    .product-details-page .ui-tabs .product-specs-box {
+        display: block;
+    }
+    .product-details-page .ui-tabs .product-specs-box .title {
+        display: none;
+    }
+    </text>
+    }
+
+    @if (tabSettings.EnableProductReviewsTab)
+    {
+    <text>
+    .product-details-page .product-no-reviews,
+    .product-details-page .product-review-links {
+        display: none;
+    }
+    </text>
+    }
+</style>

@@ -1,0 +1,41 @@
+﻿@model QuickViewSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.QuickView.Admin.Submenus.Settings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.QuickView.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <nop-tabs id="quick-view-settings-tabs" >
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.QuickView.Admin.Settings.GeneralSettings")">
+                    @await Html.PartialAsync("_Settings.General", Model)
+                </nop-tab>
+                <nop-tab asp-name="quick-view-popup-behaviour" class="advanced-setting" asp-title="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewPopupBehaviorSettings")">
+                    @await Html.PartialAsync("_Settings.PopupBehaviour", Model)
+                </nop-tab>
+                <nop-tab asp-name="quick-view-popup-appearence" class="advanced-setting" asp-title="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewPopupAppearanceSettings")">
+                    @await Html.PartialAsync("_Settings.PopupAppearance", Model)
+                </nop-tab>               
+            </nop-tabs>
+        </div>
+    </section>
+</form>
+    

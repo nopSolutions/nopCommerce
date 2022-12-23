@@ -1,0 +1,94 @@
+﻿@using Nop.Services.Common;
+
+@model RichBlogPostModel
+
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    const string richBlogBlockAttributeName = "ProductPage.SS.RichBlogPictures";
+    var hiderichBlogBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), richBlogBlockAttributeName, defaultValue: true);
+
+    <link href="@Url.Content("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="@Url.Content("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js")"></script>
+}
+
+<nop-card asp-name="product-rich-blog-picture" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.RichBlog.Admin.RichBlogTabTitle")" asp-hide-block-attribute-name="@richBlogBlockAttributeName" asp-hide="@hiderichBlogBlock" asp-advanced="false">
+    <div class="card-body">
+
+        @if (Model != null)
+        {
+            <section class="content" id="rich-blog-inputs">
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="HomePagePictureId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="HomePagePictureId" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PictureId" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.float-right > .btn.btn-primary').click(function () {
+
+                        var buttonName = $(this).attr('name');
+
+                        if (buttonName == "save" || buttonName == "save-continue") {
+                            sendRichBlogPostData();
+                        }
+                    });
+                });
+
+                function sendRichBlogPostData() {
+
+                    var data = {
+                        'BlogPostId': $('input#Id').val(),
+                        'HomePagePictureId': $('#HomePagePictureId').val(),
+                        'PictureId': $('#PictureId').val()
+                    };
+
+                    $('#rich-blog-inputs').remove();
+
+                    var headers = {};
+
+                    addAntiForgeryToken(headers);
+
+                    $.ajax({
+                        async: false,
+                        cache: false,
+                        type: "POST",
+                        data: data,
+                        headers: headers,
+                        url: "@Html.Raw(Url.Action("RichBlogTab", "RichBlogAdmin"))"
+                    }).done(function () {
+                        return;
+                    }).fail(function () {
+                        alert("Updating Rich Blog failed.");
+                    }).always(function () {
+                        return;
+                    });
+                }
+            </script>
+        }
+        else
+        {
+            @T("SevenSpikes.RichBlog.Admin.Category.SaveBeforeEdit")
+        }
+    </div>
+</nop-card>

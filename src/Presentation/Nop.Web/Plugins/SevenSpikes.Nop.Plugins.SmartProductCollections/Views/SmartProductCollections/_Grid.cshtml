@@ -1,0 +1,44 @@
+﻿@model IList<Nop.Web.Models.Catalog.ProductOverviewModel>
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+
+@{
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var showItemsInCarouselSettingKey = string.Format(Plugin.ShowItemsInCarouselKey, themeName);
+    var showItemsInCarousel = await settingService.GetSettingByKeyAsync(showItemsInCarouselSettingKey, false, (await storeContext.GetCurrentStoreAsync()).Id, true);
+
+    // If the produt box images carousel is enabled ("{0}themesettings.productboxesimagescarouselenabled") it is necessary to remove the 
+    // model for it to disable the carousel in the SPC
+    foreach (var item in Model)
+    {
+        if (item.CustomProperties.ContainsKey("ProductCarouselImages"))
+        {
+            item.CustomProperties.Remove("ProductCarouselImages");
+        }
+    }
+}
+
+@if (Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        if (showItemsInCarousel)
+        {
+            <div class="slick-item">
+                <div class="slick-box item-box">
+                    @{ await Html.RenderPartialAsync("_ProductBox", item); } 
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="item-box">
+                @{ await Html.RenderPartialAsync("_ProductBox", item); }
+            </div>
+        }
+    }
+}
+else
+{
+    <span class="no-data">@T("SevenSpikes.SmartProductCollections.Public.NoProductsAvailable")</span>
+}

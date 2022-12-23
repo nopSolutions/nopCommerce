@@ -1,0 +1,51 @@
+﻿@model CustomProductCollectionsModel
+
+@inject IWorkContext workContext
+
+@{
+	var supportRtlClass = string.Empty;
+    
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+	if (supportRtl)
+	{
+		supportRtlClass = "support-rtl";
+	}
+}
+
+@foreach (var group in Model.ProductGroups)
+{
+    <div class="spc spc-products @supportRtlClass"
+         notloaded
+         data-getitemproductsurl="@Url.RouteUrl("GetProductsForItemSPC")">
+        <div class="spc-header">
+            <h2 class="title"><span>@group.Title</span></h2>
+            <ul class="navigation">
+                @foreach (var item in group.Items)
+                {
+                    <li class="tab" data-tabid="@item.Id">
+                        <span>@item.Title</span>
+                    </li>
+                }
+            </ul>
+            <div class="mobile-navigation products-mobile-navigation">
+                <select class="products-mobile-navigation-select">
+                    @foreach (var tab in group.Items)
+                    {
+                        <option class="tab" value="@tab.Id" data-tabId="@tab.Id">@tab.Title</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="spc-body">
+            @foreach (var item in group.Items)
+            {
+                <div class="product-grid" data-tabid="@item.Id">
+                    <div class="item-grid"></div>
+                </div>
+            }
+            <div class="loading-overlay">
+                <span>@T("SevenSpikes.SmartProductCollections.Public.Loading")</span>
+            </div>
+        </div>
+    </div>
+}

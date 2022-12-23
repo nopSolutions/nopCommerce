@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop JCarousel",
+  "SystemName": "SevenSpikes.Nop.Plugins.JCarousel",
+  "Version": "4.50",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.JCarousel.dll",
+  "Description": "The plugin will help you create and integrate carousels of products quickly and without much effort."
+}

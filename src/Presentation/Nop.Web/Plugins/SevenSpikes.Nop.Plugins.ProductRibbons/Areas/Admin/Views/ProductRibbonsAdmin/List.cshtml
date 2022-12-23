@@ -1,0 +1,109 @@
+﻿@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+}
+
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<AdminAreaSettings>().GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.ProductRibbons.Admin.Submenus.ProductRibbons");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.ProductRibbons.Admin.Menu.MenuName")
+    </h1>
+    <div class="float-right">
+
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.ProductRibbons.Admin.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "product-ribbons-grid",
+                            UrlRead = new DataUrl("ListCommand", "ProductRibbonsAdmin", null),
+                            UrlDelete = new DataUrl("DeleteRibbon", "ProductRibbonsAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.RibbonName))
+                                {
+                                    Title = T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Name").Text
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.CategoryRibbonText))
+                                {
+                                    Title = T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.CategoryRibbonText").Text
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.ProductRibbonText))
+                                {
+                                    Title = T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.ProductRibbonText").Text
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.Priority))
+                                {
+                                    Title = T("Sevenspikes.Productribbons.Admin.Settings.Productribbon.ProductRibbonGeneralInformation.Priority").Text
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.Enabled))
+                                {
+                                    Title = T("Sevenspikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Enabled").Text,
+                                    Render = new RenderCustom("renderIsActive"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ProductRibbonAdminModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "100"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+<script type="text/javascript">
+
+    function renderIsActive(data, type, row, meta) {
+
+        if (row.Enabled) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+
+</script>

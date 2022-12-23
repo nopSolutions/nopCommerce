@@ -1,0 +1,19 @@
+﻿@model InstagramAuthorizeModel
+
+<form method="post" action="https://api.instagram.com/oauth/authorize">
+	@Html.HiddenFor(model => model.client_id)
+	@Html.HiddenFor(model => model.client_secret)
+	@Html.HiddenFor(model => model.scope)
+	@Html.HiddenFor(model => model.redirect_uri)
+	<button type="submit"></button>
+</form>
+
+<script src="/lib/jquery/jquery-3.4.1.js"></script>
+
+<script>
+
+	$(document).ready(function () {
+
+		$('button').click();
+	});
+</script>

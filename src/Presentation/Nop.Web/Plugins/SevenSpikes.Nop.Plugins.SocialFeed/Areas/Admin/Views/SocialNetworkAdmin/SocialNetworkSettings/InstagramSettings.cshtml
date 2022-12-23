@@ -1,0 +1,322 @@
+﻿@model InstagramModel
+
+@{
+    string feedsManagerPath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Scripts/FeedsManager.min.js";
+}
+
+<script src="@feedsManagerPath" asp-location="Footer"></script>
+
+<script>
+    $(document).ready(function () {
+        var imageTypePopularEnumValue = '@((int)InstagramImageType.Popular)';
+        var imageTypeUserEnumValue = '@((int)InstagramImageType.User)';
+        var selectedImageType = $('#SettingModels_InstagramModel_ImageType').find(':selected').val();
+        var resourcesForImageTypeIdHints = {
+
+            '@((int)InstagramImageType.Location)': '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.Location.Hint")',
+            '@((int)InstagramImageType.Tagged)': '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.TagName.Hint")',
+            '@((int)InstagramImageType.User)': '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.InstagramSettings.ImageTypeId.User.Hint")'
+        }
+
+        if (selectedImageType == imageTypePopularEnumValue || selectedImageType == imageTypeUserEnumValue) {
+            $('.id-to-specify-image-type').hide();
+        }
+
+        $('#SettingModels_InstagramModel_ImageType').change(function () {
+            var selectedImageTypeValue = $(this).find(":selected").val();
+            if (selectedImageTypeValue != imageTypePopularEnumValue && selectedImageTypeValue != imageTypeUserEnumValue) {
+
+                $('.id-to-specify-image-type').show();
+                $('#id-to-specify-image-type-hint').text(resourcesForImageTypeIdHints[selectedImageTypeValue]);
+            } else {
+
+                $('.id-to-specify-image-type').hide();
+            }
+        });
+
+        $('#authorize-instagram').click(function () {
+            var url = '@Html.Raw(@Url.RouteUrl("InstagramAuthorization", new { Model.ClientId, Model.ClientSecret, Model.SocialNetworkId }, Url.ActionContext.HttpContext.Request.Scheme))';
+            Feeds.Utils.popitup(url, 'Instagram authentication');
+        });
+
+        Feeds.Utils.disableAuthorizeOnChange('.client-id input, .client-secret input', '.authorize-btn',
+        '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")',
+        '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")');
+    });
+</script>
+
+<script>
+	function showSettings() {
+
+        var testAccessInput = $('#@Html.IdFor(model => model.TestAccess)');
+        debugger;
+        if (testAccessInput.length > 0) {
+
+            var isTestAccess = testAccessInput.is(':checked');
+
+            console.log(isTestAccess);
+
+            if (isTestAccess) {
+
+				$('.test-access').show();
+				$('.authorized-access').hide();
+			} else {
+
+				$('.authorized-access').show();
+				$('.test-access').hide();
+			}
+		}
+    }
+
+    $(document).ready(function () {
+
+        showSettings();
+
+        $('#@Html.IdFor(model => model.TestAccess)').click(showSettings);
+    });
+</script>
+
+<div class="card card-default">
+	<div class="card-body">
+		<div class="form-group row">
+			<div class="col-md-3">
+				<div class="label-wrapper">
+					<label class="control-label" for="redirect-url">@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.RedirectUrl")</label>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<strong id="redirect-url">@Url.RouteUrl("InstagramAuthenticate", null, Url.ActionContext.HttpContext.Request.Scheme)</strong>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-3">
+				<div class="label-wrapper">
+					<label class="control-label" for="deauthorize-url">@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.DeauthorizeUrl")</label>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<strong id="redirect-url">@Url.RouteUrl("InstagramDeauthorize", null, Url.ActionContext.HttpContext.Request.Scheme)</strong>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-3">
+				<div class="label-wrapper">
+					<label class="control-label" for="delete-url">@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.DeleteUrl")</label>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<strong id="redirect-url">@Url.RouteUrl("InstagramDelete", null, Url.ActionContext.HttpContext.Request.Scheme)</strong>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-3">
+				<nop-label asp-for="TestAccess" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="TestAccess" />
+				<span asp-validation-for="TestAccess"></span>
+			</div>
+		</div>		
+        <div class="form-group row test-access">
+			<div class="col-md-3">
+				<nop-label asp-for="AccessToken" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="AccessToken" />
+				<span asp-validation-for="AccessToken"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-3">
+				<nop-label asp-for="ClientId" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="ClientId" />
+				<span asp-validation-for="ClientId"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-3">
+				<nop-label asp-for="ClientSecret" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="ClientSecret" />
+				<span asp-validation-for="ClientSecret"></span>
+			</div>
+		</div>
+		<div class="adminHint">
+			<div class="col-md-3">
+			</div>
+			<div class="col-md-9">
+				<div class="summary">To obtain your <strong>ClientId</strong> and <strong>ClientSecret</strong> do the following:</div>
+				<ul>
+					<li>Login to Instagram (if you haven't already) and go to <a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a>.</li>
+					<li>Click on <strong>Manage Clients</strong> in top right corner.</li>
+					<li>Click on <strong>Register a New Client</strong> and fill out the form.</li>
+					<li>After your client is created (after you click the <strong>Register</strong> button) you will see your <strong>ClientId</strong> and <strong>ClientSecret</strong> along with other fields.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="authorization authorized-access">
+    <div class="authorize">
+        @if (Model.SocialNetworkId > 0)
+		{
+			if (string.IsNullOrEmpty(Model.AccessToken))
+			{
+				<button id="authorize-instagram" class="not-authorized btn authorize-btn bg-red" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")</span>
+                </button>
+            }
+            else
+            {
+                <button id="authorize-instagram" class="already-authorized btn authorize-btn bg-blue" type="button">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")</span>
+                </button>
+            }
+        }
+        else
+        {
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SaveBeforeAuthorize")</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        }
+    </div>
+
+    @if (Model.SocialNetworkId > 0 && string.IsNullOrEmpty(Model.AccessToken))
+	{
+		<div class="authorize-descr">
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>By clicking on the button above a popup will be opened containing the Instagram's authorize screen (this is the case when you haven't already authorize the app. If you have already authorize the app the popup will just close). There you will be asked if you are willing to provide certain rights to your Instagram profile.</p>
+                <p>If you choose to authorize the app (by clicking the Authorize button) the popup will close and the Edit page will refresh. If the Authorize button is <strong>Green</strong> your autorization was successfull, if it is <strong>Red</strong> you haven't authorized the app.</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        </div>
+    }
+</div>
+
+
+@if (!string.IsNullOrEmpty(Model.AccessToken))
+{
+	<div class="cards-group">
+        <div class="card card-default">
+            <div class="card-header">
+				<div class="card-title">
+					@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Panels.Configuration")
+				</div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ImageType" />
+                    </div>
+                    <div class="col-md-9">
+                        @*TODO: Upgrade 4.0 check this!*@
+                        <nop-select asp-for="ImageType" asp-items="@await ((InstagramImageType) Model.ImageType).ToSelectListAsync()"/>
+                        <span asp-validation-for="ImageType"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="adminHint">
+                            <div class="summary">The image types can be:</div>
+                            <ul>
+                                <li>user(default) - Images for the user who has authorized the app.</li>
+                                <li>tagged - Images with a specific tag. tagName is used to specify the tag.</li>
+                                <li>location - Images from a location. locationId is used to specify the location.</li>
+                                <li>popular - Images from the popular page.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row id-to-specify-image-type">
+                    <div class="col-md-3">
+                        <nop-label asp-for="IdToSpecifyTheImageType" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IdToSpecifyTheImageType" />
+                        <span asp-validation-for="IdToSpecifyTheImageType"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="adminHint id-to-specify-image-type">
+                            <p id="id-to-specify-image-type-hint"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Resolution" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Resolution" asp-items="@await ((InstagramImageResolution) Model.Resolution).ToSelectListAsync()" />
+                        <span asp-validation-for="Resolution"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="adminHint">
+                            <div class="summary">The resolutions can be:</div>
+                            <ul>
+                                <li>thumbnail(default) - 150x150</li>
+                                <li>low resolution -306x306</li>
+                                <li>standard resolution - 612x612</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SortBy" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="SortBy" asp-items="@await ((InstagramImageSortOption) Model.SortBy).ToSelectListAsync()" />
+                        <span asp-validation-for="SortBy"></span>
+                        @Html.ValidationMessageFor(model => model.SortBy)
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="adminHint">
+                            <div class="summary">Sort the images in a set order. Available options are:</div>
+                            <ul>
+                                <li>none(default) - As they come from Instagram.</li>
+                                <li>most recent - Newest to oldest.</li>
+                                <li>least recent - Oldest to newest.</li>
+                                <li>most liked - Highest number of likes to lowest.</li>
+                                <li>least liked - Lowest number likes to highest.</li>
+                                <li>most commented - Highest number of comments to lowest.</li>
+                                <li>least commented - Lowest number of comments to highest.</li>
+                                <li>random - Random order.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>                  
+            </div>
+        </div>
+    </div>
+}

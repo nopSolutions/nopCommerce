@@ -1,0 +1,184 @@
+﻿@model SevenSpikes.Nop.Plugins.InstantSearch.Areas.Admin.Models.InstantSearchSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.InstantSearch.Admin.Submenus.Settings");
+}
+
+<script>
+    // http://stackoverflow.com/questions/10136342/perform-validation-on-hidden-fields
+    $.validator.setDefaults({
+        ignore: [],
+        // any other default options and/or rules
+    });
+
+    $(document).ready(function () {
+        var searchInDescription= "#@Html.IdFor(model => model.SearchDescriptions)";
+        var searchByProductTags = "#product-tags";
+
+        $(searchInDescription).change(function () {
+            toggleSetting(searchInDescription, searchByProductTags);
+        });
+
+        toggleSetting(searchInDescription, searchByProductTags);
+    });
+
+    function toggleSetting(setting, element) {
+        if ($(setting).is(':checked') == true) {
+            $(element).show();
+        } else {
+            $(element).hide();
+        }
+    }
+</script>
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.InstantSearch.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enable_OverrideForStore" asp-input="Enable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enable" />      
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enable" />
+                                <span asp-validation-for="Enable"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SearchOption_OverrideForStore" asp-input="SearchOption" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SearchOption" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SearchOption" asp-items="Model.AvailableSearchOptions" />
+                                <span asp-validation-for="SearchOption"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MinKeywordLength_OverrideForStore" asp-input="MinKeywordLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MinKeywordLength" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MinKeywordLength" />
+                                <span asp-validation-for="MinKeywordLength"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfProducts_OverrideForStore" asp-input="NumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfProducts" />
+                                <span asp-validation-for="NumberOfProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfVisibleProducts_OverrideForStore" asp-input="NumberOfVisibleProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfVisibleProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfVisibleProducts" />
+                                <span asp-validation-for="NumberOfVisibleProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultProductSortOption_OverrideForStore" asp-input="DefaultProductSortOption" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultProductSortOption" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultProductSortOption" asp-items="Model.AvailableProductSortOptions" />
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PictureSize_OverrideForStore" asp-input="PictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PictureSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PictureSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                <span asp-validation-for="PictureSize"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowSku_OverrideForStore" asp-input="ShowSku" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowSku" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowSku" />
+                                <span asp-validation-for="ShowSku"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="HighlightFirstFoundElementToBeSelected_OverrideForStore" asp-input="HighlightFirstFoundElementToBeSelected" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="HighlightFirstFoundElementToBeSelected" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="HighlightFirstFoundElementToBeSelected" />
+                                <span asp-validation-for="HighlightFirstFoundElementToBeSelected"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SearchDescriptions_OverrideForStore" asp-input="SearchDescriptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SearchDescriptions" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SearchDescriptions" />
+                                <span asp-validation-for="SearchDescriptions"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting searchProductTags" id="product-tags">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SearchProductTags_OverrideForStore" asp-input="SearchProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SearchProductTags" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SearchProductTags" />
+                                <span asp-validation-for="SearchProductTags"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="VisibleIndividuallyOnly_OverrideForStore" asp-input="VisibleIndividuallyOnly" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="VisibleIndividuallyOnly" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="VisibleIndividuallyOnly" />
+                                <span asp-validation-for="VisibleIndividuallyOnly"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

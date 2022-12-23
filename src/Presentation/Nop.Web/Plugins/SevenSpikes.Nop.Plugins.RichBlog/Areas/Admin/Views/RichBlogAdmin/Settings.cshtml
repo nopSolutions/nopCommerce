@@ -1,0 +1,52 @@
+﻿@model RichBlogSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.RichBlog.Admin.Submenus.Settings");
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.RichBlog.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <nop-tabs id="rich-blog-settings">
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.GeneralSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsGeneral, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="home-page-settings" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.HomePageSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsHomePage, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="category-navigation-settings" class="advanced-setting" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.CategoryNavigationSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsCategoryNavigation, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="blog-list-settings" class="advanced-setting" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.BlogListSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsBlogList, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="blog-details-settings" class="advanced-setting" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.BlogDetailsSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsBlogDetails, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="social-networks-settings" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.SocialNetworksSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsSocialNetworks, Model); }
+                </nop-tab>
+                    <nop-tab asp-name="search-settings" class="advanced-setting" asp-title="@T("SevenSpikes.RichBlog.Admin.Settings.Common.SearchSettings")">
+                        @{ await Html.RenderPartialAsync(Views.SettingsSearch, Model); }
+                </nop-tab>
+            </nop-tabs>
+        </div>
+    </section>
+</form>

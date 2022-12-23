@@ -1,0 +1,13 @@
+﻿@model MenuItemModel
+
+@await Component.InvokeAsync("MegaMenuItemTemplateAdmin", new { model = Model })
+
+@if (Model.SubItems.Count > 0)
+{
+    foreach (MenuItemModel subItem in Model.SubItems)
+    {
+        subItem.DepthLevel = Model.DepthLevel + 1;
+
+        await Html.RenderPartialAsync(AdminViews.MenuItem, subItem);
+    }
+}

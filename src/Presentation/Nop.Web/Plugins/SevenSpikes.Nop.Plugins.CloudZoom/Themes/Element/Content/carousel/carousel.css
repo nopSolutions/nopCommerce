@@ -1,0 +1,87 @@
+/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.picture-thumbs {
+	position: relative;
+}	
+.picture-thumbs .slick-slider {
+	position: static;
+	width: 300px;
+	max-width: 100%;
+	margin: auto;
+}
+.picture-thumbs .slick-list {
+	text-align: center;
+	font-size: 0;
+}
+.picture-thumbs .slick-track {
+	display: inline-block;
+}
+
+/* navigation */
+
+.picture-thumbs .slick-prev,
+.picture-thumbs .slick-next {
+    position: absolute;
+    top: 50%;
+    width: 45px;
+    height: 14px;  
+	margin-top: -7px;
+    border: none;
+    font-size: 0;
+	cursor: pointer;
+    transition: all 0.2s ease;
+}
+.picture-thumbs .slick-prev {
+	left: 0;
+    background: url('images/prev-horizontal.png') center no-repeat;
+}
+.picture-thumbs .slick-next {
+	right: 0;
+    background: url('images/next-horizontal.png') center no-repeat;
+}
+.picture-thumbs .slick-prev.slick-disabled,
+.picture-thumbs .slick-next.slick-disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.slick-dots {
+    margin: 0;
+    padding: 10px 20px 0;
+}
+.slick-dots li {
+    display: inline-block;
+    margin: 0 4px;
+}
+.slick-dots button {
+	box-sizing: content-box;
+	width: 10px;
+    height: 10px;
+	border: 2px solid #fff;
+    background-color: #ddd;
+    font-size: 0;
+    border-radius: 50%;
+}
+.air-theme .slick-dots .slick-active button {
+	border-color: #eda187;
+    background-color: #eda187;
+}
+.earth-theme .slick-dots .slick-active button {
+	border-color: #007c5a;
+    background-color: #007c5a;
+}
+
+/* items */
+
+.picture-thumbs a.cloudzoom-gallery {
+    width: auto !important;
+    height: auto !important;
+}
+.picture-thumbs a.cloudzoom-gallery:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}

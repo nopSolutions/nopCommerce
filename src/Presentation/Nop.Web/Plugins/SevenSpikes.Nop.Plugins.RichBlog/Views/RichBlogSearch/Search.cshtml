@@ -1,0 +1,51 @@
+﻿@model RichBlogSearchModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-blog-search-page");
+}
+
+@section left {
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
+    @await Component.InvokeAsync("BlogMonths")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_blog_archive" })
+    @await Component.InvokeAsync("BlogTags")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
+}
+
+<div class="page blog-search-results-page">
+    <div class="page-title">
+        <h1 class="section-title">@T("SevenSpikes.RichBlog.Public.Search.ResultsForTitle", Model.Phrase)</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Items.Count > 0)
+        {
+            <ul class="blog-search-results">
+                @foreach (var searchResult in Model.Items)
+                {
+                    <li class="search-results-item">
+                        <a class="kb-search-link" href="@Url.RouteUrl("BlogPost", new { SeName = searchResult.SEName })" title="@searchResult.Title">@Html.Raw(searchResult.HighlightedTitle)</a>
+                        <p>@Html.Raw(searchResult.HighlightedBody)</p>
+                    </li>
+                }
+            </ul>
+
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+
+            if (!await pager.IsEmpty())
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-results">
+                @T("SevenSpikes.RichBlog.Public.Search.NoResults")
+            </div>
+        }
+    </div>
+</div>

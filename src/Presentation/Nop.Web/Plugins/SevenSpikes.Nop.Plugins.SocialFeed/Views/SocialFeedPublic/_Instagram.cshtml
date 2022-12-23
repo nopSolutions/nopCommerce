@@ -1,0 +1,39 @@
+﻿@model InstagramModel
+
+@inject IViewComponentSelector viewComponentSelector
+
+@if (Model != null)
+{
+    await Html.RenderPartialAsync(await ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.Instagram);
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <ul class="post-list">
+                @foreach (var media in Model.InstagramMedia)
+                {
+                    if (!string.IsNullOrEmpty(media.Link) &&
+                        !string.IsNullOrEmpty(media.MediaUrl))
+                    {
+                        <li class="post-item">
+                            <a class="post-link @if (media.MediaType == "VIDEO") { <text>video-thumbnail</text> }" href="@media.Link" target="_blank">
+                                @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                                {
+                                    @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                    {
+                                        ("src", media.MediaUrl),
+                                        ("class", "post-img")
+                                    })
+                                }
+                                else
+                                {
+                                    <img class="post-img" src="@media.MediaUrl" />
+                                }
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,14 @@
+﻿@model SevenSpikes.Nop.Plugins.CloudZoom.Areas.Admin.Models.CloudZoomSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultImageContainerSelector_OverrideForStore" asp-input="DefaultImageContainerSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultImageContainerSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DefaultImageContainerSelector" />
+            <span asp-validation-for="DefaultImageContainerSelector"></span>
+        </div>
+    </div>
+</div>

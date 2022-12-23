@@ -1,0 +1,105 @@
+﻿@model IList<BlogPostModel7Spikes>
+@inject IViewComponentSelector viewComponentSelector
+
+@{
+    var firstBlogPost = Model.FirstOrDefault();
+}
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.post-details').on('click', function () {
+            var blogPost = $(this);
+            var blogPostUrl = blogPost.find('.post-title > a').attr('href');
+            var blogPostTitle = blogPost.find('.post-title > a').text();
+            var blogPostPictureUrl = blogPost.attr('data-pictureUrl');
+
+            $('.post-info').remove();
+
+            blogPost.clone().addClass('post-info').removeClass('post-details').appendTo('.post-primary');
+
+            $('.post-primary .post-picture').find('a').attr('href', blogPostUrl);
+
+            if (blogPostPictureUrl.length > 0) {
+                $('.post-primary .post-picture').show();
+
+                $('.post-primary .post-picture').find('img').attr('src', blogPostPictureUrl);
+                $('.post-primary .post-picture').find('img').attr('alt', blogPostTitle);
+                $('.post-primary .post-picture').find('img').attr('title', blogPostTitle);
+            } else {
+                $('.post-primary .post-picture').hide();
+            }
+
+            $.event.trigger({ type: "richBlogHomePageImageChanged" });
+        }).on('click', 'a', function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+
+<div class="rich-blog-homepage">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.LatestFromBlog")</strong>
+    </div>
+    <div class="blog-posts">
+        <div class="blog-post-display">
+            <div class="post-primary">
+                <div class="post-picture">
+                    <a href="@Url.RouteUrl("BlogPost", new { SeName = firstBlogPost.SeName })">
+                            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                            {
+                                @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
+                                {
+                                    ("src", firstBlogPost.HomePagePictureUrl),
+                                    ("alt", firstBlogPost.Title),
+                                    ("title", firstBlogPost.Title)
+                                })
+                            }
+                            else
+                            {
+                                <img src="@firstBlogPost.HomePagePictureUrl" alt="@firstBlogPost.Title" title="@firstBlogPost.Title" />
+                            }
+                    </a>
+                </div>
+                <div class="post-info">
+                    <div class="post-date">
+                        <span class="day">@firstBlogPost.CreatedOn.Day.ToString("00")</span>
+                        <span class="month">@firstBlogPost.CreatedOn.ToString("MMM")</span>
+                    </div>
+                    <div class="post-title">
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = firstBlogPost.SeName })">@firstBlogPost.Title</a>
+                    </div>
+
+                    @if (firstBlogPost.AllowComments)
+                    {
+                        <div class="post-comments">
+                            <span>@string.Format(T("SevenSpikes.RichBlog.Public.Blog.Post.Comments").Text, firstBlogPost.NumberOfComments)</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="blog-post-list">
+            @foreach (var post in Model)
+            {
+                <div class="post-details" data-pictureUrl="@post.HomePagePictureUrl">
+                    <div class="post-date">
+                        <span class="day">@post.CreatedOn.Day.ToString("00")</span>
+                        <span class="month">@post.CreatedOn.ToString("MMM")</span>
+                    </div>
+                    <div class="post-title">
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })">@post.Title</a>
+                    </div>
+
+                    @if (post.AllowComments)
+                    {
+                        <div class="post-comments">
+                            <span>@string.Format(T("SevenSpikes.RichBlog.Public.Blog.Post.Comments").Text, post.NumberOfComments)</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="view-all">
+            <a href="@Url.RouteUrl("Blog")">@T("SevenSpikes.RichBlog.Public.ViewAllBlogPosts")</a>
+        </div>
+    </div>
+</div>

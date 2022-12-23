@@ -1,0 +1,12 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 721px) {
+	
+	.product-list .item-box .ribbon-wrapper {
+		border-left: 30px solid transparent;
+		border-right: none;
+	}
+}

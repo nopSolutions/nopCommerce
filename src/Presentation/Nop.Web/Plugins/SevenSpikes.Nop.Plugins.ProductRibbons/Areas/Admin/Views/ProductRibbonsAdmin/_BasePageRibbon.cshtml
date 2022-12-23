@@ -1,0 +1,79 @@
+﻿@model BasePageRibbonModel
+
+<input asp-for="ProductId" type="hidden" />
+<input asp-for="ProductRibbonId" type="hidden" />
+<input asp-for="PictureId" type="hidden" />
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Enabled" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Enabled" />
+        <span asp-validation-for="Enabled"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Position" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="Position" asp-items="Model.AvailablePositions" />
+        <span asp-validation-for="Position"></span>
+    </div>
+</div>
+<div class="form-group row ribbon-picture-buttons">
+    <div class="col-md-3">
+        <nop-label asp-for="RibbonPictureModel.PictureId" />
+    </div>
+    <div class="col-md-9">
+        <input type="hidden" class="get-ribbon-picture-grid" data-getGridUrl="@Url.Action("GetRibbonPicturesGrid", "ProductRibbonsAdmin")"/>
+        <input class="edit-ribbon-picture btn btn-primary" type="button" value="@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.EditPicture")" data-editPictureUrl="@Url.Action("SelectRibbonPicture", "ProductRibbonsAdmin")" />
+        <input class="manage-ribbon-pictures btn btn-primary" type="button" value="@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.ManagePictures")" data-addDeleteProductRibbonPictureUrl="@Url.Action("AddDeleteProductRibbonPicture", "ProductRibbonsAdmin")" />
+        <input class="remove-ribbon-picture btn bg-red" type="button" value="@T("admin.picture.removepicture")">
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="RibbonPictureModel.PictureUrl" />
+    </div>
+    <div class="col-md-9 ribbon-image">
+        @if (!string.IsNullOrEmpty(Model.RibbonPictureModel.PictureUrl))
+        {
+            <img alt="@Model.PictureId" src="@Model.RibbonPictureModel.PictureUrl" />
+        }
+        else
+        {
+            <div class="no-picture">
+                <label>@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.NoPicture")</label>
+            </div>
+        }
+    </div>
+</div>
+<div class="form-group row advanced-setting">
+    <div class="col-md-3">
+        <nop-label asp-for="ContainerStyle" />
+    </div>
+    <div class="col-md-9">
+        <nop-textarea asp-for="ContainerStyle" class="style-text"/>                
+        <span asp-validation-for="ContainerStyle"></span>
+    </div>
+</div>
+<div class="form-group row advanced-setting">
+    <div class="col-md-3">
+        <nop-label asp-for="TextStyle" />
+    </div>
+    <div class="col-md-9">
+        <nop-textarea asp-for="TextStyle" class="style-text"/>                
+        <span asp-validation-for="TextStyle"></span>
+    </div>
+</div>
+<div class="form-group row advanced-setting">
+    <div class="col-md-3">
+        <nop-label asp-for="ImageStyle" />
+    </div>
+    <div class="col-md-9">
+        <nop-textarea asp-for="ImageStyle" class="style-text"/>                
+        <span asp-validation-for="ImageStyle"></span>
+    </div>
+</div>

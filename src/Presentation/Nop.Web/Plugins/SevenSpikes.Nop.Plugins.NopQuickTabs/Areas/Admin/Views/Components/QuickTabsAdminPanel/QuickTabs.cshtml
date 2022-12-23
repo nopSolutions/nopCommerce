@@ -1,0 +1,186 @@
+﻿@using Nop.Services.Common;
+
+@model int
+
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var productId = Model;
+
+    const string quickTabsBlockAttributeName = "ProductPage.SS.QuickTabs";
+    var hideQuickTabsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), quickTabsBlockAttributeName, defaultValue: true);
+}
+
+<nop-card asp-name="product-quick-tabs" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle")" asp-hide-block-attribute-name="@quickTabsBlockAttributeName" asp-hide="@hideQuickTabsBlock" asp-advanced="false">
+    <div class="card-body">
+        <div class="card card-default">
+            <div class="card-body">
+
+                @if (productId > 0)
+                {
+                    <div class="content-header clearfix">
+                        <div class="float-left">
+                            <input type="button" id="btnAddExistingProductAttachment" name="btnAddExistingProductAttachment"
+                                   value="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddExistingTab")"
+                                   onclick="javascript:OpenWindow('@(Url.Action("AddExistingTabsPopup", "ProductTabAdmin", new { productId = productId, btnId = "btnRefreshGrid" }))', 800, 700, true); return false;"
+                                   class="btn bg-primary" />
+
+                            <input type="button" id="btnAddNewProductAttachment" name="btnAddNewProductAttachment"
+                                   value="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddNewTab")"
+                                   onclick="javascript:OpenWindow('@(Url.Action("Create", "TabAdmin", new { productId = productId, IsPopup = true }))', 1080, 700, true); return false;"
+                                   class="btn bg-primary" />
+                        </div>
+                    </div>
+
+                    <section class="content">
+                        <div class="form-horizontal">
+                            <div class="cards-group">
+                                <div class="card card-default">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.ProductSpecificTabs")
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+										@{
+											await Html.RenderPartialAsync("Table", new DataTablesModel
+											{
+												Name = "product-specific-tabs-grid",
+												UrlRead = new DataUrl("ListProductSpecificTabs", "ProductTabAdmin", new RouteValueDictionary { ["productId"] = productId }),
+												UrlDelete = new DataUrl("DeleteProductSpecificTabs", "ProductTabAdmin", new RouteValueDictionary { ["productId"] = productId }),
+												UrlUpdate = new DataUrl("UpdateTabs",  "ProductTabAdmin", new RouteValueDictionary { ["productId"] = productId }),
+												Length = defaultGridPageSize,
+												LengthMenu = gridPageSizes,
+												ColumnCollection = new List<ColumnProperty>
+												{
+													new ColumnProperty(nameof(TabModel.SystemName))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName").Text
+													},
+													new ColumnProperty(nameof(TabModel.DisplayName))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName").Text
+													},
+													new ColumnProperty(nameof(TabModel.DisplayOrder))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder").Text,
+														Editable = true,
+														EditType = EditType.Number
+													},
+													new ColumnProperty(nameof(TabModel.Id))
+													{
+														Width = "200",
+														Render = new RenderCustom("renderEditButton")
+													},
+													new ColumnProperty(nameof(TabModel.Id))
+													{
+														Width = "200",
+														Render = new RenderButtonsInlineEdit()
+													},
+													new ColumnProperty(nameof(TabModel.Id))
+													{
+														Width = "200",
+														Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+													}
+												}
+											});
+										}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-group">
+                                <div class="card card-default">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SharedTabs")
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+										@{
+											await Html.RenderPartialAsync("Table", new DataTablesModel
+											{
+												Name = "shared-tabs-grid",
+												UrlRead = new DataUrl("ListSharedTabs", "ProductTabAdmin", new RouteValueDictionary { ["productId"] = productId }),
+												UrlUpdate = new DataUrl("UpdateSharedTabs",  "ProductTabAdmin", new RouteValueDictionary { ["productId"] = productId }),
+												Length = defaultGridPageSize,
+												LengthMenu = gridPageSizes,
+												ColumnCollection = new List<ColumnProperty>
+												{
+													new ColumnProperty(nameof(TabModel.SystemName))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName").Text
+													},
+													new ColumnProperty(nameof(TabModel.DisplayName))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName").Text
+													},
+													new ColumnProperty(nameof(TabModel.DisplayOrder))
+													{
+														Title = T("SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder").Text,
+														Editable = true,
+														EditType = EditType.Number
+													},
+													new ColumnProperty(nameof(TabModel.Id))
+													{
+														Width = "200",
+														Render = new RenderCustom("renderEditButton")
+													},
+													new ColumnProperty(nameof(TabModel.Id))
+													{
+														Width = "200",
+														Render = new RenderButtonsInlineEdit()
+													},
+												}
+											});
+										}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                
+                    <input type="submit" id="btnRefreshGrid" name="btnRefreshGrid" style="display: none" />
+
+                    <script type="text/javascript">
+						function renderEditButton(data, type, row, meta) {
+
+                            return '<button class="btn btn-default" onclick="OpenWindow(\'@Url.Action("Edit", "TabAdmin")?id=' + data + '&isPopup=true\', 800, 700, true);return false;" title="@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.EditTab")">' +
+                                '<i class="fas fa-pencil-alt"></i>' +
+                                '@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.EditTab")' +
+                                '</button>';
+						}
+                    </script>
+
+					<script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshGrid').click(function (e) {
+								//refresh grid
+
+								e.preventDefault(); //don't reload the page
+
+								var productSpecificTabsGrid = $("#product-specific-tabs-grid").DataTable();
+								productSpecificTabsGrid.ajax.reload();
+
+								var sharedTabsGrid = $("#shared-tabs-grid").DataTable();
+								sharedTabsGrid.ajax.reload();
+
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+					</script> 
+                }
+                else
+                {
+                    @T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SaveBeforeEdit")
+                }
+            </div>
+        </div>
+    </div>
+</nop-card>

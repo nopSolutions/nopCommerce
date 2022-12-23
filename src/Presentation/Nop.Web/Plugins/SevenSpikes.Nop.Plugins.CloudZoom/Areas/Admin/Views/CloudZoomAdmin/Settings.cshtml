@@ -1,0 +1,83 @@
+﻿@model SevenSpikes.Nop.Plugins.CloudZoom.Areas.Admin.Models.CloudZoomSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.CloudZoom.Admin.Submenus.Settings");
+}
+
+<script type="text/javascript">
+    // http://stackoverflow.com/questions/10136342/perform-validation-on-hidden-fields
+    $.validator.setDefaults({
+        ignore: [],
+        // any other default options and/or rules
+    });
+
+    $(document).ready(function () {
+
+        $("#@Html.IdFor(model => model.ZoomPosition)").change(toggleCloudZoomSettings);
+        $("#@Html.IdFor(model => model.EnableTint)").change(enableTint);
+
+        toggleCloudZoomSettings();
+        enableTint();
+    });
+
+    function toggleCloudZoomSettings() {
+        if ($('#@Html.IdFor(model => model.ZoomPosition)').val() === 'inside') {
+            $('.outerSettings').hide();
+            $('.tintSettings').hide();
+            $('.tintSettingsEnabled').hide();
+            $('.autoInside').hide();
+        } else {
+            $('.outerSettings').show();
+            $('.showTitle').show();
+            $('.tintSettingsEnabled').show();
+            $('.autoInside').show();
+        }
+    }
+
+    function enableTint() {
+        if ($('#@Html.IdFor(model => model.EnableTint)').is(':checked') == true) {
+            $('.tint-opacity').show();
+            $('.tint-color').show();
+        } else {
+            $('.tint-opacity').hide();
+            $('.tint-color').hide();
+        }
+    }
+</script>
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.CloudZoom.Admin.Settings.Common")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+
+            <nop-tabs id="cloud-zoom-settings-tabs">
+                <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.CloudZoom.Admin.Settings.GeneralSettings")">
+                    @{ await Html.RenderPartialAsync(Views.SettingsGeneral, @Model); }
+                </nop-tab>
+                <nop-tab asp-name="tab-configuration-settings" asp-title="@T("SevenSpikes.CloudZoom.Admin.Settings.CloudZoomConfigurationSettings")">
+                    @{ await Html.RenderPartialAsync(Views.SettingsConfiguration, @Model); }
+                </nop-tab>
+                <nop-tab asp-name="tab-selector-settings" class="advanced-setting" asp-title="@T("SevenSpikes.CloudZoom.Admin.Settings.CloudZoomSelectorsSettings")">
+                    @{ await Html.RenderPartialAsync(Views.SettingsSelectors, @Model); }
+                </nop-tab>
+            </nop-tabs>
+        </div>
+    </section>
+</form>

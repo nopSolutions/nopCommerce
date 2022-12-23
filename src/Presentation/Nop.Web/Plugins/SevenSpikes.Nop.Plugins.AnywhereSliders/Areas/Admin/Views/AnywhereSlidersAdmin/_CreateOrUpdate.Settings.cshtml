@@ -1,0 +1,175 @@
+﻿@using SevenSpikes.Nop.Plugins.AnywhereSliders.Areas.Admin.Models.Sliders
+ 
+@model SliderModel
+
+<div class="raw clearfix">
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SystemName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SystemName" />
+                <span asp-validation-for="SystemName"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="PreLoadFirstSlide" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PreLoadFirstSlide" />
+                <span asp-validation-for="PreLoadFirstSlide"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Autoplay" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Autoplay" />
+                <span asp-validation-for="Autoplay"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AutoplaySpeed" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AutoplaySpeed" />
+                <span asp-validation-for="AutoplaySpeed"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Speed" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Speed" />
+                <span asp-validation-for="Speed"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="PauseOnHover" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PauseOnHover" />
+                <span asp-validation-for="PauseOnHover"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Fade" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Fade" />
+                <span asp-validation-for="Fade"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Dots" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Dots" />
+                <span asp-validation-for="Dots"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Arrows" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Arrows" />
+                <span asp-validation-for="Arrows"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="MobileBreakpoint" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MobileBreakpoint" asp-postfix="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.MobileBreakpoint.Postfix.Pixels").Text" />
+                <span asp-validation-for="MobileBreakpoint"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomClass" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomClass" />
+                <span asp-validation-for="CustomClass"></span>
+            </div>
+        </div>
+        @if (!Model.DisableCustomCss)
+        {
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomCss" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="CustomCss" style="height: 450px;" />
+                </div>
+            </div>
+        }
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Language" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="Language" asp-items="Model.Languages" />
+            </div>
+        </div>
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div class="cards-group">
+            <div class="card card-default  advanced-setting">
+                <div class="card-header">
+                    <div class="card-title">
+                        @T("SevenSpikes.Plugins.AnywhereSliders.Admin.Settings.Mappings")
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <nop-select asp-for="StoreMappingModel.SelectedStoreIds" asp-items="Model.StoreMappingModel.AvailableStores" asp-multiple="true" />
+                                    <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                                storesIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: 'No stores available'
+                                                });
+                                                storesIdsInput._placeholder();
+                                                storesIdsInput._enable();
+                                            </text>
+                                        }
+                                    });
+                                    </script>
+                                </div>
+                                <div class="col-md-8">
+                                    @await Component.InvokeAsync("MultistoreDisabledWarning")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+</div>

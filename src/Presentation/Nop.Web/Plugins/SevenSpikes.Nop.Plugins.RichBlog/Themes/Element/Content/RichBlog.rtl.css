@@ -1,0 +1,111 @@
+
+.rich-blog-homepage .post-info,
+.rich-blog-homepage .post-details {
+	padding: 20px 100px 20px 20px;
+	text-align: right;
+}
+.rich-blog-homepage .post-date {
+	right: 20px;
+	left: auto;
+}
+.rich-blog-homepage .post-comments:before {
+	margin: 0 -2px 0 4px;
+}
+.rich-blog-homepage .view-all:after {
+	margin: -2px 5px 0 -5px;
+	-ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.blog-search-box span.search-box-text {
+	float: right !important;
+}
+.blog-search-box input.search-box-text {
+	float: right;
+}
+.blog-search-box .instant-search-busy {
+	background-position: left center !important;
+}
+.blog-search-box .search-box-button {
+	float: left;
+}
+.blog-instant-search {
+	left: 0 !important;
+}
+.blog-instant-search .k-item:before {
+	margin: 0 0 0 8px;
+}
+.category-list ul,
+.related-posts-list ul {
+	padding: 0 25px 0 0;
+	text-align: right;
+}
+.category-list ul:before,
+.related-posts-list ul:before {
+	right: 0;
+	left: auto;
+}
+.category-list li.separator,
+.related-posts-list li.separator {
+	margin: 0 2px 0 8px;
+}
+.post-navigation .prev {
+	float: right;
+}
+.post-navigation .next {
+	float: left;
+}
+.post-navigation .prev:before {
+	right: 0;
+	left: auto;
+	background-image: url('images/next.png');
+}
+.post-navigation .next:before {
+	left: 0;
+	right: auto;
+	background-image: url('images/prev.png')
+}
+
+
+@media all and (min-width: 1025px) {
+	
+.rich-blog-homepage .blog-post-display {
+	float: left;
+}
+.rich-blog-homepage .blog-post-list {
+	float: right;
+}
+.rich-blog-homepage .post-details.active:after {
+	left: -11px;
+	right: auto;
+	border-width: 11px 11px 11px 0;
+}
+.rich-blog-homepage .view-all {
+	float: right;
+	clear: right;
+}
+.post-actions .read-more {
+	float: right;
+}
+.post-actions .share-post {
+	float: left;
+}
+.post-actions .share-post li {
+	margin: 0 3px 0 0;
+}
+.blogpost-page .post-relations {
+	float: right;
+}
+.blogpost-page .post-actions {
+	float: left;
+}
+.post-navigation a.prev {
+	padding: 0 140px 0 20px;
+	text-align: left;
+}
+.post-navigation a.next {
+	padding: 0 20px 0 140px;
+	text-align: right;
+}
+
+}

@@ -1,0 +1,68 @@
+﻿@model FacebookModel
+
+@if (Model != null)
+{
+
+    await Html.RenderPartialAsync(await ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.Facebook);
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <ul class="post-list">
+                @foreach (var feed in Model.FacebookFeeds)
+                {
+                    <li class="post-item">
+                        @if (feed.SourceModel != null &&
+                                !string.IsNullOrEmpty(feed.SourceModel.Link) &&
+                                    !string.IsNullOrEmpty(feed.SourceModel.Name))
+                        {
+                            <div class="post-head">
+                                @if (!string.IsNullOrEmpty(feed.SourceModel.PictureUrl))
+                                {
+                                    <div class="avatar-wrap">
+                                        <a class="avatar-link" href="@feed.SourceModel.Link" target="_blank" title="@feed.SourceModel.Name">
+                                            <img class="avatar-img" src="@feed.SourceModel.PictureUrl" alt="@feed.SourceModel.Name" />
+                                        </a>
+                                    </div>
+                                }
+
+                                <div class="author-date-wrap">
+                                    <div class="author-name">
+                                        <a class="author-name-link" href="@feed.SourceModel.Link" title="@feed.SourceModel.Name" target="_blank">@feed.SourceModel.Name</a>
+                                    </div>
+                                    @if (feed.CreatedDate != null)
+                                    {
+                                        <div class="post-date-wrap">
+                                            <span class="post-date">@feed.CreatedDate.Value.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="post-body">
+                            @if (!string.IsNullOrEmpty(feed.Link) &&
+                                    !string.IsNullOrEmpty(feed.PictureUrl))
+                            {
+                                bool isYouTubeVideo = feed.Link.ToLower().Contains("youtube");
+
+                                <a class="post-img-link @( isYouTubeVideo ? "youtube-video" : string.Empty )" href="@feed.Link" target="_blank">
+                                    <img class="post-img" src="@feed.PictureUrl" />
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(feed.Message))
+                            {
+                                <p class="post-description">
+                                    @Html.Raw(feed.Message)
+                                </p>
+                            }
+                        </div>
+
+                        <div class="post-buttons">
+                            <a class="post-link-btn" target="_blank" href="@string.Format("https://www.facebook.com/{0}", feed.Id)" title="@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")">@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")</a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

@@ -1,0 +1,72 @@
+﻿@model RichBlogSettingsModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".reindex-btn").click(function () {
+            var headers = {};
+
+            addAntiForgeryToken(headers);
+
+            $.post("Reindex", headers);
+        });
+    });
+</script>
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisableLuceneSearch_OverrideForStore" asp-input="DisableLuceneSearch" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisableLuceneSearch" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisableLuceneSearch" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BlogSearchWidgetZone_OverrideForStore" asp-input="BlogSearchWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BlogSearchWidgetZone"/>
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="BlogSearchWidgetZone" asp-items="Model.AvailableBlogSearchWidgetZones" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ResultsPageNumberOfItemsPerPage_OverrideForStore" asp-input="ResultsPageNumberOfItemsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ResultsPageNumberOfItemsPerPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ResultsPageNumberOfItemsPerPage" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfResultsInDropdown_OverrideForStore" asp-input="NumberOfResultsInDropdown" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfResultsInDropdown" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfResultsInDropdown" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HighlightedTextChunkLength_OverrideForStore" asp-input="HighlightedTextChunkLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HighlightedTextChunkLength" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HighlightedTextChunkLength" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <div class="label-wrapper">
+                <label class="control-label">@T("SevenSpikes.RichBlog.Admin.Settings.Reindex")</label>
+                <div class="ico-help" title="@T("SevenSpikes.RichBlog.Admin.Settings.Reindex.Hint")"><i class="fa fa-question-circle"></i></div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <button type="button" value="reindex" class="btn bg-blue reindex-btn">@T("SevenSpikes.RichBlog.Admin.Settings.Reindex")</button>
+        </div>
+    </div>
+</div>

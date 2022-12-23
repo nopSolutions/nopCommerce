@@ -1,0 +1,42 @@
+﻿@{
+    var layout = AdminViewLocations.AdminLayoutViewPath;
+
+    @if (ViewBag.isPopup)
+    {
+        layout = AdminViewLocations.AdminPopupLayoutViewPath;
+    }
+
+    Layout = layout;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.NopQuickTabs.Admin.Submenus.ManageTabs");
+}
+
+@model TabModel
+
+<form method="post" id="product-tab-form">
+
+    @if (ViewBag.isPopup)
+    {
+        <input type="hidden" name="productId" id="productId" value="@ViewBag.productId" />
+        <input type="hidden" name="isPopup" id="isPopup" value="@ViewBag.isPopup.ToString()" />
+    }
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.NopQuickTabs.Admin.Tabs.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.NopQuickTabs.Admin.Tabs.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    @{ await Html.RenderPartialAsync(AdminViews.ViewAdminTabsCreateOrUpdatePartial, Model); }
+</form>

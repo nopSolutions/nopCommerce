@@ -1,0 +1,24 @@
+﻿@model Dictionary<string, object>
+
+@inject IWorkContext workContext
+
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    var richBlogCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + themeName + "/Content/RichBlog.css";
+}
+
+<link rel="stylesheet" href="@richBlogCssFilePath" />
+
+@if (supportRtl)
+{
+    var richBlogRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + themeName + "/Content/RichBlog.rtl.css";
+
+    <link rel="stylesheet" href="@richBlogRtlCssFilePath" />
+}
+
+@foreach (var viewComponent in Model)
+{
+    @await Component.InvokeAsync(viewComponent.Key, viewComponent.Value)
+}

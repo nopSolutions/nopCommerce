@@ -1,0 +1,89 @@
+﻿@model SocialNetworkModel
+@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+
+    var instagram = SocialNetworkType.Instagram.ToString();
+
+    var adminStylesCssFilePath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.css";
+}
+
+<link rel="stylesheet" href="@adminStylesCssFilePath" />
+
+@if (supportRtl)
+{
+    var adminStylesRtlCssFilePath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Styles/adminstyles.rtl.css";
+
+    <link rel="stylesheet" href="@adminStylesRtlCssFilePath" />
+}
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row slick-arrow">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Name" />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Type" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Type" asp-items="Model.AvailableSocialNetworks" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Type != instagram && !string.IsNullOrEmpty(Model.Type))
+        {
+            <div class="networks-unsupported-info">
+                <div class="ss-info save-before-edit-network">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p><strong>Note:</strong> The Social Feed plugin no longer supports Facebook, Twitter, Pinteres and Google+ social networks.</p>
+                    <span class="ss-info-arrow up"></span>
+                </div>
+            </div>
+        }
+
+        <div id="instagram-settings" class="social-network">
+            @{
+                var dataDictInstagram = new ViewDataDictionary(ViewData);
+                dataDictInstagram.TemplateInfo.HtmlFieldPrefix = "SettingModels.InstagramModel";
+                await Html.RenderPartialAsync(AdminViews.InstagramSettings, Model.SettingModels.InstagramModel, dataDictInstagram);
+            }
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    (function ($) {
+        var showHideSocialNetworks = function (networkName) {
+            $('.social-network').hide();
+            $('#' + networkName.toLowerCase() + '-settings').show();
+
+            if (networkName.toLowerCase() == "instagram") {
+                $('.networks-unsupported-info').hide();
+            }
+        };
+
+        $(document).ready(function () {
+            showHideSocialNetworks($('#Type option:selected').val());
+
+            $('#Type').change(function () {
+                showHideSocialNetworks($(this).val());
+            });
+        });
+    })(jQuery);
+</script>

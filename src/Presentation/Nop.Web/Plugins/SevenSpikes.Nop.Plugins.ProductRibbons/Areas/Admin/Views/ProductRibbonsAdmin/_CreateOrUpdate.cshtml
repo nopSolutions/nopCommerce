@@ -1,0 +1,43 @@
+﻿@model ProductRibbonModel
+    
+@{
+    var generalInformationViewDataDictionary = new ViewDataDictionary(ViewData);
+    generalInformationViewDataDictionary.TemplateInfo.HtmlFieldPrefix = "RibbonGeneralInformation";
+
+    var categoryPViewDataDictionary = new ViewDataDictionary(ViewData);
+    categoryPViewDataDictionary.TemplateInfo.HtmlFieldPrefix = "CategoryPageRibbon";
+
+    var productPageViewDataDictionary = new ViewDataDictionary(ViewData);
+    productPageViewDataDictionary.TemplateInfo.HtmlFieldPrefix = "ProductPageRibbon";
+}    
+
+<div asp-validation-summary="All"></div>
+<input asp-for="RibbonGeneralInformation.Id" type="hidden" />
+<input asp-for="CategoryPageRibbon.Id" type="hidden" />
+<input asp-for="ProductPageRibbon.Id" type="hidden" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+        @await Component.InvokeAsync("SettingMode")
+        
+        <nop-tabs id="product-ribbons-create-or-update">
+            <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.GeneralInformation", Model.RibbonGeneralInformation, generalInformationViewDataDictionary); }
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.StoreSettings", Model); }
+            </nop-tab>
+            <nop-tab asp-name="tab-category-ribbons" asp-title="@T("SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.CategoryPageRibbon")">@await Html.PartialAsync("_CreateOrUpdate.CategoryPageRibbon", Model.CategoryPageRibbon, categoryPViewDataDictionary)</nop-tab>
+            <nop-tab asp-name="tab-product-ribbons" asp-title="@T("SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductPageRibbon")">@await Html.PartialAsync("_CreateOrUpdate.ProductPageRibbon", Model.ProductPageRibbon, productPageViewDataDictionary)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-conditions-ribbons" asp-title="@T("SevenSpikes.Conditions.Admin.Condition.TabTitle")">
+                    @await Component.InvokeAsync("ConditionsAdmin", new {entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = true})
+                </nop-tab>
+                <nop-tab asp-name="tab-override-conditions-ribbons" asp-title="@T("SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle")">
+                    @await Component.InvokeAsync("ProductOverridesAdmin", new {entityType = Plugin.EntityType, entityId = Model.Id})
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>

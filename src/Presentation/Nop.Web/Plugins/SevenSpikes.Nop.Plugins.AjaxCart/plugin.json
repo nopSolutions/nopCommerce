@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Ajax Cart",
+  "SystemName": "SevenSpikes.Nop.Plugins.AjaxCart",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.AjaxCart.dll",
+  "Description": "This plugin allows you to add products directly from the catalog pages."
+}

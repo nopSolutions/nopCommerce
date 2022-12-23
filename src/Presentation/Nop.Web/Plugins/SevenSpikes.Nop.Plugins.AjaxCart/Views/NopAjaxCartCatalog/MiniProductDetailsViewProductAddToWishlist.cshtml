@@ -1,0 +1,18 @@
+﻿@model Nop.Web.Models.Catalog.ProductDetailsModel.AddToCartModel
+
+<div class="add-to-cart">
+    <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
+
+    @if (Model.AllowedQuantities.Count > 0)
+    {
+        <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown"></select>
+    }
+    else
+    {
+        <input asp-for="EnteredQuantity" class="qty-input" type="text" />
+    }
+
+    <button type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button miniProductDetailsViewAddToWishlistButton miniProductDetailsViewAddToCartButton" data-productid="@Model.ProductId">@T("shoppingcart.addtowishlist")</button>
+
+    @Html.Hidden("addProductVariantToCartUrl", Url.Action("AddProductFromProductDetailsPageToCartAjax", "NopAjaxCartShoppingCart"))
+</div>

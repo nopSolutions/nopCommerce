@@ -1,0 +1,145 @@
+﻿@model SliderModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var pictureDimensionsString = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.PictureDimensionsString").Text;
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "anywhere-slides-grid",
+        UrlRead = new DataUrl("List", "SlidesAdmin", new RouteValueDictionary { ["sliderId"] = Model.Id }),
+        UrlDelete = new DataUrl("Delete", "SlidesAdmin", null),
+        Length = defaultGridPageSize,
+        LengthMenu = gridPageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(SlideModel.SystemName))
+                {
+                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.SystemName").Text,
+                    Width = "120"
+                },
+                new ColumnProperty(nameof(SlideModel.PictureId))
+                {
+                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.Picture").Text,
+                    Width = "200",
+                    Render = new RenderCustom("renderPicture")
+                },
+                new ColumnProperty(nameof(SlideModel.PictureId))
+                {
+                    Title = "Picture Dimensions",
+                    Width = "120",
+                    Render = new RenderCustom("renderPictureDimensions")
+                },
+                new ColumnProperty(nameof(SlideModel.MobilePictureId))
+                {
+                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.MobilePicture").Text,
+                    Width = "200",
+                    Render = new RenderCustom("renderMobilePicture")
+                },
+                new ColumnProperty(nameof(SlideModel.MobilePictureId))
+                {
+                    Title = "Mobile Picture Dimensions",
+                    Width = "120",
+                    Render = new RenderCustom("renderMobilePictureDimensions")
+                },
+                new ColumnProperty(nameof(SlideModel.DisplayOrder))
+                {
+                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.DisplayOrder").Text
+                },
+                new ColumnProperty(nameof(SlideModel.Visible))
+                {
+                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.Visible").Text,
+                    Render = new RenderCustom("renderIsActive")
+                },
+                new ColumnProperty(nameof(SlideModel.Id))
+                {
+                    Render = new RenderCustom("renderEditButton")
+                },
+                new ColumnProperty(nameof(SlideModel.Id))
+                {
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+
+            }
+    })
+</div>
+<div class="card-footer">
+    <input type="submit" id="btnAddNewImg" name="btnAddNewImg" value="@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slide.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "SlidesAdmin", new {sliderId = Model.Id}))',
+1050,    850,    true); return false;" class="btn btn-primary" />
+</div>
+
+<script>
+
+    function renderPicture(data, type, row, meta) {
+
+        if (row.PictureId > 0) {
+
+            return '<img src="' + row.PictureUrl + '" />';
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+
+    function renderPictureDimensions(data, type, row, meta) {
+
+        if (row.PictureId > 0) {
+
+            return '<strong>Width:</strong> ' + row.PictureWidth + '</br><strong>Height: </strong>' + row.PictureHeight;
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+
+    function renderMobilePicture(data, type, row, meta) {
+
+        if (row.MobilePictureId > 0) {
+
+            return '<img src="' + row.MobilePictureUrl + '" />';
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+
+    function renderMobilePictureDimensions(data, type, row, meta) {
+
+        if (row.MobilePictureId > 0) {
+
+            return '<strong>Width:</strong> ' + row.MobilePictureWidth + '</br><strong>Height: </strong>' + row.MobilePictureHeight;
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+
+    function renderIsActive(data, type, row, meta) {
+
+        if (row.Visible) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<button class="btn btn-default" onclick="OpenWindow(\'@Url.Action("Edit", "SlidesAdmin")/' + row.Id + '\', 800, 700, true);return false;" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</button>';
+    }
+</script>

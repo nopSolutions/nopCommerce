@@ -1,0 +1,38 @@
+﻿@model Nop.Web.Models.Catalog.ProductDetailsModel.AddToCartModel
+
+@if (Model.CustomerEntersPrice)
+{
+    <div class="customer-entered-price">
+        <div class="price-input">
+            <label asp-for="CustomerEnteredPrice" asp-postfix=":" class="enter-price-label"></label>
+            @*round price*@
+            <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input" />
+        </div>
+        <div class="price-range">
+            @Model.CustomerEnteredPriceRange
+        </div>
+    </div>
+}
+
+<div class="add-to-cart">
+    @if (!string.IsNullOrEmpty(Model.MinimumQuantityNotification))
+    {
+        <div class="min-qty-notification">@Model.MinimumQuantityNotification</div>
+    }
+
+    @if (!Model.DisableBuyButton)
+    {
+        <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
+
+        @if (Model.AllowedQuantities.Count > 0)
+        {
+            <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown"></select>
+        }
+        else
+        {
+            <input asp-for="EnteredQuantity" class="qty-input" type="text" />
+        }
+
+        @await Component.InvokeAsync("NopAjaxCartMiniProductDetailsViewAddToCartButton", Model)
+    }
+</div>

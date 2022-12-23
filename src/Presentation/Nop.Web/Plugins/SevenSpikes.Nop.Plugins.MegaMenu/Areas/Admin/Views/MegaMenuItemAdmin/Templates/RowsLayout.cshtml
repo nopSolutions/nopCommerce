@@ -1,0 +1,62 @@
+﻿@model MenuItemModel
+
+@{
+    Layout = "";
+}
+
+<li id="menu-item-@Model.Id" class="menu-item menu-item-depth-@Model.DepthLevel menu-item-rows-layout menu-item-edit-inactive"
+    data-menuItemId="@Model.Id">
+    <div class="menu-item-bar">
+        <div class="menu-item-handle ui-sortable-handle">
+            <span class="item-title">
+                <span class="menu-item-title">@Model.Title</span>
+                <span class="item-type" data-itemtype="@((int)Model.Type)">- @Model.TypeName</span>
+                @*<span class="is-submenu" style="display: none;">sub item</span>*@
+            </span>
+            <span class="item-controls">
+                <a class="item-edit arrow-down" title="@T("Admin.Common.Edit")" href="#menu-item-settings-@Model.Id"></a>
+            </span>
+        </div>
+    </div>
+
+    <div class="menu-item-settings" id="menu-item-settings-@Model.Id">
+
+        @(await Html.LocalizedEditorAsync<MenuItemModel, MenuItemLocalizedModel>("rows-layout-info-localized-" + Model.Id,
+        @<div class="clearfix">
+            <p class="field-title description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Title")</span>
+                    @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "widefat edit-menu-item-title localized", @id = "" })
+                </label>
+            </p>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId, new { @class = "edit-menu-item-language-id" })
+        </div>
+            ,
+        @<div class="clearfix">
+            <p class="field-title description description-wide">
+                <label>
+                    <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Title")</span>
+                    @Html.TextBoxFor(model => model.Title, new { @class = "widefat edit-menu-item-title", @id = "" })
+                </label>
+            </p>
+        </div>
+        ))
+
+        <p class="field-css-classes description description-wide">
+            <label>
+                <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.CssClasses")</span>
+                <input type="text" class="widefat edit-menu-item-classes" value="@Model.CssClass" />
+            </label>
+        </p>
+
+        <input type="hidden" class="edit-menu-item-entityId" value="-1" />
+
+        <div class="menu-item-actions description-wide submitbox">
+            <a class="item-delete submitdelete deletion" id="menu-item-delete-@Model.Id"><i class="far fa-trash-alt"></i>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Remove")</a>
+            @*<span class="meta-sep hide-if-no-js"> | </span>
+                <a class="item-cancel submitcancel hide-if-no-js">@T("SevenSpikes.MegaMenu.Admin.MenuItem.Cancel")</a>*@
+        </div>
+    </div>
+
+    <ul class="menu-item-transport"></ul>
+</li>

@@ -1,0 +1,125 @@
+﻿@model AddPostModel 
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+    
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.RichBlog.Admin.BlogPost.AddNew").Text;
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.getElementById("@ViewBag.btnId").click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("SevenSpikes.RichBlog.Admin.BlogPost.AddNew")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search card-search-popup card-popup">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchPostTitle" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchPostTitle" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-blog-posts" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        @{
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "blog-posts-grid",
+                                UrlRead = new DataUrl("ListPosts", "BlogPostToCategoryAdmin", new RouteValueDictionary { ["categoryId"] = Model.CategoryId }),
+                                Length = defaultGridPageSize,
+                                LengthMenu = gridPageSizes,
+                                SearchButtonId = "search-blog-posts",
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchPostTitle)),
+                                    new FilterParameter(nameof(Model.SearchStoreId))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(BlogPostModel.Id))
+                                    {
+                                        Width = "25",
+                                        Render = new RenderCheckBox("SelectedPostIds")
+                                    },
+                                    new ColumnProperty(nameof(BlogPostModel.Title))
+                                    {
+                                        Title = T("SevenSpikes.RichBlog.Admin.BlogPost.Title").Text
+                                    }
+                                }
+                            });
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="far fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+
+    function renderCheckBox(data, type, row, meta) {
+
+        var checked = row.CustomProperties.Selected ? 'checked' : '';
+
+        return '<input type="checkbox" id="SelectedCategoryIds" name="SelectedCategoryIds" value="' + row.Id + '" class="checkboxGroups" ' + checked + '>';
+    }
+
+    $("#@Html.IdFor(model => model.SearchPostTitle)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-blog-posts").click();
+            return false;
+        }
+    });
+</script>

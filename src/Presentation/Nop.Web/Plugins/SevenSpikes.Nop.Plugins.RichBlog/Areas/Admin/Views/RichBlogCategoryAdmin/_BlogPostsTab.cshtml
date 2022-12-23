@@ -1,0 +1,54 @@
+@model RichBlogCategoryAdminModel
+
+<div class="card-body">
+    @{ 
+        await Html.RenderPartialAsync("Table", new DataTablesModel
+        {
+            Name = "blog-posts-in-category-grid",
+            UrlRead = new DataUrl("List", "RichBlogAdmin", new RouteValueDictionary { ["categoryId"] = Model.Id }),
+            UrlDelete = new DataUrl("Delete", "BlogPostToCategoryAdmin", new RouteValueDictionary { ["categoryId"] = Model.Id }),
+            Length = int.MaxValue,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BlogPostModel.Title))
+                {
+                    Title = T("SevenSpikes.RichBlog.Admin.Post.Title").Text
+                },
+                new ColumnProperty(nameof(BlogPostModel.LanguageName))
+                {
+                    Title = T("SevenSpikes.RichBlog.Admin.Category.LanguageId").Text
+                },
+                new ColumnProperty(nameof(BlogPostModel.Id))
+                {
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                }
+            }
+        });
+    }
+    <div class="card-footer">
+        <div>
+            <button type="submit" id="btnAddNewBlogPost"
+                    onclick="javascript:OpenWindow('@(Url.Action("AvailableBlogPosts", "BlogPostToCategoryAdmin", new { categoryId = Model.Id, refreshBtnId = "btnRefreshBlogPost" }))', 800, 800, true); return false;"
+                    class="btn btn-primary">
+                @T("SevenSpikes.RichBlog.Admin.Category.AddNewBlogPost")
+            </button>
+            <input type="submit" id="btnRefreshBlogPost" name="btnRefreshBlogPost" style="display: none" />
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefreshBlogPost').click(function (e) {
+            //refresh grid
+
+            var grid = $("#blog-posts-in-category-grid").DataTable();
+            grid.ajax.reload();
+
+            e.preventDefault(); //don't reload the page
+
+            return false;
+        });
+    });
+</script>

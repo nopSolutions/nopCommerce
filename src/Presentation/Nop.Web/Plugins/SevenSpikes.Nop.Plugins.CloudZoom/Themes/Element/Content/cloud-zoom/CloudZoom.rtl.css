@@ -1,0 +1,12 @@
+/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.cloudzoom-zoom {
+	right: calc(100% + 40px) !important;
+	left: auto !important;
+}
+.cloudzoom-zoom-inside {
+	right: 0 !important;
+}

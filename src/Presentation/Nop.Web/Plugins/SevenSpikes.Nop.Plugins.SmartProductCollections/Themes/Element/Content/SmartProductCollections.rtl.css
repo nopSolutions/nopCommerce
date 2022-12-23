@@ -1,0 +1,161 @@
+﻿/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 721px) and (max-width: 1024px) {
+	
+.spc-categories .item-box {
+	margin-right: 2%;
+	margin-left: 0;
+}
+.spc-categories .item-box:nth-child(4n+1) {
+	margin-right: 0;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+.spc-categories:nth-child(odd) .spc-header,
+.spc-categories:nth-child(even) .spc-body {
+	float: left;
+}
+.spc-categories:nth-child(odd) .spc-body,
+.spc-categories:nth-child(even) .spc-header {
+	float: right;
+}
+
+
+.air-theme.variant-2 .spc-categories:nth-child(odd) .category-title,
+.air-theme.variant-2 .spc-categories:nth-child(odd) .navigation {
+	left: 0;
+	right: auto;
+}
+.air-theme.variant-2 .spc-categories:nth-child(even) .category-title,
+.air-theme.variant-2 .spc-categories:nth-child(even) .navigation {
+	right: 0;
+	left: auto;
+}
+.air-theme.variant-2 .spc-categories .item-box {
+	margin: 4% 4% 0 0;
+}
+.air-theme.variant-2 .spc-categories .item-box:nth-child(odd) {
+	margin-right: 0;
+}
+
+
+.earth-theme.variant-1 .spc-categories:nth-child(odd) .category-title {
+	right: 0;
+	left: auto;
+}
+.earth-theme.variant-1 .spc-categories:nth-child(even) .category-title {
+	left: 0;
+	right: auto;
+}
+.earth-theme.variant-1 .spc-categories:nth-child(odd) .category-title:before {
+	right: -15px;
+	left: auto;
+	border-width: 15px 0 15px 15px;
+	border-style: dashed dashed dashed solid;
+	border-color: transparent transparent transparent #333;
+}
+.earth-theme.variant-1 .spc-categories:nth-child(even) .category-title:after {
+	left: -15px;
+	right: auto;
+	border-width: 15px 15px 15px 0;
+	border-style: dashed solid dashed dashed;
+	border-color: transparent #333 transparent transparent;
+}
+.earth-theme.variant-1 .spc-categories .item-box {
+	float: right;
+	margin: 4% 4% 0 0;
+}
+.earth-theme.variant-1 .spc-categories .item-box:nth-child(2n+1) {
+	margin-right: 0;
+}
+
+
+.earth-theme.variant-2 .spc-categories:nth-child(odd) {
+	float: right;
+}
+.earth-theme.variant-2 .spc-categories:nth-child(even) {
+	float: left;
+}
+.earth-theme.variant-2 .spc-categories .category-title {
+	right: 40px;
+	left: auto;
+}
+
+}
+
+@media all and (min-width: 1321px) {
+	
+.spc-products .item-box {
+	margin-right: 2%;
+	margin-left: 0;
+}
+.spc-products .item-box:nth-child(6n+1) {
+	margin-right: 0;
+}
+
+}
+
+@media all and (min-width: 1367px) {
+
+.earth-theme.variant-1 .spc-categories .item-box {
+	margin: 2% 2% 0 0;
+}
+.earth-theme.variant-1 .spc-categories .item-box:nth-child(2n+1) {
+	margin-right: 2%;
+	margin-left: 0;
+}
+.earth-theme.variant-1 .spc-categories .item-box:nth-child(4n+1) {
+	margin-right: 0;
+}
+
+}
+
+@media all and (min-width: 1025px) and (max-width: 1320px) {
+	
+	.air-theme.variant-2 .spc-categories .item-box .buttons > button:nth-child(1) span:before,
+	.air-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(1) span:before,
+	.air-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(1) a:before {
+		right: 20px;
+		left: auto;
+	}
+	.air-theme.variant-2 .spc-categories .item-box .buttons > button:nth-child(3) span:before,
+	.air-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(3) span:before,
+	.air-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(3) a:before {
+		left: 20px;
+		right: auto;
+	}
+}
+
+@media all and (min-width: 1451px) and (max-width: 1680px) {
+	
+	.air-theme.variant-1 .spc-categories .item-box .buttons > button:nth-child(1) span:before,
+	.air-theme.variant-1 .spc-categories .item-box .buttons > div:nth-child(1) span:before,
+	.air-theme.variant-1 .spc-categories .item-box .buttons > div:nth-child(1) a:before {
+		right: 20px;
+		left: auto;
+	}
+	.air-theme.variant-1 .spc-categories .item-box .buttons > button:nth-child(3) span:before,
+	.air-theme.variant-1 .spc-categories .item-box .buttons > div:nth-child(3) span:before,
+	.air-theme.variant-1 .spc-categories .item-box .buttons > div:nth-child(3) a:before {
+		left: 20px;
+		right: auto;
+	}
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > button:nth-child(1) span:before,
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(1) span:before,
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(1) a:before {
+		right: 20px;
+		left: auto;
+	}
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > button:nth-child(3) span:before,
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(3) span:before,
+	.earth-theme.variant-2 .spc-categories .item-box .buttons > div:nth-child(3) a:before {
+		left: 20px;
+		right: auto;
+	}
+}

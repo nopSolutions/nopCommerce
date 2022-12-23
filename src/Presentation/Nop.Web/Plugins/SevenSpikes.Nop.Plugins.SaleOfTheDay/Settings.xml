@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="SaleOfTheDaySettings.Enabled">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="SaleOfTheDaySettings.AutoPlay">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="SaleOfTheDaySettings.ShowSpecialPriceCountdownTimer">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="SaleOfTheDaySettings.SlickSliderSettings">
+    <Value>{"slidesToShow":1,"arrows":true,"appendArrows":".slick-arrows-{0}","dots":true}</Value>
+  </Setting>
+  <!--No default responsive setting as the number of slidesToShow is 1 by default. It's present only for some themes where the number is bigger than 1-->
+</Settings>

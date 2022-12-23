@@ -1,0 +1,306 @@
+/*
+* Copyright 2012 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.nop-jcarousel {
+	margin-right: auto !important;
+	margin-left: auto !important;
+}
+.home-page .nop-jcarousel {
+	width: 94%;
+	margin-bottom: 90px;
+}
+.nop-jcarousel > .title {
+	position: relative;
+	margin: 0 0 60px;
+	text-align: center !important;
+}
+.nop-jcarousel > .title.has-navigation {
+	margin-bottom: 100px;
+}
+.nop-jcarousel .item-box {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* grid specific */
+
+.home-page .nop-jcarousel.product-grid {
+	width: 100%;
+}
+.nop-jcarousel.category-grid .item-grid,
+.nop-jcarousel.manufacturer-grid .item-grid,
+.nop-jcarousel.vendor-grid .item-grid {
+	margin: 0 -1%;
+}
+.nop-jcarousel.category-grid .item-box,
+.nop-jcarousel.manufacturer-grid .item-box,
+.nop-jcarousel.vendor-grid .item-box {
+	padding: 0 2%;
+}
+.nop-jcarousel .item-box .product-rating-box,
+.nop-jcarousel .item-box .description {
+	display: none;
+}
+.nop-jcarousel .category-item {
+	position: relative;
+}
+.nop-jcarousel .manufacturer-item,
+.nop-jcarousel .vendor-item {
+	margin: 0 5px;
+	border: 2px solid #eee;
+}
+.nop-jcarousel .manufacturer-item .title,
+.nop-jcarousel .vendor-item .title {
+	display: none;
+}
+
+/* navigation */
+
+.nop-jcarousel .slick-prev,
+.nop-jcarousel .slick-next {
+    position: absolute;
+	bottom: -75px;
+    width: 100px;
+	height: 24px; 
+    border: none;
+	background-color: transparent;
+	background-position: center;
+	background-repeat: no-repeat;
+	font-size: 0;
+	color: #333;
+	cursor: pointer;
+    transition: all 0.2s ease;
+}
+.nop-jcarousel .slick-prev {
+    left: 50%;
+    margin-left: -115px;
+    background-image: url('images/prev.png');
+	text-align: right;
+}
+.nop-jcarousel .slick-next {
+    right: 50%;
+    margin-right: -115px;
+    background-image: url('images/next.png');
+	text-align: left;
+}
+.nop-jcarousel .slick-prev:hover,
+.nop-jcarousel .slick-next:hover {
+}
+.nop-jcarousel .slick-disabled,
+.nop-jcarousel .slick-disabled:hover {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.nop-jcarousel .slick-dots {
+    margin: 30px 0 0;
+    text-align: center;
+    font-size: 0;
+}
+.nop-jcarousel .slick-dots li {
+    display: inline-block;
+    margin: 0 2px;
+}
+.nop-jcarousel .slick-dots button {
+    display: inline-block;
+	box-sizing: content-box;
+	width: 10px;
+	height: 10px;
+	margin: 0 3px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+    background-color: #ddd;
+	font-size: 0;
+	transition: all 0.2s ease;
+}
+.air-theme .nop-jcarousel .slick-dots .slick-active button,
+.air-theme .nop-jcarousel .slick-dots button:hover {
+	border-color: #eda187;
+    background-color: #eda187;
+}
+.earth-theme .nop-jcarousel .slick-dots .slick-active button,
+.earth-theme .nop-jcarousel .slick-dots button:hover {
+	border-color: #007c5a;
+    background-color: #007c5a;
+}
+
+/* side bars carousels */
+
+.side-2 .nop-jcarousel {
+	text-align: center;
+}
+.side-2 .nop-jcarousel,
+.center-2 .nop-jcarousel {
+	margin-top: 0;
+	margin-bottom: 40px;
+}
+.side-2 .nop-jcarousel > .title,
+.center-2 .nop-jcarousel > .title {
+	margin: 0 0 30px;
+	color: #555;
+}
+.air-theme .side-2 .nop-jcarousel > .title strong,
+.air-theme .center-2 .nop-jcarousel > .title strong {
+	font-size: 18px;
+	font-weight: 700;
+	letter-spacing: 2px;
+}
+.earth-theme .side-2 .nop-jcarousel > .title strong,
+.earth-theme .center-2 .nop-jcarousel > .title strong {
+	font-size: 20px;
+	font-weight: 400;
+}
+.side-2 .nop-jcarousel > .title strong:after,
+.center-2 .nop-jcarousel > .title strong:after {
+	display: none;
+}
+.side-2 .nop-jcarousel > .title.has-navigation,
+.center-2 .nop-jcarousel > .title.has-navigation {
+	margin: 0 0 60px;
+}
+.side-2 .nop-jcarousel .slick-prev,
+.side-2 .nop-jcarousel .slick-next,
+.center-2 .nop-jcarousel .slick-prev,
+.center-2 .nop-jcarousel .slick-next {
+	bottom: -40px;
+}
+.pager ~ .jCarouselMainWrapper {
+	margin-top: 40px;
+}
+
+
+
+@media all and (max-width: 1024px) {
+
+.jCarouselMainWrapper ~ .block:nth-of-type(odd) {
+	clear: none; /*fix for floated blocks with carousel enabled*/
+}
+.jCarouselMainWrapper ~ .block:nth-of-type(even) {
+	clear: both; /*fix for floated blocks with carousel enabled*/
+}
+.nop-jcarousel .item-box .product-title {
+	padding: 0 10px;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+.nop-jcarousel .item-box {
+	text-align: center;
+}
+.nop-jcarousel .item-box .picture {
+	margin: 0;
+}
+.nop-jcarousel .item-box .buttons {
+	bottom: -100%;
+	height: 100%;
+	padding: 0;
+	transition-duration: 0.5s;
+}
+.nop-jcarousel .item-box .buttons button {
+	top: 50%;
+	margin: -20px 2px 0;
+}
+.nop-jcarousel .item-box .ajax-cart-button-wrapper,
+.nop-jcarousel .item-box .quick-view-button {
+	top: 50%;
+	margin-top: -20px;
+}
+.nop-jcarousel .item-box .ajax-cart-button-wrapper button,
+.nop-jcarousel .item-box .quick-view-button button {
+	position: static;
+	top: auto;
+	margin-top: 0;
+}
+.nop-jcarousel .item-box:hover .buttons {
+	bottom: 0;
+}
+.nop-jcarousel .item-box:hover .ribbon-position {
+	z-index: -1;
+}
+.nop-jcarousel .item-box .product-title,
+.nop-jcarousel .item-box .add-info {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	padding: 0 20px;
+	color: #fff;
+	opacity: 0;
+	transition: opacity 0.2s ease 0.1s;
+}
+.nop-jcarousel .item-box .product-title {
+	top: 20%;
+}
+.nop-jcarousel .item-box .add-info {
+	bottom: 20%;
+}
+.nop-jcarousel .item-box .old-price {
+	color: rgba(255,255,255,0.7);
+}
+.nop-jcarousel .item-box .old-price:after {
+	background-image: url('images/line-through.png');
+	opacity: 0.6;
+}
+.nop-jcarousel .item-box .actual-price {
+	margin: 0 5px;
+	color: #fff !important;
+}
+.nop-jcarousel .item-box:hover .product-title,
+.nop-jcarousel .item-box:hover .add-info {
+	opacity: 1;
+	transition: opacity 0.2s ease 0.3s;
+}
+.nop-jcarousel .tax-shipping-info,
+.nop-jcarousel .base-price-pangv {
+	display: none;
+}
+
+.home-page .nop-jcarousel.category-grid,
+.home-page .nop-jcarousel.manufacturer-grid,
+.home-page .nop-jcarousel.vendor-grid {
+	width: 980px;
+}
+.center-2 .nop-jcarousel {
+	min-width: 721px; /*'number of items' fix for smallest desktop resolutions*/
+}
+
+}
+
+@media all and (min-width: 1321px) {
+
+.home-page .nop-jcarousel {
+	margin-bottom: 120px;
+}
+.nop-jcarousel > .title.has-navigation {
+	margin-bottom: 110px;
+}
+.nop-jcarousel .slick-prev,
+.nop-jcarousel .slick-next {
+	bottom: -85px;
+}
+
+.nop-jcarousel .item-box .product-title {
+	top: 30%;
+}
+.nop-jcarousel .item-box .add-info {
+	bottom: 30%;
+}
+.side-2 .nop-jcarousel .item-box .product-title,
+.center-2 .nop-jcarousel .item-box .product-title {
+	top: 20%;
+}
+.side-2 .nop-jcarousel .item-box .add-info,
+.center-2 .nop-jcarousel .item-box .add-info {
+	bottom: 20%;
+}
+
+.home-page .nop-jcarousel.category-grid,
+.home-page .nop-jcarousel.manufacturer-grid,
+.home-page .nop-jcarousel.vendor-grid {
+	width: 1280px;
+}
+
+}

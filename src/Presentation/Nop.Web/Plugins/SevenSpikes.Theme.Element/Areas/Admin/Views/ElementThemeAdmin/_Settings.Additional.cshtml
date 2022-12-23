@@ -1,0 +1,72 @@
+﻿@model ElementThemeSettingsModel
+
+<div class="cards-default">
+    <div class="card card-default">
+		<div class="card-body">
+			<div class="form-group row theme-color">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="Preset_OverrideForStore" asp-input="Preset" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="Preset" />
+				</div>
+				<div class="col-md-9 adminData">
+					@Html.NopRadioButtonsForPresets(Model.Presets, Model.Preset)
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="Layout_OverrideForStore" asp-input="Layout" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="Layout" />
+				</div>
+				<div class="col-md-9">
+					<nop-select asp-for="Layout" asp-items="Model.SupportedLayouts" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="Variant_OverrideForStore" asp-input="Variant" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="Variant" />
+				</div>
+				<div class="col-md-9">
+					<nop-select asp-for="Variant" asp-items="Model.SupportedVariants" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="NumberOfSubCategoriesPerRow_OverrideForStore" asp-input="NumberOfSubCategoriesPerRow" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="NumberOfSubCategoriesPerRow" />
+				</div>
+				<div class="col-md-9">
+					<nop-select asp-for="NumberOfSubCategoriesPerRow" asp-items="Model.NumberOfSubCategoriesPerRows" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="RollOverEnabled_OverrideForStore" asp-input="RollOverEnabled" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="RollOverEnabled" />
+				</div>
+				<div class="col-md-9">
+					<nop-editor asp-for="RollOverEnabled" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="PageTitleImageId_OverrideForStore" asp-input="PageTitleImageId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="PageTitleImageId" />
+				</div>
+				<div class="col-md-9">
+					<nop-editor asp-for="PageTitleImageId" />
+					<span asp-validation-for="PageTitleImageId"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<nop-override-store-checkbox asp-for="PageTitleImageId_OverrideForStore" asp-input="ReserveFixedHeightForProductTitles" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+					<nop-label asp-for="ReserveFixedHeightForProductTitles" />
+				</div>
+				<div class="col-md-9">
+					<nop-editor asp-for="ReserveFixedHeightForProductTitles" />
+				</div>
+			</div>
+		</div>
+    </div>
+</div>

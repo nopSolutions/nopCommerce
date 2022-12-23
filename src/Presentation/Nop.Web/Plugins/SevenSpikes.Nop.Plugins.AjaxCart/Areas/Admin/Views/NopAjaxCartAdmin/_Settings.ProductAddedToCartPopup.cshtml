@@ -1,0 +1,54 @@
+﻿@model NopAjaxCartSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductAddedToCartImageSize_OverrideForStore" asp-input="ProductAddedToCartImageSize" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductAddedToCartImageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductAddedToCartImageSize" />
+            <span asp-validation-for="ProductAddedToCartImageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableRelatedProductsInPopup_OverrideForStore" asp-input="EnableRelatedProductsInPopup" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableRelatedProductsInPopup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableRelatedProductsInPopup" />
+            <span asp-validation-for="EnableRelatedProductsInPopup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfRelatedProductsInPopup_OverrideForStore" asp-input="NumberOfRelatedProductsInPopup" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfRelatedProductsInPopup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfRelatedProductsInPopup" />
+            <span asp-validation-for="NumberOfRelatedProductsInPopup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableCrossSellProductsInPopup_OverrideForStore" asp-input="EnableCrossSellProductsInPopup" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableCrossSellProductsInPopup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableCrossSellProductsInPopup" />
+            <span asp-validation-for="EnableCrossSellProductsInPopup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfCrossSellProductsInPopup_OverrideForStore" asp-input="NumberOfCrossSellProductsInPopup" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfCrossSellProductsInPopup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfCrossSellProductsInPopup" />
+            <span asp-validation-for="NumberOfCrossSellProductsInPopup"></span>
+        </div>
+    </div>
+</div>

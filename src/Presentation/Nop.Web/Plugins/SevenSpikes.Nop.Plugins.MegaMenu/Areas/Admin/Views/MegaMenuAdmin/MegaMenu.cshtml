@@ -1,0 +1,92 @@
+﻿@using SevenSpikes.Nop.Framework
+@using SevenSpikes.Nop.Framework.MVCExtensions
+
+@model MenuModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    // Active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Menus");
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.MegaMenu/Areas/Admin/Content/Styles/adminStyles.css" />
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @(Model.Id > 0 ? T("SevenSpikes.MegaMenu.Admin.EditMenu") : T("Admin.Common.AddNew"))
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.MegaMenu.Admin.BackToList") + ")", "ManageMenus")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary save-settings-button">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @if (Model.Id > 0)
+            {
+                <span id="menu-delete" class="btn btn-danger">
+                    <i class="far fa-trash-alt"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <nop-tabs id="mega-menu-edit-tabs">
+                    <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.MegaMenu.Admin.Settings.Common.GeneralSettings")">
+                        @{ await Html.RenderPartialAsync(AdminViews.MenuSettings, Model); }
+                    </nop-tab>
+                    @if (Model.Id > 0)
+                    {
+                        <nop-tab asp-name="tab-menu-items" asp-title="@T("SevenSpikes.MegaMenu.Admin.Settings.Common.MenuItemsSettings")">
+                            @{ await Html.RenderPartialAsync(AdminViews.MenuMenuItems, Model); }
+                        </nop-tab>
+                    }
+                </nop-tabs>
+            </div>
+        </div>
+    </section>
+</form>
+
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="menu-delete" />
+
+<div class="menu-items-validation-message invalid-nesting"></div>
+<div class="menu-items-validation-message automatic-orphaning">@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.SelectedCatalogDoesNotAllowChildElements")</div>
+
+<div id="dialog-confirm" title="@T("SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Title")" style="display: none">
+    <p>@T("SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Text")</p>
+</div>
+
+<input type="hidden" id="mega-menu-info"
+       data-menuItemProducts="@T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Products")"
+       data-menuItemManufacturers="@T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Manufacturers")"
+       data-menuItemVendors="@T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Vendors")"
+       data-menuItemTopics="@T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Topics")"
+       data-menuItemProductTags="@T("SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.ProductTags")"
+       data-noLabel="@T("SevenSpikes.MegaMenu.Admin.MenuItem.NoLabel")"
+       data-invalidNesting-picture-asMovingItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Picture.AsMovingMenuItem")"
+       data-invalidNesting-picture-asParentItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Picture.AsParentMenuItem")"
+       data-invalidNesting-column-asMovingItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Column.AsMovingMenuItem")"
+       data-invalidNesting-column-asParentItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Column.AsParentMenuItem")"
+       data-invalidNesting-row-asMovingItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Row.AsMovingMenuItem")"
+       data-invalidNesting-row-asParentItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Row.AsParentMenuItem")"
+       data-invalidNesting-columnsLayout-asMovingItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.ColumnsLayout.AsMovingMenuItem")"
+       data-invalidNesting-columnsLayout-asParentItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.ColumnsLayout.AsParentMenuItem")"
+       data-invalidNesting-rowsLayout-asMovingItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.RowsLayout.AsMovingMenuItem")"
+       data-invalidNesting-rowsLayout-asParentItem="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.RowsLayout.AsParentMenuItem")"
+       data-invalidNesting-templateBasedMenuItems="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.TemplateBasedMenuItems")"
+       data-invalidNesting-invalidOperation="@T("SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.InvalidOperation")"
+       data-confirmationWindow-button-removeAllItems="@T("SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Button.RemoveAllItems")"
+       data-confirmationWindow-button-cancel="@T("SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Button.Cancel")" />

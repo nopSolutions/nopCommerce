@@ -1,0 +1,96 @@
+﻿@model SaleOfTheDaySettingsModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.SaleOfTheDay.Admin.Submenus.ManageOffers");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.SaleOfTheDay.Admin.Menu.MenuName")
+    </h1>
+    <div class="float-right">
+
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+@* OFFERS GRID *@
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "sale-offers-grid",
+                            UrlRead = new DataUrl("List", "SaleOfTheDayAdmin", null),
+                            UrlDelete = new DataUrl("DeleteOffer", "SaleOfTheDayAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SaleOfTheDayOfferAdminModel.Title))
+                                {
+                                    Title = T("SevenSpikes.SaleOfTheDay.Admin.SaleOfTheDayOffer.Title").Text
+                                },
+                                new ColumnProperty(nameof(SaleOfTheDayOfferAdminModel.Published))
+                                {
+                                    Title = T("SevenSpikes.SaleOfTheDay.Admin.SaleOfTheDayOffer.Published").Text,
+                                    Width = "100",
+                                    Render = new RenderCustom("renderIsPublished")
+                                },
+                                new ColumnProperty(nameof(SaleOfTheDayOfferAdminModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    Render = new RenderCustom("renderEditButton")
+                                },
+                                new ColumnProperty(nameof(SaleOfTheDayOfferAdminModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
+                            }
+                        });
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<script>
+    function renderIsPublished(data, type, row, meta) {
+
+        if (row.Published) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

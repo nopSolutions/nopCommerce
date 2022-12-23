@@ -1,0 +1,58 @@
+﻿@using Nop.Web.Framework
+@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu
+@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MegaMenuSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    // Active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.MegaMenu.Admin.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+
+                @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+
+                <div class="card-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="Enabled" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="Enabled" />
+                                    <span asp-validation-for="Enabled"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+@*@await Html.PartialAsync("~/Plugins/SevenSpikes.Core/Views/Shared/ResetDefaultSettingsView.cshtml", Constants.PluginFolderName)*@

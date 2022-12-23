@@ -1,0 +1,86 @@
+﻿@model SocialFeedModel
+
+@inject IWorkContext workContext
+
+@{
+    string socialNetworkViewPath = string.Empty;
+    ISocialFeedModel socialNetworkModel = null;
+    string socialNetworkClass = string.Empty;
+    Type socialNetworkModelType = null;
+
+    switch (Model.SocialNetwork.Type)
+    {
+        case SocialNetworkType.Twitter:
+            socialNetworkViewPath = await ViewPathHelper.GetViewPath(Views.TwitterFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.TwitterModel;
+            socialNetworkModelType = typeof(TwitterModel);
+            socialNetworkClass = "twitter-feed";
+            break;
+        case SocialNetworkType.Instagram:
+            socialNetworkViewPath = await ViewPathHelper.GetViewPath(Views.InstagramFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.InstagramModel;
+            socialNetworkModelType = typeof(InstagramModel);
+            socialNetworkClass = "instagram-feed";
+            break;
+        case SocialNetworkType.Facebook:
+            socialNetworkViewPath = await ViewPathHelper.GetViewPath(Views.FacebookFeeds);
+            socialNetworkModel = Model.SocialNetwork.ContentModels.FacebookModel;
+            socialNetworkModelType = typeof(FacebookModel);
+            socialNetworkClass = "facebook-feed";
+            break;
+    }
+
+    var userAgent = Url.ActionContext.HttpContext.Request.Headers["User-Agent"];
+    var oldIe = false;
+    if (!String.IsNullOrEmpty(userAgent) && userAgent.ToString().ToLower().IndexOf("MSIE 9.0", StringComparison.InvariantCultureIgnoreCase) > 0)
+    {
+        oldIe = true;
+    }
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    var socialFeedCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.css";
+}   
+
+<link rel="stylesheet" href="@socialFeedCssFilePath" />
+ 
+@if (supportRtl)
+{
+    var socialFeedRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.rtl.css";
+
+    <link rel="stylesheet" href="@socialFeedRtlCssFilePath" />
+}
+
+<div class="@socialNetworkClass social-feed @Model.Class" data-ieoldversion="@oldIe" data-rtl="@supportRtl">
+    @if (!string.IsNullOrEmpty(Model.Title))
+    {
+        <div class="title">
+            <strong class="title-text">@Model.Title</strong>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SubtitleLabel))
+    {
+        <div class="sub-title">
+            @if (!string.IsNullOrEmpty(Model.SubtitleLabel))
+            {
+                <span class="sub-title-label">@Model.SubtitleLabel</span>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.SubtitleLinkText) && !string.IsNullOrEmpty(Model.SubtitleUrl))
+            {
+                <a class="sub-title-link" href="@Model.SubtitleUrl" title="@Model.SubtitleLinkText" target="_blank">@Model.SubtitleLinkText</a>
+            }
+            else if (!string.IsNullOrEmpty(Model.Title))
+            {
+                <span class="sub-title-text">@Model.Title</span>
+            }
+        </div>
+    }
+
+    @{
+        await Html.RenderPartialAsync(socialNetworkViewPath, Convert.ChangeType(socialNetworkModel, socialNetworkModelType));
+    }
+
+</div>

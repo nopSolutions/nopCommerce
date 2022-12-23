@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Mega Menu",
+  "SystemName": "SevenSpikes.Nop.Plugins.MegaMenu",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.MegaMenu.dll",
+  "Description": "This plugin allows you to build your very own mega menu, the way you like it."
+}

@@ -1,0 +1,157 @@
+﻿@*@model FacebookModel
+@inject IWebHelper webHelper
+@{
+    string feedsManagerPath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Scripts/FeedsManager.min.js";
+    Html.AppendScriptParts(feedsManagerPath);
+}
+<script>
+    $(document).ready(function () {
+        @if (Model.SocialNetworkId > 0)
+        {
+            <text>
+                function callback() {
+                    var redirectUri = '@Url.RouteUrl("SocialFeedAuthCode", null, Url.ActionContext.HttpContext.Request.Scheme)';
+                    if (redirectUri && '@Model.SocialNetworkId') {
+                        $('#authorize-facebook').click(function () {
+                            var url = "https://www.facebook.com/dialog/oauth?client_id=@Model.ClientId&redirect_uri=" + redirectUri + "&scope=user_posts&state=@Model.SocialNetworkId";
+                            Feeds.Utils.popitup(url, 'Facebook authentication');
+                        });
+                    }
+                }
+                Feeds.Facebook.init('@Model.ClientId', callback);
+                Feeds.Utils.disableAuthorizeOnChange('.client-id input, .client-secret input', '.authorize-btn',
+                '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")',
+                '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")');
+            </text>
+         }
+
+        var postSourceMeEnumValue = '@((int)PostSource.Me)';
+        var selectedPostSource = $('#SettingModels_FacebookModel_PostSource').find(':selected').val();
+
+        if (selectedPostSource == postSourceMeEnumValue) {
+            $('.page-name').hide();
+        }
+
+        $('#SettingModels_FacebookModel_PostSource').change(function () {
+            var selectedPostSource = $(this).find(":selected").val();
+            if (selectedPostSource != postSourceMeEnumValue) {
+                $('.page-name').show();
+            } else {
+                $('.page-name').hide();
+            }
+        });
+    });
+</script>
+
+<div class="card card-default">
+    <div class="card-body">
+        @await Html.PartialAsync(AdminViews.SocialNetworkSharedRedirectUrl, Url.RouteUrl("SocialFeedAuthCode", null, Url.ActionContext.HttpContext.Request.Scheme))
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ClientId" />
+            </div>
+            <div class="col-md-9 client-id">
+                <nop-editor asp-for="ClientId" />
+                <span asp-validation-for="ClientId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ClientSecret" />
+            </div>
+            <div class="col-md-9 client-secret">
+                <nop-editor asp-for="ClientSecret" />
+                <span asp-validation-for="ClientSecret"></span>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <div class="summary">To obtain your <strong>AppId</strong> and <strong>AppSecret</strong> do the following:</div>
+                <ul>
+                    <li>Login to Facebook (if you haven't already) and go to <a href="https://developers.facebook.com/apps/" target="_blank">https://developers.facebook.com/apps</a>.</li>
+                    <li>Click on <strong>Add a New App</strong> in top right corner.</li>
+                    <li>You will see a popup asking you about your app type. Choose <string>Website</string>, then you will be asked to choose an app name. Enter your app name and you will see a button <strong>Create New Facebook App ID</strong>, click it and select your app category, then click the <strong>Create App ID button</strong>.</li>
+                    <li>Next thing you see will be <strong>Quick Start</strong> screen. You can skip it by clicking the <strong>Skip Quick Start</strong> at the top right corner.</li>
+                    <li>If you had skipped the Quick Start screen you will be redirected to the app Dashboard. In there click on <strong>Settings</strong>. At the top you will see three tabs (Basic, Advanced and Migrations). Click on Advanced.</li>
+                    <li>Now, before you use your App Id and App secret go to the Advanced Tab, find the <strong>Client OAuth Settings</strong> section and enter the <strong>Redirect Url</strong> in the <strong>Valid OAuth redirect URIs</strong>, then click the <strong>Save changes</strong> button at the bottom.</li>
+                    <li>If you go to the <strong>Basic</strong> tab or on the <strong>Dashboard</strong> you will see your <strong>App ID</strong> and <strong>App Secret</strong>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="authorization">
+    <div class="authorize">
+        @if (Model.SocialNetworkId > 0)
+        {
+            if (string.IsNullOrEmpty(Model.AccessToken))
+            {
+                <button id="authorize-facebook" class="not-authorized btn authorize-btn bg-red" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")</span>
+                </button>
+            }
+            else
+            {
+                <button id="authorize-facebook" class="already-authorized btn authorize-btn bg-blue" type="button">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")</span>
+                </button>
+            }
+        }
+        else
+        {
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SaveBeforeAuthorize")</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        }
+    </div>
+    @if (Model.SocialNetworkId > 0 && string.IsNullOrEmpty(Model.AccessToken))
+    {
+        <div class="authorize-descr">
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>By clicking on the button above a popup will be opened containing the Facebook's authorize screen (this is the case when you haven't already authorize the app. If you have already authorize the app the popup will just close). There you will be asked if you are willing to provide certain rights to your Facebook profile.</p>
+                <p>If you choose to authorize the app (by clicking the Authorize button) the popup will close and the Edit page will refresh. If the Authorize button is <strong>Green</strong> your autorization was successfull, if it is <strong>Red</strong> you haven't authorized the app.</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Model.AccessToken))
+{
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-header">
+				<div class="card-title">
+					@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.Panels.Configuration")
+				</div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PostSource" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PostSource" asp-items="@await ((PostSource) Model.PostSource).ToSelectListAsync()" />
+                        <span asp-validation-for="PostSource"></span>
+                    </div>
+                </div>
+                <div class="form-group row page-name">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PageName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PageName" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}*@

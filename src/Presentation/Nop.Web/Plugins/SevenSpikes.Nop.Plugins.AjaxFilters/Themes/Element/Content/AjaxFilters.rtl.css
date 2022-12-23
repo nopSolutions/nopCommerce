@@ -1,0 +1,85 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.responsive-nav-wrapper .filters-button span {
+	margin: 5px -5px -10px 0;
+	background-image: url('images/filters-button.rtl.png');
+	background-position: right center;
+	padding: 0 36px 0 0;
+}
+.close-filters {
+	text-align: left;
+}
+.filter-block a.toggleControl {
+	padding: 15px 20px 15px 40px;
+}
+a.clearFilterOptions,
+a.clearPriceRangeFilter {
+	left: 10px;
+	right: auto;
+}
+.selected-options-list span {
+	margin: 0 0 0 15px;
+}
+.selected-options-list span:after {
+	margin: -3px 5px 0 0;
+}
+.priceRangeMinPanel,
+.specification-min-panel {
+	float: right;
+}
+.priceRangeMaxPanel,
+.specification-max-panel {
+	float: left;
+}
+.currentMinPrice, .current-min-value {
+	float: right;
+}
+.currentMaxPrice, .current-max-value {
+	float: left;
+}
+.filtersGroupPanel .checkbox-list label {
+	padding: 10px 35px 10px 10px;
+}
+.filtersGroupPanel .checkbox-list label:before {
+	right: 10px;
+	left: auto;
+}
+.colorOptions label {
+	padding-right: 42px !important;
+	padding-left: 0 !important;
+}
+.colorOptions .color {
+	right: 7px;
+	left: auto;
+}
+.ajaxFilters .k-window-actions {
+	left: 8px;
+	right: auto;
+}
+.ajaxFilters .k-window-actions .k-icon {
+	left: 10px;
+	right: auto;
+}
+
+
+@media all and (max-width: 1024px) {
+	
+	.nopAjaxFilters7Spikes {
+		right: 0; left: auto;
+		-webkit-transform: translate(320px);
+		-ms-transform: translate(320px);
+		transform: translate(320px);
+	}
+}
+
+@media all and (min-width: 481px) and (max-width: 1024px) {
+	
+	.nopAjaxFilters7Spikes {
+		-webkit-transform: translate(450px);
+		-ms-transform: translate(450px);
+		transform: translate(450px);
+	}
+}

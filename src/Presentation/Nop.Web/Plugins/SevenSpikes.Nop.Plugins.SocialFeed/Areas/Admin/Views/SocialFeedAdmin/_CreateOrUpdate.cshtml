@@ -1,0 +1,21 @@
+﻿@model SocialFeedModel
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <nop-tabs id="social-network-create-or-edit">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.Plugins.SocialFeed.Admin.ManageSocialFeed.TabTitle.Settings")">
+                @{ await Html.RenderPartialAsync(AdminViews.SocialFeedSettings, Model); }
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-widgets" asp-title="@T("SevenSpikes.Plugins.SocialFeed.Admin.ManageSocialFeed.TabTitle.Widgets")">
+                    @await Component.InvokeAsync("WidgetMappingsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, pluginFolderName = Plugin.FolderName })
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>

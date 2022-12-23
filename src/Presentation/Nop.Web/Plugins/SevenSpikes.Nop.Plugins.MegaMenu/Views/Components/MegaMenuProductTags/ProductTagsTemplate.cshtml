@@ -1,0 +1,41 @@
+﻿@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemProductTagsModel
+
+@{
+    var hasTags = Model.ProductTags.Count > 0;
+    var hasSublistClass = hasTags ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasTags ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass @Model.Item.CssClass">
+
+    <a href="@Url.RouteUrl("ProductTagsAll")" class="@withSubcategoriesClass" title="@Model.Item.Title"><span>@Model.Item.Title</span></a>
+
+    @if (hasTags)
+    {
+        <div class="plus-button"></div>
+        <div class="sublist-wrap">
+            <ul class="sublist product-tags">
+                <li class="back-button">
+                    <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                </li>
+                @foreach (var productTag in Model.ProductTags)
+                {
+                    <li>
+                        <a href="@Url.RouteUrl("ProductsByTag", new {productTagId = productTag.Id, SeName = productTag.SeName })" title="@productTag.Name"><span>@productTag.Name</span></a>
+                    </li>
+                }
+
+                @if (Model.ShouldShowViewAllLink)
+                {
+                    <li>
+                        <a class="view-all" href="@Url.RouteUrl("ProductTagsAll")" title="@T("SevenSpikes.MegaMenu.ViewAllProductTags")">
+                            <span>@T("SevenSpikes.MegaMenu.ViewAllProductTags")</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</li>

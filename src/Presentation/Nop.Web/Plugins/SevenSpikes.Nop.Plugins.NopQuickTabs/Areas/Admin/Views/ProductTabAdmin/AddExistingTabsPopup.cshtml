@@ -1,0 +1,82 @@
+﻿@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+}
+
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Common;
+@inject AdminAreaSettings adminAreaSettings;
+
+@model int
+
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            var gridElement = window.opener.document.getElementById("btnRefreshGrid");
+            $(gridElement).click();
+        }
+        catch (e) { }
+        window.close();
+    </script>
+
+    return;
+}
+
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<form asp-action="AddExistingTabs" asp-controller="ProductTabAdmin">
+	<input type="hidden" value="@Model" name="id" />
+
+	<div class="content-header clearfix">
+		<h1 class="float-left">
+			@T("SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddExistingTab")
+		</h1>
+		<div class="float-right">
+			<button type="submit" name="save" value="save" class="btn bg-primary">
+				<i class="far fa-save"></i>
+				@T("Admin.Common.Save")
+			</button>
+		</div>
+	</div>
+	<section class="content">
+		<div class="form-horizontal">
+			<div class="cards-group">
+				<div class="card-body">
+					@{
+						await Html.RenderPartialAsync("Table", new DataTablesModel
+						{
+							Name = "product-specific-tabs-grid",
+							UrlRead = new DataUrl("AddExistingTabsList", "ProductTabAdmin", new RouteValueDictionary { ["id"] = Model }),
+							Length = defaultGridPageSize,
+							LengthMenu = gridPageSizes,
+							ColumnCollection = new List<ColumnProperty>
+							{
+								new ColumnProperty(nameof(TabModel.Id))
+								{
+									Render = new RenderCustom("renderCheckbox"),
+									Width = "50"
+								},
+								new ColumnProperty(nameof(TabModel.SystemName))
+								{
+									Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName").Text
+								}
+							}
+						});
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		function renderCheckbox(data, type, row, meta) {
+
+			return '<input type="checkbox" name="SelectedTabsIds" value="' + data + '" styles="text-align:center"/>'
+		}
+	</script>
+</form>

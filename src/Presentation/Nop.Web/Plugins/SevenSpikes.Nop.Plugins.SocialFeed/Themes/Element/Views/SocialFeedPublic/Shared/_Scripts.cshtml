@@ -1,0 +1,28 @@
+﻿@model SocialNetworkType
+
+@{    
+    switch (Model)
+    {
+        case SocialNetworkType.Facebook:
+
+            @*Include scripts specific for Facebook Feed*@
+            
+            break;
+        case SocialNetworkType.Twitter:
+        
+            @*Include scripts specific for Twitter Feed*@
+
+            break;
+        case SocialNetworkType.Instagram:
+
+            @*Include scripts specific for Instagram Feed*@
+
+            break;
+    }
+
+    var socialFeedCssFilePath = string.Format("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/Element/Content/scripts/{0}", "socialfeed.js");
+    var masonryCssFilePath = string.Format("~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Scripts/{0}", "masonry.pkgd.min.js");
+}
+
+<script src="@socialFeedCssFilePath" asp-location="Footer"></script>
+<script src="@masonryCssFilePath" asp-location="Footer"></script>

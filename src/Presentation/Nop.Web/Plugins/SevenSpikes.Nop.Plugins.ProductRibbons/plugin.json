@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Product Ribbons",
+  "SystemName": "SevenSpikes.Nop.Plugins.ProductRibbons",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.ProductRibbons.dll",
+  "Description": "This plugin allows you to add ribbons with text and images to the various products in your store."
+}

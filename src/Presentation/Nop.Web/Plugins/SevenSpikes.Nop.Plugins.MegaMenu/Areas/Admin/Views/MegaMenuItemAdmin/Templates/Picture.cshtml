@@ -1,0 +1,67 @@
+﻿@model MenuItemModel
+
+@{
+    Layout = "";
+}
+
+<li id="menu-item-@Model.Id" class="menu-item menu-item-depth-@Model.DepthLevel menu-item-picture menu-item-edit-inactive"
+    data-menuItemId="@Model.Id">
+    <div class="menu-item-bar">
+        <div class="menu-item-handle ui-sortable-handle">
+            <span class="item-title">
+                <span class="item-type" data-itemtype="@((int) Model.Type)">@Model.TypeName</span>
+                @*<span class="is-submenu" style="display: none;">sub item</span>*@
+            </span>
+            <span class="item-controls">
+                <a class="item-edit arrow-down" title="@T("Admin.Common.Edit")" href="#menu-item-settings-@Model.Id"></a>
+            </span>
+        </div>
+    </div>
+
+    <div class="menu-item-settings" id="menu-item-settings-@Model.Id">
+        
+        @(await Html.LocalizedEditorAsync<MenuItemModel, MenuItemLocalizedModel>("picture-info-localized-" + Model.Id,
+            @<div class="clearfix">
+                <p class="field-url description description-wide">
+                    <label>
+                        <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Url")</span>
+                        @Html.TextBoxFor(model => model.Locales[item].Url, new { @class = "widefat edit-menu-item-url localized", @id = "" })
+                    </label>
+                </p>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId, new { @class = "edit-menu-item-language-id" })
+            </div>
+            ,
+            @<div class="clearfix">
+                <p class="field-url description description-wide">
+                    <label>
+                        <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Url")</span>
+                        @Html.TextBoxFor(model => model.Url, new { @class = "widefat edit-menu-item-url", @id = "" })
+                    </label>
+                </p>
+            </div>
+        ))
+
+        <p class="field-entity-id description description-wide">
+            <label>
+                @Html.EditorFor(x => x.EntityId, "Picture")
+            </label>
+        </p>
+        
+        <p class="field-image-size description description-wide">
+            <label>
+                <span>@T("SevenSpikes.MegaMenu.Admin.MenuItem.ImageSize")</span>
+                <input type="text" class="widefat edit-menu-item-image-size" value="@Model.ImageSize" />
+            </label>
+        </p>
+        
+        @{ await Html.RenderPartialAsync(AdminViews.CustomerRolesMultiSelect, Model);} 
+
+        <div class="menu-item-actions description-wide submitbox">
+            <a class="item-delete submitdelete deletion" id="menu-item-delete-@Model.Id"><i class="far fa-trash-alt"></i>@T("SevenSpikes.MegaMenu.Admin.MenuItem.Remove")</a>
+            @*<span class="meta-sep hide-if-no-js"> | </span>
+                <a class="item-cancel submitcancel hide-if-no-js">@T("SevenSpikes.MegaMenu.Admin.MenuItem.Cancel")</a>*@
+        </div>
+    </div>
+
+    <ul class="menu-item-transport"></ul>
+</li>

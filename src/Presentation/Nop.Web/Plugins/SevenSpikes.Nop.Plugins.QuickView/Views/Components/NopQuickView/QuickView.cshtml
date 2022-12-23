@@ -1,0 +1,50 @@
+﻿@using Nop.Core;
+
+@inject QuickViewSettings quickViewSettings;
+@inject IWorkContext workContext;
+
+@{
+    var themeFolder = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Themes/@themeFolder/Content/QuickView.css" />
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Themes/@themeFolder/Content/QuickView.rtl.css" />
+
+    }
+
+    <link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
+
+    var kendoVersion = "2020.1.406";
+
+    /*
+        We usually use AddScriptParts but in this case, we need to use AppendScriptParts and reverse the order of adding the kendo js files in order for other plugins such as HelpDesk,
+        which includes kendo.all.min.js to work properly.
+    */
+
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.window.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.popup.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.draganddrop.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.userevents.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.core.min.js");
+    
+
+    <script src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.QuickView/Scripts/QuickView.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/cloudzoom.core.min.js" asp-location="Footer"></script>
+}
+
+<div class="quickViewData" data-productselector="@quickViewSettings.ProductItemSelector"
+     data-productselectorchild="@quickViewSettings.ProductItemSelectorChild"
+     data-retrievequickviewurl="@Url.RouteUrl("QuickViewData")"
+     data-quickviewbuttontext="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewButtonText")"
+     data-quickviewbuttontitle="@T("SevenSpikes.QuickView.Admin.Settings.QuickViewButtonTitle")"
+     data-isquickviewpopupdraggable="@quickViewSettings.MakeQuickViewPopupDraggable"
+     data-enablequickviewpopupoverlay="@quickViewSettings.EnableQuickViewPopupOverlay"
+     data-accordionpanelsheightstyle="@quickViewSettings.AccordionPanelsHeightStyle"
+     data-getquickviewbuttonroute="@Url.RouteUrl("QuickViewButton")">
+</div>

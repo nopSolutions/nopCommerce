@@ -1,0 +1,49 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Web.Extensions
+
+@model ProductsModel
+
+@{
+    if (Model.ViewMode == "list")
+    {
+        @*list mode*@
+        <div class="@Model.NopAjaxFiltersSettingsModel.ProductsListPanelSelector.TrimStart(new[] {'.'}) nop7SpikesAjaxFiltersGrid">
+            <div class="item-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                        @await Html.PartialAsync("_ProductBox", product)
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        @*grid mode*@
+        <div class="@Model.NopAjaxFiltersSettingsModel.ProductsGridPanelSelector.TrimStart(new[] {'.'}) nop7SpikesAjaxFiltersGrid">
+            <div class="item-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                        @await Html.PartialAsync("_ProductBox", product)
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+
+    if (!await pager.IsEmpty())
+    {
+        <div class="@Model.NopAjaxFiltersSettingsModel.PagerPanelSelector.TrimStart(new[] {'.'})">
+            <div>
+                @pager
+            </div>
+        </div>
+    }
+}

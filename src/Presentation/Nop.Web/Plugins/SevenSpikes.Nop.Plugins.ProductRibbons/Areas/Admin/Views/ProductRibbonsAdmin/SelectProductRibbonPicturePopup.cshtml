@@ -1,0 +1,47 @@
+﻿@inject AdminAreaSettings _adminAreaSettings
+
+@{
+	Layout = "_AdminPopupLayout";
+
+	var defaultGridPageSize = _adminAreaSettings.DefaultGridPageSize;
+	var gridPageSizes = _adminAreaSettings.GridPageSizes;
+}
+
+@await Html.PartialAsync("Table", new DataTablesModel
+{
+	Name = "select-ribbon-images-grid",
+	UrlRead = new DataUrl("SelectRibbonPicture", "ProductRibbonsAdmin", null),
+	Length = defaultGridPageSize,
+	LengthMenu = gridPageSizes,
+	ColumnCollection = new List<ColumnProperty>
+	{
+		new ColumnProperty(nameof(RibbonPictureModel.PictureId))
+		{
+			Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl").Text,
+			Render = new RenderCustom("renderPicture")
+		},
+		new ColumnProperty(nameof(RibbonPictureModel.PictureHeight))
+		{
+			Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureHeight").Text
+		},
+		new ColumnProperty(nameof(RibbonPictureModel.PictureWidth))
+		{
+			Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureWidth").Text
+		}
+	}
+})
+
+
+<script asp-location="Footer">
+    function renderPicture(data, type, row, meta) {
+
+        if (row.PictureId > 0) {
+
+            return '<img src="' + row.PictureUrl + '" alt="'+ row.Id + '"/>';
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+</script>

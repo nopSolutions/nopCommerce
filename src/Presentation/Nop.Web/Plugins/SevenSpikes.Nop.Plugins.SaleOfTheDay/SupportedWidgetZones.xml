@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>main_column_before</WidgetZone>
+  <WidgetZone>main_column_after</WidgetZone>
+  <WidgetZone>home_page_top</WidgetZone>
+  <WidgetZone>home_page_before_categories</WidgetZone>
+  <WidgetZone>home_page_before_products</WidgetZone>
+  <WidgetZone>home_page_before_best_sellers</WidgetZone>
+  <WidgetZone>home_page_before_news</WidgetZone>
+  <WidgetZone>home_page_before_poll</WidgetZone>
+  <WidgetZone>home_page_bottom</WidgetZone>
+  <WidgetZone>categorydetails_top</WidgetZone>
+  <WidgetZone>categorydetails_after_breadcrumb</WidgetZone>
+  <WidgetZone>categorydetails_before_subcategories</WidgetZone>
+  <WidgetZone>categorydetails_before_featured_products</WidgetZone>
+  <WidgetZone>categorydetails_after_featured_products</WidgetZone>
+  <WidgetZone>categorydetails_before_filters</WidgetZone>
+  <WidgetZone>categorydetails_before_product_list</WidgetZone>
+  <WidgetZone>categorydetails_bottom</WidgetZone>
+</SupportedWidgetZones>

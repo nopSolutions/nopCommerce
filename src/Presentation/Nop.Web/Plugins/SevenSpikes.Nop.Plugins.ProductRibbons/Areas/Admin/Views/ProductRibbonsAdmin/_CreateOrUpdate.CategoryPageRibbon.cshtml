@@ -1,0 +1,51 @@
+﻿@model CategoryPageRibbonModel
+
+<div class="page-ribbon-settings" data-ribbontype="category">
+    <div class="card-body">
+        <div class="advanced-setting">
+            <p>@T("SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.CategoryPageRibbon.CategoryPageRibbonSettings")</p>
+        </div>
+        <div>
+            @(await Html.LocalizedEditorAsync<CategoryPageRibbonModel, BasePageRibbonLocalizedModel>("categoryPageRibbon-localized",
+            @<div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Text" />
+                    </div>
+                    <div class="col-md-9">
+                        @*Using the nop-editor helper is causing problems. The field doesn't show anyhting even if ther is a value*@
+                        <input class="form-control text-box single-line"
+                                asp-for="@Model.Locales[item].Text"
+                                value="@Model.Locales[item].Text"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 col-md-offset-3">
+                        @{ await Html.RenderPartialAsync("_ProductTokens"); }
+                    </div>
+                </div>
+                <div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                </div>
+            </div>
+            ,
+            @<div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Text" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 col-md-offset-3">
+                        @{ await Html.RenderPartialAsync("_ProductTokens"); }
+                    </div>
+                </div>
+            </div>
+            ))
+            @{ await Html.RenderPartialAsync("_BasePageRibbon", Model); }
+        </div>
+    </div>
+</div>

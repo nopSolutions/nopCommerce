@@ -1,0 +1,105 @@
+﻿@using Nop.Core.Domain.Common
+@using Nop.Core.Infrastructure
+@using SevenSpikes.Nop.Framework
+@using SevenSpikes.Nop.Framework.MVCExtensions
+@using SevenSpikes.Nop.Plugins.MegaMenu
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    // Active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.MegaMenu.Admin.Submenus.Menus");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+@model bool
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.MegaMenu.Admin.Menus")
+    </h1>
+    <div class="float-right">
+        <a href="@Url.Action("MenuCreate")" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model, Plugin.Name, Plugin.UrlInStore)
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{ 
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "menus-grid",
+                            UrlRead = new DataUrl("MenuList", "MegaMenuAdmin", null),
+                            UrlDelete = new DataUrl("MenuDelete", "MegaMenuAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(MenuAdminModel.Name))
+                                {
+                                    Title = T("SevenSpikes.MegaMenu.Admin.Menu.Name").Text
+                                },
+                                new ColumnProperty(nameof(MenuAdminModel.CssClass))
+                                {
+                                    Title = T("SevenSpikes.MegaMenu.Admin.Menu.CssClass").Text
+                                },
+                                new ColumnProperty(nameof(MenuAdminModel.Enabled))
+                                {
+                                    Title = T("SevenSpikes.MegaMenu.Admin.Menu.Enabled").Text,
+                                    Render = new RenderCustom("renderEnabled"),
+                                    Width = "70"
+                                },
+                                new ColumnProperty(nameof(MenuAdminModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "70"
+                                },
+                                new ColumnProperty(nameof(MenuAdminModel.Id))
+                                { 
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "70"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function renderEnabled(data, type, row, meta) {
+
+            if (row.Enabled) {
+
+                return '<i class="fa fa-check true-icon"></i>';
+            }
+            else {
+
+                return '<i class="fa fa-times false-icon"></i>';
+            }
+        }
+
+        function renderEditButton(data, type, row, meta) {
+
+            return '<a class="btn btn-default" href="MenuEdit/' + data + '" title="@T("Admin.Common.Edit")">' +
+                '<i class="fas fa-pencil-alt"></i>' +
+                '@T("Admin.Common.Edit")' +
+                '</a>';
+        }
+    </script>
+</section>

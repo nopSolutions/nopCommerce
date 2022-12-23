@@ -1,0 +1,98 @@
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.SocialFeed.Admin.Submenus.SocialFeed");
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed")
+    </h1>
+    <div class="float-right">
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "social-feed-grid",
+                            UrlRead = new DataUrl("List", "SocialFeedAdmin", null),
+                            UrlDelete = new DataUrl("DeleteSocialFeed", "SocialFeedAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SocialFeedModel.Name))
+                                {
+                                    Title = T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Name").Text
+                                },
+                                new ColumnProperty(nameof(SocialFeedModel.NumberOfPosts))
+                                {
+                                    Title = T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.NumberOfPosts").Text
+                                },
+                                new ColumnProperty(nameof(SocialFeedModel.SocialNetworkToFeedName))
+                                {
+                                    Title = T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.SocialNetworkToFeed").Text
+                                },
+                                new ColumnProperty(nameof(SocialFeedModel.Published))
+                                {
+                                    Title = T("SevenSpikes.Plugins.SocialFeed.Admin.SocialFeed.Published").Text,
+                                    Render = new RenderCustom("renderIsPublished"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(SocialNetworkModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(SocialNetworkModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "100"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    function renderIsPublished(data, type, row, meta) {
+
+        if (row.Published) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

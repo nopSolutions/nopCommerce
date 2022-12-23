@@ -1,0 +1,29 @@
+@model RichBlogCategoryAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+}
+
+<form method="post" id="rich-blog-category-form">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ManageRichBlogCategories">@T("SevenSpikes.RichBlog.Admin.Category.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @{ await Html.RenderPartialAsync(Views.CategoryCreateOrUpdate, Model); } 
+</form>

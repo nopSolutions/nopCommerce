@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="RichBlogSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfCharactersInBlogPostPreviewOnBlogListPage">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfCharactersInBlogPostPreviewOnHomePage">
+    <Value>200</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.NumberOfBlogPostsToShow">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageWidgetZone">
+    <Value>home_page_before_poll</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageImageSize">
+    <Value>300</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.BlogCategoryNavigationWidgetZone">
+    <Value>left_side_column_blog_before</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.BlogListImageWidgetZone">
+    <Value>bloglist_page_before_post_body</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.BlogDetailsImageWidgetZone">
+    <Value>blogpost_page_before_body</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogDetailsPrevNextWidgetZone">
+    <Value>blogpost_page_top</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.ShowPrevNextNavigation">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.ShowImageOnBlogPostPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogDetailsImageSize">
+    <Value>400</Value>
+  </Setting>
+
+  <Setting Name="RichBlogSettings.ShowFacebookShare">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.ShowTwitterShare">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.ShowPinterestShare">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.ShowLinkedInShare">
+    <Value>true</Value>
+  </Setting>
+  
+  <Setting Name="RichBlogSettings.DisableLuceneSearch">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogSearchWidgetZone">
+    <Value>left_side_column_blog_before</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfResultsInDropdown">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.ResultsPageNumberOfItemsPerPage">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HighlightedTextChunkLength">
+    <Value>200</Value>
+  </Setting>
+</Settings>

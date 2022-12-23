@@ -1,0 +1,50 @@
+
+.social-feed .avatar-wrap,
+.feeds-page .author-avatar {
+	float: right;
+}
+.social-feed .author-date-wrap,
+.social-feed .author-board-wrap,
+.feeds-page .author-info {
+	margin: 0 60px 0 0;
+	text-align: right;
+}
+.social-feed .post-date,
+.social-feed .board-name-link,
+.feeds-page .post-date {
+	padding: 0 15px 0 0;
+}
+.social-feed .post-description,
+.social-feed .post-text,
+.feeds-page .post-text {
+	text-align: right;
+}
+.social-feed .post-buttons,
+.feeds-page .post-buttons {
+	text-align: right;
+}
+.social-feed .post-buttons:after {
+	margin: 0 8px 0 0;
+	-ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.instagram-feed .post-list {
+	text-align: right;
+}
+.feeds-page .post-buttons:before {
+	margin: 0 0 0 8px;
+}
+.social-feed .video-thumbnail:after,
+.feeds-page .video-thumbnail:after {
+	right: auto;
+	left: 10px;
+}
+
+
+@media all and (min-width: 1025px) {
+	
+.feeds-page .feeds-nav-item:before {
+	margin: 0 0 0 15px;
+}
+}

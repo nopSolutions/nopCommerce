@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Social Feed",
+  "SystemName": "SevenSpikes.Nop.Plugins.SocialFeed",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.SocialFeed.dll",
+  "Description": "With the Nop Social Feed plugin you can display your social feed from Facebook, Twitter, Pinterest, Instagram and Google+ on any of your website pages."
+}

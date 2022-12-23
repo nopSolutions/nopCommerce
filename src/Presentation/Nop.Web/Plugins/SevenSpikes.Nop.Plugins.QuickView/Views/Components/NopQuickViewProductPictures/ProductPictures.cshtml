@@ -1,0 +1,83 @@
+﻿@inject QuickViewSettings quickViewSettings
+
+@model ProductDetailsModel
+
+@{
+    var isCloudZoomAvailable = quickViewSettings.EnableCloudZoom && Model.DefaultPictureModel.CustomProperties.ContainsKey("SmallImageUrl");
+}
+
+@if (isCloudZoomAvailable)
+{
+    const string defaultRelation = "appendSelector: '.quickViewWindow .gallery .picture', zoomPosition: 'inside', zoomOffsetX: 0, easing: 3, zoomFlyOut: false, disableZoom: 'auto'";
+    const string galleryRelation = "appendSelector: '.quickViewWindow .gallery .picture', zoomPosition: 'inside', zoomOffsetX: 0, easing: 3, zoomFlyOut: false, disableZoom: 'auto', titleOpacity: 0,  useZoom: '#quick-view-zoom', image: '{0}', zoomImage: '{1}'";
+
+    var defaultSmallImageUrl = Model.DefaultPictureModel.CustomProperties["SmallImageUrl"].ToString();
+
+    <script>
+    $(document).ready(function() {
+            CloudZoom.quickStart();
+        });
+    </script>
+
+    <div class="picture">
+        <a href="@Model.DefaultPictureModel.FullSizeImageUrl">
+            <img class="cloudzoom" src="@defaultSmallImageUrl" data-cloudzoom="@defaultRelation"
+                 alt="@Model.DefaultPictureModel.AlternateText" id="quick-view-zoom" />
+        </a>
+    </div>
+
+    if (Model.PictureModels.Count > 1)
+    {
+        <div class="thumbnails">
+            @foreach (var picture in Model.PictureModels)
+            {
+                var smallImageUrl = "";
+                if (picture.CustomProperties.ContainsKey("SmallImageUrl"))
+                {
+                    smallImageUrl = picture.CustomProperties["SmallImageUrl"].ToString();
+                }
+
+                var tinyImateUrl = "";
+
+                if (picture.CustomProperties.ContainsKey("TinyImageUrl"))
+                {
+                    tinyImateUrl = picture.CustomProperties["TinyImageUrl"].ToString();
+                }
+
+                <a href="@picture.FullSizeImageUrl" class="cloudzoom-gallery" data-cloudzoom="@String.Format(galleryRelation, smallImageUrl, picture.FullSizeImageUrl)">
+                    <img class="cloud-zoom-gallery-img" src="@tinyImateUrl" alt="@picture.AlternateText" />
+                </a>
+            }
+        </div>
+    }
+}
+else
+{
+    <script>
+        $('.quickViewWindow .thumbnails a').on('click', function () {
+            var thumbnailImageUrl = $(this).attr("data-full-size-image-url");
+
+            $('.quickViewWindow .gallery .picture img').attr("src", thumbnailImageUrl);
+        });
+    </script>
+
+    <div class="picture">
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" />
+    </div>
+    if (Model.PictureModels.Count > 1)
+    {
+        <div class="thumbnails">
+
+            @foreach (var picture in Model.PictureModels)
+            {
+                <a data-full-size-image-url="@picture.FullSizeImageUrl">
+                    <img src="@picture.ImageUrl" alt="@picture.AlternateText" />
+                </a>
+            }
+        </div>
+    }
+}
+
+<input type="hidden" class="quickViewAdjustPictureOnProductAttributeValueChange"
+       data-productId="@Model.Id"
+       data-isCloudZoomAvailable="@isCloudZoomAvailable.ToString().ToLowerInvariant()" />

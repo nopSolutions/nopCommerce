@@ -1,0 +1,85 @@
+﻿@using SevenSpikes.Nop.Plugins.NopQuickTabs.Models
+@using SevenSpikes.Nop.Plugins.NopQuickTabs
+@using SevenSpikes.Nop.Framework
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.NopQuickTabs.Admin.Submenus.ManageTabs");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.NopQuickTabs.Admin.Tabs")
+    </h1>
+    <div class="float-right">
+
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "tabs-grid",
+                            UrlRead = new DataUrl("ListTabs", "TabAdmin", null),
+                            UrlDelete = new DataUrl("DeleteTabs", "TabAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TabModel.SystemName))
+                                {
+                                    Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName").Text
+                                },
+                                new ColumnProperty(nameof(TabModel.DisplayName))
+                                {
+                                    Title = T("SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName").Text
+                                },
+                                new ColumnProperty(nameof(TabModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(TabModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "100"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

@@ -1,0 +1,54 @@
+﻿@model TwitterModel
+
+@if (Model != null)
+{
+    await Html.RenderPartialAsync(await ViewPathHelper.GetViewPath(Views.SocialNetworkScripts), SocialNetworkType.Twitter);
+
+    <div class="feed-body">
+        <div class="post-list-wrap">
+            <div class="post-list">
+                @foreach (var twitterStatus in Model.TwitterStatuses)
+                {
+                    <div class="post-item">
+                        @if (!string.IsNullOrEmpty(twitterStatus.UserModel.Name))
+                        {
+                            <div class="post-head">
+                                @if (!string.IsNullOrEmpty(twitterStatus.UserModel.ScreenNameResponse) &&
+                                        !string.IsNullOrEmpty(twitterStatus.UserModel.ProfileImageUrlHttps))
+                                {
+                                    <div class="avatar-wrap">
+                                        <a class="avatar-link" href="https://twitter.com/@twitterStatus.UserModel.ScreenNameResponse" target="_blank" title="@twitterStatus.UserModel.Name">
+                                            <img class="avatar-img" src="@twitterStatus.UserModel.ProfileImageUrlHttps" alt="@twitterStatus.UserModel.Name" />
+                                        </a>
+                                    </div>
+                                }
+                                <div class="author-date-wrap">
+                                    <div class="author-name">
+                                        <a class="author-name-link" href="https://twitter.com/@twitterStatus.UserModel.ScreenNameResponse" target="_blank">@twitterStatus.UserModel.Name</a>
+                                    </div>
+                                    @if (twitterStatus.StatusID > 0 && twitterStatus.CreatedAt != null)
+                                    {
+                                        <div class="post-date-wrap">
+                                            <span class="post-date">@twitterStatus.CreatedAt.Value.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(twitterStatus.Text))
+                        {
+                            <div class="post-body">
+                                <p class="post-text">@Html.Raw(twitterStatus.Text)</p>
+                            </div>
+                        }
+
+                        <div class="post-buttons">
+                            <a class="post-link-btn" target="_blank" href="https://twitter.com/statuses/@twitterStatus.StatusID" title="@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")">@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

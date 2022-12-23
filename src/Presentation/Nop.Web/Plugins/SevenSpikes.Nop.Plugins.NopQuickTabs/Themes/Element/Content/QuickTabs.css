@@ -1,0 +1,94 @@
+﻿/* GLOBAL STYLES */
+
+.ui-tabs .product-specs-box,
+.ui-tabs .product-reviews-page,
+.ui-tabs .full-description  {
+    display: block;
+}
+
+/* THEME STYLES */
+
+.product-essential {
+	margin: 0;
+}
+.product-essential .full-description {
+	margin: 0 0 50px;
+}
+
+.ui-tabs .submitReviewResult {
+    margin: 0 0 30px;
+    text-align: center;
+    color: #555;
+}
+
+.ui-tabs #review-form {
+	margin: 0 0 50px;
+}
+.ui-tabs .form-fields {
+	margin: 0 0 30px;
+}
+.ui-tabs .buttons {
+	border: none;
+	padding: 0;
+}
+
+.ui-tabs .product-review-list {
+	margin: 0;
+}
+.ui-tabs .product-review-item {
+	border-top: 1px solid #eee;
+	border-bottom: none;
+}
+.ui-tabs .product-review-item:last-child {
+	padding-bottom: 0;
+}
+
+.ui-tabs .buttons .button-1 {
+	min-width: 150px;
+	height: 50px;
+	padding: 0 30px;
+	color: #fff;
+	text-transform: uppercase;
+	transition: opacity 0.2s ease;
+}
+.air-theme .ui-tabs .buttons .button-1 {
+	background-color: #eda187;
+	font-size: 14px;
+}
+.earth-theme .ui-tabs .buttons .button-1 {
+	background-color: #007c5a;
+	font-size: 15px;
+	line-height: 51px; /*firefox line-height bug fix*/
+}
+.ui-tabs .buttons .button-1:hover {
+	opacity: 0.9;
+}
+
+.ui-tabs .data-table td:first-child {
+	background-color: #fff;
+}
+
+
+@media all and (max-width: 720px) {
+
+.ui-tabs .ui-tabs-nav {
+	border: none;
+}
+.ui-tabs .ui-tabs-nav li {
+	display: block;
+}
+.ui-tabs .ui-tabs-nav li a:after {
+	height: 1px;
+	background-color: #eee;
+} 
+.ui-tabs .ui-state-active.ui-tabs-active a:after {
+	height: 3px;
+}
+.ui-tabs .ui-tabs-panel {
+	border: none;
+}
+.ui-tabs .product-specs-box {
+	margin: 0 -20px;
+}
+
+}

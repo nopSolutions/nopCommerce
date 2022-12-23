@@ -1,0 +1,23 @@
+﻿
+	<script>
+	var contentWrapper = document.getElementsByClassName('content-wrapper');
+
+	@if(ViewBag.AuthSuccess)
+	{
+		<text>
+			window.opener.location.reload();
+			window.close();
+		</text>
+	}
+	else
+	{
+		<text>
+			var errorHtml = document.createTextNode('<div class="alert alert-error alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> @ViewBag.ErrorMessage</div>');
+
+			contentWrapper(errorHtml, contentWrapper.firstChild);
+
+			window.close();
+		</text>
+	}
+
+	</script>

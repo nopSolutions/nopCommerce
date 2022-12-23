@@ -1,0 +1,77 @@
+﻿@model global::Nop.Web.Models.Catalog.ProductDetailsModel
+
+<div class="product-overview-line">
+    <div class="product-essential">
+        <!--product pictures-->
+        <div class="gallery">
+            <div class="picture">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            </div>
+        </div>
+        <div class="overview">
+            @if (!String.IsNullOrEmpty(Model.Name))
+            {
+                <h1 class="product-variant-name">
+                    @Model.Name
+                </h1>
+            }
+            @if (!String.IsNullOrEmpty(Model.ShortDescription))
+            {
+                <div class="short-description">
+                    @Html.Raw(Model.ShortDescription)
+                </div>
+            }
+            @{
+
+                var dataDictPrice = new ViewDataDictionary(ViewData);
+                dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
+
+                var dataDictAttributes = new ViewDataDictionary(ViewData);
+                dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                @await Html.PartialAsync("_AjaxCartProductAttributes", Model, dataDictAttributes)
+
+                if (Model.IsRental)
+                {
+                    @await Html.PartialAsync("_AjaxCartRentalInfo", Model)
+                }
+
+                var dataDictAddToCart = new ViewDataDictionary(ViewData);                
+                dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+
+                bool isAddToCartButton = (bool)ViewData["IsAddToCartButton"];
+
+                if (isAddToCartButton)
+                {
+                    @await Html.PartialAsync("MiniProductDetailsViewProductAddToCart", Model.AddToCart, dataDictAddToCart)
+                }
+                else
+                {
+                    @await Html.PartialAsync("MiniProductDetailsViewProductAddToWishlist", Model.AddToCart, dataDictAddToCart)
+                }
+            }
+
+            <div class="message-error"></div>
+        </div>
+    </div>
+
+    @{
+        var tierPrice = await Html.PartialAsync("_ProductTierPrices", Model.TierPrices);
+
+        var dataDictGiftCard = new ViewDataDictionary(ViewData);
+        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
+        var giftCard = await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard);
+    }
+
+    @if (!String.IsNullOrEmpty(await tierPrice.RenderHtmlContentAsync()) || !String.IsNullOrEmpty(await giftCard.RenderHtmlContentAsync()))
+    {
+        <div class="product-collateral">
+
+            @tierPrice
+
+            @giftCard
+
+        </div>
+    }
+
+</div>

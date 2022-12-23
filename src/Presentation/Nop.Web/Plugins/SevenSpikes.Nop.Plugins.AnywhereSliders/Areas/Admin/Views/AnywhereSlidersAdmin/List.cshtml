@@ -1,0 +1,133 @@
+﻿@model SliderSearchModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@inject IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Plugins.AnywhereSliders.Admin.Submenus.ManageSliders");
+
+    const string hideSearchBlockAttributeName = "SlidersListPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.AnywhereSliders")
+    </h1>
+    <div class="float-right">
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchSliderName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchSliderName" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 offset-md-4">
+                                    <button type="button" id="slidersSearchButton" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("SevenSpikes.Plugins.AnywhereSliders.Admin.List.Search.SearchButton")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body" id="topics-area">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "anywhere-sliders-grid",
+                            UrlRead = new DataUrl("List", "AnywhereSlidersAdmin", null),
+                            UrlDelete = new DataUrl("Delete", "AnywhereSlidersAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            SearchButtonId = "slidersSearchButton",
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchSliderName))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SliderModel.SystemName))
+                                {
+                                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SystemName").Text
+                                },
+                                new ColumnProperty(nameof(SliderModel.IsActive))
+                                {
+                                    Title = T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.IsActive").Text,
+                                    Render = new RenderCustom("renderIsActive")
+                                },
+                                new ColumnProperty(nameof(SliderModel.Id))
+                                {
+                                    Width = "200",
+                                    Render = new RenderCustom("renderEditButton")
+                                },
+                                new ColumnProperty(nameof(SliderModel.Id))
+                                {
+                                    Width = "200",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function renderIsActive(data, type, row, meta) {
+
+        if (row.IsActive) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

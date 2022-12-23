@@ -1,0 +1,200 @@
+﻿@model List<SevenSpikes.Nop.Plugins.JCarousel.Models.JCarouselModel>
+
+@inject IThemeContext themeContext
+@inject IWorkContext workContext
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@inject ILogger logger
+
+@{
+    var currentThemeName = await themeContext.GetWorkingThemeNameAsync();
+
+    var jCarouselCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Themes/" + currentThemeName + "/Content/JCarousel.css";
+
+    bool supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    string controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    string actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase) &&
+             actionName.Equals("index", StringComparison.InvariantCultureIgnoreCase);
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Styles/slick.css" />
+<link rel="stylesheet" href="@jCarouselCssFilePath" />
+
+@if (supportRtl)
+{
+    var jCarouselRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Themes/" + currentThemeName + "/Content/JCarousel.rtl.css";
+
+    <link rel="stylesheet" href="@jCarouselRtlCssFilePath" />
+}
+
+<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/slick-slider-1.6.0.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Scripts/jCarousel.min.js" asp-location="Footer"></script>
+
+@foreach (var carousel in Model)
+{
+    if (carousel.Items.Count < 1)
+    {
+        continue;
+    }
+
+    var homePageCategoryClass = string.Empty;
+
+    if (carousel.DataSourceTypeClass == "category-grid")
+    {
+        if (isHomePage)
+        {
+            homePageCategoryClass = "home-page-category-grid";
+        }
+        else
+        {
+            homePageCategoryClass = "sub-category-grid";
+        }
+    }
+
+    var homePageProductGridClass = string.Empty;
+
+    if (carousel.DataSourceTypeClass == "product-grid")
+    {
+        if (isHomePage)
+        {
+            homePageProductGridClass = "home-page-product-grid";
+        }
+    }
+
+    var loopItems = carousel.Settings.JCarouselEntitySettings.LoopItems;
+    var numberOfItemsToShow = carousel.Settings.JCarouselEntitySettings.NumberOfVisibleItems < 1 ? 1 : carousel.Settings.JCarouselEntitySettings.NumberOfVisibleItems;
+    var numOfSlidesToScroll = carousel.Settings.JCarouselEntitySettings.ScrollItems;
+    var navigationDots = carousel.Settings.JCarouselEntitySettings.NavigationDots;
+    var animationSpeedString = carousel.Settings.JCarouselEntitySettings.AnimationSpeed;
+    var animationSpeed = 0;
+    var autoscrollTimeout = carousel.Settings.JCarouselEntitySettings.Autoscroll;
+    var autoscroll = autoscrollTimeout > 0;
+    var navigationArrows = carousel.Settings.JCarouselEntitySettings.NavigationArrows;
+    var initialSlide = carousel.Settings.JCarouselEntitySettings.StartIndex - 1;
+    var pauseOnHover = carousel.Settings.JCarouselEntitySettings.AutoscrollHoverPause;
+    var prevArrowHtml = "<button type=\"button\" data-role=\"none\" class=\"slick-prev\" aria-label=\"Previous\" tabindex=\"0\" role=\"button\">" + T("SevenSpikes.JCarousel.Public.PreviousArrow") + "</button>";
+    var nextArrowHtml = "<button type=\"button\" data-role=\"none\" class=\"slick-next\" aria-label=\"Next\" tabindex=\"0\" role=\"button\">" + T("SevenSpikes.JCarousel.Public.NextArrow") + "</button>";
+    var carouselArrowsContainer = "#" + carousel.Settings.CarouselHtmlElementId + " " + carousel.NavigationArrowsSelector;
+
+    switch (animationSpeedString)
+    {
+        case "slow":
+            animationSpeed = 300;
+
+            break;
+        case "fast":
+            animationSpeed = 150;
+
+            break;
+    }
+
+    var responsiveBreakpointJson = carousel.ResponsiveBreakpoints;
+
+    IList<ResponsiveBreakpointDTO> responsiveBreakPoints = new List<ResponsiveBreakpointDTO>();
+
+    try
+    {
+        responsiveBreakPoints = JsonConvert.DeserializeObject<IList<ResponsiveBreakpointDTO>>(responsiveBreakpointJson);
+
+        var responsiveBreakpoint = new ResponsiveBreakpointDTO {
+            Breakpoint = 10000,
+            Settings = new Dictionary<string, object>()
+        };
+
+        responsiveBreakpoint.Settings.TryAdd("slidesToShow", numberOfItemsToShow);
+
+        responsiveBreakPoints.Insert(0, responsiveBreakpoint);
+
+        foreach (var breakpoint in responsiveBreakPoints)
+        {
+            if(breakpoint.Settings.ContainsKey("slidesToShow"))
+            {
+                var slidesToShow = int.Parse(breakpoint.Settings["slidesToShow"].ToString());
+
+                if(slidesToShow < numOfSlidesToScroll)
+                {
+                    if(breakpoint.Settings.ContainsKey("slidesToScroll"))
+                    {
+                        breakpoint.Settings.Remove("slidesToScroll");
+                    }
+
+                    breakpoint.Settings.Add("slidesToScroll", slidesToShow);
+                }
+            }
+        }
+    }
+    catch (Exception e)
+    {
+        await logger.ErrorAsync("Invalid slick slider responsive breakpoints setting value!", e);
+    }
+
+    var slickSettingsDictionary = new Dictionary<string, object>
+    {
+            {"rtl", supportRtl},
+            {"infinite", loopItems},
+            {"slidesToScroll", numOfSlidesToScroll},
+            {"dots", navigationDots},
+            {"speed", animationSpeed},
+            {"autoplay", autoscroll},
+            {"autoplaySpeed", autoscrollTimeout * 1000},
+            {"arrows", navigationArrows},
+            {"appendArrows", carouselArrowsContainer},
+            {"cssEase", "linear"},
+            {"respondTo", "slider"},
+            {"edgeFriction", 0.05},
+            {"initialSlide", initialSlide},
+            {"pauseOnHover", pauseOnHover},
+            {"draggable", false},
+            {"prevArrow", prevArrowHtml},
+            {"nextArrow", nextArrowHtml},
+            {"responsive", responsiveBreakPoints},
+            {"lazyLoad", "ondemand"}
+    };
+
+    var slickSettingsJson = JsonConvert.SerializeObject(slickSettingsDictionary, Formatting.None);
+
+    <div id="@carousel.Settings.CarouselHtmlElementId" class="jCarouselMainWrapper @carousel.Settings.JCarouselEntitySettings.Skin">
+        <div class="nop-jcarousel @carousel.DataSourceTypeClass @homePageCategoryClass @homePageProductGridClass">
+
+            <div class="title carousel-title">
+                @if (!string.IsNullOrEmpty(carousel.Settings.Title) && carousel.Settings.JCarouselEntitySettings.ShowTitle)
+                {
+                    <strong>@carousel.Settings.Title</strong>
+                }
+                else
+                {
+                    <text>&nbsp</text>
+                }
+            </div>
+
+            <div class="slick-carousel item-grid" data-slick='@slickSettingsJson' data-numberOfVisibleItems="@numberOfItemsToShow">
+                @foreach (var item in carousel.Items)
+                {
+                    <div class="carousel-item">
+                        <div class="item-box">
+                            @switch (carousel.DataSourceTypeClass)
+                            {
+                                case "product-grid":
+                                    @await Html.PartialAsync("_ProductBox", item.ProductOverviewModel)
+                                    break;
+                                case "category-grid":
+                                    @await Component.InvokeAsync("JCarouselCategoryBox", item.CategoryModel)
+                                    break;
+                                case "manufacturer-grid":
+                                    @await Component.InvokeAsync("JCarouselManufacturerBox", item.ManufacturerModel)
+                                    break;
+                                case "vendor-grid":
+                                    @await Component.InvokeAsync("JCarouselVendorBox", item.VendorModel)
+                                    break;
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

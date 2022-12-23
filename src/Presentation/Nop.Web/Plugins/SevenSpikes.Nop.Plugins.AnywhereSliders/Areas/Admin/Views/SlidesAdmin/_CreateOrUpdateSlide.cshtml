@@ -1,0 +1,175 @@
+﻿@using SevenSpikes.Nop.Plugins.AnywhereSliders.Areas.Admin.Models.Sliders
+
+@model SlideModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="SliderId" type="hidden" />
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-popup">
+                    <div class="card-body">
+                        <div class="form-group row type">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Type" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-select asp-for="Type" asp-items="Model.AvailableTypes" />
+                                <span asp-validation-for="Type"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row all-settings">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="SystemName" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="SystemName" />
+                                <span asp-validation-for="SystemName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row content-slide">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Content" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="Content" asp-template="RichEditor" />
+                                <span asp-validation-for="Content"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row picture-slide">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="PictureId" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="PictureId" />
+                                <span asp-validation-for="PictureId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row picture-slide">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="MobilePictureId" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="MobilePictureId" />
+                                <span asp-validation-for="MobilePictureId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row all-settings">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Visible" />
+                            </div>
+                            <div class="col-sm-9">
+                                <input asp-for="Visible" />
+                            </div>
+                        </div>
+                        <div class="form-group row all-settings">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="DisplayOrder" />
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @(await Html.LocalizedEditorAsync<SlideModel, SlideLocalizedModel>("slide-localized",
+            @<div class="card-body">
+                <div class="form-group row picture-slide row">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Url" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="@Model.Locales[item].Url" />
+                        <span asp-validation-for="@Model.Locales[item].Url"></span>
+                    </div>
+                </div>
+                <div class="form-group row picture-slide row">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Alt" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="@Model.Locales[item].Alt" />
+                        <div class="form-group picture-slide">
+                            <div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ,
+            @<div class="card-body">
+                <div class="form-group row picture-slide">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Url" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Url" />
+                    </div>
+                </div>
+                <div class="form-group row picture-slide">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Alt" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Alt" />
+                    </div>
+                </div>
+            </div>
+            ))
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    function toggleSettings() {
+
+        var type = $('#@Html.IdFor(model => model.Type)').val();
+
+        switch (type) {
+
+            case '0':
+                $('.content-slide').hide();
+                $('.picture-slide').hide();
+				$('.all-settings').hide();
+				$('#slide-localized').hide();
+
+
+                break;
+            case '1':
+				$('.all-settings').show();
+				$('.content-slide').hide();
+				$('.picture-slide').show();
+				$('#slide-localized').show();
+
+                break;
+            case '5':
+				$('.all-settings').show();
+                $('.content-slide').show();
+				$('.picture-slide').hide();
+				$('#slide-localized').hide();
+
+                break;
+        }
+    }
+
+    $(document).ready(function () {
+        $('#btnRefreshImgs').on("click", function (e) {
+            //refresh grid
+
+            var grid = $("#anywhere-slides-grid").DataTable();
+            grid.ajax.reload();
+            e.preventDefault(); //don't reload the page
+        });
+
+        toggleSettings();
+
+        $('#@Html.IdFor(model => model.Type)').on('change', toggleSettings);
+    });
+</script>

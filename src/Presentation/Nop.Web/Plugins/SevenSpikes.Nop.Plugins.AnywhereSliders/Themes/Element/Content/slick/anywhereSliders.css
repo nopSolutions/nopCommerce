@@ -1,0 +1,121 @@
+
+.anywhere-slider {
+    position: relative;
+    background: url('images/loader.gif') 50% 50% no-repeat;
+}
+.anywhere-slider .slick-track {
+    background-color: #fff;
+}
+.anywhere-slider .picture-slide a {
+    display: block;
+}
+.anywhere-slider .picture-slide img {
+    display: none;
+    width: 100%;
+}
+.anywhere-slider .first-slide img {
+    display: block;
+}
+.anywhere-slider .html-slide {
+	display: none;
+}
+.anywhere-slider .first-slide,
+.slick-initialized .html-slide {
+    display: block;
+}
+
+/* directional navigation */
+
+.anywhere-slider .slick-arrow {
+	position: absolute;
+    top: 50%;
+    z-index: 99;
+	width: 40px;
+	height: 40px;
+    margin-top: -30px;
+    border: none;
+	border-radius: 50%;
+	background-position: center;
+	background-repeat: no-repeat;
+    font-size: 0; opacity: 0;
+	transition: opacity 0.2s ease;
+}
+.air-theme .anywhere-slider .slick-arrow {
+    background-color: #eda187;
+}
+.earth-theme .anywhere-slider .slick-arrow {
+    background-color: #007c5a;
+}
+.anywhere-slider:hover .slick-arrow {
+    opacity: 0.85;
+}
+.anywhere-slider .slick-prev {
+    left: 10px;
+    background-image: url('images/arrow-left.png');
+}
+.anywhere-slider .slick-next {
+    right: 10px;
+    background-image: url('images/arrow-right.png');
+}
+
+/*bullet navigation*/
+
+.anywhere-slider .slick-dots {
+    position: relative;
+    z-index: 99;
+    height: 0;
+    padding: 0;
+    text-align: center;
+}
+.anywhere-slider .slick-dots li {
+    display: inline-block;
+    position: relative;
+    top: -50px;
+    margin: 0 3px;
+}
+.anywhere-slider .slick-dots button {
+    box-sizing: content-box;
+    width: 10px;
+    height: 10px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background-color: #fff;
+    font-size: 0;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+}
+.anywhere-slider .slick-active button {
+    border-color: #fff;
+    opacity: 1;
+}
+.air-theme .anywhere-slider .slick-active button {
+    background-color: #eda187;
+}
+.earth-theme .anywhere-slider .slick-active button {
+    background-color: #007c5a;
+}
+
+/* home page banners */
+
+.home-page-banners {
+	max-width: 1920px;
+	margin: 60px auto;
+	overflow: hidden;
+}
+
+
+@media all and (min-width: 721px) {
+	
+.home-page-banners .slider-wrapper {
+	float: left;
+	width: 50%;
+}
+}
+
+@media all and (min-width: 1025px) {
+	
+.air-theme.variant-2.home-page-body 
+.anywhere-slider .slick-arrow {
+	top: -80px;
+}
+}

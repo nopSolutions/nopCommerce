@@ -1,0 +1,79 @@
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.JCarousel.Admin.Submenus.ManageSettings");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.JCarousel.Admin.Menu.MenuName")
+    </h1>
+    <div class="float-right">
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.JCarousel.Admin.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{ 
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "jcarousel-grid",
+                            UrlRead = new DataUrl("List", "JCarouselAdmin", null),
+                            UrlDelete = new DataUrl("DeleteCarousel", "JCarouselAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(JCarouselSettingsModel.Name))
+                                {
+                                    Title = T("SevenSpikes.JCarousel.Admin.Settings.Name").Text
+                                },
+                                new ColumnProperty(nameof(JCarouselSettingsModel.DataSourceType))
+                                {
+                                    Title = T("SevenSpikes.JCarousel.Admin.Settings.DataSourceType").Text
+                                },
+                                new ColumnProperty(nameof(JCarouselSettingsModel.JCarouselEntitySettings.Skin))
+                                {
+                                    Title = T("SevenSpikes.JCarousel.Admin.Settings.Skin").Text
+                                },
+                                new ColumnProperty(nameof(JCarouselSettingsModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(JCarouselSettingsModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "100"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function renderEditButton(data, type, row, meta) {
+
+            return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+                '<i class="fas fa-pencil-alt"></i>' +
+                '@T("Admin.Common.Edit")' +
+                '</a>';
+        }
+    </script>
+</section>

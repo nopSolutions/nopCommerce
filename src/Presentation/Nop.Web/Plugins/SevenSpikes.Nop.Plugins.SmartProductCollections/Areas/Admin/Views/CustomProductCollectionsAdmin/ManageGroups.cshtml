@@ -1,0 +1,99 @@
+﻿@model ProductCollectionsAdminModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+    
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.SmartProductCollections.Admin.Submenus.ManageGroups");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.SmartProductCollections.Admin.ProductGroup.ManageGroupsPageTitle")
+    </h1>
+    <div class="float-right">
+        <a href="@Html.Raw(Url.Action("CreateProductsGroup", "CustomProductCollectionsAdmin"))" class="btn bg-primary">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+@await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+@if (Model.ProductGroups.Count > 0)
+{
+    <nop-antiforgery-token />
+
+    @* GROUPS GRID *@
+
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                @{
+                    await Html.RenderPartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "groups-grid",
+                        UrlRead = new DataUrl("ListProductsGroups", "CustomProductCollectionsAdmin", null),
+                        UrlDelete = new DataUrl("DeleteProductsGroup", "CustomProductCollectionsAdmin", null),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductsGroupAdminModel.Title))
+                            {
+                                Title = T("SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Title").Text
+                            },
+                            new ColumnProperty(nameof(ProductsGroupAdminModel.WidgetZone))
+                            {
+                                Title = T("SevenSpikes.SmartProductCollections.Admin.ProductsGroup.WidgetZone").Text
+                            },
+                            new ColumnProperty(nameof(ProductsGroupAdminModel.Published))
+                            {
+                                Title = T("SevenSpikes.SmartProductCollections.Admin.ProductsGroup.Published").Text,
+                                Render = new RenderCustom("renderIsPublished")
+                            },
+                            new ColumnProperty(nameof(ProductsGroupAdminModel.Id))
+                            {
+                                Width = "200",
+                                Render = new RenderCustom("renderEditButton")
+                            },
+                            new ColumnProperty(nameof(ProductsGroupAdminModel.Id))
+                            {
+                                Width = "200",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                            }
+                        }
+                    });
+                }
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    @T("SevenSpikes.SmartProductCollections.Admin.ProductGroup.NoGroupsMessage") <a href="@Html.Raw(Url.Action("CreateProductsGroup", "CustomProductCollectionsAdmin"))">@T("Admin.Common.AddNew")</a>
+}
+
+
+<script type="text/javascript">
+
+    function renderIsPublished(data, type, row, meta) {
+
+        if (row.Published) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="UpdateProductsGroup/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

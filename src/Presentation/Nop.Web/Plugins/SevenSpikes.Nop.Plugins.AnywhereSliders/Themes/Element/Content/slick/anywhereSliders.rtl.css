@@ -1,0 +1,18 @@
+
+.anywhere-slider .slick-prev {
+    right: 10px;
+    left: auto;
+    background-image: url('images/arrow-right.png');
+}
+.anywhere-slider .slick-next {
+    left: 10px;
+    right: auto;
+    background-image: url('images/arrow-left.png');
+}
+
+@media all and (min-width: 721px) {
+	
+.home-page-banners .slider-wrapper {
+	float: right;
+}
+}

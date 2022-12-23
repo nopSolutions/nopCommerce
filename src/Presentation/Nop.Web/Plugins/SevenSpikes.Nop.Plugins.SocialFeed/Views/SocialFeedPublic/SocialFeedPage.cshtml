@@ -1,0 +1,199 @@
+﻿@model SocialFeedPageModel
+
+@inject IWorkContext workContext
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    //title, meta
+    NopHtml.AddTitleParts(T("SevenSpikes.SocialFeed.Public.SocialFeedPage.Title").Text);
+    NopHtml.AddMetaDescriptionParts(T("SevenSpikes.SocialFeed.Public.SocialFeedPage.MetaDescription").Text);
+    NopHtml.AddMetaKeywordParts(T("SevenSpikes.SocialFeed.Public.SocialFeedPage.MetaKeywords").Text);
+    
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    var socialFeedCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.css";
+
+    var hasFacebookFeeds = Model.SocialFeeds.Any(x => x.SocaiNetworkType == SocialNetworkType.Facebook);
+    var hasTwitterFeeds = Model.SocialFeeds.Any(x => x.SocaiNetworkType == SocialNetworkType.Twitter);
+    var hasInstagramFeeds = Model.SocialFeeds.Any(x => x.SocaiNetworkType == SocialNetworkType.Instagram);
+}
+
+<link rel="stylesheet" href="@socialFeedCssFilePath" />
+
+@if (supportRtl)
+{
+    var socialFeedRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/" + themeName + "/Content/SocialFeed.rtl.css";
+
+    <link rel="stylesheet" href="@socialFeedRtlCssFilePath" />
+}
+    
+@if (Model.SocialFeeds != null && Model.SocialFeeds.Count > 0)
+{
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Scripts/masonry.pkgd.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Scripts/SocialFeedPage.min.js" asp-location="Footer"></script>
+}
+
+<div class="feeds-page" data-rtl="@supportRtl">
+    <div class="page-head">
+        <div class="page-title">
+            <h1>@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.PageTitle")</h1>
+        </div>
+        @if (Model.SocialFeeds != null && Model.SocialFeeds.Count > 0)
+        {
+            <div class="mobile-feeds-nav">
+                <select class="feeds-select">
+                    <option value="All">@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.All")</option>
+                    @if (hasFacebookFeeds)
+                    {
+                        <option value="facebook">@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Facebook")</option>
+                    }
+                    @if (hasTwitterFeeds)
+                    {
+                        <option value="twitter">@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Twitter")</option>
+                    }
+                    @if (hasInstagramFeeds)
+                    {
+                        <option value="instagram">@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Instagram")</option>
+                    }
+                </select>
+            </div>
+
+            <ul class="feeds-nav">
+                <li class="feeds-nav-item all-tab active">
+                    <span>@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.All")</span>
+                </li>
+                @if (hasFacebookFeeds)
+                {
+                    <li class="feeds-nav-item facebook-tab">
+                        <span>@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Facebook")</span>
+                    </li>
+                }
+                @if (hasTwitterFeeds)
+                {
+                    <li class="feeds-nav-item twitter-tab">
+                        <span>@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Twitter")</span>
+                    </li>
+                }
+                @if (hasInstagramFeeds)
+                {
+                    <li class="feeds-nav-item instagram-tab">
+                        <span>@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.SocialNetworksNavigation.Instagram")</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="page-body @if (Model.SocialFeeds.Count == 0){<text>no-feeds</text>}">
+        @if (Model.SocialFeeds != null && Model.SocialFeeds.Count > 0)
+        {
+            <ul class="feeds-post-list">
+                @foreach (SocialMediaModel socialMediaModel in Model.SocialFeeds)
+                {
+                    string socialNetworkClassName = String.Format("{0}-item", socialMediaModel.SocaiNetworkType.ToString().ToLower());
+
+                    <li class="feeds-post-item @socialNetworkClassName shown">
+                        @if (socialMediaModel.Source != null || socialMediaModel.CreatedDate != null)
+                        {
+                            if (socialMediaModel.SocaiNetworkType != SocialNetworkType.Instagram)
+                            {
+                                <div class="post-head">
+                                    @if (!string.IsNullOrEmpty(socialMediaModel.Source.PictureUrl))
+                                    {
+                                        <div class="author-avatar">
+                                            <a class="author-avatar-link" target="_blank" href="@socialMediaModel.Source.Link">
+                                                <img class="author-avatar-img" src="@socialMediaModel.Source.PictureUrl" />
+                                            </a>
+                                        </div>
+                                    }
+                                    <div class="author-info">
+                                        <a class="author-name" target="_blank" href="@socialMediaModel.Source.Link">@socialMediaModel.Source.Name</a>
+                                        @if (socialMediaModel.CreatedDate != null)
+                                        {
+                                            <div class="post-date-wrap">
+                                                <span class="post-date">@socialMediaModel.CreatedDate.Value.ToString("dd/MM/yyyy")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="post-body">
+
+                            @if (socialMediaModel.SocaiNetworkType == SocialNetworkType.Instagram)
+                            {
+                                <div class="instagram-img-wrap">
+                                    <a class="instagram-link @if (socialMediaModel.MediaType == "VIDEO") { <text>video-thumbnail</text> }" target="_blank" href="@socialMediaModel.Url">
+                                        <img class="instagram-img" src="@socialMediaModel.Content" />
+                                    </a>
+                                </div>
+                            }
+
+                            @if (socialMediaModel.AttachmentModel != null)
+                            {
+                                bool isYouTubeVideo = false;
+
+                                if (!string.IsNullOrEmpty(socialMediaModel.AttachmentModel.Url))
+                                {
+                                    isYouTubeVideo = socialMediaModel.AttachmentModel.Url.ToLower().Contains("youtube");
+                                }
+                                
+                                <div class="post-attachment @( isYouTubeVideo ? "youtube-video" : string.Empty )">
+                                    @if (!string.IsNullOrEmpty(socialMediaModel.AttachmentModel.ImageUrl))
+                                    {
+                                        <div class="attachment-img-wrap">
+                                            <a class="attachment-img-link" target="_blank" href="@socialMediaModel.AttachmentModel.Url">
+                                                <img class="attachment-img" src="@socialMediaModel.AttachmentModel.ImageUrl" />
+                                            </a>
+                                        </div>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(socialMediaModel.AttachmentModel.DisplayName) &&
+                                            !string.IsNullOrEmpty(socialMediaModel.AttachmentModel.Url))
+                                    {
+                                        <h3 class="attachment-title">
+                                            <a class="attachment-title-link" target="_blank" href="@socialMediaModel.AttachmentModel.Url">@socialMediaModel.AttachmentModel.DisplayName</a>
+                                        </h3>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(socialMediaModel.AttachmentModel.Content))
+                                    {
+                                        <p class="post-attachment-description">
+                                            @Html.Raw(socialMediaModel.AttachmentModel.Content)
+                                        </p>
+                                    }
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(socialMediaModel.Content) && socialMediaModel.SocaiNetworkType != SocialNetworkType.Instagram)
+                            {
+                                <div class="post-text">
+                                    @Html.Raw(socialMediaModel.Content)
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(socialMediaModel.Url))
+                            {
+
+                                <div class="post-buttons">
+                                    <a class="post-link-btn" target="_blank" href="@socialMediaModel.Url" title="@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")">@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.GoToPost")</a>
+                                </div>
+                                
+                            }
+                        </div>
+                    </li>
+                }
+                <li class="feeds-post-item-sizer"></li>
+            </ul>            
+            <div class="feed-loader-wrapper">
+                <div class="feed-loader">@T("SevenSpikes.SocialFeed.Public.SocialFeedGlobal.Loading")</div>
+            </div>
+        }
+        else
+        {
+            <p class="no-active-feeds">@T("SevenSpikes.SocialFeed.Public.SocialFeedPage.NoFeeds")</p>
+        }
+    </div>
+</div>

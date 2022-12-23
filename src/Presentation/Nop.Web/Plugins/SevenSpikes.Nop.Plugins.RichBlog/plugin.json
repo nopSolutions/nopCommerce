@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Rich Blog",
+  "SystemName": "SevenSpikes.Nop.Plugins.RichBlog",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.RichBlog.dll",
+  "Description": "The Nop Rich Blog Plugin is packed with great features that will help you manage your blog content better."
+}

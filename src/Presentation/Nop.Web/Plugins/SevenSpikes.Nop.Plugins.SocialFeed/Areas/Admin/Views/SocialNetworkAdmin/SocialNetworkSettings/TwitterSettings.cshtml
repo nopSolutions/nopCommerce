@@ -1,0 +1,98 @@
+﻿@*@model TwitterModel
+@{
+    string feedsManagerPath = $"~/Plugins/{Plugin.FolderName}/Areas/Admin/Content/Scripts/FeedsManager.min.js";
+    Html.AppendScriptParts(feedsManagerPath);
+}
+
+<script>
+    $(document).ready(function () {
+        $('#authorize-twitter').click(function () {
+
+            var url = '@Html.Raw(@Url.RouteUrl("TwitterAuthorization", new { Model.ClientId, Model.ClientSecret, Model.SocialNetworkId }, Url.ActionContext.HttpContext.Request.Scheme))';
+            Feeds.Utils.popitup(url, 'Twitter authentication');
+        });
+        Feeds.Utils.disableAuthorizeOnChange('.client-id input, .client-secret input', '.authorize-btn',
+           '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")',
+           '@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")');
+    });
+</script>
+
+<div class="card card-default">
+    <div class="card-body">
+        @* The replace is needed bacause Twitter does not recognize localhost as valid Url, but it recognizes its IP equivalent.*@
+        @*@await Html.PartialAsync(AdminViews.SocialNetworkSharedRedirectUrl, Url.RouteUrl("TwitterAuthenticate", null, Url.ActionContext.HttpContext.Request.Scheme).Replace("localhost", "127.0.0.1"))
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ClientId" />
+            </div>
+            <div class="col-md-9 client-id">
+                <nop-editor asp-for="ClientId" />
+                <span asp-validation-for="ClientId"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ClientSecret" />
+            </div>
+            <div class="col-md-9 client-secret">
+                <nop-editor asp-for="ClientSecret" />
+                <span asp-validation-for="ClientSecret"></span>
+            </div>
+        </div>
+        <div class="adminHint">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-9">
+                <div class="summary">To obtain your <strong>Consumer Key</strong> and <strong>Consumer Secret</strong> do the following:</div>
+                <ul>
+                    <li>Login to Twitter (if you haven't already) and go to <a href="https://apps.twitter.com" target="_blank">https://apps.twitter.com</a>.</li>
+                    <li>Click on <strong>Create New App</strong> in top right corner.</li>
+                    <li>Fill the form and click on <strong>Create your Twitter application</strong> button.</li>
+                    <li>After your app is created you will see your app settings page. There on the <strong>Keys and Access Tokens</strong> tab you will find your <strong>Consumer Key ( API key )</strong> and <strong>Consumer Secret ( API secret )</strong> along with other data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="authorization">
+    <div class="authorize">
+        @if (Model.SocialNetworkId > 0)
+        {
+            if (string.IsNullOrEmpty(Model.AccessToken))
+            {
+                <button id="authorize-twitter" class="not-authorized btn authorize-btn bg-red" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.NotAuthorized")</span>
+                </button>
+            }
+            else
+            {
+                <button id="authorize-twitter" class="already-authorized btn authorize-btn bg-blue" type="button">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <span>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.AuthorizeButton.Authorized")</span>
+                </button>
+            }
+        }
+        else
+        {
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>@T("SevenSpikes.Plugins.SocialFeed.Admin.SocialNetwork.SaveBeforeAuthorize")</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        }
+    </div>
+    @if (Model.SocialNetworkId > 0)
+    {
+        <div class="authorize-descr">
+            <div class="ss-info save-before-edit-network">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p>By clicking on the button above a popup will be opened containing the Twitter's authorize screen (this is the case when you haven't already authorize the app. If you have already authorize the app the popup will just close). There you will be asked if you are willing to provide certain rights to your Twitter profile.</p>
+                <p>If you choose to authorize the app (by clicking the Authorize button) the popup will close and the Edit page will refresh. If the Authorize button is <strong>Green</strong> your autorization was successfull, if it is <strong>Red</strong> you haven't authorized the app.</p>
+                <span class="ss-info-arrow up"></span>
+            </div>
+        </div>
+    }
+</div>*@

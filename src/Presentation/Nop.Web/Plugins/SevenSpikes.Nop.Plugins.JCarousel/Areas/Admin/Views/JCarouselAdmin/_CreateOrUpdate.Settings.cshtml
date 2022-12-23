@@ -1,0 +1,211 @@
+﻿@model JCarouselSettingsModel
+
+<div class="card-body">
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="Name" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="Name" />
+			<span asp-validation-for="Name"></span>
+		</div>
+	</div>
+	@(await Html.LocalizedEditorAsync<JCarouselSettingsModel, JCarouselSettingsLocalizedModel>("jCarousel-localized",
+    @<text>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Title" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Title" />
+                <span asp-validation-for="@Model.Locales[item].Title"></span>
+            </div>
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </text>
+	,
+    @<text>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Title" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Title" />
+                <span asp-validation-for="Title"></span>
+            </div>
+        </div>
+    </text>
+    ))
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="DataSourceType" />
+		</div>
+		<div class="col-md-9">
+			<nop-select asp-for="DataSourceType" asp-items="Model.AvailableDataSourceTypes" />
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.NumberOfItems" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.NumberOfItems" />
+			<span asp-validation-for="JCarouselEntitySettings.NumberOfItems"></span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.NumberOfVisibleItems" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.NumberOfVisibleItems" />
+			<span asp-validation-for="JCarouselEntitySettings.NumberOfVisibleItems"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.Skin" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.Skin" />
+			<span asp-validation-for="JCarouselEntitySettings.Skin"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.StartIndex" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.StartIndex" />
+			<span asp-validation-for="JCarouselEntitySettings.StartIndex"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.ScrollItems" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.ScrollItems" />
+			<span asp-validation-for="JCarouselEntitySettings.ScrollItems"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.Autoscroll" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.Autoscroll" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Seconds").Text" />
+			<span asp-validation-for="JCarouselEntitySettings.Autoscroll"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.AutoscrollHoverPause" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.AutoscrollHoverPause" />
+			<span asp-validation-for="JCarouselEntitySettings.AutoscrollHoverPause"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.LoopItems" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.LoopItems" />
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.AnimationSpeed" />
+		</div>
+		<div class="col-md-9">
+			<nop-select asp-for="JCarouselEntitySettings.AnimationSpeed" asp-items="Model.AvailableAnimationSpeeds" />
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.NavigationDots" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.NavigationDots" />
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.NavigationArrows" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.NavigationArrows" />
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.ShowTitle" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.ShowTitle" />
+			<span asp-validation-for="JCarouselEntitySettings.ShowTitle"></span>
+		</div>
+	</div>
+	<div class="form-group row advanced-setting">
+		<div class="col-md-3">
+			<nop-label asp-for="JCarouselEntitySettings.ProductImageSize" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="JCarouselEntitySettings.ProductImageSize" />
+			<span asp-validation-for="JCarouselEntitySettings.ProductImageSize"></span>
+		</div>
+	</div>
+</div>
+@if (Model.Id > 0)
+{
+    <div class="cards-group">
+        <div class="card card-default  advanced-setting">
+            <div class="card-header">
+                <div class="card-title">
+                    @T("SevenSpikes.JCarousel.Admin.Settings.Mappings")
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.StoreMappingModel.SelectedStoreIds, new { SelectList = Model.StoreMappingModel.AvailableStores })
+                                <script>
+                                $(document).ready(function () {
+                                    var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                    storesIdsInput.setOptions({
+                                        autoClose: false
+                                    });
+
+                                    @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+									{
+										<text>
+											storesIdsInput.setOptions({
+												enable: false,
+												placeholder: 'No stores available'
+											});
+											storesIdsInput._placeholder();
+											storesIdsInput._enable();
+										</text>
+									}
+                                });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

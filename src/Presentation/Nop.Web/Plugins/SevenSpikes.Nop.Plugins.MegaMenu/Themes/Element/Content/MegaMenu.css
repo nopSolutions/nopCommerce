@@ -1,0 +1,241 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.mega-menu, .menu-title,
+.mega-menu .dropdown {
+	display: none;
+}
+
+@media all and (min-width: 1025px) {
+
+.mega-menu {
+	display: block;
+}
+.mega-menu-responsive {
+	display: none !important;
+}
+.mega-menu .dropdown {
+	display: none;
+	position: absolute;
+	left: 50%;
+	z-index: 1;
+	width: 980px;
+	margin-left: -490px;
+	border-top: 10px solid transparent;
+	overflow: hidden;
+}
+.mega-menu .dropdown.active {
+	display: block;
+}
+.mega-menu .row-wrapper {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+	padding: 20px;
+}
+.mega-menu .row {
+	margin: 10px 0 0;
+	overflow: hidden;
+}
+.mega-menu .row:first-child {
+	margin: 0;
+}
+.mega-menu .box {
+	float: left;
+	padding: 5px;
+	text-align: left;
+}
+
+.mega-menu .boxes-1 .box {
+    width: 100%;
+}
+
+.mega-menu .boxes-2 .box {
+    width: 50%;
+}
+
+.mega-menu .boxes-3 .box {
+    width: 33.333%;
+}
+
+.mega-menu .boxes-4 .box {
+    width: 25%;
+}
+
+.mega-menu .boxes-5 .box {
+    width: 20%;
+}
+
+.mega-menu .boxes-6 .box {
+    width: 16.666%;
+}
+
+.mega-menu .boxes-7 .box {
+    width: 14.28%;
+}
+
+.mega-menu .boxes-8 .box {
+    width: 12.5%;
+}
+
+.mega-menu .picture {
+	margin: 0 0 20px;
+	overflow: hidden;
+}
+.mega-menu .categories .picture {
+	height: 150px;
+}
+/*.mega-menu .manufacturers .picture,
+.mega-menu .vendors .picture {
+	height: 120px;
+}*/
+.mega-menu .picture a {
+	display: block;
+}
+.mega-menu .title {
+	font-size: 18px;
+	color: #333;
+	text-transform: uppercase;
+}
+.air-theme .mega-menu .title {	
+	font-weight: 700;
+}
+.earth-theme .mega-menu .title {
+	font-weight: 400;
+}
+.mega-menu .subcategories {
+	margin: 8px 0 0;
+	padding: 0 0 0 10px;
+}
+.mega-menu .subcategories li {
+	padding: 5px 0;
+}
+.air-theme .mega-menu .subcategories {
+	font-family: 'Raleway', sans-serif;
+	font-size: 13px;
+}
+.earth-theme .mega-menu .subcategories {
+	font-size: 16px;
+}
+
+.earth-theme.variant-2 .header-menu,
+.earth-theme.variant-2 .header-menu .sublist-wrap {
+	display: block !important; /*prevents a bug when 'Show Dropdowns On Click' setting is enabled*/
+}
+
+}
+
+@media all and (min-width: 1321px) {
+	
+.mega-menu .dropdown {
+	width: 1280px;
+	margin-left: -640px;
+}
+.mega-menu .categories .picture {
+	height: 200px;
+}
+/*.mega-menu .manufacturers .picture,
+.mega-menu .vendors .picture {
+	height: 160px;
+}*/
+
+}
+
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+
+/* ALL CATEGORIES TAB */
+
+/*styles for "all categories" tab which is a <span>, it clones the theme menu link <a> styles,
+but should be prefixed with ".has-sublist" to avoid conflicts with the <span> inside the "back" button*/
+
+.mega-menu-responsive .has-sublist > span {
+	min-height: 60px;
+	background-color: #fff;
+	padding: 0 10px 0 0;
+	line-height: 24px;
+	color: #aaa;
+	text-transform: uppercase;
+}
+.air-theme .mega-menu-responsive .has-sublist > span {
+	font-size: 18px;
+	font-weight: 700;
+}
+.earth-theme .mega-menu-responsive .has-sublist > span {
+	font-size: 22px;
+	font-weight: 400;
+}
+
+
+@media all and (min-width: 481px) {
+	
+.air-theme .mega-menu-responsive .has-sublist > span {
+	font-size: 20px;
+}
+.earth-theme .mega-menu-responsive .has-sublist > span {
+	font-size: 24px;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+	
+.air-theme .mega-menu .has-sublist > span,
+.earth-theme.variant-1 .mega-menu .has-sublist > span {
+	display: block;
+	position: relative;
+	padding: 10px 20px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.air-theme .mega-menu .has-sublist > span {
+	font-size: 14px;
+	font-weight: 700;
+	color: #333;
+}
+.earth-theme.variant-1 .mega-menu .has-sublist > span {
+	font-size: 15px;
+	font-weight: 400;
+	color: #fff;
+}
+.air-theme .mega-menu .has-sublist > span:before,
+.air-theme .mega-menu .has-sublist > span:after,
+.earth-theme.variant-1 .mega-menu .has-sublist > span:before,
+.earth-theme.variant-1 .mega-menu .has-sublist > span:after {
+	content: "";
+	position: absolute;
+	width: 1px;
+}
+.air-theme .mega-menu .has-sublist > span:before,
+.earth-theme.variant-1 .mega-menu .has-sublist > span:before {
+	left: 0;
+}
+.air-theme .mega-menu .has-sublist > span:after,
+.earth-theme.variant-1 .mega-menu .has-sublist > span:after {
+	right: 0;
+}
+.air-theme .mega-menu.has-sublist > span:before,
+.air-theme .mega-menu .has-sublist > span:after {
+	height: 18px;
+	background-color: #e5e5e5;
+}
+.earth-theme.variant-1 .mega-menu > ul > li > span:before,
+.earth-theme.variant-1 .mega-menu > ul > li > span:after {
+	height: 22px;
+	background-color: #393939;
+}
+
+.earth-theme.variant-2 .mega-menu .has-sublist > span {
+	min-height: 60px;
+	background-color: #fff;
+	padding: 0 10px 0 0;
+	line-height: 24px;
+	color: #aaa;
+	text-transform: uppercase;
+	font-size: 24px;
+	font-weight: 400;
+}
+
+}

@@ -1,0 +1,137 @@
+﻿@model AddCategoryModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+    
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.RichBlog.Admin.Category.AddNew").Text;
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.getElementById("@ViewBag.btnId").click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.RichBlog.Admin.BlogPost.AddNew")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search-popup card-popup">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchCategoryName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-categories" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="car-body">
+                        @{ 
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "categories-grid",
+                                UrlRead = new DataUrl("ListCategories", "CategoriesToBlogPostsAdmin", null),
+                                Length = defaultGridPageSize,
+                                LengthMenu = gridPageSizes,
+                                SearchButtonId = "search-categories",
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchCategoryName)),
+                                    new FilterParameter(nameof(Model.SearchStoreId))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(RichBlogCategoryAdminModel.Id))
+                                    {
+                                        Width = "15",
+                                        Render = new RenderCheckBox("SelectedCategoryIds")
+                                    },
+                                    new ColumnProperty(nameof(RichBlogCategoryAdminModel.Name))
+                                    {
+                                        Title = T("SevenSpikes.RichBlog.Admin.Category.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(RichBlogCategoryAdminModel.Published))
+                                    {
+                                        Width = "15",
+                                        Title = T("SevenSpikes.RichBlog.Admin.Category.Published").Text,
+                                        Render = new RenderCustom("renderPublished")
+                                    }
+                                }
+                            });
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="fas fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+
+    function renderPublished(data, type, row, meta) {
+
+        if (row.Published) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-categories").click();
+            return false;
+        }
+    });
+</script>

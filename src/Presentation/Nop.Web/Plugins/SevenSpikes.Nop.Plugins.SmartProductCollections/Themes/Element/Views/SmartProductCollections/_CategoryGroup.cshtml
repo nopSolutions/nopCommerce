@@ -1,0 +1,32 @@
+﻿@model CategoryGroupModel
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@{
+    int storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+
+    string layoutDesign = await settingService.GetSettingByKeyAsync("elementthemesettings.layout", "earth-theme", storeId, true);
+    string layoutVariant = await settingService.GetSettingByKeyAsync("elementthemesettings.variant", "variant-1", storeId, true);
+}
+
+@if (layoutDesign == "earth-theme")
+{
+    if (layoutVariant == "variant-1")
+    {
+        await Html.RenderPartialAsync("CategoryGroupVariants/_EarthVariant1", Model);
+    }
+    else
+    {
+        await Html.RenderPartialAsync("CategoryGroupVariants/_EarthVariant2", Model);
+    }
+}
+else if (layoutDesign == "air-theme")
+{
+    if (layoutVariant == "variant-1")
+    {
+        await Html.RenderPartialAsync("CategoryGroupVariants/_AirVariant1", Model);
+    }
+    else
+    {
+        await Html.RenderPartialAsync("CategoryGroupVariants/_AirVariant2", Model);
+    }
+}

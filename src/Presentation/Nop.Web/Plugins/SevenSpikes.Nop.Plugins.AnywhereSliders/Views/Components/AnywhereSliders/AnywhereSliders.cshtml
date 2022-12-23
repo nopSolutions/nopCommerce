@@ -1,0 +1,123 @@
+﻿@model SlidersModel
+
+@inject IWorkContext workContext
+@inject IStoreContext  storeContext
+@inject ISettingService  settingService
+
+@{
+    Layout = null;
+
+    var storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+    var customCssFileVersion = await settingService.GetSettingByKeyAsync(Plugin.CustomCssFileNameSettingKey, 1, storeId, false);
+    var doNotUseCustomCSSInAnywhereSliders = await settingService.GetSettingByKeyAsync("AnywhereSliderSettings.DoNotUseCustomCSSInAnywhereSliders", false, (await storeContext.GetCurrentStoreAsync()).Id, true);
+
+    var cssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Themes/" + Model.Theme + "/Content/slick/anywhereSliders.css";
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    var slidesCounter = 0;
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Core/Styles/slick-slider-1.6.0.css" />
+
+@if (doNotUseCustomCSSInAnywhereSliders == false)
+{
+    var customCssFilePath = string.Format("~/css/Slick/anywhereSlidersCustomCss-{0}-{1}.css", storeId, customCssFileVersion);
+        
+    <link rel="stylesheet" href="@customCssFilePath" />
+}
+
+<link rel="stylesheet" href="@cssFilePath" />    
+
+@if (supportRtl)
+{
+    var rtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Themes/" + Model.Theme + "/Content/slick/anywhereSliders.rtl.css";
+
+    <link rel="stylesheet" href="@rtlCssFilePath" />
+}
+
+<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/AnywhereSliders.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/slick-slider-1.6.0.min.js" asp-location="Footer"></script>
+
+@foreach (var slider in Model.Sliders)
+{
+    var breakpoint = new ResponsiveBreakpointDTO
+    {
+        Breakpoint = slider.MobileBreakpoint
+    };
+
+    var breakpoints = new List<ResponsiveBreakpointDTO>();
+    breakpoints.Add(breakpoint);
+
+    var sliderHtmlElementId = string.Format("anywhereSlider{0}", slider.SliderId);
+    var arrowsContainer = string.Format("#{0} .slick-arrows", sliderHtmlElementId);
+
+    var slickSettingsDictionary = new Dictionary<string, object>()
+{
+        {"adaptiveHeight", false},
+        {"zIndex", 0},
+        {"autoplay", slider.Autoplay},
+        {"autoplaySpeed", slider.AutoplaySpeed},
+        {"speed", slider.Speed},
+        {"pauseOnHover", slider.PauseOnHover},
+        {"fade", slider.Fade},
+        {"infinite", true},
+        {"dots", slider.Dots},
+        {"arrows", slider.Arrows},
+        {"appendArrows", arrowsContainer},
+        {"slide", ".picture-slide, .html-slide"}, // explicitly define slides to prevent the arrow container from sliding
+        {"slidesToShow", 1},
+        {"slidesToScroll", 1},
+        {"responsive", breakpoints},
+        {"lazyLoad", "ondemand"},
+        {"centerPadding", "0px"},
+        {"centerMode", true},
+        {"rtl", supportRtl}
+    };
+
+    var slickSettingsJson = JsonConvert.SerializeObject(slickSettingsDictionary);
+
+    @if (slider.Slides.Count > 1)
+    {
+        <div class="slider-wrapper @slider.CustomClass">
+            <div class="anywhere-slider anywhere-slick-slider" id="@sliderHtmlElementId"
+                 data-mobileBreakpoint="@slider.MobileBreakpoint"
+                 data-slick='@slickSettingsJson'>
+                @foreach (var slide in slider.Slides)
+                {
+                    if (slidesCounter++ == 0)
+                    {
+                        slide.IsFirstSlide = true;
+                    }
+
+                    await Html.RenderPartialAsync(Views.Slide, slide,
+                        new ViewDataDictionary(ViewData) {
+                            { "PreLoadFirstImage", slider.PreLoadFirstImage },
+                            { "MobileBreakpoint", slider.MobileBreakpoint } });
+                }
+                <div class="slick-arrows">@*directional navigation container*@</div>
+            </div>
+        </div>
+    }
+    else if (slider.Slides.Count == 1)
+    {
+        <div class="slider-wrapper @slider.CustomClass">
+            <div class="anywhere-slider anywhere-slick-slider slickless" id="@sliderHtmlElementId"
+                 data-mobileBreakpoint="@slider.MobileBreakpoint">
+                @{
+                    slider.Slides[0].IsFirstSlide = true;
+                }
+
+                @{
+                    await Html.RenderPartialAsync(Views.Slide, slider.Slides[0],
+                        new ViewDataDictionary(ViewData) {
+                            { "PreLoadFirstImage", slider.PreLoadFirstImage },
+                            { "MobileBreakpoint", slider.MobileBreakpoint } });
+                }
+                @*@await Html.PartialAsync(Views.Slide, slider.Slides[0])*@
+                <div class="slick-arrows">@*directional navigation container*@</div>
+            </div>
+        </div>
+    }
+}

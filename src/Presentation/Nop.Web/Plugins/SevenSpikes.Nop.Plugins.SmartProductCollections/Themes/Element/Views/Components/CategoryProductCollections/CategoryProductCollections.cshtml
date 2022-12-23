@@ -1,0 +1,16 @@
+﻿@model CategoryCollectionsModel
+
+<div class="spc-wrapper">
+    @foreach (var categoryGroup in Model.CategoryGroups)
+    {
+        <div class="spc spc-categories @Model.Settings.CategoryImagesOrientation"
+             notloaded
+             data-categorygroupid="@categoryGroup.Id"
+             data-getcategorygroupinfourl="@Url.RouteUrl("PrepareCategoryGroupSPC")"
+             data-getItemProductsUrl="@Url.RouteUrl("GetProductsForItemSPC")">
+            <div class="loading-overlay initial">
+                <span>@T("SevenSpikes.SmartProductCollections.Public.Loading")</span>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="elementthemesettings.preset">
+    <Value>007c5a</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.defaultpreset">
+    <Value>007c5a</Value>
+  </Setting>
+  <!--<Setting Name="elementthemesettings.defaultproductimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.defaultcategoryimageproportion">
+    <Value>65</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.productimageproportion">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.categoryimageproportion">
+    <Value>65</Value>
+  </Setting>-->
+  <Setting Name="elementthemesettings.layout">
+    <Value>earth-theme</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.variant">
+    <Value>variant-1</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.numberofsubcategoriesperrow">
+    <Value>2</Value>
+  </Setting>
+  <Setting Name="elementthemesettings.ReserveFixedHeightForProductTitles">
+    <Value>true</Value>
+  </Setting>
+
+  <Setting Name="mediasettings.maximumimagesize">
+    <Value>1920</Value>
+  </Setting>
+  <Setting Name="mediasettings.avatarpicturesize">
+    <Value>270</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesize">
+    <Value>635</Value>
+  </Setting>
+  <Setting Name="mediasettings.productdetailspicturesize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="mediasettings.minicartthumbpicturesize">
+    <Value>140</Value>
+  </Setting>
+  <Setting Name="mediasettings.manufacturerthumbpicturesize">
+    <Value>350</Value>
+  </Setting>
+  <Setting Name="mediasettings.categorythumbpicturesize">
+    <Value>630</Value>
+  </Setting>
+  <Setting Name="mediasettings.associatedproductpicturesize">
+    <Value>300</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesizeonproductdetailspage">
+    <Value>190</Value>
+  </Setting>
+
+  <Setting Name="nopajaxcartsettings.productpageaddtocartbuttonselector">
+    <Value>button.add-to-cart-button</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.productboxaddtocartbuttonselector">
+    <Value>button.product-box-add-to-cart-button</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.addtowishlistbuttonselector">
+    <Value>button.add-to-wishlist-button</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.productaddedtocartimagesize">
+    <Value>315</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.miniproductdetailsviewimagesize">
+    <Value>315</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.shoppingcartmenulinkselector">
+    <Value>.shopping-cart-link .cart-qty</Value>
+  </Setting>
+  <Setting Name="nopajaxcartsettings.WishlistMenuLinkSelector">
+    <Value>.wishlist-qty</Value>
+  </Setting>
+  
+  <Setting Name="nopajaxfilterssettings.shownumberofreturnedproductsselector">
+    <Value>.product-selectors</Value>
+  </Setting>
+  
+  <Setting Name="cloudzoomsettings.zoomposition">
+    <Value>inside</Value>
+  </Setting>
+  <Setting Name="cloudzoomsettings.zoomwidth">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="cloudzoomsettings.zoomheight">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-Element">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ResponsiveBreakpointsForThumbnailsCarousel-Element">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":3, "slidesToScroll":3,"arrows":true,"dots":false}},{"breakpoint":721,"settings":{"slidesToShow":3,"slidesToScroll":3,"arrows":true,"dots":false}},{"breakpoint":481,"settings":{"slidesToShow":3,"slidesToScroll":3,"arrows":false,"dots":true}}]</Value>
+  </Setting>
+
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsForSlickSlider-Element">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":3}},{"breakpoint":721,"settings":{"slidesToShow":2}},{"breakpoint":481,"settings":{"slidesToShow":1}}]</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsCategorySlider-Element">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":2}},{"breakpoint":721,"settings":{"slidesToShow":2}},{"breakpoint":481,"settings":{"slidesToShow":1}}]</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsManufacturerSlider-Element">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":4}},{"breakpoint":721,"settings":{"slidesToShow":3}},{"breakpoint":481,"settings":{"slidesToShow":2}}]</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsVendorSlider-Element">
+    <Value>[{"breakpoint":1001,"settings":{"slidesToShow":4}},{"breakpoint":721,"settings":{"slidesToShow":3}},{"breakpoint":481,"settings":{"slidesToShow":2}}]</Value>
+  </Setting>
+  
+  <Setting Name="megamenusettings.manufacturerimagesize">
+    <Value>165</Value>
+  </Setting>
+  <Setting Name="megamenusettings.vendorimagesize">
+    <Value>165</Value>
+  </Setting>
+
+  <Setting Name="quickviewsettings.productitemselectorchild">
+    <Value>.buttons</Value>
+  </Setting>
+  <Setting Name="quickviewsettings.productdetailspicturesize">
+    <Value>405</Value>
+  </Setting>
+  <Setting Name="quickviewsettings.productthumbpicturesize">
+    <Value>100</Value>
+  </Setting>
+  <Setting Name="quickviewsettings.accordionpanelsheightstyle">
+    <Value>content</Value>
+  </Setting>
+  
+  <Setting Name="RichBlogSettings.BlogListImageWidgetZone">
+    <Value>bloglist_page_before_post_title</Value>
+  </Setting>
+
+  <Setting Name="smartproductcollectionssettings.categorythumbimagesize">
+    <Value>950</Value><!--Earth2,Air1-->
+    <!--Earth1 is 570; Air2 is 845-->
+  </Setting>
+  <Setting Name="smartproductcollectionssettings.productthumbimagesize">
+	  <Value>275</Value>
+  </Setting>
+
+  <Setting Name="sevenspikescommonsettings.lazyloadimages">
+    <Value>True</Value>
+  </Setting>
+</Settings>

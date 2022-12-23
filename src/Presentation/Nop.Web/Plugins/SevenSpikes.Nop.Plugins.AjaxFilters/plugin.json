@@ -1,0 +1,12 @@
+﻿{
+	"Group": "7Spikes",
+	"FriendlyName": "Nop Ajax Filters",
+	"SystemName": "SevenSpikes.Nop.Plugins.AjaxFilters",
+	"Version": "4.5",
+	"SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+	"Author": "Seven Spikes Ltd",
+	"DisplayOrder": 5,
+	"FileName": "SevenSpikes.Nop.Plugins.AjaxFilters.dll",
+	"Description": "This plugin adds extremely fast and powerful filtering capabilities to your online store."
+}

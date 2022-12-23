@@ -1,0 +1,134 @@
+﻿@model RibbonPictureModel
+
+@inject AdminAreaSettings _adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.ProductRibbons.Admin.Submenus.RibbonImages");
+
+    var defaultGridPageSize = _adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = _adminAreaSettings.GridPageSizes;
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Areas/Admin/Content/Styles/adminstyles.css" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#quickAddRibbonImage').click(function () {
+            var pictureId = $("#@Html.IdFor(model => model.PictureId)").val();
+
+            if (pictureId == 0) {
+                alert('Upload picture first');
+                return;
+            }
+
+            var headers = {};
+
+            addAntiForgeryToken(headers);
+
+            $('#quickAddRibbonImage').attr('disabled', true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("RibbonPictureAdd", "ProductRibbonsAdmin")",
+                data: "pictureId=" + pictureId,
+                headers: headers,
+                success: function (data) {
+                    $(".data-tables-refresh button").click();
+                    $('#quickAddRibbonImage').attr('disabled', false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to add ribbon image.');
+                    $('#quickAddRibbonImage').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.ProductRibbons.Admin.RibbonPicture")
+    </h1>
+</div>
+
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PictureId" />
+                            <span asp-validation-for="PictureId"></span>
+                            <button type="button" name="quickAddRibbonImage" id="quickAddRibbonImage" class="btn btn-primary margin-t-5">@T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.AddPicture")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{ 
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "ribbon-images-grid",
+                            UrlRead = new DataUrl("RibbonPicturesList", "ProductRibbonsAdmin", null),
+                            UrlDelete = new DataUrl("RibbonPictureDelete", "ProductRibbonsAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(RibbonPictureModel.PictureId))
+                                {
+                                    Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl").Text,
+                                    Render = new RenderCustom("renderPicture")
+                                },
+                                new ColumnProperty(nameof(RibbonPictureModel.PictureHeight))
+                                {
+                                    Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureHeight").Text
+                                },
+                                new ColumnProperty(nameof(RibbonPictureModel.PictureWidth))
+                                {
+                                    Title = T("SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureWidth").Text
+                                },
+                                new ColumnProperty(nameof(RibbonPictureModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "70"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    function renderPicture(data, type, row, meta) {
+
+        if (row.PictureId > 0) {
+
+            return '<img src="' + row.PictureUrl + '" />';
+        }
+        else {
+
+            return 'n/a';
+        }
+    }
+</script>

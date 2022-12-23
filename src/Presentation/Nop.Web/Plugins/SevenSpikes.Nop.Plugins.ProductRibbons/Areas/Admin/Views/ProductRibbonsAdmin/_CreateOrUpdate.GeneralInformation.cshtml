@@ -1,0 +1,58 @@
+﻿@model ProductRibbonGeneralInformationModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+            <span asp-validation-for="Enabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StopAddingRibbonsAftherThisOneIsAdded" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StopAddingRibbonsAftherThisOneIsAdded" />
+            <span asp-validation-for="StopAddingRibbonsAftherThisOneIsAdded"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="Priority" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Priority" />
+            <span asp-validation-for="Priority"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="FromDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="FromDate" />
+            <span asp-validation-for="FromDate"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="ToDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ToDate" />
+            <span asp-validation-for="ToDate"></span>
+        </div>
+    </div>
+</div>

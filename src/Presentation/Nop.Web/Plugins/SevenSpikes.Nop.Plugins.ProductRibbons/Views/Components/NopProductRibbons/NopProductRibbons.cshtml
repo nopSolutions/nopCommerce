@@ -1,0 +1,48 @@
+﻿@** Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@inject ProductRibbonsSettings _productRibbonsSettings
+@inject IWorkContext workContext
+
+@{    
+    var productIdObject = Url.ActionContext.RouteData.Values.FirstOrDefault(x => x.Key.Equals("productid"));
+
+    var productId = 0;
+
+    if (productIdObject.Value != null)
+    {
+        int.TryParse(productIdObject.Value.ToString(), out productId);
+    }
+    
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var theme = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+    var ribbonsCssFilePath = $"~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{theme}/Content/Ribbons.css";
+}
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.css" />
+<link rel="stylesheet" href="@ribbonsCssFilePath" />
+
+@if (supportRtl)
+{
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.rtl.css" />
+}
+
+@if (supportRtl)
+{
+    var ribbonsRtlCssFilePath = $"~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{theme}/Content/Ribbons.rtl.css";
+
+    <link rel="stylesheet" href="@ribbonsRtlCssFilePath" />
+}
+
+<script src="~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Scripts/ProductRibbons.min.js" asp-location="Footer"></script>
+
+<div id="product-ribbon-info" data-productid="@productId"
+     data-productboxselector="@_productRibbonsSettings.ProductBoxSelector"
+     data-productboxpicturecontainerselector="@_productRibbonsSettings.ProductBoxPictureContainerSelector"
+     data-productpagepicturesparentcontainerselector="@_productRibbonsSettings.ProductPagePicturesParentContainerSelector"
+     data-productpagebugpicturecontainerselector="@_productRibbonsSettings.ProductPageBugPictureContainerSelector"
+     data-retrieveproductribbonsurl="@Url.RouteUrl("RetrieveProductRibbons")">
+</div>

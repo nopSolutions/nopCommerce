@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>bloglist_page_before_post_body</WidgetZone>
+  <WidgetZone>bloglist_page_after_post_body</WidgetZone>
+</SupportedWidgetZones>

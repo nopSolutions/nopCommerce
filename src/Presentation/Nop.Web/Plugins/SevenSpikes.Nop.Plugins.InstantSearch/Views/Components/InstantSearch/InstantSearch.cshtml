@@ -1,0 +1,104 @@
+﻿@** Copyright 2017 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model InstantSearchModel
+@inject IWorkContext workContext
+@{
+    /*
+    Kendo UI specific css files.
+    kendo.common.min.css - it contains common kendo styles
+    kendo.default.min.css - it contains deafult kendo theme specific styles. You can use the kendo theme builder for new themes - http://demos.kendoui.com/themebuilder/index.html
+    */
+
+    var instantSearchCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.InstantSearch/Themes/" + Model.Theme + "/Content/InstantSearch.css";
+
+    var kendoVersion = "2020.1.406";
+
+    <!--Kendo scripts should be included before kendo.all.min.js in case we have HelpDesk. That is why we use Append to place them at the top of any other scripts -->
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.fx.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.autocomplete.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.list.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.popup.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.data.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/lib/kendo/{kendoVersion}/js/kendo.core.min.js");
+}
+
+<link rel="stylesheet" href="@instantSearchCssFilePath" />   
+
+@if (await Html.ShouldUseRtlThemeAsync())
+{
+    var instantSearchRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.InstantSearch/Themes/" + Model.Theme + "/Content/InstantSearch.rtl.css";
+        
+    <link rel="stylesheet" href="@instantSearchRtlCssFilePath" />
+}
+
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.InstantSearch/Scripts/InstantSearch.min.js" asp-location="Footer"></script>
+
+
+@if (Model.TopLevelCategories.Count > 0)
+{
+    <select class="search-box-select" id="instant-search-categories">
+        <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllCategories")</option>
+        @foreach(var category in Model.TopLevelCategories) 
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+}
+else if (Model.Manufacturers.Count > 0)
+{
+    <select class="search-box-select" id="instant-search-manufacturers">
+        <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllManufacturer")</option>
+        @foreach (var manufacturer in Model.Manufacturers)
+        {
+            <option value="@manufacturer.Id">@manufacturer.Name</option>
+        }
+    </select>
+}
+else if (Model.Vendors.Count > 0)
+{
+    <select class="search-box-select" id="instant-search-vendors">
+        <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllVendor")</option>
+        @foreach (var vendor in Model.Vendors)
+        {
+            <option value="@vendor.Id">@vendor.Name</option>
+        }
+    </select>
+}
+
+<input type="hidden" class="instantSearchResourceElement"
+       data-highlightFirstFoundElement="@Model.HighlightFirstFoundElementToBeSelected.ToString().ToLowerInvariant()"
+       data-minKeywordLength="@Model.MinKeywordLength"
+       data-defaultProductSortOption="@Model.DefaultProductSortOption"
+       data-instantSearchUrl="@Url.RouteUrl("InstantSearch")"
+       data-searchPageUrl="@Url.RouteUrl("ProductSearch")"
+       data-searchInProductDescriptions="@Model.SearchInProductDescriptions.ToString().ToLowerInvariant()"
+       data-numberOfVisibleProducts="@Model.NumberOfVisibleProducts"
+       data-noResultsResourceText="@T("SevenSpikes.InstantSearch.Public.NoResults")"/>
+
+@* You can change the whole html by modifying the template below without the main div element as it is used in the navigation.
+    There is NO need to add anchor html elements(<a href..) as the navigation is handled automaticaly when an item is selected.
+    You can use the following tokens to get the information retuned from the server:
+    ${ data.ProductPageUrl } - contains the url of the product page i.e /p/7. This property is required for the navigation to work and should not be removed from the template!!!
+    ${ data.ProductName } - contains the name of the product
+    ${ data.DefaultPictureUrl } - contains the Url of the default product picture
+    ${ data.ProductPrice } - contains the price of the product
+*@
+<script id="instantSearchItemTemplate" type="text/x-kendo-template" asp-location="Footer">
+    <div class="instant-search-item" data-url="${ data.CustomProperties.Url }">
+        <a class="iOS-temp" href="${ data.CustomProperties.Url }">
+            <div class="img-block">
+                <img src="${ data.DefaultPictureModel.ImageUrl }" alt="${ data.Name }" title="${ data.Name }" style="border: none">
+            </div>
+            <div class="detail">
+                <div class="title">${ data.Name }</div>
+                @if (Model.ShowSku)
+                {
+                    <div class="sku"># var sku = ""; if (data.CustomProperties.Sku != null) { sku = "@T("Products.Sku"): " + data.CustomProperties.Sku } # #= sku #</div>
+                }
+                <div class="price"># var price = ""; if (data.ProductPrice.Price) { price = data.ProductPrice.Price } # #= price #</div>           
+            </div>
+        </a>
+    </div>
+</script>

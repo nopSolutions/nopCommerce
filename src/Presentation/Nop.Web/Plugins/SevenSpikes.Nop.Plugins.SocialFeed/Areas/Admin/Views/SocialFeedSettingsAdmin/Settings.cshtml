@@ -1,0 +1,88 @@
+﻿@model SocialFeedSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.SocialFeed.Admin.Submenus.Settings");
+}
+
+<script>
+    $(document).ready(function () {
+
+        if ($("#EnableSocialPage:checked").length > 0) {
+
+            $(".header-menu-integration").show();
+        } else {
+
+            $("#HeaderMenuIntegration").val(0);
+            $(".header-menu-integration").hide();
+        }
+
+        $("#EnableSocialPage").change(function () {
+
+            if ($(this).prop('checked')) {
+
+                $(".header-menu-integration").show();
+            } else {
+
+                $("#HeaderMenuIntegration").val(0);
+                $(".header-menu-integration").hide();
+            }
+        });
+    });
+</script>
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.SocialFeed.Admin.Submenus.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableSocialFeed_OverrideForStore" asp-input="EnableSocialFeed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableSocialFeed"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableSocialFeed" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableSocialPage_OverrideForStore" asp-input="EnableSocialPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableSocialPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableSocialPage" />
+                            </div>
+                        </div>
+                        <div class="form-group row header-menu-integration">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="HeaderMenuIntegration_OverrideForStore" asp-input="HeaderMenuIntegration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="HeaderMenuIntegration" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="HeaderMenuIntegration" asp-items="Model.AvailableWidgetZonesForHeaderMenu" />
+                                <span asp-validation-for="HeaderMenuIntegration"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

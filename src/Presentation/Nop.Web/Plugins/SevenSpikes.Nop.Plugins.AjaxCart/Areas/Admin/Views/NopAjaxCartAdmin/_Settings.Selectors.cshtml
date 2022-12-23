@@ -1,0 +1,74 @@
+﻿@model NopAjaxCartSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShoppingCartMenuLinkSelector_OverrideForStore" asp-input="ShoppingCartMenuLinkSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShoppingCartMenuLinkSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShoppingCartMenuLinkSelector" />
+            <span asp-validation-for="ShoppingCartMenuLinkSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="WishlistMenuLinkSelector_OverrideForStore" asp-input="WishlistMenuLinkSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="WishlistMenuLinkSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="WishlistMenuLinkSelector" />
+            <span asp-validation-for="WishlistMenuLinkSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="FlyoutCartPanelSelector_OverrideForStore" asp-input="FlyoutCartPanelSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="FlyoutCartPanelSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="FlyoutCartPanelSelector" />
+            <span asp-validation-for="FlyoutCartPanelSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductBoxProductItemElementSelector_OverrideForStore" asp-input="ProductBoxProductItemElementSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductBoxProductItemElementSelector" />
+        </div>
+        <div class="col-md-9">                   
+            <nop-editor asp-for="ProductBoxProductItemElementSelector" />
+            <span asp-validation-for="ProductBoxProductItemElementSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductBoxAddToCartButtonSelector_OverrideForStore" asp-input="ProductBoxAddToCartButtonSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductBoxAddToCartButtonSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductBoxAddToCartButtonSelector" />
+            <span asp-validation-for="ProductBoxAddToCartButtonSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductPageAddToCartButtonSelector_OverrideForStore" asp-input="ProductPageAddToCartButtonSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductPageAddToCartButtonSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductPageAddToCartButtonSelector" />
+            <span asp-validation-for="ProductPageAddToCartButtonSelector"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AddToWishlistButtonSelector_OverrideForStore" asp-input="AddToWishlistButtonSelector" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AddToWishlistButtonSelector" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AddToWishlistButtonSelector" />
+            <span asp-validation-for="AddToWishlistButtonSelector"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>element_theme_logo</WidgetZone>
+  <WidgetZone>head_html_tag_after_css_files_element</WidgetZone>
+</SupportedWidgetZones>

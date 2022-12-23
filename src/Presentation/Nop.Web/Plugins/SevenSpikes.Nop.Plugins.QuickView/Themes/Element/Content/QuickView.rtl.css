@@ -1,0 +1,74 @@
+ /*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.product-list .quick-view-button {
+	margin: 0 0 0 5px;
+}
+.quickView .k-window-titlebar .k-window-actions {
+	left: 10px;
+	right: auto;
+}
+.quickView .gallery {
+	float: right;
+	padding: 0 30px 30px 15px;
+}
+.quickView .thumbnails a {
+	margin: 0 2% 2% 0;
+}
+.quickView .thumbnails a:nth-child(3n+1) {
+	margin-right: 0;
+	margin-left: 0;
+}
+.quickView .links-panel:after {
+	margin: 0 5px 0 -5px;
+	-ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.quickView .overview {
+	float: left;
+	padding: 0 10px 30px 30px;
+}
+.air-theme .quickView .overview .old-product-price span:after,
+.air-theme .quickView .overview .non-discounted-price span:after {
+	right: 0;
+	left: auto;
+}
+.earth-theme .quickView .old-product-price span:after,
+.earth-theme .quickView .non-discounted-price span:after {
+	right: -5px;
+	left: auto;
+}
+.quickView .item-box {
+	margin: 5px 2% 5px 0;
+}
+.quickView .item-box:nth-child(4n+1) {
+	margin-right: 0;
+}
+.quickView .variant-info {
+	margin: 0 110px 0 0;
+	text-align: right;
+}
+.air-theme .quickView .variant-info .old-product-price span:after,
+.air-theme .quickView .variant-info .non-discounted-price span:after {
+	right: 0;
+	left: auto;
+}
+.earth-theme .quickView .variant-info .old-product-price span:after,
+.earth-theme .quickView .variant-info .non-discounted-price span:after {
+	right: 0;
+	left: auto;
+}
+
+
+@media all and (min-width: 1025px) {
+
+.quickView .thumbnails a:nth-child(3n+1) {
+	margin-right: 2%;
+}
+.quickView .thumbnails a:nth-child(4n+1) {
+	margin-right: 0;
+}
+}

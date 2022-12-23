@@ -1,0 +1,71 @@
+﻿@model ProductsGroupItemAdminModel
+
+<div class="form-group row category-custom-collection-wrapper">
+    <div class="col-md-3">
+        <div class="label-wrapper">
+            <label class="control-label" for="" title="">
+                @T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EnableCategoryCustomCollection")
+            </label>
+            <div class="ico-help" title="@T("SevenSpikes.SmartProductCollections.Admin.ProductsGroupItem.EnableCategoryCustomCollection.Hint")">
+                <i class="fa fa-question-circle"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <input id="enable-custom-collection-@Model.Id" class="category-custom-collection" type="checkbox" @if (Model.EnableCategoryCustomCollection) { <text> checked="checked" </text> } data-itemid="@Model.Id" />
+    </div>
+</div>
+
+@(await Html.LocalizedEditorAsync<ProductsGroupItemAdminModel, ProductsGroupItemLocalizedAdminModel>(string.Format("products-group-item-localized-title-{0}", Model.Id),
+      @<div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="@Model.Locales[item].Title" />
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.Locales[item].Title, new { @class = "group-item-title k-textbox" })
+            <span asp-validation-for="@Model.Locales[item].Title"></span>
+        </div>
+        <div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+      @<div class="form-group row">
+          <div class="col-md-3">
+              <nop-label asp-for="Title" />
+          </div>
+          <div class="col-md-9">
+              @Html.TextBoxFor(model => model.Title, new { @class = "group-item-title k-textbox" } )
+              <span asp-validation-for="Title"></span>
+          </div>
+      </div>
+    ))
+
+<script type="text/javascript">
+    (function () {
+        $(document).one('initializeCustomCategoryMappingPanel', function () {
+            if (!$('#enable-custom-collection-@Model.Id').is(':checked')) {
+                return;
+            }
+
+            var tabContentId = $('#tabstrip .tabs-anchors li[data-itemId="@(Model.Id)"]').attr('aria-controls');
+            var tabContent = $('#' + tabContentId);
+
+            $('.visualized-tabs-wrapper').trigger('customListProductsLoaded', { tabContent: tabContent });
+
+            $.ajax({
+                url: '@(Html.Raw(Url.Action("ProductMappingsAdd", "ProductMappingsAdmin", new { entityId = Model.Id, entityType = Plugin.EntityType })))'
+            }).done(function (dataString) {
+                var data = $(dataString);
+
+                var storeIdFilter = data.find('.searchStoreId');
+
+                storeIdFilter.closest('tr').hide();
+
+                storeIdFilter.val($('#Store').val());
+
+                tabContent.find('.custom-list-add-products').html(data).show();
+            });
+        });
+    })();
+</script>

@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Instant Search",
+  "SystemName": "SevenSpikes.Nop.Plugins.InstantSearch",
+  "Version": "4.5",
+  "SupportedVersions": [ "4.50" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.InstantSearch.dll",
+  "Description": "A search auto-complete plugin for nopCommerce, which allows your customers to find the right products in seconds."
+}
