@@ -8522,7 +8522,8 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 }
 
 .box-shadow-wrapper .listbox ul li.active > a {
-  background-color: lightgray;
+  background-color: #F5F5F5;
+  border-left: 5px solid #20b2aa;
 }
 
 /* CUSTOMIZATION */

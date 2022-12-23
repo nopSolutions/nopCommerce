@@ -349,7 +349,7 @@ namespace Nop.Web.Factories
                 RegistrationType = _customerSettings.UserRegistrationType,
                 IsAuthenticated = await _customerService.IsRegisteredAsync(customer),
                 CustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
-                ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart),
+                ShoppingCartEnabled = IsShoppingCartEnabled(),//customization
                 WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
