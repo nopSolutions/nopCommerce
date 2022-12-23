@@ -9,7 +9,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
 {
-    public class PluginBuilder : NopEntityBuilder<CustomProductReviewMapping>
+    public class CustomProductReviewsBuilder : NopEntityBuilder<CustomProductReviewMapping>
     {
         #region Methods
 
@@ -17,8 +17,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
         {
             table
                 .WithColumn(nameof(CustomProductReviewMapping.DisplayOrder)).AsInt32().Nullable()
-                .WithColumn(nameof(CustomProductReviewMapping.Id)).AsInt32().NotNullable()
-                .WithColumn(nameof(CustomProductReviewMapping.PictureId)).AsInt32().ForeignKey<Picture>()
+                .WithColumn(nameof(CustomProductReviewMapping.Id)).AsInt32().PrimaryKey().NotNullable()
+                .WithColumn(nameof(CustomProductReviewMapping.PictureId)).AsInt32().ForeignKey<Picture>().Nullable()
                 .WithColumn(nameof(CustomProductReviewMapping.ProductReviewId)).AsInt32().ForeignKey<ProductReview>()
                 .WithColumn(nameof(CustomProductReviewMapping.VideoId)).AsInt32().ForeignKey<Video>();
         }
