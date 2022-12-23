@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using System;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FluentMigrator;
 using Nop.Data.Extensions;
@@ -30,8 +31,10 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
         }     
         public override void Down()
         {
+
             Delete.Table("Video");
             Delete.Table("CustomProductReviewMapping");
+
 
         }
     }
