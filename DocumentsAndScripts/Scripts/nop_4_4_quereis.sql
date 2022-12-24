@@ -20,8 +20,8 @@ SELECT * FROM [Discount]
 SELECT * FROM [Customer] WHERE Id in (2009,2010)
 -- DELETE [Customer] WHERE Id in  (2009,2010)
 
-select * from  [dbo].[Product_SpecificationAttribute_Mapping] Where SpecificationAttributeOptionId in (1,2)
-UPDATE [Product_SpecificationAttribute_Mapping] SET AllowFiltering=0 Where SpecificationAttributeOptionId in (1,2)
+select * from  [dbo].[Product_SpecificationAttribute_Mapping] Where SpecificationAttributeOptionId in (7)
+-- UPDATE [Product_SpecificationAttribute_Mapping] SET AllowFiltering=0 Where SpecificationAttributeOptionId in (1,2)
 
 SELECT * FROM [Category]
 SELECT * FROM [product]
@@ -36,6 +36,66 @@ SELECT * FROM [CustomerRole]
 SELECT * FROM [UrlRecord] Where EntityName='Product'
 and slug like '%test%'
 
+SELECT * FROM [dbo].[Customer_CustomerRole_Mapping] where customer_id=263
+
+SELECT  
+		Distinct(C.VendorId) AS ProductId, 
+        C.Id as CustomerId,
+        CRM.CustomerRole_Id AS CustomerRole,
+		CAST(CASE 
+                  --WHEN OI.ProductId=1 AND O.PaidDateUtc >= GETUTCDATE()-90  THEN 1	 -- 1 Month Subscription
+				  WHEN CRM.CustomerRole_Id=9 THEN 1	 -- 6 Month Subscription
+				  ELSE 0 END AS BIT) AS PremiumCustomer
+	INTO #CustomerOrderTemp
+		FROM [Order] O 
+		INNER JOIN [OrderItem] OI ON OI.OrderId=O.Id -- AND O.OrderStatusId=30 
+		INNER JOIN [Product] P ON P.Id=OI.ProductId
+		INNER JOIN [Customer] C ON C.Id=O.CustomerId
+		INNER JOIN [Customer_CustomerRole_Mapping] CRM ON C.Id=CRM.Customer_Id   -- paid customer
+		--WHERE O.OrderStatusId=30 -- Order Paid
+        WHERE CRM.CustomerRole_Id=9 -- paid customer
+
+        select * from  #CustomerOrderTemp
+        drop table #CustomerOrderTemp
+
+         SELECT ISNULL((SELECT 1 FROM [Product] WHERE id = 100), 0) res
+
+         SELECT ISNULL((SELECT 1 FROM [Customer_CustomerRole_Mapping] WHERE CustomerRole_Id=9), 0) res
+
+ -- paid customers product ids
+    SELECT  
+		Distinct(C.VendorId) AS ProductId,
+        C.Id as CustomerId,
+        CRM.CustomerRole_Id AS CustomerRole,
+        CRM.Customer_Id
+      --  CAST(CASE WHEN CRM.CustomerRole_Id=9 THEN 1	 -- 6 Month Subscription
+				  --ELSE 0 END AS BIT) AS PremiumCustomer
+    --INTO #CustomerOrderTemp
+		FROM [Customer] C 
+		INNER JOIN [Product] P ON P.Id=C.VendorId
+		LEFT JOIN [Customer_CustomerRole_Mapping] CRM ON C.Id=CRM.Customer_Id
+        WHERE CRM.CustomerRole_Id=9 -- paid customer
+
+
+
+        	SELECT  
+		Distinct(C.VendorId) AS ProductId,
+        C.Id as CustomerId,
+		CAST(CASE WHEN OI.ProductId=1 AND O.PaidDateUtc >= GETUTCDATE()-90  THEN 1	 -- 1 Month Subscription
+				  WHEN OI.ProductId=2 AND O.PaidDateUtc >= GETUTCDATE()-180 THEN 1	 -- 6 Month Subscription
+				  WHEN OI.ProductId=3 AND O.PaidDateUtc >= GETUTCDATE()-365 THEN 1	 -- 1 Year subscription
+				  ELSE 0 END AS BIT) AS PremiumCustomer
+	INTO #CustomerOrderTemp
+		FROM [Order] O 
+		INNER JOIN [OrderItem] OI ON OI.OrderId=O.Id -- AND O.OrderStatusId=30 
+		INNER JOIN [Product] P ON P.Id=OI.ProductId
+		INNER JOIN [Customer] C ON C.Id=O.CustomerId
+		WHERE O.OrderStatusId=30 -- Order Paid
+
+		 SELECT '#CustomerOrderTemp', * FROM #CustomerOrderTemp
+		 -- DROP TABLE #CustomerOrderTemp
+
+        
 UPDATE Customer SET CustomerProfileTypeId=0
 Where Id=1
 
@@ -102,7 +162,10 @@ select * from [SpecificationAttribute] order by DisplayOrder
 
 SELECT * FROM [CustomerAttribute] 
 select * from [SpecificationAttribute]
-select * from [SpecificationAttributeOption] WHERE SpecificationAttributeId=5
+select * from [SpecificationAttributeOption] WHERE SpecificationAttributeId=9
+
+DELETE [SpecificationAttributeOption] WHERE SpecificationAttributeId=6
+
 
 SELECT * FROM [ProductAttribute] 
 SELECT * FROM [ProductAttributeValue] 
@@ -290,6 +353,11 @@ UPDATE [dbo].[ShoppingCartItem] SET ShoppingCartTypeId=3 where CustomerId=263 an
 
 select * from store
 select * from Warehouse
+
+select * from  Product
+
+select * from  UrlRecord
+where entityid=57
 
 
 SELECT 
@@ -483,8 +551,17 @@ WHERE
 		 --AND sa.Id in (5)
 		 
 
+--The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Product_SpecificationAttribute_Mapping_ProductId_Product_Id". 
+--The conflict occurred in database "nopcommerce46", table "dbo.Product", column 'Id'. The statement has been terminated.
 
+select * from  [dbo].[Product] 
 
+select *  from  [dbo].[Product_SpecificationAttribute_Mapping] 
+WHERE ProductId=10 AND AllowFiltering=1
 
+SELECT Vendorid,* FROM [dbo].[Customer] --18 --56 
+select * from  [dbo].[Product] Where VendorId=1 
 
+UPDATE [dbo].[Product] SET VendorId=1 Where Id=56 
+UPDATE [dbo].[Customer] SET VendorId=56 where Id in (1)
 

@@ -173,6 +173,7 @@ UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.show
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.allowcartitemediting';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.moveitemsfromwishlisttocart';
 
+-- catalogsettings
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.showskuonproductdetailspage';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductviewmodechanging';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductsorting';
@@ -192,7 +193,13 @@ UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'catalogsettings.showlinkt
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductsorting';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.searchpageallowcustomerstoselectpagesize';
 
+-- catalogsettings -- Filter settings -- nop4.6
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.enablemanufacturerfiltering';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.enablepricerangefiltering';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.productsbytagpricerangefiltering';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.searchpagepricerangefiltering';
 
+-- ordersettings
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.anonymouscheckoutallowed';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'ordersettings.disablebillingaddresscheckoutstep';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'ordersettings.termsofserviceonshoppingcartpage';
@@ -315,3 +322,6 @@ UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | 
 UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaulttitle';
 UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetakeywords';
 UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetadescription';
+
+Update [dbo].[LocaleStringResource] SET ResourceValue='Partner Consultancies' WHERE ResourceName='manufacturers'
+-- Manufacturers
