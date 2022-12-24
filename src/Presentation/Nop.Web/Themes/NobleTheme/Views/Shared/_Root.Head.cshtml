@@ -18,7 +18,7 @@
         NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
     }
 
-    //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
 
     //resources
     //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
@@ -29,7 +29,7 @@
     //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     //NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
 
-    <script src="lib_npm/jquery/jquery.min.js"></script>
+    //<script src="lib_npm/jquery/jquery.min.js"></script>
 
 
     //resources to avoid bundling
@@ -73,8 +73,8 @@
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.common.min.css" />
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.bootstrap.min.css" />
     @*<link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.default.mobile.min.css" />*@
-            //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
-
+    //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+   
     @*<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>*@
     @*<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.ui.core.min.js"></script>*@
 
@@ -97,9 +97,8 @@
     @*Bootstrap icons*@
     @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">*@
 
-    //NopHtml.AppendScriptParts(ResourceLocation.None, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
-
-    <script src="Themes/NobleTheme/Content/js/mmenu-light.js"></script>
+    NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
+    
     @*<script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/mmenu-light.js"></script>*@
 
     //phone number format widget
