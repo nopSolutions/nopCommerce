@@ -7178,10 +7178,10 @@ ul.poll-results {
     padding-bottom: 15px;
   }
 
-    .block-recently-viewed-products ul li.last {
-      margin-bottom: 10px;
-      border-bottom: none;
-    }
+.block-recently-viewed-products ul li.last {
+  margin-bottom: 10px;
+  border-bottom: none;
+}
 
 .block-recently-viewed-products.well.box-shadow-wrapper .listbox ul li a {
   background: none;
@@ -8373,7 +8373,7 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 
 .customer-info {
   font-style: normal;
-  /* float: left;*/
+  float: left;
   margin-left: 5px;
 }
 

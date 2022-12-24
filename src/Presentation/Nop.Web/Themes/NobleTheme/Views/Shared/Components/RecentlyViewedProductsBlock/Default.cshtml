@@ -25,16 +25,16 @@
                                 </div>
                             }
 
-                            <a class="product-name" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>
+                        <a class="product-name" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name.Split(' ')[0]</a>
                             <div class="customer-info">
                                 <ul>
-                                    <li>Primary Technology: @Html.Raw(product.PrimaryTechnology)</li>
+                                    <li>Technology: @Html.Raw(product.PrimaryTechnology)</li>
                                     @if (customerSettings.ShowSecondaryTechnologySpecificationAttribute)
                                     {
                                         <li>Secondary Tech: @Html.Raw(product.SecondaryTechnology)</li>
                                     }
                                     <li>Location: @Html.Raw(product.Location)</li>
-                                    <li>@Html.Raw(product.CurrentAvalibility)</li>
+                                    <li hidden>@Html.Raw(product.CurrentAvalibility)</li>
                                     <li>Exp: : @Html.Raw(product.WorkExperience)</li>
                                     <li>Online : @Html.Raw(product.LastLoginDateTime)</li>
                                     <li hidden>@Html.Raw(product.ProfileType)</li>
