@@ -1337,11 +1337,11 @@ namespace Nop.Web.Factories
                             });
                         }
                     }
-                    else
-                    {
-                        foreach (var error in getShippingOptionResponse.Errors)
-                            model.Errors.Add(error);
-                    }
+                }
+                else
+                {
+                    foreach (var error in getShippingOptionResponse.Errors)
+                        model.Errors.Add(error);
                 }
 
                 var pickupPointsNumber = 0;
