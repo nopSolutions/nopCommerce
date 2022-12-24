@@ -73,8 +73,8 @@
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.common.min.css" />
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.bootstrap.min.css" />
     @*<link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.default.mobile.min.css" />*@
-    //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
-   
+            //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+
     @*<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>*@
     @*<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.ui.core.min.js"></script>*@
 
@@ -98,7 +98,7 @@
     @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">*@
 
     NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
-    
+
     @*<script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/mmenu-light.js"></script>*@
 
     //phone number format widget
@@ -120,14 +120,18 @@
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
+
+    var title = await NopHtml.GenerateTitleAsync();
+    var description = await @NopHtml.GenerateMetaDescriptionAsync();
+    var keywords = await NopHtml.GenerateMetaKeywordsAsync();
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
-    <title>@NopHtml.GenerateTitleAsync()</title>
+    <title>@title</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@NopHtml.GenerateMetaDescriptionAsync()" />
-    <meta name="keywords" content="@NopHtml.GenerateMetaKeywordsAsync()" />
+    <meta name="description" content="@description" />
+    <meta name="keywords" content="@keywords" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -139,27 +143,22 @@
     @NopHtml.GenerateCssFiles()
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
     @NopHtml.GenerateCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
-    @await Component.InvokeAsync("Favicon")
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
     @if (displayMiniProfiler)
     {
         <mini-profiler />
     }
+
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Theme Designed by nopAccelerate Themes - https://themes.nopaccelerate.com/themes/ -->
-    <!--Copyright (c) 2016-->
-    <!--[if lt IE 9]>
-           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
+    @Html.Raw(commonSettings.HeaderCustomHtml)
 </head>
 <body>
     <nop-antiforgery-token />
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-    <![endif]-->
     @RenderBody()
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
