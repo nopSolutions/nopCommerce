@@ -105,14 +105,14 @@
                         }
                     </ul>
                 </div>
-                <div class="column follow-us col-sm-3 col-md-3">
+                <div class="column follow-us col-sm-3 col-md-3" >
                     <div class="social">
                         <div class="title newsletter-title">
                             <strong>@T("Footer.FollowUs")</strong>
                         </div>
                         @await Component.InvokeAsync("NewsletterBox")
-                        <h4>@T("Footer.FollowUs")</h4>
-                        @await Component.InvokeAsync("SocialButtons")
+                       @* <h4>@T("Footer.FollowUs")</h4>
+                        @await Component.InvokeAsync("SocialButtons")*@
                     </div>
                 </div>
             </div>

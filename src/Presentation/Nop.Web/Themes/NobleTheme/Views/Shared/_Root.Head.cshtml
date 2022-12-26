@@ -4,6 +4,7 @@
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Security
 @using Nop.Core.Events
+@using Nop.Core
 
 @inject CatalogSettings catalogSettings
 @inject CommonSettings commonSettings
@@ -11,6 +12,10 @@
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject AppSettings appSettings
+@inject IWebHelper webHelper
+@{
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
+}
 @{
 
     if (catalogSettings.DisplayAllPicturesOnCatalogPages)
@@ -104,6 +109,11 @@
     //phone number format widget
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+
+    if (thisPageUrl.Contains("Login", StringComparison.InvariantCultureIgnoreCase))
+    {
+        <script src="https://cdn.tailwindcss.com"></script>
+    }
 
     <script>
         if (typeof kendo == "undefined") {
