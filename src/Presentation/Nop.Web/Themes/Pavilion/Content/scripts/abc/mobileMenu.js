@@ -195,11 +195,11 @@ function menuSetting() {
     $(menu_array[len]).append("<div class='phone-line'></div>");
     $(menu_array[len]).find('span').css('line-height', '0px');
 
-    hardcodeForMickeyShorr(menu_array);
+    hardcodeForMickeyShorr(menu_array, len);
 }
 
 // Hardcodes for Mickey Shorr since menu items don't match desired outcome.
-function hardcodeForMickeyShorr(menu_array) {
+function hardcodeForMickeyShorr(menu_array, len) {
     const isMickeyShorr = window.location.href.indexOf("mickeyshorr") > -1;
     if (!isMickeyShorr) { return; }
 
@@ -215,7 +215,12 @@ function hardcodeForMickeyShorr(menu_array) {
     $(menu_array[2]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/CreditIcon.png')");
     $(menu_array[2]).find('a').attr("href", '/special-financing-options-2')
     $(menu_array[2]).find('a').find('span').text('Financing')
-    menu_array.length = 3;
+
+    for (var i = 3; i < len; i++)
+    {
+        $(menu_array[i]).remove();
+    }
+    
 }
 
 function removeNonLeafLinks() {
