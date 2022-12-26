@@ -49,7 +49,7 @@
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
-                <form asp-route="ProductReviews" method="post">
+                <form asp-controller="CustomProductReview" asp-action="ProductReviews" method="post">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
@@ -232,7 +232,7 @@
 <script asp-location="Footer">
     var uploadButton = document.getElementById('add-review-button');
 
-    $('#formProductReviews').submit(function (e) {
+    $('#review-form').submit(function (e) {
 
         e.preventDefault();
         uploadButton.value = 'Submitting...';
@@ -242,14 +242,12 @@
         if (!readURLFileUpload()) return false;
 
         var formData = new FormData(form[0]);
-
+        alert(formData);
         $(".form-message").html("");
         $.ajax({
-            url: "@Url.RouteUrl("Nop.Plugin.Widgets.CustomProductReviews.ProductReviewsAdd")",
-            type: 'POST',
-            beforeSend: function () {
-                $('#formProductReviews .ajax-loader').css("visibility", "visible");
-            },
+           
+            url: "@Url.RouteUrl("Nop.Plugin.Widgets.CustomProductReviews.ProductReviewsAdd",Model)",
+            type: 'POST',           
             data: formData,
             dataType: 'json',
             processData: false,
@@ -266,22 +264,22 @@
                     strmsg += "</ul>";
 
                     if (!data.success) {
-                        $("#message-error-formProductReviews").html(strmsg);
+                        $("#message-error-review-form").html(strmsg);
                     }
                     else {
-                        $("#message-success-formProductReviews").html(data.message);
-                        $("#formProductReviews .formProductReviews-body").css("display", "none");
-                        document.getElementById("formProductReviews").reset();
+                        $("#message-success-review-form").html(data.message);
+                        $("#review-form .review-form-body").css("display", "none");
+                        document.getElementById("review-form").reset();
                     }
                     if (typeof grecaptcha != "undefined") {
                         grecaptcha.reset();
                     }
-                    $('html, body').animate({ scrollTop: $("#message-success-formProductReviews").offset().top }, 'slow');
+                    $('html, body').animate({ scrollTop: $("#message-success-review-form").offset().top }, 'slow');
                     return false;
                 }
             },
             complete: function () {
-                $('#formProductReviews .ajax-loader').css("visibility", "hidden");
+                $('#review-form .ajax-loader').css("visibility", "hidden");
             }
         });
     });

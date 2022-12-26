@@ -1,373 +1,279 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Html;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
+using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
+using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
-
-
-[AutoValidateAntiforgeryToken]
-public class CustomProductReviewController : BasePluginController
+namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
 {
-  
-    public class PickupInStoreController : BasePluginController
+
+    [AutoValidateAntiforgeryToken]
+    public class CustomProductReviewController : BasePluginController
     {
+
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
+        private readonly ICompareProductsService _compareProductsService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStorePickupPointModelFactory _storePickupPointModelFactory;
-        private readonly IStorePickupPointService _storePickupPointService;
-        private readonly IStoreService _storeService;
-        private readonly AddressSettings _addressSettings;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
+        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IReviewTypeService _reviewTypeService;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
         #region Ctor
 
-        public PickupInStoreController(IAddressService addressService,
-            ICountryService countryService,
+        public CustomProductReviewController(CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
+            IAclService aclService,
+            ICompareProductsService compareProductsService,
+            ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
+            IEventPublisher eventPublisher,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
+            IOrderService orderService,
             IPermissionService permissionService,
-            IStateProvinceService stateProvinceService,
-            IStorePickupPointModelFactory storePickupPointModelFactory,
-            IStorePickupPointService storePickupPointService,
-            IStoreService storeService,
-            AddressSettings customerSettings)
+            IProductAttributeParser productAttributeParser,
+            IProductModelFactory productModelFactory,
+            IProductService productService,
+            IRecentlyViewedProductsService recentlyViewedProductsService,
+            IReviewTypeService reviewTypeService,
+            IShoppingCartModelFactory shoppingCartModelFactory,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings,
+            ShoppingCartSettings shoppingCartSettings,
+            ShippingSettings shippingSettings)
         {
-            _addressService = addressService;
-            _countryService = countryService;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _compareProductsService = compareProductsService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
+            _orderService = orderService;
             _permissionService = permissionService;
-            _stateProvinceService = stateProvinceService;
-            _storePickupPointModelFactory = storePickupPointModelFactory;
-            _storePickupPointService = storePickupPointService;
-            _storeService = storeService;
-            _addressSettings = customerSettings;
+            _productAttributeParser = productAttributeParser;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _reviewTypeService = reviewTypeService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
+
 
         #endregion
 
         #region Methods
 
-        public async Task<IActionResult> Configure()
+        //public async Task<IActionResult> Configure()
+        //{
+        //    //if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+        //    //    return AccessDeniedView();
+
+        //    ////prepare model
+        //    //var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModelAsync(new StorePickupPointSearchModel());
+
+        //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
+        //}
+        [HttpPost, ActionName("ProductReviews")]
+        [FormValueRequired("add-review")]
+        [ValidateCaptcha]
+        public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model,
+            bool captchaValid)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+            var product = await _productService.GetProductByIdAsync(productId);
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
-            //prepare model
-            var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModelAsync(new StorePickupPointSearchModel());
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
+                !await _productService.CanAddReviewAsync(product.Id,
+                    _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
+                return RedirectToRoute("Homepage");
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return await AccessDeniedDataTablesJson();
-
-            //prepare model
-            var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModelAsync(searchModel);
-
-            return Json(model);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var model = new StorePickupPointModel
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
             {
-                Address = new AddressModel()
-            };
-
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var country in await _countryService.GetAllCountriesAsync(showHidden: true))
-                model.Address.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString() });
-
-            var states = !model.Address.CountryId.HasValue ? new List<StateProvince>()
-                : await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.Address.CountryId.Value, showHidden: true);
-            if (states.Any())
-            {
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectState"), Value = "0" });
-                foreach (var state in states)
-                    model.Address.AvailableStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString() });
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
-            else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.Other"), Value = "0" });
 
-            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
-            foreach (var store in await _storeService.GetAllStoresAsync())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            await ValidateProductReviewAvailabilityAsync(product);
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(StorePickupPointModel model)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var address = new Address
+            if (ModelState.IsValid)
             {
-                Address1 = model.Address.Address1,
-                City = model.Address.City,
-                County = model.Address.County,
-                CountryId = model.Address.CountryId,
-                StateProvinceId = model.Address.StateProvinceId,
-                ZipPostalCode = model.Address.ZipPostalCode,
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            await _addressService.InsertAddressAsync(address);
+                //save review
+                var rating = model.AddProductReview.Rating;
+                if (rating < 1 || rating > 5)
+                    rating = _catalogSettings.DefaultProductRatingValue;
+                var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+                var customer = await _workContext.GetCurrentCustomerAsync();
 
-            var pickupPoint = new StorePickupPoint
-            {
-                Name = model.Name,
-                Description = model.Description,
-                AddressId = address.Id,
-                OpeningHours = model.OpeningHours,
-                PickupFee = model.PickupFee,
-                DisplayOrder = model.DisplayOrder,
-                StoreId = model.StoreId,
-                Latitude = model.Latitude,
-                Longitude = model.Longitude,
-                TransitDays = model.TransitDays
-            };
-            await _storePickupPointService.InsertStorePickupPointAsync(pickupPoint);
-
-            ViewBag.RefreshPage = true;
-
-            return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
-            if (pickupPoint == null)
-                return RedirectToAction("Configure");
-
-            var model = new StorePickupPointModel
-            {
-                Id = pickupPoint.Id,
-                Name = pickupPoint.Name,
-                Description = pickupPoint.Description,
-                OpeningHours = pickupPoint.OpeningHours,
-                PickupFee = pickupPoint.PickupFee,
-                DisplayOrder = pickupPoint.DisplayOrder,
-                StoreId = pickupPoint.StoreId,
-                Latitude = pickupPoint.Latitude,
-                Longitude = pickupPoint.Longitude,
-                TransitDays = pickupPoint.TransitDays
-            };
-
-            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId);
-            if (address != null)
-            {
-                model.Address = new AddressModel
+                var productReview = new ProductReview
                 {
-                    Address1 = address.Address1,
-                    City = address.City,
-                    County = address.County,
-                    CountryId = address.CountryId,
-                    StateProvinceId = address.StateProvinceId,
-                    ZipPostalCode = address.ZipPostalCode,
-                };
-            }
-
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var country in await _countryService.GetAllCountriesAsync(showHidden: true))
-                model.Address.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString(), Selected = (address != null && country.Id == address.CountryId) });
-
-            var states = !model.Address.CountryId.HasValue ? new List<StateProvince>()
-                : await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.Address.CountryId.Value, showHidden: true);
-            if (states.Any())
-            {
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectState"), Value = "0" });
-                foreach (var state in states)
-                    model.Address.AvailableStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString(), Selected = (address != null && state.Id == address.StateProvinceId) });
-            }
-            else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.Other"), Value = "0" });
-
-            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
-            foreach (var store in await _storeService.GetAllStoresAsync())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = store.Id == model.StoreId });
-
-            return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(StorePickupPointModel model)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            if (!ModelState.IsValid)
-                return await Edit(model.Id);
-
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(model.Id);
-            if (pickupPoint == null)
-                return RedirectToAction("Configure");
-
-            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId) ?? new Address { CreatedOnUtc = DateTime.UtcNow };
-            address.Address1 = model.Address.Address1;
-            address.City = model.Address.City;
-            address.County = model.Address.County;
-            address.CountryId = model.Address.CountryId;
-            address.StateProvinceId = model.Address.StateProvinceId;
-            address.ZipPostalCode = model.Address.ZipPostalCode;
-            if (address.Id > 0)
-                await _addressService.UpdateAddressAsync(address);
-            else
-                await _addressService.InsertAddressAsync(address);
-
-            pickupPoint.Name = model.Name;
-            pickupPoint.Description = model.Description;
-            pickupPoint.AddressId = address.Id;
-            pickupPoint.OpeningHours = model.OpeningHours;
-            pickupPoint.PickupFee = model.PickupFee;
-            pickupPoint.DisplayOrder = model.DisplayOrder;
-            pickupPoint.StoreId = model.StoreId;
-            pickupPoint.Latitude = model.Latitude;
-            pickupPoint.Longitude = model.Longitude;
-            pickupPoint.TransitDays = model.TransitDays;
-            await _storePickupPointService.UpdateStorePickupPointAsync(pickupPoint);
-
-            ViewBag.RefreshPage = true;
-
-            return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
-            if (pickupPoint == null)
-                return RedirectToAction("Configure");
-
-            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId);
-            if (address != null)
-                await _addressService.DeleteAddressAsync(address);
-
-            await _storePickupPointService.DeleteStorePickupPointAsync(pickupPoint);
-
-            return new NullJsonResult();
-        }
-
-        #endregion
-    }
-    [HttpPost, ActionName("ProductReviews")]
-    [FormValueRequired("add-review")]
-    [ValidateCaptcha]
-    public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
-    {
-        var product = await _productService.GetProductByIdAsync(productId);
-        var currentStore = await _storeContext.GetCurrentStoreAsync();
-
-        if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
-            !await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
-            return RedirectToRoute("Homepage");
-
-        //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
-        {
-            ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
-
-        await ValidateProductReviewAvailabilityAsync(product);
-
-        if (ModelState.IsValid)
-        {
-            //save review
-            var rating = model.AddProductReview.Rating;
-            if (rating < 1 || rating > 5)
-                rating = _catalogSettings.DefaultProductRatingValue;
-            var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
-            var customer = await _workContext.GetCurrentCustomerAsync();
-
-            var productReview = new ProductReview
-            {
-                ProductId = product.Id,
-                CustomerId = customer.Id,
-                Title = model.AddProductReview.Title,
-                ReviewText = model.AddProductReview.ReviewText,
-                Rating = rating,
-                HelpfulYesTotal = 0,
-                HelpfulNoTotal = 0,
-                IsApproved = isApproved,
-                CreatedOnUtc = DateTime.UtcNow,
-                StoreId = currentStore.Id,
-            };
-
-            await _productService.InsertProductReviewAsync(productReview);
-
-            //add product review and review type mapping                
-            foreach (var additionalReview in model.AddAdditionalProductReviewList)
-            {
-                var additionalProductReview = new ProductReviewReviewTypeMapping
-                {
-                    ProductReviewId = productReview.Id,
-                    ReviewTypeId = additionalReview.ReviewTypeId,
-                    Rating = additionalReview.Rating
+                    ProductId = product.Id,
+                    CustomerId = customer.Id,
+                    Title = model.AddProductReview.Title,
+                    ReviewText = model.AddProductReview.ReviewText,
+                    Rating = rating,
+                    HelpfulYesTotal = 0,
+                    HelpfulNoTotal = 0,
+                    IsApproved = isApproved,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    StoreId = currentStore.Id,
                 };
 
-                await _reviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
+                await _productService.InsertProductReviewAsync(productReview);
+
+                //add product review and review type mapping                
+                foreach (var additionalReview in model.AddAdditionalProductReviewList)
+                {
+                    var additionalProductReview = new ProductReviewReviewTypeMapping
+                    {
+                        ProductReviewId = productReview.Id,
+                        ReviewTypeId = additionalReview.ReviewTypeId,
+                        Rating = additionalReview.Rating
+                    };
+
+                    await _reviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
+                }
+
+                //update product totals
+                await _productService.UpdateProductReviewTotalsAsync(product);
+
+                //notify store owner
+                if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                    await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview,
+                        _localizationSettings.DefaultAdminLanguageId);
+
+                //activity log
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
+                    string.Format(
+                        await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"),
+                        product.Name), product);
+
+                //raise event
+                if (productReview.IsApproved)
+                    await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
+
+                model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+                model.AddProductReview.Title = null;
+                model.AddProductReview.ReviewText = null;
+
+                model.AddProductReview.SuccessfullyAdded = true;
+                if (!isApproved)
+                    model.AddProductReview.Result =
+                        await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
+                else
+                    model.AddProductReview.Result =
+                        await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
+
+                return View(model);
             }
 
-            //update product totals
-            await _productService.UpdateProductReviewTotalsAsync(product);
-
-            //notify store owner
-            if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
-
-            //raise event
-            if (productReview.IsApproved)
-                await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
-
+            //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            model.AddProductReview.Title = null;
-            model.AddProductReview.ReviewText = null;
-
-            model.AddProductReview.SuccessfullyAdded = true;
-            if (!isApproved)
-                model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
-            else
-                model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
-
             return View(model);
         }
 
-        //if we got this far, something failed, redisplay form
-        model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-        return View(model);
-    }
+        protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                ModelState.AddModelError(string.Empty,
+                    await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
+            if (!_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+                return;
+
+            var hasCompletedOrders = product.ProductType == ProductType.SimpleProduct
+                ? await HasCompletedOrdersAsync(product)
+                : await (await _productService.GetAssociatedProductsAsync(product.Id)).AnyAwaitAsync(
+                    HasCompletedOrdersAsync);
+
+            if (!hasCompletedOrders)
+                ModelState.AddModelError(string.Empty,
+                    await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+        }
+
+        protected virtual async ValueTask<bool> HasCompletedOrdersAsync(Product product)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            return (await _orderService.SearchOrdersAsync(customerId: customer.Id,
+                productId: product.Id,
+                osIds: new List<int> { (int)OrderStatus.Complete },
+                pageSize: 1)).Any();
+        }
+
+        #endregion
+
+
+
+    }
 }
