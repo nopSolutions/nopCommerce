@@ -200,7 +200,6 @@ function menuSetting() {
 
 // Hardcodes for Mickey Shorr since menu items don't match desired outcome.
 function hardcodeForMickeyShorr(menu_array) {
-    debugger;
     const isMickeyShorr = window.location.href.indexOf("mickeyshorr") > -1;
     if (!isMickeyShorr) { return; }
 
