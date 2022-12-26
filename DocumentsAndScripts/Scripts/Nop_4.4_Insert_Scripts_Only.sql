@@ -386,3 +386,18 @@ INSERT INTO [dbo].[Topic]
 			,1,1,0,0)
 
 ---------------------- Topic Texts --------------------
+
+IF NOT EXISTS (SELECT * FROM [CustomerRole] WHERE [Name]='GiveSupport-Paid')
+   BEGIN
+    INSERT INTO [dbo].[CustomerRole]([Name],[SystemName],[FreeShipping],[TaxExempt],[Active],[IsSystemRole],[EnablePasswordLifetime],[OverrideTaxDisplayType],[DefaultTaxDisplayTypeId],[PurchasedWithProductId])
+    VALUES ('GiveSupport-Paid','GiveSupport-Paid',1,0,1,0,0,0,0,0)
+  END
+
+IF NOT EXISTS (SELECT * FROM [CustomerRole] WHERE [Name]='PaidCustomer')
+   BEGIN
+    INSERT INTO [dbo].[CustomerRole]([Name],[SystemName],[FreeShipping],[TaxExempt],[Active],[IsSystemRole],[EnablePasswordLifetime],[OverrideTaxDisplayType],[DefaultTaxDisplayTypeId],[PurchasedWithProductId])
+    VALUES ('PaidCustomer','PaidCustomer',1,0,1,0,0,0,0,0)
+ END
+
+
+ ----------------------  --------------------

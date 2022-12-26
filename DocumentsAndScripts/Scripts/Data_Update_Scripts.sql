@@ -4,7 +4,7 @@ use [itjobsupport]
 use [nopcommerce46]
 
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
-SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%Apply for vendor%'
+SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%reviews%';
 
 ---------------------------------------------------------
@@ -153,7 +153,7 @@ Update [dbo].[LocaleStringResource] SET ResourceValue='You will receive a onetim
 Update [dbo].[LocaleStringResource] SET ResourceValue='You will receive an e-mail when a particular profile is back to available.' WHERE ResourceName='account.backinstocksubscriptions.description'
 	-- You will receive an e-mail when a particular product is back in stock.
 
-SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'reviews.productreviewsfor%'
+SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Admin.Configuration.Stores.Fields.%'
 SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Products.Tags%'
 SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceValue] like '%Returning Customer%'
 
@@ -229,6 +229,8 @@ UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.countryr
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phoneenabled';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phonerequired';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.companyenabled';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidedownloadableproductstab';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidebackinstocksubscriptionstab';
 
 -- Customersettings -- AddressSettings -- Address form fields
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.companyenabled';
@@ -245,13 +247,18 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phoneena
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phonerequired';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.faxenabled';
 
+-- shopping cart settings
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'shoppingcartsettings.displaycartafteraddingproduct';
+
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingCartSettings.MiniShoppingCartProductNumber%';
-SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingcartsettings.move%';
-SELECT * FROM [dbo].[Setting] WHERE [Name] like 'CatalogSettings.%';
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'customersettings.%stock%';
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingcartsettings.displaycartafteraddingproduct';
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'seosettings.%';
 SELECT * FROM [dbo].[Setting] WHERE [Name] like '%infotab%';
 SELECT * FROM [dbo].[Setting] WHERE [Value] like '%Anonymous%';
 
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'AddressSettings.%';
+SELECT * FROM [dbo].[Setting] WHERE Value like '%job%';
 
 -- UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = '';
 
@@ -285,9 +292,7 @@ SELECT * FROM [CustomerAttribute] Where Id>=7
 
 -- Delete [CustomerAttribute]
 DBCC CHECKIDENT ('[CustomerAttribute]', RESEED, 0);
-GO
-
- DBCC CHECKIDENT ('[SpecificationAttributeOption]', RESEED, 4);
+DBCC CHECKIDENT ('[SpecificationAttributeOption]', RESEED, 4);
 
 
 --Make all feilds mandatory
@@ -301,6 +306,7 @@ select * from [SpecificationAttributeOption]
 
 SELECT * FROM [Category]
 SELECT * FROM [product]
+SELECT * FROM [Topic]
 
 SELECT * FROM [dbo].[Product_SpecificationAttribute_Mapping]
 
@@ -313,15 +319,17 @@ select distinct(keygroup) from [dbo].[GenericAttribute]
 DBCC CHECKIDENT ('SpecificationAttributeOption', NORESEED);
 DBCC CHECKIDENT ('SpecificationAttributeOption', RESEED, 27);
 
+--  Store SEO Settings
+UPDATE [dbo].[Store] SET DefaultTitle='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
+UPDATE [dbo].[Store] SET DefaultMetaDescription='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
+UPDATE [dbo].[Store] SET DefaultMetaKeywords='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
+UPDATE [dbo].[Store] SET HomepageDescription='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
+UPDATE [dbo].[Store] SET HomepageTitle='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
 
-SELECT * FROM [dbo].[Setting] WHERE [Name] like '%customersettings.%';
-
-
-UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.homepagetitle';
-UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.homepagedescription';
-UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaulttitle';
-UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetakeywords';
-UPDATE [dbo].[Setting] SET Value='On Job support |proxy support|  USA | INDIA | MS Students | Masters in USA | OPT | CPT |' WHERE Name = 'seosettings.defaultmetadescription';
 
 Update [dbo].[LocaleStringResource] SET ResourceValue='Partner Consultancies' WHERE ResourceName='manufacturers'
 -- Manufacturers
+
+-- Topics Settings
+UPDATE [dbo].[Topic] SET [Body] = '<p>Please contact us for any queries you have. We will be happy to assist you.</p>' WHERE Id=4 -- Contact us page
+UPDATE [dbo].[Topic] SET [Body] = '<p></p>', Title='' WHERE Id=7 -- Login Page Info

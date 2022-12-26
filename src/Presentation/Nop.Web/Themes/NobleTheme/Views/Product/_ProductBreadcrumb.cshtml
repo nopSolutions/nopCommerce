@@ -28,7 +28,7 @@
         position++;
         }
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <strong class="active" itemprop="name">@Model.ProductName</strong>
+            <strong class="active" itemprop="name">@Model.ProductName.Split(' ')[0]</strong>
             <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
                   id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
             </span>
