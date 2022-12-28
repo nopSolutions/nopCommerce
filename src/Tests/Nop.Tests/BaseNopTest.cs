@@ -315,6 +315,7 @@ namespace Nop.Tests
             services.AddTransient<IDiscountService, DiscountService>();
             services.AddTransient<ILocalizationService, LocalizationService>();
             services.AddTransient<ILocalizedEntityService, LocalizedEntityService>();
+            services.AddTransient(typeof(Lazy<ILocalizationService>));
             services.AddTransient<IInstallationLocalizationService, InstallationLocalizationService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IDownloadService, DownloadService>();
