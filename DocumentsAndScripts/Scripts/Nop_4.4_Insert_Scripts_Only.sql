@@ -259,12 +259,12 @@ INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId],
 INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Angular', 7, 0);
 
 -- Secondary Technology
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('C#', 6, 0);
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('MVC', 6, 0);
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('JAVA', 6, 0);
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('AWS', 6, 0);
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('TeraData', 6, 0);
-INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Azure', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('C#', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('MVC', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('JAVA', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('AWS', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('TeraData', 6, 0);
+--INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Azure', 6, 0);
 
 --------------------   ------------------------------------------------------------------------
 IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Orders.UpgradeSubscription.Message')
@@ -297,7 +297,7 @@ IF NOT EXISTS (SELECT * FROM [EmailAccount] WHERE [Email]='no-reply@Onjobsupport
 	 INSERT INTO [EmailAccount]([DisplayName],[Email],[Host],[Username],[Password],[Port])
      VALUES ('On Job Suport','no-reply@Onjobsupport.in','smtp-relay.sendinblue.com','umsateesh@gmail.com','TkUZDCRvhxnF8Era','587')
    END
-
+  
 ------------------------- Shopping cart settings -----------------
 
 IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='shoppingCartSettings.threemonthsubscriptionproductid')
@@ -398,6 +398,5 @@ IF NOT EXISTS (SELECT * FROM [CustomerRole] WHERE [Name]='PaidCustomer')
     INSERT INTO [dbo].[CustomerRole]([Name],[SystemName],[FreeShipping],[TaxExempt],[Active],[IsSystemRole],[EnablePasswordLifetime],[OverrideTaxDisplayType],[DefaultTaxDisplayTypeId],[PurchasedWithProductId])
     VALUES ('PaidCustomer','PaidCustomer',1,0,1,0,0,0,0,0)
  END
-
 
  ----------------------  --------------------
