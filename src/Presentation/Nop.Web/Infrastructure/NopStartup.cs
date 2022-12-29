@@ -114,7 +114,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<ITinyMceHelper, TinyMceHelper>();
         }
 
-        // <summary>
+        /// <summary>
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
