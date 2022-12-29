@@ -194,7 +194,7 @@ namespace Nop.Services.Plugins
             DeserializePluginInfo(text);
 
             var pluginDescriptors = new List<(PluginDescriptor pluginDescriptor, bool needToDeploy)>();
-            var incompatiblePlugins = new List<string>();
+            var incompatiblePlugins = new Dictionary<string, string>();
 
             //ensure plugins directory is created
             var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
@@ -213,7 +213,7 @@ namespace Nop.Services.Plugins
                 //ensure that plugin is compatible with the current version
                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION, StringComparer.InvariantCultureIgnoreCase))
                 {
-                    incompatiblePlugins.Add(pluginDescriptor.SystemName);
+                    incompatiblePlugins.Add(pluginDescriptor.SystemName, "The plugin isn't compatible with the current version. Hence this plugin can't be loaded.");
                     continue;
                 }
 
@@ -251,7 +251,7 @@ namespace Nop.Services.Plugins
                     if (mainPluginFile == null)
                     {
                         //so plugin is incompatible
-                        incompatiblePlugins.Add(pluginDescriptor.SystemName);
+                        incompatiblePlugins.Add(pluginDescriptor.SystemName, "The main assembly isn't found. Hence this plugin can't be loaded.");
                         continue;
                     }
 
@@ -328,7 +328,7 @@ namespace Nop.Services.Plugins
                                    new List<(string SystemName, Guid? CustomerGuid)>();
             AssemblyLoadedCollision = pluginsInfo.AssemblyLoadedCollision?.ToList();
             PluginDescriptors = pluginsInfo.PluginDescriptors;
-            IncompatiblePlugins = pluginsInfo.IncompatiblePlugins?.ToList();
+            IncompatiblePlugins = pluginsInfo.IncompatiblePlugins?.ToDictionary(item => item.Key, item => item.Value);
         }
 
         #endregion
@@ -395,11 +395,16 @@ namespace Nop.Services.Plugins
         public virtual IList<(string SystemName, Guid? CustomerGuid)> PluginNamesToInstall { get; set; } =
             new List<(string SystemName, Guid? CustomerGuid)>();
 
+
         /// <summary>
-        /// Gets or sets the list of plugin names which are not compatible with the current version
+        /// Gets or sets the list of plugin which are not compatible with the current version
         /// </summary>
+        /// <remarks>
+        /// Key - the system name of plugin.
+        /// Value - the reason of incompatibility.
+        /// </remarks>
         [JsonIgnore]
-        public virtual IList<string> IncompatiblePlugins { get; set; }
+        public virtual IDictionary<string, string> IncompatiblePlugins { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assembly loaded collisions

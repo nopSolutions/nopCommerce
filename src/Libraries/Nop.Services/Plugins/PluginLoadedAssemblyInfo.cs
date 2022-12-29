@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Nop.Services.Plugins
 {
@@ -15,17 +16,22 @@ namespace Nop.Services.Plugins
         /// Ctor
         /// </summary>
         /// <param name="shortName">Assembly short name</param>
-        /// <param name="assemblyInMemory">Assembly full name</param>
-        public PluginLoadedAssemblyInfo(string shortName, string assemblyInMemory)
+        /// <param name="assemblyInMemory">Assembly</param>
+        public PluginLoadedAssemblyInfo(string shortName, Assembly assemblyInMemory)
         {
             ShortName = shortName;
             References = new List<(string PluginName, string AssemblyName)>();
-            AssemblyFullNameInMemory = assemblyInMemory;
+            AssemblyInMemory = assemblyInMemory;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Assembly in memory
+        /// </summary>
+        public Assembly AssemblyInMemory { get; }
 
         /// <summary>
         /// Gets the short assembly name
@@ -35,7 +41,12 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets the full assembly name loaded in memory
         /// </summary>
-        public string AssemblyFullNameInMemory { get; }
+        public string AssemblyFullNameInMemory {
+            get
+            {
+                return AssemblyInMemory.FullName;
+            }
+        }
 
         /// <summary>
         /// Gets a list of all mentioned plugin-assembly pairs

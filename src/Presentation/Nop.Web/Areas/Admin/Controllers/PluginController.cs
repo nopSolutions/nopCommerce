@@ -11,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
+using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
@@ -115,6 +116,44 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Utils
+
+        //TODO: make CommonModelFactory.PreparePluginsWarningModelAsync method public and delete this one
+        protected virtual async Task<List<string>> GetPluginsWarningModelAsync()
+        {
+            var warnings = new List<string>();
+
+            var pluginInfo = Singleton<IPluginsInfo>.Instance;
+
+            foreach (var pluginName in pluginInfo.IncompatiblePlugins) 
+                warnings.Add(string.Format($"<b>{pluginName.Key}</b> plugin: {pluginName.Value}"));
+
+            var assemblyCollisions = _pluginService.GetAssemblyCollisions();
+
+            if (!assemblyCollisions.Any())
+                return warnings;
+
+            var warningFormat = await _localizationService
+                .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly");
+
+            //check whether there are any collision of loaded assembly
+            foreach (var assembly in assemblyCollisions)
+            {
+                //get plugin references message
+                var message = assembly.Collisions
+                    .Select(item => string.Format(warningFormat, item.PluginName, item.AssemblyName))
+                    .Aggregate("", (current, all) => all + ", " + current).TrimEnd(',', ' ');
+
+                warnings.Add(string.Format(
+                    await _localizationService.GetResourceAsync("Admin.System.Warnings.AssemblyHasCollision"),
+                    assembly.ShortName, assembly.AssemblyFullNameInMemory, message));
+            }
+
+            return warnings;
+        }
+
+        #endregion
+
         #region Methods
 
         public virtual async Task<IActionResult> List()
@@ -123,6 +162,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = await _pluginModelFactory.PreparePluginSearchModelAsync(new PluginSearchModel());
+
+            var warnings = await GetPluginsWarningModelAsync();
+            if (warnings.Any())
+                _notificationService.WarningNotification(string.Join("<br />", warnings), false);
 
             return View(model);
         }
