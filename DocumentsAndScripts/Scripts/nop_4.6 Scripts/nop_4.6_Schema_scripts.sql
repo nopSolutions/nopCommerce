@@ -11,21 +11,53 @@ USE [nopcommerce46]
 -- ***  SCHEMA SCRIPTS ****
 ---------------------------------------------------------
 
-ALTER TABLE [dbo].[Customer] ADD CustomerProfileTypeId [int] NULL;
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Customer]') AND NAME = 'CustomerProfileTypeId')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD CustomerProfileTypeId [int] NULL
+END
+GO
 
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderSubject [nvarchar](450) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD SenderBodyText [nvarchar](max) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD RecipientBodyText [nvarchar](max) NULL;
-ALTER TABLE [dbo].[Forums_PrivateMessage] ADD IsSystemGenerated Bit NULL;
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'SenderSubject')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD SenderSubject [nvarchar](450) NULL
+END
+GO
 
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'SenderBodyText')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD SenderBodyText [nvarchar](max) NULL
+END
+GO
 
-IF NOT EXISTS(SELECT * FROM   INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Discount'AND COLUMN_NAME = 'IsActive')
-    BEGIN
-        ALTER TABLE [Discount] ADD [IsActive] [bit] NOT NULL
-    END
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'RecipientBodyText')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD RecipientBodyText [nvarchar](max) NULL
+END
+GO
 
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'IsSystemGenerated')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD IsSystemGenerated Bit NULL
+END
+GO
 
-
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Forums_PrivateMessage]') AND NAME = 'ParentMessageId')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD ParentMessageId [int] NULL
+END
+GO
 
 
 
