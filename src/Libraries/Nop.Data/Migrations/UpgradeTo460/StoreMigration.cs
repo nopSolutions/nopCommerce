@@ -4,7 +4,7 @@ using Nop.Core.Domain.Stores;
 namespace Nop.Data.Migrations.UpgradeTo460
 {
 
-    [NopMigration("2022-12-06 15:03:00", "Added new fields to store table", MigrationProcessType.NoDependencies)]
+    [NopMigration("2022-12-06 15:09:01", "Added new fields to store table", MigrationProcessType.NoDependencies)]
     public class StoreMigration : ForwardOnlyMigration
     {
         public override void Up()
@@ -22,27 +22,37 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.DefaultTitle)).Exists())
                 //add new column
                 Alter.Table(nameof(Store))
-                    .AddColumn(nameof(Store.DefaultTitle)).AsString().Nullable();
+                    .AddColumn(nameof(Store.DefaultTitle)).AsString(int.MaxValue).Nullable();
+            else
+                Alter.Table(nameof(Store)).AlterColumn(nameof(Store.DefaultTitle)).AsString(int.MaxValue).Nullable();
 
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.DefaultMetaDescription)).Exists())
                 //add new column
                 Alter.Table(nameof(Store))
-                    .AddColumn(nameof(Store.DefaultMetaDescription)).AsString().Nullable();
+                    .AddColumn(nameof(Store.DefaultMetaDescription)).AsString(int.MaxValue).Nullable();
+            else
+                Alter.Table(nameof(Store)).AlterColumn(nameof(Store.DefaultMetaDescription)).AsString(int.MaxValue).Nullable();
 
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.DefaultMetaKeywords)).Exists())
                 //add new column
                 Alter.Table(nameof(Store))
-                    .AddColumn(nameof(Store.DefaultMetaKeywords)).AsString().Nullable();
+                    .AddColumn(nameof(Store.DefaultMetaKeywords)).AsString(int.MaxValue).Nullable();
+            else
+                Alter.Table(nameof(Store)).AlterColumn(nameof(Store.DefaultMetaKeywords)).AsString(int.MaxValue).Nullable();
 
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.HomepageDescription)).Exists())
                 //add new column
                 Alter.Table(nameof(Store))
-                    .AddColumn(nameof(Store.HomepageDescription)).AsString().Nullable();
+                    .AddColumn(nameof(Store.HomepageDescription)).AsString(int.MaxValue).Nullable();
+            else
+                Alter.Table(nameof(Store)).AlterColumn(nameof(Store.HomepageDescription)).AsString(int.MaxValue).Nullable();
 
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.HomepageTitle)).Exists())
                 //add new column
                 Alter.Table(nameof(Store))
-                    .AddColumn(nameof(Store.HomepageTitle)).AsString().Nullable();
+                    .AddColumn(nameof(Store.HomepageTitle)).AsString(int.MaxValue).Nullable();
+            else
+                Alter.Table(nameof(Store)).AlterColumn(nameof(Store.HomepageTitle)).AsString(int.MaxValue).Nullable();
         }
     }
 }

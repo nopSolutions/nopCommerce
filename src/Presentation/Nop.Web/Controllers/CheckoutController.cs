@@ -248,6 +248,14 @@ namespace Nop.Web.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    var errors = string.Join(", ", ModelState.Values.Where(p => p.Errors.Any()).SelectMany(p => p.Errors)
+                        .Select(p => p.ErrorMessage));
+
+                    throw new Exception(errors);
+                }
+                
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
@@ -457,35 +465,28 @@ namespace Nop.Web.Controllers
         /// <returns></returns>
         public virtual async Task<IActionResult> SaveEditBillingAddress(CheckoutBillingAddressModel model, IFormCollection form, bool opc = false)
         {
-            try
+            return await EditAddressAsync(model.BillingNewAddress, form, async (customer, cart, address) =>
             {
-                return await EditAddressAsync(model.BillingNewAddress, form, async (customer, cart, address) =>
+                customer.BillingAddressId = address.Id;
+                await _customerService.UpdateCustomerAsync(customer);
+
+                if (!opc)
+                    return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
+
+                var billingAddressModel =
+                    await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
+
+                return Json(new
                 {
-                    customer.BillingAddressId = address.Id;
-                    await _customerService.UpdateCustomerAsync(customer);
-
-                    if (!opc) 
-                        return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
-
-                    var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
-                    
-                    return Json(new
+                    selected_id = model.BillingNewAddress.Id,
+                    update_section = new UpdateSectionJsonModel
                     {
-                        selected_id = model.BillingNewAddress.Id,
-                        update_section = new UpdateSectionJsonModel
-                        {
-                            name = "billing",
-                            html = await RenderPartialViewToStringAsync("OpcBillingAddress",
-                                billingAddressModel)
-                        }
-                    });
+                        name = "billing",
+                        html = await RenderPartialViewToStringAsync("OpcBillingAddress",
+                            billingAddressModel)
+                    }
                 });
-            }
-            catch (Exception exc)
-            {
-                await _logger.WarningAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
-                return Json(new { error = 1, message = exc.Message });
-            }
+            });
         }
 
         /// <summary>

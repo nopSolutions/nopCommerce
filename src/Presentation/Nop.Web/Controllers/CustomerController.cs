@@ -1773,9 +1773,9 @@ namespace Nop.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
-            var contentType = uploadedFile.ContentType.ToLowerInvariant();
+            var contentType = uploadedFile?.ContentType.ToLowerInvariant();
 
-            if (!contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
+            if (contentType != null && !contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
 
             if (ModelState.IsValid)

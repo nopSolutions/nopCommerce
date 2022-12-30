@@ -406,29 +406,35 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //check whether there are incompatible plugins
             foreach (var pluginName in _pluginService.GetIncompatiblePlugins())
-            {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotLoaded"), pluginName)
                 });
-            }
 
-            //check whether there are any collision of loaded assembly
-            foreach (var assembly in _pluginService.GetAssemblyCollisions())
+            var assemblyCollisions = _pluginService.GetAssemblyCollisions();
+
+            if (assemblyCollisions.Any())
             {
-                //get plugin references message
-                var message = (await assembly.Collisions
-                    .SelectAwait(async item => string.Format(await _localizationService
-                        .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
-                    .AggregateAsync("", (curent, all) => all + ", " + curent)).TrimEnd(',', ' ');
+                var warningFormat = await _localizationService
+                    .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly");
 
-                models.Add(new SystemWarningModel
+                //check whether there are any collision of loaded assembly
+                foreach (var assembly in _pluginService.GetAssemblyCollisions())
                 {
-                    Level = SystemWarningLevel.Warning,
-                    Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.AssemblyHasCollision"),
-                        assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
-                });
+                    //get plugin references message
+                    var message = assembly.Collisions
+                        .Select(item => string.Format(warningFormat, item.PluginName, item.AssemblyName))
+                        .Aggregate("", (current, all) => all + ", " + current).TrimEnd(',', ' ');
+
+                    models.Add(new SystemWarningModel
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = string.Format(
+                            await _localizationService.GetResourceAsync("Admin.System.Warnings.AssemblyHasCollision"),
+                            assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
+                    });
+                }
             }
 
             //check whether there are different plugins which try to override the same interface
