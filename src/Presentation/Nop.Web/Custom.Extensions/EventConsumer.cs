@@ -105,7 +105,7 @@ namespace Nop.CustomExtensions.Services
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             await AddCustomerToPaidCustomerRole(eventMessage.Order.CustomerId);
-            await AddCustomerGenericAttributes(eventMessage.Order);
+            await AddCustomerSubscriptionInfoToGenericAttributes(eventMessage.Order);
         }
 
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
@@ -157,18 +157,19 @@ namespace Nop.CustomExtensions.Services
                 await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customerId, CustomerRoleId = 9 });
 
                 //customer activity
-                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.EditCustomerAvailabilityToTrue", "Customer Has Been Added To PaidCustomer Role ", customer);
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", "Customer Has Been Added To PaidCustomer Role ", customer);
 
             }
             else
-                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.EditCustomerAvailabilityToTrue", "Customer already having PaidCustomer Role.Paid again may be by mistake.", customer);
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", "Customer already having PaidCustomer Role.Paid again may be by mistake.", customer);
 
         }
 
-        public async Task AddCustomerGenericAttributes(Order order)
+        public async Task AddCustomerSubscriptionInfoToGenericAttributes(Order order)
         {
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
+            //get ordered product id
             var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
             var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
 
@@ -188,21 +189,22 @@ namespace Nop.CustomExtensions.Services
                 allottedCount = _shoppingCartSettings.OneYearSubscriptionAllottedCount;
             }
 
-            var SubscriptionId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionId, storeId);
-            var SubscriptionAllottedCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionAllottedCount, storeId);
-            var SubscriptionDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionDate, storeId);
+            // get the subscription details from generic attribute table
+            var subscriptionId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionId, storeId);
+            var subscriptionAllottedCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionAllottedCount, storeId);
+            var subscriptionDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionDate, storeId);
 
             // carry forward previous credits
-            allottedCount += SubscriptionAllottedCount;
+            allottedCount += subscriptionAllottedCount;
 
             var oldSubscriptionInfo = string.Format("Old Subscription Info - Customer Email:{0} ; SubscriptionId: {1} ; Credits: {2} ; SubscriptionDate: {3}",
                                         customer.Email,
-                                        SubscriptionId,
-                                        SubscriptionAllottedCount,
-                                        SubscriptionDate);
+                                        subscriptionId,
+                                        subscriptionAllottedCount,
+                                        subscriptionDate);
 
             //customer activity : Before updating the new subscription , save the old subscription details
-            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.EditCustomerAvailabilityToTrue", oldSubscriptionInfo, customer);
+            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", oldSubscriptionInfo, customer);
 
             //save SubscriptionId, credits , subscription date 
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SubscriptionId, customerSubscribedProductId, storeId);
@@ -217,7 +219,7 @@ namespace Nop.CustomExtensions.Services
                                         order.CreatedOnUtc.ToString());
 
             //customer activity
-            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.EditCustomerAvailabilityToTrue", newSubscriptionInfo, customer);
+            await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", newSubscriptionInfo, customer);
 
         }
 
