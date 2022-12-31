@@ -1,6 +1,6 @@
 
-use [itjobsupport]
-use [nopcommerce46]
+--use [itjobsupport]
+--use [nopcommerce46]
 
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
@@ -47,9 +47,10 @@ Update [dbo].[LocaleStringResource] SET [ResourceValue]='Receive an email when p
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='You will receive a onetime e-mail when this profile is available' WHERE [ResourceName]='backinstocksubscriptions.tooltip'
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='You will receive an e-mail when a particular profile is back to available.' WHERE [ResourceName]='account.backinstocksubscriptions.description'
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Partner Consultancies' WHERE [ResourceName]='manufacturers'
+--Update [dbo].[LocaleStringResource] SET ResourceValue='Your Shopping Cart is empty!' WHERE [ResourceName]='shoppingcart.cartisempty';
 
-SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Admin.Configuration.Stores.Fields.%'
-SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Products.Tags%'
+SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Admin.Configuration.Stores.Fields.%';
+SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Products.Tags%';
 
 --------------- End: [LocaleStringResource] Table Scripts--------------------------------------------------------------
 
@@ -121,6 +122,8 @@ UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phonereq
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'customersettings.companyenabled';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidedownloadableproductstab';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidebackinstocksubscriptionstab';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.newsletterenabled';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.dateofbirthenabled';
 
 -- Customersettings -- AddressSettings -- Address form fields
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.companyenabled';
@@ -142,7 +145,7 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.faxenabl
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'shoppingcartsettings.displaycartafteraddingproduct';
 
 
-SELECT * FROM [dbo].[Setting] WHERE [Name] like 'AddressSettings.%';
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'customersettings.date%';
 SELECT * FROM [dbo].[Setting] WHERE Value like '%job%';
 
 ---------------------	End: [Setting] Table Scripts---------------------------------------------------------------------
@@ -174,16 +177,16 @@ Update [Country] SET DisplayOrder=80 WHERE [TwoLetterIsoCode]='GB'
 SELECT * FROM [CustomerAttribute] Where Id>=7
 
 -- Delete [CustomerAttribute]
-DBCC CHECKIDENT ('[CustomerAttribute]', RESEED, 0);
-DBCC CHECKIDENT ('[SpecificationAttributeOption]', RESEED, 4);
+--DBCC CHECKIDENT ('[CustomerAttribute]', RESEED, 0);
+--DBCC CHECKIDENT ('[SpecificationAttributeOption]', RESEED, 4);
 
---Make all feilds mandatory
-UPDATE [CustomerAttribute] SET IsRequired=1
+-- Make all feilds mandatory except secondary technology which is not used presently
+UPDATE [CustomerAttribute] SET IsRequired=1 WHERE Id Not In (8)
 
 -- delete [SpecificationAttributeOption] WHERE id=6
 
-DBCC CHECKIDENT ('SpecificationAttributeOption', NORESEED);
-DBCC CHECKIDENT ('SpecificationAttributeOption', RESEED, 27);
+--DBCC CHECKIDENT ('SpecificationAttributeOption', NORESEED);
+--DBCC CHECKIDENT ('SpecificationAttributeOption', RESEED, 27);
 
 --  Store SEO Settings
 UPDATE [dbo].[Store] SET DefaultTitle='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1

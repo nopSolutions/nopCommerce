@@ -181,7 +181,8 @@ SELECT VendorId FROM [Customer]
 
 SELECT * FROM [product]
 
-SELECT * FROM [Order]
+SELECT * FROM [Order] 
+WHERE CustomerId=1
 SELECT * FROM [dbo].[OrderItem]
 SELECT * FROM [dbo].[OrderNote]
 --DELETE [Order]
@@ -331,6 +332,12 @@ SELECT  * FROM [dbo].[Customer] WHERE Id=263
 
 SELECT *FROM .[dbo].[ShoppingCartItem]
 -- DELETE [dbo].[ShoppingCartItem]
+
+
+SELECT  * FROM [dbo].[CustomerAddresses]
+SELECT  * FROM [dbo].[Address]
+
+select * from tmp_guestsToDelete
 
 
 SELECT *FROM [dbo].[ShoppingCartItem] WHERE ShoppingCartTypeId=1 -- ShoppingCart
@@ -484,6 +491,7 @@ UPDATE [dbo].[Customer] SET VendorId=30 where Id in (1337)
 		sci.ProductId=10
 		AND sci.ShoppingCartTypeId=2
 
+    SELECT * FROM [Discount]
 
 SELECT * FROM [dbo].[Country] where [Name] like '%United states%'
 SELECT * FROM [dbo].[Country] where Published=1
@@ -493,12 +501,23 @@ SELECT * FROM [dbo].[Setting] where [Value] like '%Featured%';
 
 SELECT * FROM [dbo].[Customer]
 SELECT * FROM [dbo].[CustomerRole]
+
 SELECT * FROM [dbo].[Customer_CustomerRole_Mapping]
+WHERE Customer_Id=1 AND CustomerRole_Id=9
+
+--DELETE  [dbo].[Customer_CustomerRole_Mapping]
+--WHERE Customer_Id=1 AND CustomerRole_Id=9
+
+-- DELETE [Order] WHERE CustomerId=1
+SELECT * FROM [Order] WHERE CustomerId=1
+
+SELECT * FROM [Order]
+SELECT * FROM [dbo].[OrderItem]cc
 
 SELECT * FROM [dbo].[ActivityLog] WHERE ActivityLogTypeId=133
-SELECT * FROM [dbo].[ActivityLog] WHERE ActivityLogTypeId=154
-SELECT * FROM [dbo].[ActivityLogType] WHERE Id=154
-SELECT * FROM [dbo].[ActivityLogType] WHERE SystemKeyword like '%PublicStore.ViewContactDetail%'
+SELECT * FROM [dbo].[ActivityLog] WHERE ActivityLogTypeId=163 
+SELECT * FROM [dbo].[ActivityLogType] WHERE Id=163
+SELECT * FROM [dbo].[ActivityLogType] WHERE SystemKeyword like '%PublicStore.EditCustomerAvailabilityToTrue%'
 
 SELECT distinct(EntityName) FROM [dbo].[ActivityLog]
 SELECT * FROM [dbo].[ActivityLog] WHERE ActivityLogTypeId=133 AND CustomerId=263 and EntityName='Product'
@@ -537,6 +556,7 @@ WHERE ProductId=10 AND AllowFiltering=1
 
 select *  from [SpecificationAttribute]
 select *  from [SpecificationAttributeOption]
+WHERE SpecificationAttributeId=7
 
 
 SELECT *
@@ -554,6 +574,9 @@ WHERE
 --The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Product_SpecificationAttribute_Mapping_ProductId_Product_Id". 
 --The conflict occurred in database "nopcommerce46", table "dbo.Product", column 'Id'. The statement has been terminated.
 
+INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES (' AI', 7, 0);
+
+
 select * from  [dbo].[Product] 
 
 select *  from  [dbo].[Product_SpecificationAttribute_Mapping] 
@@ -564,4 +587,5 @@ select * from  [dbo].[Product] Where VendorId=1
 
 UPDATE [dbo].[Product] SET VendorId=1 Where Id=56 
 UPDATE [dbo].[Customer] SET VendorId=56 where Id in (1)
+
 
