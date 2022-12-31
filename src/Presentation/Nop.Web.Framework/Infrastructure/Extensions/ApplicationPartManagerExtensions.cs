@@ -79,17 +79,22 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 !_fileProvider.GetFileName(file).Equals(_fileProvider.GetFileName(pluginDescriptor.OriginalAssemblyFile))).ToList();
 
             var badLibraries = new List<string>();
-
+            
             foreach (var refFile in refFiles.Where(file => assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
-            {
-                var assembly = Assembly.LoadFile(refFile);
-                var assemblyVersion = assembly.GetName().Version;
-                var libraryName = _fileProvider.GetFileName(refFile);
-                var inMemoryVersion = assemblies[libraryName.ToLower()];
+                try
+                {
+                    var assemblyVersion = AssemblyName.GetAssemblyName(refFile).Version;
 
-                if (assemblyVersion != inMemoryVersion) 
-                    badLibraries.Add($"The version of the referenced \"{libraryName}\" library is \"{assemblyVersion}\". But another version of the same library ({inMemoryVersion}) is already loaded in memory. Hence this plugin can't be loaded.");
-            }
+                    var libraryName = _fileProvider.GetFileName(refFile);
+                    var inMemoryVersion = assemblies[libraryName.ToLower()];
+
+                    if (assemblyVersion != inMemoryVersion)
+                        badLibraries.Add($"The version of the referenced \"{libraryName}\" library is \"{assemblyVersion}\". But another version of the same library ({inMemoryVersion}) is already loaded in memory. Hence this plugin can't be loaded.");
+                }
+                catch (BadImageFormatException)
+                {
+                    //ignore
+                }
 
             if (badLibraries.Any())
             {
