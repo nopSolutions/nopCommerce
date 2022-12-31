@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         #region Fields
 
         private static readonly INopFileProvider _fileProvider;
-        private static readonly Dictionary<string, Assembly> _baseAppLibraries;
+        private static readonly List<KeyValuePair<string, Assembly>> _baseAppLibraries;
         private static readonly Dictionary<string, Assembly> _pluginLibraries;
         private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
         private static readonly ReaderWriterLockSlim _locker = new();
@@ -36,23 +36,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //we use the default file provider, since the DI isn't initialized yet
             _fileProvider = CommonHelper.DefaultFileProvider;
 
-            _baseAppLibraries = new Dictionary<string, Assembly>();
+            _baseAppLibraries = new List<KeyValuePair<string, Assembly>>();
             _pluginLibraries = new Dictionary<string, Assembly>();
             
             //get all libraries from /bin/{version}/ directory
             foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")) 
-                _baseAppLibraries.Add(_fileProvider.GetFileName(file), Assembly.LoadFile(file));
+                _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
 
             //get all libraries from base site directory
             if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
                 foreach (var file in _fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll"))
-                    _baseAppLibraries.Add(_fileProvider.GetFileName(file), Assembly.LoadFile(file));
+                    _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
 
             //get all libraries from refs directory
             var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
             if (_fileProvider.DirectoryExists(refsPathName))
                 foreach (var file in _fileProvider.GetFiles(refsPathName, "*.dll"))
-                    _baseAppLibraries.Add(_fileProvider.GetFileName(file), Assembly.LoadFile(file));
+                    _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
         }
 
         #endregion
@@ -72,24 +72,29 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
         #region Utilities
 
-        private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Assembly> assemblies)
+        private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Version?> assemblies)
         {
             //and then deploy all other referenced assemblies
             var refFiles = pluginDescriptor.PluginFiles.Where(file =>
                 !_fileProvider.GetFileName(file).Equals(_fileProvider.GetFileName(pluginDescriptor.OriginalAssemblyFile))).ToList();
 
             var badLibraries = new List<string>();
+            
+            foreach (var refFile in refFiles.Where(file => assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
+                try
+                {
+                    var assemblyVersion = AssemblyName.GetAssemblyName(refFile).Version;
 
-            foreach (var refFile in refFiles.Where(file => assemblies.ContainsKey(_fileProvider.GetFileName(file))))
-            {
-                var assembly = Assembly.LoadFile(refFile);
-                var assemblyVersion = assembly.GetName().Version;
-                var libraryName = _fileProvider.GetFileName(refFile);
-                var inMemoryVersion = assemblies[libraryName].GetName().Version;
+                    var libraryName = _fileProvider.GetFileName(refFile);
+                    var inMemoryVersion = assemblies[libraryName.ToLower()];
 
-                if (assemblyVersion != inMemoryVersion) 
-                    badLibraries.Add($"The version of the referenced \"{libraryName}\" library is \"{assemblyVersion}\". But another version of the same library ({inMemoryVersion}) is already loaded in memory. Hence this plugin can't be loaded.");
-            }
+                    if (assemblyVersion != inMemoryVersion)
+                        badLibraries.Add($"The version of the referenced \"{libraryName}\" library is \"{assemblyVersion}\". But another version of the same library ({inMemoryVersion}) is already loaded in memory. Hence this plugin can't be loaded.");
+                }
+                catch (BadImageFormatException)
+                {
+                    //ignore
+                }
 
             if (badLibraries.Any())
             {
@@ -286,16 +291,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     }
 
 
-                    var assemblies = _baseAppLibraries.ToDictionary(item => item.Key, item => item.Value);
+                    var assemblies = _baseAppLibraries.ToList();
                     foreach (var pluginLoadedAssemblyInfo in _loadedAssemblies)
-                        assemblies.Add(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory);
+                        assemblies.Add(new KeyValuePair<string, Assembly>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory));
 
-                    foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.ContainsKey(item.Key)).ToList()) 
-                        assemblies.Add(pluginLibrary.Key, pluginLibrary.Value);
+                    foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList()) 
+                        assemblies.Add(new KeyValuePair<string, Assembly>(pluginLibrary.Key, pluginLibrary.Value));
+
+                    var inMemoryAssemblies = assemblies.GroupBy(p => p.Key).Select(p => p.First())
+                        .ToDictionary(p => p.Key.ToLower(), p => p.Value.GetName().Version);
 
                     foreach (var pluginDescriptor in PluginsInfo.PluginDescriptors.Where(p => !p.needToDeploy)
                                  .Select(p => p.pluginDescriptor).ToList())
-                        CheckCompatible(pluginDescriptor, assemblies);
+                        CheckCompatible(pluginDescriptor, inMemoryAssemblies);
                 }
                 catch (Exception exception)
                 {
