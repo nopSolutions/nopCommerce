@@ -14067,4 +14067,46 @@
   <browscapitem name="Core_Class_HttpClient_Cached">
     <item name="Crawler" value="true" />
   </browscapitem>
+<browscapitem name="Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/108.0.5359.130 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15 (Applebot/0.1; +http://www.apple.com/go/applebot)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Linux;u;Android 4.2.2;zh-cn;) AppleWebKit/534.46 (KHTML,like Gecko) Version/5.1 Mobile Safari/10600.6.3 (compatible; Baiduspider/2.0 ; +http://www.baidu.com/search/spider.html)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; Baiduspider/2.0 ; +http://www.baidu.com/search/spider.html)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/100.0.4896.127 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; coccocbot-web/1.0 ; +http://help.coccoc.com/searchengine)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="DuckDuckBot-Https/1.1; (+https://duckduckgo.com/duckduckbot)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Yeti/1.1; +https://naver.me/spd) Chrome/106.0.5249.0 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Linux; Android 7.0;) AppleWebKit/537.36 (KHTML, like Gecko) Mobile Safari/537.36 (compatible; PetalBot;+https://webmaster.petalsearch.com/site/petalbot)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible;PetalBot;+https://webmaster.petalsearch.com/site/petalbot)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; SeznamBot/4.0-RC1 +http://napoveda.seznam.cz/seznambot-intro/)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 4.4.2; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 (compatible; Sogou web spider/4.0 ; +http://www.sogou.com/docs/help/webmasters.htm#07)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Sogou web spider/4.0 (+http://www.sogou.com/docs/help/webmasters.htm#07)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch sieve.k8s.crawler-production /[TIMESTAMP]-10"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Mobile/15E148 Safari/604.1 (compatible; YandexMobileBot/3.0; +http://yandex.com/bots)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="neckerbot"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/103.0.5060.134 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; MicrosoftPreview/2.0; +https://aka.ms/MicrosoftPreview) Chrome/100.0.4896.127 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; adidxbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 530) like Gecko (compatible; adidxbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/98.0.4758.102 Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot/1.0 (+http://search.msn.com/msnbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot/1.1 (+http://search.msn.com/msnbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/86.0.4240.68 Safari/537.36 Edg/86.0.622.31"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; bingbot/2.0;  http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot/2.0b (+http://search.msn.com/msnbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot/2.0b ( http://search.msn.com/msnbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot-media/1.1 (+http://search.msn.com/msnbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Safari/537.36"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (seoanalyzer; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0; BingPreview/1.0b) like Gecko"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="msnbot/2.0b (+http://search.msn.com/msnbot.htm)."><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0;  http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko BingPreview/1.0b"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; adidxbot/2.0; +http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; adidxbot/2.0;  http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
+<browscapitem name="Mozilla/5.0 (compatible; adidxbot/2.0;  http://www.bing.com/bingbot.htm)"><item name="Crawler" value="true" /></browscapitem>
 </browsercapitems>
