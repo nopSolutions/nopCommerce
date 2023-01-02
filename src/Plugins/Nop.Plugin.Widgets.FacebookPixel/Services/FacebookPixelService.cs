@@ -326,6 +326,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         private async Task<string> PrepareTrackedEventsScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //get previously stored events and remove them from the session data
+            await _httpContextAccessor.HttpContext.Session.LoadAsync();
             var events = _httpContextAccessor.HttpContext.Session
                 .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -395,6 +396,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             customerId ??= customer.Id;
             var store = await _storeContext.GetCurrentStoreAsync();
             storeId ??= store.Id;
+            await _httpContextAccessor.HttpContext.Session.LoadAsync();
             var events = _httpContextAccessor.HttpContext.Session
                 .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
             var activeEvent = events.FirstOrDefault(trackedEvent =>
