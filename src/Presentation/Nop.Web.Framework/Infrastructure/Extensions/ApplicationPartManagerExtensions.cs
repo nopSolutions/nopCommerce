@@ -22,8 +22,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         #region Fields
 
         private static readonly INopFileProvider _fileProvider;
-        private static readonly List<KeyValuePair<string, Assembly>> _baseAppLibraries;
-        private static readonly Dictionary<string, Assembly> _pluginLibraries;
+        private static readonly List<KeyValuePair<string, Version>> _baseAppLibraries;
+        private static readonly Dictionary<string, Version> _pluginLibraries;
         private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
         private static readonly ReaderWriterLockSlim _locker = new();
 
@@ -36,23 +36,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //we use the default file provider, since the DI isn't initialized yet
             _fileProvider = CommonHelper.DefaultFileProvider;
 
-            _baseAppLibraries = new List<KeyValuePair<string, Assembly>>();
-            _pluginLibraries = new Dictionary<string, Assembly>();
+            _baseAppLibraries = new List<KeyValuePair<string, Version>>();
+            _pluginLibraries = new Dictionary<string, Version>();
             
             //get all libraries from /bin/{version}/ directory
             foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")) 
-                _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
+                _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
 
             //get all libraries from base site directory
             if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
                 foreach (var file in _fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll"))
-                    _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
+                    _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
 
             //get all libraries from refs directory
             var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
             if (_fileProvider.DirectoryExists(refsPathName))
                 foreach (var file in _fileProvider.GetFiles(refsPathName, "*.dll"))
-                    _baseAppLibraries.Add(new KeyValuePair<string, Assembly>(_fileProvider.GetFileName(file), Assembly.LoadFile(file)));
+                    _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
         }
 
         #endregion
@@ -72,6 +72,20 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
         #region Utilities
 
+        private static Version GetAssemblyVersion(string filePath)
+        {
+            try
+            {
+                return AssemblyName.GetAssemblyName(filePath).Version;
+            }
+            catch (BadImageFormatException)
+            {
+                //ignore
+            }
+
+            return null;
+        }
+
         private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Version?> assemblies)
         {
             //and then deploy all other referenced assemblies
@@ -83,7 +97,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             foreach (var refFile in refFiles.Where(file => assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
                 try
                 {
-                    var assemblyVersion = AssemblyName.GetAssemblyName(refFile).Version;
+                    var assemblyVersion = GetAssemblyVersion(refFile);
 
                     var libraryName = _fileProvider.GetFileName(refFile);
                     var inMemoryVersion = assemblies[libraryName.ToLower()];
@@ -166,7 +180,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
 
             if (!_pluginLibraries.ContainsKey(fileProvider.GetFileName(assemblyFile))) 
-                _pluginLibraries.Add(fileProvider.GetFileName(assemblyFile), assembly);
+                _pluginLibraries.Add(fileProvider.GetFileName(assemblyFile), assembly.GetName().Version);
 
             return assembly;
         }
@@ -293,13 +307,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                     var assemblies = _baseAppLibraries.ToList();
                     foreach (var pluginLoadedAssemblyInfo in _loadedAssemblies)
-                        assemblies.Add(new KeyValuePair<string, Assembly>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory));
+                        assemblies.Add(new KeyValuePair<string, Version>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory.GetName().Version));
 
                     foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList()) 
-                        assemblies.Add(new KeyValuePair<string, Assembly>(pluginLibrary.Key, pluginLibrary.Value));
+                        assemblies.Add(new KeyValuePair<string, Version>(pluginLibrary.Key, pluginLibrary.Value));
 
                     var inMemoryAssemblies = assemblies.GroupBy(p => p.Key).Select(p => p.First())
-                        .ToDictionary(p => p.Key.ToLower(), p => p.Value.GetName().Version);
+                        .ToDictionary(p => p.Key.ToLower(), p => p.Value);
 
                     foreach (var pluginDescriptor in PluginsInfo.PluginDescriptors.Where(p => !p.needToDeploy)
                                  .Select(p => p.pluginDescriptor).ToList())
