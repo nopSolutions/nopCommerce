@@ -135,7 +135,10 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             return models.Where(m => !new string[]{
                 "Home Delivery",
                 "Warranty",
-                "Pickup"
+                "Delivery/Pickup Options",
+                "Pickup",
+                "Haul Away (Delivery)",
+                "Haul Away (Delivery/Install)"
             }.Contains(m.Name)).ToList();
         }
 
