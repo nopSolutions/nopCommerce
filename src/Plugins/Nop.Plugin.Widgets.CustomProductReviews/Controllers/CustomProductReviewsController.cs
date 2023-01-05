@@ -35,7 +35,7 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
 {
 
     [AutoValidateAntiforgeryToken]
-    public class CustomProductReviewController : BasePluginController
+    public class CustomProductReviewsController : BasePluginController
     {
 
         #region Fields
@@ -72,7 +72,7 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
 
         #region Ctor
 
-        public CustomProductReviewController(CaptchaSettings captchaSettings,
+        public CustomProductReviewsController(CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             IAclService aclService,
             ICompareProductsService compareProductsService,
@@ -144,11 +144,10 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
 
         //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         //}
-        [HttpPost, ActionName("ProductReviews")]
+        [HttpPost]
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
-        public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model,
-            bool captchaValid)
+        public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = await _productService.GetProductByIdAsync(productId);
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -242,6 +241,31 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
             return View(model);
         }
 
+        public virtual async Task<IActionResult> ProductReviewsAdd(int productId)
+        {
+            var product = await _productService.GetProductByIdAsync(productId);
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+                return RedirectToRoute("Homepage");
+
+            var model = new ProductReviewsModel();
+            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+
+            await ValidateProductReviewAvailabilityAsync(product);
+
+            //default value
+            model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+
+            //default value for all additional review types
+            if (model.ReviewTypeList.Count > 0)
+                foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
+                {
+                    additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
+                }
+
+            return View(model);
+        }
+
+       
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
