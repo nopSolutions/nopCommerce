@@ -233,12 +233,12 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
                     model.AddProductReview.Result =
                         await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
 
-                return View(model);
+                return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
             }
 
             //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            return View(model);
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
         }
 
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId)

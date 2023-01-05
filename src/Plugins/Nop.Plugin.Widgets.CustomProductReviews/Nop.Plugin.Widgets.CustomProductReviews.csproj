@@ -14,6 +14,8 @@
     <None Remove="logo.jpg" />
 	<None Remove="plugin.json" />
     <None Remove="Areas\Admin\Views\_ViewImports.cshtml" />
+    <None Remove="Views\CustomProductReviews\_ProductReviewPictures.cshtml" />
+    <None Remove="Views\CustomProductReviews\_ViewImports.cshtml" />
     <None Remove="Views\ProductReviewComponent.cshtml" />
     <None Remove="Views\_ProductReviewPictures.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
@@ -25,6 +27,12 @@
     </Content>
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CustomProductReviews\_ProductReviewPictures.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CustomProductReviews\_ViewImports.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ProductReviewComponent.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -68,6 +76,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Content\style.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\CustomProductReviews\_ProductReviewHelpfulness.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Views\_ProductReviewHelpfulness.cshtml">

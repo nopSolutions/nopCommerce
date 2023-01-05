@@ -210,7 +210,7 @@
                             <div class="review-text">
                                 @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
                             </div>
-                            @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
+                            @await Html.PartialAsync("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewHelpfulness.cshtml", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
                             @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
