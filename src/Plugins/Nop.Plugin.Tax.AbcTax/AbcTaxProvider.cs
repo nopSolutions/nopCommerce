@@ -117,7 +117,7 @@ namespace Nop.Plugin.Tax.AbcTax
 
             // get TaxJar rate if appropriate
             result.TaxRate = foundRecord.IsTaxJarEnabled ?
-                await _taxjarRateService.GetTaxJarRateAsync(taxRateRequest.Address) :
+                await _taxjarRateService.GetTaxJarRateAsync(taxRateRequest) :
                 foundRecord.Percentage;
 
             if (_abcTaxSettings.IsDebugMode)
