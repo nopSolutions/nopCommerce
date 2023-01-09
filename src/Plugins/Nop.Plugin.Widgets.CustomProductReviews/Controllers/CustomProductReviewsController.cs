@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.FileProviders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,6 +15,9 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Core.Infrastructure;
+using Nop.Data;
+using Nop.Plugin.Widgets.CustomProductReviews.Domains;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -20,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -68,6 +74,10 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IPictureService _pictureService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IRepository<CustomProductReviewMapping> _customProductReviewMappingRepository;
+
 
         #endregion
 
@@ -99,9 +109,14 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             ShoppingCartSettings shoppingCartSettings,
-            ShippingSettings shippingSettings)
+            IPictureService pictureService,
+            INopFileProvider fileProvider,
+            ShippingSettings shippingSettings,
+            IRepository<CustomProductReviewMapping> customProductReviewMappingRepository)
         {
             _captchaSettings = captchaSettings;
+            _pictureService = pictureService;
+            _fileProvider= fileProvider;
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _compareProductsService = compareProductsService;
@@ -128,6 +143,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             _localizationSettings = localizationSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
+            _customProductReviewMappingRepository = customProductReviewMappingRepository;
         }
 
 
@@ -146,16 +162,13 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         //}
 
-        //TODO:2 kere yorum oluşturuyor bunu engelle
+        //TODO:Foto ekleme olayını çöz
         [HttpPost]
+        //[FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid, List<IFormFile> photos)
         {
-            foreach (var photo in photos)
-            {
-                string name=photo.Name;
-                name = photo.FileName;
-            }
+           
             var product = await _productService.GetProductByIdAsync(productId);
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -195,7 +208,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     StoreId = currentStore.Id,
                 };
 
-                await _productService.InsertProductReviewAsync(productReview);
+                int reviewId =  _productService.InsertProductReviewAsync(productReview).Id;
+            
+
 
                 //add product review and review type mapping                
                 foreach (var additionalReview in model.AddAdditionalProductReviewList)
@@ -233,6 +248,20 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 model.AddProductReview.ReviewText = null;
 
                 model.AddProductReview.SuccessfullyAdded = true;
+                //pictures
+                var productReviewPhotoPath = _fileProvider.MapPath("~/Plugins/Widgets.CustomProductReviews/Content/Images/");
+                foreach (var photo in photos)
+                {
+                    string filetype = photo.ContentType;
+                    string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
+                    int pictureId = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(productReviewPhotoPath, name)), MimeTypes.ImagePJpeg, name)).Id;
+                    var mapping = new CustomProductReviewMapping();
+                    mapping.PictureId = pictureId;
+                    mapping.DisplayOrder = 0;
+                    mapping.ProductReviewId= reviewId;
+                    await _customProductReviewMappingRepository.InsertAsync(mapping);
+                }
+
                 if (!isApproved)
                     model.AddProductReview.Result =
                         await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
@@ -240,37 +269,37 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     model.AddProductReview.Result =
                         await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
 
-                return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
+                return Json(model.AddProductReview);
             }
 
             //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
+            return Json( model.AddProductReview);
         }
 
-        public virtual async Task<IActionResult> ProductReviewsAdd(int productId)
-        {
-            var product = await _productService.GetProductByIdAsync(productId);
-            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return RedirectToRoute("Homepage");
+        //public virtual async Task<IActionResult> ProductReviewsAdd(int productId)
+        //{
+        //    var product = await _productService.GetProductByIdAsync(productId);
+        //    if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+        //        return RedirectToRoute("Homepage");
 
-            var model = new ProductReviewsModel();
-            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+        //    var model = new ProductReviewsModel();
+        //    model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
 
-            await ValidateProductReviewAvailabilityAsync(product);
+        //    await ValidateProductReviewAvailabilityAsync(product);
 
-            //default value
-            model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+        //    //default value
+        //    model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
 
-            //default value for all additional review types
-            if (model.ReviewTypeList.Count > 0)
-                foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
-                {
-                    additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
-                }
+        //    //default value for all additional review types
+        //    if (model.ReviewTypeList.Count > 0)
+        //        foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
+        //        {
+        //            additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
+        //        }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
 
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)

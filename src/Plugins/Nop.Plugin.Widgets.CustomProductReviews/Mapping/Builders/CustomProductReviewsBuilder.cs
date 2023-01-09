@@ -20,7 +20,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
                 .WithColumn(nameof(CustomProductReviewMapping.Id)).AsInt32().PrimaryKey().NotNullable()
                 .WithColumn(nameof(CustomProductReviewMapping.PictureId)).AsInt32().ForeignKey<Picture>().Nullable()
                 .WithColumn(nameof(CustomProductReviewMapping.ProductReviewId)).AsInt32().ForeignKey<ProductReview>()
-                .WithColumn(nameof(CustomProductReviewMapping.VideoId)).AsInt32().ForeignKey<Video>();
+                .WithColumn(nameof(CustomProductReviewMapping.VideoId)).AsInt32().ForeignKey<Video>().Nullable();
         }
 
         #endregion

@@ -50,8 +50,8 @@
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
-                <form id="review-form" asp-controller="CustomProductReviews" asp-action="ProductReviewsAdd" asp-route-productId="@Model.ProductId" method="post" enctype="multipart/form-data">
-                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <form id="review-form" method="post" enctype="multipart/form-data">
+                    <div id="message-error" asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
                             <div class="inputs">
@@ -231,17 +231,16 @@
     </div>
 </div>
 <script asp-location="Footer">
-    var uploadButton = document.getElementById('add-review-button');
 
     $('#review-form').submit(function (e) {
         var form = $(this);
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         if (!readURLFileUpload()) return false;
         var formData = new FormData(form[0]);
         formData.append("productId", @Model.ProductId);
         var t = $("input[name='__RequestVerificationToken']").val();
-        console.log(formData);
         $(".form-message").html("");
         $.ajax({
             url: '@Url.Action("ProductReviewsAdd", "CustomProductReviews")',
@@ -252,38 +251,48 @@
             },
             data: formData,
             contentType: false,
-            cache : false,
             processData: false,
             success: function (data) {
+                console.log(data);
                 var strmsg = "";
-
-                if (data.message.length > 0) {
+                console.log(data.Result);
+                if (data.Result > 0) {
                     strmsg += "<ul>";
-                    for (var i = 0; i < data.message.length; i++) {
-                        strmsg += "<li>" + data.message[i] + "</li>";
+                    for (var i = 0; i < data.length; i++) {
+                        strmsg += "<li>" + data[i] + "</li>";
                     }
                     strmsg += "</ul>";
-
-                    if (!data.success) {
-                        $("#message-error-review-form").html(strmsg);
+                    console.log(strmsg);
+                    if (!data.SuccessfullyAdded) {
+                        console.log('datahatasi');
+                        $("#message-error").html(strmsg);
                     }
                     else {
-                        $("#message-success-review-form").html(data.message);
+                        console.log('datamesajı');
+                        $("#message-success").html(data.Result);
                         $("#review-form .review-form-body").css("display", "none");
                         document.getElementById("review-form").reset();
+                        console.log(data.Result);
                     }
-                    alert(strmsg);
+                    console.log(data);
                    
                     return false;
                 }
+                console.log(data);
             },
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);
             },
             complete: function () {
-                alert('metodbitti');
+                console.log('complatereview');
+                location.reload(true);
+
+                $('html, body').animate({
+                    scrollTop: $("#review-form").offset().top
+                }, 500);
             }
         });
+        return false;
     });
     
     $(document).ready(function () {

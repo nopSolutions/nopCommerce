@@ -63,6 +63,7 @@
     <Folder Include="Areas\Admin\Extensions\" />
     <Folder Include="Areas\Admin\Factories\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Content\Images\" />
     <Folder Include="Extensions\" />
     <Folder Include="Factories\" />
     <Folder Include="Services\" />
