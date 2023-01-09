@@ -1,12 +1,18 @@
 ﻿{
   "Group": "7Spikes",
   "FriendlyName": "Nop Quick Tabs",
-  "SystemName": "SevenSpikes.Nop.Plugins.NopQuickTabs",
-  "Version": "4.5",
-  "SupportedVersions": [ "4.50" ],
-  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "SupportedVersions": [
+    "4.50"
+  ],
   "Author": "Seven Spikes Ltd",
   "DisplayOrder": 5,
   "FileName": "SevenSpikes.Nop.Plugins.NopQuickTabs.dll",
-  "Description": "This plugin allows you to add information tabs to product pages that can be mapped to products, categories or manufacturers."
+  "Description": "This plugin allows you to add information tabs to product pages that can be mapped to products, categories or manufacturers.",
+  "LimitedToStores": [],
+  "LimitedToCustomerRoles": [],
+  "DependsOnSystemNames": [
+    "SevenSpikes.Core"
+  ],
+  "SystemName": "SevenSpikes.Nop.Plugins.NopQuickTabs",
+  "Version": "4.5"
 }

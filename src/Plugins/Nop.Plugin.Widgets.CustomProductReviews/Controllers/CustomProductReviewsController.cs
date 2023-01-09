@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -31,7 +32,7 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
-namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
+namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
 
     [AutoValidateAntiforgeryToken]
@@ -144,11 +145,17 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
 
         //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         //}
+
+        //TODO:2 kere yorum oluşturuyor bunu engelle
         [HttpPost]
-        [FormValueRequired("add-review")]
         [ValidateCaptcha]
-        public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
+        public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid, List<IFormFile> photos)
         {
+            foreach (var photo in photos)
+            {
+                string name=photo.Name;
+                name = photo.FileName;
+            }
             var product = await _productService.GetProductByIdAsync(productId);
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -265,7 +272,7 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Controllers
             return View(model);
         }
 
-       
+
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();

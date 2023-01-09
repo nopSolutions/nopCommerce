@@ -141,7 +141,7 @@
                                 type: "POST",
                                 url: "@Url.Action("AddressDelete", "Customer")",
                                 data: postData,
-                                dataType: "json",
+                                contentType: false,
                                 success: function (data, textStatus, jqXHR) {
                                     location.href = data.redirect;
                                 },

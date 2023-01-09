@@ -1,13 +1,12 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Nop.Core.Infrastructure
-@using Nop.Web.Framework.TagHelpers.Shared
 @using Nop.Web.Framework.TagHelpers.Public
+@using Nop.Web.Framework.TagHelpers.Shared
 @using LabelTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
 @using TextAreaTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper
 @using InputTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
 @model Nop.Web.Models.Catalog.ProductReviewsModel
-@using (Html.BeginForm("CustomProductReviews", "CustomProductReviews", FormMethod.Post))
-
 
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 
@@ -20,7 +19,7 @@
     var _storeContext = EngineContext.Current.Resolve<Nop.Core.IStoreContext>();
     var _settingService = EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
 
-    var setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>( _storeContext.GetCurrentStore().Id);
+    var setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>(_storeContext.GetCurrentStore().Id);
     if (setting == null)
     {
         setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>();
@@ -47,11 +46,11 @@
         }
         else
         {
-            <div class="write-review" id="review-form">
+            <div class="write-review" >
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
-                <form asp-controller="CustomProductReviews" asp-action="ProductReviewsAdd" asp-route-productId="@Model.ProductId" method="post">
+                <form id="review-form" asp-controller="CustomProductReviews" asp-action="ProductReviewsAdd" asp-route-productId="@Model.ProductId" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
@@ -231,31 +230,32 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
     </div>
 </div>
-@*<script asp-location="Footer">
+<script asp-location="Footer">
     var uploadButton = document.getElementById('add-review-button');
 
     $('#review-form').submit(function (e) {
-
-        e.preventDefault();
-        uploadButton.value = 'Submitting...';
-
         var form = $(this);
-        if (!form.valid()) return false;
-        if (!readURLFileUpload()) return false;
+        e.preventDefault();
 
+        if (!readURLFileUpload()) return false;
         var formData = new FormData(form[0]);
+        formData.append("productId", @Model.ProductId);
+        var t = $("input[name='__RequestVerificationToken']").val();
+        console.log(formData);
         $(".form-message").html("");
         $.ajax({
-           
-            url: "@Url.RouteUrl("Nop.Plugin.Widgets.CustomProductReviews.ProductReviewsAdd",Model)",
-            type: 'POST',           
+            url: '@Url.Action("ProductReviewsAdd", "CustomProductReviews")',
+            type: 'POST',  
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
             data: formData,
-            dataType: 'json',
-            processData: false,
             contentType: false,
+            cache : false,
+            processData: false,
             success: function (data) {
                 var strmsg = "";
-                uploadButton.value = "@T("Reviews.SubmitButton")";
 
                 if (data.message.length > 0) {
                     strmsg += "<ul>";
@@ -272,19 +272,20 @@
                         $("#review-form .review-form-body").css("display", "none");
                         document.getElementById("review-form").reset();
                     }
-                    if (typeof grecaptcha != "undefined") {
-                        grecaptcha.reset();
-                    }
-                    $('html, body').animate({ scrollTop: $("#message-success-review-form").offset().top }, 'slow');
+                    alert(strmsg);
+                   
                     return false;
                 }
             },
+            error: function(xhr, resp, text) {
+                console.log(xhr, resp, text);
+            },
             complete: function () {
-                $('#review-form .ajax-loader').css("visibility", "hidden");
+                alert('metodbitti');
             }
         });
     });
-
+    
     $(document).ready(function () {
         $('.product-review-links a,.product-no-reviews a').on('click', function (e) {
             e.preventDefault();
@@ -323,4 +324,4 @@
         }
         return true;
     }
-</script>*@
+</script>
