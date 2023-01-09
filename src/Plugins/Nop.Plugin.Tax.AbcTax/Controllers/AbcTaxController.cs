@@ -127,6 +127,10 @@ namespace Nop.Plugin.Tax.AbcTax.Controllers
                     ViewBag.ShowTour = true;
             }
 
+            // ABC: set up our variables:
+            model.TaxJarAPIToken = _abcTaxSettings.TaxJarAPIToken;
+            model.IsDebugMode = _abcTaxSettings.IsDebugMode;
+
             return View("~/Plugins/Tax.AbcTax/Views/Configure.cshtml", model);
         }
 
@@ -212,6 +216,7 @@ namespace Nop.Plugin.Tax.AbcTax.Controllers
             var taxRate = await _abcTaxService.GetTaxRateByIdAsync(model.Id);
             taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
+            taxRate.IsTaxJarEnabled = model.IsTaxJarEnabled;
             await _abcTaxService.UpdateTaxRateAsync(taxRate);
 
             return new NullJsonResult();
