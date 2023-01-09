@@ -37,6 +37,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
+using WebOptimizer;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -254,7 +255,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 {
                     string filetype = photo.ContentType;
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
-                    int pictureId = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(productReviewPhotoPath, name)), MimeTypes.ImagePJpeg, name)).Id;
+                    //TODO:foto olayını çöz boka sardı
+                    await _fileProvider.ReadAllBytesAsync(await photo.OpenReadStream().AsBytesAsync());
+                    await _fileProvider.WriteAllBytesAsync(_fileProvider.Combine(productReviewPhotoPath, name),photo.)
+                    var data = await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(productReviewPhotoPath, name));
+                    int pictureId = (await _pictureService.InsertPictureAsync(data, MimeTypes.ImagePJpeg, name)).Id;
                     var mapping = new CustomProductReviewMapping();
                     mapping.PictureId = pictureId;
                     mapping.DisplayOrder = 0;
