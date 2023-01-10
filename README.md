@@ -22,3 +22,5 @@ sudo .devcontainer/restore-scripts/restore.sh
 1. Run application in debug mode with F5.
 1. Uninstall any plugins not for use:
     1. Google Analytics 4
+    2. Accessibe
+    3. Listrak

@@ -30,6 +30,11 @@ var editMode = false;
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
 
+// Open slideout URL param
+$(document).ready(function () {
+    console.log('should check if open param is there')
+});
+
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
     checkButton.disabled = true;
