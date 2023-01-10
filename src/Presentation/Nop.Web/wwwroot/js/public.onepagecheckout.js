@@ -330,13 +330,13 @@ var Shipping = {
   newAddress: function (id, billingAddressId) {
     isNew = !id;    
         if (isNew) {
-            this.resetSelectedAddress();
+          this.resetSelectedAddress();         
           $('#shipping-new-address-form').show();          
           $('#edit-shipping-address-button').hide();
           $('#delete-shipping-address-button').hide();
         } else {
           $('#shipping-new-address-form').hide();
-          if (id == billingAddressId) {
+          if (id == billingAddressId || (id != undefined && billingAddressId == undefined)) {
             $('#edit-shipping-address-button').hide();
             $("#save-shipping-address-button").hide();
             $('#delete-shipping-address-button').hide();            
