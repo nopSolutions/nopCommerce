@@ -12,8 +12,6 @@
     $(document).ready(function() {
         $("#@Html.IdForModel()").kendoNumericTextBox({
             value: "@Model?.ToString(culture)",
-            min: @int.MinValue.ToString(culture),
-            max: @int.MaxValue.ToString(culture),
             decimals: 0,
             restrictDecimals: true,
             format: "# @Html.Raw(postfix)"
