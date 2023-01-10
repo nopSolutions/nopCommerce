@@ -5,6 +5,7 @@ using FluentMigrator;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
+using Nop.Plugin.Widgets.CustomCustomProductReviews;
 using Nop.Plugin.Widgets.CustomProductReviews.Domains;
 using Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders;
 
@@ -27,6 +28,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
         {
             Create.TableFor<Video>();
             Create.TableFor<CustomProductReviewMapping>();
+            Create.TableFor<VideoBinary>();
 
         }     
         public override void Down()
@@ -34,6 +36,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
 
             Delete.Table("Video");
             Delete.Table("CustomProductReviewMapping");
+            //Delete.Table("VideoBinary");
 
 
         }
