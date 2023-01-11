@@ -268,7 +268,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     Picture pic=await _pictureService.InsertPictureAsync(photo);
                     var mapping = new CustomProductReviewMapping();
                     var video = new Video();
-                    Video vid = await _videoService.InsertVideoAsync(video);
+                    Video vid = await _videoService.InsertVideoAsync(photo);
                     int videoId = _videoRepository.GetAll().Last().Id;
                     mapping.PictureId = pic.Id;
                     mapping.DisplayOrder = 0;
