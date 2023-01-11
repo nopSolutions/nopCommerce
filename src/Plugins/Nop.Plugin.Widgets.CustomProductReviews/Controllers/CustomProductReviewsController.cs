@@ -79,9 +79,10 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         private readonly ShippingSettings _shippingSettings;
         private readonly IPictureService _pictureService;
         private readonly IVideoService _videoService;
+        private readonly ICustomProductReviewMappingService _customProductReviewMappingService;
         private readonly INopFileProvider _fileProvider;
-        private readonly IRepository<CustomProductReviewMapping> _customProductReviewMappingRepository;
-        private readonly IRepository<Video> _videoRepository;
+        
+        
 
 
         #endregion
@@ -118,8 +119,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             IVideoService videoService,
             INopFileProvider fileProvider,
             ShippingSettings shippingSettings,
-            IRepository<CustomProductReviewMapping> customProductReviewMappingRepository,
-            IRepository<Video> videoRepository)
+            ICustomProductReviewMappingService customProductReviewMappingService
+
+        )
         {
             _captchaSettings = captchaSettings;
             _pictureService = pictureService;
@@ -151,8 +153,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             _localizationSettings = localizationSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
-            _customProductReviewMappingRepository = customProductReviewMappingRepository;
-            _videoRepository = videoRepository;
+            _customProductReviewMappingService = customProductReviewMappingService;
+           
         }
 
 
@@ -266,16 +268,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
                     //TODO:foto olayını çöz boka sardı 
                     Picture pic=await _pictureService.InsertPictureAsync(photo);
-                    var mapping = new CustomProductReviewMapping();
-                    var video = new Video();
                     Video vid = await _videoService.InsertVideoAsync(photo);
-                    int videoId = _videoRepository.GetAll().Last().Id;
-                    mapping.PictureId = pic.Id;
-                    mapping.DisplayOrder = 0;
-                    mapping.ProductReviewId= reviewId;
-                    mapping.VideoId = videoId;
-                    //Todo:Videoservice gibi bununda servisini yaz
-                   await _customProductReviewMappingRepository.InsertAsync(mapping,false);
+
+                    //todo:id 9 geliyor çöz
+                    await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, pic.Id,
+                        vid.Id);
 
                 }
 

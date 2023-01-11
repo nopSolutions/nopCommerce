@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Widgets.CustomProductReviews.Services;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Infrastructure
 {
@@ -17,6 +18,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Infrastructure
 
             //register services and interfaces
             //services.AddScoped<CustomModelFactory, ICustomerModelFactory>();
+            services.AddScoped<IVideoService,VideoService>();
+            services.AddScoped<ICustomProductReviewMappingService, CustomProductReviewMappingService>();
+
         }
 
         public void Configure(IApplicationBuilder application)

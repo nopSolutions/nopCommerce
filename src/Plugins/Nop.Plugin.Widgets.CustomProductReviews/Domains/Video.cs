@@ -7,7 +7,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Domains
         /// <summary>
         /// Gets or sets the video identifier
         /// </summary>
-        public int Id { get; set; }
         public string MimeType { get; set; }
         public string SeoFilename { get; set; }
         public string AltAttribute { get; set; }

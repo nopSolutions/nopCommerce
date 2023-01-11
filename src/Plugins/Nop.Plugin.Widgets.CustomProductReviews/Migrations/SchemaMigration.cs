@@ -33,10 +33,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
         }     
         public override void Down()
         {
-
-            Delete.Table("Video");
             Delete.Table("CustomProductReviewMapping");
-            //Delete.Table("VideoBinary");
+            Delete.Table("Video");
+            Delete.Table("VideoBinary");
 
 
         }

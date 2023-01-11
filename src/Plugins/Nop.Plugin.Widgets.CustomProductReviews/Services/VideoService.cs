@@ -803,6 +803,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 IsNew = isNew
             };
             await _videoRepository.InsertAsync(video);
+           
             await UpdateVideoBinaryAsync(video, await IsStoreInDbAsync() ? videoBinary : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
