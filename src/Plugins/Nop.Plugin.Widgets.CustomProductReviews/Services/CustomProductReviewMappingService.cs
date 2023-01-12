@@ -60,7 +60,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the customProductReviewMapping
         /// </returns>
-        public virtual async Task<CustomProductReviewMapping> InsertCustomProductReviewMappingAsync(int productReviewId, int pictureId, int videoIdId)
+        public virtual async Task<CustomProductReviewMapping> InsertCustomProductReviewMappingAsync(int productReviewId, int? pictureId, int? videoIdId)
         {
 
 
@@ -71,7 +71,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 VideoId = videoIdId
             };
 
-            await _customProductReviewMappingRepository.InsertAsync(customProductReviewMapping);
+            _customProductReviewMappingRepository.InsertAsync(customProductReviewMapping);
 
             return customProductReviewMapping;
         }

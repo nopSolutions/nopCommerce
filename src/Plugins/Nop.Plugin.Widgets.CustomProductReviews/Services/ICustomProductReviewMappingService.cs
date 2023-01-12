@@ -24,7 +24,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
 
 
         /// </returns>
-        Task<CustomProductReviewMapping> InsertCustomProductReviewMappingAsync(int productReviewId, int pictureId, int videoIdId);
+        Task<CustomProductReviewMapping> InsertCustomProductReviewMappingAsync(int productReviewId, int? pictureId, int? videoIdId);
 
 
         /// <summary>

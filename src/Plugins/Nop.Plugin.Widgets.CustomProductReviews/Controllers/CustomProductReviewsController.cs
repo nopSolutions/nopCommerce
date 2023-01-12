@@ -266,13 +266,36 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 {
                     string filetype = photo.ContentType;
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
-                    //TODO:foto olayını çöz boka sardı 
-                    Picture pic=await _pictureService.InsertPictureAsync(photo);
-                    Video vid = await _videoService.InsertVideoAsync(photo);
+                   
+                    Picture pic = new Picture();
+                    Video vid = new Video();
+                    if ( filetype.Contains("image"))
+                    {
+                         pic = await _pictureService.InsertPictureAsync(photo, name);
+                    }
+                    else if (filetype.Contains("video"))
+                    {
+                        vid = await _videoService.InsertVideoAsync(photo, name);
+                    }
+
+                    int? lastPicId = pic.Id;
+                    int? lastVidId = vid.Id;
+                    if (lastPicId == 0)
+                    {
+                        lastPicId = null;
+                    }
+
+                    if (lastVidId == 0)
+                    {
+                        lastVidId = null;
+                    }
+
+
 
                     //todo:id 9 geliyor çöz
-                    await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, pic.Id,
-                        vid.Id);
+                    CustomProductReviewMapping resultMapping= await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
+                        lastVidId);
+                  
 
                 }
 
