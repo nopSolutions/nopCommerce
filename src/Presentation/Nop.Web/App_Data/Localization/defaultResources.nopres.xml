@@ -15927,6 +15927,12 @@
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
     <Value>In order to use this functionality, you have to disable the following setting: Catalog settings &gt; Ignore "limit per store" rules.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginMainAssemblyNotFound">
+    <Value>{0}: The main assembly isn't found. Hence this plugin can't be loaded.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginNotCompatibleWithCurrentVersion">
+    <Value>{0}: The plugin isn't compatible with the current version. Hence this plugin can't be loaded.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
     <Value>Uninstall and delete the plugin(s) that you don't use</Value>
   </LocaleResource>
@@ -15938,9 +15944,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotInstalled.HelpText">
     <Value>You may delete the plugins you don't use in order to decrease startup time</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
-    <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginRequiredAssembly">
     <Value>the '{0}' plugin required the '{1}' assembly</Value>
