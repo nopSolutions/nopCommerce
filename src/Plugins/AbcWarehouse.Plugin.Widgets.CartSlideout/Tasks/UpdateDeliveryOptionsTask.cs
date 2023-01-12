@@ -176,11 +176,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             var deliveryOnlyItem = map.DeliveryOnly == 0 ? new AbcDeliveryItem() : await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryOnly);
             var deliveryOnlyPriceFormatted = await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
 
+            // Need to get the category to determine if furniture
+            string message = await GetHomeDeliveryMessageAsync(
+                deliveryOnlyPriceFormatted,
+                deliveryOptionsPam.ProductId);
+
             var existingDeliveryOnlyPav = existingValues.Where(pav => pav.Name.Contains("Home Delivery (")).SingleOrDefault();
             var newDeliveryOnlyPav = map.DeliveryOnly != 0 ? new ProductAttributeValue()
             {
                 ProductAttributeMappingId = deliveryOptionsPam.Id,
-                Name = string.Format("Home Delivery ({0}, FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted),
+                Name = message,
                 Cost = map.DeliveryOnly,
                 PriceAdjustment = deliveryOnlyItem.Price,
                 IsPreSelected = true,
@@ -288,6 +293,23 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return existingPav.Name == newPav.Name
                 && existingPav.PriceAdjustment == newPav.PriceAdjustment
                 && existingPav.Cost == newPav.Cost;
+        }
+
+        // If Furniture, no mail-in rebate
+        private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(string deliveryOnlyPriceFormatted, int productId)
+        {
+            var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
+            foreach (var pc in productCategories)
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(pc.CategoryId);
+                var fullCategoryListNames = (await _categoryService.GetCategoryBreadCrumbAsync(category)).Select(c => c.Name);
+                if (fullCategoryListNames.Contains("Furniture"))
+                {
+                    return string.Format("Home Delivery ({0})", deliveryOnlyPriceFormatted);
+                }
+            }
+
+            return string.Format("Home Delivery ({0}, FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
         }
     }
 }
