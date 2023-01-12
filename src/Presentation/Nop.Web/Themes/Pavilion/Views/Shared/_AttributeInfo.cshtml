@@ -49,7 +49,12 @@
         // remove attribute name
         warranty = warranty.Substring(warranty.IndexOf(':') + 2);
         // change format of price difference
-        warranty = warranty.Replace('[', '(').Replace(']', ')').Remove(warranty.IndexOf('+'), 1);
+        warranty = warranty.Replace('[', '(').Replace(']', ')');
+        var plusIndex = warranty.IndexOf('+');
+        if (plusIndex !+ -1)
+        {
+            warranty.Remove(plusIndex, 1)
+        }
         warranty = warranty.Trim();
     }
 }
