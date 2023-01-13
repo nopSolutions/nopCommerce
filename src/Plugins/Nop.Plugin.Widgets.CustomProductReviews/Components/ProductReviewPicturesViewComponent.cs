@@ -127,26 +127,24 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 
                     (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, defaultPictureSize, true);
                     (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                    (thumbImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
 
                     var pictureModel = new PictureModel
                     {
                         ImageUrl = imageUrl,
-                        ThumbImageUrl = thumbImageUrl,
                         FullSizeImageUrl = fullSizeImageUrl,
-                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName),
-                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName),
+                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), model.Title),
+                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), model.Title),
                     };
                     //"title" attribute
                     pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
                     picture.TitleAttribute :
-                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName);
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), model.Title);
                     //"alt" attribute
                     pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
                     picture.AltAttribute :
-                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName);
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), model.Title);
 
-                    pictureModels.Add(pictureModel);
+                    pictureModelList.Add(pictureModel);
                 }
             }
             
@@ -155,7 +153,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
            
 
 
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml", reviewPicList);
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml", pictureModelList);
 
         }
 

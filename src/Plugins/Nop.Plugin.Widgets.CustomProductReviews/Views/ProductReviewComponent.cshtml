@@ -13,7 +13,7 @@
 @{
     Layout = "_ColumnsOne";
 }
-@*<link href="~/Plugins/Widgets.CustomProductReviews/Content/style.css" rel="stylesheet" />*@
+<link href="~/Plugins/Widgets.CustomProductReviews/Content/style.css" rel="stylesheet" />
 
 @{
     var _storeContext = EngineContext.Current.Resolve<Nop.Core.IStoreContext>();
@@ -148,7 +148,7 @@
                     var ratingPercent = review.Rating * 20;
                     <div class="product-review-item">
                         <div class="review-item-head">
-                            @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
+                           
                             <div class="review-info">
                                 <span class="user">
                                     <label>@T("Reviews.From"):</label>
@@ -210,6 +210,7 @@
                             <div class="review-text">
                                 @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
                             </div>
+                            @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
                             @await Html.PartialAsync("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewHelpfulness.cshtml", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
                             @if (!string.IsNullOrEmpty(review.ReplyText))
