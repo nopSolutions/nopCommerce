@@ -14,6 +14,9 @@ using Nop.Web.Factories;
 using Nop.Services.Media;
 using Picture = Nop.Core.Domain.Media.Picture;
 using Nop.Web.Models.Media;
+using Nop.Services.Localization;
+using Nop.Core.Domain.Media;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 {
@@ -29,13 +32,16 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         private readonly IProductModelFactory _productModelFactory;
         private readonly IPictureService _pictureService;
         private readonly ICustomProductReviewMappingService _customProductReviewMappingService;
+        private readonly ILocalizationService _localizationService;
+        private readonly MediaSettings _mediaSettings;
+
 
 
         #endregion
 
         #region Ctor
 
-        public ProductReviewPictures(CustomProductReviewsSettings customProductReviewsSettings, IProductService productService, IProductModelFactory productModelFactory,IPictureService pictureService, ICustomProductReviewMappingService customProductReviewMappingService)
+        public ProductReviewPictures(CustomProductReviewsSettings customProductReviewsSettings, IProductService productService, IProductModelFactory productModelFactory,IPictureService pictureService, ICustomProductReviewMappingService customProductReviewMappingService, ILocalizationService localizationService, MediaSettings mediaSettings)
         {
             //_accessiBeService = accessiBeService;
             _customProductReviewsSettings = customProductReviewsSettings;
@@ -43,6 +49,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
             _productModelFactory = productModelFactory;
             _pictureService = pictureService;
             _customProductReviewMappingService = customProductReviewMappingService;
+            _localizationService=localizationService;
+            _mediaSettings = mediaSettings;
         }
 
     
@@ -94,20 +102,53 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
            }
            else
            {
-               foreach (var mapping in reviewMappings)
+               //default picture size
+               var defaultPictureSize = _mediaSettings.ProductDetailsPictureSize;
+                foreach (var mapping in reviewMappings)
                {
                    var picId = mapping.PictureId;
                    if (picId != null)
                    {
                        var pic = await _pictureService.GetPictureByIdAsync(picId.Value);
-                       PictureModel picModel = new PictureModel();
-                       picModel.AlternateText = pic.AltAttribute;
-                       
-                       pictureModelList.Add(picModel);
                        reviewPicList.Add(pic);
+                       
+
+
+                  
+                      
                    }
                 }
-           }
+
+                string fullSizeImageUrl, imageUrl;
+
+                for (var i = 0; i < reviewPicList.Count; i++)
+                {
+                    var picture = reviewPicList[i];
+
+                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, defaultPictureSize, true);
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+                    (thumbImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
+
+                    var pictureModel = new PictureModel
+                    {
+                        ImageUrl = imageUrl,
+                        ThumbImageUrl = thumbImageUrl,
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName),
+                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName),
+                    };
+                    //"title" attribute
+                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
+                    picture.TitleAttribute :
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName);
+                    //"alt" attribute
+                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
+                    picture.AltAttribute :
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName);
+
+                    pictureModels.Add(pictureModel);
+                }
+            }
             
             
             
