@@ -131,8 +131,16 @@ namespace Nop.Data.Migrations
                     migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)))
                     continue;
 #endif
-                _versionLoader.Value
-                    .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
+                try
+                {
+                    _versionLoader.Value
+                        .UpdateVersionInfo(migrationInfo.Version,
+                            migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
+                }
+                catch 
+                {
+                    //TODO: refactoring the GetUpMigrations to get directly selected MigrationProcessType for commitVersionOnly == true
+                }
             }
         }
 
