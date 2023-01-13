@@ -148,6 +148,7 @@
                     var ratingPercent = review.Rating * 20;
                     <div class="product-review-item">
                         <div class="review-item-head">
+                            @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
                             <div class="review-info">
                                 <span class="user">
                                     <label>@T("Reviews.From"):</label>
@@ -166,12 +167,12 @@
                                         @if (review.AllowViewingProfiles)
                                         {
                                             <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
-                                                <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                                <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar"/>
                                             </a>
                                         }
                                         else
                                         {
-                                            <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                            <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar"/>
                                         }
                                     </div>
                                 }

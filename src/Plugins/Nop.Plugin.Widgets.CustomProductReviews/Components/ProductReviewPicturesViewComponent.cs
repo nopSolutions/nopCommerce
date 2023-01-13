@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Html;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Nop.Plugin.Widgets.CustomProductReviews.Services;
 using Nop.Web.Framework.Components;
 using Nop.Web.Models.Catalog;
+using Nop.Services.Catalog;
+using Nop.Web.Factories;
+using Nop.Services.Media;
+using Picture = Nop.Core.Domain.Media.Picture;
+using Nop.Web.Models.Media;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 {
@@ -16,16 +25,27 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 
         //private readonly CustomProductReviewsService _customProductReviewsServiceService;
         private readonly CustomProductReviewsSettings _customProductReviewsSettings;
+        private readonly IProductService _productService;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IPictureService _pictureService;
+        private readonly ICustomProductReviewMappingService _customProductReviewMappingService;
+
 
         #endregion
 
         #region Ctor
 
-        public ProductReviewPictures(CustomProductReviewsSettings customProductReviewsSettings)
+        public ProductReviewPictures(CustomProductReviewsSettings customProductReviewsSettings, IProductService productService, IProductModelFactory productModelFactory,IPictureService pictureService, ICustomProductReviewMappingService customProductReviewMappingService)
         {
             //_accessiBeService = accessiBeService;
             _customProductReviewsSettings = customProductReviewsSettings;
+            _productService = productService;
+            _productModelFactory = productModelFactory;
+            _pictureService = pictureService;
+            _customProductReviewMappingService = customProductReviewMappingService;
         }
+
+    
 
         #endregion
 
@@ -58,8 +78,43 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 
             //return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
 
+            //Todo:photo view sorunu çöz
+            var model = new ProductReviewModel();
+            if (additionalData.GetType() == model.GetType())
+            {
+                model = (ProductReviewModel)additionalData;
+            }
+            List<Picture> reviewPicList = new List<Picture>();
+            List<PictureModel> pictureModelList = new List<PictureModel>();
+            var reviewMappings= await _customProductReviewMappingService.GetCustomProductReviewMappingByProductReviewIdAsync(model.Id);
+           if (reviewMappings == null)
+           {
+               return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml", pictureModelList);
 
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml",additionalData);
+           }
+           else
+           {
+               foreach (var mapping in reviewMappings)
+               {
+                   var picId = mapping.PictureId;
+                   if (picId != null)
+                   {
+                       var pic = await _pictureService.GetPictureByIdAsync(picId.Value);
+                       PictureModel picModel = new PictureModel();
+                       picModel.AlternateText = pic.AltAttribute;
+                       
+                       pictureModelList.Add(picModel);
+                       reviewPicList.Add(pic);
+                   }
+                }
+           }
+            
+            
+            
+           
+
+
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewPictures.cshtml", reviewPicList);
 
         }
 

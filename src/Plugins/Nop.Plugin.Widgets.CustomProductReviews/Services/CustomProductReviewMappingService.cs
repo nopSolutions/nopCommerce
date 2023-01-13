@@ -147,9 +147,34 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             return await _customProductReviewMappingRepository.GetByIdAsync(customProductReviewMappingId, cache => default);
         }
 
-       
 
- 
+     
+
+        /// <summary>
+        /// Gets pictures by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pictures
+        /// </returns>
+        public virtual async Task<List<CustomProductReviewMapping>> GetCustomProductReviewMappingByProductReviewIdAsync(int productReviewId)
+        {
+            if (productReviewId == 0)
+                return new  List<CustomProductReviewMapping>();
+
+            var query = from p in _customProductReviewMappingRepository.Table
+                where p.ProductReviewId == productReviewId
+                select p;
+
+            var mappings = await query.ToListAsync();
+
+            return mappings;
+        }
+
+
+
         /// <summary>
         /// Gets pictures by product identifier
         /// </summary>
@@ -179,7 +204,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         //}
 
 
-  
+
 
 
 
@@ -229,7 +254,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
 
-        
+
 
         #endregion
     }

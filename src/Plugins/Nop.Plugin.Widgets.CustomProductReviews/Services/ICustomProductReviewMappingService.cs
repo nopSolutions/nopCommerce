@@ -51,6 +51,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         Task<CustomProductReviewMapping> UpdateCustomProductReviewMappingAsync(CustomProductReviewMapping customProductReviewMapping);
 
         Task<CustomProductReviewMapping> GetCustomProductReviewMappingByIdAsync(int customProductReviewMappingId);
+        Task<List<CustomProductReviewMapping>> GetCustomProductReviewMappingByProductReviewIdAsync(int productReviewId);
 
 
 
