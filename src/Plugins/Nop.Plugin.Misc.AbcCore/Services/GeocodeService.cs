@@ -39,6 +39,11 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                 throw new NopException($"Error returned while geocoding: {errorMessage}");
             }
 
+            if (status.Value.Equals("ZERO_RESULTS"))
+            {
+                return new (0, 0);
+            }
+
             XElement result = geocodeResponse.Element("result");
             XElement locationElement = result.Element("geometry").Element("location");
             XElement lat = locationElement.Element("lat");

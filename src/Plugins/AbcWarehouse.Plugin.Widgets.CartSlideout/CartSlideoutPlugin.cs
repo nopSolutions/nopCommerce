@@ -11,6 +11,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Services.Localization;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout
 {
@@ -18,15 +19,18 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
     {
         private readonly string _taskType = $"{typeof(UpdateDeliveryOptionsTask).FullName}, {typeof(CartSlideoutPlugin).Namespace}";
 
+        private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly ISettingService _settingService;
 
         public CartSlideoutPlugin(
+            ILocalizationService localizationService,
             IProductAttributeService productAttributeService,
             IScheduleTaskService scheduleTaskService,
             ISettingService settingService)
         {
+            _localizationService = localizationService;
             _productAttributeService = productAttributeService;
             _scheduleTaskService = scheduleTaskService;
             _settingService = settingService;
@@ -56,6 +60,13 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
 
             await RemoveProductAttributesAsync();
             await AddProductAttributesAsync();
+
+            await _localizationService.AddOrUpdateLocaleResourceAsync(
+                "AbcWarehouse.Plugin.Widgets.CartSlideout.DeliveryNotAvailable",
+                "Home delivery for the zip code entered is not available at this time. ABC Warehouse currently " +
+                "provides home delivery on major appliances and TVs within our Home Delivery Areas throughout " +
+                "Michigan, and surrounding areas of our store locations in Ohio and Indiana."
+            );
 
             await base.InstallAsync();
         }
