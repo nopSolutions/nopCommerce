@@ -30,7 +30,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
             Create.TableFor<CustomProductReviewMapping>();
             Create.TableFor<VideoBinary>();
 
-        }     
+            }     
         public override void Down()
         {
             Delete.Table("CustomProductReviewMapping");

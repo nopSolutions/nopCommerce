@@ -16,8 +16,10 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             //TODO:mappingler sıçtı çöz
-            table.WithColumn(nameof(CustomProductReviewMapping.DisplayOrder)).AsInt32().Nullable()
-                .WithColumn(nameof(CustomProductReviewMapping.ProductReviewId)).AsInt32().PrimaryKey().ForeignKey<ProductReview>()
+            table
+                .WithColumn(nameof(CustomProductReviewMapping.Id)).AsInt32().NotNullable().PrimaryKey().Identity()
+                .WithColumn(nameof(CustomProductReviewMapping.DisplayOrder)).AsInt32().Nullable()
+                .WithColumn(nameof(CustomProductReviewMapping.ProductReviewId)).AsInt32().ForeignKey<ProductReview>()
                 .WithColumn(nameof(CustomProductReviewMapping.PictureId)).AsInt32().ForeignKey<Picture>().Nullable()
                 .WithColumn(nameof(CustomProductReviewMapping.VideoId)).AsInt32().ForeignKey<Video>().Nullable();
         }

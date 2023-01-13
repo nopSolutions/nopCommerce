@@ -71,7 +71,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 VideoId = videoIdId
             };
 
-            _customProductReviewMappingRepository.InsertAsync(customProductReviewMapping);
+            await _customProductReviewMappingRepository.InsertAsync(customProductReviewMapping);
 
             return customProductReviewMapping;
         }
