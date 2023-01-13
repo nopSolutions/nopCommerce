@@ -18,6 +18,7 @@
     <None Remove="Views\CustomProductReviews\_ViewImports.cshtml" />
     <None Remove="Views\ProductReviewComponent.cshtml" />
     <None Remove="Views\_ProductReviewPictures.cshtml" />
+    <None Remove="Views\_ProductReviewVideos.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ProductReviewComponent.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ProductReviewVideos.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_ProductReviewPictures.cshtml">
