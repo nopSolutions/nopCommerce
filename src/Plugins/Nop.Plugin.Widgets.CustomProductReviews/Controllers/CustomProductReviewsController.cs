@@ -292,9 +292,12 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
 
 
-                    //todo:id 9 geliyor çöz
-                    CustomProductReviewMapping resultMapping= await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
-                        lastVidId);
+                    if (!(lastPicId == null && lastVidId==null))
+                    {
+                        CustomProductReviewMapping resultMapping = await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
+                            lastVidId);
+                    }
+                   
                   
 
                 }

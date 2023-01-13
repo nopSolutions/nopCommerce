@@ -826,18 +826,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         {
             var imgExt = new List<string>
             {
-                ".bmp",
-                ".gif",
-                ".webp",
-                ".jpeg",
-                ".jpg",
-                ".jpe",
-                ".jfif",
-                ".pjpeg",
-                ".pjp",
-                ".png",
-                ".tiff",
-                ".tif"
+                ".mp4",
+                ".mov",
+                ".webm"
             } as IReadOnlyCollection<string>;
 
             var fileName = formFile.FileName;
@@ -863,29 +854,14 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             {
                 switch (fileExtension)
                 {
-                    case ".bmp":
-                        contentType = MimeTypes.ImageBmp;
+                    case ".mp4":
+                        contentType = Data.MimeTypes.VideoMp4;
                         break;
-                    case ".gif":
-                        contentType = MimeTypes.ImageGif;
+                    case ".mov":
+                        contentType = Data.MimeTypes.VideoMov;
                         break;
-                    case ".jpeg":
-                    case ".jpg":
-                    case ".jpe":
-                    case ".jfif":
-                    case ".pjpeg":
-                    case ".pjp":
-                        contentType = MimeTypes.ImageJpeg;
-                        break;
-                    case ".webp":
-                        contentType = MimeTypes.ImageWebp;
-                        break;
-                    case ".png":
-                        contentType = MimeTypes.ImagePng;
-                        break;
-                    case ".tiff":
-                    case ".tif":
-                        contentType = MimeTypes.ImageTiff;
+                    case ".webm":
+                        contentType = Data.MimeTypes.VideoWebm;
                         break;
                     default:
                         break;
@@ -1041,14 +1017,15 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         {
             try
             {
-                using var image = SKBitmap.Decode(videoBinary);
+                //Todo:Video Validate yap
+                //using var image = SKBitmap.Decode(videoBinary);
 
-                //resize the image in accordance with the maximum size
-                if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
-                {
-                    var format = GetImageFormatByMimeType(mimeType);
-                    videoBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
-                }
+                ////resize the image in accordance with the maximum size
+                //if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
+                //{
+                //    var format = GetImageFormatByMimeType(mimeType);
+                //    videoBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
+                //}
                 return Task.FromResult(videoBinary);
             }
             catch
