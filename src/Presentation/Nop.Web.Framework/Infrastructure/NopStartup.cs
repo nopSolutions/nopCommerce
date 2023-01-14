@@ -2,9 +2,12 @@
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -94,22 +97,30 @@ namespace Nop.Web.Framework.Infrastructure
                 switch (distributedCacheConfig.DistributedCacheType)
                 {
                     case DistributedCacheType.Memory:
-                        services.AddScoped<ILocker, MemoryDistributedCacheManager>();
                         services.AddScoped<IStaticCacheManager, MemoryDistributedCacheManager>();
                         break;
                     case DistributedCacheType.SqlServer:
-                        services.AddScoped<ILocker, MsSqlServerCacheManager>();
                         services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
                         break;
                     case DistributedCacheType.Redis:
-                        services.AddScoped<ILocker, RedisCacheManager>();
+                        services.AddSingleton<RedisConnectionWrapper>();
                         services.AddScoped<IStaticCacheManager, RedisCacheManager>();
                         break;
+                    case DistributedCacheType.RedisSynchronizedMemory:
+                        services.AddSingleton<RedisConnectionWrapper>();
+                        services.AddSingleton<IStaticCacheManager, MemoryCacheManager>(services =>
+                            new MemoryCacheManager(
+                                appSettings,
+                                new RedisSynchronizedMemoryCache(
+                                    services.GetRequiredService<IMemoryCache>(),
+                                    services.GetRequiredService<RedisConnectionWrapper>())));
+                        break;
                 }
+                services.AddSingleton<ILocker, DistributedCacheLocker>();
             }
             else
             {
-                services.AddSingleton<ILocker, MemoryCacheManager>();
+                services.AddSingleton<ILocker, MemoryCacheLocker>();
                 services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             }
 

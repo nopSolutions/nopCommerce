@@ -314,6 +314,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.DistributedCache.SchemaName.Hint"] = "Specify the schema name (by default it is dbo)",
                 ["Admin.Configuration.AppSettings.DistributedCache.TableName"] = "Table name",
                 ["Admin.Configuration.AppSettings.DistributedCache.TableName.Hint"] = "Specify the table name",
+                ["Admin.Configuration.AppSettings.DistributedCache.InstanceName"] = "Instance name",
+                ["Admin.Configuration.AppSettings.DistributedCache.InstanceName.Hint"] = "Specify the instance name (by default \"nopCommerce\")",
                 ["Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning"] = "It seems that you use distributed cache, keep in mind that enabling this setting creates a lot of traffic between the distributed cache server and the application because of the large number of locales",
 
                 //configuration steps tour
