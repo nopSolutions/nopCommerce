@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Nop.Core.Caching;
 using StackExchange.Redis;
 
 namespace Nop.Services.Caching
@@ -16,7 +17,7 @@ namespace Nop.Services.Caching
         private bool _disposed;
         private readonly IMemoryCache _memoryCache;
         private readonly string _ignorePrefix;
-
+        private readonly CacheKeyManager _keyManager;
 
         static RedisSynchronizedMemoryCache()
         {
@@ -31,10 +32,14 @@ namespace Nop.Services.Caching
         }
 
 
-        public RedisSynchronizedMemoryCache(IMemoryCache memoryCache, RedisConnectionWrapper connectionWrapper, string ignorePrefix = null)
+        public RedisSynchronizedMemoryCache(IMemoryCache memoryCache,
+            RedisConnectionWrapper connectionWrapper,
+            CacheKeyManager cacheKeyManager,
+            string ignorePrefix = null)
         {
             _memoryCache = memoryCache;
             _ignorePrefix = ignorePrefix;
+            _keyManager = cacheKeyManager;
             _connection = connectionWrapper;
             SubscribeAsync().Wait();
         }
@@ -51,7 +56,11 @@ namespace Nop.Services.Caching
             (await _connection.GetSubscriberAsync()).Subscribe(channel + "*", (redisChannel, value) =>
             {
                 if (value != _processId)
-                    _memoryCache.Remove(((string)redisChannel).Replace(channel, ""));
+                {
+                    var key = ((string)redisChannel).Replace(channel, "");
+                    _memoryCache.Remove(key);
+                    _keyManager.RemoveKey(key);
+                }
             });
         }
 

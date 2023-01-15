@@ -22,8 +22,11 @@ namespace Nop.Services.Caching
 
         #region Ctor
 
-        public RedisCacheManager(AppSettings appSettings, IDistributedCache distributedCache, RedisConnectionWrapper connectionWrapper)
-        : base(appSettings, distributedCache)
+        public RedisCacheManager(AppSettings appSettings,
+            IDistributedCache distributedCache,
+            RedisConnectionWrapper connectionWrapper,
+            CacheKeyManager cacheKeyManager)
+            : base(appSettings, distributedCache, cacheKeyManager)
         {
             _connectionWrapper = connectionWrapper;
         }

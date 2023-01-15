@@ -19,16 +19,18 @@ namespace Nop.Core.Caching
         private bool _disposed;
 
         private readonly IMemoryCache _memoryCache;
-        private static readonly ConcurrentTrie<byte> _keys = new();
+        private readonly CacheKeyManager _keyManager;
         private static CancellationTokenSource _clearToken = new();
 
         #endregion
 
         #region Ctor
 
-        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache) : base(appSettings)
+        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache, CacheKeyManager cacheKeyManager)
+            : base(appSettings)
         {
             _memoryCache = memoryCache;
+            _keyManager = cacheKeyManager;
         }
 
         #endregion
@@ -40,7 +42,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <returns>Cache entry options</returns>
-        private static MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
+        private MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
         {
             //set expiration time for the passed cache key
             var options = new MemoryCacheEntryOptions
@@ -51,12 +53,12 @@ namespace Nop.Core.Caching
             //add token to clear cache entries
             options.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
             options.RegisterPostEvictionCallback(OnEviction);
-            _keys.Add(key.Key, default);
+            _keyManager.AddKey(key.Key);
 
             return options;
         }
 
-        private static void OnEviction(object key, object value, EvictionReason reason, object state)
+        private void OnEviction(object key, object value, EvictionReason reason, object state)
         {
             switch (reason)
             {
@@ -67,7 +69,7 @@ namespace Nop.Core.Caching
                     break;
                 // if the entry was evicted by the cache itself, we remove the key
                 default:
-                    _keys.Remove(key as string);
+                    _keyManager.RemoveKey(key as string);
                     break;
             }
         }
@@ -86,7 +88,7 @@ namespace Nop.Core.Caching
         {
             var key = PrepareKey(cacheKey, cacheKeyParameters).Key;
             _memoryCache.Remove(key);
-            _keys.Remove(key);
+            _keyManager.RemoveKey(key);
             return Task.CompletedTask;
         }
 
@@ -158,11 +160,8 @@ namespace Nop.Core.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
-            if (_keys.Prune(PrepareKeyPrefix(prefix, prefixParameters), out var subtree))
-            {
-                foreach (var key in subtree.Keys)
-                    _memoryCache.Remove(key);
-            }
+            foreach (var key in _keyManager.RemoveByPrefix(PrepareKeyPrefix(prefix, prefixParameters)))
+                _memoryCache.Remove(key);
 
             return Task.CompletedTask;
         }
@@ -176,7 +175,7 @@ namespace Nop.Core.Caching
             _clearToken.Cancel();
             _clearToken.Dispose();
             _clearToken = new CancellationTokenSource();
-            _keys.Clear();
+            _keyManager.Clear();
             return Task.CompletedTask;
         }
 

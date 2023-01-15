@@ -20,7 +20,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Holds the keys known by this nopCommerce instance
         /// </summary>
-        protected static readonly ConcurrentTrie<byte> _localKeys = new();
+        protected readonly CacheKeyManager _localKeyManager;
         protected readonly IDistributedCache _distributedCache;
         private readonly ConcurrentTrie<object> _perRequestCache = new();
 
@@ -33,9 +33,13 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public DistributedCacheManager(AppSettings appSettings, IDistributedCache distributedCache) : base(appSettings)
+        public DistributedCacheManager(AppSettings appSettings,
+            IDistributedCache distributedCache,
+            CacheKeyManager cacheKeyManager)
+            : base(appSettings)
         {
             _distributedCache = distributedCache;
+            _localKeyManager = cacheKeyManager;
         }
 
         #endregion
@@ -49,7 +53,7 @@ namespace Nop.Core.Caching
         protected void ClearInstanceData()
         {
             _perRequestCache.Clear();
-            _localKeys.Clear();
+            _localKeyManager.Clear();
         }
 
         /// <summary>
@@ -62,9 +66,7 @@ namespace Nop.Core.Caching
         {
             var prefix_ = PrepareKeyPrefix(prefix, prefixParameters);
             _perRequestCache.Prune(prefix_, out _);
-            return _localKeys.Prune(prefix_, out var subtree)
-                ? subtree.Keys
-                : Enumerable.Empty<string>();
+            return _localKeyManager.RemoveByPrefix(prefix_);
         }
 
         /// <summary>
@@ -84,13 +86,13 @@ namespace Nop.Core.Caching
         private void SetLocal(string key, object value)
         {
             _perRequestCache.Add(key, value);
-            _localKeys.Add(key, default);
+            _localKeyManager.AddKey(key);
         }
 
         private void RemoveLocal(string key)
         {
             _perRequestCache.Remove(key);
-            _localKeys.Remove(key);
+            _localKeyManager.RemoveKey(key);
         }
 
         private async Task<(bool isSet, T item)> TryGetItemAsync<T>(string key)

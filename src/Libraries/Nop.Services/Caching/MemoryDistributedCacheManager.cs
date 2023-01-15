@@ -9,8 +9,10 @@ namespace Nop.Services.Caching
     {
         #region Ctor
 
-        public MemoryDistributedCacheManager(AppSettings appSettings, IDistributedCache distributedCache)
-        : base(appSettings, distributedCache)
+        public MemoryDistributedCacheManager(AppSettings appSettings,
+            IDistributedCache distributedCache,
+            CacheKeyManager cacheKeyManager)
+            : base(appSettings, distributedCache, cacheKeyManager)
         {
         }
 
@@ -18,7 +20,7 @@ namespace Nop.Services.Caching
 
         public override async Task ClearAsync()
         {
-            foreach (var key in _localKeys.Keys)
+            foreach (var key in _localKeyManager.Keys)
                 await RemoveAsync(key, false);
             ClearInstanceData();
         }
