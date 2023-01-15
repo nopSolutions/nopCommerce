@@ -53,8 +53,14 @@
 .cart-slideout__content {
     padding: 1rem 0;
     flex-grow: 2;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
+/* Hides scrollbar for Safari & Chrome */
+.cart-slideout__content::-webkit-scrollbar { 
+    display: none;
+}
+
 
 /* Cart Slideout Pickup In Store */
 
