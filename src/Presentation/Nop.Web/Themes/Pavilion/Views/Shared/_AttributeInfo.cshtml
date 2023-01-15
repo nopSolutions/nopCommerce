@@ -59,7 +59,7 @@
     }
 }
 
-@if (attributes.Any())
+@if (attributes.Any() && deliveryPickupOptions != null)
 {
     <div class="abc-cart-attribute-info">
         @if (deliveryPickupOptions != null)
