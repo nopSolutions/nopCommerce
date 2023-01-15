@@ -51,9 +51,9 @@
         // change format of price difference
         warranty = warranty.Replace('[', '(').Replace(']', ')');
         var plusIndex = warranty.IndexOf('+');
-        if (plusIndex !+ -1)
+        if (plusIndex != -1)
         {
-            warranty.Remove(plusIndex, 1)
+            warranty.Remove(plusIndex, 1);
         }
         warranty = warranty.Trim();
     }
