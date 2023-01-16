@@ -179,6 +179,14 @@ namespace Nop.Core.Caching
             return GetAsync(key, () => Task.FromResult(acquire()));
         }
 
+        public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
+        {
+            var value = await _distributedCache.GetStringAsync(key.Key);
+            return value != null
+                ? JsonConvert.DeserializeObject<T>(value)
+                : defaultValue;
+        }
+
         /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>

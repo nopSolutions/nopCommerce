@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 
 namespace Nop.Core.Caching
 {

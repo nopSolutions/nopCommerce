@@ -79,15 +79,15 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             {
                 var manager = GetService<MemoryDistributedCacheManager>(scope);
                 manager.Equals(_staticCacheManager).Should().BeFalse();
-                _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), () => null).Should().Be(1);
-                _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), () => null).Should().Be(2);
-                _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), () => null).Should().Be(3);
+                _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), null).Should().Be(1);
+                _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), null).Should().Be(2);
+                _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), null).Should().Be(3);
                 await manager.ClearAsync();
             }
 
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), () => null).Should().BeNull();
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), () => null).Should().BeNull();
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), () => null).Should().BeNull();
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), null).Should().BeNull();
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), null).Should().BeNull();
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), null).Should().BeNull();
         }
 
         [Test]
@@ -114,9 +114,9 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             await _distributedCache.SetAsync("some_key_2", Encoding.UTF8.GetBytes("2"));
             await _distributedCache.SetAsync("some_key_3", Encoding.UTF8.GetBytes("3"));
 
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), () => null).Should().Be(1);
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), () => null).Should().Be(2);
-            _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), () => null).Should().Be(3);
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), null).Should().Be(1);
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), null).Should().Be(2);
+            _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), null).Should().Be(3);
 
             _staticCacheManager.Get<int?>(new CacheKey("some_key_4"), () => 4).Should().Be(4);
 
@@ -134,9 +134,9 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             await _distributedCache.SetAsync("some_key_2", Encoding.UTF8.GetBytes("2"));
             await _staticCacheManager.SetAsync(new CacheKey("some_key_3"), "3");
 
-            _staticCacheManager.Get<string>(new CacheKey("some_key_1"), () => null).Should().Be("1");
-            _staticCacheManager.Get<string>(new CacheKey("some_key_2"), () => null).Should().Be("2");
-            _staticCacheManager.Get<string>(new CacheKey("some_key_3"), () => null).Should().Be("3");
+            _staticCacheManager.Get<string>(new CacheKey("some_key_1"), null).Should().Be("1");
+            _staticCacheManager.Get<string>(new CacheKey("some_key_2"), null).Should().Be("2");
+            _staticCacheManager.Get<string>(new CacheKey("some_key_3"), null).Should().Be("3");
 
             await _staticCacheManager.RemoveAsync(new CacheKey("some_key_1"));
             await _staticCacheManager.RemoveAsync(new CacheKey("some_key_2"));

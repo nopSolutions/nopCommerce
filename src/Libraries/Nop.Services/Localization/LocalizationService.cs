@@ -318,7 +318,7 @@ namespace Nop.Services.Localization
 
             //get all locale string resources by language identifier
             var allLocales =
-                await _staticCacheManager.GetAsync(key, () => (Dictionary<string, KeyValuePair<int, string>>)null);
+                await _staticCacheManager.GetAsync<Dictionary<string, KeyValuePair<int, string>>>(key);
 
             if (!loadPublicLocales.HasValue || allLocales != null)
             {

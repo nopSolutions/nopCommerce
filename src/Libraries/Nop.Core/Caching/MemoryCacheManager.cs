@@ -107,16 +107,19 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            var value = await _memoryCache.GetOrCreate(
+            return await _memoryCache.GetOrCreate(
                 key.Key,
                 entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(key));
                     return new Lazy<Task<T>>(acquire, true);
                 }).Value;
-            if (value == null)
-                await RemoveAsync(key);
-            return value;
+        }
+
+        public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
+        {
+            var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
+            return value != null ? await value : defaultValue;
         }
 
         /// <summary>

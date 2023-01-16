@@ -59,8 +59,27 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
 
             await _staticCacheManager.ClearAsync();
 
-            var rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => Task.FromResult((object)null));
+            var rez = await _staticCacheManager.GetAsync<object>(new CacheKey("some_key_1"));
             rez.Should().BeNull();
+        }
+
+        [Test]
+        public async Task GetReturnsValueIfSet()
+        {
+            var key = new CacheKey("some_key_1");
+            await _staticCacheManager.SetAsync(key, 3);
+            var res = await _staticCacheManager.GetAsync<int>(key);
+            res.Should().Be(3);
+        }
+
+        [Test]
+        public async Task GetReturnsDefaultIfNotSet()
+        {
+            var key = new CacheKey("some_key_1");
+            var res = await _staticCacheManager.GetAsync(key, 1);
+            res.Should().Be(1);
+            res = await _staticCacheManager.GetAsync<int>(key);
+            res.Should().Be(0);
         }
 
         [Test]
@@ -72,11 +91,11 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
 
             await _staticCacheManager.RemoveByPrefixAsync("some_key");
 
-            var result = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => 0);
+            var result = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), 0);
             result.Should().Be(0);
-            result = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"), () => 0);
+            result = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"), 0);
             result.Should().Be(0);
-            result = await _staticCacheManager.GetAsync(new CacheKey("some_other_key"), () => 0);
+            result = await _staticCacheManager.GetAsync(new CacheKey("some_other_key"), 0);
             result.Should().Be(3);
         }
 
@@ -84,7 +103,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         public async Task ExecutesSetInOrder()
         {
             await Task.WhenAll(Enumerable.Range(1, 5).Select(i => _staticCacheManager.SetAsync(new CacheKey("some_key_1"), i)));
-            var value = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => 0);
+            var value = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), 0);
             value.Should().Be(5);
         }
 
