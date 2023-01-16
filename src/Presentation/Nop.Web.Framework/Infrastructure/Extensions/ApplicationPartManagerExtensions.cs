@@ -86,33 +86,22 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             return null;
         }
 
-        private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Version?> assemblies)
+        private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Version> assemblies)
         {
-            //and then deploy all other referenced assemblies
             var refFiles = pluginDescriptor.PluginFiles.Where(file =>
                 !_fileProvider.GetFileName(file).Equals(_fileProvider.GetFileName(pluginDescriptor.OriginalAssemblyFile))).ToList();
 
-            var badLibraries = new List<string>();
-            
-            foreach (var refFile in refFiles.Where(file => assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
-                try
-                {
-                    var assemblyVersion = GetAssemblyVersion(refFile);
+            foreach (var refFile in refFiles.Where(file =>
+                         assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
+                IsAlreadyLoaded(refFile, pluginDescriptor.SystemName);
 
-                    var libraryName = _fileProvider.GetFileName(refFile);
-                    var inMemoryVersion = assemblies[libraryName.ToLower()];
+            var hasCollisions = _loadedAssemblies.Where(p =>
+                    p.Value.References.Any(r => r.PluginName.Equals(pluginDescriptor.SystemName)))
+                .Any(p => p.Value.Collisions.Any());
 
-                    if (assemblyVersion != inMemoryVersion)
-                        badLibraries.Add($"The version of the referenced \"{libraryName}\" library is \"{assemblyVersion}\". But another version of the same library ({inMemoryVersion}) is already loaded in memory. Hence this plugin can't be loaded.");
-                }
-                catch (BadImageFormatException)
-                {
-                    //ignore
-                }
-
-            if (badLibraries.Any())
+            if (hasCollisions)
             {
-                PluginsInfo.IncompatiblePlugins.Add(pluginDescriptor.SystemName, string.Join(";", badLibraries));
+                PluginsInfo.IncompatiblePlugins.Add(pluginDescriptor.SystemName, PluginIncompatibleType.HasCollisions);
                 PluginsInfo.PluginDescriptors.Remove((pluginDescriptor, false));
             }
         }
@@ -217,11 +206,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     if (!_loadedAssemblies.ContainsKey(assemblyName))
                     {
                         //add it to the list to find collisions later
-                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, assembly));
+                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, GetAssemblyVersion(assembly.Location)));
                     }
 
                     //set assembly name and plugin name for further using
-                    _loadedAssemblies[assemblyName].References.Add((pluginName, AssemblyName.GetAssemblyName(filePath).FullName));
+                    _loadedAssemblies[assemblyName].References.Add((pluginName, GetAssemblyVersion(filePath)));
 
                     return true;
                 }
@@ -307,7 +296,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                     var assemblies = _baseAppLibraries.ToList();
                     foreach (var pluginLoadedAssemblyInfo in _loadedAssemblies)
-                        assemblies.Add(new KeyValuePair<string, Version>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory.GetName().Version));
+                        assemblies.Add(new KeyValuePair<string, Version>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory));
 
                     foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList()) 
                         assemblies.Add(new KeyValuePair<string, Version>(pluginLibrary.Key, pluginLibrary.Value));

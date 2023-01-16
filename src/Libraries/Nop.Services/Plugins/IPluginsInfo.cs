@@ -69,8 +69,8 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <remarks>
         /// Key - the system name of plugin.
-        /// Value - the reason of incompatibility.
+        /// Value - the incompatibility type.
         /// </remarks>
-        IDictionary<string, string> IncompatiblePlugins { get; set; }
+        IDictionary<string, PluginIncompatibleType> IncompatiblePlugins { get; set; }
     }
 }
