@@ -10,6 +10,7 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Services.Catalog;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
+using Nop.Plugin.Misc.AbcCore.Mattresses;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
@@ -17,11 +18,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
     {
         private readonly CoreSettings _coreSettings;
         private readonly IAbcDeliveryService _abcDeliveryService;
+        private readonly IAbcMattressModelService _abcMattressModelService;
         private readonly IAbcProductAttributeService _abcProductAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
         private readonly IPriceFormatter _priceFormatter;
-        
 
         private ProductAttribute _deliveryPickupOptionsProductAttribute;
         private ProductAttribute _haulAwayDeliveryProductAttribute;
@@ -31,6 +32,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         public UpdateDeliveryOptionsTask(
             CoreSettings coreSettings,
             IAbcDeliveryService abcDeliveryService,
+            IAbcMattressModelService abcMattressModelService,
             IAbcProductAttributeService abcProductAttributeService,
             ICategoryService categoryService,
             ILogger logger,
@@ -38,6 +40,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         {
             _coreSettings = coreSettings;
             _abcDeliveryService = abcDeliveryService;
+            _abcMattressModelService = abcMattressModelService;
             _abcProductAttributeService = abcProductAttributeService;
             _categoryService = categoryService;
             _logger = logger;
@@ -92,6 +95,29 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                             e.ToString());
                         hasErrors = true;
                     }
+                }
+            }
+
+            // Mattresses
+            var mattressProductIds = _abcMattressModelService.GetAllAbcMattressModels()
+                                                             .Where(amm => amm.ProductId != null)
+                                                             .Select(amm => (int)amm.ProductId);
+            foreach (var mattressProductId in mattressProductIds)
+            {
+                try
+                {
+                    // Hardcoding 2 as the "Mattress Delivery Only" option
+                    var mattressAbcDeliveryMap = new AbcDeliveryMap() { DeliveryOnly = 2 };
+                    var deliveryOptionsPam = await UpdateDeliveryOptionsPamAsync(mattressProductId, mattressAbcDeliveryMap);
+                    await UpdateDeliveryOptionsPavAsync(deliveryOptionsPam, mattressAbcDeliveryMap);
+                }
+                catch (Exception e)
+                {
+                    await _logger.InsertLogAsync(
+                        LogLevel.Error,
+                        $"Failure when updating delivery options for Mattress ProductId {mattressProductId}",
+                        e.ToString());
+                    hasErrors = true;
                 }
             }
 
@@ -174,7 +200,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             // TODO: This could be refactored to clean up the repeating
             // Delivery only
             var deliveryOnlyItem = map.DeliveryOnly == 0 ? new AbcDeliveryItem() : await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryOnly);
-            var deliveryOnlyPriceFormatted = await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
+            var deliveryOnlyPriceFormatted = map.DeliveryOnly == 2 ?
+                "MATTRESS" : 
+                await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
 
             // Need to get the category to determine if furniture
             string message = await GetHomeDeliveryMessageAsync(
@@ -295,9 +323,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 && existingPav.Cost == newPav.Cost;
         }
 
-        // If Furniture, no mail-in rebate
         private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(string deliveryOnlyPriceFormatted, int productId)
         {
+            if (deliveryOnlyPriceFormatted == "MATTRESS")
+            {
+                return "Home Delivery (Price in Cart)";
+            }
+
+            // If Furniture, no mail-in rebate
             var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
             foreach (var pc in productCategories)
             {

@@ -34,6 +34,12 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(int itemNumber)
         {
+            // Mattresses
+            if (itemNumber == 2)
+            {
+                return new AbcDeliveryItem();
+            }
+
             try
             {
                 return await _abcDeliveryItemRepository.Table.SingleAsync(adi => adi.Item_Number == itemNumber);

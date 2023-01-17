@@ -19,11 +19,14 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using SevenSpikes.Nop.Plugins.StoreLocator.Services;
 using Nop.Core.Domain.Orders;
 using Newtonsoft.Json;
+using Nop.Plugin.Misc.AbcCore.Mattresses;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Misc.AbcCore.Controllers
 {
     public class CartSlideoutController : BasePluginController
     {
+        private readonly IAbcMattressModelService _abcMattressModelService;
         private readonly IAbcProductAttributeService _abcProductAttributeService;
         private readonly IBackendStockService _backendStockService;
         private readonly IDeliveryService _deliveryService;
@@ -36,6 +39,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
         private readonly IWorkContext _workContext;
 
         public CartSlideoutController(
+            IAbcMattressModelService abcMattressModelService,
             IAbcProductAttributeService abcProductAttributeService,
             IBackendStockService backendStockService,
             IDeliveryService deliveryService,
@@ -47,6 +51,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             IShopService shopService,
             IWorkContext workContext
         ) {
+            _abcMattressModelService = abcMattressModelService;
             _abcProductAttributeService = abcProductAttributeService;
             _backendStockService = backendStockService;
             _deliveryService = deliveryService;
@@ -71,16 +76,27 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                 return BadRequest("Product ID must be provided.");
             }
 
+            // skip gathering everything if mattress
+            //var mattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId.Value);
+
             // pickup in store options
             StockResponse stockResponse = await _backendStockService.GetApiStockAsync(productId.Value);
-            
+                
             // get 5 closest based on zip code
             var coords = _geocodeService.GeocodeZip(zip.Value);
-            stockResponse.ProductStocks = stockResponse.ProductStocks
+            if (stockResponse == null)
+            {
+                stockResponse = new StockResponse();
+                stockResponse.ProductStocks = new List<ProductStock>();
+            }
+            else
+            {
+                stockResponse.ProductStocks = stockResponse.ProductStocks
                     .Select(s => s)
                     .OrderBy(s => Distance(Double.Parse(s.Shop.Latitude), Double.Parse(s.Shop.Longitude), coords.lat, coords.lng))
                     .Take(5).ToList();
-
+            }
+            
             return Json(new {
                 isDeliveryAvailable = await _deliveryService.CheckZipcodeAsync(zip.Value),
                 pickupInStoreHtml = await RenderViewComponentToStringAsync(
