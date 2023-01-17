@@ -264,7 +264,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     var paymentStatus = result.NewPaymentStatus;
                     result.NewPaymentStatus = PaymentStatus.Pending;
                     var key = string.Format(CyberSourceDefaults.OrderStatusesSessionKey, processPaymentRequest.OrderGuid);
-                    _httpContextAccessor.HttpContext.Session.Set(key, (orderStatus, paymentStatus));
+                    await _httpContextAccessor.HttpContext.Session.SetAsync(key, (orderStatus, paymentStatus));
                 }
             }
 

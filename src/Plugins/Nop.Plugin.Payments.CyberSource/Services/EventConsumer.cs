@@ -194,7 +194,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
                 return;
 
             var key = string.Format(CyberSourceDefaults.OrderStatusesSessionKey, order.OrderGuid);
-            var (orderStatus, paymentStatus) = _httpContextAccessor.HttpContext.Session.Get<(OrderStatus?, PaymentStatus?)>(key);
+            var (orderStatus, paymentStatus) = await _httpContextAccessor.HttpContext.Session.GetAsync<(OrderStatus?, PaymentStatus?)>(key);
             if (!orderStatus.HasValue || !paymentStatus.HasValue)
                 return;
 
