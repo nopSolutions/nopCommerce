@@ -157,7 +157,8 @@ function updateCartSlideoutHtml(response) {
     }
     hasWarranties = response.slideoutInfo.WarrantyHtml &&
                     response.slideoutInfo.WarrantyHtml !== "\n" &&
-                    response.slideoutInfo.WarrantyHtml !== "\r\n";
+                    response.slideoutInfo.WarrantyHtml !== "\r\n" &&
+                    response.slideoutInfo.WarrantyHtml !== "\n\n";
     if (hasWarranties) {
         $('.cart-slideout__warranty').html(response.slideoutInfo.WarrantyHtml);
     }
