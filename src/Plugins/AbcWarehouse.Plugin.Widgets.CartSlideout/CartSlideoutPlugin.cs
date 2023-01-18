@@ -67,6 +67,10 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
                 "provides home delivery on major appliances and TVs within our Home Delivery Areas throughout " +
                 "Michigan, and surrounding areas of our store locations in Ohio and Indiana."
             );
+            await _localizationService.AddOrUpdateLocaleResourceAsync(
+                "AbcWarehouse.Plugin.Widgets.CartSlideout.MattressMessaging",
+                "FREE Delivery, Set-Up and Removal on any mattress purchase set $697 or more."
+            );
 
             await base.InstallAsync();
         }
