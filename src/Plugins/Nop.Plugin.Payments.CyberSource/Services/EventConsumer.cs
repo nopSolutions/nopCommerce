@@ -199,7 +199,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
                 return;
 
             //remove value from session
-            _httpContextAccessor.HttpContext.Session.Remove(key);
+            await _httpContextAccessor.HttpContext.Session.RemoveAsync(key);
 
             var note = $"Order status has been changed to {orderStatus.Value} by CyberSource AVS/CVN/decision profile results";
             await _orderService.InsertOrderNoteAsync(new OrderNote

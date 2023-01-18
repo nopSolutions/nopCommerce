@@ -36,6 +36,27 @@ namespace Nop.Core.Http.Extensions
             return value == null ? default : JsonConvert.DeserializeObject<T>(value);
         }
 
+        /// <summary>
+        /// Remove the given key from session if present.
+        /// </summary>
+        /// <param name="session">Session</param>
+        /// <param name="key">Key</param>
+        public static async Task RemoveAsync(this ISession session, string key)
+        {
+            await LoadAsync(session);
+            session.Remove(key);
+        }
+
+        /// <summary>
+        /// Remove all entries from the current session, if any. The session cookie is not removed.
+        /// </summary>
+        /// <param name="session">Session</param>
+        public static async Task ClearAsync(this ISession session)
+        {
+            await LoadAsync(session);
+            session.Clear();
+        }
+
         private static async Task LoadAsync(ISession session)
         {
             if (!session.IsAvailable)
