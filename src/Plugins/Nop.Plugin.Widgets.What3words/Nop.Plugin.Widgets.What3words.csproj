@@ -14,7 +14,6 @@
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. You need to set this parameter to true if your plugin has a nuget package to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-   
   <ItemGroup>
     <None Remove="logo.png" />
     <None Remove="plugin.json" />

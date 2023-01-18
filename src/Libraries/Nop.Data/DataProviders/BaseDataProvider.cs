@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
 using LinqToDB;
@@ -131,8 +132,18 @@ namespace Nop.Data.DataProviders
             var targetAssembly = typeof(NopDbStartup).Assembly;
             migrationManager.ApplyUpMigrations(targetAssembly);
 
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+            var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
+                .Select(t => t.Assembly)
+                .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
+                .Distinct()
+                .ToArray();
+
             //mark update migrations as applied
-            migrationManager.ApplyUpMigrations(targetAssembly, MigrationProcessType.Update, true);
+            foreach (var assembly in mAssemblies)
+            {
+                migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
+            }
         }
 
         /// <summary>

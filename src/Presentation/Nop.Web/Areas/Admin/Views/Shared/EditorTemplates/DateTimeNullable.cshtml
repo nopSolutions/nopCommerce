@@ -1,8 +1,12 @@
 @model DateTime?
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString() : null)" />
+<input asp-for="@Model" />
+@if (!CultureInfo.CurrentCulture.TextInfo.IsRightToLeft)
+{
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoDateTimePicker({
+            culture: "en-US",
+            value: "@Model?.ToString("MM/dd/yyyy hh:mm tt", CultureInfo.InvariantCulture)",
             popup: {
                 position: "bottom right",
                 origin: "top right"
@@ -10,3 +14,4 @@
         });
     });
 </script>
+}
