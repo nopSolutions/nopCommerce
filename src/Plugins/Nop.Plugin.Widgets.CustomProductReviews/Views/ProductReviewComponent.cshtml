@@ -210,8 +210,10 @@
                             <div class="review-text">
                                 @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
                             </div>
+                            <div class="mediacontainer"> 
                             @await Component.InvokeAsync("ProductReviewVideos",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
                             @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
+                            </div>
                             @await Html.PartialAsync("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewHelpfulness.cshtml", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
                             @if (!string.IsNullOrEmpty(review.ReplyText))

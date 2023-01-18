@@ -196,8 +196,8 @@ clear: both;
 
 .video-container video {
   /* Make video to at least 100% wide and tall */
-  max-width: 150px;
-  max-height: 150px;
+  max-width: 640px;
+  max-height: 480px;
   /* Setting width & height to auto prevents the browser from stretching or squishing the video */
   width: auto;
   height: auto;
@@ -207,3 +207,21 @@ clear: both;
   left: 50%;*/
  
 }
+
+.mediacontainer {
+  position: relative;
+ 
+}
+
+.picture-thumbs {
+  max-width: 150px;
+  max-height: 150px;
+  margin: 5px auto;
+}
+
+.video-thumbs {
+  max-width: 640px;
+  max-width: 480px;
+  margin: 5px auto;
+}
+
