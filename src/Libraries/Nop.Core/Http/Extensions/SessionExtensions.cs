@@ -70,15 +70,14 @@ namespace Nop.Core.Http.Extensions
         /// <returns>A task that represents the asynchronous operation</returns>
         private static async Task LoadAsync(ISession session)
         {
-            if (!session.IsAvailable)
-                try
-                {
-                    await session.LoadAsync();
-                }
-                catch
-                {
-                    //fallback to synchronous handling
-                }
+            try
+            {
+                await session.LoadAsync();
+            }
+            catch
+            {
+                //fallback to synchronous handling
+            }
         }
     }
 }
