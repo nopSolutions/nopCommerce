@@ -81,7 +81,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         [HttpPost]
         public async Task<IActionResult> VerifyGoogleAuthenticator(TokenModel model)
         {
-            var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+            var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
             var username = customerMultiFactorAuthenticationInfo.UserName;
             var returnUrl = customerMultiFactorAuthenticationInfo.ReturnUrl;
             var isPersist = customerMultiFactorAuthenticationInfo.RememberMe;
@@ -96,7 +96,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 var isValidToken = _googleAuthenticatorService.ValidateTwoFactorToken(record.SecretKey, model.Token);
                 if (isValidToken)
                 {
-                    HttpContext.Session.Set<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, null);
+                    await HttpContext.Session.SetAsync<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, null);
 
                     return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, isPersist);
                 }
