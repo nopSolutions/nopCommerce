@@ -282,7 +282,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">The order</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task ReOrderAsync(Order order);
+        Task<IList<string>> ReOrderAsync(Order order);
 
         /// <summary>
         /// Check whether return request is allowed

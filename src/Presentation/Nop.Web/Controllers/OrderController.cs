@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -25,6 +26,7 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly INotificationService _notificationService;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
@@ -40,6 +42,7 @@ namespace Nop.Web.Controllers
 		#region Ctor
 
         public OrderController(ICustomerService customerService,
+            INotificationService notificationService,
             IOrderModelFactory orderModelFactory,
             IOrderProcessingService orderProcessingService, 
             IOrderService orderService, 
@@ -51,6 +54,7 @@ namespace Nop.Web.Controllers
             RewardPointsSettings rewardPointsSettings)
         {
             _customerService = customerService;
+            _notificationService = notificationService;
             _orderModelFactory = orderModelFactory;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
@@ -207,7 +211,11 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            await _orderProcessingService.ReOrderAsync(order);
+            var warnings = await _orderProcessingService.ReOrderAsync(order);
+
+            if (warnings.Any())
+                _notificationService.WarningNotification("Some products are not available anymore, so they weren't added to the cart.");
+
             return RedirectToRoute("ShoppingCart");
         }
 
