@@ -427,7 +427,7 @@ namespace Nop.Services.Payments
         /// Generate an order GUID
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        public virtual void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest)
+        public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest == null)
                 return;
@@ -435,7 +435,7 @@ namespace Nop.Services.Payments
             //we should use the same GUID for multiple payment attempts
             //this way a payment gateway can prevent security issues such as credit card brute-force attacks
             //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-            var previousPaymentRequest = _httpContextAccessor.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+            var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
             if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
                 previousPaymentRequest != null &&
                 previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)

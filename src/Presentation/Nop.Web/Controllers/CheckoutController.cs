@@ -1165,7 +1165,7 @@ namespace Nop.Web.Controllers
                 var paymentInfo = new ProcessPaymentRequest();
 
                 //session save
-                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
 
                 return RedirectToRoute("CheckoutConfirm");
             }
@@ -1219,10 +1219,10 @@ namespace Nop.Web.Controllers
                 //get payment info
                 var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
                 //set previous order GUID (if exists)
-                _paymentService.GenerateOrderGuid(paymentInfo);
+                await _paymentService.GenerateOrderGuidAsync(paymentInfo);
 
                 //session save
-                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
             }
 
@@ -1297,7 +1297,7 @@ namespace Nop.Web.Controllers
                     throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                 //place order
-                var processPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+                var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -1306,16 +1306,16 @@ namespace Nop.Web.Controllers
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                _paymentService.GenerateOrderGuid(processPaymentRequest);
+                await _paymentService.GenerateOrderGuidAsync(processPaymentRequest);
                 processPaymentRequest.StoreId = store.Id;
                 processPaymentRequest.CustomerId = customer.Id;
                 processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-                HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", processPaymentRequest);
+                await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
                 var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                    await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder
@@ -1452,7 +1452,7 @@ namespace Nop.Web.Controllers
                 var paymentInfo = new ProcessPaymentRequest();
 
                 //session save
-                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
 
                 var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
@@ -1962,10 +1962,10 @@ namespace Nop.Web.Controllers
                     //get payment info
                     var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
                     //set previous order GUID (if exists)
-                    _paymentService.GenerateOrderGuid(paymentInfo);
+                    await _paymentService.GenerateOrderGuidAsync(paymentInfo);
 
                     //session save
-                    HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                    await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
 
                     var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                     return Json(new
@@ -2037,7 +2037,7 @@ namespace Nop.Web.Controllers
                         throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                     //place order
-                    var processPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+                    var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
                     if (processPaymentRequest == null)
                     {
                         //Check whether payment workflow is required
@@ -2048,16 +2048,16 @@ namespace Nop.Web.Controllers
 
                         processPaymentRequest = new ProcessPaymentRequest();
                     }
-                    _paymentService.GenerateOrderGuid(processPaymentRequest);
+                    await _paymentService.GenerateOrderGuidAsync(processPaymentRequest);
                     processPaymentRequest.StoreId = store.Id;
                     processPaymentRequest.CustomerId = customer.Id;
                     processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                         NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-                    HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", processPaymentRequest);
+                    await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
                     var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
                     if (placeOrderResult.Success)
                     {
-                        HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                        await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
                         var postProcessPaymentRequest = new PostProcessPaymentRequest
                         {
                             Order = placeOrderResult.PlacedOrder

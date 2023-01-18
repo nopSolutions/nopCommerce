@@ -478,7 +478,9 @@ namespace Nop.Web.Controllers
                                 RememberMe = model.RememberMe,
                                 ReturnUrl = returnUrl
                             };
-                            HttpContext.Session.Set(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, customerMultiFactorAuthenticationInfo);
+                            await HttpContext.Session.SetAsync(
+                                NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
+                                customerMultiFactorAuthenticationInfo);
                             return RedirectToRoute("MultiFactorVerification");
                         }
                     case CustomerLoginResults.CustomerNotExist:
@@ -520,7 +522,8 @@ namespace Nop.Web.Controllers
             if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 return RedirectToRoute("Login");
 
-            var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+            var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(
+                NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
             var userName = customerMultiFactorAuthenticationInfo?.UserName;
             if (string.IsNullOrEmpty(userName))
                 return RedirectToRoute("Homepage");

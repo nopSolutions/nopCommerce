@@ -5,7 +5,7 @@
 
     var session = Context.Session;
 
-    var errors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+    var errors = await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
 
     if (errors != null)
         session.Remove(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);

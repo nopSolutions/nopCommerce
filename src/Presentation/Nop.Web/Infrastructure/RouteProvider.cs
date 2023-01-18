@@ -686,11 +686,6 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{NopInstallationDefaults.InstallPath}",
                 defaults: new { controller = "Install", action = "Index" });
 
-            //error page
-            endpointRouteBuilder.MapControllerRoute(name: "Error",
-                pattern: $"error",
-                defaults: new { controller = "Common", action = "Error" });
-
             //page not found
             endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",
                 pattern: $"{lang}/page-not-found",
