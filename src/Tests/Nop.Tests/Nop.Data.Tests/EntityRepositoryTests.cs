@@ -68,11 +68,11 @@ namespace Nop.Tests.Nop.Data.Tests
             product = await productRepository.GetByIdAsync(2, includeDeleted:false);
             product.Should().BeNull();
 
-            product = await _cacheManager.GetAsync(_cacheKey, () => default(Product));
+            product = await _cacheManager.GetAsync(_cacheKey, default(Product));
             product.Should().BeNull();
 
             await productRepository.GetByIdAsync(1, _ => _cacheKey);
-            product = await _cacheManager.GetAsync(_cacheKey, () => default(Product));
+            product = await _cacheManager.GetAsync(_cacheKey, default(Product));
             product.Should().NotBeNull();
         }
 
@@ -100,11 +100,11 @@ namespace Nop.Tests.Nop.Data.Tests
             products = await productRepository.GetByIdsAsync(ids, includeDeleted: false);
             products.Count.Should().Be(2);
 
-            products = await _cacheManager.GetAsync(_cacheKey, () => default(IList<Product>));
+            products = await _cacheManager.GetAsync(_cacheKey, default(IList<Product>));
             products.Should().BeNull();
 
             await productRepository.GetByIdsAsync(ids, _ => _cacheKey);
-            products = await _cacheManager.GetAsync(_cacheKey, () => default(IList<Product>));
+            products = await _cacheManager.GetAsync(_cacheKey, default(IList<Product>));
             products.Count.Should().Be(3);
         }
 
