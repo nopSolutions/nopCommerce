@@ -421,7 +421,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             // --------------------------------
             // ABC: add Home Delivery attribute
             // --------------------------------
-            attributes = await _attributeUtilities.InsertHomeDeliveryAttributeAsync(product, attributes);
+            var attXml = await GetProductAttributeXmlAsync(product, attributes);
 
             //rental attributes 
             _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
@@ -430,143 +430,11 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 //if the item to update is found, then we ignore the specified "shoppingCartTypeId" parameter
                 updatecartitem.ShoppingCartType;
 
-            await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
+            await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attXml, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
 
             //return result
-            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attributes);
+            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attXml);
         }
-
-        // //add product to cart using AJAX
-        // //currently we use this method on the product details pages
-        // [HttpPost]
-        // [IgnoreAntiforgeryToken]
-        // public async Task<IActionResult> AddProductToCart_Pickup(
-        //     int productId,
-        //     int shoppingCartTypeId,
-        //     IFormCollection form
-        // )
-        // {
-        //     var product = await _productService.GetProductByIdAsync(productId);
-        //     if (product == null)
-        //     {
-        //         return Json(new
-        //         {
-        //             redirect = Url.RouteUrl("Homepage")
-        //         });
-        //     }
-
-        //     //we can add only simple products
-        //     if (product.ProductType != ProductType.SimpleProduct)
-        //     {
-        //         return Json(new
-        //         {
-        //             success = false,
-        //             message = "Only simple products could be added to the cart"
-        //         });
-        //     }
-        //     //-------------------------------------CUSTOM CODE------------------------------------------
-        //     // force customer to select a store if store not already selected
-        //     //TODO: This could be cached, would have to be cleared when the order is complete
-        //     var customerId = (await _workContext.GetCurrentCustomerAsync()).Id;
-        //     CustomerShopMapping csm = _customerShopMappingRepository.Table
-        //         .Where(c => c.CustomerId == customerId)
-        //         .Select(c => c).FirstOrDefault();
-        //     if (csm == null)
-        //     {
-        //         // return & force them to select a store
-        //         return Json(new
-        //         {
-        //             success = false,
-        //             message = "Select a store to pick the item up"
-        //         });
-        //     }
-
-        //     // check if item is available
-        //     StockResponse stockResponse = await _backendStockService.GetApiStockAsync(product.Id);
-        //     if (stockResponse == null)
-        //     {
-        //         bool availableAtStore = stockResponse.ProductStocks
-        //             .Where(ps => ps.Shop.Id == csm.ShopId)
-        //             .Select(ps => ps.Available).FirstOrDefault();
-        //         if (!availableAtStore)
-        //         {
-        //             return Json(new
-        //             {
-        //                 success = false,
-        //                 message = "This item is not available at this store"
-        //             });
-        //         }
-        //     }
-        //     //----------------------------------END CUSTOM CODE------------------------------------------
-
-
-        //     //update existing shopping cart item
-        //     var updatecartitemid = 0;
-        //     foreach (var formKey in form.Keys)
-        //         if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
-        //         {
-        //             int.TryParse(form[formKey], out updatecartitemid);
-        //             break;
-        //         }
-
-        //     ShoppingCartItem updatecartitem = null;
-        //     if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
-        //     {
-        //         //search with the same cart type as specified
-        //         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), (ShoppingCartType)shoppingCartTypeId, (await _storeContext.GetCurrentStoreAsync()).Id);
-
-        //         updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
-        //         //not found? let's ignore it. in this case we'll add a new item
-        //         //if (updatecartitem == null)
-        //         //{
-        //         //    return Json(new
-        //         //    {
-        //         //        success = false,
-        //         //        message = "No shopping cart item found to update"
-        //         //    });
-        //         //}
-        //         //is it this product?
-        //         if (updatecartitem != null && product.Id != updatecartitem.ProductId)
-        //         {
-        //             return Json(new
-        //             {
-        //                 success = false,
-        //                 message = "This product does not match a passed shopping cart item identifier"
-        //             });
-        //         }
-        //     }
-
-
-        //     var addToCartWarnings = new List<string>();
-
-        //     //customer entered price
-        //     var customerEnteredPriceConverted = await _productAttributeParser.ParseCustomerEnteredPriceAsync(product, form);
-
-        //     //entered quantity
-        //     var quantity = _productAttributeParser.ParseEnteredQuantity(product, form);
-
-        //     //product and gift card attributes
-        //     var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
-
-        //     //---------------------------------------------START CUSTOM CODE-----------------------------------------------------
-        //     if (stockResponse != null)
-        //     {
-        //         attributes = await _attributeUtilities.InsertPickupAttributeAsync(product, stockResponse, attributes);
-        //     }
-        //     //----------------------------------------------END CUSTOM CODE------------------------------------------------------
-
-        //     //rental attributes
-        //     _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
-
-        //     var cartType = updatecartitem == null ? (ShoppingCartType)shoppingCartTypeId :
-        //         //if the item to update is found, then we ignore the specified "shoppingCartTypeId" parameter
-        //         updatecartitem.ShoppingCartType;
-
-        //     await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
-
-        //     //return result
-        //     return await GetProductToCartDetails(addToCartWarnings, cartType, product);
-        // }
 
         protected async virtual Task<IActionResult> GetProductToCartDetails(
             List<string> addToCartWarnings,

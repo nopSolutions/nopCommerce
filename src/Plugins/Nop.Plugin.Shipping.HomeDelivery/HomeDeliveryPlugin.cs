@@ -105,7 +105,20 @@ namespace Nop.Plugin.Shipping.HomeDelivery
 
                 if (paNames.Contains(AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName))
                 {
-                    continue;
+                    // check if price in cart
+                    var deliveryPa = pas.First(pa => pa.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName);
+                    var deliveryPam = pams.First(p => p.ProductAttributeId == deliveryPa.Id);
+                    var pavs = await _productAttributeService.GetProductAttributeValuesAsync(deliveryPam.Id);
+                    var pavsNames = pavs.Select(pav => pav.Name);
+                    if (pavsNames.Contains("Home Delivery (Price in Cart)"))
+                    {
+                        legacyHomeDeliveryItems.Add(item);
+                        continue;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 // legacy
                 else if (paNames.Contains("Home Delivery"))
@@ -120,7 +133,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             var legacyHomeDeliveryCharge = await _homeDeliveryCostService.GetHomeDeliveryCostAsync(legacyHomeDeliveryItems);
 
             //if there are items to be shipped, use the base calculation service if items remain that will be shipped by ups
-            if (legacyHomeDeliveryItems.Count > 0 || fedexDeliveryItems.Count > 0)
+            if (legacyHomeDeliveryItems.Count > 0 && fedexDeliveryItems.Count > 0)
             {
                 var oldProtocol = ServicePointManager.SecurityProtocol;
                 try
