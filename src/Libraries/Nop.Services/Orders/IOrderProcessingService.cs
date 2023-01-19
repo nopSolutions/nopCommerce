@@ -281,7 +281,10 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
         Task<IList<string>> ReOrderAsync(Order order);
 
         /// <summary>
