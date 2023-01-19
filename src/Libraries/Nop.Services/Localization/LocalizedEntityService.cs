@@ -77,8 +77,21 @@ namespace Nop.Services.Localization
             return await _localizedPropertyRepository.GetAllAsync(query =>
             {
                 return from lp in query
-                    select lp;
+                       select lp;
             }, cache => default);
+        }
+
+        /// <summary>
+        /// Gets all cached localized properties by language
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uncached localized properties
+        /// </returns>
+        protected virtual async Task<IList<LocalizedProperty>> GetAllLocalizedPropertiesAsync(int languageId)
+        {
+            // do not cache here
+            return await _localizedPropertyRepository.GetAllAsync(query => query.Where(lp => lp.LanguageId == languageId));
         }
 
         /// <summary>
@@ -166,23 +179,30 @@ namespace Nop.Services.Localization
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                var source = _localizationSettings.LoadAllLocalizedPropertiesOnStartup
-                    //load all records (we know they are cached)
-                    ? (await GetAllLocalizedPropertiesAsync()).AsQueryable()
-                    //gradual loading
-                    : _localizedPropertyRepository.Table;
+                if (_localizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                {
+                    var lookupKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                        NopLocalizationDefaults.LocalizedPropertyLookupCacheKey,
+                        languageId);
+                    var lookup = await _staticCacheManager.GetAsync(
+                        lookupKey,
+                        async () => (await GetAllLocalizedPropertiesAsync(languageId))
+                            .ToGroupedDictionary(p => p.EntityId));
+                    return lookup.TryGetValue(entityId, out var localizedProperties)
+                        ? localizedProperties.FirstOrDefault(p => p.LocaleKeyGroup == localeKeyGroup && p.LocaleKey == localeKey)
+                            ?.LocaleValue ?? string.Empty
+                        : string.Empty;
+                }
 
-                var query = from lp in source
-                    where lp.LanguageId == languageId &&
-                          lp.EntityId == entityId &&
-                          lp.LocaleKeyGroup == localeKeyGroup &&
-                          lp.LocaleKey == localeKey
-                    select lp.LocaleValue;
+                var query = from lp in _localizedPropertyRepository.Table
+                            where lp.LanguageId == languageId &&
+                                  lp.EntityId == entityId &&
+                                  lp.LocaleKeyGroup == localeKeyGroup &&
+                                  lp.LocaleKey == localeKey
+                            select lp.LocaleValue;
 
                 //little hack here. nulls aren't cacheable so set it to ""
-                var localeValue = query.FirstOrDefault() ?? string.Empty;
-
-                return localeValue;
+                return query.FirstOrDefault() ?? string.Empty;
             });
         }
 
