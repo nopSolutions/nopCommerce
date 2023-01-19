@@ -63,7 +63,7 @@ namespace Nop.Services
         }
 
         /// <summary>
-        /// Convert to lookup-like dictionary, for JSON serialisation
+        /// Convert to lookup-like dictionary, for JSON serialization
         /// </summary>
         /// <typeparam name="T">Source type</typeparam>
         /// <typeparam name="TKey">Key type</typeparam>
@@ -78,20 +78,23 @@ namespace Nop.Services
           Func<T, TValue> valueSelector)
         {
             var result = new Dictionary<TKey, IList<TValue>>();
+
             foreach (var x in xs)
             {
                 var key = keySelector(x);
                 var value = valueSelector(x);
+
                 if (result.TryGetValue(key, out var list))
                     list.Add(value);
                 else
                     result[key] = new List<TValue> { value };
             }
+
             return result;
         }
 
         /// <summary>
-        /// Convert to lookup-like dictionary, for JSON serialisation
+        /// Convert to lookup-like dictionary, for JSON serialization
         /// </summary>
         /// <typeparam name="T">Source type</typeparam>
         /// <typeparam name="TKey">Key type</typeparam>

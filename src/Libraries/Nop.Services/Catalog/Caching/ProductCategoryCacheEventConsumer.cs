@@ -21,7 +21,6 @@ namespace Nop.Services.Catalog.Caching
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductMultiplePricePrefix, entity.ProductId);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoryFeaturedProductsIdsPrefix, entity.CategoryId);
-            await RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryIdLookupPrefix);
             await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, entity.CategoryId.ToString());
             await RemoveAsync(NopCatalogDefaults.ManufacturersByCategoryCacheKey, entity.CategoryId.ToString());
         }

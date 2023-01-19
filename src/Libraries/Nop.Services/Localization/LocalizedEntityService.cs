@@ -188,6 +188,7 @@ namespace Nop.Services.Localization
                         lookupKey,
                         async () => (await GetAllLocalizedPropertiesAsync(languageId))
                             .ToGroupedDictionary(p => p.EntityId));
+                    
                     return lookup.TryGetValue(entityId, out var localizedProperties)
                         ? localizedProperties.FirstOrDefault(p => p.LocaleKeyGroup == localeKeyGroup && p.LocaleKey == localeKey)
                             ?.LocaleValue ?? string.Empty

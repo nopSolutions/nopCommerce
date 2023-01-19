@@ -410,6 +410,7 @@ namespace Nop.Services.Catalog
                     _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ChildCategoryIdLookupCacheKey, storeId, showHidden),
                     async () => (await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden))
                         .ToGroupedDictionary(c => c.ParentCategoryId, x => x.Id));
+
                 var categoryIds = new List<int>();
                 if (lookup.TryGetValue(parentCategoryId, out var categories))
                 {
@@ -419,6 +420,7 @@ namespace Nop.Services.Catalog
                     await foreach (var cIds in childCategoryIds)
                         categoryIds.AddRange(cIds);
                 }
+
                 return categoryIds;
             });
         }

@@ -1224,7 +1224,7 @@ namespace Nop.Services.Seo
                 query = query.OrderBy(ur => ur.Slug);
 
                 return query;
-            }, cache => default)).AsQueryable();
+            }, _ => default)).AsQueryable();
 
 
             if (!string.IsNullOrWhiteSpace(slug))
@@ -1267,9 +1267,7 @@ namespace Nop.Services.Seo
                             .ToGroupedDictionary(x => x.EntityId));
 
                     return lookup.TryGetValue(entityId, out var records)
-                        ? records.Where(x => x.EntityName == entityName)
-                            .OrderBy(x => x.Id)
-                            .FirstOrDefault()?.Slug ?? string.Empty
+                        ? records.Where(x => x.EntityName == entityName).MinBy(x => x.Id)?.Slug ?? string.Empty
                         : string.Empty;
                 }
 

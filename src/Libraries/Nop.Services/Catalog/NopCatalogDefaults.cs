@@ -88,12 +88,17 @@ namespace Nop.Services.Catalog
         /// {0} : current store ID
         /// {1} : show hidden records?
         /// </remarks>
-        public static CacheKey ChildCategoryIdLookupCacheKey => new("Nop.childcategoryidlookup.bystore.{0}-{1}", prefixes: ChildCategoryIdLookupPrefix);
+        public static CacheKey ChildCategoryIdLookupCacheKey => new("Nop.childcategoryidlookup.bystore.{0}-{1}", ChildCategoryIdLookupPrefix, ChildCategoryIdLookupByStorePrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ChildCategoryIdLookupPrefix => "Nop.childcategoryidlookup.";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ChildCategoryIdLookupByStorePrefix => "Nop.childcategoryidlookup.bystore.{0}";
 
         /// <summary>
         /// Gets a key for caching
