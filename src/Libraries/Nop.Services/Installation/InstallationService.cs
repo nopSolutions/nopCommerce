@@ -3023,7 +3023,7 @@ namespace Nop.Services.Installation
                 LastNameEnabled = true,
                 LastNameRequired = true,
                 GenderEnabled = true,
-                DateOfBirthEnabled = true,
+                DateOfBirthEnabled = false,
                 DateOfBirthRequired = false,
                 DateOfBirthMinimumAge = null,
                 CompanyEnabled = true,
