@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\js\test.ts" />
     <None Remove="logo.jpg" />
 	<None Remove="plugin.json" />
     <None Remove="Areas\Admin\Views\_ViewImports.cshtml" />
@@ -23,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\js\test.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.jpg">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

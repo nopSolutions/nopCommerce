@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Html;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +22,18 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         private readonly CustomProductReviewsSettings _customProductReviewsSettings;
         private readonly IProductService _productService;
         private readonly IProductModelFactory _productModelFactory;
+        private readonly IWidgetModelFactory _widgetModelFactory;
         #endregion
 
         #region Ctor
 
-        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings,IProductService productService, IProductModelFactory productModelFactory)
+        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings,IProductService productService, IProductModelFactory productModelFactory,IWidgetModelFactory widgetModelFactory)
         {
             //_accessiBeService = accessiBeService;
             _customProductReviewsSettings = customProductReviewsSettings;
             _productService = productService;
             _productModelFactory = productModelFactory;
+            _widgetModelFactory = widgetModelFactory;
         }
 
         #endregion
@@ -50,6 +53,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         {
             var model = new ProductReviewsModel();
             var productDetailModel = new ProductDetailsModel();
+
+         
+
             if (additionalData.GetType()== model.GetType())
             {
                 model = (ProductReviewsModel)additionalData;
@@ -60,7 +66,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
                 int productId=productDetailModel.Id;
                 var product = await _productService.GetProductByIdAsync(productId);
                 model = await _productModelFactory.PrepareProductReviewsModelAsync(new ProductReviewsModel(), product);
+
             }
+            var result = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, model);
+
+            //return View(result);
 
             return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
 

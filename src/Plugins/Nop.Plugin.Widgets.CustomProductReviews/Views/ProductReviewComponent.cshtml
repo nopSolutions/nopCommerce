@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Core
 @using Nop.Core.Infrastructure
 @using Nop.Web.Framework.TagHelpers.Public
 @using Nop.Web.Framework.TagHelpers.Shared
@@ -8,12 +9,26 @@
 @using InputTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
 @model Nop.Web.Models.Catalog.ProductReviewsModel
 
+
+@*@inject Nop.Web.Models.Catalog.ProductDetailsModel model1;*@
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@inject INopHtmlHelper NopHtml
 
 @{
     Layout = "_ColumnsOne";
+    NopHtml.AppendPageCssClassParts("html-product-reviews-page");
+    var kendoVersion = "2020.1.406";
+
+    <!--Kendo scripts should be included before kendo.all.min.js in case we have HelpDesk. That is why we use Append to place them at the top of any other scripts -->
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.fx.min.js");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.autocomplete.min.js");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.list.min.js");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.popup.min.js");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.data.min.js");
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.core.min.js");
 }
 <link href="~/Plugins/Widgets.CustomProductReviews/Content/style.css" rel="stylesheet" />
+
 
 @{
     var _storeContext = EngineContext.Current.Resolve<Nop.Core.IStoreContext>();
@@ -25,6 +40,9 @@
         setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>();
     }
 }
+
+
+
 
 <div class="page product-reviews-page">
     <div class="page-title">
@@ -233,6 +251,12 @@
             </div>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
+        @await Component.InvokeAsync("AnywhereSliders", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
+        @await Component.InvokeAsync("JCarousel", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
+        @await Component.InvokeAsync("SocialFeed", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
+
+
+
     </div>
 </div>
 <script asp-location="Footer">
