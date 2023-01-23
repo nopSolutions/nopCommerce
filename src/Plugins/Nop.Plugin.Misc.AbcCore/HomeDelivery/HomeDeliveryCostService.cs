@@ -41,7 +41,8 @@ namespace Nop.Plugin.Misc.AbcCore.HomeDelivery
             foreach (var orderItem in orderItems.OrderByDescending(oi => oi.PriceExclTax))
             {
                 var isMattress = orderItem.GetMattressSize() != null;
-                if (isMattress && skipMattress) { continue; }
+                var hasDeliveryOptions = orderItem.HasDeliveryOptions();
+                if ((hasDeliveryOptions && !isMattress) || (isMattress && skipMattress)) { continue; }
 
                 result += await GetHomeDeliveryCostOfItem(orderItem);
 

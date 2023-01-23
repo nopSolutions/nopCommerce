@@ -21,11 +21,13 @@ using Nop.Plugin.Misc.AbcCore.HomeDelivery;
 using Nop.Services.Payments;
 using System;
 using System.Threading.Tasks;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcExportOrder.Services
 {
     public class YahooService : IYahooService
     {
+        private readonly IAbcDeliveryService _abcDeliveryService;
         private readonly IAbcMattressBaseService _abcMattressBaseService;
         private readonly IAbcMattressEntryService _abcMattressEntryService;
         private readonly IAbcMattressFrameService _abcMattressFrameService;
@@ -42,6 +44,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly IHomeDeliveryCostService _homeDeliveryCostService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -56,6 +59,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
 
 
         public YahooService(
+            IAbcDeliveryService abcDeliveryService,
             IAbcMattressBaseService abcMattressBaseService,
             IAbcMattressEntryService abcMattressEntryService,
             IAbcMattressFrameService abcMattressFrameService,
@@ -73,6 +77,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             IGiftCardService giftCardService,
             IHomeDeliveryCostService homeDeliveryCostService,
             IPriceCalculationService priceCalculationService,
+            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IProductAbcDescriptionService productAbcDescriptionService,
             IStateProvinceService stateProvinceService,
@@ -84,6 +89,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             IPaymentService paymentService
         )
         {
+            _abcDeliveryService = abcDeliveryService;
             _abcMattressBaseService = abcMattressBaseService;
             _abcMattressEntryService = abcMattressEntryService;
             _abcMattressFrameService = abcMattressFrameService;
@@ -100,6 +106,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
             _homeDeliveryCostService = homeDeliveryCostService;
+            _productAttributeParser = productAttributeParser;
             _productService = productService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _priceCalculationService = priceCalculationService;

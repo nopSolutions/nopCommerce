@@ -6,6 +6,12 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
 {
     public static class OrderItemExtensions
     {
+        public static bool HasDeliveryOptions(this OrderItem oi)
+        {
+            return !string.IsNullOrWhiteSpace(oi.AttributeDescription) &&
+                   oi.AttributeDescription.Contains("Delivery/Pickup Options:");
+        }
+
         public static bool IsPickup(this OrderItem oi)
         {
             return !string.IsNullOrWhiteSpace(oi.AttributeDescription) &&
