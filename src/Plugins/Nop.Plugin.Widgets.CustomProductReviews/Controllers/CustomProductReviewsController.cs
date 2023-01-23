@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -40,6 +42,8 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 using WebOptimizer;
+using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -81,6 +85,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         private readonly IVideoService _videoService;
         private readonly ICustomProductReviewMappingService _customProductReviewMappingService;
         private readonly INopFileProvider _fileProvider;
+
         
         
 
@@ -173,9 +178,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         //}
 
-        //TODO:Foto ekleme olayını çöz
-        [HttpPost]
+
+   
+
         //[FormValueRequired("add-review")]
+        [HttpPost]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid, List<IFormFile> photos)
         {
@@ -261,21 +268,30 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                 model.AddProductReview.SuccessfullyAdded = true;
                 //pictures
-                var productReviewPhotoPath = _fileProvider.MapPath("~/Plugins/Widgets.CustomProductReviews/Content/Images/");
-                foreach (var photo in photos)
+                foreach (var file in photos)
                 {
-                    string filetype = photo.ContentType;
+                  
+                    string filetype = file.ContentType;
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
                    
                     Picture pic = new Picture();
                     Video vid = new Video();
                     if ( filetype.Contains("image"))
                     {
-                         pic = await _pictureService.InsertPictureAsync(photo, name);
+                        ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
+                        Image img = Image.FromStream(file.OpenReadStream(), true, true);
+                        var ms = new MemoryStream();
+                        imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+                       
+                        byte[]raw=ms.ToArray();
+
+
+
+                        pic = await _pictureService.InsertPictureAsync(raw,"image/webp", name);
                     }
                     else if (filetype.Contains("video"))
                     {
-                        vid = await _videoService.InsertVideoAsync(photo, name);
+                        vid = await _videoService.InsertVideoAsync(file, name);
                     }
 
                     int? lastPicId = pic.Id;
@@ -317,29 +333,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             return Json( model.AddProductReview);
         }
 
-        //public virtual async Task<IActionResult> ProductReviewsAdd(int productId)
-        //{
-        //    var product = await _productService.GetProductByIdAsync(productId);
-        //    if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-        //        return RedirectToRoute("Homepage");
-
-        //    var model = new ProductReviewsModel();
-        //    model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-
-        //    await ValidateProductReviewAvailabilityAsync(product);
-
-        //    //default value
-        //    model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-
-        //    //default value for all additional review types
-        //    if (model.ReviewTypeList.Count > 0)
-        //        foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
-        //        {
-        //            additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
-        //        }
-
-        //    return View(model);
-        //}
+    
 
 
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)

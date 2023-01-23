@@ -1,31 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Mvc
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using Nop.Core
 @using Nop.Core.Infrastructure
-@using Nop.Web.Framework.TagHelpers.Public
-@using Nop.Web.Framework.TagHelpers.Shared
-@using LabelTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
-@using TextAreaTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper
-@using InputTagHelper = Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
 @model Nop.Web.Models.Catalog.ProductReviewsModel
 
 
-@*@inject Nop.Web.Models.Catalog.ProductDetailsModel model1;*@
-@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
-@inject INopHtmlHelper NopHtml
+
 
 @{
-    Layout = "_ColumnsOne";
     NopHtml.AppendPageCssClassParts("html-product-reviews-page");
-    var kendoVersion = "2020.1.406";
-
-    <!--Kendo scripts should be included before kendo.all.min.js in case we have HelpDesk. That is why we use Append to place them at the top of any other scripts -->
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.fx.min.js");
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.autocomplete.min.js");
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.list.min.js");
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.popup.min.js");
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.data.min.js");
-    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.CustomProductReviews/Content/js/kendo.core.min.js");
+    //Layout = "_ColumnsOne";
 }
 <link href="~/Plugins/Widgets.CustomProductReviews/Content/style.css" rel="stylesheet" />
 
@@ -40,17 +22,13 @@
         setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>();
     }
 }
-
-
-
-
 <div class="page product-reviews-page">
-    <div class="page-title">
-        <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
+<div >
+        <h2 style="text-align: center;">@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h2>
+
     </div>
     <div class="page-body">
-@*        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
-*@        @if (Model.AddProductReview.SuccessfullyAdded)
+        @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
                 @Model.AddProductReview.Result
@@ -64,29 +42,33 @@
         }
         else
         {
-            <div class="write-review" >
+            <div class="write-review">
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
                 <form id="review-form" method="post" enctype="multipart/form-data">
-                    <div id="message-error" asp-validation-summary="ModelOnly" class="message-error"></div>
+                    <input type="hidden" name="productId" value="@(Model.ProductId)" />
+
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    <div id="message-success-review-form" class="form-message message-success"></div>
+                    <div id="message-error-review-form" class="form-message message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
                             <div class="inputs">
                                 <label asp-for="AddProductReview.Title" asp-postfix=":"></label>
-                                <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" />
-                                <nop-required />
+                                <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
+                                <nop-required/>
                                 <span asp-validation-for="AddProductReview.Title"></span>
                             </div>
                             <div class="inputs">
                                 <label asp-for="AddProductReview.ReviewText" asp-postfix=":"></label>
                                 <textarea asp-for="AddProductReview.ReviewText" class="review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
-                                <nop-required />
+                                <nop-required/>
                                 <span asp-validation-for="AddProductReview.ReviewText"></span>
                             </div>
                             <div class="inputs">
                                 <label>Attach files</label>
-                                <input type="file" id="photos" name="photos" multiple="multiple" onchange="readURLFileUpload()" />
+                                <input type="file" id="photos" name="photos" multiple="multiple" onchange="readURLFileUpload()"/>
                                 Max file in upload: 5
                             </div>
                             <div class="review-rating">
@@ -94,16 +76,16 @@
                                 <ul>
                                     <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li class="rating-options">
-                                        <input asp-for="AddProductReview.Rating" value="0" type="radio" id="addproductrating_0" style="display: none;" />
-                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" aria-label="@T("Reviews.Fields.Rating.Bad")" />
+                                        <input asp-for="AddProductReview.Rating" value="0" type="radio" id="addproductrating_0" style="display: none;"/>
+                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" aria-label="@T("Reviews.Fields.Rating.Bad")"/>
                                         <label for="addproductrating_1">1</label>
-                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" aria-label="@T("Reviews.Fields.Rating.NotGood")" />
+                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" aria-label="@T("Reviews.Fields.Rating.NotGood")"/>
                                         <label for="addproductrating_2">2</label>
-                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")" />
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")"/>
                                         <label for="addproductrating_3">3</label>
-                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" aria-label="@T("Reviews.Fields.Rating.Good")" />
+                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" aria-label="@T("Reviews.Fields.Rating.Good")"/>
                                         <label for="addproductrating_4">4</label>
-                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" aria-label="@T("Reviews.Fields.Rating.Excellent")" />
+                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" aria-label="@T("Reviews.Fields.Rating.Excellent")"/>
                                         <label for="addproductrating_5">5</label>
                                     </li>
                                     <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
@@ -120,22 +102,22 @@
                                         <ul>
                                             <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                             <li class="rating-options">
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].ReviewTypeId" value="@(additionalReview.ReviewTypeId)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Name" value="@(additionalReview.Name)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Description" value="@(additionalReview.Description)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].DisplayOrder" value="@(additionalReview.DisplayOrder)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].IsRequired" value="@(additionalReview.IsRequired)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="0" type="radio" id="addproductratingext_0_@(additionalReview.ReviewTypeId)" style="display: none" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].ReviewTypeId" value="@(additionalReview.ReviewTypeId)" type="hidden"/>
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Name" value="@(additionalReview.Name)" type="hidden"/>
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Description" value="@(additionalReview.Description)" type="hidden"/>
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].DisplayOrder" value="@(additionalReview.DisplayOrder)" type="hidden"/>
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].IsRequired" value="@(additionalReview.IsRequired)" type="hidden"/>
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="0" type="radio" id="addproductratingext_0_@(additionalReview.ReviewTypeId)" style="display: none"/>
                                                 <label for="addproductratingext_0_@(additionalReview.ReviewTypeId)" style="display: none">0</label>
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="1" type="radio" id="addproductratingext_1_@(additionalReview.ReviewTypeId)" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="1" type="radio" id="addproductratingext_1_@(additionalReview.ReviewTypeId)"/>
                                                 <label for="addproductratingext_1_@(additionalReview.ReviewTypeId)">1</label>
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="2" type="radio" id="addproductratingext_2_@(additionalReview.ReviewTypeId)" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="2" type="radio" id="addproductratingext_2_@(additionalReview.ReviewTypeId)"/>
                                                 <label for="addproductratingext_2_@(additionalReview.ReviewTypeId)">2</label>
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="3" type="radio" id="addproductratingext_3_@(additionalReview.ReviewTypeId)" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="3" type="radio" id="addproductratingext_3_@(additionalReview.ReviewTypeId)"/>
                                                 <label for="addproductratingext_3_@(additionalReview.ReviewTypeId)">3</label>
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="4" type="radio" id="addproductratingext_4_@(additionalReview.ReviewTypeId)" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="4" type="radio" id="addproductratingext_4_@(additionalReview.ReviewTypeId)"/>
                                                 <label for="addproductratingext_4_@(additionalReview.ReviewTypeId)">4</label>
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="5" type="radio" id="addproductratingext_5_@(additionalReview.ReviewTypeId)" />
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="5" type="radio" id="addproductratingext_5_@(additionalReview.ReviewTypeId)"/>
                                                 <label for="addproductratingext_5_@(additionalReview.ReviewTypeId)">5</label>
                                             </li>
                                             <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
@@ -145,12 +127,12 @@
                             }
                             @if (Model.AddProductReview.DisplayCaptcha)
                             {
-                                <nop-captcha />
+                                <nop-captcha/>
                             }
                         </div>
                     </div>
                     <div class="buttons">
-                        <input type="submit" id="add-review-button" name="add-review" @(!Model.AddProductReview.CanCurrentCustomerLeaveReview == true ? "disabled" : "") class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                        <input type="submit" id="add-review" name="add-review" @(!Model.AddProductReview.CanCurrentCustomerLeaveReview == true ? "disabled" : "") class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")"/>
                     </div>
                 </form>
             </div>
@@ -166,7 +148,7 @@
                     var ratingPercent = review.Rating * 20;
                     <div class="product-review-item">
                         <div class="review-item-head">
-                           
+
                             <div class="review-info">
                                 <span class="user">
                                     <label>@T("Reviews.From"):</label>
@@ -185,12 +167,12 @@
                                         @if (review.AllowViewingProfiles)
                                         {
                                             <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
-                                                <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar"/>
+                                                <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                                             </a>
                                         }
                                         else
                                         {
-                                            <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar"/>
+                                            <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                                         }
                                     </div>
                                 }
@@ -228,9 +210,9 @@
                             <div class="review-text">
                                 @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
                             </div>
-                            <div class="mediacontainer"> 
-                            @await Component.InvokeAsync("ProductReviewVideos",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
-                            @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
+                            <div class="mediacontainer">
+                                @await Component.InvokeAsync("ProductReviewVideos",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
+                                @await Component.InvokeAsync("ProductReviewPictures",new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review  })
                             </div>
                             @await Html.PartialAsync("~/Plugins/Widgets.CustomProductReviews/Views/_ProductReviewHelpfulness.cshtml", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
@@ -251,10 +233,6 @@
             </div>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
-        @await Component.InvokeAsync("AnywhereSliders", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
-        @await Component.InvokeAsync("JCarousel", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
-        @await Component.InvokeAsync("SocialFeed", new { widgetZone = PublicWidgetZones.ProductDetailsBottom })
-
 
 
     </div>
@@ -265,7 +243,7 @@
         var form = $(this);
         e.preventDefault();
         e.stopImmediatePropagation();
-
+        //if (!form.valid()) return false;
         if (!readURLFileUpload()) return false;
         var formData = new FormData(form[0]);
         formData.append("productId", @Model.ProductId);
@@ -273,7 +251,7 @@
         $(".form-message").html("");
         $.ajax({
             url: '@Url.Action("ProductReviewsAdd", "CustomProductReviews")',
-            type: 'POST',  
+            type: 'POST',
             headers:
             {
                 "RequestVerificationToken": t
@@ -304,12 +282,12 @@
                         console.log(data.Result);
                     }
                     console.log(data);
-                   
+
                     return false;
                 }
                 console.log(data);
             },
-            error: function(xhr, resp, text) {
+            error: function (xhr, resp, text) {
                 console.log(xhr, resp, text);
             },
             complete: function () {
@@ -323,7 +301,7 @@
         });
         return false;
     });
-    
+
     $(document).ready(function () {
         $('.product-review-links a,.product-no-reviews a').on('click', function (e) {
             e.preventDefault();
@@ -363,3 +341,6 @@
         return true;
     }
 </script>
+
+
+
