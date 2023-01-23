@@ -172,12 +172,13 @@
             <a class="clearFilterOptionsAll">@T("SevenSpikes.NopAjaxFilters.Client.Common.ClearAll")</a>
         </div>
         <div class="filtersPanel">
+            @* ABC: Moving manufacturers on top *@
+            @manufacturersFilter
             @priceRangeFilter
             @onSaleFilter
             @inStockFilter
             @specificationsFilter
             @attributesFilter
-            @manufacturersFilter
             @vendorsFilter
         </div>
 
