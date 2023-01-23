@@ -11,7 +11,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
@@ -27,7 +26,6 @@ using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Factories;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 using Nop.Web.Framework.Controllers;
@@ -40,7 +38,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
@@ -54,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IUploadService _uploadService;
+        private readonly IWebHelper _webHelper;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
@@ -68,7 +66,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public PluginController(ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
-            ICommonModelFactory commonModelFactory,
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
@@ -82,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             IShippingPluginManager shippingPluginManager,
             IUploadService uploadService,
+            IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
@@ -92,7 +90,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _authenticationPluginManager = authenticationPluginManager;
-            _commonModelFactory = commonModelFactory;
             _customerActivityService = customerActivityService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
@@ -106,6 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService = settingService;
             _shippingPluginManager = shippingPluginManager;
             _uploadService = uploadService;
+            _webHelper = webHelper;
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
@@ -116,24 +114,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
-        public virtual async Task<IActionResult> List(bool showWarnings = true)
+        public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var model = await _pluginModelFactory.PreparePluginSearchModelAsync(new PluginSearchModel());
-
-            if (!showWarnings) 
-                return View(model);
-
-            var warnings = new List<SystemWarningModel>();
-            await _commonModelFactory.PreparePluginsWarningModelAsync(warnings);
-
-            if (warnings.Any())
-                _notificationService.WarningNotification(string.Join("<br />", warnings), false);
 
             return View(model);
         }
@@ -214,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _notificationService.ErrorNotificationAsync(exc);
             }
 
-            return RedirectToAction("List", new { showWarnings = false });
+            return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
@@ -235,11 +224,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
-                    return RedirectToAction("List", new { showWarnings = false });
+                    return RedirectToAction("List");
 
                 //check whether plugin is not installed
                 if (pluginDescriptor.Installed)
-                    return RedirectToAction("List", new { showWarnings = false });
+                    return RedirectToAction("List");
 
                 await _pluginService.PreparePluginToInstallAsync(pluginDescriptor.SystemName, await _workContext.GetCurrentCustomerAsync());
                 pluginDescriptor.ShowInPluginsList = false;
@@ -250,7 +239,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _notificationService.ErrorNotificationAsync(exc);
             }
 
-            return RedirectToAction("List", new { showWarnings = false });
+            return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
@@ -271,11 +260,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
-                    return RedirectToAction("List", new { showWarnings = false });
+                    return RedirectToAction("List");
 
                 //check whether plugin is installed
                 if (!pluginDescriptor.Installed)
-                    return RedirectToAction("List", new { showWarnings = false });
+                    return RedirectToAction("List");
 
                 await _pluginService.PreparePluginToUninstallAsync(pluginDescriptor.SystemName);
                 pluginDescriptor.ShowInPluginsList = false;
@@ -286,7 +275,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _notificationService.ErrorNotificationAsync(exc);
             }
 
-            return RedirectToAction("List", new { showWarnings = false });
+            return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
@@ -308,7 +297,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //check whether plugin is not installed
                 if (pluginDescriptor.Installed)
-                    return RedirectToAction("List", new { showWarnings = false });
+                    return RedirectToAction("List");
 
                 await _pluginService.PreparePluginToDeleteAsync(pluginDescriptor.SystemName);
                 pluginDescriptor.ShowInPluginsList = false;
@@ -319,7 +308,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _notificationService.ErrorNotificationAsync(exc);
             }
 
-            return RedirectToAction("List", new { showWarnings = false });
+            return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
@@ -369,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _pluginService.ResetChanges();
 
-            return RedirectToAction("List", new { showWarnings = false });
+            return RedirectToAction("List");
         }
 
         public virtual async Task<IActionResult> EditPopup(string systemName)
@@ -380,7 +369,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a plugin with the specified system name
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
-                return RedirectToAction("List", new { showWarnings = false });
+                return RedirectToAction("List");
 
             //prepare model
             var model = await _pluginModelFactory.PreparePluginModelAsync(null, pluginDescriptor);
@@ -397,7 +386,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a plugin with the specified system name
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(model.SystemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
-                return RedirectToAction("List", new { showWarnings = false });
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {

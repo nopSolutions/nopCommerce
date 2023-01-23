@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets the major store version
         /// </summary>
-        public const string CURRENT_VERSION = "4.70";
+        public const string CURRENT_VERSION = "4.60";
 
         /// <summary>
         /// Gets the minor store version

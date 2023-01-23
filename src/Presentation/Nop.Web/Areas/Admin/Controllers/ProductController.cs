@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +14,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -56,7 +54,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IExportManager _exportManager;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IImportManager _importManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -80,7 +77,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVideoService _videoService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
 
@@ -98,7 +94,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDownloadService downloadService,
             IExportManager exportManager,
             IGenericAttributeService genericAttributeService,
-            IHttpClientFactory httpClientFactory,
             IImportManager importManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -122,7 +117,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IVideoService videoService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
@@ -136,7 +130,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _downloadService = downloadService;
             _exportManager = exportManager;
             _genericAttributeService = genericAttributeService;
-            _httpClientFactory = httpClientFactory;
             _importManager = importManager;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -160,7 +153,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _videoService = videoService;
-            _webHelper = webHelper;
             _workContext = workContext;
             _vendorSettings = vendorSettings;
         }
@@ -739,14 +731,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
             }
-        }
-
-        protected virtual async Task PingVideoUrlAsync(string videoUrl)
-        {
-            var path = videoUrl.StartsWith("/") ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}" : videoUrl;
-
-            var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-            await client.GetStringAsync(path);
         }
 
         #endregion
@@ -1810,23 +1794,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
-            var videoUrl = model.VideoUrl.TrimStart('~');
-
-            try
+            if (!ModelState.IsValid)
             {
-                await PingVideoUrlAsync(videoUrl);
-            }
-            catch (Exception exc)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
-                });
-            }
-
-            if (!ModelState.IsValid) 
                 return ErrorJson(ModelState.SerializeErrors());
+            }
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1836,7 +1807,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var video = new Video
                 {
-                    VideoUrl = videoUrl
+                    VideoUrl = model.VideoUrl
                 };
 
                 //insert video
@@ -1854,7 +1825,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new
                 {
                     success = false,
-                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                    message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
                 });
             }
 
@@ -1905,22 +1876,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var video = await _videoService.GetVideoByIdAsync(productVideo.VideoId)
                 ?? throw new ArgumentException("No video found with the specified id");
 
-            var videoUrl = model.VideoUrl.TrimStart('~');
-
-            try
-            {
-                await PingVideoUrlAsync(videoUrl);
-            }
-            catch (Exception exc)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate")} {exc.Message}",
-                });
-            }
-
-            video.VideoUrl = videoUrl;
+            video.VideoUrl = model.VideoUrl;
 
             await _videoService.UpdateVideoAsync(video);
 

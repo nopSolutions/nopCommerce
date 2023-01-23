@@ -16,10 +16,10 @@
   <ItemGroup>
     <PackageReference Include="FluentMigrator" Version="3.3.2" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="linq2db" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
-    <PackageReference Include="MySqlConnector" Version="2.2.2" />
-    <PackageReference Include="Npgsql" Version="7.0.0" />
+    <PackageReference Include="linq2db" Version="4.1.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="MySqlConnector" Version="2.1.13" />
+    <PackageReference Include="Npgsql" Version="6.0.7" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>

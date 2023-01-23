@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Common;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
@@ -20,11 +22,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            var (languageId, languages) = this.GetLanguageData();
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+
+            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                .Select(lang => lang.Id).FirstOrDefault();
 
             #region Delete locales
 
-            localizationService.DeleteLocaleResources(new List<string>
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 //#6102
                 "Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup",
@@ -43,59 +50,66 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
+            }).Wait();
 
-				//4622
-                "PDFInvoice.OrderDate",
-                "PDFInvoice.Company",
-                "PDFInvoice.Name",
-                "PDFInvoice.Phone",
-                "PDFInvoice.Fax",
-                "PDFInvoice.Address",
-                "PDFInvoice.Address2",
-                "PDFInvoice.VATNumber",
-                "PDFInvoice.PaymentMethod",
-                "PDFInvoice.ShippingMethod",
-                "PDFInvoice.BillingInformation",
-                "PDFInvoice.ShippingInformation",
-                "PDFInvoice.OrderNotes",
-                "PDFInvoice.OrderNotes.CreatedOn",
-                "PDFInvoice.OrderNotes.Note",
-                "PDFPackagingSlip.Shipment",
-                "PDFInvoice.Order#",
-                "PDFInvoice.Discount",
-                "PDFInvoice.Sub-Total",
-                "PDFInvoice.Shipping",
-                "PDFInvoice.OrderTotal",
-                "PDFInvoice.PaymentMethodAdditionalFee",
-                "PDFInvoice.Pickup",
-                "PDFInvoice.Product(s)",
-                "PDFInvoice.Tax",
-                "PDFPackagingSlip.Address",
-                "PDFPackagingSlip.Address2",
-                "PDFPackagingSlip.Company",
-                "PDFPackagingSlip.Name",
-                "PDFPackagingSlip.Order",
-                "PDFPackagingSlip.Phone",
-                "PDFPackagingSlip.ProductName",
-                "PDFPackagingSlip.QTY",
-                "PDFPackagingSlip.ShippingMethod",
-                "PDFPackagingSlip.SKU",
-                "PDFProductCatalog.Price",
-                "PDFProductCatalog.SKU",
+            #endregion
 
-            });
+            #region Rename locales
+
+            var localesToRename = new[]
+            {
+                //#6255
+                new { Name = "Forum.BreadCrumb.HomeTitle", NewName = "Forum.Breadcrumb.HomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumHomeTitle", NewName = "Forum.Breadcrumb.ForumHomeTitle" },
+                new { Name = "Forum.BreadCrumb.ForumGroupTitle", NewName = "Forum.Breadcrumb.ForumGroupTitle" },
+                new { Name = "Forum.BreadCrumb.ForumTitle", NewName = "Forum.Breadcrumb.ForumTitle" },
+                new { Name = "Forum.BreadCrumb.TopicTitle", NewName = "Forum.Breadcrumb.TopicTitle" },
+
+                
+                //#3511
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
+                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
+
+                //#7
+                new { Name = "Admin.Catalog.Products.Pictures", NewName =  "Admin.Catalog.Products.Multimedia.Pictures"},
+                new { Name = "Admin.Catalog.Products.Pictures.AddNew", NewName = "Admin.Catalog.Products.Multimedia.Pictures.AddNew"},
+                new { Name = "Admin.Catalog.Products.Pictures.Alert.PictureAdd", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture"},
+                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint"},
+                new { Name = "Admin.Catalog.Products.Copy.CopyImages", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia"},
+                new { Name = "Admin.Catalog.Products.Copy.CopyImages.Hint", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint"},
+            };
+
+            foreach (var lang in languages)
+            {
+                foreach (var locale in localesToRename)
+                {
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    if (lsr is not null)
+                    {
+                        lsr.ResourceName = locale.NewName;
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                    }
+                }
+            }
 
             #endregion
 
             #region Add or update locales
 
-            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#3075
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName"] = "Allow customers to search with category name",
-                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customers to search with category name.",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithCategoryName.Hint"] = "Check to allow customer to search with category name.",
                 ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName"] = "Allow customers to search with manufacturer name",
-                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customers to search with manufacturer name.",
+                ["Admin.Configuration.Settings.Catalog.AllowCustomersToSearchWithManufacturerName.Hint"] = "Check to allow customer to search with manufacturer name.",
 
                 //#3997
                 ["Admin.Configuration.Settings.GeneralCommon.InstagramLink"] = "Instagram URL",
@@ -139,10 +153,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#5313
                 ["ActivityLog.ImportOrders"] = "{0} orders were imported",
-                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following GUIDs don't exist: {0}",
+                ["Admin.Orders.Import.CustomersDontExist"] = "Customers with the following guids don't exist: {0}",
                 ["Admin.Orders.Import.ProductsDontExist"] = "Products with the following SKUs don't exist: {0}",
                 ["Admin.Orders.Imported"] = "Orders have been imported successfully.",
-                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order GUID. If the order GUID already exists, then its details will be updated.",
+                ["Admin.Orders.List.ImportFromExcelTip"] = "Imported orders are distinguished by order guid. If the order guid already exists, then its corresponding information will be updated.",
 
                 //#1933
                 ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages"] = "Display all pictures on catalog pages",
@@ -187,7 +201,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit"] = "You need to save the product before you can upload videos for this product page.",
                 ["Admin.Catalog.Products.Multimedia.Videos.AddNew"] = "Add a new video",
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd"] = "Failed to add product video.",
-                ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate"] = "Failed to update product video.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder"] = "Display order",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder.Hint"] = "Display order of the video. 1 represents the top of the list.",
                 ["Admin.Catalog.Products.Multimedia.Videos.Fields.Preview"] = "Preview",
@@ -221,26 +234,26 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Enums.Nop.Core.Domain.Catalog.ProductUrlStructureType.Product"] = "/Product",
 
                 //#5261
-                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt"] = "robots.txt",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"] = "You also may extend the robots.txt data by adding the {0} file to the wwwroot directory of your site.",
+                ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.RobotsTxt"] ="robots.txt",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsInstruction"] = "You also may extend the robots.txt data by adding the {0} file on the wwwroot directory of your site.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules"] = "Additions rules",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint"] = "Enter additional rules for the robots.txt file.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules.Hint"] = "Put here an additional rules for robots.txt file",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml"] = "Allow sitemap.xml",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint"] = "Check to allow robots to access the sitemap.xml file.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsAllowSitemapXml.Hint"] = "Check to allow robots use the sitemap.xml file",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsCustomFileExists"] = "robots.txt file data overridden by {0} file in site root.",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages"] = "Disallow languages",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint"] = "The list of languages to disallow.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages.Hint"] = "The list of languages which prohibit to use by robots",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths"] = "Disallow paths",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint"] = "The list of paths to disallow.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsDisallowPaths.Hint"] = "The list of paths which prohibit to use by robots",
                 ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths"] = "Localizable disallow paths",
-                ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint"] = "The list of localizable paths to disallow.",
+                ["Admin.Configuration.Settings.GeneralCommon.RobotsLocalizableDisallowPaths.Hint"] = "The list of localizable paths which prohibit to use by robots",
 
                 //#5753
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage"] = "Default image",
                 ["Admin.Configuration.Settings.Media.ProductDefaultImage.Hint"] = "Upload a picture to be used as the default image. If nothing is uploaded, {0} will be used.",
 
                 ["Admin.Help.Training"] = "Training",
-
+                
                 //5607
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for customer roles specified in Access control list (at least one MFA provider must be active).",
                 ["Permission.Authentication.EnableMultiFactorAuthentication"] = "Security. Enable Multi-factor authentication",
@@ -281,11 +294,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6378
                 ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
-                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area.",
+                ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area",
 
                 //#6396
                 ["Admin.Catalog.Products.Fields.MinStockQuantity.Hint"] = "If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.",
                 ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you track inventory by product attributes, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
+                
                 //#6213
                 ["Admin.System.Maintenance.DeleteMinificationFiles"] = "Delete minification files",
                 ["Admin.System.Maintenance.DeleteMinificationFiles.Text"] = "Clear the bundles directory.",
@@ -296,96 +310,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 //#6411
                 ["Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"] = "The stock quantity has been reduced when an order item of the order #{0} became a ready for pickup by customer",
-
-                //4622
-                ["Pdf.OrderDate"] = "Date",
-                ["Pdf.Address.Company"] = "Company",
-                ["Pdf.Address.Name"] = "Name",
-                ["Pdf.Address.Phone"] = "Phone",
-                ["Pdf.Address.Fax"] = "Fax",
-                ["Pdf.Address"] = "Address",
-                ["Pdf.Address2"] = "Address 2",
-                ["Pdf.Address.VATNumber"] = "VAT number",
-                ["Pdf.BillingInformation"] = "Billing Information",
-                ["Pdf.ShippingInformation"] = "Shipping Information",
-                ["Pdf.OrderNotes"] = "Order notes",
-                ["Pdf.Address.PaymentMethod"] = "Payment method",
-                ["Pdf.Address.ShippingMethod"] = "Shipping method",
-                ["Pdf.Shipment"] = "Shipment",
-                ["Pdf.Order"] = "Order",
-                ["Pdf.Shipping"] = "Shipping",
-                ["Pdf.SubTotal"] = "Sub-total",
-                ["Pdf.Discount"] = "Discount",
-                ["Pdf.OrderTotal"] = "Order total",
-                ["Pdf.PaymentMethodAdditionalFee"] = "Payment Method Additional Fee",
-                ["Pdf.PickupPoint"] = "Pickup point",
-                ["Pdf.Tax"] = "Tax",
-
-                //#43
-                ["admin.configuration.stores.info"] = "Info",
-
-                //5701
-                ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
-                ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container. If disabled, then the default .Net IoC container will be used.",
-            }, languageId);
-
-            #endregion
-
-            #region Rename locales
-
-            this.RenameLocales(new Dictionary<string, string>
-            {
-                //#6255
-                ["Forum.BreadCrumb.HomeTitle"] = "Forum.Breadcrumb.HomeTitle",
-                ["Forum.BreadCrumb.ForumHomeTitle"] = "Forum.Breadcrumb.ForumHomeTitle",
-                ["Forum.BreadCrumb.ForumGroupTitle"] = "Forum.Breadcrumb.ForumGroupTitle",
-                ["Forum.BreadCrumb.ForumTitle"] = "Forum.Breadcrumb.ForumTitle",
-                ["Forum.BreadCrumb.TopicTitle"] = "Forum.Breadcrumb.TopicTitle",
-
-                //#3511
-                ["Admin.Configuration.Settings.Catalog.NewProductsNumber"] = "Admin.Configuration.Settings.Catalog.NewProductsPageSize",
-                ["Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint"] = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint",
-
-                //#7
-                ["Admin.Catalog.Products.Pictures"] = "Admin.Catalog.Products.Multimedia.Pictures",
-                ["Admin.Catalog.Products.Pictures.AddNew"] = "Admin.Catalog.Products.Multimedia.Pictures.AddNew",
-                ["Admin.Catalog.Products.Pictures.Alert.PictureAdd"] = "Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd",
-                ["Admin.Catalog.Products.Pictures.Fields.DisplayOrder"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder",
-                ["Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint",
-                ["Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute",
-                ["Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint",
-                ["Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute",
-                ["Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint",
-                ["Admin.Catalog.Products.Pictures.Fields.Picture"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture",
-                ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint",
-                ["Admin.Catalog.Products.Copy.CopyImages"] = "Admin.Catalog.Products.Copy.CopyMultimedia",
-                ["Admin.Catalog.Products.Copy.CopyImages.Hint"] = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint",
-
-                //#43
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription"] = "Admin.Configuration.Stores.Fields.DefaultMetaDescription",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint"] = "Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords"] = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint"] = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultTitle"] = "Admin.Configuration.Stores.Fields.DefaultTitle",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint"] = "Admin.Configuration.Stores.Fields.DefaultTitle.Hint",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Admin.Configuration.Stores.Fields.HomepageDescription",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle"] = "Admin.Configuration.Stores.Fields.HomepageTitle",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint"] = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint",
-
-                //4622
-                ["PDFInvoice.ProductName"] = "Pdf.Product.Name",
-                ["PDFInvoice.SKU"] = "Pdf.Product.Sku",
-                ["PDFInvoice.VendorName"] = "Pdf.Product.VendorName",
-                ["PDFProductCatalog.Weight"] = "Pdf.Product.Weight",
-                ["PDFInvoice.ProductPrice"] = "Pdf.Product.Price",
-                ["PDFInvoice.ProductQuantity"] = "Pdf.Product.Quantity",
-                ["PDFProductCatalog.StockQuantity"] = "Pdf.Product.StockQuantity",
-                ["PDFInvoice.ProductTotal"] = "Pdf.Product.Total",
-                ["PDFInvoice.RewardPoints"] = "Pdf.RewardPoints",
-                ["PDFInvoice.TaxRate"] = "Pdf.TaxRate",
-                ["PDFInvoice.GiftCardInfo"] = "Pdf.GiftCardInfo"
-            }, languages, localizationService);
+            }, languageId).Wait();
 
             #endregion
         }

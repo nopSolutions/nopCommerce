@@ -580,10 +580,5 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         /// <remarks>We have ProductUrlStructureType enum, but we use int value here so that it can be overridden in third-party plugins</remarks>
         public int ProductUrlStructureTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets an system name of active search provider
-        /// </summary>
-        public string ActiveSearchProviderSystemName { get; set; }
     }
 }

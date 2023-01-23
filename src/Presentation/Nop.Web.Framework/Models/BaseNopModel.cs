@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace Nop.Web.Framework.Models
+﻿namespace Nop.Web.Framework.Models
 {
     /// <summary>
     /// Represents base nopCommerce model
@@ -15,7 +12,6 @@ namespace Nop.Web.Framework.Models
         /// </summary>
         public BaseNopModel()
         {
-            CustomProperties = new Dictionary<string, string>();
             PostInitialize();
         }
 
@@ -32,16 +28,5 @@ namespace Nop.Web.Framework.Models
         }
 
         #endregion
-
-        #region Properties
-        
-        /// <summary>
-        /// Gets or sets property to store any custom values for models 
-        /// </summary>
-        [XmlIgnore]
-        public Dictionary<string, string> CustomProperties { get; set; }
-
-        #endregion
-
     }
 }

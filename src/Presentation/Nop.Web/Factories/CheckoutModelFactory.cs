@@ -367,8 +367,6 @@ namespace Nop.Web.Factories
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
 
-            model.SelectedBillingAddress = customer.BillingAddressId ?? 0;
-
             return model;
         }
 

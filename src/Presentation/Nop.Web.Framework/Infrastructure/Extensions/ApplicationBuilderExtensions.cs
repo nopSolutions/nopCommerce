@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -35,8 +34,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using QuestPDF.Drawing;
-using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.AspNetCore6;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -55,7 +53,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             EngineContext.Current.ConfigureRequestPipeline(application);
         }
 
-        public static async Task StartEngineAsync(this IApplicationBuilder _)
+        public static void StartEngine(this IApplicationBuilder application)
         {
             var engine = EngineContext.Current;
 
@@ -63,12 +61,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //log application start
-                await engine.Resolve<ILogger>().InformationAsync("Application started");
+                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
-                await pluginService.InstallPluginsAsync();
-                await pluginService.UpdatePluginsAsync();
+                pluginService.InstallPluginsAsync().Wait();
+                pluginService.UpdatePluginsAsync().Wait();
 
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -78,7 +76,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
 
                 var taskScheduler = engine.Resolve<ITaskScheduler>();
-                await taskScheduler.InitializeAsync();
+                taskScheduler.InitializeAsync().Wait();
                 taskScheduler.StartScheduler();
             }
         }
@@ -346,7 +344,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
+                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
                     RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                     OnPrepareResponse = staticFileResponse
                 });
@@ -395,43 +393,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure PDF
-        /// </summary>
-        public static void UseNopPdf(this IApplicationBuilder _)
-        {
-            if (!DataSettingsManager.IsDatabaseInstalled())
-                return;
-
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
-
-            //write placeholder characters instead of unavailable glyphs for both debug/release configurations
-            QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
-
-            foreach (var fp in fontPaths)
-            {
-                FontManager.RegisterFont(File.OpenRead(fp));
-            }
-        }
-
-        /// <summary>
         /// Configure the request localization feature
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopRequestLocalization(this IApplicationBuilder application)
         {
-            application.UseRequestLocalization(options =>
+            application.UseRequestLocalization(async options =>
             {
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //prepare supported cultures
-                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                var cultures = (await EngineContext.Current.Resolve<ILanguageService>().GetAllLanguagesAsync())
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
-                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault() ?? new CultureInfo(NopCommonDefaults.DefaultLanguageCulture));
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
                 options.ApplyCurrentCultureToResponseHeaders = true;
 
                 //configure culture providers

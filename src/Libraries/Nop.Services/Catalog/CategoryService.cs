@@ -406,22 +406,15 @@ namespace Nop.Services.Catalog
                 //little hack for performance optimization
                 //there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
                 //so we load all categories at once (we know they are cached) and process them server-side
-                var lookup = await _staticCacheManager.GetAsync(
-                    _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ChildCategoryIdLookupCacheKey, storeId, showHidden),
-                    async () => (await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden))
-                        .ToGroupedDictionary(c => c.ParentCategoryId, x => x.Id));
+                var categoriesIds = new List<int>();
+                var categories = (await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden))
+                    .Where(c => c.ParentCategoryId == parentCategoryId)
+                    .Select(c => c.Id)
+                    .ToList();
+                categoriesIds.AddRange(categories);
+                categoriesIds.AddRange(await categories.SelectManyAwait(async cId => await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToListAsync());
 
-                var categoryIds = new List<int>();
-                if (lookup.TryGetValue(parentCategoryId, out var categories))
-                {
-                    categoryIds.AddRange(categories);
-                    var childCategoryIds = categories.SelectAwait(async cId => await GetChildCategoryIdsAsync(cId, storeId, showHidden));
-                    // avoid allocating a new list or blocking with ToEnumerable
-                    await foreach (var cIds in childCategoryIds)
-                        categoryIds.AddRange(cIds);
-                }
-
-                return categoryIds;
+                return categoriesIds;
             });
         }
 

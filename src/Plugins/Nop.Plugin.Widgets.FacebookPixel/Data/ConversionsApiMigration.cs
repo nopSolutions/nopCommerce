@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
+using Nop.Services.Common;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Data
 {
@@ -66,9 +68,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Data
             }
 
             //locales
-            var (languageId, _) = this.GetLanguageData();
+            var languages = _languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .FirstOrDefault(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                ?.Id;
 
-            _localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+            _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken"] = "Access token",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken.Hint"] = "Enter the Facebook Conversions API access token.",
@@ -77,13 +82,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Data
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelScriptEnabled.Hint"] = "Toggle to enable/disable Facebook Pixel for this configuration.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled"] = "Conversions API enabled",
                 ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled.Hint"] = "Toggle to enable/disable Facebook Conversions API for this configuration."
-            }, languageId);
+            }, languageId).Wait();
 
-            _localizationService.DeleteLocaleResources(new List<string>
+            _localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled",
                 "Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint"
-            });
+            }).Wait();
         }
 
         /// <summary>

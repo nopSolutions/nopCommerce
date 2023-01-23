@@ -36,7 +36,7 @@ namespace Nop.Data.Mapping
         {
             var attribute = Types.GetOrAdd((type, memberInfo), _ =>
             {
-                var entityDescriptor = _mappingEntityAccessor.GetEntityDescriptor(type);
+                var entityDescriptor  = _mappingEntityAccessor.GetEntityDescriptor(type);
 
                 if (typeof(T) == typeof(TableAttribute))
                     return new TableAttribute(entityDescriptor.EntityName) { Schema = entityDescriptor.SchemaName };
@@ -51,8 +51,6 @@ namespace Nop.Data.Mapping
 
                 var columnSystemType = (memberInfo as PropertyInfo)?.PropertyType ?? typeof(string);
 
-                var mappingSchema = _mappingEntityAccessor.GetMappingSchema();
-
                 return new ColumnAttribute
                 {
                     Name = entityField.Name,
@@ -62,7 +60,7 @@ namespace Nop.Data.Mapping
                     Length = entityField.Size ?? 0,
                     Precision = entityField.Precision ?? 0,
                     IsIdentity = entityField.IsIdentity,
-                    DataType = mappingSchema.GetDataType(columnSystemType).Type.DataType
+                    DataType = SqlDataType.GetDataType(columnSystemType).Type.DataType
                 };
             });
 

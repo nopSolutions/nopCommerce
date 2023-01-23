@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Caching;
-using Nop.Services.Catalog;
 
 namespace Nop.Services.Stores.Caching
 {
@@ -21,9 +19,6 @@ namespace Nop.Services.Stores.Caching
             await RemoveAsync(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
             await RemoveAsync(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
             await RemoveAsync(NopStoreDefaults.StoreMappingExistsCacheKey, entity.EntityName);
-
-            if (entity.EntityName.Equals(nameof(Category))) 
-                await RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryIdLookupByStorePrefix, entity.StoreId);
         }
     }
 }

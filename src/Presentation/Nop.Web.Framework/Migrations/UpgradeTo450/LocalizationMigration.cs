@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Common;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
@@ -21,7 +23,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResources(new List<string>
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps",
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint",
@@ -31,11 +33,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint",
                 //#5042
                 "Admin.Help.Topics"
-            });
+            }).Wait();
 
-            var (languageId, languages) = this.GetLanguageData();
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                .Select(lang => lang.Id).FirstOrDefault();
 
-            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
@@ -174,17 +180,30 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
                 ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
                 ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
-            }, languageId);
-            
+            }, languageId).Wait();
+
             // rename locales
-            this.RenameLocales(new Dictionary<string, string>
+            var localesToRename = new[]
             {
                 //#5834
-                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling",
-                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint",
-                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling",
-                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint"
-            }, languages, localizationService);
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling" },
+                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint" }
+            };
+
+            foreach (var lang in languages)
+            {
+                foreach (var locale in localesToRename)
+                {
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    if (lsr != null)
+                    {
+                        lsr.ResourceName = locale.NewName;
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                    }
+                }
+            }
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

@@ -306,7 +306,7 @@ namespace Nop.Web.Factories
             if (selectedPriceRange.From < availablePriceRange.From)
                 selectedPriceRange.From = availablePriceRange.From;
 
-            if (selectedPriceRange.To > availablePriceRange.To)
+            if (selectedPriceRange.To > availablePriceRange.To || selectedPriceRange.To < availablePriceRange.From)
                 selectedPriceRange.To = availablePriceRange.To;
 
             var workingCurrency = await _workContext.GetWorkingCurrencyAsync();
@@ -1763,39 +1763,39 @@ namespace Nop.Web.Factories
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                         PriceRangeModel availablePriceRange;
-                        async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                        if (!_catalogSettings.SearchPageManuallyPriceRange)
                         {
-                            var products = await _productService.SearchProductsAsync(0, 1,
-                                categoryIds: categoryIds,
-                                manufacturerIds: new List<int> { manufacturerId },
-                                storeId: currentStore.Id,
-                                visibleIndividuallyOnly: true,
-                                keywords: searchTerms,
-                                searchDescriptions: searchInDescriptions,
-                                searchProductTags: searchInProductTags,
-                                languageId: workingLanguage.Id,
-                                vendorId: vendorId,
-                                orderBy: orderBy);
-
-                            return products?.FirstOrDefault()?.Price ?? 0;
-                        }
-
-                        if (_catalogSettings.SearchPageManuallyPriceRange)
-                        {
-                            var to = await getProductPriceAsync(ProductSortingEnum.PriceDesc);
-
-                            availablePriceRange = new PriceRangeModel
+                            async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                             {
-                                From = _catalogSettings.SearchPagePriceFrom,
-                                To = to == 0 ? 0 : _catalogSettings.SearchPagePriceTo
-                            };
-                        }
-                        else
+                                var products = await _productService.SearchProductsAsync(0, 1,
+                                    categoryIds: categoryIds,
+                                    manufacturerIds: new List<int> { manufacturerId },
+                                    storeId: currentStore.Id,
+                                    visibleIndividuallyOnly: true,
+                                    keywords: searchTerms,
+                                    searchDescriptions: searchInDescriptions,
+                                    searchProductTags: searchInProductTags,
+                                    languageId: workingLanguage.Id,
+                                    vendorId: vendorId,
+                                    orderBy: orderBy);
+
+                                return products?.FirstOrDefault()?.Price ?? 0;
+                            }
+
                             availablePriceRange = new PriceRangeModel
                             {
                                 From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
                                 To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
                             };
+                        }
+                        else
+                        {
+                            availablePriceRange = new PriceRangeModel
+                            {
+                                From = _catalogSettings.SearchPagePriceFrom,
+                                To = _catalogSettings.SearchPagePriceTo
+                            };
+                        }
 
                         model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                     }

@@ -15,12 +15,12 @@ namespace Nop.Services.Plugins
         /// Ctor
         /// </summary>
         /// <param name="shortName">Assembly short name</param>
-        /// <param name="assemblyInMemory">Assembly version</param>
-        public PluginLoadedAssemblyInfo(string shortName, Version assemblyInMemory)
+        /// <param name="assemblyInMemory">Assembly full name</param>
+        public PluginLoadedAssemblyInfo(string shortName, string assemblyInMemory)
         {
             ShortName = shortName;
-            References = new List<(string PluginName, Version AssemblyVersion)>();
-            AssemblyInMemory = assemblyInMemory;
+            References = new List<(string PluginName, string AssemblyName)>();
+            AssemblyFullNameInMemory = assemblyInMemory;
         }
 
         #endregion
@@ -28,25 +28,25 @@ namespace Nop.Services.Plugins
         #region Properties
 
         /// <summary>
-        /// Assembly in memory
-        /// </summary>
-        public Version AssemblyInMemory { get; }
-
-        /// <summary>
         /// Gets the short assembly name
         /// </summary>
         public string ShortName { get; }
-        
+
+        /// <summary>
+        /// Gets the full assembly name loaded in memory
+        /// </summary>
+        public string AssemblyFullNameInMemory { get; }
+
         /// <summary>
         /// Gets a list of all mentioned plugin-assembly pairs
         /// </summary>
-        public List<(string PluginName, Version AssemblyVersion)> References { get; }
+        public List<(string PluginName, string AssemblyName)> References { get; }
 
         /// <summary>
         /// Gets a list of plugins that conflict with the loaded assembly version
         /// </summary>
-        public IList<(string PluginName, Version AssemblyVersion)> Collisions =>
-            References.Where(reference => !reference.AssemblyVersion.Equals(AssemblyInMemory)).ToList();
+        public IList<(string PluginName, string AssemblyName)> Collisions =>
+            References.Where(reference => !reference.AssemblyName.Equals(AssemblyFullNameInMemory, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
         #endregion
     }

@@ -335,7 +335,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
                     await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
-                    await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryIdLookupPrefix);
                 }
 
                 category = model.ToEntity(category);

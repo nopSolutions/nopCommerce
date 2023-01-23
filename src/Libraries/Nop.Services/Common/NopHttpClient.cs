@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,10 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Rss;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 
 namespace Nop.Services.Common
 {
@@ -22,11 +19,10 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
         private readonly HttpClient _httpClient;
-        private readonly IEmailAccountService _emailAccountService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
@@ -35,11 +31,10 @@ namespace Nop.Services.Common
         #region Ctor
 
         public NopHttpClient(AdminAreaSettings adminAreaSettings,
-            EmailAccountSettings emailAccountSettings,
             HttpClient client,
-            IEmailAccountService emailAccountService,
             IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
+            IStoreContext storeContext,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
@@ -49,11 +44,10 @@ namespace Nop.Services.Common
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
 
             _adminAreaSettings = adminAreaSettings;
-            _emailAccountSettings = emailAccountSettings;
             _httpClient = client;
-            _emailAccountService = emailAccountService;
             _httpContextAccessor = httpContextAccessor;
             _languageService = languageService;
+            _storeContext = storeContext;
             _webHelper = webHelper;
             _workContext = workContext;
         }
@@ -75,30 +69,23 @@ namespace Nop.Services.Common
         }
 
         /// <summary>
-        /// Check the current store for license compliance
+        /// Check the current store for the copyright removal key
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the asynchronous task whose result contains the license check details
+        /// The task result contains the asynchronous task whose result contains the warning text
         /// </returns>
-        public virtual async Task<string> GetLicenseCheckDetailsAsync()
+        public virtual async Task<string> GetCopyrightWarningAsync()
         {
-            var isLocal = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
-            var storeUrl = _webHelper.GetStoreLocation();
-            if (!_adminAreaSettings.CheckLicense || isLocal || storeUrl.Contains("localhost"))
-                return string.Empty;
-
-            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
-                ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+            //prepare URL to request
             var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
-            var url = string.Format(NopCommonDefaults.NopLicenseCheckPath,
-                storeUrl,
-                NopVersion.FULL_VERSION,
-                WebUtility.UrlEncode(emailAccount.Email),
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var url = string.Format(NopCommonDefaults.NopCopyrightWarningPath,
+                store.Url,
+                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 language).ToLowerInvariant();
 
-            _httpClient.Timeout = TimeSpan.FromSeconds(3);
-
+            //get the message
             return await _httpClient.GetStringAsync(url);
         }
 
@@ -114,7 +101,7 @@ namespace Nop.Services.Common
             //prepare URL to request
             var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopNewsRssPath,
-                NopVersion.FULL_VERSION,
+                NopVersion.CURRENT_VERSION,
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 _adminAreaSettings.HideAdvertisementsOnAdminArea,
                 _webHelper.GetStoreLocation(),
@@ -139,7 +126,7 @@ namespace Nop.Services.Common
         {
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
-                NopVersion.FULL_VERSION,
+                NopVersion.CURRENT_VERSION,
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
                 _webHelper.GetStoreLocation(),

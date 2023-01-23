@@ -21,8 +21,8 @@
     <None Remove="Content\nivoslider\license.txt" />
     <None Remove="Content\nivoslider\nivo-slider.css" />
     <None Remove="Content\nivoslider\README" />
-    <None Remove="Content\nivoslider\sample-images\banner_01.webp" />
-    <None Remove="Content\nivoslider\sample-images\banner_02.webp" />
+    <None Remove="Content\nivoslider\sample-images\banner1.jpg" />
+    <None Remove="Content\nivoslider\sample-images\banner2.jpg" />
     <None Remove="Content\nivoslider\themes\bar\arrows.png" />
     <None Remove="Content\nivoslider\themes\bar\bar.css" />
     <None Remove="Content\nivoslider\themes\bar\bullets.png" />
@@ -62,10 +62,10 @@
     <Content Include="Content\nivoslider\README">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\nivoslider\sample-images\banner_01.webp">
+    <Content Include="Content\nivoslider\sample-images\banner1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\nivoslider\sample-images\banner_02.webp">
+    <Content Include="Content\nivoslider\sample-images\banner2.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\nivoslider\themes\bar\arrows.png">
