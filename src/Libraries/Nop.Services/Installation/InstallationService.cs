@@ -308,6 +308,11 @@ namespace Nop.Services.Installation
                 new Store
                 {
                     Name = "Your store name",
+                    DefaultTitle = "Your store",
+                    DefaultMetaKeywords = string.Empty,
+                    DefaultMetaDescription = string.Empty,
+                    HomepageTitle = "Home page title",
+                    HomepageDescription = "Home page description",
                     Url = storeUrl,
                     SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
@@ -2759,7 +2764,7 @@ namespace Nop.Services.Installation
                 LogoPictureId = 0,
                 LetterPageSizeEnabled = false,
                 RenderOrderNotes = true,
-                FontFileName = "FreeSerif.ttf",
+                FontFamily = "FreeSerif",
                 InvoiceFooterTextColumn1 = null,
                 InvoiceFooterTextColumn2 = null
             });
@@ -2787,7 +2792,9 @@ namespace Nop.Services.Installation
                 SitemapXmlIncludeProducts = true,
                 SitemapXmlIncludeProductTags = true,
                 SitemapXmlIncludeCustomUrls = true,
-                SitemapXmlIncludeTopics = true
+                SitemapXmlIncludeTopics = true,
+                RebuildSitemapXmlAfterHours = 2 * 24,
+                SitemapBuildOperationDelay = 60
             });
 
             await settingService.SaveSettingAsync(new CommonSettings
@@ -2812,11 +2819,6 @@ namespace Nop.Services.Installation
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
-                HomepageTitle = "Home page title",
-                HomepageDescription = "Home page description",
-                DefaultTitle = "Your store",
-                DefaultMetaKeywords = string.Empty,
-                DefaultMetaDescription = string.Empty,
                 GenerateProductMetaDescription = true,
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
@@ -2840,7 +2842,7 @@ namespace Nop.Services.Installation
                 RichEditorAllowStyleTag = false,
                 UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
-                CheckCopyrightRemovalKey = true,
+                CheckLicense = true,
                 UseIsoDateFormatInJsonResult = true,
                 ShowDocumentationReferenceLinks = true
             });
@@ -2969,7 +2971,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToSearchWithCategoryName = true,
                 AllowCustomersToSearchWithManufacturerName = true,
                 DisplayAllPicturesOnCatalogPages = false,
-                ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product
+                ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
+                ActiveSearchProviderSystemName = string.Empty
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
@@ -3020,7 +3023,7 @@ namespace Nop.Services.Installation
                 LastNameEnabled = true,
                 LastNameRequired = true,
                 GenderEnabled = true,
-                DateOfBirthEnabled = true,
+                DateOfBirthEnabled = false,
                 DateOfBirthRequired = false,
                 DateOfBirthMinimumAge = null,
                 CompanyEnabled = true,
@@ -3122,7 +3125,9 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new ExternalAuthenticationSettings
             {
-                RequireEmailValidation = false, LogErrors = false, AllowCustomersToRemoveAssociations = true
+                RequireEmailValidation = false,
+                LogErrors = false,
+                AllowCustomersToRemoveAssociations = true
             });
 
             await settingService.SaveSettingAsync(new RewardPointsSettings
@@ -3168,7 +3173,10 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new MessageTemplatesSettings
             {
-                CaseInvariantReplacement = false, Color1 = "#b9babe", Color2 = "#ebecee", Color3 = "#dde2e6"
+                CaseInvariantReplacement = false,
+                Color1 = "#b9babe",
+                Color2 = "#ebecee",
+                Color3 = "#dde2e6"
             });
 
             await settingService.SaveSettingAsync(new ShoppingCartSettings
@@ -3318,7 +3326,8 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new DateTimeSettings
             {
-                DefaultStoreTimeZoneId = string.Empty, AllowCustomersToSetTimeZone = false
+                DefaultStoreTimeZoneId = string.Empty,
+                AllowCustomersToSetTimeZone = false
             });
 
             await settingService.SaveSettingAsync(new BlogSettings
@@ -9202,6 +9211,15 @@ namespace Nop.Services.Installation
                     Name = "Keep alive",
                     Seconds = 300,
                     Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                },
+                new ScheduleTask
+                {
+                    Name = nameof(ResetLicenseCheckTask),
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
                     Enabled = true,
                     LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false

@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
@@ -23,7 +21,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            localizationService.DeleteLocaleResources(new List<string>
             {
                 "Account.Fields.VatNumber.Status",
                 "Account.Fields.VatNumberStatus",
@@ -159,15 +157,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.SpecificationFilter.CurrentlyFilteredBy",
                 "Filtering.SpecificationFilter.Remove",
                 "Filtering.SpecificationFilter.Separator",
-            }).Wait();
+            });
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
-            
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            var (languageId, languages) = this.GetLanguageData();
+
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -713,74 +707,60 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
-            }, languageId).Wait();
-
+            }, languageId);
+            
             // rename locales
-            var localesToRename = new[]
+            this.RenameLocales(new Dictionary<string, string>
             {
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Added", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.AddNew", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.BackToList", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Deleted", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Deleted" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Required", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Required" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Info", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Info" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.EditOptionDetails" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Hint", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Hint" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Required", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Required" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.NumberOfAssociatedProducts" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.SaveBeforeEdit" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Updated", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Updated" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product" },
-                new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published" },
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Added"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.AddNew"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.BackToList"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Deleted"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Deleted",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Required"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Required",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Info"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Info",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.EditOptionDetails",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Hint"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Hint",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Required"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Required",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.NumberOfAssociatedProducts",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.SaveBeforeEdit",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.Updated"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Updated",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product",
+                ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published",
                 
                 //#475
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.BackToList", NewName = "Admin.Configuration.Authentication.ExternalMethods.BackToList"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Configure", NewName = "Admin.Configuration.Authentication.ExternalMethods.Configure"},
-                new { Name = "Admin.Configuration.ExternalAuthenticationMethods", NewName = "Admin.Configuration.Authentication.ExternalMethods"},
-                new { Name = "Permission.ManageExternalAuthenticationMethods", NewName = "Permission.Authentication.ManageExternalMethods"},
+                ["Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder",
+                ["Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName",
+                ["Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive",
+                ["Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName",
+                ["Admin.Configuration.ExternalAuthenticationMethods.BackToList"] = "Admin.Configuration.Authentication.ExternalMethods.BackToList",
+                ["Admin.Configuration.ExternalAuthenticationMethods.Configure"] = "Admin.Configuration.Authentication.ExternalMethods.Configure",
+                ["Admin.Configuration.ExternalAuthenticationMethods"] = "Admin.Configuration.Authentication.ExternalMethods",
+                ["Permission.ManageExternalAuthenticationMethods"] = "Permission.Authentication.ManageExternalMethods",
                 
                 //#4564
-                new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
+                ["Nop.Web.Framework.Validators.MaxDecimal"] = "Admin.Common.Validation.Decimal.Max",
 
                 //#5321
-                new { Name = "Common.Wait...", NewName = "Common.Wait"},
+                ["Common.Wait..."] = "Common.Wait",
 
                 //#5429
-                new { Name = "Search.NoResultsText", NewName = "Catalog.Products.NoResult"},
-
-            };
-
-            foreach (var lang in languages)
-            {
-                foreach (var locale in localesToRename)
-                {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
-                    if (lsr != null)
-                    {
-                        lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
-                    }
-                }
-            }
+                ["Search.NoResultsText"] = "Catalog.Products.NoResult"
+            }, languages, localizationService);
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

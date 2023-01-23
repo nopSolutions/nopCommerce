@@ -179,7 +179,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             var isCategoryProductUrl = _catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct;
             if (isCategoryProductUrl)
             {
-                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
+                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
                 var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
                 catalogSeName = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
             }

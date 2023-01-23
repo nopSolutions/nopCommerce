@@ -65,8 +65,12 @@ namespace Nop.Services.Plugins
         IList<(PluginDescriptor pluginDescriptor, bool needToDeploy)> PluginDescriptors { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of plugin names which are not compatible with the current version
+        /// Gets or sets the list of plugin which are not compatible with the current version
         /// </summary>
-        IList<string> IncompatiblePlugins { get; set; }
+        /// <remarks>
+        /// Key - the system name of plugin.
+        /// Value - the incompatibility type.
+        /// </remarks>
+        IDictionary<string, PluginIncompatibleType> IncompatiblePlugins { get; set; }
     }
 }

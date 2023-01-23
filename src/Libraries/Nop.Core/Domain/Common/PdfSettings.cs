@@ -28,9 +28,9 @@ namespace Nop.Core.Domain.Common
         public bool DisablePdfInvoicesForPendingOrders { get; set; }
 
         /// <summary>
-        /// Gets or sets the font file name that will be used
+        /// Gets or sets the font name that will be used
         /// </summary>
-        public string FontFileName { get; set; }
+        public string FontFamily { get; set; }
 
         /// <summary>
         /// Gets or sets the text that will appear at the bottom of invoices (column 1)

@@ -105,5 +105,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the common statistics model
         /// </returns>
         Task<CommonStatisticsModel> PrepareCommonStatisticsModelAsync();
+
+        /// <summary>
+        /// Prepare plugins warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models);
     }
 }

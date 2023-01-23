@@ -160,20 +160,6 @@
                                 @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                             </li>
                         }
-                        @if (Model.CustomValues != null)
-                        {
-                            foreach (var item in Model.CustomValues)
-                            {
-                                <li class="custom-value">
-                                    <span class="label">
-                                        @item.Key:
-                                    </span>
-                                    <span class="value">
-                                        @(item.Value != null ? item.Value.ToString() : "")
-                                    </span>
-                                </li>
-                            }
-                        }
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
@@ -214,6 +200,20 @@
                                         </p>
                                     </form>
                                 </li>
+                            }
+                            @if (Model.CustomValues != null)
+                            {
+                                foreach (var item in Model.CustomValues)
+                                {
+                                    <li class="custom-value">
+                                        <span class="label">
+                                            @item.Key:
+                                        </span>
+                                        <span class="value">
+                                            @(item.Value != null ? item.Value.ToString() : "")
+                                        </span>
+                                    </li>
+                                }
                             }
                         </ul>
                     </div>

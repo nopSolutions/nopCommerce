@@ -1,19 +1,25 @@
-﻿@using Nop.Core.Domain.Seo
-@inject SeoSettings seoSettings
+﻿@using Nop.Services.Localization
+@using Nop.Core
+@inject ILocalizationService localizationService
+@inject IStoreContext storeContext
 
 @{
     Layout = "_ColumnsOne";
 
+    var homepageTitle = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageTitle);
+
     //title
-    if (!string.IsNullOrEmpty(seoSettings.HomepageTitle))
+    if (!string.IsNullOrEmpty(homepageTitle))
     {
-        NopHtml.AddTitleParts(seoSettings.HomepageTitle);
+        NopHtml.AddTitleParts(homepageTitle);
     }
 
+    var homepageDescription = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageDescription);
+
     //meta
-    if (!string.IsNullOrEmpty(seoSettings.HomepageDescription))
+    if (!string.IsNullOrEmpty(homepageDescription))
     {
-        NopHtml.AddMetaDescriptionParts(seoSettings.HomepageDescription);
+        NopHtml.AddMetaDescriptionParts(homepageDescription);
     }
 
     //page class

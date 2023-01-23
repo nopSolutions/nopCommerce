@@ -104,7 +104,10 @@ namespace Nop.Services.Authentication.External
 
             //account is already assigned to another user
             if (currentLoggedInUser.Id != associatedUser.Id)
-                return ErrorAuthentication(new[] { await _localizationService.GetResourceAsync("Account.AssociatedExternalAuth.AccountAlreadyAssigned") }, returnUrl);
+                return await ErrorAuthenticationAsync(new[]
+                {
+                    await _localizationService.GetResourceAsync("Account.AssociatedExternalAuth.AccountAlreadyAssigned")
+                }, returnUrl);
 
             //or the user try to log in as himself. bit weird
             return SuccessfulAuthentication(returnUrl);
@@ -135,7 +138,7 @@ namespace Nop.Services.Authentication.External
                 return await RegisterNewUserAsync(parameters, returnUrl);
 
             //registration is disabled
-            return ErrorAuthentication(new[] { "Registration is disabled" }, returnUrl);
+            return await ErrorAuthenticationAsync(new[] { "Registration is disabled" }, returnUrl);
         }
 
         /// <summary>
@@ -154,7 +157,7 @@ namespace Nop.Services.Authentication.External
             {
                 var alreadyExistsError = string.Format(await _localizationService.GetResourceAsync("Account.AssociatedExternalAuth.EmailAlreadyExists"),
                     !string.IsNullOrEmpty(parameters.ExternalDisplayIdentifier) ? parameters.ExternalDisplayIdentifier : parameters.ExternalIdentifier);
-                return ErrorAuthentication(new[] { alreadyExistsError }, returnUrl);
+                return await ErrorAuthenticationAsync(new[] { alreadyExistsError }, returnUrl);
             }
 
             //registration is approved if validation isn't required
@@ -174,7 +177,7 @@ namespace Nop.Services.Authentication.External
             //whether registration request has been completed successfully
             var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
             if (!registrationResult.Success)
-                return ErrorAuthentication(registrationResult.Errors, returnUrl);
+                return await ErrorAuthenticationAsync(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
             await _eventPublisher.PublishAsync(new CustomerAutoRegisteredByExternalMethodEvent(customer, parameters));
@@ -215,7 +218,7 @@ namespace Nop.Services.Authentication.External
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
 
-            return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
+            return await ErrorAuthenticationAsync(new[] { "Error on registration" }, returnUrl);
         }
 
         /// <summary>
@@ -224,17 +227,17 @@ namespace Nop.Services.Authentication.External
         /// <param name="errors">Collection of errors</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult ErrorAuthentication(IEnumerable<string> errors, string returnUrl)
+        protected virtual async Task<IActionResult> ErrorAuthenticationAsync(IEnumerable<string> errors, string returnUrl)
         {
             var session = _httpContextAccessor.HttpContext?.Session;
 
             if (session != null)
             {
-                var existsErrors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey)?.ToList() ?? new List<string>();
+                var existsErrors = (await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey))?.ToList()?? new List<string>();
 
                 existsErrors.AddRange(errors);
 
-                session.Set(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey, existsErrors);
+                await session.SetAsync(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey, existsErrors);
             }
 
             return new RedirectToActionResult("Login", "Customer", !string.IsNullOrEmpty(returnUrl) ? new { ReturnUrl = returnUrl } : null);
@@ -279,7 +282,7 @@ namespace Nop.Services.Authentication.External
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
             if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, store.Id))
-                return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
+                return await ErrorAuthenticationAsync(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
             var currentLoggedInUser = await _customerService.IsRegisteredAsync(customer) ? customer : null;

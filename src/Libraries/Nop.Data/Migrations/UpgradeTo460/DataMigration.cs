@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using FluentMigrator;
@@ -18,7 +17,7 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-03 00:00:00", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+    [NopMigration("2022-07-20 00:00:01", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
@@ -34,7 +33,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         public override void Up()
         {
             //#4601 customer attribute values to customer table column values
-            var attributeKeys = new [] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
+            var attributeKeys = new[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
                 nameof(Customer.TimeZoneId), nameof(Customer.CustomCustomerAttributesXML), nameof(Customer.CountryId),
@@ -46,7 +45,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var customerRole = _dataProvider.GetTable<CustomerRole>().FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
             var customerRoleId = customerRole?.Id ?? 0;
 
-            var query = 
+            var query =
                 from c in _dataProvider.GetTable<Customer>()
                 join crm in _dataProvider.GetTable<CustomerCustomerRoleMapping>() on c.Id equals crm.CustomerId
                 where !c.Deleted && (customerRoleId == 0 || crm.CustomerRoleId == customerRoleId)
@@ -123,8 +122,8 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.DateOfBirth = getAttributeValue(customerAttributes, nameof(Customer.DateOfBirth), castToDateTime);
                 }
 
-                _dataProvider.UpdateEntitiesAsync(customers);
-                _dataProvider.BulkDeleteEntitiesAsync(genericAttributes);
+                _dataProvider.UpdateEntities(customers);
+                _dataProvider.BulkDeleteEntities(genericAttributes);
             }
 
             //#3777 new activity log types
@@ -260,6 +259,20 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 }
             }
 
+            var lastEnabledUtc = DateTime.UtcNow;
+            if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                _dataProvider.InsertEntity(new ScheduleTask
+                {
+                    Name = "ResetLicenseCheckTask",
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                });
+            }
+
             //#3651
             if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.OrderProcessingCustomerNotification, StringComparison.InvariantCultureIgnoreCase) == 0))
             {
@@ -280,7 +293,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             if (paRange is not null)
             {
                 paRange.Name = "2 weeks";
-                _dataProvider.UpdateEntityAsync(paRange).Wait();
+                _dataProvider.UpdateEntity(paRange);
             }
         }
 

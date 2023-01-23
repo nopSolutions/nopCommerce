@@ -64,7 +64,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
 
             //prepare order GUID
             var paymentRequest = new ProcessPaymentRequest();
-            _paymentService.GenerateOrderGuid(paymentRequest);
+            await _paymentService.GenerateOrderGuidAsync(paymentRequest);
 
             //try to create an order
             var (order, error) = await _serviceManager.CreateOrderAsync(_settings, paymentRequest.OrderGuid);
@@ -86,7 +86,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
                     _notificationService.ErrorNotification(error);
             }
 
-            HttpContext.Session.Set(PayPalCommerceDefaults.PaymentRequestSessionKey, paymentRequest);
+            await HttpContext.Session.SetAsync(PayPalCommerceDefaults.PaymentRequestSessionKey, paymentRequest);
 
             return View("~/Plugins/Payments.PayPalCommerce/Views/PaymentInfo.cshtml", model);
         }

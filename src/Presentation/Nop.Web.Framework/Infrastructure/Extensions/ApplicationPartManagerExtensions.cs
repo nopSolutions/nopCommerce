@@ -22,7 +22,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         #region Fields
 
         private static readonly INopFileProvider _fileProvider;
-        private static readonly List<string> _baseAppLibraries;
+        private static readonly List<KeyValuePair<string, Version>> _baseAppLibraries;
+        private static readonly Dictionary<string, Version> _pluginLibraries;
         private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
         private static readonly ReaderWriterLockSlim _locker = new();
 
@@ -35,26 +36,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //we use the default file provider, since the DI isn't initialized yet
             _fileProvider = CommonHelper.DefaultFileProvider;
 
-            _baseAppLibraries = new List<string>();
-
+            _baseAppLibraries = new List<KeyValuePair<string, Version>>();
+            _pluginLibraries = new Dictionary<string, Version>();
+            
             //get all libraries from /bin/{version}/ directory
-            _baseAppLibraries.AddRange(_fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")
-                .Select(fileName => _fileProvider.GetFileName(fileName)));
+            foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")) 
+                _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
 
             //get all libraries from base site directory
             if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
-            {
-                _baseAppLibraries.AddRange(_fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll")
-                    .Select(fileName => _fileProvider.GetFileName(fileName)));
-            }
+                foreach (var file in _fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll"))
+                    _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
 
             //get all libraries from refs directory
             var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
             if (_fileProvider.DirectoryExists(refsPathName))
-            {
-                _baseAppLibraries.AddRange(_fileProvider.GetFiles(refsPathName, "*.dll")
-                    .Select(fileName => _fileProvider.GetFileName(fileName)));
-            }
+                foreach (var file in _fileProvider.GetFiles(refsPathName, "*.dll"))
+                    _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
         }
 
         #endregion
@@ -73,7 +71,41 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         #endregion
 
         #region Utilities
-        
+
+        private static Version GetAssemblyVersion(string filePath)
+        {
+            try
+            {
+                return AssemblyName.GetAssemblyName(filePath).Version;
+            }
+            catch (BadImageFormatException)
+            {
+                //ignore
+            }
+
+            return null;
+        }
+
+        private static void CheckCompatible(PluginDescriptor pluginDescriptor, IDictionary<string, Version> assemblies)
+        {
+            var refFiles = pluginDescriptor.PluginFiles.Where(file =>
+                !_fileProvider.GetFileName(file).Equals(_fileProvider.GetFileName(pluginDescriptor.OriginalAssemblyFile))).ToList();
+
+            foreach (var refFile in refFiles.Where(file =>
+                         assemblies.ContainsKey(_fileProvider.GetFileName(file).ToLower())))
+                IsAlreadyLoaded(refFile, pluginDescriptor.SystemName);
+
+            var hasCollisions = _loadedAssemblies.Where(p =>
+                    p.Value.References.Any(r => r.PluginName.Equals(pluginDescriptor.SystemName)))
+                .Any(p => p.Value.Collisions.Any());
+
+            if (hasCollisions)
+            {
+                PluginsInfo.IncompatiblePlugins.Add(pluginDescriptor.SystemName, PluginIncompatibleType.HasCollisions);
+                PluginsInfo.PluginDescriptors.Remove((pluginDescriptor, false));
+            }
+        }
+
         /// <summary>
         /// Load and register the assembly
         /// </summary>
@@ -136,6 +168,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (assemblyFile.EndsWith(".dll")) 
                 _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
 
+            if (!_pluginLibraries.ContainsKey(fileProvider.GetFileName(assemblyFile))) 
+                _pluginLibraries.Add(fileProvider.GetFileName(assemblyFile), assembly.GetName().Version);
+
             return assembly;
         }
 
@@ -150,7 +185,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //ignore already loaded libraries
             //(we do it because not all libraries are loaded immediately after application start)
             var fileName = _fileProvider.GetFileName(filePath);
-            if (_baseAppLibraries.Any(library => library.Equals(fileName, StringComparison.InvariantCultureIgnoreCase)))
+            if (_baseAppLibraries.Any(library => library.Key.Equals(fileName, StringComparison.InvariantCultureIgnoreCase)))
                 return true;
 
             try
@@ -171,11 +206,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     if (!_loadedAssemblies.ContainsKey(assemblyName))
                     {
                         //add it to the list to find collisions later
-                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, assembly.FullName));
+                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, GetAssemblyVersion(assembly.Location)));
                     }
 
                     //set assembly name and plugin name for further using
-                    _loadedAssemblies[assemblyName].References.Add((pluginName, AssemblyName.GetAssemblyName(filePath).FullName));
+                    _loadedAssemblies[assemblyName].References.Add((pluginName, GetAssemblyVersion(filePath)));
 
                     return true;
                 }
@@ -257,6 +292,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (pluginType != default)
                             pluginDescriptor.PluginType = pluginType;
                     }
+
+
+                    var assemblies = _baseAppLibraries.ToList();
+                    foreach (var pluginLoadedAssemblyInfo in _loadedAssemblies)
+                        assemblies.Add(new KeyValuePair<string, Version>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory));
+
+                    foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList()) 
+                        assemblies.Add(new KeyValuePair<string, Version>(pluginLibrary.Key, pluginLibrary.Value));
+
+                    var inMemoryAssemblies = assemblies.GroupBy(p => p.Key).Select(p => p.First())
+                        .ToDictionary(p => p.Key.ToLower(), p => p.Value);
+
+                    foreach (var pluginDescriptor in PluginsInfo.PluginDescriptors.Where(p => !p.needToDeploy)
+                                 .Select(p => p.pluginDescriptor).ToList())
+                        CheckCompatible(pluginDescriptor, inMemoryAssemblies);
                 }
                 catch (Exception exception)
                 {

@@ -62,6 +62,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseNopRequestLocalization();
+
+            //configure PDF
+            application.UseNopPdf();
         }
 
         /// <summary>

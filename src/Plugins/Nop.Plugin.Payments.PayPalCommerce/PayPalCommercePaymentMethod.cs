@@ -354,14 +354,14 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// A task that represents the asynchronous operation
         /// The task result contains the payment info holder
         /// </returns>
-        public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+        public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             //already set
-            return Task.FromResult(_actionContextAccessor.ActionContext.HttpContext.Session
-                .Get<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey));
+            return await _actionContextAccessor.ActionContext.HttpContext.Session
+                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
         }
 
         /// <summary>

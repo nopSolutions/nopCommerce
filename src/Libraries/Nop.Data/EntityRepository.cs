@@ -150,6 +150,35 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Get the entity entry
+        /// </summary>
+        /// <param name="id">Entity entry identifier</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
+        /// <returns>
+        /// The entity entry
+        /// </returns>
+        public virtual TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        {
+            if (!id.HasValue || id == 0)
+                return null;
+
+            TEntity getEntity()
+            {
+                return AddDeletedFilter(Table, includeDeleted).FirstOrDefault(entity => entity.Id == Convert.ToInt32(id));
+            }
+
+            if (getCacheKey == null)
+                return getEntity();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
+
+            return _staticCacheManager.Get(cacheKey, getEntity);
+        }
+
+        /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
@@ -350,6 +379,23 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Insert the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Insert(TEntity entity, bool publishEvent = true)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dataProvider.InsertEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityInserted(entity);
+        }
+
+        /// <summary>
         /// Insert entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -370,6 +416,28 @@ namespace Nop.Data
             //event notification
             foreach (var entity in entities)
                 await _eventPublisher.EntityInsertedAsync(entity);
+        }
+
+        /// <summary>
+        /// Insert entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Insert(IList<TEntity> entities, bool publishEvent = true)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            _dataProvider.BulkInsertEntities(entities);
+            transaction.Complete();
+
+            if (!publishEvent)
+                return;
+
+            //event notification
+            foreach (var entity in entities)
+                _eventPublisher.EntityInserted(entity);
         }
 
         /// <summary>
@@ -405,6 +473,23 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Update the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Update(TEntity entity, bool publishEvent = true)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dataProvider.UpdateEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityUpdated(entity);
+        }
+
+        /// <summary>
         /// Update entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -426,6 +511,29 @@ namespace Nop.Data
 
             foreach (var entity in entities)
                 await _eventPublisher.EntityUpdatedAsync(entity);
+        }
+
+        /// <summary>
+        /// Update entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Update(IList<TEntity> entities, bool publishEvent = true)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (entities.Count == 0)
+                return;
+
+            _dataProvider.UpdateEntities(entities);
+
+            //event notification
+            if (!publishEvent)
+                return;
+
+            foreach (var entity in entities)
+                _eventPublisher.EntityUpdated(entity);
         }
 
         /// <summary>
@@ -454,6 +562,33 @@ namespace Nop.Data
             //event notification
             if (publishEvent)
                 await _eventPublisher.EntityDeletedAsync(entity);
+        }
+
+        /// <summary>
+        /// Delete the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Delete(TEntity entity, bool publishEvent = true)
+        {
+            switch (entity)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(entity));
+
+                case ISoftDeletedEntity softDeletedEntity:
+                    softDeletedEntity.Deleted = true;
+                    _dataProvider.UpdateEntity(entity);
+                    break;
+
+                default:
+                    _dataProvider.DeleteEntity(entity);
+                    break;
+            }
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityDeleted(entity);
         }
 
         /// <summary>
@@ -508,6 +643,25 @@ namespace Nop.Data
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            transaction.Complete();
+
+            return countDeletedRecords;
+        }
+
+        /// <summary>
+        /// Delete entity entries by the passed predicate
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition</param>
+        /// <returns>
+        /// The number of deleted records
+        /// </returns>
+        public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);
             transaction.Complete();
 
             return countDeletedRecords;

@@ -95,7 +95,11 @@
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";
         listControllerName = "Plugin";
-    }    
+    }
+
+    //IAdminMenuPlugin can set own active menu item
+    if (plugin is IAdminMenuPlugin && NopHtml.GetActiveMenuItemSystemName() is string menuItem && !string.IsNullOrEmpty(menuItem))
+        activeMenuSystemName = menuItem;
 
     Layout = "_AdminLayout";
     //page title

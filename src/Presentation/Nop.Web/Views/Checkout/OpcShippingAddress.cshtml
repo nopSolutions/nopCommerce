@@ -32,7 +32,7 @@
                     }
                     <div>
                         <select name="shipping_address_id" id="shipping-address-select" class="address-select"
-                                title="" onchange="Shipping.newAddress(!this.value)">
+                                title="" onchange="Shipping.newAddress(this.value, @Model.SelectedBillingAddress)">
                             @foreach (var address in Model.ExistingAddresses)
                             {
                                 var addressLine = "";

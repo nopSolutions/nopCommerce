@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Data
 {
@@ -48,23 +46,20 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Data
                 return;
 
             //locales
-            var languages = _languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .FirstOrDefault(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                ?.Id;
+            var (languageId, languages) = this.GetLanguageData();
 
-            _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            _localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages"] = "Display Pay Later messages",
                 ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages.Hint"] = "Determine whether to display Pay Later messages. This message displays how much the customer pays in four payments. The message will be shown next to the PayPal buttons.",
-            }, languageId).Wait();
+            }, languageId);
 
 
             //settings
-            if (!_settingService.SettingExistsAsync(_payPalCommerceSettings, settings => settings.DisplayPayLaterMessages).Result)
+            if (!_settingService.SettingExists(_payPalCommerceSettings, settings => settings.DisplayPayLaterMessages))
                 _payPalCommerceSettings.DisplayPayLaterMessages = false;
             
-            _settingService.SaveSettingAsync(_payPalCommerceSettings).Wait();
+            _settingService.SaveSetting(_payPalCommerceSettings);
         }
 
         /// <summary>

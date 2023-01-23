@@ -22,7 +22,7 @@ namespace Nop.Core.Infrastructure
         /// Get IServiceProvider
         /// </summary>
         /// <returns>IServiceProvider</returns>
-        protected IServiceProvider GetServiceProvider(IServiceScope scope = null)
+        protected virtual IServiceProvider GetServiceProvider(IServiceScope scope = null)
         {
             if (scope == null)
             {
@@ -51,7 +51,7 @@ namespace Nop.Core.Infrastructure
 
             //execute tasks
             foreach (var task in instances)
-                task.ExecuteAsync().Wait();
+                task.Execute();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Core.Infrastructure
             AutoMapperConfiguration.Init(config);
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        protected virtual Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             //check for assembly already loaded
             var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
@@ -103,7 +103,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //register engine
             services.AddSingleton<IEngine>(this);
@@ -137,7 +137,7 @@ namespace Nop.Core.Infrastructure
         /// Configure HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void ConfigureRequestPipeline(IApplicationBuilder application)
+        public virtual void ConfigureRequestPipeline(IApplicationBuilder application)
         {
             ServiceProvider = application.ApplicationServices;
 
@@ -161,7 +161,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="scope">Scope</param>
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
-        public T Resolve<T>(IServiceScope scope = null) where T : class
+        public virtual T Resolve<T>(IServiceScope scope = null) where T : class
         {
             return (T)Resolve(typeof(T), scope);
         }
@@ -172,7 +172,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="type">Type of resolved service</param>
         /// <param name="scope">Scope</param>
         /// <returns>Resolved service</returns>
-        public object Resolve(Type type, IServiceScope scope = null)
+        public virtual object Resolve(Type type, IServiceScope scope = null)
         {
             return GetServiceProvider(scope)?.GetService(type);
         }

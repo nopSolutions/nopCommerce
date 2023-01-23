@@ -61,6 +61,7 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<Shipment> _shipmentRepository;
         protected readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         protected readonly IRepository<TierPrice> _tierPriceRepository;
+        protected readonly ISearchPluginManager _searchPluginManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
@@ -102,6 +103,7 @@ namespace Nop.Services.Catalog
             IRepository<Shipment> shipmentRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<TierPrice> tierPriceRepository,
+            ISearchPluginManager searchPluginManager,
             IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
@@ -139,6 +141,7 @@ namespace Nop.Services.Catalog
             _shipmentRepository = shipmentRepository;
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _tierPriceRepository = tierPriceRepository;
+            _searchPluginManager = searchPluginManager;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
@@ -901,10 +904,18 @@ namespace Nop.Services.Catalog
 
                 //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
                 var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
-
                 IQueryable<int> productsByKeywords;
 
-                productsByKeywords =
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
+
+                if (activeSearchProvider is not null)
+                {
+                    productsByKeywords = (await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue)).AsQueryable();
+                }
+                else
+                {
+                    productsByKeywords =
                         from p in _productRepository.Table
                         where p.Name.Contains(keywords) ||
                             (searchDescriptions &&
@@ -913,19 +924,20 @@ namespace Nop.Services.Catalog
                             (searchSku && p.Sku == keywords)
                         select p.Id;
 
-                if (searchLocalizedValue)
-                {
-                    productsByKeywords = productsByKeywords.Union(
-                        from lp in _localizedPropertyRepository.Table
-                        let checkName = lp.LocaleKey == nameof(Product.Name) &&
-                                        lp.LocaleValue.Contains(keywords)
-                        let checkShortDesc = searchDescriptions &&
-                                        lp.LocaleKey == nameof(Product.ShortDescription) &&
-                                        lp.LocaleValue.Contains(keywords)
-                        where
-                            lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
+                    if (searchLocalizedValue)
+                    {
+                        productsByKeywords = productsByKeywords.Union(
+                            from lp in _localizedPropertyRepository.Table
+                            let checkName = lp.LocaleKey == nameof(Product.Name) &&
+                                            lp.LocaleValue.Contains(keywords)
+                            let checkShortDesc = searchDescriptions &&
+                                            lp.LocaleKey == nameof(Product.ShortDescription) &&
+                                            lp.LocaleValue.Contains(keywords)
+                            where
+                                lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
 
-                        select lp.EntityId);
+                            select lp.EntityId);
+                    }
                 }
 
                 //search by SKU for ProductAttributeCombination

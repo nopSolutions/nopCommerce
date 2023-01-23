@@ -14,16 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.1" />
-    <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
-    <PackageReference Include="MailKit" Version="2.15.0" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="4.1.0" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.9.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.2" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.2" />
-    <PackageReference Include="Svg.Skia" Version="0.5.16" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+    <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
+    <PackageReference Include="MailKit" Version="3.4.3" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="5.1.0" />
+    <PackageReference Include="QuestPDF" Version="2022.11.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.10.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
+    <PackageReference Include="Svg.Skia" Version="0.5.18" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.23" />
   </ItemGroup>
 
   <ItemGroup>

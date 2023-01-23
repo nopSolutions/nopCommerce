@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
 using LinqToDB;
@@ -35,17 +35,6 @@ namespace Nop.Data.DataProviders
         #endregion
 
         #region Utils
-
-        /// <summary>
-        /// Gets an additional mapping schema
-        /// </summary>
-        private MappingSchema GetMappingSchema()
-        {
-            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
-            {
-                MetadataReader = new FluentMigratorMetadataReader(this)
-            };
-        }
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -143,8 +132,18 @@ namespace Nop.Data.DataProviders
             var targetAssembly = typeof(NopDbStartup).Assembly;
             migrationManager.ApplyUpMigrations(targetAssembly);
 
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+            var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
+                .Select(t => t.Assembly)
+                .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
+                .Distinct()
+                .ToArray();
+
             //mark update migrations as applied
-            migrationManager.ApplyUpMigrations(targetAssembly, MigrationProcessType.Update, true);
+            foreach (var assembly in mAssemblies)
+            {
+                migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
+            }
         }
 
         /// <summary>
@@ -239,6 +238,17 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Get or create mapping schema with specified configuration name (<see cref="ConfigurationName"/>) and base mapping schema
+        /// </summary>
+        public MappingSchema GetMappingSchema()
+        {
+            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
+            {
+                MetadataReader = new FluentMigratorMetadataReader(this)
+            };
+        }
+
+        /// <summary>
         /// Returns queryable source for specified mapping class for current connection,
         /// mapped to database table or view.
         /// </summary>
@@ -247,10 +257,10 @@ namespace Nop.Data.DataProviders
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
             return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
-                {
-                    MappingSchema = GetMappingSchema(),
-                    CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-                }
+            {
+                MappingSchema = GetMappingSchema(),
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+            }
                 .GetTable<TEntity>();
         }
 
@@ -297,6 +307,18 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Updates record in table, using values from entity parameter.
+        /// Record to update identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.Update(entity);
+        }
+
+        /// <summary>
         /// Updates records in table, using values from entity parameter.
         /// Records to update are identified by match on primary key value from obj value.
         /// </summary>
@@ -312,6 +334,20 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void UpdateEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            //we don't use the Merge API on this level, because this API not support all databases.
+            //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
+            foreach (var entity in entities)
+                UpdateEntity(entity);
+        }
+
+        /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
         /// </summary>
@@ -322,6 +358,18 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = CreateDataConnection();
             await dataContext.DeleteAsync(entity);
+        }
+
+        /// <summary>
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.Delete(entity);
         }
 
         /// <summary>
@@ -347,6 +395,23 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            if (entities.All(entity => entity.Id == 0))
+                foreach (var entity in entities)
+                    dataContext.Delete(entity);
+            else
+                dataContext.GetTable<TEntity>()
+                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
+                    .Delete();
+        }
+
+        /// <summary>
         /// Performs delete records in a table by a condition
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
@@ -364,7 +429,23 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
-        /// Performs bulk insert operation for entity colllection.
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// The number of deleted records
+        /// </returns>
+        public virtual int BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            return dataContext.GetTable<TEntity>()
+                .Where(predicate)
+                .Delete();
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity collection.
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -373,6 +454,17 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = CreateDataConnection(LinqToDbDataProvider);
             await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity collection.
+        /// </summary>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
         /// <summary>

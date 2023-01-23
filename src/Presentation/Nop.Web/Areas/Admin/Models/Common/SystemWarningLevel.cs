@@ -7,7 +7,6 @@
     {
         Pass,
         Recommendation,
-        CopyrightRemovalKey,
         Warning,
         Fail
     }
