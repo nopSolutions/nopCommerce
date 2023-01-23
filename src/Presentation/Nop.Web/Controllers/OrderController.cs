@@ -190,10 +190,14 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
+            var orders = new List<Order>
+            {
+                order
+            };
             byte[] bytes;
             await using (var stream = new MemoryStream())
             {
-                await _pdfService.PrintOrderToPdfAsync(stream, order, await _workContext.GetWorkingLanguageAsync());
+                await _pdfService.PrintOrdersToPdfAsync(stream, orders, (await _workContext.GetWorkingLanguageAsync()).Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");

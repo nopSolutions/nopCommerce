@@ -123,14 +123,6 @@ namespace Nop.Services.Localization
         /// </remarks>
         public static CacheKey LocalizedPropertiesCacheKey => new("Nop.localizedproperty.all.{0}-{1}-{2}");
 
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        public static CacheKey LocalizedPropertyLookupCacheKey => new("Nop.localizedproperty.value.{0}");
-
         #endregion
 
         #endregion

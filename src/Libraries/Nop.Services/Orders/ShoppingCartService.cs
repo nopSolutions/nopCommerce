@@ -1427,12 +1427,7 @@ namespace Nop.Services.Orders
                 {
                     foreach (var attributeValue in attributeValues)
                     {
-                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product,
-                            attributeValue,
-                            customer,
-                            store,
-                            product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null,
-                            quantity);
+                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
                     }
                 }
 

@@ -75,8 +75,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareProductReviewsModel()
         {
-            var pId = (await _productService.GetProductReviewByIdAsync(1)).ProductId;
-            var product = await _productService.GetProductByIdAsync(pId);
+            var product = await _productService.GetProductByIdAsync(3);
             var model = await _productModelFactory.PrepareProductReviewsModelAsync(new ProductReviewsModel(), product);
 
             model.ProductId.Should().Be(product.Id);

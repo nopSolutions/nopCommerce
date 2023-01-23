@@ -21,12 +21,12 @@ namespace Nop.Tests
 
         public class TestSmtpClient : SmtpClient
         {
-            public override Task<string> SendAsync(MimeMessage message,
+            public override Task SendAsync(MimeMessage message,
                 CancellationToken cancellationToken = default,
                 ITransferProgress progress = null)
             {
                 MessageIsSent = true;
-                return Task.FromResult(string.Empty);
+                return Task.CompletedTask;
             }
 
             public static bool MessageIsSent { get; set; }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="Slovensky" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Email administrátora</Value>
+    <Value>Admin user email</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
     <Value>Zadajte email administrátora</Value>
@@ -34,10 +34,10 @@
     <Value>Zlý formát databázového spojenia s SQL Serverom.</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Krajina</Value>
+    <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Vyberte si svoju krajinu...</Value>
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Vytvoriť databázu, ak neexistuje.</Value>

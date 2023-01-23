@@ -34,10 +34,10 @@
     <Value>Hibás az  SQL kapcsolat string formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Ország</Value>
+    <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Válaszd ki az országod...</Value>
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Hozzon létre adatbázist, ha nem létezik</Value>

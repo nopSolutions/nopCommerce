@@ -26,42 +26,42 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
             //miniprofiler settings are moved to appSettings
             settingRepository
-                .Delete(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
-                    setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore");
+                .DeleteAsync(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
+                    setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore").Wait();
 
             //#4363
-            var commonSettings = settingService.LoadSetting<CommonSettings>();
+            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
 
-            if (!settingService.SettingExists(commonSettings, settings => settings.ClearLogOlderThanDays))
+            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Result)
             {
                 commonSettings.ClearLogOlderThanDays = 0;
-                settingService.SaveSetting(commonSettings, settings => settings.ClearLogOlderThanDays);
+                settingService.SaveSettingAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Wait();
             }
 
             //#5551
-            var catalogSettings = settingService.LoadSetting<CatalogSettings>();
+            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
 
-            if (!settingService.SettingExists(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering))
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Result)
             {
                 catalogSettings.EnableSpecificationAttributeFiltering = true;
-                settingService.SaveSetting(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering);
+                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Wait();
             }
 
             //#5204
-            var shippingSettings = settingService.LoadSetting<ShippingSettings>();
+            var shippingSettings = settingService.LoadSettingAsync<ShippingSettings>().Result;
 
-            if (!settingService.SettingExists(shippingSettings, settings => settings.ShippingSorting))
+            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.ShippingSorting).Result)
             {
                 shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
-                settingService.SaveSetting(shippingSettings, settings => settings.ShippingSorting);
+                settingService.SaveSettingAsync(shippingSettings, settings => settings.ShippingSorting).Wait();
             }
 
             //#5698
-            var orderSettings = settingService.LoadSetting<OrderSettings>();
-            if (!settingService.SettingExists(orderSettings, settings => settings.DisplayOrderSummary))
+            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayOrderSummary).Result)
             {
                 orderSettings.DisplayOrderSummary = true;
-                settingService.SaveSetting(orderSettings, settings => settings.DisplayOrderSummary);
+                settingService.SaveSettingAsync(orderSettings, settings => settings.DisplayOrderSummary).Wait();
             }
         }
 

@@ -603,13 +603,6 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
-        /// </summary>
-        public string WebRootPath { get; }
-
-        #endregion
+        protected string WebRootPath { get; }
     }
 }

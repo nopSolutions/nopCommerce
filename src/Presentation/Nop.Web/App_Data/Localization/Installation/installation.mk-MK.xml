@@ -34,10 +34,10 @@
     <Value>Погрешен формат на низа SQL врска</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Земја</Value>
+    <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>одберете ја вашата држава</Value>
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Создадете база на податоци ако не постои</Value>

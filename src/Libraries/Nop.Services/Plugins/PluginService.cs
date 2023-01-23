@@ -481,8 +481,10 @@ namespace Nop.Services.Plugins
 
             //display all plugins on the plugin list page
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.ToList();
-            foreach (var pluginDescriptor in pluginDescriptors) 
+            foreach (var pluginDescriptor in pluginDescriptors)
+            {
                 pluginDescriptor.pluginDescriptor.ShowInPluginsList = true;
+            }
 
             //clear the uploaded directory
             foreach (var directory in _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath)))
@@ -703,7 +705,7 @@ namespace Nop.Services.Plugins
         /// Get names of incompatible plugins
         /// </summary>
         /// <returns>List of plugin names</returns>
-        public virtual IDictionary<string, PluginIncompatibleType> GetIncompatiblePlugins()
+        public virtual IList<string> GetIncompatiblePlugins()
         {
             return _pluginsInfo.IncompatiblePlugins;
         }

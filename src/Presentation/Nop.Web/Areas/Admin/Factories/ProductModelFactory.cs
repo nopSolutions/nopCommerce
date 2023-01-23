@@ -7,10 +7,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
@@ -18,7 +16,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -31,7 +28,6 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -70,7 +66,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductTagService _productTagService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ISettingModelFactory _settingModelFactory;
-        private readonly ISettingService _settingService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -82,7 +77,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IVideoService _videoService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly NopHttpClient _nopHttpClient;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -114,7 +108,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductTagService productTagService,
             IProductTemplateService productTemplateService,
             ISettingModelFactory settingModelFactory,
-            ISettingService settingService,
             IShipmentService shipmentService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
@@ -126,7 +119,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IVideoService videoService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            NopHttpClient nopHttpClient,
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
@@ -145,6 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizedModelFactory = localizedModelFactory;
             _manufacturerService = manufacturerService;
             _measureService = measureService;
+            _measureSettings = measureSettings;
             _orderService = orderService;
             _pictureService = pictureService;
             _productAttributeFormatter = productAttributeFormatter;
@@ -154,7 +147,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _productTagService = productTagService;
             _productTemplateService = productTemplateService;
             _settingModelFactory = settingModelFactory;
-            _settingService = settingService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
@@ -165,8 +157,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _urlRecordService = urlRecordService;
             _videoService = videoService;
             _workContext = workContext;
-            _measureSettings = measureSettings;
-            _nopHttpClient = nopHttpClient;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
         }
@@ -696,20 +686,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //a vendor should have access only to his products
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             searchModel.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
-
-            var licenseCheckModel = new LicenseCheckModel();
-            try
-            {
-                var result = await _nopHttpClient.GetLicenseCheckDetailsAsync();
-                if (!string.IsNullOrEmpty(result))
-                {
-                    licenseCheckModel = JsonConvert.DeserializeObject<LicenseCheckModel>(result);
-                    if (licenseCheckModel.DisplayWarning == false && licenseCheckModel.BlockPages == false)
-                        await _settingService.SetSettingAsync($"{nameof(AdminAreaSettings)}.{nameof(AdminAreaSettings.CheckLicense)}", false);
-                }
-            }
-            catch { }
-            searchModel.LicenseCheckModel = licenseCheckModel;
 
             //prepare available categories
             await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);

@@ -24,7 +24,7 @@
 <div class="upload-picture-block">
     <div class="picture-container">
         <div id="@(clientId + "image")" class="uploaded-image">
-            <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" width="@(pictureSize)" />
+            <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" />
         </div>
     </div>
     <div class="upload-button-container">
@@ -103,13 +103,13 @@
             }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {
-                    $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "' width='@(pictureSize)'/> ");
+                $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
                 $("#@(clientId + "value") input").val(responseJSON.pictureId);
                 $("#@(clientId + "remove")").show();
             }
         });
         $("#@(clientId + "remove")").click(function(e) {
-            $("#@(clientId + "image")").html("<img src='@await pictureService.GetDefaultPictureUrlAsync(pictureSize)' width='@(pictureSize)' />");
+            $("#@(clientId + "image")").html("<img src='@await pictureService.GetDefaultPictureUrlAsync(pictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
             $("#@(clientId) .qq-upload-list-selector").empty();
             $(this).hide();

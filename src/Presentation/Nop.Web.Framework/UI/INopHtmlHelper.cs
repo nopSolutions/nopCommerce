@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 
 namespace Nop.Web.Framework.UI
 {
@@ -25,9 +24,8 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>A task that represents the asynchronous operation
-        /// The task result contains generated HTML string</returns>
-        Task<IHtmlContent> GenerateTitleAsync(bool addDefaultTitle = true, string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "");
 
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
@@ -45,9 +43,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>A task that represents the asynchronous operation
-        /// The task result contains generated HTML string</returns>
-        Task<IHtmlContent> GenerateMetaDescriptionAsync(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaDescription(string part = "");
 
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
@@ -65,9 +62,8 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>A task that represents the asynchronous operation
-        /// The task result contains generated HTML string</returns>
-        Task<IHtmlContent> GenerateMetaKeywordsAsync(string part = "");
+        /// <returns>Generated HTML string</returns>
+        IHtmlContent GenerateMetaKeywords(string part = "");
 
         /// <summary>
         /// Add script element

@@ -64,10 +64,6 @@ namespace Nop.Data.Migrations
                         migrationProcessType != migrationAttribute.TargetMigrationProcess)
                         return false;
 
-                    if (migrationProcessType == MigrationProcessType.NoDependencies &&
-                        migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoDependencies)
-                        return false;
-
                     return assembly == null || t.Assembly == assembly;
 
                 }) ?? Enumerable.Empty<IMigration>();
@@ -131,16 +127,8 @@ namespace Nop.Data.Migrations
                     migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)))
                     continue;
 #endif
-                try
-                {
-                    _versionLoader.Value
-                        .UpdateVersionInfo(migrationInfo.Version,
-                            migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
-                }
-                catch 
-                {
-                    //TODO: refactoring the GetUpMigrations to get directly selected MigrationProcessType for commitVersionOnly == true
-                }
+                _versionLoader.Value
+                    .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
             }
         }
 

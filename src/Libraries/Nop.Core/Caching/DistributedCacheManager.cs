@@ -83,31 +83,6 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Remove items by cache key prefix
-        /// </summary>
-        /// <param name="prefix">Cache key prefix</param>
-        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        protected void RemoveByPrefixInstanceData(string prefix, params object[] prefixParameters)
-        {
-            using var _ = _locker.Lock();
-
-            prefix = PrepareKeyPrefix(prefix, prefixParameters);
-
-            var regex = new Regex(prefix,
-                RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            var matchesKeys = new List<CacheKey>();
-
-            //get cache keys that matches pattern
-            matchesKeys.AddRange(_items.Keys.Where(key => regex.IsMatch(key.Key)).ToList());
-
-            //remove matching values
-            if (matchesKeys.Any())
-                foreach (var key in matchesKeys)
-                    _items.TryRemove(key, out var _);
-        }
-
-        /// <summary>
         /// Prepare cache entry options for the passed key
         /// </summary>
         /// <param name="key">Cache key</param>
@@ -344,13 +319,6 @@ namespace Nop.Core.Caching
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         public abstract Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters);
-
-        /// <summary>
-        /// Remove items by cache key prefix
-        /// </summary>
-        /// <param name="prefix">Cache key prefix</param>
-        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        public abstract void RemoveByPrefix(string prefix, params object[] prefixParameters);
 
         /// <summary>
         /// Clear all cache data

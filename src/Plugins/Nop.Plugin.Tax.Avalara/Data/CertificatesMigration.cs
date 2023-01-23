@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Tax.Avalara.Data
 {
@@ -46,9 +48,12 @@ namespace Nop.Plugin.Tax.Avalara.Data
                 return;
 
             //locales
-            var (languageId, languages) = this.GetLanguageData();
+            var languages = _languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .FirstOrDefault(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                ?.Id;
 
-            _localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+            _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.Avalara.Configuration.Certificates"] = "Exemption certificates",
                 ["Plugins.Tax.Avalara.Configuration.Certificates.InProgress"] = "Exemption certificates",
@@ -98,9 +103,9 @@ namespace Nop.Plugin.Tax.Avalara.Data
                 ["Plugins.Tax.Avalara.Fields.EnableCertificates.Hint"] = "Determine whether to enable this feature. In this case, a new page will be added in the account section, so customers can manage their exemption certificates before making a purchase.",
                 ["Plugins.Tax.Avalara.Fields.EnableCertificates.Warning"] = "To use this feature, you need the following information from customers: name, country, state, city, address, postal code. Ensure that the appropriate Customer form fields are enabled under <a href=\"{0}\" target=\"_blank\">Customer settings</a>",
                 ["Plugins.Tax.Avalara.TestTax.Button"] = "Submit",
-            }, languageId);
+            }, languageId).Wait();
 
-            _localizationService.DeleteLocaleResources(new List<string>
+            _localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create",
                 "Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse",
@@ -112,28 +117,28 @@ namespace Nop.Plugin.Tax.Avalara.Data
                 "Plugins.Tax.Avalara.VerifyCredentials",
                 "Plugins.Tax.Avalara.VerifyCredentials.Declined",
                 "Plugins.Tax.Avalara.VerifyCredentials.Verified",
-            });
+            }).Wait();
 
             //settings
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.CompanyId))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.CompanyId).Result)
                 _avalaraTaxSettings.CompanyId = null;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.EnableCertificates))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.EnableCertificates).Result)
                 _avalaraTaxSettings.EnableCertificates = false;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.AutoValidateCertificate))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.AutoValidateCertificate).Result)
                 _avalaraTaxSettings.AutoValidateCertificate = true;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.AllowEditCustomer))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.AllowEditCustomer).Result)
                 _avalaraTaxSettings.AllowEditCustomer = true;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.DisplayNoValidCertificatesMessage))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.DisplayNoValidCertificatesMessage).Result)
                 _avalaraTaxSettings.DisplayNoValidCertificatesMessage = true;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.CustomerRoleIds))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.CustomerRoleIds).Result)
                 _avalaraTaxSettings.CustomerRoleIds = null;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.PreviewCertificate))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.PreviewCertificate).Result)
                 _avalaraTaxSettings.PreviewCertificate = false;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.UploadOnly))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.UploadOnly).Result)
                 _avalaraTaxSettings.UploadOnly = false;
-            if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.FillOnly))
+            if (!_settingService.SettingExistsAsync(_avalaraTaxSettings, settings => settings.FillOnly).Result)
                 _avalaraTaxSettings.FillOnly = false;
-            _settingService.SaveSetting(_avalaraTaxSettings);
+            _settingService.SaveSettingAsync(_avalaraTaxSettings).Wait();
         }
 
         /// <summary>

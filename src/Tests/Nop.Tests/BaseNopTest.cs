@@ -315,7 +315,6 @@ namespace Nop.Tests
             services.AddTransient<IDiscountService, DiscountService>();
             services.AddTransient<ILocalizationService, LocalizationService>();
             services.AddTransient<ILocalizedEntityService, LocalizedEntityService>();
-            services.AddTransient(typeof(Lazy<ILocalizationService>));
             services.AddTransient<IInstallationLocalizationService, InstallationLocalizationService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IDownloadService, DownloadService>();
@@ -386,7 +385,6 @@ namespace Nop.Tests
             services.AddTransient<IPickupPluginManager, PickupPluginManager>();
             services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
-            services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
             services.AddTransient<IPictureService, TestPictureService>();
             services.AddScoped<IVideoService, VideoService>();

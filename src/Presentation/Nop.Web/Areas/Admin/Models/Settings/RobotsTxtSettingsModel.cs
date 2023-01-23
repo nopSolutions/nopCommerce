@@ -23,9 +23,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool LocalizableDisallowPaths_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages")]
-        public IList<int> DisallowLanguages { get; set; }
+        public List<int> DisallowLanguages { get; set; } = new();
         public bool DisallowLanguages_OverrideForStore { get; set; }
-        public IList<SelectListItem> AvailableLanguages { get; set; }
+        public List<SelectListItem> AvailableLanguages { get; set; } = new();
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules")]
         public string AdditionsRules { get; set; }

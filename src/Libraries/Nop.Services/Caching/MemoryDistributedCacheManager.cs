@@ -67,29 +67,6 @@ namespace Nop.Services.Caching
         }
 
         /// <summary>
-        /// Remove items by cache key prefix
-        /// </summary>
-        /// <param name="prefix">Cache key prefix</param>
-        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        public override void RemoveByPrefix(string prefix, params object[] prefixParameters)
-        {
-            using (var _ = _locker.Lock())
-            {
-                prefix = PrepareKeyPrefix(prefix, prefixParameters);
-
-                foreach (var key in _keysList
-                             .Where(key => key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-                             .ToList())
-                {
-                    _distributedCache.Remove(key);
-                    _keysList.Remove(key);
-                }
-            }
-
-            RemoveByPrefixInstanceData(prefix);
-        }
-
-        /// <summary>
         /// Clear all cache data
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>

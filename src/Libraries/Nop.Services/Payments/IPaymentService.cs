@@ -172,6 +172,6 @@ namespace Nop.Services.Payments
         /// Generate an order GUID
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest);
+        void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest);
     }
 }

@@ -114,13 +114,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             //add some generic mapping rules
             this.Internal().ForAllMaps((mapConfiguration, map) =>
             {
-                //exclude Form and CustomProperties from mapping BaseNopModel
-                if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
-                {
-                    //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
-                    map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
-                }
-
                 //exclude ActiveStoreScopeConfiguration from mapping ISettingsModel
                 if (typeof(ISettingsModel).IsAssignableFrom(mapConfiguration.DestinationType))
                     map.ForMember(nameof(ISettingsModel.ActiveStoreScopeConfiguration), options => options.Ignore());
@@ -425,8 +418,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
                 .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
                 .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
-                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
-                .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore());
+                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore());
 
             CreateMap<ProductCategory, CategoryProductModel>()
                 .ForMember(model => model.ProductName, options => options.Ignore());
@@ -1580,7 +1572,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<Store, StoreModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore());
             CreateMap<StoreModel, Store>()
-                .ForMember(entity => entity.SslEnabled, options => options.Ignore())
                 .ForMember(entity => entity.Deleted, options => options.Ignore());
         }
 

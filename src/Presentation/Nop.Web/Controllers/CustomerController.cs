@@ -478,9 +478,7 @@ namespace Nop.Web.Controllers
                                 RememberMe = model.RememberMe,
                                 ReturnUrl = returnUrl
                             };
-                            await HttpContext.Session.SetAsync(
-                                NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
-                                customerMultiFactorAuthenticationInfo);
+                            HttpContext.Session.Set(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, customerMultiFactorAuthenticationInfo);
                             return RedirectToRoute("MultiFactorVerification");
                         }
                     case CustomerLoginResults.CustomerNotExist:
@@ -522,8 +520,7 @@ namespace Nop.Web.Controllers
             if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 return RedirectToRoute("Login");
 
-            var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(
-                NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+            var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
             var userName = customerMultiFactorAuthenticationInfo?.UserName;
             if (string.IsNullOrEmpty(userName))
                 return RedirectToRoute("Homepage");
@@ -1654,9 +1651,6 @@ namespace Nop.Web.Controllers
                 {
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
-                    //authenticate customer after changing password
-                    await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
-
                     if (string.IsNullOrEmpty(returnUrl))
                         return View(model);
 
@@ -1705,9 +1699,9 @@ namespace Nop.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
-            var contentType = uploadedFile?.ContentType.ToLowerInvariant();
+            var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-            if (contentType != null && !contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
+            if (!contentType.Equals("image/jpeg") && !contentType.Equals("image/gif"))
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
 
             if (ModelState.IsValid)
