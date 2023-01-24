@@ -44,6 +44,7 @@ using Nop.Web.Models.Catalog;
 using WebOptimizer;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using NReco.VideoConverter;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -291,6 +292,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     }
                     else if (filetype.Contains("video"))
                     {
+                       
+
+
+
+
                         vid = await _videoService.InsertVideoAsync(file, name);
                     }
 

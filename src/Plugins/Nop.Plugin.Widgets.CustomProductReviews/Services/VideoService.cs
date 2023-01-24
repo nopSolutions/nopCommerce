@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -16,7 +18,10 @@ using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
 using Nop.Services.Seo;
+using NReco.VideoConverter;
 using SkiaSharp;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Services
 {
@@ -794,6 +799,13 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             if (validateBinary)
                 videoBinary = await ValidateVideoAsync(videoBinary, mimeType);
 
+            //Todo:Video thumb olayını çöz
+            //var ffmpeg = new FFMpegConverter();
+            //string ffpath = Directory.GetCurrentDirectory();
+            //ffmpeg.FFMpegToolPath = ffpath;
+
+            //ffmpeg.GetVideoThumbnail("output.mp4", "video_thumbnail.jpg");
+
             var video = new Video
             {
                 MimeType = mimeType,
@@ -847,9 +859,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             if (imgExt.All(ext => !ext.Equals(fileExtension, StringComparison.CurrentCultureIgnoreCase)))
                 return null;
 
-            //contentType is not always available 
-            //that's why we manually update it here
-            //http://www.sfsu.edu/training/mimetype.htm
             if (string.IsNullOrEmpty(contentType))
             {
                 switch (fileExtension)
@@ -1026,12 +1035,40 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 //    var format = GetImageFormatByMimeType(mimeType);
                 //    videoBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
                 //}
+              
+                var ffmpeg = new FFMpegConverter();
+                string ffpath= Directory.GetCurrentDirectory();
+                ffmpeg.FFMpegToolPath = ffpath;
+                ffmpeg.LogLevel = "debug";
+                ffmpeg.LogReceived += Ffmpeg_LogReceived;
+                using var writer = new BinaryWriter(File.OpenWrite("tempVideo.mp4"));
+                writer.Write(videoBinary);
+                writer.Close();
+                
+
+                var convertSettings = new ConvertSettings();
+                convertSettings.CustomInputArgs = "-y";
+                      convertSettings.CustomOutputArgs = "-c:v libx265 -tag:v hvc1 -vf scale=640:-2 -b:v 750k -x265-params pass=1 -an ";
+                ffmpeg.ConvertMedia("tempVideo.mp4", null, "null", "null", convertSettings);
+
+                convertSettings.CustomInputArgs = "";
+                convertSettings.CustomOutputArgs = "-c:v libx265 -tag:v hvc1 -b:v 750k -vf scale=640:-2 -x265-params pass=2 -c:a aac -b:a 64k ";
+                ffmpeg.ConvertMedia("tempVideo.mp4", null, "output.mp4", null, convertSettings);
+
+                videoBinary= File.ReadAllBytes("output.mp4");
+
+                
                 return Task.FromResult(videoBinary);
             }
             catch
             {
                 return Task.FromResult(videoBinary);
             }
+        }
+
+        private void Ffmpeg_LogReceived(object sender, FFMpegLogEventArgs e)
+        {
+            File.AppendAllText("logffmpeg.txt", e.Data + Environment.NewLine);
         }
 
         /// <summary>
