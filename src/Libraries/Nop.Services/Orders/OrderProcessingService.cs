@@ -3210,29 +3210,36 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task ReOrderAsync(Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
+        public virtual async Task<IList<string>> ReOrderAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
+            var warnings = new List<string>();
+
             //move shopping cart items (if possible)
             foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
-                await _shoppingCartService.AddToCartAsync(customer, product,
+                warnings.AddRange(await _shoppingCartService.AddToCartAsync(customer, product,
                     ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                    orderItem.Quantity, false);
+                    orderItem.Quantity, false));
             }
 
             //set checkout attributes
             //comment the code below if you want to disable this functionality
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
+
+            return warnings;
         }
 
         /// <summary>

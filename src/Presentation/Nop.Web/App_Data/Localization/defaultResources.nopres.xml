@@ -19623,6 +19623,9 @@
   <LocaleResource Name="ShoppingCart.Rental.StartDateShouldBeFuture">
     <Value>Rental start date should be the future date</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ReorderWarning">
+    <Value>Some products are not available anymore, so they weren't added to the cart.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
     <Value>This product is required in the quantity of {0}</Value>
   </LocaleResource>

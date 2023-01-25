@@ -43,6 +43,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //#4834
                 ["Admin.System.Warnings.PluginMainAssemblyNotFound"] = "{0}: The main assembly isn't found. Hence this plugin can't be loaded.",
                 ["Admin.System.Warnings.PluginNotCompatibleWithCurrentVersion"] = "{0}: The plugin isn't compatible with the current version. Hence this plugin can't be loaded.",
+                //#6309
+                ["ShoppingCart.ReorderWarning"] = "Some products are not available anymore, so they weren't added to the cart.",
             }, languageId);
 
             #endregion
