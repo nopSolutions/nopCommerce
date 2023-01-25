@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
+    /// <remarks>
+    /// This class should be registered on IoC as singleton instance
+    /// </remarks>
     public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     {
         #region Fields
@@ -19,14 +21,19 @@ namespace Nop.Core.Caching
         private bool _disposed;
 
         private readonly IMemoryCache _memoryCache;
-        private readonly CacheKeyManager _keyManager;
+
+        /// <summary>
+        /// Holds the keys known by this nopCommerce instance
+        /// </summary>
+        private readonly ICacheKeyManager _keyManager;
+
         private static CancellationTokenSource _clearToken = new();
 
         #endregion
 
         #region Ctor
 
-        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache, CacheKeyManager cacheKeyManager)
+        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache, ICacheKeyManager cacheKeyManager)
             : base(appSettings)
         {
             _memoryCache = memoryCache;
@@ -89,6 +96,7 @@ namespace Nop.Core.Caching
             var key = PrepareKey(cacheKey, cacheKeyParameters).Key;
             _memoryCache.Remove(key);
             _keyManager.RemoveKey(key);
+
             return Task.CompletedTask;
         }
 
@@ -107,18 +115,34 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            return await _memoryCache.GetOrCreate(
+            var value = _memoryCache.GetOrCreate(
                 key.Key,
                 entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(key));
                     return new Lazy<Task<T>>(acquire, true);
-                }).Value;
+                })?.Value;
+
+            if (value != null)
+                return await value;
+
+            return default;
         }
 
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, return a default value
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="defaultValue">A default value to return if the key is not present in the cache</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key, or the default value if none was found
+        /// </returns>
         public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
         {
             var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
+
             return value != null ? await value : defaultValue;
         }
 
@@ -146,12 +170,11 @@ namespace Nop.Core.Caching
         public Task SetAsync<T>(CacheKey key, T data)
         {
             if (data != null && (key?.CacheTime ?? 0) > 0)
-            {
                 _memoryCache.Set(
                     key.Key,
                     new Lazy<Task<T>>(() => Task.FromResult(data), true),
                     PrepareEntryOptions(key));
-            }
+
             return Task.CompletedTask;
         }
 
@@ -179,6 +202,7 @@ namespace Nop.Core.Caching
             _clearToken.Dispose();
             _clearToken = new CancellationTokenSource();
             _keyManager.Clear();
+
             return Task.CompletedTask;
         }
 
@@ -195,11 +219,9 @@ namespace Nop.Core.Caching
                 return;
 
             if (disposing)
-            {
-                _clearToken.Dispose();
                 // don't dispose of the MemoryCache, as it is injected
-            }
-
+                _clearToken.Dispose();
+            
             _disposed = true;
         }
 

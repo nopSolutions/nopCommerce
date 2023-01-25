@@ -2,16 +2,11 @@
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -92,8 +87,9 @@ namespace Nop.Web.Framework.Infrastructure
             //static cache manager
             var appSettings = Singleton<AppSettings>.Instance;
             var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
-            var cacheKeyManager = new CacheKeyManager();
-            services.AddSingleton<CacheKeyManager>(cacheKeyManager);
+  
+            services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
+
             if (distributedCacheConfig.Enabled)
             {
                 switch (distributedCacheConfig.DistributedCacheType)
@@ -105,21 +101,16 @@ namespace Nop.Web.Framework.Infrastructure
                         services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
                         break;
                     case DistributedCacheType.Redis:
-                        services.AddSingleton<RedisConnectionWrapper>();
+                        services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
                         services.AddScoped<IStaticCacheManager, RedisCacheManager>();
                         break;
                     case DistributedCacheType.RedisSynchronizedMemory:
-                        services.AddSingleton<RedisConnectionWrapper>();
-                        services.AddSingleton<IStaticCacheManager, MemoryCacheManager>(services =>
-                            new MemoryCacheManager(
-                                appSettings,
-                                new RedisSynchronizedMemoryCache(
-                                    services.GetRequiredService<IMemoryCache>(),
-                                    services.GetRequiredService<RedisConnectionWrapper>(),
-                                    cacheKeyManager),
-                                cacheKeyManager));
+                        services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+                        services.AddSingleton<ISynchronizedMemoryCache, RedisSynchronizedMemoryCache>();
+                        services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
                         break;
                 }
+
                 services.AddSingleton<ILocker, DistributedCacheLocker>();
             }
             else

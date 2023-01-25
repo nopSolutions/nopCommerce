@@ -23,7 +23,7 @@ namespace Nop.Services.Caching
 
         public MsSqlServerCacheManager(AppSettings appSettings,
             IDistributedCache distributedCache,
-            CacheKeyManager cacheKeyManager)
+            ICacheKeyManager cacheKeyManager)
             : base(appSettings, distributedCache, cacheKeyManager)
         {
             _distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();

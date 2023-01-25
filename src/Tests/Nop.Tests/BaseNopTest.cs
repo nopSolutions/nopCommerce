@@ -6,7 +6,6 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
@@ -259,7 +258,7 @@ namespace Nop.Tests
             //plugins
             services.AddTransient<IPluginService, PluginService>();
 
-            services.AddSingleton<CacheKeyManager>();
+            services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
             services.AddSingleton<IMemoryCache>(memoryCache);
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
             services.AddSingleton<ILocker, MemoryCacheLocker>();

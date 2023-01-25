@@ -23,7 +23,7 @@ namespace Nop.Core.Caching
         /// <param name="expirationTime">The time after which the heartbeat key will automatically be expired. Should be longer than <paramref name="heartbeatInterval"/></param>
         /// <param name="heartbeatInterval">The interval at which to update the heartbeat, if required by the implementation</param>
         /// <param name="action">Asynchronous background task to be performed</param>
-        /// <param name="cancellationTokenSource">A CancellationTokenSource for manually cancelling the task</param>
+        /// <param name="cancellationTokenSource">A CancellationTokenSource for manually canceling the task</param>
         /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
         Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default);
 
@@ -32,9 +32,9 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">The task's key</param>
         /// <param name="expirationTime">The time after which the task will be considered stopped due to system shutdown or other causes,
-        /// even if not explicitly cancelled.</param>
+        /// even if not explicitly canceled.</param>
         /// <returns>A task that represents requesting cancellation of the task. Note that the completion of this task does not
-        /// necessarily imply that the task has been cancelled, only that cancellation has been requested.</returns>
+        /// necessarily imply that the task has been canceled, only that cancellation has been requested.</returns>
 
         Task CancelTaskAsync(string key, TimeSpan expirationTime);
 

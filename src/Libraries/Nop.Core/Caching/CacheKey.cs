@@ -61,32 +61,12 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Gets or sets prefixes for remove by prefix functionality
         /// </summary>
-        public List<string> Prefixes { get; protected set; } = new List<string>();
+        public List<string> Prefixes { get; protected set; } = new();
 
         /// <summary>
         /// Gets or sets a cache time in minutes
         /// </summary>
         public int CacheTime { get; set; } = Singleton<AppSettings>.Instance.Get<CacheConfig>().DefaultCacheTime;
-
-        #endregion
-        
-        #region Nested classes
-
-        public class CacheKeyEqualityComparer : IEqualityComparer<CacheKey>
-        {
-            public bool Equals(CacheKey x, CacheKey y)
-            {
-                if (x == null && y == null)
-                    return true;
-
-                return x?.Key.Equals(y?.Key, StringComparison.OrdinalIgnoreCase) ?? false;
-            }
-
-            public int GetHashCode(CacheKey obj)
-            {
-                return obj.Key.GetHashCode();
-            }
-        }
 
         #endregion
     }

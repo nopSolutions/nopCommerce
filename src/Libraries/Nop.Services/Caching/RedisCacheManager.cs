@@ -16,7 +16,7 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private RedisConnectionWrapper _connectionWrapper;
+        private readonly IRedisConnectionWrapper _connectionWrapper;
 
         #endregion
 
@@ -24,8 +24,8 @@ namespace Nop.Services.Caching
 
         public RedisCacheManager(AppSettings appSettings,
             IDistributedCache distributedCache,
-            RedisConnectionWrapper connectionWrapper,
-            CacheKeyManager cacheKeyManager)
+            IRedisConnectionWrapper connectionWrapper,
+            ICacheKeyManager cacheKeyManager)
             : base(appSettings, distributedCache, cacheKeyManager)
         {
             _connectionWrapper = connectionWrapper;

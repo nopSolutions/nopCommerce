@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,21 +9,18 @@ using StackExchange.Redis;
 namespace Nop.Services.Caching
 {
     /// <summary>
-    /// Represents Redis connection wrapper implementation
+    /// Redis connection wrapper
     /// </summary>
-    public class RedisConnectionWrapper
+    /// <remarks>
+    /// This class should be registered on IoC as singleton instance
+    /// </remarks>
+    public class RedisConnectionWrapper : IRedisConnectionWrapper
     {
         #region Fields
 
         private readonly SemaphoreSlim _connectionLock = new(1, 1);
         private volatile IConnectionMultiplexer _connection;
         private readonly RedisCacheOptions _options;
-
-        #endregion
-
-        #region Properties
-
-        public string Instance => _options.InstanceName ?? string.Empty;
 
         #endregion
 
@@ -55,6 +52,22 @@ namespace Nop.Services.Caching
 
             if (_options.ProfilingSession != null)
                 connection.RegisterProfiler(_options.ProfilingSession);
+
+            return connection;
+        }
+
+        private IConnectionMultiplexer Connect()
+        {
+            IConnectionMultiplexer connection;
+
+            if (_options.ConnectionMultiplexerFactory is null)
+                connection = _options.ConfigurationOptions is not null ? ConnectionMultiplexer.Connect(_options.ConfigurationOptions) : ConnectionMultiplexer.Connect(_options.Configuration);
+            else
+                connection = _options.ConnectionMultiplexerFactory().GetAwaiter().GetResult();
+
+            if (_options.ProfilingSession != null)
+                connection.RegisterProfiler(_options.ProfilingSession);
+
             return connection;
         }
 
@@ -87,6 +100,35 @@ namespace Nop.Services.Caching
             return _connection;
         }
 
+        /// <summary>
+        /// Get connection to Redis servers, and reconnects if necessary
+        /// </summary>
+        /// <returns></returns>
+        protected IConnectionMultiplexer GetConnection()
+        {
+            if (_connection?.IsConnected == true)
+                return _connection;
+
+            _connectionLock.Wait();
+            try
+            {
+                if (_connection?.IsConnected == true)
+                    return _connection;
+
+                //Connection disconnected. Disposing connection...
+                _connection?.Dispose();
+
+                //Creating new instance of Redis Connection
+                _connection = Connect();
+            }
+            finally
+            {
+                _connectionLock.Release();
+            }
+
+            return _connection;
+        }
+
         #endregion
 
         #region Methods
@@ -98,6 +140,15 @@ namespace Nop.Services.Caching
         public async Task<IDatabase> GetDatabaseAsync()
         {
             return (await GetConnectionAsync()).GetDatabase();
+        }
+
+        /// <summary>
+        /// Obtain an interactive connection to a database inside Redis
+        /// </summary>
+        /// <returns>Redis cache database</returns>
+        public IDatabase GetDatabase()
+        {
+            return GetConnection().GetDatabase();
         }
 
         /// <summary>
@@ -129,6 +180,15 @@ namespace Nop.Services.Caching
         }
 
         /// <summary>
+        /// Gets a subscriber for the server
+        /// </summary>
+        /// <returns>Array of endpoints</returns>
+        public ISubscriber GetSubscriber()
+        {
+            return GetConnection().GetSubscriber();
+        }
+
+        /// <summary>
         /// Delete all the keys of the database
         /// </summary>
         public async Task FlushDatabaseAsync()
@@ -137,8 +197,7 @@ namespace Nop.Services.Caching
             await Task.WhenAll(endPoints.Select(async endPoint =>
                 await (await GetServerAsync(endPoint)).FlushDatabaseAsync()));
         }
-
-
+        
         /// <summary>
         /// Release all resources associated with this object
         /// </summary>
@@ -147,6 +206,15 @@ namespace Nop.Services.Caching
             //dispose ConnectionMultiplexer
             _connection?.Dispose();
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The Redis instance name
+        /// </summary>
+        public string Instance => _options.InstanceName ?? string.Empty;
 
         #endregion
     }

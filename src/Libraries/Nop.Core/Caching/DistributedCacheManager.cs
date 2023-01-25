@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -20,22 +19,22 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Holds the keys known by this nopCommerce instance
         /// </summary>
-        protected readonly CacheKeyManager _localKeyManager;
+        protected readonly ICacheKeyManager _localKeyManager;
         protected readonly IDistributedCache _distributedCache;
-        private readonly ConcurrentTrie<object> _perRequestCache = new();
+        protected readonly ConcurrentTrie<object> _perRequestCache = new();
 
         /// <summary>
         /// Holds ongoing acquisition tasks, used to avoid duplicating work
         /// </summary>
-        private readonly ConcurrentDictionary<string, Lazy<Task<object>>> _ongoing = new();
+        protected readonly ConcurrentDictionary<string, Lazy<Task<object>>> _ongoing = new();
 
         #endregion
 
         #region Ctor
 
-        public DistributedCacheManager(AppSettings appSettings,
+        protected DistributedCacheManager(AppSettings appSettings,
             IDistributedCache distributedCache,
-            CacheKeyManager cacheKeyManager)
+            ICacheKeyManager cacheKeyManager)
             : base(appSettings)
         {
             _distributedCache = distributedCache;
@@ -64,9 +63,10 @@ namespace Nop.Core.Caching
         /// <returns>The removed keys</returns>
         protected IEnumerable<string> RemoveByPrefixInstanceData(string prefix, params object[] prefixParameters)
         {
-            var prefix_ = PrepareKeyPrefix(prefix, prefixParameters);
-            _perRequestCache.Prune(prefix_, out _);
-            return _localKeyManager.RemoveByPrefix(prefix_);
+            var keyPrefix = PrepareKeyPrefix(prefix, prefixParameters);
+            _perRequestCache.Prune(keyPrefix, out _);
+
+            return _localKeyManager.RemoveByPrefix(keyPrefix);
         }
 
         /// <summary>
@@ -83,32 +83,55 @@ namespace Nop.Core.Caching
             };
         }
 
-        private void SetLocal(string key, object value)
+        /// <summary>
+        /// Add the specified key and object to the local cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="value">Value for caching</param>
+        protected void SetLocal(string key, object value)
         {
             _perRequestCache.Add(key, value);
             _localKeyManager.AddKey(key);
         }
 
-        private void RemoveLocal(string key)
+        /// <summary>
+        /// Remove the value with the specified key from the cache
+        /// </summary>
+        /// <param name="key">Cache key</param>
+        protected void RemoveLocal(string key)
         {
             _perRequestCache.Remove(key);
             _localKeyManager.RemoveKey(key);
         }
 
-        private async Task<(bool isSet, T item)> TryGetItemAsync<T>(string key)
+        /// <summary>
+        /// Try get a cached item. If it's not in the cache yet, then return default object
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        protected async Task<(bool isSet, T item)> TryGetItemAsync<T>(string key)
         {
             var json = await _distributedCache.GetStringAsync(key);
+
             return string.IsNullOrEmpty(json)
               ? (false, default)
               : (true, item: JsonConvert.DeserializeObject<T>(json));
         }
 
+        /// <summary>
+        /// Remove the value with the specified key from the cache
+        /// </summary>
+        /// <param name="key">Cache key</param>
+        /// <param name="removeFromInstance">Remove from instance</param>
         protected async Task RemoveAsync(string key, bool removeFromInstance = true)
         {
             _ongoing.TryRemove(key, out _);
             await _distributedCache.RemoveAsync(key);
-            if (removeFromInstance)
-                RemoveLocal(key);
+
+            if(!removeFromInstance)
+                return;
+
+            RemoveLocal(key);
         }
 
         #endregion
@@ -140,12 +163,15 @@ namespace Nop.Core.Caching
         {
             if (_perRequestCache.TryGetValue(key.Key, out var data))
                 return (T)data;
+
             var lazy = _ongoing.GetOrAdd(key.Key, _ => new(async () => await acquire(), true));
             var setTask = Task.CompletedTask;
+
             try
             {
                 if (lazy.IsValueCreated)
                     return (T)await lazy.Value;
+
                 var (isSet, item) = await TryGetItemAsync<T>(key.Key);
                 if (!isSet)
                 {
@@ -155,7 +181,9 @@ namespace Nop.Core.Caching
                         JsonConvert.SerializeObject(item),
                         PrepareEntryOptions(key));
                 }
+
                 SetLocal(key.Key, item);
+
                 return item;
             }
             finally
@@ -182,6 +210,7 @@ namespace Nop.Core.Caching
         public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
         {
             var value = await _distributedCache.GetStringAsync(key.Key);
+
             return value != null
                 ? JsonConvert.DeserializeObject<T>(value)
                 : defaultValue;
@@ -199,6 +228,7 @@ namespace Nop.Core.Caching
                 return;
 
             var lazy = new Lazy<Task<object>>(() => Task.FromResult(data as object), true);
+            
             try
             {
                 // await the lazy task in order to force value creation instead of directly setting data
@@ -227,6 +257,7 @@ namespace Nop.Core.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         public abstract Task ClearAsync();
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
