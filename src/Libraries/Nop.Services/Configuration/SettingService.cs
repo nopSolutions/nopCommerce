@@ -134,8 +134,8 @@ namespace Nop.Services.Configuration
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
             var allSettings = await GetAllSettingsDictionaryAsync();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            var settingForCaching = allSettings.TryGetValue(key, out var settings) ?
+                settings.FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
             {
                 //update
@@ -172,8 +172,8 @@ namespace Nop.Services.Configuration
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsDictionary();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            var settingForCaching = allSettings.TryGetValue(key, out var settings) ?
+                settings.FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
             {
                 //update
@@ -831,8 +831,8 @@ namespace Nop.Services.Configuration
             key = key.Trim().ToLowerInvariant();
 
             var allSettings = await GetAllSettingsDictionaryAsync();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            var settingForCaching = allSettings.TryGetValue(key, out var settings_) ?
+                settings_.FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching == null) 
                 return;
 

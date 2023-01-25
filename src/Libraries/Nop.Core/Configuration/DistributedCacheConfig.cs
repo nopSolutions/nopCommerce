@@ -12,7 +12,7 @@ namespace Nop.Core.Configuration
         /// Gets or sets a distributed cache type
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
-        public DistributedCacheType DistributedCacheType { get; private set; } = DistributedCacheType.Redis;
+        public DistributedCacheType DistributedCacheType { get; private set; } = DistributedCacheType.RedisSynchronizedMemory;
 
         /// <summary>
         /// Gets or sets a value indicating whether we should use distributed cache
@@ -33,5 +33,11 @@ namespace Nop.Core.Configuration
         /// Gets or sets table name. Used when distributed cache is enabled and DistributedCacheType property is set as SqlServer
         /// </summary>
         public string TableName { get; private set; } = "DistributedCache";
+
+        /// <summary>
+        /// Gets or sets instance name. Used when distributed cache is enabled and DistributedCacheType property is set as Redis or RedisSynchronizedMemory.
+        /// Useful when one wants to partition a single Redis server for use with multiple apps, e.g. by setting InstanceName to "development" and "production".
+        /// </summary>
+        public string InstanceName { get; private set; } = "nopCommerce";
     }
 }
