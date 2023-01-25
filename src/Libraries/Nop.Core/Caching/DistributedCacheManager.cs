@@ -176,6 +176,10 @@ namespace Nop.Core.Caching
                 if (!isSet)
                 {
                     item = (T)await lazy.Value;
+
+                    if (key.CacheTime == 0)
+                        return item;
+
                     setTask = _distributedCache.SetStringAsync(
                         key.Key,
                         JsonConvert.SerializeObject(item),
