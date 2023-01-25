@@ -71,10 +71,9 @@ namespace Nop.Core.Caching
         {
             if (!string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key)))
                 return;
-            
+
             var tokenSource = cancellationTokenSource ?? new CancellationTokenSource();
-            var heartbeatTokenSource = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token);
-            
+
             try
             {
                 // run heartbeat early to minimize risk of multiple execution
@@ -82,14 +81,14 @@ namespace Nop.Core.Caching
                     key,
                     _running,
                     new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expirationTime },
-                    token: heartbeatTokenSource.Token);
+                    token: tokenSource.Token);
 
                 await using var timer = new Timer(
                     callback: _ =>
                     {
                         try
                         {
-                            heartbeatTokenSource.Token.ThrowIfCancellationRequested();
+                            tokenSource.Token.ThrowIfCancellationRequested();
                             var status = _distributedCache.GetString(key);
                             if (!string.IsNullOrEmpty(status) && JsonConvert.DeserializeObject<TaskStatus>(status) ==
                                 TaskStatus.Canceled)
@@ -114,10 +113,7 @@ namespace Nop.Core.Caching
             catch (OperationCanceledException) { }
             finally
             {
-                // Because the heartbeat is called as an async void callback by the timer, it is not awaited or canceled on disposal.
-                // Since this may lead to heartbeat being called after the key is removed, we cancel it before removing the key.
-                heartbeatTokenSource.Cancel();
-                await _distributedCache.RemoveAsync(key, tokenSource.Token);
+                await _distributedCache.RemoveAsync(key);
             }
         }
 
