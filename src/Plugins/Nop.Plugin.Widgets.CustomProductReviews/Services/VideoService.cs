@@ -1039,7 +1039,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 var ffmpeg = new FFMpegConverter();
                 string ffpath= Directory.GetCurrentDirectory();
                 ffmpeg.FFMpegToolPath = ffpath;
-                ffmpeg.LogLevel = "debug";
                 ffmpeg.LogReceived += Ffmpeg_LogReceived;
                 using var writer = new BinaryWriter(File.OpenWrite("tempVideo.mp4"));
                 writer.Write(videoBinary);
@@ -1048,14 +1047,14 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
 
                 var convertSettings = new ConvertSettings();
                 convertSettings.CustomInputArgs = "-y";
-                      convertSettings.CustomOutputArgs = "-c:v libx265 -tag:v hvc1 -vf scale=640:-2 -b:v 750k -x265-params pass=1 -an ";
+                      convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 600k -pass 1 -an ";
                 ffmpeg.ConvertMedia("tempVideo.mp4", null, "null", "null", convertSettings);
 
                 convertSettings.CustomInputArgs = "";
-                convertSettings.CustomOutputArgs = "-c:v libx265 -tag:v hvc1 -b:v 750k -vf scale=640:-2 -x265-params pass=2 -c:a aac -b:a 64k ";
-                ffmpeg.ConvertMedia("tempVideo.mp4", null, "output.mp4", null, convertSettings);
+                convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -b:v 600k -vf scale=640:-2 -pix_fmt yuv420p -pass 2 -c:a libopus -b:a 64k ";
+                ffmpeg.ConvertMedia("tempVideo.mp4", null, "output.webm", null, convertSettings);
 
-                videoBinary= File.ReadAllBytes("output.mp4");
+                videoBinary= File.ReadAllBytes("output.webm");
 
                 
                 return Task.FromResult(videoBinary);

@@ -101,7 +101,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
                 WidgetZone = PublicWidgetZones.ProductReviewsPageTop,
                 data = "testdata",
                 MaximumFile = 5,
-                MaximumSize = 1024
+                MaximumSize = 1073741824
 
             });
          

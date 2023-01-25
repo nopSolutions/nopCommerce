@@ -279,9 +279,9 @@
                         $("#message-success").html(data.Result);
                         $("#review-form .review-form-body").css("display", "none");
                         document.getElementById("review-form").reset();
-                        console.log(data.Result);
+                      
                     }
-                    console.log(data);
+                   
 
                     return false;
                 }
@@ -313,11 +313,15 @@
 
     function readURLFileUpload() {
         var fileSelect = document.getElementById('photos'),
-            supportedFileFormat = '.jpg,.jpeg,.png,.mp4,.mov',
+            supportedFileFormat = '.jpg,.jpeg,.png,.mp4,.mov,.webp,.webm',
             files = fileSelect.files;
-
+        console.log('dosyalar adeti');
+console.log(files.length);
+ console.log('settings adeti');
+console.log(@setting.MaximumFile);
         if (files.length > @setting.MaximumFile) {
-            alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFile")');
+                alert('File upload exceeds the allowed size Your file sizes:' + myfile.size+'bytes / Maximum file size:'+@setting.MaximumSize+'bytes' );
+            //alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFile")');
             $("#photos").val("");
             return false;
         }
@@ -328,12 +332,19 @@
                 type = value.substr(value.lastIndexOf(".")).toString();
 
             if (supportedFileFormat.indexOf(type) == -1) {
-                alert('@T("Nop.Plugin.Widgets.CustomProductReviews.AllowedExtension")');
+                //alert('@T("Nop.Plugin.Widgets.CustomProductReviews.AllowedExtension")');
+                alert('File is not properly formatted');
+
                 $("#photos").val("");
                 return false;
             }
-            if (myfile.size > 1000000 * @setting.MaximumSize) {
-                alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFileSize")');
+                  console.log('dosyalar boyutu');
+            console.log(myfile.size);
+ console.log('settings boyutu');
+            console.log(@setting.MaximumSize);
+            if (myfile.size > @setting.MaximumSize) {
+                alert('File upload exceeds the allowed size Your file sizes:' + myfile.size+'bytes / Maximum file size:'+@setting.MaximumSize+'bytes' );
+                //alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFileSize")');
                 $("#photos").val("");
                 return false;
             }

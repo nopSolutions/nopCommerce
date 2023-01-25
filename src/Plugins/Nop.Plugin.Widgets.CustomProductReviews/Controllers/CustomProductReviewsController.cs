@@ -185,6 +185,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //[FormValueRequired("add-review")]
         [HttpPost]
         [ValidateCaptcha]
+        [RequestFormLimits(MultipartBodyLengthLimit = 1048576000)]
+        [RequestSizeLimit(1048576000)]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid, List<IFormFile> photos)
         {
            
