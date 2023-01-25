@@ -101,6 +101,7 @@ function hideCartSlideout() {
         deliveryNotAvailable.style.display = "none";
         warrantyOptions.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
+        pickupInStoreOptions.style.display = "none";
 
         isPickup = false;
         hasWarranties = false;
