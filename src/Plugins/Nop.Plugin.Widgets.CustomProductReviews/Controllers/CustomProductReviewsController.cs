@@ -54,6 +54,7 @@ using NReco.VideoConverter;
 using Microsoft.AspNetCore.StaticFiles;
 using Nito.Disposables;
 using static System.Net.WebRequestMethods;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -189,7 +190,19 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //}
 
 
-   
+        public static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
 
         //[FormValueRequired("add-review")]
         [HttpPost]
@@ -307,37 +320,46 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     new FileExtensionContentTypeProvider().TryGetContentType(filename, out filetype);
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
                     Stopwatch sw = new Stopwatch();
-                    Task.Factory.StartNew(() =>
-                        {
+            
+                    Task.Factory.StartNew(async () =>
+                    {
+
                        
 
-                        Picture pic = new Picture();
+                        Core.Domain.Media.Picture pic = new Core.Domain.Media.Picture();
                         Video vid = new Video();
                         if (filetype.Contains("image"))
                         {
                             sw.Start();
-                                var configuration = new WebpConfigurationBuilder()
-                                .Preset(Preset.DEFAULT).QualityFactor(90).AlphaQ(10).Build();
-                            var encoder = new WebpEncoder(configuration);
-                            //FileStream file=new FileStream(filename, FileMode.Open);
-                            var ms = new MemoryStream();
-                            // file.CopyTo(ms);
-                                ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
-                                var fs =  encoder.EncodeAsync(ms, filename).Result;
-                                 fs.CopyTo(ms);
-                               // Image img = Image.FromFile(filename);
+                            //var oFileName = $"{Path.GetFileNameWithoutExtension(filename)}.webp";
 
-                          
-                                
-                           
-                                //imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+                            //var configuration = new WebpConfigurationBuilder()
+                            //    .Preset(Preset.PICTURE).QualityFactor(90).AlphaQ(10).Output(oFileName).Build();
+                            //var encoder = new WebpEncoder(configuration);
+                                //FileStream file=new FileStream(filename, FileMode.Open);
+                                FileStream fileStream = new FileStream(filename, FileMode.Open);
+                                var ms = new MemoryStream();
+                            //await fileStream.CopyToAsync(ms);
+                            await fileStream.DisposeAsync();
+                            // file.CopyTo(ms);
+
+                            //var fs =await encoder.EncodeAsync(ms, filename);
+                            ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
+                            Image img = Image.FromFile(filename);
+                            imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+                             
+
+
+
+
                             sw.Stop();
                                 Console.WriteLine("Elapsed Picture Encode={0}", sw.Elapsed);
                                 System.IO.File.AppendAllText(@"ImageProcessPerformace.log", String.Format("Elapsed Picture Encode={0}", sw.Elapsed) + Environment.NewLine);
 
                                 byte[] raw = ms.ToArray();
-                            //imageFactory.Dispose();
-                            //img.Dispose();
+                                await ms.DisposeAsync();
+                            imageFactory.Dispose();
+                            img.Dispose();
                             try
                             {
                                 System.IO.File.Delete(filename);
@@ -352,12 +374,12 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
 
 
-                                pic = _pictureService.InsertPictureAsync(raw, "image/webp", name).Result;
+                                pic =await _pictureService.InsertPictureAsync(raw, "image/webp", name);
                         }
                         else if (filetype.Contains("video"))
                         {
 
-                            vid =  _videoService.InsertVideoAsync(filename, name).Result;
+                            vid =await  _videoService.InsertVideoAsync(filename, name);
                             try
                             {
                                 System.IO.File.Delete(filename);
@@ -386,12 +408,12 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                         if (!(lastPicId == null && lastVidId == null))
                         {
-                             _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
+                           await  _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
                                 lastVidId);
                         }
 
 
-                        });
+                    });
                 }
                
 

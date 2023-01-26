@@ -1032,21 +1032,26 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         {
             try
             {
-                //Todo:Video Validate yap
-                //using var image = SKBitmap.Decode(videoBinary);
-
-                ////resize the image in accordance with the maximum size
-                //if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
-                //{
-                //    var format = GetImageFormatByMimeType(mimeType);
-                //    videoBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
-                //}
+                switch (mimeType)
+                {
+                    case "video/mp4":
+                        mimeType = ".mp4";
+                        break;
+                    case "video/mov":
+                        mimeType = ".mov";
+                        break;
+                    case "video/webm":
+                        mimeType = ".webm";
+                        break;
+                    default:
+                        break;
+                }
                 Stopwatch sw = new Stopwatch();
                 var ffmpeg = new FFMpegConverter();
                 string ffpath= Directory.GetCurrentDirectory();
                 ffmpeg.FFMpegToolPath = ffpath;
                 ffmpeg.LogReceived += Ffmpeg_LogReceived;
-                string fileName = "tempUpload" + DateTime.UtcNow.ToFileTime();
+                string fileName = "tempUpload" + DateTime.UtcNow.ToFileTime()+mimeType;
                 using var writer = new BinaryWriter(File.OpenWrite(fileName));
                 writer.Write(videoBinary);
                 writer.Close();
