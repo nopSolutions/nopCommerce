@@ -147,36 +147,18 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
 
                 // adjust the price here based on the delivery option selected
                 // also add a row for the delivery option itself
-                if (orderItem.HasDeliveryOptions())
+                var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
+                var pickupPav = pavs?.FirstOrDefault(pav => pav.Name.Contains("Pickup"));
+                var hasDeliveryOptions = orderItem.HasDeliveryOptions() && pickupPav == null;
+                if (hasDeliveryOptions)
                 {
-                    // get delivery option selected on the order item
-                    var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
-                    
-                    // if pickup, skip this completely and use old method
-                    var pickupPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Pickup"));
-                    if (pickupPav == null)
-                    {
-                        var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
-                        var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old Appliance"));
-                        var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
-                        var priceAdjustment = haulawayPav != null ?
-                            haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
-                            hdPav.PriceAdjustment;
-                        standardItemCodeAndPrice.price -= priceAdjustment;
-
-                        result.Add(new YahooDetailRow(
-                            _settings.OrderIdPrefix,
-                            orderItem,
-                            lineNumber,
-                            "", // no item ID associated
-                            code,
-                            priceAdjustment,
-                            "Delivery", // not sure if I need a name
-                            "", // no URL
-                            await GetPickupStoreAsync(orderItem)
-                        ));
-                        lineNumber++;
-                    }
+                    var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
+                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old Appliance"));
+                    var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
+                    var priceAdjustment = haulawayPav != null ?
+                        haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
+                        hdPav.PriceAdjustment;
+                    standardItemCodeAndPrice.price -= priceAdjustment;
                 }
 
                 result.Add(new YahooDetailRow(
@@ -203,6 +185,28 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                         warranty.PriceAdjustment,
                         warranty.Name,
                         "", // no url for warranty line items
+                        await GetPickupStoreAsync(orderItem)
+                    ));
+                    lineNumber++;
+                }
+
+                if (hasDeliveryOptions)
+                {
+                    var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
+                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old Appliance"));
+                    var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
+                    var priceAdjustment = haulawayPav != null ?
+                        haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
+                        hdPav.PriceAdjustment;
+                    result.Add(new YahooDetailRow(
+                        _settings.OrderIdPrefix,
+                        orderItem,
+                        lineNumber,
+                        "", // no item ID associated
+                        code,
+                        priceAdjustment,
+                        "Delivery", // not sure if I need a name
+                        "", // no URL
                         await GetPickupStoreAsync(orderItem)
                     ));
                     lineNumber++;
