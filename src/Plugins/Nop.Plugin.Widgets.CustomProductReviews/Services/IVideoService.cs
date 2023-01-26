@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
@@ -173,7 +174,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        Task<Video> InsertVideoAsync(IFormFile formFile, string defaultFileName = "", string virtualPath = "");
+        Task<Video> InsertVideoAsync(string formFile, string defaultFileName = "", string virtualPath = "");
 
         /// <summary>
         /// Updates the video

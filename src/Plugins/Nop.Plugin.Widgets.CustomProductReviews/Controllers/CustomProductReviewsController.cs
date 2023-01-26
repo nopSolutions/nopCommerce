@@ -44,7 +44,9 @@ using Nop.Web.Models.Catalog;
 using WebOptimizer;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using Microsoft.CodeAnalysis.Diagnostics;
 using NReco.VideoConverter;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -270,61 +272,93 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 model.AddProductReview.ReviewText = null;
 
                 model.AddProductReview.SuccessfullyAdded = true;
+
                 //pictures
-                foreach (var file in photos)
+                var rootFolder = Directory.GetCurrentDirectory();
+                var taskDirectory = new DirectoryInfo(rootFolder);
+
+                var datas = taskDirectory.GetFiles("*").Where(p => p.Name.StartsWith("tempUpload"));
+                foreach (var data in datas)
                 {
-                  
-                    string filetype = file.ContentType;
-                    string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
-                   
-                    Picture pic = new Picture();
-                    Video vid = new Video();
-                    if ( filetype.Contains("image"))
+                    try
                     {
-                        ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
-                        Image img = Image.FromStream(file.OpenReadStream(), true, true);
-                        var ms = new MemoryStream();
-                        imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
-                       
-                        byte[]raw=ms.ToArray();
-
-
-
-                        pic = await _pictureService.InsertPictureAsync(raw,"image/webp", name);
+                        System.IO.File.Delete(data.Name);
                     }
-                    else if (filetype.Contains("video"))
-                    {
-                       
-
-
-
-
-                        vid = await _videoService.InsertVideoAsync(file, name);
-                    }
-
-                    int? lastPicId = pic.Id;
-                    int? lastVidId = vid.Id;
-                    if (lastPicId == 0)
-                    {
-                        lastPicId = null;
-                    }
-
-                    if (lastVidId == 0)
-                    {
-                        lastVidId = null;
-                    }
-
-
-
-                    if (!(lastPicId == null && lastVidId==null))
-                    {
-                        CustomProductReviewMapping resultMapping = await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
-                            lastVidId);
-                    }
-                   
-                  
-
+                    catch { } 
                 }
+
+                foreach (var photo in photos)
+                    {
+                    FileInfo fileInfo = new FileInfo(photo.FileName);
+                    
+                    string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
+
+
+                    using (var stream = new FileStream(fileName, FileMode.Create))
+                    {
+                        
+                       await photo.CopyToAsync(stream);
+                    }
+
+                    }
+                 datas=taskDirectory.GetFiles("*").Where(p => p.Name.StartsWith("tempUpload"));
+
+
+
+                foreach (var data in datas)
+                {
+                    string filetype = "";
+                    new FileExtensionContentTypeProvider().TryGetContentType(data.Name, out filetype);
+                    string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
+                    Task.Factory.StartNew(() =>
+                        {
+                       
+
+                        Picture pic = new Picture();
+                        Video vid = new Video();
+                        if (filetype.Contains("image"))
+                        {
+                            ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
+                            Image img = Image.FromFile(data.Name);
+                            var ms = new MemoryStream();
+                            imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+
+                            byte[] raw = ms.ToArray();
+
+
+
+                            pic = _pictureService.InsertPictureAsync(raw, "image/webp", name).Result;
+                        }
+                        else if (filetype.Contains("video"))
+                        {
+
+                            vid =  _videoService.InsertVideoAsync(data.Name, name).Result;
+                        }
+
+                        int? lastPicId = pic.Id;
+                        int? lastVidId = vid.Id;
+                        if (lastPicId == 0)
+                        {
+                            lastPicId = null;
+                        }
+
+                        if (lastVidId == 0)
+                        {
+                            lastVidId = null;
+                        }
+
+
+
+                        if (!(lastPicId == null && lastVidId == null))
+                        {
+                             _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
+                                lastVidId);
+                        }
+
+
+                        });
+                }
+               
 
                 if (!isApproved)
                     model.AddProductReview.Result =

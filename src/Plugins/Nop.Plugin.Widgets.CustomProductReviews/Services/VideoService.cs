@@ -834,7 +834,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        public virtual async Task<Video> InsertVideoAsync(IFormFile formFile, string defaultFileName = "", string virtualPath = "")
+        public virtual async Task<Video> InsertVideoAsync(string formFile, string defaultFileName = "", string virtualPath = "")
         {
             var imgExt = new List<string>
             {
@@ -843,14 +843,19 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 ".webm"
             } as IReadOnlyCollection<string>;
 
-            var fileName = formFile.FileName;
+
+            var fileBytes =await File.ReadAllBytesAsync(formFile);
+
+            var fileName = formFile;
             if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(defaultFileName))
                 fileName = defaultFileName;
 
             //remove path (passed in IE)
             fileName = _fileProvider.GetFileName(fileName);
 
-            var contentType = formFile.ContentType;
+            string filetype = "";
+            new FileExtensionContentTypeProvider().TryGetContentType(formFile, out filetype);
+            var contentType = filetype;
 
             var fileExtension = _fileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
@@ -877,7 +882,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 }
             }
 
-            var video = await InsertVideoAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            var video = await InsertVideoAsync(fileBytes, contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
 
             if (string.IsNullOrEmpty(virtualPath))
                 return video;
@@ -1040,22 +1045,32 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 string ffpath= Directory.GetCurrentDirectory();
                 ffmpeg.FFMpegToolPath = ffpath;
                 ffmpeg.LogReceived += Ffmpeg_LogReceived;
-                using var writer = new BinaryWriter(File.OpenWrite("tempVideo.mp4"));
+                string fileName = "tempUpload" + DateTime.UtcNow.ToFileTime();
+                using var writer = new BinaryWriter(File.OpenWrite(fileName));
                 writer.Write(videoBinary);
                 writer.Close();
-                
+
+                string ouFilename = "tempUpload" + DateTime.UtcNow.ToFileTime();
 
                 var convertSettings = new ConvertSettings();
                 convertSettings.CustomInputArgs = "-y";
                       convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 600k -pass 1 -an ";
-                ffmpeg.ConvertMedia("tempVideo.mp4", null, "null", "null", convertSettings);
+                ffmpeg.ConvertMedia(fileName, null, "null", "null", convertSettings);
 
                 convertSettings.CustomInputArgs = "";
                 convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -b:v 600k -vf scale=640:-2 -pix_fmt yuv420p -pass 2 -c:a libopus -b:a 64k ";
-                ffmpeg.ConvertMedia("tempVideo.mp4", null, "output.webm", null, convertSettings);
+                ffmpeg.ConvertMedia(fileName, null, ouFilename+".webm", null, convertSettings);
 
-                videoBinary= File.ReadAllBytes("output.webm");
-
+                videoBinary= File.ReadAllBytes(ouFilename + ".webm");
+                try
+                {
+                    File.Delete(ouFilename + ".webm");
+                    File.Delete(fileName);
+                }
+                catch 
+                {
+                  
+                }
                 
                 return Task.FromResult(videoBinary);
             }
