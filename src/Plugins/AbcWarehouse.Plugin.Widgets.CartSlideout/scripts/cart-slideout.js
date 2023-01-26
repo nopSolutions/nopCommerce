@@ -168,7 +168,8 @@ function updateCartSlideoutHtml(response) {
     // Should only check zip code if product has delivery options
     if (response.slideoutInfo.DeliveryOptionsHtml &&
         response.slideoutInfo.DeliveryOptionsHtml !== "\n" &&
-        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n") {
+        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n" &&
+        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n\r\n") {
         deliveryInput.style.display = "block";
         zipCodeInput.value = getCookie('customerZipCode');
         updateCheckDeliveryAvailabilityButton();
