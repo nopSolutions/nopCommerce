@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,9 +46,14 @@ using Nop.Web.Models.Catalog;
 using WebOptimizer;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using Libwebp.Net;
+using Libwebp.Net.utility;
+using Libwebp.Standard;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NReco.VideoConverter;
 using Microsoft.AspNetCore.StaticFiles;
+using Nito.Disposables;
+using static System.Net.WebRequestMethods;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -274,19 +281,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 model.AddProductReview.SuccessfullyAdded = true;
 
                 //pictures
-                var rootFolder = Directory.GetCurrentDirectory();
-                var taskDirectory = new DirectoryInfo(rootFolder);
+                List<string> tempList = new List<string>();
 
-                var datas = taskDirectory.GetFiles("*").Where(p => p.Name.StartsWith("tempUpload"));
-                foreach (var data in datas)
-                {
-                    try
-                    {
-                        System.IO.File.Delete(data.Name);
-                    }
-                    catch { } 
-                }
-
+              
                 foreach (var photo in photos)
                     {
                     FileInfo fileInfo = new FileInfo(photo.FileName);
@@ -299,17 +296,17 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                         
                        await photo.CopyToAsync(stream);
                     }
-
+                    tempList.Add(fileName);
                     }
-                 datas=taskDirectory.GetFiles("*").Where(p => p.Name.StartsWith("tempUpload"));
+                
 
 
-
-                foreach (var data in datas)
+                foreach (var filename in tempList)
                 {
                     string filetype = "";
-                    new FileExtensionContentTypeProvider().TryGetContentType(data.Name, out filetype);
+                    new FileExtensionContentTypeProvider().TryGetContentType(filename, out filetype);
                     string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
+                    Stopwatch sw = new Stopwatch();
                     Task.Factory.StartNew(() =>
                         {
                        
@@ -318,24 +315,62 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                         Video vid = new Video();
                         if (filetype.Contains("image"))
                         {
-                            ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
-                            Image img = Image.FromFile(data.Name);
+                            sw.Start();
+                                var configuration = new WebpConfigurationBuilder()
+                                .Preset(Preset.DEFAULT).QualityFactor(90).AlphaQ(10).Build();
+                            var encoder = new WebpEncoder(configuration);
+                            //FileStream file=new FileStream(filename, FileMode.Open);
                             var ms = new MemoryStream();
-                            imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+                            // file.CopyTo(ms);
+                                ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
+                                var fs =  encoder.EncodeAsync(ms, filename).Result;
+                                 fs.CopyTo(ms);
+                               // Image img = Image.FromFile(filename);
 
-                            byte[] raw = ms.ToArray();
+                          
+                                
+                           
+                                //imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
+                            sw.Stop();
+                                Console.WriteLine("Elapsed Picture Encode={0}", sw.Elapsed);
+                                System.IO.File.AppendAllText(@"ImageProcessPerformace.log", String.Format("Elapsed Picture Encode={0}", sw.Elapsed) + Environment.NewLine);
+
+                                byte[] raw = ms.ToArray();
+                            //imageFactory.Dispose();
+                            //img.Dispose();
+                            try
+                            {
+                                System.IO.File.Delete(filename);
+                            }
+                            catch (Exception e)
+                            {
+                                System.IO.File.AppendAllText(@"customProductReview.log", e.Message + Environment.NewLine);
+
+                            }
+                                
 
 
 
-                            pic = _pictureService.InsertPictureAsync(raw, "image/webp", name).Result;
+
+                                pic = _pictureService.InsertPictureAsync(raw, "image/webp", name).Result;
                         }
                         else if (filetype.Contains("video"))
                         {
 
-                            vid =  _videoService.InsertVideoAsync(data.Name, name).Result;
+                            vid =  _videoService.InsertVideoAsync(filename, name).Result;
+                            try
+                            {
+                                System.IO.File.Delete(filename);
+                            }
+                            catch (Exception e)
+                            {
+                                System.IO.File.AppendAllText(@"customProductReview.log", e.InnerException + Environment.NewLine);
+
+                            }
+
                         }
 
-                        int? lastPicId = pic.Id;
+                            int? lastPicId = pic.Id;
                         int? lastVidId = vid.Id;
                         if (lastPicId == 0)
                         {

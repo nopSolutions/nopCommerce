@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -1040,7 +1041,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 //    var format = GetImageFormatByMimeType(mimeType);
                 //    videoBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
                 //}
-              
+                Stopwatch sw = new Stopwatch();
                 var ffmpeg = new FFMpegConverter();
                 string ffpath= Directory.GetCurrentDirectory();
                 ffmpeg.FFMpegToolPath = ffpath;
@@ -1051,7 +1052,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 writer.Close();
 
                 string ouFilename = "tempUpload" + DateTime.UtcNow.ToFileTime();
-
+               
+                sw.Start();
                 var convertSettings = new ConvertSettings();
                 convertSettings.CustomInputArgs = "-y";
                       convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 600k -pass 1 -an ";
@@ -1060,18 +1062,22 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 convertSettings.CustomInputArgs = "";
                 convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -b:v 600k -vf scale=640:-2 -pix_fmt yuv420p -pass 2 -c:a libopus -b:a 64k ";
                 ffmpeg.ConvertMedia(fileName, null, ouFilename+".webm", null, convertSettings);
-
-                videoBinary= File.ReadAllBytes(ouFilename + ".webm");
+                
+                sw.Stop();
+                Console.WriteLine("Elapsed Videp Encode={0}", sw.Elapsed);
+                System.IO.File.AppendAllText(@"VideoProcessPerformace.log", String.Format("Elapsed Video Encode={0}", sw.Elapsed) + Environment.NewLine);
+                videoBinary = File.ReadAllBytes(ouFilename + ".webm");
                 try
                 {
                     File.Delete(ouFilename + ".webm");
                     File.Delete(fileName);
                 }
-                catch 
+                catch (Exception e)
                 {
-                  
+                    File.AppendAllText(@"customProductReview.log", e.InnerException + Environment.NewLine);
+
                 }
-                
+
                 return Task.FromResult(videoBinary);
             }
             catch
