@@ -45,6 +45,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.System.Warnings.PluginNotCompatibleWithCurrentVersion"] = "{0}: The plugin isn't compatible with the current version. Hence this plugin can't be loaded.",
                 //#6309
                 ["ShoppingCart.ReorderWarning"] = "Some products are not available anymore, so they weren't added to the cart.",
+                //import product refactoring
+                ["Admin.Catalog.Products.Import.DatabaseNotContainCategory"] = "Import product '{0}'. Database doesn't contain the '{1}' category",
+                ["Admin.Catalog.Products.Import.DatabaseNotContainManufacturer"] = "Import product '{0}'. Database doesn't contain the '{1}' manufacturer",
             }, languageId);
 
             #endregion

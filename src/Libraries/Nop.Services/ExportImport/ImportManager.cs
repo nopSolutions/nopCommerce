@@ -2174,13 +2174,13 @@ namespace Nop.Services.ExportImport
                             if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
                                 rez = id;
 
-                            //TODO: Let's ignore these category and write a log message instead of interrupting the import of the product
                             if (!rez.HasValue)
                                 //database doesn't contain the imported category
-                                throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
+                                //this can happen if the category was deleted during the import process
+                                await _logger.WarningAsync(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), product.Name, categoryKey.Key));
 
-                            return rez.Value;
-                        }).ToListAsync();
+                            return rez;
+                        }).Where(id => id != null).ToListAsync();
 
                     foreach (var categoryId in importedCategories)
                     {
@@ -2190,7 +2190,7 @@ namespace Nop.Services.ExportImport
                         var productCategory = new ProductCategory
                         {
                             ProductId = product.Id,
-                            CategoryId = categoryId,
+                            CategoryId = categoryId.Value,
                             IsFeaturedProduct = false,
                             DisplayOrder = 1
                         };
@@ -2213,20 +2213,24 @@ namespace Nop.Services.ExportImport
                     //manufacturer mappings
                     var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsManufacturerIds[product.Id];
 
-                   int? getManufacturerId(string x)
-                   {
-                       var id = allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id;
-
-                       if (id != null)
-                           return id;
-
-                        //TODO: we should add a log message for situation where not exists manufacturer
-                        return int.TryParse(x, out var parsedId) ? parsedId : null;
-                   }
-
-                   var importedManufacturers = manufacturerList
+                   var importedManufacturers = await manufacturerList
                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                       .Select(getManufacturerId).Where(id => id.HasValue).ToList();
+                       .SelectAwait(async x =>
+                       {
+                           var id = allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id;
+
+                           if (id != null)
+                               return id;
+
+                           id = int.TryParse(x, out var parsedId) ? parsedId : null;
+
+                           if (!id.HasValue)
+                               //database doesn't contain the imported manufacturer
+                               //this can happen if the manufacturer was deleted during the import process
+                               await _logger.WarningAsync(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainManufacturer"), product.Name, x));
+
+                           return id;
+                       }).Where(id => id.HasValue).ToListAsync();
 
                     foreach (var manufacturerId in importedManufacturers)
                     {

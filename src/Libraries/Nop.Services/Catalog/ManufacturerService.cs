@@ -478,7 +478,7 @@ namespace Nop.Services.Catalog
             if (manufacturerIdsNames == null)
                 throw new ArgumentNullException(nameof(manufacturerIdsNames));
 
-            var query = _manufacturerRepository.Table;
+            var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
             var queryFilter = manufacturerIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();

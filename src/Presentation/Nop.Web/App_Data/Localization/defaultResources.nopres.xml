@@ -3427,7 +3427,10 @@
     <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -&gt; Categories" page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.DatabaseNotContainCategory">
-    <Value>Database doesn't contain the '{0}' category</Value>
+    <Value>Import product '{0}'. Database doesn't contain the '{1}' category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.DatabaseNotContainManufacturer">
+    <Value>Import product '{0}'. Database doesn't contain the '{1}' manufacturer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
     <Value>Manufacturers with the following names and/or IDs don't exist: {0}</Value>

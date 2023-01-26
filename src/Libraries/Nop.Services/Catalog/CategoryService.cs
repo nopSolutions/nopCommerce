@@ -652,7 +652,7 @@ namespace Nop.Services.Catalog
             if (categoryIdsNames == null)
                 throw new ArgumentNullException(nameof(categoryIdsNames));
 
-            var query = _categoryRepository.Table;
+            var query = _categoryRepository.Table.Where(c => !c.Deleted);
             var queryFilter = categoryIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = await query.Select(c => c.Name)
