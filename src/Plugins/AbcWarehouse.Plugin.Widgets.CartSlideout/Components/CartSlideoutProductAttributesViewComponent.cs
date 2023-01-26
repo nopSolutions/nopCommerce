@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.AbcCore.Factories;
 using Nop.Web.Framework.Components;
 using Nop.Core.Domain.Orders;
+using System.Linq;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
 {
@@ -28,7 +29,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             // once Mickey Shorr is written
             // More ideally, we won't need to modify _ProductAttributes.cshtml
             // Could also just place this in AbcFrontend/Core?
-            return View("~/Themes/Pavilion/Views/Product/_ProductAttributes.cshtml", models);
+            return models.Any() ?
+                View("~/Themes/Pavilion/Views/Product/_ProductAttributes.cshtml", models) :
+                Content("");
         }
     }
 }

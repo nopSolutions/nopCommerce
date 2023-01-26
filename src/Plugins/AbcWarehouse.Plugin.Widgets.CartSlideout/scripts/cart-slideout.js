@@ -156,20 +156,13 @@ function updateCartSlideoutHtml(response) {
     if (response.slideoutInfo.SubtotalHtml) {
         $('.cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
     }
-    hasWarranties = response.slideoutInfo.WarrantyHtml &&
-                    response.slideoutInfo.WarrantyHtml !== "\n" &&
-                    response.slideoutInfo.WarrantyHtml !== "\r\n" &&
-                    response.slideoutInfo.WarrantyHtml !== "\n\n" &&
-                    response.slideoutInfo.WarrantyHtml !== "\r\n\r\n";
+    hasWarranties = response.slideoutInfo.WarrantyHtml !== "";
     if (hasWarranties) {
         $('.cart-slideout__warranty').html(response.slideoutInfo.WarrantyHtml);
     }
 
     // Should only check zip code if product has delivery options
-    if (response.slideoutInfo.DeliveryOptionsHtml &&
-        response.slideoutInfo.DeliveryOptionsHtml !== "\n" &&
-        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n" &&
-        response.slideoutInfo.DeliveryOptionsHtml !== "\r\n\r\n") {
+    if (response.slideoutInfo.DeliveryOptionsHtml !== "") {
         deliveryInput.style.display = "block";
         zipCodeInput.value = getCookie('customerZipCode');
         updateCheckDeliveryAvailabilityButton();
@@ -177,6 +170,9 @@ function updateCartSlideoutHtml(response) {
         setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
         cartSlideoutProductId = response.slideoutInfo.ProductId;
         cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
+    } else if (hasWarranties) {
+        warrantyOptions.style.display = "block";
+        setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
     }
 }
 
