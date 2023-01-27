@@ -1349,9 +1349,12 @@ input[type="text"].k-input {
   align-items: flex-start;
 }
 
-.nav-sidebar .nav-treeview > li > a i {
+.nav-sidebar .nav-treeview > li > a i.nav-icon {
   padding-top: 4px;
-  min-width: 26px;
+}
+
+.nav-sidebar .nav-treeview > li > a i.right {
+    right: 2rem;
 }
 
 .sidebar-form {
