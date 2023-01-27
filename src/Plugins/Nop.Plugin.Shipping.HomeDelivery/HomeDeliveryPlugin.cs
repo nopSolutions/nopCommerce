@@ -133,7 +133,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             var legacyHomeDeliveryCharge = await _homeDeliveryCostService.GetHomeDeliveryCostAsync(legacyHomeDeliveryItems);
 
             //if there are items to be shipped, use the base calculation service if items remain that will be shipped by ups
-            if (legacyHomeDeliveryItems.Count > 0 && fedexDeliveryItems.Count > 0)
+            if (fedexDeliveryItems.Count > 0)
             {
                 var oldProtocol = ServicePointManager.SecurityProtocol;
                 try
