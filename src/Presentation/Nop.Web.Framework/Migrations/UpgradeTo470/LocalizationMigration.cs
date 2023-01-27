@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint"] = "Check to cache product prices. It can significantly improve performance. But you should not enable it if you use some complex discounts, discount requirement rules, or coupon codes.",
                 //6541
                 ["Customer.FullNameFormat"] = "{0} {1}",
-                //TODO: update comment with issue number for KnownNetworks Update
+                //#6555
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks"] = "Addresses of known proxy networks",
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint"] = "Specify a list of IP CIDR notations (comma separated) to accept forwarded headers.  e.g. 172.64.0.0/13,162.158.0.0/15",
             }, languageId);
