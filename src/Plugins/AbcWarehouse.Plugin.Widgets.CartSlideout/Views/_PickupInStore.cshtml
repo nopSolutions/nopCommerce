@@ -12,7 +12,7 @@
         </div>
         @if (@item.Available)
         {
-            <button class="available" onclick="selectStoreAsync(@item.Shop.Id)">Available Today</button>
+            <button class="available" onclick="selectStoreAsync(@item.Shop.Id)">@item.Message</button>
         }
         else
         {

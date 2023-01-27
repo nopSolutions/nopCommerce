@@ -78,15 +78,14 @@
 .cart-slideout__pickup-in-store button {
     margin-right: 0.5rem;
     border: 2px solid #78de9c;
-    height: 3rem;
+    height: 4rem;
     background-color: white;
-    font-weight: bold;
-    width: 9rem;
+    width: 12rem;
+    font-size: 0.8rem;
 }
 
 .cart-slideout__pickup-in-store button.not-available {
     border: 1px solid gray;
-    font-weight: normal;
     opacity: 0.4;
     cursor: not-allowed;
 }

@@ -225,7 +225,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             {
                 Shop = await _shopService.GetShopByIdAsync(440),
                 Available = true,
-                Quantity = 1
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
             };
             stockResponse.ProductStocks.Add(bloomfieldTownshipMockShop);
 
@@ -241,7 +242,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             {
                 Shop = await _shopService.GetShopByIdAsync(445),
                 Available = true,
-                Quantity = 1
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
             };
             stockResponse.ProductStocks.Add(troyMockShop);
 
@@ -249,7 +251,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             {
                 Shop = await _shopService.GetShopByIdAsync(443),
                 Available = true,
-                Quantity = 1
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
             };
             stockResponse.ProductStocks.Add(farmingtonHillsMockShop);
 
