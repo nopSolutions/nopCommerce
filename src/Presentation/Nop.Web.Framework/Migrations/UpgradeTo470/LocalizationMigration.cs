@@ -59,7 +59,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength"] = "Password maximum length",
                 ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint"] = "Specify password maximum length",
                 ["Validation.Password.LengthValidation"] = "<li>must have at least {0} characters and not greater than {1} characters</li>",
-                //TODO: update comment with issue number for KnownNetworks Update
+                //6555
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks"] = "Addresses of known proxy networks",
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint"] = "Specify a list of IP CIDR notations (comma separated) to accept forwarded headers.  e.g. 172.64.0.0/13,162.158.0.0/15",
             }, languageId);
