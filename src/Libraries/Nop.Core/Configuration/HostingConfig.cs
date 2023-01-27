@@ -25,5 +25,10 @@ namespace Nop.Core.Configuration
         /// Gets or sets addresses of known proxies to accept forwarded headers from
         /// </summary>
         public string KnownProxies { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets addresses of known networks to accept forwarded headers from
+        /// </summary>
+        public string KnownNetworks { get; private set; } = string.Empty;
     }
 }
