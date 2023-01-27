@@ -4614,6 +4614,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownProxies.Hint">
     <Value>Specify a list of IP addresses (comma separated) to accept forwarded headers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownNetworks">
+    <Value>Addresses of known proxy networks</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint">
+    <Value>Specify a list of IP CIDR notations (comma separated) to accept forwarded headers.  e.g. 172.64.0.0/13,162.158.0.0/15</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy">
     <Value>Use proxy servers</Value>
   </LocaleResource>

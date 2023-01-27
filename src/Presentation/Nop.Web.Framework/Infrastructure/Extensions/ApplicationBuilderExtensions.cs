@@ -487,10 +487,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (IPAddress.TryParse(strIp, out var ip))
                             options.KnownProxies.Add(ip);
                     }
-
-                    if (options.KnownProxies.Count > 1)
-                        options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
                 }
+
+                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownNetworks))
+                {
+                    foreach (var strIpNet in appSettings.Get<HostingConfig>().KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    {
+                        string[] ipNetParts = strIpNet.Split("/");
+                        if (ipNetParts.Length == 2)
+                        {
+                            if (IPAddress.TryParse(ipNetParts[0], out var ip) && int.TryParse(ipNetParts[1], out var length))
+                                options.KnownNetworks.Add(new IPNetwork(ip, length));
+                        }
+                    }
+                }
+
+                if (options.KnownProxies.Count > 1 || options.KnownNetworks.Count > 1)
+                    options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
 
                 //configure forwarding
                 application.UseForwardedHeaders(options);
