@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -741,7 +740,7 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer full name
         /// </returns>
-        public virtual Task<string> GetCustomerFullNameAsync(Customer customer)
+        public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -751,7 +750,12 @@ namespace Nop.Services.Customers
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
-                fullName = $"{firstName} {lastName}";
+            {
+                //do not inject ILocalizationService via constructor because it'll cause circular references
+                var format = await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.FullNameFormat");
+
+                fullName = string.Format(format, firstName, lastName);
+            }
             else
             {
                 if (!string.IsNullOrWhiteSpace(firstName))
@@ -761,7 +765,7 @@ namespace Nop.Services.Customers
                     fullName = lastName;
             }
 
-            return Task.FromResult(fullName);
+            return fullName;
         }
 
         /// <summary>

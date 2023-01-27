@@ -16839,6 +16839,9 @@
   <LocaleResource Name="Currency.Selector.Label">
     <Value>Currency selector</Value>
   </LocaleResource>
+  <LocaleResource Name="Customer.FullNameFormat">
+    <Value>{0} {1}</Value>
+  </LocaleResource>
   <LocaleResource Name="Customer.Guest">
     <Value>Guest</Value>
   </LocaleResource>
