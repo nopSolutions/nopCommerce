@@ -149,7 +149,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             string xmlRequestString = await BuildXmlRequestStringAsync(backendId);
             if (_settings.IsDebugMode)
             {
-                await _logger.InformationAsync($"BackendStockService request: {xmlRequestString}")
+                await _logger.InformationAsync($"BackendStockService request: {xmlRequestString}");
             }
             using (var client = new HttpClient())
             {
@@ -163,7 +163,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
 
                         if (_settings.IsDebugMode)
                         {
-                            await _logger.InformationAsync($"BackendStockService response: {xmlResponse}")
+                            await _logger.InformationAsync($"BackendStockService response: {xmlResponse}");
                         }
 
                         byte[] byteArray = Encoding.UTF8.GetBytes(xmlResponse);
