@@ -221,6 +221,7 @@ clear: both;
   display: inline-block;
   max-width: 150px;
   max-height: 150px;
+  padding: 10px;
 }
 
 .product-review-item .thumb-item .img {

@@ -1021,8 +1021,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 }
                 Stopwatch sw = new Stopwatch();
                 var ffmpeg = new FFMpegConverter();
-                string ffpath= Directory.GetCurrentDirectory();
-                ffmpeg.FFMpegToolPath = ffpath;
+                //string ffpath= Directory.GetCurrentDirectory();
+                //ffmpeg.FFMpegToolPath = ffpath;
                 ffmpeg.LogReceived += Ffmpeg_LogReceived;
                 string fileName = "tempUpload" + DateTime.UtcNow.ToFileTime()+mimeType;
                 using var writer = new BinaryWriter(File.OpenWrite(fileName));
@@ -1034,7 +1034,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 sw.Start();
                 var convertSettings = new ConvertSettings();
                 convertSettings.CustomInputArgs = "-y";
-                      convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 1000k -pass 1 -an ";
+                      convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 1000k -c:a libopus -b:a 64k -pass 1 -an ";
                 ffmpeg.ConvertMedia(fileName, null, "null", "null", convertSettings);
 
                 convertSettings.CustomInputArgs = "";

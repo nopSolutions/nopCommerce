@@ -311,7 +311,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                 #region Product Review Media Upload Section
 
-
+                try
+                {
 
 
                 //pictures
@@ -343,24 +344,31 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                        await InsertReviewMedia(model, data, reviewId);
                     });
 
-                    #endregion
+                    
 
-                    if (!isApproved)
-                        model.AddProductReview.Result =
-                            await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") + Environment.NewLine +
-                            " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
-                            " After processing, the media will be automatically added to your review.";
-
-                    else
-                        model.AddProductReview.Result =
-                            await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded") + Environment.NewLine +
-                            " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
-                            " After processing, the media will be automatically added to your review.";
-
-                    return Json(model);
                 }
 
-                
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    
+                }
+                #endregion
+                if (!isApproved)
+                    model.AddProductReview.Result =
+                        await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") + Environment.NewLine +
+                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
+                        " After processing, the media will be automatically added to your review.";
+
+                else
+                    model.AddProductReview.Result =
+                        await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded") + Environment.NewLine +
+                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
+                        " After processing, the media will be automatically added to your review.";
+
+                return Json(model);
+
             }
             //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
