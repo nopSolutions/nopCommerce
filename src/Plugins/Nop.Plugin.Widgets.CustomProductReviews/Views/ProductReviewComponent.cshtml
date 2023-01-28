@@ -7,6 +7,7 @@
 
 @{
     NopHtml.AppendPageCssClassParts("html-product-reviews-page");
+    NopHtml.AddCssFileParts("~/Plugins/Widgets.CustomProductReviews/Content/style.css");
     //Layout = "_ColumnsOne";
 }
 <link href="~/Plugins/Widgets.CustomProductReviews/Content/style.css" rel="stylesheet" />
@@ -16,7 +17,7 @@
     var _storeContext = EngineContext.Current.Resolve<Nop.Core.IStoreContext>();
     var _settingService = EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
 
-    var setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>(_storeContext.GetCurrentStore().Id);
+    var setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>((await _storeContext.GetCurrentStoreAsync()).Id);
     if (setting == null)
     {
         setting = await _settingService.LoadSettingAsync<Nop.Plugin.Widgets.CustomProductReviews.CustomProductReviewsSettings>();
@@ -30,7 +31,7 @@
     <div class="page-body">
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
-            <div class="result">
+            <div class="submitReviewResult result">
                 @Model.AddProductReview.Result
             </div>
         }
@@ -238,10 +239,12 @@
     </div>
 </div>
 <script asp-location="Footer">
+    var uploadButton = document.getElementById('add-review');
 
     $('#review-form').submit(function (e) {
         var form = $(this);
         e.preventDefault();
+        uploadButton.value = 'Submitting...';
         e.stopImmediatePropagation();
         //if (!form.valid()) return false;
         if (!readURLFileUpload()) return false;
@@ -259,44 +262,49 @@
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend: function(){
+                $('#review-form .ajax-loader').css("visibility", "visible");
+            },
             success: function (data) {
-                console.log(data);
+                console.log('success1');
+                console.log(data.AddProductReview);
                 var strmsg = "";
-                console.log(data.Result);
-                if (data.Result > 0) {
+                uploadButton.value = "@T("Reviews.SubmitButton")";
+                console.log(data.AddProductReview.Result);
+                if (data.AddProductReview.Result.length > 0) {
                     strmsg += "<ul>";
-                    for (var i = 0; i < data.length; i++) {
-                        strmsg += "<li>" + data[i] + "</li>";
-                    }
+                    strmsg += "<li>" + data.AddProductReview.Result + "</li>";
                     strmsg += "</ul>";
                     console.log(strmsg);
-                    if (!data.SuccessfullyAdded) {
-                        console.log('datahatasi');
-                        $("#message-error").html(strmsg);
+                    if (!data.AddProductReview.SuccessfullyAdded) {
+                        console.log('hatadatamesajı');
+                        $("#message-error-review-form").html(strmsg);
                     }
                     else {
-                        console.log('datamesajı');
-                        $("#message-success").html(data.Result);
+                        console.log('basaridatamesajı');
+                        $("#message-success-review-form").html(strmsg);
                         $("#review-form .review-form-body").css("display", "none");
                         document.getElementById("review-form").reset();
-                      
                     }
-                   
+                    if (typeof grecaptcha != "undefined") {
+                        grecaptcha.reset();
+                    }
+                    $('html, body').animate({ scrollTop: $("#message-success-review-form").offset().top }, 'slow');
 
                     return false;
                 }
-                console.log(data);
+                //console.log(data);
             },
             error: function (xhr, resp, text) {
                 console.log(xhr, resp, text);
             },
             complete: function () {
                 console.log('complatereview');
-                location.reload(true);
+                //location.reload(true);
 
-                $('html, body').animate({
-                    scrollTop: $("#review-form").offset().top
-                }, 500);
+                $('#review-form .ajax-loader').css("visibility", "hidden");
+                uploadButton.value = "@T("Reviews.SubmitButton")";
+
             }
         });
         return false;

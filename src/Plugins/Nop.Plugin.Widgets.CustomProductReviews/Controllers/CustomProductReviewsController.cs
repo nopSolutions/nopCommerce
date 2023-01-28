@@ -38,23 +38,13 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Models.Catalog;
-using WebOptimizer;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using Libwebp.Net;
-using Libwebp.Net.utility;
-using Libwebp.Standard;
-using Microsoft.CodeAnalysis.Diagnostics;
-using NReco.VideoConverter;
-using Microsoft.AspNetCore.StaticFiles;
-using Nito.Disposables;
-using static System.Net.WebRequestMethods;
-using DocumentFormat.OpenXml.Wordprocessing;
+
+using System.Runtime.InteropServices;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 {
@@ -190,18 +180,50 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //}
 
 
-        public static byte[] ReadFully(Stream input)
+        [DllImport("urlmon.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
+        private static extern int FindMimeFromData(IntPtr pBc,
+            [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)]
+            byte[] pBuffer,
+            int cbSize,
+            [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
+            int dwMimeFlags,
+            out IntPtr ppwzMimeOut,
+            int dwReserved
+        );
+
+        /**
+         * This function will detect mime type from provided byte array
+         * and if it fails, it will return default mime type
+         */
+        private static string GetMimeFromBytes(byte[] dataBytes, string defaultMimeType)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
+            if (dataBytes == null)
+                throw new ArgumentNullException(nameof(dataBytes));
+
+            var mimeType = string.Empty;
+            IntPtr suggestPtr = IntPtr.Zero, filePtr = IntPtr.Zero;
+
+            try
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                var ret = FindMimeFromData(IntPtr.Zero, null, dataBytes, dataBytes.Length, null, 0, out var outPtr, 0);
+                if (ret == 0 && outPtr != IntPtr.Zero)
                 {
-                    ms.Write(buffer, 0, read);
+                    mimeType = Marshal.PtrToStringUni(outPtr);
+                    Marshal.FreeCoTaskMem(outPtr);
                 }
-                return ms.ToArray();
+
+                if (!mimeType.Contains("image")|| !mimeType.Contains("video"))
+                {
+                    mimeType = defaultMimeType;
+                }
             }
+            catch
+            {
+                mimeType = defaultMimeType;
+            }
+
+            return mimeType;
         }
 
         //[FormValueRequired("add-review")]
@@ -293,146 +315,130 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                 model.AddProductReview.SuccessfullyAdded = true;
 
+                #region Product Review Media Upload Section
+
+                
+
+              
                 //pictures
-                List<string> tempList = new List<string>();
+                List<UploadDataBinary> dataList = new List<UploadDataBinary>();
 
               
                 foreach (var photo in photos)
-                    {
-                    FileInfo fileInfo = new FileInfo(photo.FileName);
-                    
-                    string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
+                {
+                    var uploadData = new UploadDataBinary();
+                        FileInfo fileInfo = new FileInfo(photo.FileName);
+                        uploadData.Extentions= photo.ContentType;
+                        //string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
 
 
-                    using (var stream = new FileStream(fileName, FileMode.Create))
+                    using (var ms = new MemoryStream())
                     {
-                        
-                       await photo.CopyToAsync(stream);
+                        await photo.CopyToAsync(ms);
+                        uploadData.BinaryData = ms.ToArray();
+                        dataList.Add(uploadData);
                     }
-                    tempList.Add(fileName);
+                   
                     }
                 
 
 
-                foreach (var filename in tempList)
+                foreach (var data in dataList)
                 {
-                    string filetype = "";
-                    new FileExtensionContentTypeProvider().TryGetContentType(filename, out filetype);
-                    string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
-                    Stopwatch sw = new Stopwatch();
-            
-                    Task.Factory.StartNew(async () =>
-                    {
-
-                       
-
-                        Core.Domain.Media.Picture pic = new Core.Domain.Media.Picture();
-                        Video vid = new Video();
-                        if (filetype.Contains("image"))
-                        {
-                            sw.Start();
-                            //var oFileName = $"{Path.GetFileNameWithoutExtension(filename)}.webp";
-
-                            //var configuration = new WebpConfigurationBuilder()
-                            //    .Preset(Preset.PICTURE).QualityFactor(90).AlphaQ(10).Output(oFileName).Build();
-                            //var encoder = new WebpEncoder(configuration);
-                                //FileStream file=new FileStream(filename, FileMode.Open);
-                                FileStream fileStream = new FileStream(filename, FileMode.Open);
-                                var ms = new MemoryStream();
-                            //await fileStream.CopyToAsync(ms);
-                            await fileStream.DisposeAsync();
-                            // file.CopyTo(ms);
-
-                            //var fs =await encoder.EncodeAsync(ms, filename);
-                            ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
-                            Image img = Image.FromFile(filename);
-                            imageFactory.Load(img).Format(new WebPFormat()).Quality(90).Save(ms);
-                             
-
-
-
-
-                            sw.Stop();
-                                Console.WriteLine("Elapsed Picture Encode={0}", sw.Elapsed);
-                                System.IO.File.AppendAllText(@"ImageProcessPerformace.log", String.Format("Elapsed Picture Encode={0}", sw.Elapsed) + Environment.NewLine);
-
-                                byte[] raw = ms.ToArray();
-                                await ms.DisposeAsync();
-                            imageFactory.Dispose();
-                            img.Dispose();
-                            try
-                            {
-                                System.IO.File.Delete(filename);
-                            }
-                            catch (Exception e)
-                            {
-                                System.IO.File.AppendAllText(@"customProductReview.log", e.Message + Environment.NewLine);
-
-                            }
-                                
-
-
-
-
-                                pic =await _pictureService.InsertPictureAsync(raw, "image/webp", name);
-                        }
-                        else if (filetype.Contains("video"))
-                        {
-
-                            vid =await  _videoService.InsertVideoAsync(filename, name);
-                            try
-                            {
-                                System.IO.File.Delete(filename);
-                            }
-                            catch (Exception e)
-                            {
-                                System.IO.File.AppendAllText(@"customProductReview.log", e.InnerException + Environment.NewLine);
-
-                            }
-
-                        }
-
-                            int? lastPicId = pic.Id;
-                        int? lastVidId = vid.Id;
-                        if (lastPicId == 0)
-                        {
-                            lastPicId = null;
-                        }
-
-                        if (lastVidId == 0)
-                        {
-                            lastVidId = null;
-                        }
-
-
-
-                        if (!(lastPicId == null && lastVidId == null))
-                        {
-                           await  _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
-                                lastVidId);
-                        }
-
-
-                    });
+                    InsertReviewMedia(model, data, reviewId);
                 }
-               
 
+                #endregion
                 if (!isApproved)
                     model.AddProductReview.Result =
-                        await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
+                        await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") + Environment.NewLine +
+                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
+                        " After processing, the media will be automatically added to your review.";
+
                 else
                     model.AddProductReview.Result =
-                        await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
+                        await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded")+ Environment.NewLine +
+                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine+
+                        " After processing, the media will be automatically added to your review.";
 
-                return Json(model.AddProductReview);
+                return Json(model);
             }
 
             //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            return Json( model.AddProductReview);
+            return Json( model);
         }
 
-    
+        private void InsertReviewMedia(ProductReviewsModel model, UploadDataBinary data, int reviewId)
+        {
+            string filetype = GetMimeFromBytes(data.BinaryData, data.Extentions);
+
+            string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
+            Stopwatch sw = new Stopwatch();
+
+            Task.Factory.StartNew(async () =>
+            {
+                var pic = new Picture();
+
+
+                Video vid = new Video();
+                if (filetype.Contains("image"))
+                {
+                    try
+                    {
+                        sw.Start();
+
+                        var ms = new MemoryStream();
+                        ImageFactory imageFactory = new ImageFactory(preserveExifData: false);
+                        imageFactory.Load(data.BinaryData).Format(new WebPFormat()).Quality(90).Save(ms);
+                        sw.Stop();
+                        Console.WriteLine("Elapsed Picture Encode={0}", sw.Elapsed);
+                        System.IO.File.AppendAllText(@"ImageProcessPerformace.log", string.Format("Elapsed Picture Encode={0}", sw.Elapsed) + Environment.NewLine);
+
+                        byte[] raw = ms.ToArray();
+                        await ms.DisposeAsync();
+                        imageFactory.Dispose();
+
+
+                        pic = await _pictureService.InsertPictureAsync(raw, "image/webp", name);
+                    }
+                    catch (Exception e)
+                    {
+                        System.IO.File.AppendAllText(@"customProductReview.log", e.Message + Environment.NewLine);
+                    }
+                }
+                else if (filetype.Contains("video"))
+                {
+                    try
+                    {
+                        vid = await _videoService.InsertVideoAsync(data.BinaryData, name, filetype);
+                    }
+                    catch (Exception e)
+                    {
+                        System.IO.File.AppendAllText(@"customProductReview.log", e.InnerException + Environment.NewLine);
+                    }
+                }
+
+                int? lastPicId = pic.Id;
+                int? lastVidId = vid.Id;
+                if (lastPicId == 0)
+                {
+                    lastPicId = null;
+                }
+
+                if (lastVidId == 0)
+                {
+                    lastVidId = null;
+                }
+
+
+                if (!(lastPicId == null && lastVidId == null))
+                {
+                    await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
+                        lastVidId);
+                }
+            });
+        }
 
 
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)

@@ -788,7 +788,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        public virtual async Task<Video> InsertVideoAsync(byte[] videoBinary, string mimeType, string seoFilename,
+        public virtual async Task<Video> InsertVideoDataAsync(byte[] videoBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true)
         {
@@ -835,47 +835,20 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        public virtual async Task<Video> InsertVideoAsync(string formFile, string defaultFileName = "", string virtualPath = "")
+        public virtual async Task<Video> InsertVideoAsync(byte[] formFile, string defaultFileName , string contentType, string virtualPath = "")
         {
-            var imgExt = new List<string>
-            {
-                ".mp4",
-                ".mov",
-                ".webm"
-            } as IReadOnlyCollection<string>;
-
-
-            var fileBytes =await File.ReadAllBytesAsync(formFile);
-
-            var fileName = formFile;
-            if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(defaultFileName))
-                fileName = defaultFileName;
-
-            //remove path (passed in IE)
-            fileName = _fileProvider.GetFileName(fileName);
-
-            string filetype = "";
-            new FileExtensionContentTypeProvider().TryGetContentType(formFile, out filetype);
-            var contentType = filetype;
-
-            var fileExtension = _fileProvider.GetFileExtension(fileName);
-            if (!string.IsNullOrEmpty(fileExtension))
-                fileExtension = fileExtension.ToLowerInvariant();
-
-            if (imgExt.All(ext => !ext.Equals(fileExtension, StringComparison.CurrentCultureIgnoreCase)))
-                return null;
 
             if (string.IsNullOrEmpty(contentType))
             {
-                switch (fileExtension)
+                switch (contentType)
                 {
-                    case ".mp4":
+                    case var ext when contentType.Contains("mp4"):
                         contentType = Data.MimeTypes.VideoMp4;
                         break;
-                    case ".mov":
+                    case var ext when contentType.Contains("mov"):
                         contentType = Data.MimeTypes.VideoMov;
                         break;
-                    case ".webm":
+                    case var ext when contentType.Contains("webm"):
                         contentType = Data.MimeTypes.VideoWebm;
                         break;
                     default:
@@ -883,7 +856,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 }
             }
 
-            var video = await InsertVideoAsync(fileBytes, contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            var video = await InsertVideoDataAsync(formFile, contentType, defaultFileName);
 
             if (string.IsNullOrEmpty(virtualPath))
                 return video;

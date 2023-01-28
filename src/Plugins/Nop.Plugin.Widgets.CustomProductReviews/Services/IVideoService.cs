@@ -160,7 +160,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        Task<Video> InsertVideoAsync(byte[] videoBinary, string mimeType, string seoFilename,
+        Task<Video> InsertVideoDataAsync(byte[] videoBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
 
@@ -174,7 +174,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video
         /// </returns>
-        Task<Video> InsertVideoAsync(string formFile, string defaultFileName = "", string virtualPath = "");
+        Task<Video> InsertVideoAsync(byte[] formFile, string defaultFileName , string contentType, string virtualPath = "");
 
         /// <summary>
         /// Updates the video

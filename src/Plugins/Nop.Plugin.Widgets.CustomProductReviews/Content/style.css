@@ -158,7 +158,10 @@ clear: both;
     color: green;
     font-weight: bold;
 }
-
+.message-success {
+  color: green;
+  font-weight: bold;
+}
 #formProductReviews .ajax-loader {
     background: #F9F9F9;
     position: fixed;
@@ -193,6 +196,11 @@ clear: both;
 }*/
 
 
+.submitReviewResult {
+  margin: 0 0 30px;
+  text-align: center;
+  color: #555;
+}
 
 .product-review-item video {
   /* Make video to at least 100% wide and tall */
