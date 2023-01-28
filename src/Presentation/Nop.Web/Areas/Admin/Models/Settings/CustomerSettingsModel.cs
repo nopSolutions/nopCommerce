@@ -70,6 +70,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
         public int PasswordMinLength { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMaxLength")]
+        public int PasswordMaxLength { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase")]
         public bool PasswordRequireLowercase { get; set; }
 

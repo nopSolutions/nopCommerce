@@ -6723,6 +6723,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength">
+    <Value>Password maximum length</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint">
+    <Value>Specify password maximum length.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
     <Value>Password recovery link. Days valid</Value>
   </LocaleResource>
@@ -19789,7 +19795,7 @@
     <Value>Password is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.LengthValidation">
-    <Value><![CDATA[<li>must have at least {0} characters</li>]]></Value>
+    <Value><![CDATA[<li>must have at least {0} characters and maximum {1}</li>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireDigit">
     <Value><![CDATA[<li>must have at least one digit</li>]]></Value>

@@ -68,6 +68,11 @@ namespace Nop.Core.Domain.Customers
         public int PasswordMinLength { get; set; }
 
         /// <summary>
+        /// Gets or sets a maximum password length
+        /// </summary>
+        public int PasswordMaxLength { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether password are have least one lowercase
         /// </summary>
         public bool PasswordRequireLowercase { get; set; }

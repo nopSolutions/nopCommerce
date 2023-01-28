@@ -26,6 +26,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             _customerSettings = new CustomerSettings
             {
                 PasswordMinLength = 8,
+                PasswordMaxLength = 20,
                 PasswordRequireUppercase = true,
                 PasswordRequireLowercase = true,
                 PasswordRequireDigit = true,
@@ -49,6 +50,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 15,
                 PasswordRequireLowercase = true
             };
 
@@ -71,7 +73,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
-                PasswordRequireUppercase = true                
+                PasswordMaxLength = 15,
+                PasswordRequireUppercase = true
             };
 
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
@@ -93,6 +96,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 15,
                 PasswordRequireDigit = true
             };
 
@@ -115,6 +119,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 15,
                 PasswordRequireNonAlphanumeric = true
             };
 
@@ -134,7 +139,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
         {
             var validator = new TestValidator();
 
-            //Example:  (?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$
+            //Example:  (?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,32}$
             validator.RuleFor(x => x.Password).IsPassword(_localizationService, _customerSettings);
 
             //ShouldHaveValidationError
@@ -157,6 +162,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             _person.Password = "NOPCOMMERCE123$";
             validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
             _person.Password = "nopCommerce123~";
+            validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
+            _person.Password = "nopCommerce123$nopCommerce123$";
             validator.TestValidate(_person).ShouldHaveValidationErrorFor(x => x.Password);
 
             //ShouldNotHaveValidationError
