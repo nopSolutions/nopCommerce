@@ -338,10 +338,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                         uploadData.BinaryData = ms.ToArray();
                         dataList.Add(uploadData);
                     }
-                   
-                    }
-                
-
+                }
 
                 foreach (var data in dataList)
                 {
