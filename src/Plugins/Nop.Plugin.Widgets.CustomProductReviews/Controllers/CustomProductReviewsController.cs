@@ -86,10 +86,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         private readonly IVideoService _videoService;
         private readonly ICustomProductReviewMappingService _customProductReviewMappingService;
         private readonly INopFileProvider _fileProvider;
-
-        
-        
-
+        private readonly IBackgroundQueue _queue;
 
         #endregion
 
@@ -125,7 +122,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             IVideoService videoService,
             INopFileProvider fileProvider,
             ShippingSettings shippingSettings,
-            ICustomProductReviewMappingService customProductReviewMappingService
+            ICustomProductReviewMappingService customProductReviewMappingService,
+            IBackgroundQueue queue
 
         )
         {
@@ -160,7 +158,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
             _customProductReviewMappingService = customProductReviewMappingService;
-           
+            _queue = queue;
+
         }
 
 
@@ -213,7 +212,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     Marshal.FreeCoTaskMem(outPtr);
                 }
 
-                if (!mimeType.Contains("image")|| !mimeType.Contains("video"))
+                if (!mimeType.Contains("image") || !mimeType.Contains("video"))
                 {
                     mimeType = defaultMimeType;
                 }
@@ -233,7 +232,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         [RequestSizeLimit(1048576000)]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid, List<IFormFile> photos)
         {
-           
+
             var product = await _productService.GetProductByIdAsync(productId);
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -273,20 +272,15 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     StoreId = currentStore.Id,
                 };
                 await _productService.InsertProductReviewAsync(productReview);
-                var reviewId =  productReview.Id;
-               
-            
+                var reviewId = productReview.Id;
+
+
 
 
                 //add product review and review type mapping                
                 foreach (var additionalReview in model.AddAdditionalProductReviewList)
                 {
-                    var additionalProductReview = new ProductReviewReviewTypeMapping
-                    {
-                        ProductReviewId = productReview.Id,
-                        ReviewTypeId = additionalReview.ReviewTypeId,
-                        Rating = additionalReview.Rating
-                    };
+                    var additionalProductReview = new ProductReviewReviewTypeMapping { ProductReviewId = productReview.Id, ReviewTypeId = additionalReview.ReviewTypeId, Rating = additionalReview.Rating };
 
                     await _reviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
                 }
@@ -317,19 +311,19 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                 #region Product Review Media Upload Section
 
-                
 
-              
+
+
                 //pictures
                 List<UploadDataBinary> dataList = new List<UploadDataBinary>();
 
-              
+
                 foreach (var photo in photos)
                 {
                     var uploadData = new UploadDataBinary();
-                        FileInfo fileInfo = new FileInfo(photo.FileName);
-                        uploadData.Extentions= photo.ContentType;
-                        //string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
+                    FileInfo fileInfo = new FileInfo(photo.FileName);
+                    uploadData.Extentions = photo.ContentType;
+                    //string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
 
 
                     using (var ms = new MemoryStream())
@@ -342,40 +336,46 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
                 foreach (var data in dataList)
                 {
-                    InsertReviewMedia(model, data, reviewId);
+                    // InsertReviewMedia(model, data, reviewId);
+                    //var ss=_insInsertReviewMediaService.get
+                    _queue.QueueTask(async token =>
+                    {
+                       await InsertReviewMedia(model, data, reviewId);
+                    });
+
+                    #endregion
+
+                    if (!isApproved)
+                        model.AddProductReview.Result =
+                            await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") + Environment.NewLine +
+                            " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
+                            " After processing, the media will be automatically added to your review.";
+
+                    else
+                        model.AddProductReview.Result =
+                            await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded") + Environment.NewLine +
+                            " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
+                            " After processing, the media will be automatically added to your review.";
+
+                    return Json(model);
                 }
 
-                #endregion
-                if (!isApproved)
-                    model.AddProductReview.Result =
-                        await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") + Environment.NewLine +
-                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine +
-                        " After processing, the media will be automatically added to your review.";
-
-                else
-                    model.AddProductReview.Result =
-                        await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded")+ Environment.NewLine +
-                        " Your uploaded media(photo or video ) will continue to be processed in the background." + Environment.NewLine+
-                        " After processing, the media will be automatically added to your review.";
-
-                return Json(model);
+                
             }
-
             //if we got this far, something failed, redisplay form
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            return Json( model);
+            return Json(model);
         }
+    
 
-        private void InsertReviewMedia(ProductReviewsModel model, UploadDataBinary data, int reviewId)
+    public async Task<string> InsertReviewMedia(ProductReviewsModel model, UploadDataBinary data, int reviewId)
         {
             string filetype = GetMimeFromBytes(data.BinaryData, data.Extentions);
 
             string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
             Stopwatch sw = new Stopwatch();
 
-            Task.Factory.StartNew(async () =>
-            {
-                var pic = new Picture();
+            var pic = new Picture();
 
 
                 Video vid = new Video();
@@ -434,7 +434,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                     await _customProductReviewMappingService.InsertCustomProductReviewMappingAsync(reviewId, lastPicId,
                         lastVidId);
                 }
-            });
+           
+            return "done";
         }
 
 

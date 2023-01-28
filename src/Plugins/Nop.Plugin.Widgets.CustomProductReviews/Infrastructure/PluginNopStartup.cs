@@ -20,7 +20,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Infrastructure
             //services.AddScoped<CustomModelFactory, ICustomerModelFactory>();
             services.AddScoped<IVideoService,VideoService>();
             services.AddScoped<ICustomProductReviewMappingService, CustomProductReviewMappingService>();
-
+            services.AddSingleton<IBackgroundQueue,BackgroundQueue>();
+            services.AddHostedService<QueueService>();
         }
 
         public void Configure(IApplicationBuilder application)
