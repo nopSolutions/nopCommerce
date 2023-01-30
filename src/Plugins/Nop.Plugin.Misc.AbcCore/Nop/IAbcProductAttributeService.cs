@@ -11,5 +11,7 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
         Task<IList<ProductAttributeMapping>> SaveProductAttributeMappingsAsync(int productId, IList<ProductAttributeMapping> pams, string[] excludedPas);
 
         Task<ProductAttribute> GetProductAttributeByNameAsync(string name);
+
+        Task<bool> ProductHasDeliveryOptionsAsync(int productId);
     }
 }

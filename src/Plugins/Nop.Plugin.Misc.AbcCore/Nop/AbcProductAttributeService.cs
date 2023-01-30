@@ -12,6 +12,7 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
     public class AbcProductAttributeService : ProductAttributeService, IAbcProductAttributeService
     {
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
+        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
 
         // We need to exclude Warranty, Home Delivery, and Pickup until we've fully deployed
         // the Delivery Options functionality
@@ -33,6 +34,7 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
                productAttributeMappingRepository, productAttributeValueRepository, staticCacheManager)
         {
             _productAttributeRepository = productAttributeRepository;
+            _productAttributeMappingRepository = productAttributeMappingRepository;
         }
 
         public async Task<ProductAttribute> GetProductAttributeByNameAsync(string name)
@@ -82,6 +84,16 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
             toBeInserted.ToList().ForEach(async pam => await InsertProductAttributeMappingAsync(pam));
 
             return await groupedPams.Union(toBeInserted).ToListAsync();
+        }
+
+        public async Task<bool> ProductHasDeliveryOptionsAsync(int productId)
+        {
+            var deliveryOptionsPa = await GetProductAttributeByNameAsync("Delivery/Pickup Options");
+            var query = from pam in _productAttributeMappingRepository.Table
+                where pam.ProductAttributeId == deliveryOptionsPa.Id && pam.ProductId == productId
+                select pam;
+
+            return await query.AnyAsync();
         }
     }
 }
