@@ -324,8 +324,7 @@
                             var elm = document.getElementsByClassName('progressab')[0];
                             elm.style.width = progressval+"%";
                             
-                            elm.innerText = "You're "+progressval+"% There!";
-                            console.log("You're "+progressval+"% There!");
+                            elm.innerText =+progressval;
                             if(progressval>90 && progressval<=100 )
                             {  
                                 elm.style.backgroundColor = 'blue';                            
