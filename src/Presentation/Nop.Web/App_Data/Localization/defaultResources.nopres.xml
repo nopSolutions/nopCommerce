@@ -19242,9 +19242,6 @@
   <LocaleResource Name="Reviews.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product can be reviewed only after purchasing it</Value>
   </LocaleResource>
-  <LocaleResource Name="Reviews.ProductReviewsFor">
-    <Value>Product reviews for</Value>
-  </LocaleResource>
   <LocaleResource Name="Reviews.Reply">
     <Value>A manager responded to this review</Value>
   </LocaleResource>

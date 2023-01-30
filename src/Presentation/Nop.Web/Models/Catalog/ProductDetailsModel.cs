@@ -29,6 +29,7 @@ namespace Nop.Web.Models.Catalog
             ProductSpecificationModel = new ProductSpecificationModel();
             ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
+            ProductReviews = new ProductReviewsModel();
             TierPrices = new List<TierPriceModel>();
             ProductEstimateShipping = new ProductEstimateShippingModel();
         }
@@ -106,6 +107,8 @@ namespace Nop.Web.Models.Catalog
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
 
+        public ProductReviewsModel ProductReviews { get; set; }
+
         public ProductEstimateShippingModel ProductEstimateShipping { get; set; }
 
         public IList<TierPriceModel> TierPrices { get; set; }
@@ -121,7 +124,7 @@ namespace Nop.Web.Models.Catalog
 
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
-        #region Nested Classes
+        #region Nested Classes
 
         public partial record ProductBreadcrumbModel : BaseNopModel
         {

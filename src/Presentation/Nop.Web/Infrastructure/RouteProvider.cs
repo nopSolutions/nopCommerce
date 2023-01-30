@@ -176,10 +176,6 @@ namespace Nop.Web.Infrastructure
                 defaults: new { controller = "Product", action = "ProductEmailAFriend" });
 
             //reviews
-            endpointRouteBuilder.MapControllerRoute(name: "ProductReviews",
-                pattern: $"{lang}/productreviews/{{productId}}",
-                defaults: new { controller = "Product", action = "ProductReviews" });
-
             endpointRouteBuilder.MapControllerRoute(name: "CustomerProductReviews",
                 pattern: $"{lang}/customer/productreviews",
                 defaults: new { controller = "Product", action = "CustomerProductReviews" });

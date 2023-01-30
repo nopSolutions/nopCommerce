@@ -165,6 +165,7 @@
                 @await Component.InvokeAsync(typeof(RelatedProductsViewComponent), new { productId = Model.Id })
             </div>
         </form>
+        @await Html.PartialAsync("_ProductReviews", Model.ProductReviews)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
     </div>
 </div>

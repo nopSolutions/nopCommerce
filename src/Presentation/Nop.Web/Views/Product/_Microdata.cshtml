@@ -2,7 +2,9 @@
 
 @using Nop.Core 
 @using Nop.Core.Domain.Catalog
+@using Nop.Services.Html
 
+@inject IHtmlFormatter htmlFormatter
 @inject IWebHelper webHelper
 
 @{ 
@@ -51,15 +53,6 @@
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
         <meta itemprop="availability" content="http://schema.org/@(Model.InStock ? "InStock" : "OutOfStock")" />
     </div>
-    @if (Model.ProductReviewOverview.AllowCustomerReviews)
-    {
-        <div itemprop="review" itemscope itemtype="http://schema.org/Review">
-            <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
-                <meta itemprop="name" content="ALL" />
-            </div>
-            <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
-        </div>
-    }
     @foreach (var product in Model.AssociatedProducts)
     {
         var viewDataDictionary = new ViewDataDictionary(ViewData);
@@ -72,3 +65,19 @@
         @await Html.PartialAsync("_Microdata", product, viewDataDictionary)        
     }
 </div>
+
+@if (Model.ProductReviewOverview.TotalReviews > 0)
+{
+    foreach(var review in Model.ProductReviews.Items)
+    {
+    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+        <meta itemprop="name" content="@review.Title" />
+        <meta itemprop="reviewBody" content="@Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))" />
+        <div class="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+            <meta itemprop="ratingValue" content="@review.Rating" />
+        </div>
+        <meta itemprop="author" content="@review.CustomerName" />
+        <meta itemprop="datePublished" content="@review.WrittenOnStr" />
+    </div>
+    }
+}

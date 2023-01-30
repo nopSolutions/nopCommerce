@@ -28,6 +28,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
             {
                 //#4834
                 "Admin.System.Warnings.PluginNotLoaded",
+                //#6518
+                "Reviews.ProductReviewsFor",
             });
 
             #endregion

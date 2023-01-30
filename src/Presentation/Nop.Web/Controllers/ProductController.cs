@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly INopUrlHelper _nopUrlHelper;
+        private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -77,6 +78,7 @@ namespace Nop.Web.Controllers
             IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
             INopUrlHelper nopUrlHelper,
+            INotificationService notificationService,
             IOrderService orderService,
             IPermissionService permissionService,
             IProductAttributeParser productAttributeParser,
@@ -105,6 +107,7 @@ namespace Nop.Web.Controllers
             _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
             _nopUrlHelper = nopUrlHelper;
+            _notificationService = notificationService;
             _orderService = orderService;
             _permissionService = permissionService;
             _productAttributeParser = productAttributeParser;
@@ -201,7 +204,7 @@ namespace Nop.Web.Controllers
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
-                
+
                 //not found?
                 if (updatecartitem == null)
                     return LocalRedirect(productUrl);
@@ -345,7 +348,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
 
             var model = new ProductReviewsModel();
-            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+            model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
 
             await ValidateProductReviewAvailabilityAsync(product);
 
@@ -363,7 +366,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductReviews")]
-        [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
@@ -435,22 +437,29 @@ namespace Nop.Web.Controllers
                 if (productReview.IsApproved)
                     await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
 
-                model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+                model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
                 model.AddProductReview.Title = null;
                 model.AddProductReview.ReviewText = null;
 
-                model.AddProductReview.SuccessfullyAdded = true;
                 if (!isApproved)
-                    model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving"));
                 else
-                    model.AddProductReview.Result = await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded"));
 
-                return View(model);
+                var seName = await _urlRecordService.GetSeNameAsync(product);
+                var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
+                return LocalRedirect(productUrl);
             }
 
-            //if we got this far, something failed, redisplay form
-            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            return View(model);
+            //If we got this far, something failed, redisplay form
+            RouteData.Values["action"] = "ProductDetails";
+
+            //model
+            var productModel = await _productModelFactory.PrepareProductDetailsModelAsync(product);
+            //template
+            var productTemplateViewPath = await _productModelFactory.PrepareProductTemplateViewPathAsync(product);
+
+            return View(productTemplateViewPath, productModel);
         }
 
         [HttpPost]
@@ -638,7 +647,7 @@ namespace Nop.Web.Controllers
             //prepare model
             var poModels = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
                 .ToList();
-            foreach(var poModel in poModels)
+            foreach (var poModel in poModels)
             {
                 model.Products.Add(poModel);
             }
