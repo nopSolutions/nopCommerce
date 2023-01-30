@@ -76,9 +76,6 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                 return BadRequest("Product ID must be provided.");
             }
 
-            // skip gathering everything if mattress
-            //var mattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId.Value);
-
             // pickup in store options
             StockResponse stockResponse = await _backendStockService.GetApiStockAsync(productId.Value);
                 
@@ -169,6 +166,22 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             });
         }
 
+        public async Task<IActionResult> GetAddCartItemInfo(int productId)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var product = await _productService.GetProductByIdAsync(productId);
+
+            var slideoutInfo = await GetSlideoutInfoAsync(product);
+
+            return Json(new
+            {
+                slideoutInfo
+            }, new JsonSerializerSettings() 
+            { 
+                NullValueHandling = NullValueHandling.Ignore 
+            });
+        }
+
         private double Distance(double lat1, double lng1, double lat2, double lng2)
         {
             return Math.Pow(Math.Pow(lat1 - lat2, 2) + Math.Pow(lng1 - lng2, 2), 0.5);
@@ -176,11 +189,13 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
 
         private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
             Product product,
-            ShoppingCartItem sci)
+            ShoppingCartItem sci = null)
         {
             return new CartSlideoutInfo() {
                 ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = product.Id } ),
-                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci } ),
+                SubtotalHtml = sci != null ?
+                    await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { productOrSci = sci } ) :
+                    await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { productOrSci = product } ),
                 DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",
                     new {
@@ -189,18 +204,13 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                         {
                             AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
                             AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
-                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName
+                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
+                            "Warranty"
                         },
                         updateCartItem = sci
                     }),
-                WarrantyHtml = await RenderViewComponentToStringAsync(
-                    "CartSlideoutProductAttributes",
-                    new {
-                        product = product,
-                        includedAttributeNames = new string[] { "Warranty" }
-                    }),
-                ShoppingCartItemId = sci.Id,
-                ProductId = sci.ProductId
+                ShoppingCartItemId = sci?.Id ?? 0,
+                ProductId = product.Id
             };
         }
     }

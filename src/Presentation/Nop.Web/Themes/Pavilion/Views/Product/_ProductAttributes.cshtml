@@ -62,12 +62,6 @@
                         </div>
                     }
                 </dt>
-                // ABC: Extra blurb for warranties
-                @if (attribute.Name == "Warranty")
-                {
-                    <p>No Deductibles | Fully Transferable | All Labor | All Parts | Factory Service | 800# for Service</p>
-                    <p>Extend the original Manufacturer's Product Warranty for up to 5 years and receive up to 50% Merchandise Credit Back if you don't use it.</p>
-                }
                 <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" style="@($"{isHidden}")">
                     @switch (attribute.AttributeControlType)
                     {

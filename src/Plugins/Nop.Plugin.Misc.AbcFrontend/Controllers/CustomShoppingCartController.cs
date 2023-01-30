@@ -569,12 +569,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                             AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName
                         }
                     }),
-                WarrantyHtml = await RenderViewComponentToStringAsync(
-                    "CartSlideoutProductAttributes",
-                    new {
-                        product = product,
-                        includedAttributeNames = new string[] { "Warranty" }
-                    }),
                 ShoppingCartItemId = sci.Id,
                 ProductId = sci.ProductId
             };

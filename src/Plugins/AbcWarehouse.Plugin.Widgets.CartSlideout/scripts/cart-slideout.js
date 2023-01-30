@@ -12,7 +12,6 @@ const checkButton = document.querySelector(".cart-slideout__check-delivery-optio
 
 const deliveryOptions = document.querySelector('.cart-slideout__delivery-options');
 const deliveryNotAvailable = document.querySelector('.cart-slideout__delivery-not-available');
-const deliveryOptionsContinue = document.querySelector('.cart-slideout__delivery-options-continue');
 
 const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
 
@@ -24,7 +23,6 @@ const warrantyInformation = document.querySelector('.warranty-information');
 var cartSlideoutShoppingCartItemId = 0;
 var cartSlideoutProductId = 0;
 var isPickup = false;
-var hasWarranties = false;
 var editMode = false;
 
 // Event listeners for updating the check delivery options button:
@@ -64,7 +62,6 @@ function openDeliveryOptions(response) {
 
     if (response.isDeliveryAvailable) {
         deliveryOptions.style.display = "block";
-        updateContinueButton();
     } else {
         deliveryNotAvailable.style.display = "block";
     }
@@ -97,14 +94,12 @@ function hideCartSlideout() {
         CartSlideoutOverlay.style.display = "none";
         CartSlideout.style.display = "none";
         deliveryOptions.style.display = "none";
-        deliveryOptionsContinue.style.display = "none";
         deliveryNotAvailable.style.display = "none";
         warrantyOptions.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
         pickupInStoreOptions.style.display = "none";
 
         isPickup = false;
-        hasWarranties = false;
 
         hideDeliveryOptionsInformation();
         hideWarrantyInformation();
@@ -127,7 +122,6 @@ function back() {
         pickupInStoreOptions.style.display = "none";
 
         deliveryOptions.style.display = "block";
-        updateContinueButton();
     } else if (warrantyOptions.style.display === "block") {
         warrantyOptions.style.display = "none";
 
@@ -135,12 +129,10 @@ function back() {
             pickupInStoreOptions.style.display = "block";
         } else {
             deliveryOptions.style.display = "block";
-            updateContinueButton();
         }
     } else if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
         deliveryNotAvailable.style.display = "none";
         deliveryOptions.style.display = "none";
-        deliveryOptionsContinue.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
 
         deliveryInput.style.display = "block";
@@ -156,10 +148,6 @@ function updateCartSlideoutHtml(response) {
     if (response.slideoutInfo.SubtotalHtml) {
         $('.cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
     }
-    hasWarranties = response.slideoutInfo.WarrantyHtml !== "";
-    if (hasWarranties) {
-        $('.cart-slideout__warranty').html(response.slideoutInfo.WarrantyHtml);
-    }
 
     // Should only check zip code if product has delivery options
     if (response.slideoutInfo.DeliveryOptionsHtml !== "") {
@@ -170,25 +158,6 @@ function updateCartSlideoutHtml(response) {
         setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
         cartSlideoutProductId = response.slideoutInfo.ProductId;
         cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
-    } else if (hasWarranties) {
-        warrantyOptions.style.display = "block";
-        setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
-    }
-}
-
-function updateContinueButton() {
-    deliveryOptionsContinue.style.display = hasWarranties || isPickup ? "block" : "none";
-}
-
-function clickContinueButton() {
-    deliveryOptions.style.display = "none";
-    deliveryOptionsContinue.style.display = "none";
-
-    // determine which option was selected
-    if (isPickup) {
-        pickupInStoreOptions.style.display = "block";
-    } else {
-        warrantyOptions.style.display = "block";
     }
 }
 
@@ -222,9 +191,6 @@ function setAttributeListeners(shoppingCartItemId) {
     var warrantyOptions = document.querySelectorAll('.cart-slideout__warranty [name^=product_attribute_]');
     for (option in deliveryOptions) {
         deliveryOptions[option].onclick = function() {
-            var continueButton = document.querySelector('.cart-slideout__continue__btn');
-            continueButton.disabled = true;
-
             const [attributeMappingId] = this.name.split('_').slice(-1);
             const payload = {
                 shoppingCartItemId: shoppingCartItemId,
@@ -262,11 +228,8 @@ function setAttributeListeners(shoppingCartItemId) {
                 });
 
                 isPickup = responseJson.IsPickup;
-                updateContinueButton();
 
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
-
-                continueButton.disabled = false;
             })
             .catch(err => {
                 console.log(err)
@@ -337,13 +300,26 @@ async function editCartItemAsync(shoppingCartItemId) {
     cartSlideoutBackButton.style.display = "block";
     deliveryInput.style.display = "none";
 
-    if (hasWarranties) {
-        warrantyOptions.style.display = "block";
-    } else {
-        deliveryOptions.style.display = "block";
-    }
+    deliveryOptions.style.display = "block";
 
     document.querySelector('.cart-slideout__buttons__cart').style.display = "none";
+}
+
+async function addCartItemAsync(productId) {
+    editMode = true;
+    var zip = getCookie('customerZipCode');
+
+    AjaxCart.setLoadWaiting(true);
+    const response = await fetch(`/AddToCart/GetAddCartItemInfo?productId=${productId}`);
+    if (response.status != 200) {
+        alert('Error occurred when getting delivery information.');
+        AjaxCart.setLoadWaiting(false);
+        return;
+    }
+    AjaxCart.setLoadWaiting(false);
+
+    const responseJson = await response.json();
+    showCartSlideout(responseJson);
 }
 
 function getCookie(cookieName) {

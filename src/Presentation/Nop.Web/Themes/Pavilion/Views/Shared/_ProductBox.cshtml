@@ -455,7 +455,7 @@
             {
                 <button type="button"
                         class="button-2 product-box-add-to-cart-button"
-                        onclick="console.log('should open slideout asking for zip code')"><span>Delivery</span></button>
+                        onclick="addCartItemAsync(@Model.Id)"><span>Delivery</span></button>
             }
             @* end custom *@
             else if (!Model.ProductPrice.DisableBuyButton)

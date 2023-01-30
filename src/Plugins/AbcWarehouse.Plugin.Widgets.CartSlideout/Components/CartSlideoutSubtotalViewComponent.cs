@@ -4,6 +4,8 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Web.Framework.Components;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
 {
@@ -20,11 +22,25 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             _shoppingCartService = shoppingCartService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, ShoppingCartItem sci)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object productOrSci)
         {
-            var unitPrice = await _shoppingCartService.GetUnitPriceAsync(sci, false);
+            decimal unitPrice = 0M;
+            if (productOrSci is Product)
+            {
+                unitPrice = (productOrSci as Product).Price;
+            }
+            else if (productOrSci is ShoppingCartItem)
+            {
+                unitPrice = (await _shoppingCartService.GetUnitPriceAsync((productOrSci as ShoppingCartItem), false)).unitPrice;
+            }
+            else
+            {
+                throw new NopException(
+                    "CartSlideoutSubtotalViewComponent: Invalid object provided");
+            }
+            // TODO: Break down price based on delivery/warranty
 
-            return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", await _priceFormatter.FormatPriceAsync(unitPrice.unitPrice));
+            return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", await _priceFormatter.FormatPriceAsync(unitPrice));
         }
     }
 }
