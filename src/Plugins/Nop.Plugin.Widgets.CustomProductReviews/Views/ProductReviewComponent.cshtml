@@ -132,11 +132,15 @@
                         </div>
                     </div>
                     <div class="buttons">
+                        <div id="ajax-loader" style="display:none">
+                            <div class="progressa">
+                                <div class="progressab" style="    background-color: rgb(178, 222, 75);"></div>
+                            </div>
+                        </div>
                         <input type="submit" id="add-review" name="add-review" @(!Model.AddProductReview.CanCurrentCustomerLeaveReview == true ? "disabled" : "") class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")"/>
+
                     </div>
-                    <div id="ajax-loader" style="display:none">
-                        <img  src="~/Plugins/Widgets.CustomProductReviews/Content/ajax-loader.gif" />
-                    </div>
+                    
                 </form>
             </div>
         }
@@ -307,6 +311,38 @@
                 document.getElementById("ajax-loader").style.display = "none";
                 uploadButton.value = "@T("Reviews.SubmitButton")";
 
+            },
+            xhr:function()
+            {
+            var filexhr=$.ajaxSettings.xhr();
+                if(filexhr.upload)
+                {
+                    filexhr.upload.addEventListener("progress",function(e){
+                        if(e.lengthComputable)
+                        {                           
+                            var progressval = parseInt(((e.loaded)/(e.total))*100);
+                            var elm = document.getElementsByClassName('progressab')[0];
+                            elm.style.width = progressval+"%";
+                            
+                            elm.innerText = "You're "+progressval+"% There!";
+                            console.log("You're "+progressval+"% There!");
+                            if(progressval>90 && progressval<=100 )
+                            {  
+                                elm.style.backgroundColor = 'blue';                            
+                            }
+                            else if(progressval>50 && progressval<90 )
+                            { 
+                                elm.style.backgroundColor = 'green';
+                            }
+                            else if(progressval<=50)
+                            { 
+                                elm.style.backgroundColor = 'red';
+                            }
+                        }
+                    },false);
+
+                }
+                return filexhr;
             }
         });
         return false;

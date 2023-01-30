@@ -44,7 +44,6 @@ using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 using System.Runtime.InteropServices;
-using MediaInfo;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
@@ -179,52 +178,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
         //    return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         //}
 
-
-        [DllImport("urlmon.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
-        private static extern int FindMimeFromData(IntPtr pBc,
-            [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)]
-            byte[] pBuffer,
-            int cbSize,
-            [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed,
-            int dwMimeFlags,
-            out IntPtr ppwzMimeOut,
-            int dwReserved
-        );
-
-        /**
-         * This function will detect mime type from provided byte array
-         * and if it fails, it will return default mime type
-         */
-        private static string GetMimeFromBytes(byte[] dataBytes, string defaultMimeType)
-        {
-            if (dataBytes == null)
-                throw new ArgumentNullException(nameof(dataBytes));
-
-            var mimeType = string.Empty;
-            IntPtr suggestPtr = IntPtr.Zero, filePtr = IntPtr.Zero;
-
-            try
-            {
-                var ret = FindMimeFromData(IntPtr.Zero, null, dataBytes, dataBytes.Length, null, 0, out var outPtr, 0);
-                if (ret == 0 && outPtr != IntPtr.Zero)
-                {
-                    mimeType = Marshal.PtrToStringUni(outPtr);
-                    Marshal.FreeCoTaskMem(outPtr);
-                }
-
-                if (!mimeType.Contains("image") || !mimeType.Contains("video"))
-                {
-                    mimeType = defaultMimeType;
-                }
-            }
-            catch
-            {
-                mimeType = defaultMimeType;
-            }
-
-            return mimeType;
-        }
 
         //[FormValueRequired("add-review")]
         [HttpPost]
