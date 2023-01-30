@@ -86,6 +86,7 @@
       <GeneratePathProperty>True</GeneratePathProperty>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </PackageReference>
+    <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
     <PackageReference Include="NReco.VideoConverter" Version="1.2.0" />
   </ItemGroup>
 

@@ -439,6 +439,15 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 case "x-icon":
                     lastPart = "ico";
                     break;
+                case "video/webm":
+                    lastPart = "webm";
+                    break;
+                case "video/mp4":
+                    lastPart = "mp4";
+                    break;
+                case "image/webp":
+                    lastPart = "webp";
+                    break;
                 default:
                     break;
             }
@@ -569,17 +578,29 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            if (video == null)
-                return showDefaultVideo ? (await GetDefaultVideoUrlAsync(targetSize, defaultPictureType, storeLocation), null) : (string.Empty, (Video)null);
+            //if (video == null)
+            //    return showDefaultVideo ? (await GetDefaultVideoUrlAsync(targetSize, defaultPictureType, storeLocation), null) : (string.Empty, (Video)null);
 
-            byte[] videoBinary = null;
+            byte[] videoBinary=null;
+          
+
+            var seoFileName = video.SeoFilename; // = GetVideoSeName(video.SeoFilename); //just for sure
+
+            var lastPart = await GetFileExtensionFromMimeTypeAsync(video.MimeType);
+            string thumbFileName;
+            
+            thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                ? $"{video.Id:0000000}_{seoFileName}.{lastPart}"
+                : $"{video.Id:0000000}.{lastPart}";
+
+            var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
             if (video.IsNew)
             {
                 await DeleteVideoThumbsAsync(video);
                 videoBinary = await LoadVideoBinaryAsync(video);
 
-                if ((videoBinary?.Length ?? 0) == 0)
-                    return showDefaultVideo ? (await GetDefaultVideoUrlAsync(targetSize, defaultPictureType, storeLocation), video) : (string.Empty, video);
+                //if ((videoBinary?.Length ?? 0) == 0)
+                //    return showDefaultVideo ? (await GetDefaultVideoUrlAsync(targetSize, defaultPictureType, storeLocation), video) : (string.Empty, video);
 
                 //we do not validate video binary here to ensure that no exception ("Parameter is not valid") will be thrown
                 video = await UpdateVideoAsync(video.Id,
@@ -590,23 +611,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                     video.TitleAttribute,
                     false,
                     false);
-            }
-
-            var seoFileName = video.SeoFilename; // = GetVideoSeName(video.SeoFilename); //just for sure
-
-            var lastPart = await GetFileExtensionFromMimeTypeAsync(video.MimeType);
-            string thumbFileName;
-            if (targetSize == 0)
-            {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{video.Id:0000000}_{seoFileName}.{lastPart}"
-                    : $"{video.Id:0000000}.{lastPart}";
-
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), video);
-
-                videoBinary ??= await LoadVideoBinaryAsync(video);
 
                 //the named mutex helps to avoid creating the same files in different threads,
                 //and does not decrease performance significantly, because the code is blocked only for the specific file.
@@ -622,47 +626,16 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 {
                     mutex.ReleaseMutex();
                 }
+
             }
             else
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{video.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
-                    : $"{video.Id:0000000}_{targetSize}.{lastPart}";
-
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
                 if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
                     return (await GetThumbUrlAsync(thumbFileName, storeLocation), video);
-
-                videoBinary ??= await LoadVideoBinaryAsync(video);
-
-                //the named mutex helps to avoid creating the same files in different threads,
-                //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
-                {
-                    if (videoBinary != null)
-                    {
-                        try
-                        {
-                            using var image = SKBitmap.Decode(videoBinary);
-                            var format = GetImageFormatByMimeType(video.MimeType);
-                            videoBinary = ImageResize(image, format, targetSize);
-                        }
-                        catch
-                        {
-                        }
-                    }
-
-                    SaveThumbAsync(thumbFilePath, thumbFileName, video.MimeType, videoBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
-                }
             }
+          
+
+           
 
             return (await GetThumbUrlAsync(thumbFileName, storeLocation), video);
         }
@@ -796,9 +769,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
-
+            var data = new UploadDataBinary();
             if (validateBinary)
-                videoBinary = await ValidateVideoAsync(videoBinary, mimeType);
+                data = await ValidateVideoAsync(videoBinary, mimeType);
 
             //Todo:Video thumb olayını çöz
             //var ffmpeg = new FFMpegConverter();
@@ -809,7 +782,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
 
             var video = new Video
             {
-                MimeType = mimeType,
+                MimeType = data.Extentions,
                 SeoFilename = seoFilename,
                 AltAttribute = altAttribute,
                 TitleAttribute = titleAttribute,
@@ -817,10 +790,10 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             };
             await _videoRepository.InsertAsync(video);
            
-            await UpdateVideoBinaryAsync(video, await IsStoreInDbAsync() ? videoBinary : Array.Empty<byte>());
+            await UpdateVideoBinaryAsync(video, await IsStoreInDbAsync() ? data.BinaryData : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
-                await SaveVideoInFileAsync(video.Id, videoBinary, mimeType);
+                await SaveVideoInFileAsync(video.Id, data.BinaryData, data.Extentions);
 
             return video;
         }
@@ -838,24 +811,29 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         public virtual async Task<Video> InsertVideoAsync(byte[] formFile, string defaultFileName , string contentType, string virtualPath = "")
         {
 
-            if (string.IsNullOrEmpty(contentType))
+            switch (contentType)
             {
-                switch (contentType)
-                {
-                    case var ext when contentType.Contains("mp4"):
-                        contentType = Data.MimeTypes.VideoMp4;
-                        break;
-                    case var ext when contentType.Contains("mov"):
-                        contentType = Data.MimeTypes.VideoMov;
-                        break;
-                    case var ext when contentType.Contains("webm"):
-                        contentType = Data.MimeTypes.VideoWebm;
-                        break;
-                    default:
-                        break;
-                }
+                case var ext when contentType.Contains("mp4"):
+                    contentType = Data.MimeTypes.VideoMp4;
+                    break;
+                case var ext when contentType.Contains("mpeg4"):
+                    contentType = Data.MimeTypes.VideoMp4;
+                    break;
+                case var ext when contentType.Contains("mov"):
+                    contentType = Data.MimeTypes.VideoMov;
+                    break;
+                case var ext when contentType.Contains("quicktime"):
+                    contentType = Data.MimeTypes.VideoMov;
+                    break;
+                case var ext when contentType.Contains("Web Video"):
+                    contentType = Data.MimeTypes.VideoWebm;
+                    break;
+                case var ext when contentType.Contains("webm"):
+                    contentType = Data.MimeTypes.VideoWebm;
+                    break;
+                default:
+                    break;
             }
-
             var video = await InsertVideoDataAsync(formFile, contentType, defaultFileName);
 
             if (string.IsNullOrEmpty(virtualPath))
@@ -890,29 +868,36 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
-
+            var data = new UploadDataBinary();
             if (validateBinary)
-                videoBinary = await ValidateVideoAsync(videoBinary, mimeType);
+                data = await ValidateVideoAsync(videoBinary, mimeType);
 
             var video = await GetVideoByIdAsync(videoId);
+            var binaryData = await GetVideoBinaryByVideoIdAsync(videoId);
             if (video == null)
                 return null;
 
             //delete old thumbs if a video has been changed
             if (seoFilename != video.SeoFilename)
                 await DeleteVideoThumbsAsync(video);
-
-            video.MimeType = mimeType;
+            if (video.IsNew)
+            {  
+                video.MimeType = video.MimeType;
             video.SeoFilename = seoFilename;
             video.AltAttribute = altAttribute;
             video.TitleAttribute = titleAttribute;
             video.IsNew = isNew;
-
             await _videoRepository.UpdateAsync(video);
-            await UpdateVideoBinaryAsync(video, await IsStoreInDbAsync() ? videoBinary : Array.Empty<byte>());
-
+            await UpdateVideoBinaryAsync(video, await IsStoreInDbAsync() ? binaryData.BinaryData : Array.Empty<byte>());
             if (!await IsStoreInDbAsync())
-                await SaveVideoInFileAsync(video.Id, videoBinary, mimeType);
+                await SaveVideoInFileAsync(video.Id, binaryData.BinaryData, video.MimeType);
+            }
+                
+              
+
+            
+
+            
 
             return video;
         }
@@ -956,8 +941,29 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// </returns>
         public virtual async Task<VideoBinary> GetVideoBinaryByVideoIdAsync(int videoId)
         {
-            return await _videoBinaryRepository.Table
-                .FirstOrDefaultAsync(pb => pb.VideoId == videoId);
+            var result = new VideoBinary();
+            try
+            {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                {
+                 
+                }
+                var resultTask=
+                  _videoBinaryRepository.Table.Where(pb => pb.VideoId == videoId);
+                sw.Stop();
+                Console.WriteLine(videoId+ "- Elapsed GetVideoBinaryByVideoIdAsync ={0}", sw.Elapsed);
+                
+                return resultTask.FirstOrDefault();
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result.BinaryData = null;
+                result.VideoId = videoId;
+                return result;
+            }
         }
 
         /// <summary>
@@ -1001,8 +1007,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video binary or throws an exception
         /// </returns>
-        public virtual Task<byte[]> ValidateVideoAsync(byte[] videoBinary, string mimeType)
+        public virtual Task<UploadDataBinary> ValidateVideoAsync(byte[] videoBinary, string mimeType)
         {
+            UploadDataBinary data=new UploadDataBinary();
             try
             {
                 switch (mimeType)
@@ -1042,9 +1049,41 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 ffmpeg.ConvertMedia(fileName, null, ouFilename+".webm", null, convertSettings);
                 
                 sw.Stop();
-                Console.WriteLine("Elapsed Videp Encode={0}", sw.Elapsed);
+                Console.WriteLine("Elapsed Video Encode={0}", sw.Elapsed);
+
+                sw.Start();
+                string outFiletype = ouFilename + ".webm";
+                switch (outFiletype)
+                {
+                    case var ext when outFiletype.Contains("mp4"):
+                        outFiletype = Data.MimeTypes.VideoMp4;
+                        break;
+                    case var ext when outFiletype.Contains("mpeg4"):
+                        outFiletype = Data.MimeTypes.VideoMp4;
+                        break;
+                    case var ext when outFiletype.Contains("mov"):
+                        outFiletype = Data.MimeTypes.VideoMov;
+                        break;
+                    case var ext when outFiletype.Contains("quicktime"):
+                        outFiletype = Data.MimeTypes.VideoMov;
+                        break;
+                    case var ext when outFiletype.Contains("Web Video"):
+                        outFiletype = Data.MimeTypes.VideoWebm;
+                        break;
+                    case var ext when outFiletype.Contains("webm"):
+                        outFiletype = Data.MimeTypes.VideoWebm;
+                        break;
+                    default:
+                        break;
+                }
+                
+                sw.Stop();
+                Console.WriteLine("Elapsed video format validate process={0}", sw.Elapsed);
+
                 System.IO.File.AppendAllText(@"VideoProcessPerformace.log", String.Format("Elapsed Video Encode={0}", sw.Elapsed) + Environment.NewLine);
                 videoBinary = File.ReadAllBytes(ouFilename + ".webm");
+                data.BinaryData = videoBinary;
+                data.Extentions = outFiletype;
                 try
                 {
                     File.Delete(ouFilename + ".webm");
@@ -1056,11 +1095,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
 
                 }
 
-                return Task.FromResult(videoBinary);
+                return Task.FromResult(data);
             }
             catch
             {
-                return Task.FromResult(videoBinary);
+                return Task.FromResult(data);
             }
         }
 

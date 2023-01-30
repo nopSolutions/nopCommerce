@@ -225,7 +225,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the video binary or throws an exception
         /// </returns>
-        Task<byte[]> ValidateVideoAsync(byte[] videoBinary, string mimeType);
+        Task<UploadDataBinary> ValidateVideoAsync(byte[] videoBinary, string mimeType);
 
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.

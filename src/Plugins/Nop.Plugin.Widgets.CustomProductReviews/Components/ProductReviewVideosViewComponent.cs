@@ -103,8 +103,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
            }
            else
            {
-               //default picture size
-               var defaultPictureSize = _mediaSettings.ProductDetailsPictureSize;
+                //default picture size
+                //var defaultPictureSize = _mediaSettings.ProductDetailsPictureSize;
+                var defaultPictureSize = 0;
                 foreach (var mapping in reviewMappings)
                {
                     if (mapping.VideoId != null)
@@ -123,8 +124,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
                 {
                     var video = reviewVidList[i];
 
-                    (imageUrl, video) = await _videoService.GetVideoUrlAsync(video, defaultPictureSize, true);
-                    (fullSizeImageUrl, video) = await _videoService.GetVideoUrlAsync(video);
+                    (imageUrl, video) = await _videoService.GetVideoUrlAsync(video, defaultPictureSize, false);
+                    (fullSizeImageUrl, video) = await _videoService.GetVideoUrlAsync(video, defaultPictureSize, false);
 
                     var videoModel = new VideoModel()
                     {

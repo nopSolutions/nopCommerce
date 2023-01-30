@@ -44,6 +44,7 @@ using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 using System.Runtime.InteropServices;
+using MediaInfo;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
@@ -322,30 +323,30 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                 foreach (var photo in photos)
                 {
                     var uploadData = new UploadDataBinary();
-                    FileInfo fileInfo = new FileInfo(photo.FileName);
+
                     uploadData.Extentions = photo.ContentType;
-                    //string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
-
-
+                        
+                  
                     using (var ms = new MemoryStream())
                     {
                         await photo.CopyToAsync(ms);
                         uploadData.BinaryData = ms.ToArray();
                         dataList.Add(uploadData);
                     }
+                        
+                        
+                    //string fileName = "tempUpload"+DateTime.UtcNow.ToFileTime() + fileInfo.Extension;
+
+
+                   
                 }
 
                 foreach (var data in dataList)
                 {
-                    // InsertReviewMedia(model, data, reviewId);
-                    //var ss=_insInsertReviewMediaService.get
-                    _queue.QueueTask(async token =>
+                   _queue.QueueTask(async token =>
                     {
                        await InsertReviewMedia(model, data, reviewId);
                     });
-
-                    
-
                 }
 
                 }
@@ -378,7 +379,6 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
     public async Task<string> InsertReviewMedia(ProductReviewsModel model, UploadDataBinary data, int reviewId)
         {
-            string filetype = GetMimeFromBytes(data.BinaryData, data.Extentions);
 
             string name = model.ProductSeName + "-" + DateTime.UtcNow.ToFileTime();
             Stopwatch sw = new Stopwatch();
@@ -387,7 +387,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
 
 
                 Video vid = new Video();
-                if (filetype.Contains("image"))
+                if (data.Extentions.Contains("image"))
                 {
                     try
                     {
@@ -412,11 +412,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Controllers
                         System.IO.File.AppendAllText(@"customProductReview.log", e.Message + Environment.NewLine);
                     }
                 }
-                else if (filetype.Contains("video"))
+                else if (data.Extentions.Contains("video"))
                 {
                     try
                     {
-                        vid = await _videoService.InsertVideoAsync(data.BinaryData, name, filetype);
+                        vid = await _videoService.InsertVideoAsync(data.BinaryData, name, data.Extentions);
                     }
                     catch (Exception e)
                     {
