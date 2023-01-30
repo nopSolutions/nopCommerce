@@ -8,10 +8,13 @@
             $(document).ready(function () {
                 $(document).unbind('checkout_toggle_pickup_in_store');
                 $(document).on('checkout_toggle_pickup_in_store', function (e) {
-                    if (e.checked)
+                    if (e.checked) {
                         $('#shipping-addresses-form').hide();
-                    else
+                        $('#edit-shipping-address-buttons').hide();
+                    } else {
                         $('#shipping-addresses-form').show();
+                        $('#edit-shipping-address-buttons').show();
+                    }
                 });
             });
         </script>
