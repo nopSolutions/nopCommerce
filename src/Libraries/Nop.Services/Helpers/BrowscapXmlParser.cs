@@ -22,12 +22,13 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="userAgentStringsPath">User agent file path</param>
         /// <param name="crawlerOnlyUserAgentStringsPath">User agent with crawlers only file path</param>
+        /// <param name="additionalCrawlersFilePath">Additional crawlers user agent file path</param>
         /// <param name="fileProvider">File provider</param>
-        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
+        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, string additionalCrawlersFilePath, INopFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
 
-            Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
+            Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, additionalCrawlersFilePath);
         }
 
         private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
@@ -44,7 +45,29 @@ namespace Nop.Services.Helpers
             return $"^{sb}$";
         }
 
-        private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        /// <summary>
+        /// Gets the additional crawler list
+        /// </summary>
+        /// <returns>List of crawlers</returns>
+        protected IEnumerable<XElement> GetAdditionalCrawlerItems(string additionalCrawlersFilePath)
+        {
+            try
+            {
+                using var sr = new StreamReader(additionalCrawlersFilePath);
+
+                var crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
+
+                return crawlerItems;
+            }
+            catch
+            {
+                //ignore
+            }
+
+            return Enumerable.Empty<XElement>();
+        }
+
+        private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, string additionalCrawlersFilePath)
         {
             List<XElement> crawlerItems = null;
             var comments = new XElement("comments");
@@ -61,16 +84,19 @@ namespace Nop.Services.Helpers
             {
                 //try to load crawler list from full user agents file
                 using var sr = new StreamReader(userAgentStringsPath);
-                var rootElemen = XDocument.Load(sr).Root;
-                crawlerItems = rootElemen?.Element("browsercapitems")?.Elements("browscapitem")
+                var rootElement = XDocument.Load(sr).Root;
+                crawlerItems = rootElement?.Element("browsercapitems")?.Elements("browscapitem")
                     //only crawlers
                     .Where(IsBrowscapItemIsCrawler).ToList();
                 needSaveCrawlerOnly = true;
-                comments = rootElemen?.Element("comments");
+                comments = rootElement?.Element("comments");
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
+
+            if (_fileProvider.FileExists(additionalCrawlersFilePath))
+                crawlerItems.AddRange(GetAdditionalCrawlerItems(additionalCrawlersFilePath));
 
             var crawlerRegexpPattern = string.Join("|", crawlerItems
                 //get only user agent names

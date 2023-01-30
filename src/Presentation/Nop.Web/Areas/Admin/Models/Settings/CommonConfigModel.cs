@@ -20,6 +20,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath")]
         public string CrawlerOnlyUserAgentStringsPath { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.CrawlerOnlyAdditionalUserAgentStringsPath")]
+        public string CrawlerOnlyAdditionalUserAgentStringsPath { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider")]
         public bool UseSessionStateTempDataProvider { get; set; }
 

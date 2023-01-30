@@ -4461,6 +4461,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common">
     <Value>Common configuration</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.CrawlerOnlyAdditionalUserAgentStringsPath">
+    <Value>Crawler user agent additional strings path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.CrawlerOnlyAdditionalUserAgentStringsPath.Hint">
+    <Value>Specify a path to the file with additional crawler only user agent strings.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath">
     <Value>Crawler user agent strings path</Value>
   </LocaleResource>
