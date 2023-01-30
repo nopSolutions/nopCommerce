@@ -2997,6 +2997,7 @@ namespace Nop.Services.Installation
                 DefaultPasswordFormat = PasswordFormat.Hashed,
                 HashedPasswordFormat = NopCustomerServicesDefaults.DefaultHashedPasswordFormat,
                 PasswordMinLength = 6,
+                PasswordMaxLength = 64,
                 PasswordRequireDigit = false,
                 PasswordRequireLowercase = false,
                 PasswordRequireNonAlphanumeric = false,

@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -17,6 +18,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
             //do not use DI, because it produces exception on the installation process
             var settingService = EngineContext.Current.Resolve<ISettingService>();
+
+            var customerSettings = settingService.LoadSetting<CustomerSettings>();
+
+            if (!settingService.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
+            {
+                customerSettings.PasswordMaxLength = 64;
+                settingService.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
+            }
         }
 
         public override void Down()

@@ -75,12 +75,12 @@ namespace Nop.Web.Framework.Validators
             regExp += customerSettings.PasswordRequireLowercase ? "(?=.*?[a-z])" : "";
             regExp += customerSettings.PasswordRequireDigit ? "(?=.*?[0-9])" : "";
             regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
-            regExp += $".{{{customerSettings.PasswordMinLength},}}$";
+            regExp += $".{{{customerSettings.PasswordMinLength},{customerSettings.PasswordMaxLength}}}$";
             
             var options = ruleBuilder
                 .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"))
                 .Matches(regExp).WithMessageAwait(async () => string.Format(await localizationService.GetResourceAsync("Validation.Password.Rule"),
-                string.Format(await localizationService.GetResourceAsync("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength),
+                string.Format(await localizationService.GetResourceAsync("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength, customerSettings.PasswordMaxLength),
                 customerSettings.PasswordRequireUppercase ? await localizationService.GetResourceAsync("Validation.Password.RequireUppercase") : "",
                 customerSettings.PasswordRequireLowercase ? await localizationService.GetResourceAsync("Validation.Password.RequireLowercase") : "",
                 customerSettings.PasswordRequireDigit ? await localizationService.GetResourceAsync("Validation.Password.RequireDigit") : "",

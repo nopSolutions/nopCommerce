@@ -55,6 +55,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6521
                 ["Admin.Configuration.AppSettings.Common.CrawlerOnlyAdditionalUserAgentStringsPath"] = "Crawler user agent additional strings path",
                 ["Admin.Configuration.AppSettings.Common.CrawlerOnlyAdditionalUserAgentStringsPath.Hint"] = "Specify a path to the file with additional crawler only user agent strings.",
+                //6557
+                ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength"] = "Password maximum length",
+                ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint"] = "Specify password maximum length",
+                ["Validation.Password.LengthValidation"] = "<li>must have at least {0} characters and not greater than {1} characters</li>",
             }, languageId);
 
             #endregion

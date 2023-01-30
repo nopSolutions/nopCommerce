@@ -6723,6 +6723,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime.Hint">
     <Value>Specify number of days for password expiration. Don't forget to check "EnablePasswordLifetime" property on customer role edit page for those roles, who will have to change passwords.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength">
+    <Value>Password maximum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint">
+    <Value>Specify password maximum length.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
     <Value>Password minimum length</Value>
   </LocaleResource>
@@ -19795,7 +19801,7 @@
     <Value>Password is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.LengthValidation">
-    <Value><![CDATA[<li>must have at least {0} characters</li>]]></Value>
+    <Value><![CDATA[<li>must have at least {0} characters and not greater than {1} characters</li>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireDigit">
     <Value><![CDATA[<li>must have at least one digit</li>]]></Value>
