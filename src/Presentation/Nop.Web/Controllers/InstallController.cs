@@ -232,12 +232,16 @@ namespace Nop.Web.Controllers
                 if (model.InstallRegionalResources)
                 {
                     //try to get CultureInfo and RegionInfo
-                    try
-                    {
-                        cultureInfo = new CultureInfo(model.Country[3..]);
-                        regionInfo = new RegionInfo(model.Country[3..]);
-                    }
-                    catch { }
+                    if (model.Country != null)
+                        try
+                        {
+                            cultureInfo = new CultureInfo(model.Country[3..]);
+                            regionInfo = new RegionInfo(model.Country[3..]);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
 
                     //get URL to download language pack
                     if (cultureInfo.Name != NopCommonDefaults.DefaultLanguageCulture)
@@ -248,14 +252,17 @@ namespace Nop.Web.Controllers
                             var resultString = await _nopHttpClient.Value.InstallationCompletedAsync(model.AdminEmail, languageCode, cultureInfo.Name);
                             var result = JsonConvert.DeserializeAnonymousType(resultString,
                                 new { Message = string.Empty, LanguagePack = new { Culture = string.Empty, Progress = 0, DownloadLink = string.Empty } });
-                            if (result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
+                            
+                            if (result !=null && result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
                             {
                                 languagePackInfo.DownloadUrl = result.LanguagePack.DownloadLink;
                                 languagePackInfo.Progress = result.LanguagePack.Progress;
                             }
-
                         }
-                        catch { }
+                        catch
+                        {
+                            // ignored
+                        }
                     }
 
                     //upload CLDR
