@@ -28,8 +28,8 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Installation
 {
-    [NopMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema", MigrationProcessType.Installation)]
-    public class SchemaMigration : AutoReversingMigration
+    [NopSchemaMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema", MigrationProcessType.Installation)]
+    public class SchemaMigration : ForwardOnlyMigration
     {
         /// <summary>
         /// Collect the UP migration expressions

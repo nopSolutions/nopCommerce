@@ -19,16 +19,16 @@ namespace Nop.Data.Migrations
         {
             var dataSettings = DataSettingsManager.LoadSettings();
 
-            if (dataSettings.DataProvider == DataProviderType.PostgreSQL)
+            if (dataSettings.DataProvider != DataProviderType.PostgreSQL) 
+                return expression;
+
+            foreach (var columnDefinition in expression.Columns)
             {
-                foreach (var columnDefinition in expression.Columns)
-                {
-                    if (columnDefinition.Type == System.Data.DbType.String)
-                    {
-                        columnDefinition.Type = null;
-                        columnDefinition.CustomType = "citext";
-                    }
-                }
+                if (columnDefinition.Type != System.Data.DbType.String) 
+                    continue;
+
+                columnDefinition.Type = null;
+                columnDefinition.CustomType = "citext";
             }
 
             return expression;

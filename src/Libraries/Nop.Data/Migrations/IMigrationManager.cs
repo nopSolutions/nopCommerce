@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FluentMigrator;
+using FluentMigrator.Infrastructure;
 
 namespace Nop.Data.Migrations
 {
@@ -17,6 +17,12 @@ namespace Nop.Data.Migrations
         void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation, bool commitVersionOnly = false);
 
         /// <summary>
+        /// Executes an Up for schema unapplied migrations
+        /// </summary>
+        /// <param name="assembly">Assembly to find migrations</param>
+        void ApplyUpSchemaMigrations(Assembly assembly);
+
+        /// <summary>
         /// Executes a Down for all found (and applied) migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration</param>
@@ -26,12 +32,13 @@ namespace Nop.Data.Migrations
         /// Executes down expressions for the passed migration
         /// </summary>
         /// <param name="migration">Migration to rollback</param>
-        void DownMigration(IMigration migration);
+        void ApplyDownMigration(IMigrationInfo migration);
 
         /// <summary>
         /// Executes up expressions for the passed migration
         /// </summary>
         /// <param name="migration">Migration to apply</param>
-        void UpMigration(IMigration migration);
+        /// <param name="commitVersionOnly">Commit only version information</param>
+        void ApplyUpMigration(IMigrationInfo migration, bool commitVersionOnly = false);
     }
 }

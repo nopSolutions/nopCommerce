@@ -5,10 +5,9 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
-    [NopMigration("2020/03/08 11:26:08:9037680", "Specification attribute grouping", MigrationProcessType.Update)]
-    public class SpecificationAttributeGroupingMigration : MigrationBase
+    [NopSchemaMigration("2020/03/08 11:26:08:9037680", "Specification attribute grouping")]
+    public class SpecificationAttributeGroupingMigration : ForwardOnlyMigration
     {
-
         #region Methods
 
         /// <summary>
@@ -25,11 +24,6 @@ namespace Nop.Data.Migrations.UpgradeTo440
                 Alter.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute)))
                     .AddColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
             }
-        }
-
-        public override void Down()
-        {
-            //add the downgrade logic if necessary 
         }
 
         #endregion
