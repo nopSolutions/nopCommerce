@@ -48,7 +48,7 @@ namespace Nop.Core.Caching
         public IEnumerable<string> RemoveByPrefix(string prefix)
         {
             return _keys.Prune(prefix, out var subtree)
-                ? subtree.Keys
+                ? subtree?.Keys
                 : Enumerable.Empty<string>();
         }
 
