@@ -3249,7 +3249,8 @@ namespace Nop.Services.Installation
                 AdminAreaAllowedIpAddresses = null,
                 HoneypotEnabled = false,
                 HoneypotInputName = "hpinput",
-                AllowNonAsciiCharactersInHeaders = true
+                AllowNonAsciiCharactersInHeaders = true,
+                UseAesEncryptionAlgorithm = true
             });
 
             await settingService.SaveSettingAsync(new ShippingSettings

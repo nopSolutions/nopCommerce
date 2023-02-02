@@ -26,11 +26,16 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets a honeypot input name
         /// </summary>
-        public string HoneypotInputName { get; set; }        
+        public string HoneypotInputName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
         /// </summary>
         public bool AllowNonAsciiCharactersInHeaders { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Advanced Encryption Standard (AES) is used
+        /// </summary>
+        public bool UseAesEncryptionAlgorithm { get; set; }
     }
 }
