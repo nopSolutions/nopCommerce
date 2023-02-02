@@ -3,6 +3,7 @@
 @* ABC: for shopping cart item count *@
 @using Nop.Services.Orders
 @using Nop.Core.Domain.Orders
+@using Nop.Plugin.Misc.AbcCore;
 
 @inject IStoreContext storeContext
 @inject ISettingService settingService
@@ -28,7 +29,15 @@
         customer,
         ShoppingCartType.ShoppingCart
     )).Count();
+
+    var primaryColor = await HtmlHelpers.GetPavilionPrimaryColorAsync();
 }
+
+<style>
+    .mobile-header-content-row {
+        background-color: #@primaryColor;
+    }
+</style>
 
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
 @await Html.PartialAsync("_Notifications")
