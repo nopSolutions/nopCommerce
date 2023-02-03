@@ -480,10 +480,17 @@ namespace Nop.Services.Orders
                 details.AffiliateId = affiliate.Id;
 
             //tax display type
-            if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)details.Customer.TaxDisplayTypeId;
+            //TODO: this code duplicates method IWorkContext.GetTaxDisplayTypeAsync(), let's move it to a ICustomerService with "customer" parameter passing
+            var taxDisplayType = _taxSettings.TaxDisplayType;
+            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && details.Customer.TaxDisplayTypeId.HasValue)
+                taxDisplayType = (TaxDisplayType)details.Customer.TaxDisplayTypeId.Value;
             else
-                details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
+            {
+                var defaultRoleTaxDisplayType = await _customerService.GetCustomerDefaultTaxDisplayTypeAsync(details.Customer);
+                if (defaultRoleTaxDisplayType.HasValue)
+                    taxDisplayType = defaultRoleTaxDisplayType.Value;
+            }
+            details.CustomerTaxDisplayType = taxDisplayType;
 
             //recurring or standard shopping cart?
             details.IsRecurringShoppingCart = await _shoppingCartService.ShoppingCartIsRecurringAsync(details.Cart);
