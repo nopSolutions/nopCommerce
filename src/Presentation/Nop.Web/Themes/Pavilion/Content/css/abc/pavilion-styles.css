@@ -2,6 +2,15 @@
     Overwrites styles.css for the Pavilion theme.
 */
 
+/* Social media icons */
+.social-sharing .linkedin a {
+    background-position: -256px 0;
+}
+
+.social-sharing .tiktok a {
+    background-position: -292px 0;
+}
+
 /* InstantSearch changes */
 
 @media (max-width: 1000px)
