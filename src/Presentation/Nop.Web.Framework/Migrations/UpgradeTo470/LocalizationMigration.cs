@@ -28,6 +28,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
             {
                 //#4834
                 "Admin.System.Warnings.PluginNotLoaded",
+                //#7
+                "Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit"
             });
 
             #endregion
@@ -59,6 +61,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength"] = "Password maximum length",
                 ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint"] = "Specify password maximum length",
                 ["Validation.Password.LengthValidation"] = "<li>must have at least {0} characters and not greater than {1} characters</li>",
+                //7
+                ["Admin.Catalog.Products.Multimedia.SaveBeforeEdit"] = "You need to save the product before you can upload pictures or videos for this product page.",
             }, languageId);
 
             #endregion

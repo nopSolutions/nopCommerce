@@ -3561,6 +3561,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint">
     <Value>You can choose multiple images to upload at once. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.SaveBeforeEdit">
+    <Value>You need to save the product before you can upload pictures or videos for this product page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos">
     <Value>Videos</Value>
   </LocaleResource>
@@ -3590,9 +3593,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl.Hint">
     <Value>Specify the URL path to the video.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit">
-    <Value>You need to save the product before you can upload videos for this product page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Price">
     <Value>Prices</Value>
