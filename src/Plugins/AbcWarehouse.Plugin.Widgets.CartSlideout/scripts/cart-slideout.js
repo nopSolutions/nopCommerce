@@ -15,8 +15,6 @@ const deliveryNotAvailable = document.querySelector('.cart-slideout__delivery-no
 
 const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
 
-const warrantyOptions = document.querySelector('.cart-slideout__warranty');
-
 const deliveryOptionsInformation = document.querySelector('.delivery-options-information');
 const warrantyInformation = document.querySelector('.warranty-information');
 
@@ -27,11 +25,6 @@ var editMode = false;
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
-
-// Open slideout URL param
-$(document).ready(function () {
-    console.log('should check if open param is there')
-});
 
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
@@ -88,14 +81,13 @@ function showCartSlideout(response) {
 }
 
 function hideCartSlideout() {
-    if (editMode) {
-        location.reload();
-    } else {
+    // if (editMode) {
+    //     location.reload();
+    // } else {
         CartSlideoutOverlay.style.display = "none";
         CartSlideout.style.display = "none";
         deliveryOptions.style.display = "none";
         deliveryNotAvailable.style.display = "none";
-        warrantyOptions.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
         pickupInStoreOptions.style.display = "none";
 
@@ -105,7 +97,7 @@ function hideCartSlideout() {
         hideWarrantyInformation();
 
         document.body.classList.remove("scrollYRemove");
-    }
+    // }
 }
 
 function hideDeliveryOptionsInformation() {
@@ -122,14 +114,6 @@ function back() {
         pickupInStoreOptions.style.display = "none";
 
         deliveryOptions.style.display = "block";
-    } else if (warrantyOptions.style.display === "block") {
-        warrantyOptions.style.display = "none";
-
-        if (isPickup) {
-            pickupInStoreOptions.style.display = "block";
-        } else {
-            deliveryOptions.style.display = "block";
-        }
     } else if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
         deliveryNotAvailable.style.display = "none";
         deliveryOptions.style.display = "none";
@@ -180,7 +164,7 @@ async function selectStoreAsync(shopId)
     }
 
     pickupInStoreOptions.style.display = "none";
-    warrantyOptions.style.display = "block";
+    deliveryOptions.style.display = "block";
 }
 
 function setAttributeListeners(shoppingCartItemId) {
@@ -188,7 +172,6 @@ function setAttributeListeners(shoppingCartItemId) {
 
     // TODO: Refactor this
     var deliveryOptions = document.querySelectorAll('.cart-slideout__delivery-options [name^=product_attribute_]');
-    var warrantyOptions = document.querySelectorAll('.cart-slideout__warranty [name^=product_attribute_]');
     for (option in deliveryOptions) {
         deliveryOptions[option].onclick = function() {
             const [attributeMappingId] = this.name.split('_').slice(-1);
@@ -229,32 +212,6 @@ function setAttributeListeners(shoppingCartItemId) {
 
                 isPickup = responseJson.IsPickup;
 
-                $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        }
-    }
-
-    for (option in warrantyOptions) {
-        warrantyOptions[option].onclick = function() {
-            const [attributeMappingId] = this.name.split('_').slice(-1);
-            const payload = {
-                shoppingCartItemId: shoppingCartItemId,
-                productAttributeMappingId: attributeMappingId,
-                productAttributeValueId: this.value,
-                isChecked: this.checked
-            };
-            fetch('/CartSlideout/UpdateShoppingCartItem', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(responseJson => {
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
             })
             .catch(err => {

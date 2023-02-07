@@ -44,8 +44,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
                 await _pictureService.GetPictureUrlAsync(productPicture.PictureId) :
                 string.Empty;
 
-            var shouldShowPrice = !await product.IsAddToCartAsync() &&
-                                  !await product.IsAddToCartWithUserInfoAsync();
+            var shouldShowPrice = !await product.IsAddToCartToSeePriceAsync();
 
             var model = new ProductInfoModel()
             {
