@@ -1810,6 +1810,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
+            if (string.IsNullOrEmpty(model.VideoUrl))
+                ModelState.AddModelError(string.Empty, 
+                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"));
+
+            if (!ModelState.IsValid)
+                return ErrorJson(ModelState.SerializeErrors());
+
             var videoUrl = model.VideoUrl.TrimStart('~');
 
             try
@@ -1824,9 +1831,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
                 });
             }
-
-            if (!ModelState.IsValid) 
-                return ErrorJson(ModelState.SerializeErrors());
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();

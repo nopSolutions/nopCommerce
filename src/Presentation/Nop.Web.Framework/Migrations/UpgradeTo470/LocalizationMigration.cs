@@ -63,6 +63,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Validation.Password.LengthValidation"] = "<li>must have at least {0} characters and not greater than {1} characters</li>",
                 //7
                 ["Admin.Catalog.Products.Multimedia.SaveBeforeEdit"] = "You need to save the product before you can upload pictures or videos for this product page.",
+                //6543
+                ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"] = "Video URL is required.",
             }, languageId);
 
             #endregion
