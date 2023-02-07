@@ -52,7 +52,6 @@ namespace Nop.Web.Framework
         private Vendor _cachedVendor;
         private Language _cachedLanguage;
         private Currency _cachedCurrency;
-        private TaxDisplayType? _cachedTaxDisplayType;
 
         #endregion
 
@@ -469,52 +468,9 @@ namespace Nop.Web.Framework
         }
 
         /// <summary>
-        /// Gets or sets current tax display type
+        /// Sets current customer tax display type
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<TaxDisplayType> GetTaxDisplayTypeAsync()
-        {
-            //whether there is a cached value
-            if (_cachedTaxDisplayType.HasValue)
-                return _cachedTaxDisplayType.Value;
-
-            var taxDisplayType = TaxDisplayType.IncludingTax;
-            var customer = await GetCurrentCustomerAsync();
-
-            //whether customers are allowed to select tax display type
-            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer != null)
-            {
-                //try to get previously saved tax display type
-                var taxDisplayTypeId = customer.TaxDisplayTypeId;
-                if (taxDisplayTypeId.HasValue)
-                    taxDisplayType = (TaxDisplayType)taxDisplayTypeId.Value;
-                else
-                {
-                    //default tax type by customer roles
-                    var defaultRoleTaxDisplayType = await _customerService.GetCustomerDefaultTaxDisplayTypeAsync(customer);
-                    if (defaultRoleTaxDisplayType != null)
-                        taxDisplayType = defaultRoleTaxDisplayType.Value;
-                }
-            }
-            else
-            {
-                //default tax type by customer roles
-                var defaultRoleTaxDisplayType = await _customerService.GetCustomerDefaultTaxDisplayTypeAsync(customer);
-                if (defaultRoleTaxDisplayType != null)
-                    taxDisplayType = defaultRoleTaxDisplayType.Value;
-                else
-                {
-                    //or get the default tax display type
-                    taxDisplayType = _taxSettings.TaxDisplayType;
-                }
-            }
-
-            //cache the value
-            _cachedTaxDisplayType = taxDisplayType;
-
-            return _cachedTaxDisplayType.Value;
-        }
-
+        /// <param name="taxDisplayType">Tax Display Type</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType)
         {
@@ -526,9 +482,6 @@ namespace Nop.Web.Framework
             var customer = await GetCurrentCustomerAsync();
             customer.TaxDisplayType = taxDisplayType;
             await _customerService.UpdateCustomerAsync(customer);
-
-            //then reset the cached value
-            _cachedTaxDisplayType = null;
         }
 
         /// <summary>

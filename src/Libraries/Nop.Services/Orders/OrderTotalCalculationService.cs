@@ -1070,7 +1070,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<decimal?> GetShoppingCartShippingTotalAsync(IList<ShoppingCartItem> cart)
         {
-            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includingTax = await _customerService.GetTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax;
             return (await GetShoppingCartShippingTotalAsync(cart, includingTax)).shippingTotal;
         }
 

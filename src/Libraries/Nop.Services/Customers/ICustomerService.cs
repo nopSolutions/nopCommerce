@@ -242,6 +242,16 @@ namespace Nop.Services.Customers
         Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
 
         /// <summary>
+        /// Gets or sets current tax display type
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        Task<TaxDisplayType> GetTaxDisplayTypeAsync(Customer customer);
+
+        /// <summary>
         /// Gets a default tax display type (if configured)
         /// </summary>
         /// <param name="customer">Customer</param>

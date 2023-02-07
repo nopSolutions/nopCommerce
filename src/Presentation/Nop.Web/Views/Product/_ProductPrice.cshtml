@@ -1,9 +1,11 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
 
 @using Nop.Core
+@using Nop.Services.Customers
 @using Nop.Core.Domain.Tax
 
 @inject IWorkContext workContext
+@inject ICustomerService customerService
 
 @if (!Model.CustomerEntersPrice)
 {
@@ -68,7 +70,7 @@
             }
             if (Model.DisplayTaxShippingInfo)
             {
-                var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                var inclTax = await customerService.GetTaxDisplayTypeAsync(await workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax;
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info">

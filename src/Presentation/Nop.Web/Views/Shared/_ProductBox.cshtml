@@ -4,9 +4,11 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
+@using Nop.Services.Customers
 
 @inject CatalogSettings catalogSettings
 @inject IWorkContext workContext
+@inject ICustomerService customerService
 
 @{
     //prepare "Add to cart" AJAX link
@@ -96,7 +98,7 @@
                 <span class="price actual-price">@Model.ProductPrice.Price</span>
                 @if (Model.ProductPrice.DisplayTaxShippingInfo)
                 {
-                    var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                    var inclTax = await customerService.GetTaxDisplayTypeAsync(await workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <span class="tax-shipping-info">

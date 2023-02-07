@@ -1028,7 +1028,7 @@ namespace Nop.Web.Factories
                     model.TotalProducts = cart.Sum(item => item.Quantity);
 
                     //subtotal
-                    var subTotalIncludingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                    var subTotalIncludingTax = await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                     var (_, _, _, subTotalWithoutDiscountBase, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, subTotalIncludingTax);
                     var subtotalBase = subTotalWithoutDiscountBase;
                     var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
@@ -1143,7 +1143,7 @@ namespace Nop.Web.Factories
             if (cart.Any())
             {
                 //subtotal
-                var subTotalIncludingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                var subTotalIncludingTax = await _customerService.GetTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 var (orderSubTotalDiscountAmountBase, _, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, subTotalIncludingTax);
                 var subtotalBase = subTotalWithoutDiscountBase;
                 var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
@@ -1194,7 +1194,7 @@ namespace Nop.Web.Factories
                 //tax
                 bool displayTax;
                 bool displayTaxRates;
-                if (_taxSettings.HideTaxInOrderSummary && await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax)
+                if (_taxSettings.HideTaxInOrderSummary && await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;

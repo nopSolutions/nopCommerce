@@ -63,14 +63,9 @@ namespace Nop.Core
         Task SetWorkingCurrencyAsync(Currency currency);
 
         /// <summary>
-        /// Gets or sets current tax display type
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        Task<TaxDisplayType> GetTaxDisplayTypeAsync();
-
-        /// <summary>
         /// Sets current tax display type
         /// </summary>
+        /// <param name="taxDisplayType">Tax Display Type</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);        
     }

@@ -482,7 +482,7 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price,
             Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includingTax = await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax;
             return await GetProductPriceAsync(product, price, includingTax, customer);
         }
 
@@ -622,7 +622,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<(decimal price, decimal taxRate)> GetShippingPriceAsync(decimal price, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includingTax = await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax;
 
             return await GetShippingPriceAsync(price, includingTax, customer);
         }
@@ -667,7 +667,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includingTax = await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax;
             
             return await GetPaymentMethodAdditionalFeeAsync(price, includingTax, customer);
         }
@@ -728,7 +728,7 @@ namespace Nop.Services.Tax
         /// </returns>
         public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            var includingTax = await _customerService.GetTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax;
 
             return await GetCheckoutAttributePriceAsync(ca, cav, includingTax, customer);
         }

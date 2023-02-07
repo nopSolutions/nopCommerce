@@ -11,6 +11,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Customers;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Models.Common;
@@ -25,6 +26,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         private LocalizationSettings _localizationSettings;
         private IWorkContext _workContext;
         private CustomerSettings _customerSettings;
+        private CustomerService _customerService;
         private ForumSettings _forumSettings;
         private StoreInformationSettings _storeInformationSettings;
         private NewsSettings _newsSettings;
@@ -40,6 +42,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             _localizationSettings = GetService<LocalizationSettings>();
             _workContext = GetService<IWorkContext>();
             _customerSettings = GetService<CustomerSettings>();
+            _customerService = GetService<CustomerService>();
             _forumSettings = GetService<ForumSettings>();
             _storeInformationSettings = GetService<StoreInformationSettings>();
             _newsSettings = GetService<NewsSettings>();
@@ -89,7 +92,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPrepareTaxTypeSelectorModel()
         {
             var model = await _commonModelFactory.PrepareTaxTypeSelectorModelAsync();
-            model.CurrentTaxType.Should().Be(await _workContext.GetTaxDisplayTypeAsync());
+            model.CurrentTaxType.Should().Be(await _customerService.GetTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()));
         }
 
         [Test]

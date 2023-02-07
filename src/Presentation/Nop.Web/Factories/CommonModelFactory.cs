@@ -310,7 +310,7 @@ namespace Nop.Web.Factories
         {
             var model = new TaxTypeSelectorModel
             {
-                CurrentTaxType = await _workContext.GetTaxDisplayTypeAsync()
+                CurrentTaxType = await _customerService.GetTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync())
             };
 
             return model;
