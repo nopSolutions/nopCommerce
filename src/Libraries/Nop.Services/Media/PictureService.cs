@@ -914,7 +914,10 @@ namespace Nop.Services.Media
             if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSVGUploads)
                 return null;
 
-            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            //avoid validate picture binary for svg images 
+            var validateBinary = contentType == MimeTypes.ImageSvg ? false : true;
+
+            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName), validateBinary: validateBinary);
 
             if (string.IsNullOrEmpty(virtualPath))
                 return picture;
