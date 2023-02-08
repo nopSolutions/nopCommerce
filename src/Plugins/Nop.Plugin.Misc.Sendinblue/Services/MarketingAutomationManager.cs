@@ -151,7 +151,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                     //get shopping cart amounts
                     var (_, cartDiscount, _, cartSubtotal, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart,
-                        await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax);
+                        await _customerService.GetCustomerTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax);
                     var cartTax = await _orderTotalCalculationService.GetTaxTotalAsync(cart, false);
                     var cartShipping = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart);
                     var (cartTotal, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false, false);

@@ -51,6 +51,9 @@ namespace Nop.Services.Customers
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly TaxSettings _taxSettings;
+
+        private TaxDisplayType? _cachedTaxDisplayType;
 
         #endregion
 
@@ -77,7 +80,8 @@ namespace Nop.Services.Customers
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings)
         {
             _customerSettings = customerSettings;
             _genericAttributeService = genericAttributeService;
@@ -101,6 +105,7 @@ namespace Nop.Services.Customers
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -731,6 +736,77 @@ namespace Nop.Services.Customers
 
             return (TaxDisplayType)roleWithOverriddenTaxType.DefaultTaxDisplayTypeId;
         }
+
+        /// <summary>
+        /// Gets customer tax display type
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer)
+        {
+            //whether there is a cached value
+            if (_cachedTaxDisplayType.HasValue)
+                return _cachedTaxDisplayType.Value;
+
+            var taxDisplayType = TaxDisplayType.IncludingTax;
+
+            //whether customers are allowed to select tax display type
+            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer != null)
+            {
+                //try to get previously saved tax display type
+                var taxDisplayTypeId = customer.TaxDisplayTypeId;
+                if (taxDisplayTypeId.HasValue)
+                    taxDisplayType = (TaxDisplayType)taxDisplayTypeId.Value;
+                else
+                {
+                    //default tax type by customer roles
+                    var defaultRoleTaxDisplayType = await GetCustomerDefaultTaxDisplayTypeAsync(customer);
+                    if (defaultRoleTaxDisplayType != null)
+                        taxDisplayType = defaultRoleTaxDisplayType.Value;
+                }
+            }
+            else
+            {
+                //default tax type by customer roles
+                var defaultRoleTaxDisplayType = await GetCustomerDefaultTaxDisplayTypeAsync(customer);
+                if (defaultRoleTaxDisplayType != null)
+                    taxDisplayType = defaultRoleTaxDisplayType.Value;
+                else
+                {
+                    //or get the default tax display type
+                    taxDisplayType = _taxSettings.TaxDisplayType;
+                }
+            }
+
+            //cache the value
+            _cachedTaxDisplayType = taxDisplayType;
+
+            return _cachedTaxDisplayType.Value;
+        }
+
+        /// <summary>
+        /// Sets customer tax display type
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxDisplayType">Tax display type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SetCustomerTaxDisplayTypeAsync(Customer customer, TaxDisplayType taxDisplayType)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //whether customers are allowed to select tax display type
+            if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                return;
+
+            //save passed value 
+            customer.TaxDisplayType = taxDisplayType;
+            await UpdateCustomerAsync(customer);
+
+            //then reset the cached value
+            _cachedTaxDisplayType = null;
+        }
+
 
         /// <summary>
         /// Get full name

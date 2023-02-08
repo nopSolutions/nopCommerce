@@ -3,7 +3,9 @@
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Domain.Topics
+@using Nop.Services.Customers;
 
+@inject ICustomerService customerService
 @inject IWorkContext workContext
 
 <div class="footer">
@@ -120,7 +122,7 @@
             <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
             @if (Model.DisplayTaxShippingInfoFooter)
             {
-                var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                var inclTax = await customerService.GetCustomerTaxDisplayTypeAsync(await workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax;
                 <span class="footer-tax-shipping">
                     @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
                 </span>

@@ -12,6 +12,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Html;
 using Nop.Services.Localization;
@@ -36,6 +37,7 @@ namespace Nop.Web.Controllers
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILanguageService _languageService;
@@ -61,6 +63,7 @@ namespace Nop.Web.Controllers
             ICommonModelFactory commonModelFactory,
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
@@ -82,6 +85,7 @@ namespace Nop.Web.Controllers
             _commonModelFactory = commonModelFactory;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _htmlFormatter = htmlFormatter;
             _languageService = languageService;
@@ -170,7 +174,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
-            await _workContext.SetTaxDisplayTypeAsync(taxDisplayType);
+            await _customerService.SetCustomerTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync(),taxDisplayType);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
