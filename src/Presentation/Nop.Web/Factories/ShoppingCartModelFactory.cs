@@ -1028,7 +1028,7 @@ namespace Nop.Web.Factories
                     model.TotalProducts = cart.Sum(item => item.Quantity);
 
                     //subtotal
-                    var subTotalIncludingTax = await _customerService.GetCustomerTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                    var subTotalIncludingTax = await _customerService.GetCustomerTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                     var (_, _, _, subTotalWithoutDiscountBase, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, subTotalIncludingTax);
                     var subtotalBase = subTotalWithoutDiscountBase;
                     var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
@@ -1194,7 +1194,7 @@ namespace Nop.Web.Factories
                 //tax
                 bool displayTax;
                 bool displayTaxRates;
-                if (_taxSettings.HideTaxInOrderSummary && await _customerService.GetCustomerTaxDisplayTypeAsync(await _workContext.GetCurrentCustomerAsync()) == TaxDisplayType.IncludingTax)
+                if (_taxSettings.HideTaxInOrderSummary && await _customerService.GetCustomerTaxDisplayTypeAsync(customer) == TaxDisplayType.IncludingTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
