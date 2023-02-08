@@ -10,6 +10,7 @@ using Nop.Services.Orders;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Web.Framework.Controllers;
 using Nop.Plugin.Misc.AbcCore.Nop;
+using Microsoft.AspNetCore.Http;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 {
@@ -30,6 +31,12 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             _productAttributeService = productAttributeService;
             _shoppingCartService = shoppingCartService;
             _workContext = workContext;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Slideout_AttributeChange(int product, IFormCollection form)
+        {
+            return Ok();
         }
 
         [HttpPost]

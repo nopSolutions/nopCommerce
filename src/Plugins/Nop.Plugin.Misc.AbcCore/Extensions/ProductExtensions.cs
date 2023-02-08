@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Nop.Plugin.Misc.AbcCore.Mattresses;
 
 namespace Nop.Plugin.Misc.AbcCore.Extensions
 {
@@ -14,6 +15,12 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
     {
         public const string IsAddToCartKey = "IsAddToCart";
         public const string IsAddToCartWithUserInfoKey = "IsAddToCartWithUserInfo";
+
+        public static bool IsMattress(this Product product)
+        {
+            var abcMattressModelService = EngineContext.Current.Resolve<IAbcMattressModelService>();
+            return abcMattressModelService.IsProductMattress(product.Id);
+        }
 
         public static async Task<bool> IsAddToCartToSeePriceAsync(this Product product)
         {

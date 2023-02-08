@@ -557,7 +557,9 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             return new CartSlideoutInfo() {
                 ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = product.Id } ),
-                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci } ),
+                SubtotalHtml = sci != null ?
+                    await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { productOrSci = sci } ) :
+                    await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { productOrSci = product } ),
                 DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",
                     new {

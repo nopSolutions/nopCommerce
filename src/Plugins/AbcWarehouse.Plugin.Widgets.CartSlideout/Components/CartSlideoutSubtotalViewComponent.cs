@@ -43,7 +43,6 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             {
                 throw new NopException("CartSlideoutSubtotalViewComponent: Invalid object provided");
             }
-            // TODO: Break down price based on delivery/warranty
 
             return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", unitPriceString);
         }

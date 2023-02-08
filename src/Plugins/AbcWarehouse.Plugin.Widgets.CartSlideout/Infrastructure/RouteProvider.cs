@@ -17,9 +17,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             endpointRouteBuilder.MapControllerRoute(
-                "CartSlideoutUpdateItem",
-                "CartSlideout/UpdateShoppingCartItem",
-                new { controller = "CartSlideout", action = "UpdateShoppingCartItem" });
+                "SlideoutAttributeChange",
+                "slideout_attributechange",
+                new { controller = "CartSlideout", action = "Slideout_AttributeChange" });
         }
     }
 }

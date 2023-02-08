@@ -10,5 +10,6 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
         IList<AbcMattressModel> GetAllAbcMattressModels();
         Task UpdateAbcMattressModelAsync(AbcMattressModel model);
         AbcMattressModel GetAbcMattressModelByProductId(int productId);
+        bool IsProductMattress(int productId);
     }
 }

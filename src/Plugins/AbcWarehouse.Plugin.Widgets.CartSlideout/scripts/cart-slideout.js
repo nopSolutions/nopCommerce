@@ -181,7 +181,7 @@ function setAttributeListeners(shoppingCartItemId) {
                 productAttributeValueId: this.value,
                 isChecked: this.checked
             };
-            fetch('/CartSlideout/UpdateShoppingCartItem', {
+            fetch('/slideout_attributechange', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
