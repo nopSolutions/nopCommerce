@@ -167,26 +167,19 @@ async function selectStoreAsync(shopId)
     deliveryOptions.style.display = "block";
 }
 
-function setAttributeListeners(shoppingCartItemId) {
+function setAttributeListeners() {
     setInformationalIconListeners();
 
     // TODO: Refactor this
     var deliveryOptions = document.querySelectorAll('.cart-slideout__delivery-options [name^=product_attribute_]');
     for (option in deliveryOptions) {
         deliveryOptions[option].onclick = function() {
-            const [attributeMappingId] = this.name.split('_').slice(-1);
-            const payload = {
-                shoppingCartItemId: shoppingCartItemId,
-                productAttributeMappingId: attributeMappingId,
-                productAttributeValueId: this.value,
-                isChecked: this.checked
-            };
-            fetch('/slideout_attributechange', {
+            fetch(`/slideout_attributechange?productId=${cartSlideoutProductId}`, {
                 method: 'POST',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 },
-                body: JSON.stringify(payload)
+                body: $('#delivery-options').serialize()
             })
             .then(response => response.json())
             .then(responseJson => {

@@ -34,14 +34,16 @@
     <div class="cart-slideout__delivery-not-available">
         @T("AbcWarehouse.Plugin.Widgets.CartSlideout.DeliveryNotAvailable")
     </div>
-    <div class="cart-slideout__delivery-options"></div>
+    <!-- use the form to collect attributes -->
+    <form id="delivery-options">
+        <div class="cart-slideout__delivery-options"></div>
+    </form>
     <div class="cart-slideout__pickup-in-store"></div>
   </div>
   <div class="cart-slideout__buttons">
       <div class="cart-slideout__subtotal"></div>
       <div class="cart-slideout__buttons__add">
-          <a class="cart-slideout__buttons__cart" href="/cart">Go To Cart</a>
-          <a class="cart-slideout__buttons__continue" onclick="hideCartSlideout()">Continue Shopping</a>
+          <input type="button" value="Add to Cart" onclick="console.log('added to cart')" />
       </div>
   </div>
 </div>

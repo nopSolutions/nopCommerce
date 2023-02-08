@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
@@ -13,36 +14,35 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
     public class CartSlideoutSubtotalViewComponent : NopViewComponent
     {
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
 
         public CartSlideoutSubtotalViewComponent(
             IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             IShoppingCartService shoppingCartService)
         {
             _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
             _shoppingCartService = shoppingCartService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object productOrSci)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, ShoppingCartItem sci)
         {
-            decimal unitPrice = 0M;
-            string unitPriceString = string.Empty;
-            if (productOrSci is Product)
+            var productId = sci.ProductId;
+            var product = await _productService.GetProductByIdAsync(productId);
+            if (product == null)
             {
-                var product = productOrSci as Product;
-                unitPriceString = await product.IsAddToCartToSeePriceAsync() ?
+                throw new ArgumentException($"CartSlideoutSubtotalViewComponent: Unable to find product with id {productId}");
+            }
+
+            decimal unitPrice = (await _shoppingCartService.GetUnitPriceAsync(sci, false)).unitPrice;
+            string unitPriceString = await product.IsAddToCartToSeePriceAsync() ?
                     "Add to Cart to See Price" :
-                    $"Subtotal: {await _priceFormatter.FormatPriceAsync(product.Price)}";
-            }
-            else if (productOrSci is ShoppingCartItem)
-            {
-                unitPrice = (await _shoppingCartService.GetUnitPriceAsync((productOrSci as ShoppingCartItem), false)).unitPrice;
-                unitPriceString = $"Subtotal: {await _priceFormatter.FormatPriceAsync(unitPrice)}";
-            }
-            else
-            {
-                throw new NopException("CartSlideoutSubtotalViewComponent: Invalid object provided");
-            }
+                    $"Subtotal: {await _priceFormatter.FormatPriceAsync(unitPrice)}";
 
             return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", unitPriceString);
         }

@@ -11,99 +11,80 @@ using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Web.Framework.Controllers;
 using Nop.Plugin.Misc.AbcCore.Nop;
 using Microsoft.AspNetCore.Http;
+using Nop.Web.Framework.Mvc;
+using Nop.Core.Domain.Orders;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 {
     public class CartSlideoutController : BaseController
     {
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IAbcProductAttributeService _productAttributeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkContext _workContext;
 
         public CartSlideoutController(
             IProductAttributeParser productAttributeParser,
+            IProductService productService,
             IAbcProductAttributeService productAttributeService,
             IShoppingCartService shoppingCartService,
             IWorkContext workContext)
         {
             _productAttributeParser = productAttributeParser;
+            _productService = productService;
             _productAttributeService = productAttributeService;
             _shoppingCartService = shoppingCartService;
             _workContext = workContext;
         }
 
+        // very similiar to OrderController.ProductDetails_AttributeChange
         [HttpPost]
-        public async Task<IActionResult> Slideout_AttributeChange(int product, IFormCollection form)
+        public async Task<IActionResult> Slideout_AttributeChange(int productId, IFormCollection form)
         {
-            return Ok();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateShoppingCartItem([FromBody]UpdateShoppingCartItemModel model)
-        {
-            if (model == null || !model.IsValid())
+            var product = await _productService.GetProductByIdAsync(productId);
+            if (product == null)
             {
-                return BadRequest();
+                return new NullJsonResult();
             }
 
-            var itemId = model.ShoppingCartItemId;
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var errors = new List<string>();
+            var attributeXml = await _productAttributeParser.ParseProductAttributesAsync(product, form, errors);
 
-            // Get the item
-            var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
-            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == itemId);
-            if (shoppingCartItem == null)
-            {
-                return BadRequest($"Unable to find shopping cart item with id {itemId}");
-            }
-
-            // Manipulate the attributes
-            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(
-                model.ProductAttributeMappingId);
-            shoppingCartItem.AttributesXml = model.IsChecked.Value ?
-                await ChangeProductAttributeAsync(
-                    productAttributeMapping,
-                    shoppingCartItem.AttributesXml,
-                    model.ProductAttributeValueId) :
-                _productAttributeParser.RemoveProductAttribute(
-                    shoppingCartItem.AttributesXml,
-                    productAttributeMapping);
-
-            // Update the item
-            await _shoppingCartService.UpdateShoppingCartItemAsync(
-                    customer,
-                    shoppingCartItem.Id,
-                    shoppingCartItem.AttributesXml,
-                    shoppingCartItem.CustomerEnteredPrice,
-                    shoppingCartItem.RentalStartDateUtc,
-                    shoppingCartItem.RentalEndDateUtc,
-                    shoppingCartItem.Quantity);
-
-            // Check which attributes should be visible
+            //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
             var disabledAttributeMappingIds = new List<int>();
-            var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(shoppingCartItem.ProductId);
+            var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in attributes)
             {
-                var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, shoppingCartItem.AttributesXml);
-                if (conditionMet.HasValue)
+                var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributeXml);
+                if (!conditionMet.HasValue)
                 {
-                    if (conditionMet.Value)
-                        enabledAttributeMappingIds.Add(attribute.Id);
-                    else
-                        disabledAttributeMappingIds.Add(attribute.Id);
+                    continue;
+                }
+
+                if (conditionMet.Value)
+                {
+                    enabledAttributeMappingIds.Add(attribute.Id);
+                }
+                else
+                {
+                    disabledAttributeMappingIds.Add(attribute.Id);
                 }
             }
 
-            var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(model.ProductAttributeValueId);
+            var sci = new ShoppingCartItem()
+            {
+                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                ProductId = product.Id,
+                AttributesXml = attributeXml
+            };
 
             return Json(new
             {
-                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = shoppingCartItem }),
-                EnabledAttributeMappingIds = enabledAttributeMappingIds,
-                DisabledAttributeMappingIds = disabledAttributeMappingIds,
-                IsPickup = pav == null ? false : pav.Name.Contains("Pickup In-Store")
+                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci }),
+                EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
+                DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
             });
         }
 

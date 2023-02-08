@@ -160,7 +160,7 @@ i.warranty-info {
     font-size: 1.25rem;
 }
 
-.cart-slideout__buttons a {
+.cart-slideout__buttons input {
     width: 100%;
     background-color: white;
     border: 2px solid #e1e1e1;
