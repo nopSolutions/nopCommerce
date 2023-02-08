@@ -39,15 +39,12 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Fields
 
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressService _addressService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
-        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
@@ -57,19 +54,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IProductService _productService;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly TaxTransactionLogService _taxTransactionLogService;
-        private readonly WidgetSettings _widgetSettings;
 
         private AvaTaxClient _serviceClient;
         private bool _disposed;
@@ -112,16 +104,12 @@ namespace Nop.Plugin.Tax.Avalara.Services
             WidgetSettings widgetSettings)
         {
             _avalaraTaxSettings = avalaraTaxSettings;
-            _actionContextAccessor = actionContextAccessor;
             _addressService = addressService;
             _checkoutAttributeParser = checkoutAttributeParser;
-            _checkoutAttributeService = checkoutAttributeService;
             _countryService = countryService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
-            _localizationService = localizationService;
-            _logger = logger;
             _fileProvider = fileProvider;
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
@@ -130,19 +118,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _productService = productService;
             _genericAttributeRepository = genericAttributeRepository;
             _taxCategoryRepository = taxCategoryRepository;
-            _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
-            _taxPluginManager = taxPluginManager;
-            _urlHelperFactory = urlHelperFactory;
-            _webHelper = webHelper;
             _workContext = workContext;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
             _taxTransactionLogService = taxTransactionLogService;
-            _widgetSettings = widgetSettings;
         }
 
         #endregion
