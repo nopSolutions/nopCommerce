@@ -252,6 +252,21 @@ namespace Nop.Services.Customers
         Task<TaxDisplayType?> GetCustomerDefaultTaxDisplayTypeAsync(Customer customer);
 
         /// <summary>
+        /// Gets customer tax display type
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer);
+
+        /// <summary>
+        /// Sets customer tax display type
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxDisplayType">Tax display type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SetCustomerTaxDisplayTypeAsync(Customer customer, TaxDisplayType taxDisplayType);
+
+        /// <summary>
         /// Get full name
         /// </summary>
         /// <param name="customer">Customer</param>
