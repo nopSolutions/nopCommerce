@@ -274,22 +274,18 @@
 
             },
             success: function (data) {
-                console.log('success1');
-                console.log(data.AddProductReview);
+               
                 var strmsg = "";
                 uploadButton.value = "@T("Reviews.SubmitButton")";
-                console.log(data.AddProductReview.Result);
                 if (data.AddProductReview.Result.length > 0) {
                     strmsg += "<ul>";
                     strmsg += "<li>" + data.AddProductReview.Result + "</li>";
                     strmsg += "</ul>";
-                    console.log(strmsg);
                     if (!data.AddProductReview.SuccessfullyAdded) {
-                        console.log('hatadatamesajı');
                         $("#message-error-review-form").html(strmsg);
                     }
                     else {
-                        console.log('basaridatamesajı');
+                      
                         $("#message-success-review-form").html(strmsg);
                         $("#review-form .review-form-body").css("display", "none");
                         document.getElementById("review-form").reset();
@@ -307,7 +303,6 @@
                 console.log(xhr, resp, text);
             },
             complete: function () {
-                console.log('complatereview');
                 document.getElementById("ajax-loader").style.display = "none";
                 uploadButton.value = "@T("Reviews.SubmitButton")";
 
@@ -359,12 +354,7 @@
     function readURLFileUpload() {
         var fileSelect = document.getElementById('photos'),
             supportedFileFormat = '.jpg,.jpeg,.png,.mp4,.mov,.webp,.webm',
-            files = fileSelect.files;
-        console.log('dosyalar adeti');
-console.log(files.length);
- console.log('settings adeti');
-console.log(@setting.MaximumFile);
-        if (files.length > @setting.MaximumFile) {
+            files = fileSelect.files;if (files.length > @setting.MaximumFile) {
                 alert('File upload exceeds the allowed size Your file sizes:' + myfile.size+'bytes / Maximum file size:'+@setting.MaximumSize+'bytes' );
             //alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFile")');
             $("#photos").val("");
@@ -383,10 +373,7 @@ console.log(@setting.MaximumFile);
                 $("#photos").val("");
                 return false;
             }
-                  console.log('dosyalar boyutu');
-            console.log(myfile.size);
- console.log('settings boyutu');
-            console.log(@setting.MaximumSize);
+
             if (myfile.size > @setting.MaximumSize) {
                 alert('File upload exceeds the allowed size Your file sizes:' + myfile.size+'bytes / Maximum file size:'+@setting.MaximumSize+'bytes' );
                 //alert('@T("Nop.Plugin.Widgets.CustomProductReviews.MaximumUploadedFileSize")');
