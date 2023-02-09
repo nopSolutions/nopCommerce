@@ -1037,22 +1037,23 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 writer.Close();
 
                 string ouFilename = "tempUpload" + DateTime.UtcNow.ToFileTime();
-               
+                string outFiletype = ouFilename + ".mp4";
+                string outFilename= ouFilename + ".mp4";
                 sw.Start();
                 var convertSettings = new ConvertSettings();
                 convertSettings.CustomInputArgs = "-y";
-                      convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -vf scale=640:-2 -pix_fmt yuv420p -b:v 1000k -c:a libopus -b:a 64k -pass 1 -an ";
+                      convertSettings.CustomOutputArgs = "-c:v libx264  -vf scale=640:-2 -pix_fmt yuv420p -preset veryslow -b:v 1800k -c:a aac -b:a 64k -pass 1 -an ";
                 ffmpeg.ConvertMedia(fileName, null, "null", "null", convertSettings);
 
                 convertSettings.CustomInputArgs = "";
-                convertSettings.CustomOutputArgs = "-c:v libvpx-vp9 -b:v 1000k -vf scale=640:-2 -pix_fmt yuv420p -pass 2 -c:a libopus -b:a 64k ";
-                ffmpeg.ConvertMedia(fileName, null, ouFilename+".webm", null, convertSettings);
+                convertSettings.CustomOutputArgs = "-c:v libx264  -b:v 1800k -vf scale=640:-2 -preset veryslow -pix_fmt yuv420p -pass 2 -c:a aac -b:a 64k ";
+                ffmpeg.ConvertMedia(fileName, null, outFilename, null, convertSettings);
                 
                 sw.Stop();
                 Console.WriteLine("Elapsed Video Encode={0}", sw.Elapsed);
 
                 sw.Start();
-                string outFiletype = ouFilename + ".webm";
+               
                 switch (outFiletype)
                 {
                     case var ext when outFiletype.Contains("mp4"):
@@ -1081,12 +1082,12 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Services
                 Console.WriteLine("Elapsed video format validate process={0}", sw.Elapsed);
 
                 System.IO.File.AppendAllText(@"VideoProcessPerformace.log", String.Format("Elapsed Video Encode={0}", sw.Elapsed) + Environment.NewLine);
-                videoBinary = File.ReadAllBytes(ouFilename + ".webm");
+                videoBinary = File.ReadAllBytes(outFilename);
                 data.BinaryData = videoBinary;
                 data.Extentions = outFiletype;
                 try
                 {
-                    File.Delete(ouFilename + ".webm");
+                    File.Delete(outFilename);
                     File.Delete(fileName);
                 }
                 catch (Exception e)
