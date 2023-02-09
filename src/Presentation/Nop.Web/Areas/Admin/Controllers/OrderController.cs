@@ -44,7 +44,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
         private readonly IEncryptionService _encryptionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
@@ -80,7 +79,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService,
             IEncryptionService encryptionService,
             IEventPublisher eventPublisher,
             IExportManager exportManager,
@@ -112,7 +110,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService = customerActivityService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _encryptionService = encryptionService;
             _eventPublisher = eventPublisher;
             _exportManager = exportManager;
