@@ -1,3 +1,12 @@
-@model string
+@model (string delivery, string warranty, string subtotal)
 
-<span id="cart-slideout__subtotal-value">@Model</span>
+@if (Model.delivery != "$0.00")
+{
+    <span id="cart-slideout__subtotal-value">Delivery: @Model.delivery<br /></span>
+}
+@if (Model.warranty != "$0.00")
+{
+    <span id="cart-slideout__subtotal-value">Warranty: @Model.warranty<br /></span>
+}
+
+<span id="cart-slideout__subtotal-value">@Model.subtotal</span>

@@ -1,6 +1,6 @@
 @model AbcWarehouse.Plugin.Widgets.CartSlideout.Models.ProductInfoModel;
 
-<img id="cart-slideout__product-image" src="@Model.ImageUrl" style="float: left; padding-right: 0.5rem; width: 120px" />
+<img id="cart-slideout__product-image" src="@Model.ImageUrl" style="float: left; padding-right: 0.5rem; max-width: 120px; max-height: 100px" />
 <div id="cart-slideout__product-name">@Model.Name</div>
 <div id="cart-slideout__product-description">@Model.Description</div>
 <div id="cart-slideout__product-price" style="margin-top: 0.25rem;">@Model.Price</div>
