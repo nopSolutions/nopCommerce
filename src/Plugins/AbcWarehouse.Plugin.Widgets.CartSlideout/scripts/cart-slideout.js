@@ -288,7 +288,7 @@ function AddToCart()
         url: `/addproducttocart/details/${cartSlideoutProductId}/1`,
         data: $('#delivery-options').serialize(),
         type: "POST",
-        success: function() {
+        success: function(response) {
             if (response.redirect) {
                 location.href = response.redirect;
                 return true;
