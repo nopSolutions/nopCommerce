@@ -65,6 +65,35 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Catalog.Products.Multimedia.SaveBeforeEdit"] = "You need to save the product before you can upload pictures or videos for this product page.",
                 //6543
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"] = "Video URL is required.",
+                //6388 PayPal Commerce tour
+                ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Text"] = "If you want to process payments online, we’d recommend you to set up the PayPal Commerce payment method. PayPal Commerce gives your buyers a simplified and secure checkout experience. Learn how to set this plugin <a href=\"{0}\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Title"] = "PayPal Commerce",
+                ["Admin.ConfigurationSteps.PaymentMethods.Configure.Text"] = "You can configure each payment method by clicking the appropriate <b>Configure</b> button. Now we’ll configure the PayPal Commerce payment method.",
+                ["Admin.ConfigurationSteps.PaymentMethods.Configure.Title"] = "Configure PayPal Commerce",
+                
+                ["Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title"] = "Create a PayPal account",
+                ["Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text"] = "You have two options to do this: you can either register an account on the PayPal website or you can do this from the plugin configuration page. Let’s register an account from the plugin configuration page.",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Register.Title"] = "Register an account",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Register.Text"] = "Enter your email address and let PayPal check everything out by clicking the <b>Save</b> button.",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Register.Text2"] = "If everything is OK, you will see the green notification and a newly added <b>Sign up for PayPal</b> button. Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.",
+
+                ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title"] = "Specify API credentials",
+                ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text"] = "If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.",
+                
+                ["Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title"] = "Sandbox",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text"] = "Use sandbox if you want to test the payment method first.",
+
+                ["Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title"] = "Credentials",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text"] = "After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b> and <b>Secret</b>, and paste them into these fields.",
+
+                ["Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Title"] = "Payment type",
+                ["Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Text"] = "Choose the <b>Payment type</b> to either capture payment immediately (<b>Capture</b>) or <b>Authorize</b> payment for an order after order creation.",
+
+                ["Admin.ConfigurationSteps.PaymentPayPal.Prominently.Title"] = "Feature PayPal Prominently",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Prominently.Text"] = "Logos and banners are a great way to let your customers know that you choose PayPal to securely process their payments. This panel allows you to customize the display options for the PayPal buttons and logo on your store pages.",
+
+                ["Admin.ConfigurationSteps.PaymentPayPal.Configured.Title"] = "Configured",
+                ["Admin.ConfigurationSteps.PaymentPayPal.Configured.Text"] = "These settings are different from the basic ones, you have already configured the PayPal Commerce plugin!",
             }, languageId);
 
             #endregion

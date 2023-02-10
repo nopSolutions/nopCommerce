@@ -359,7 +359,7 @@
             /// <summary>
             /// Gets a URL of the PayPal docs page
             /// </summary>
-            public static string PayPal => "https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-smart-payment-buttons.html";
+            public static string PayPal => "https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html";
 
             /// <summary>
             /// Gets a URL of the Avalara docs page

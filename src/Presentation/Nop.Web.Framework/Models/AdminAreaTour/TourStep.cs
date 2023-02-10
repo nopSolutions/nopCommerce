@@ -10,6 +10,7 @@
         ShippingProviders,
         ShippingManual,
         PaymentMethods,
+        PaymentPayPal,
         TaxProviders,
         TaxManual,
         Product,

@@ -135,6 +135,39 @@
             </script>
             break;
 
+        case TourStep.PaymentPayPal:
+
+            <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.paymentpaypal.js" asp-location="Footer"></script>
+            <script asp-location="Footer">
+                var localized_data = {
+                    PaymentPayPalSignUpTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title")',
+                    PaymentPayPalSignUpText: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text")',
+
+                    PaymentPayPalRegisterTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Title")',
+                    PaymentPayPalRegisterText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text")',
+                    PaymentPayPalRegisterText2: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text2")',
+
+                    PaymentPayPalApiCredentialsTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title")',
+                    PaymentPayPalApiCredentialsText: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text")',
+
+                    PaymentPayPalSandboxTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title")',
+                    PaymentPayPalSandboxText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text")',
+
+                    PaymentPayPalCredentialsTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title")',
+                    PaymentPayPalCredentialsText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text")',
+
+                    PaymentPayPalPaymentTypeTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Title")',
+                    PaymentPayPalPaymentTypeText: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Text")',
+
+                    PaymentPayPalProminentlyTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Title")',
+                    PaymentPayPalProminentlyText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Text")',
+
+                    PaymentPayPalConfiguredTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Title")',
+                    PaymentPayPalConfiguredText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Text")',
+                };
+            </script>
+            break;
+
         case TourStep.TaxProviders:
 
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.taxproviders.js" asp-location="Footer"></script>
