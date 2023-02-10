@@ -255,10 +255,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             //first, try to find existing shopping cart item
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), cartType, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var attXml = await GetProductAttributeXmlAsync(product, string.Empty);
-
             // ABC: should look for appropriate attributes
-            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product, attXml);
+            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = await _shoppingCartService
@@ -282,8 +280,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 product: product,
                 shoppingCartType: cartType,
                 storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                quantity: quantity,
-                attributesXml: attXml);
+                quantity: quantity);
             if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
@@ -341,7 +338,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                             });
                         }     
 
-                        return await SlideoutJson(product, attXml);
+                        return await SlideoutJson(product);
                     }
             }
         }
@@ -418,11 +415,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             //product and gift card attributes
             var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
 
-            // --------------------------------
-            // ABC: add Home Delivery attribute
-            // --------------------------------
-            var attXml = await GetProductAttributeXmlAsync(product, attributes);
-
             //rental attributes 
             _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
 
@@ -430,10 +422,10 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 //if the item to update is found, then we ignore the specified "shoppingCartTypeId" parameter
                 updatecartitem.ShoppingCartType;
 
-            await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attXml, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
+            await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
 
             //return result
-            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attXml);
+            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attributes);
         }
 
         protected async virtual Task<IActionResult> GetProductToCartDetails(
@@ -509,7 +501,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             }
         }
 
-        private async Task<IActionResult> SlideoutJson(Product product, string attXml)
+        private async Task<IActionResult> SlideoutJson(Product product, string attXml = "")
         {
             //display notification message and update appropriate blocks
             var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(
@@ -572,54 +564,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 ShoppingCartItemId = sci.Id,
                 ProductId = sci.ProductId
             };
-        }
-
-                // Will get the appropriate default product attributes for the product
-        private async Task<string> GetProductAttributeXmlAsync(Product product, string attXml)
-        {
-            var productAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            var deliveryOptionsProductAttributeMapping = (await productAttributeMappings.WhereAwait(
-                async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "Delivery/Pickup Options"
-            ).ToListAsync()).FirstOrDefault();
-            var legacyHomeDeliveryProductAttributeMapping = (await productAttributeMappings.WhereAwait(
-                async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "Home Delivery"
-            ).ToListAsync()).FirstOrDefault();
-
-            if (deliveryOptionsProductAttributeMapping != null)
-            {
-                var deliveryPavs = await _productAttributeService.GetProductAttributeValuesAsync(deliveryOptionsProductAttributeMapping.Id);
-
-                var homeDeliveryProductAttributeValue = deliveryPavs.Where(
-                        pav => pav.Name.Contains("Home Delivery") && !pav.Name.Contains("Installation")
-                    ).FirstOrDefault();
-                if (homeDeliveryProductAttributeValue != null)
-                {
-                    return _productAttributeParser.AddProductAttribute(
-                        attXml,
-                        deliveryOptionsProductAttributeMapping,
-                        homeDeliveryProductAttributeValue.Id.ToString());
-                }
-
-                // If no home delivery option, check if delivery/install option is available
-                var deliveryInstallProductAttributeValue = deliveryPavs.Where(
-                        pav => pav.Name.Contains("Installation")
-                    ).FirstOrDefault();
-                if (deliveryInstallProductAttributeValue != null)
-                {
-                    return _productAttributeParser.AddProductAttribute(
-                        attXml,
-                        deliveryOptionsProductAttributeMapping,
-                        deliveryInstallProductAttributeValue.Id.ToString());
-                }
-
-                return attXml;
-            }
-            if (legacyHomeDeliveryProductAttributeMapping != null)
-            {
-                return await _attributeUtilities.InsertHomeDeliveryAttributeAsync(product, attXml);
-            }
-
-            return attXml;
         }
     }
 }

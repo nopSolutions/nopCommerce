@@ -280,3 +280,24 @@ function getCookie(cookieName) {
     })
     return cookie[cookieName] ?? '';
 }
+
+function AddToCart()
+{
+    $.ajax({
+        cache: false,
+        url: `/addproducttocart/details/${cartSlideoutProductId}/1`,
+        data: $('#delivery-options').serialize(),
+        type: "POST",
+        success: function() {
+            if (response.redirect) {
+                location.href = response.redirect;
+                return true;
+            }
+            return false;
+        },
+        error: function() {
+            alert('Error when adding item to cart.');
+        }
+    });
+    return false;
+}
