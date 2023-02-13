@@ -5815,7 +5815,7 @@
     <Value>Display all pictures on catalog pages</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint">
-    <Value>Check to display all pictures on catalog pages.</Value>
+    <Value>When enabled, customers will see a slider at the bottom of each picture block. It'll be visible only when a product has more than one picture.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability">
     <Value>Display the date for a pre-order availability</Value>
