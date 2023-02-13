@@ -1,6 +1,9 @@
 @model OrderDetailsModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
+
+@inject MediaSettings mediaSettings
 
 @{
     if (!Model.PrintMode)
@@ -627,7 +630,9 @@
                                     @if (Model.ShowProductThumbnail)
                                     {
                                         <td class="picture">
-                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))">
+                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                            </a>
                                         </td>
                                     }
                                     <td class="product">

@@ -65,6 +65,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Catalog.Products.Multimedia.SaveBeforeEdit"] = "You need to save the product before you can upload pictures or videos for this product page.",
                 //6543
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"] = "Video URL is required.",
+                //6567
+                ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint"] = "When enabled, customers will see a slider at the bottom of each picture block. It'll be visible only when a product has more than one picture.",
             }, languageId);
 
             #endregion
