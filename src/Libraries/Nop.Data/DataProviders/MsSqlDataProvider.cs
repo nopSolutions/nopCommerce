@@ -230,7 +230,7 @@ namespace Nop.Data.DataProviders
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR
                     SELECT table_name
-                    FROM [{currentConnection.Connection.Database}].information_schema.tables
+                    FROM [{currentConnection.Connection.Database}].INFORMATION_SCHEMA.TABLES
                     WHERE table_type = 'base table'
                     OPEN cur_reindex
                     FETCH NEXT FROM cur_reindex INTO @TableName
