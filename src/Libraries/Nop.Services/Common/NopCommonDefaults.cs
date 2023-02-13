@@ -172,19 +172,7 @@ namespace Nop.Services.Common
         #endregion
 
         #region Caching defaults
-
-        #region Address attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute ID
-        /// </remarks>
-        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new("Nop.addressattributevalue.byattribute.{0}");
-
-        #endregion
-
+        
         #region Generic attributes
 
         /// <summary>

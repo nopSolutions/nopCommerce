@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Builders.Customers
         {
             table
                 .WithColumn(nameof(CustomerAttributeValue.Name)).AsString(400).NotNullable()
-                .WithColumn(nameof(CustomerAttributeValue.CustomerAttributeId)).AsInt32().ForeignKey<CustomerAttribute>();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAttributeValue), nameof(CustomerAttributeValue.AttributeId))).AsInt32().ForeignKey<CustomerAttribute>();
         }
 
         #endregion

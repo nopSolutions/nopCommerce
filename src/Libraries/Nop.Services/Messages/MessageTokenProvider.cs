@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -28,6 +27,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
+using Nop.Services.Attributes;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -57,12 +57,13 @@ namespace Nop.Services.Messages
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressService _addressService;
+        private readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        private readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
+        private readonly IAttributeFormatter<VendorAttribute, VendorAttributeValue> _vendorAttributeFormatter;
         private readonly IBlogService _blogService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEventPublisher _eventPublisher;
@@ -84,7 +85,6 @@ namespace Nop.Services.Messages
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
         private readonly IWorkContext _workContext;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -100,12 +100,13 @@ namespace Nop.Services.Messages
         public MessageTokenProvider(CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressService addressService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
+            IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> customerAttributeFormatter,
+            IAttributeFormatter<VendorAttribute, VendorAttributeValue> vendorAttributeFormatter,
             IBlogService blogService,
             ICountryService countryService,
             ICurrencyService currencyService,
-            ICustomerAttributeFormatter customerAttributeFormatter,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IEventPublisher eventPublisher,
@@ -127,7 +128,6 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
-            IVendorAttributeFormatter vendorAttributeFormatter,
             IWorkContext workContext,
             MessageTemplatesSettings templatesSettings,
             PaymentSettings paymentSettings,
@@ -137,12 +137,13 @@ namespace Nop.Services.Messages
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _addressService = addressService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _customerAttributeFormatter = customerAttributeFormatter;
+            _vendorAttributeFormatter = vendorAttributeFormatter;
             _blogService = blogService;
             _countryService = countryService;
             _currencyService = currencyService;
-            _customerAttributeFormatter = customerAttributeFormatter;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _eventPublisher = eventPublisher;
@@ -164,7 +165,6 @@ namespace Nop.Services.Messages
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
-            _vendorAttributeFormatter = vendorAttributeFormatter;
             _workContext = workContext;
             _templatesSettings = templatesSettings;
             _paymentSettings = paymentSettings;

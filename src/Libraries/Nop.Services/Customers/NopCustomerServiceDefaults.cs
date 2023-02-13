@@ -49,19 +49,7 @@ namespace Nop.Services.Customers
         public static CacheKey CustomerByGuidCacheKey => new("Nop.customer.byguid.{0}");
 
         #endregion
-
-        #region Customer attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
-        public static CacheKey CustomerAttributeValuesByAttributeCacheKey => new("Nop.customerattributevalue.byattribute.{0}");
-
-        #endregion
-
+        
         #region Customer roles
 
         /// <summary>

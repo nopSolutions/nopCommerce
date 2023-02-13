@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Builders.Vendors
         {
             table
                 .WithColumn(nameof(VendorAttributeValue.Name)).AsString(400).NotNullable()
-                .WithColumn(nameof(VendorAttributeValue.VendorAttributeId)).AsInt32().ForeignKey<VendorAttribute>();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(VendorAttributeValue), nameof(VendorAttributeValue.AttributeId))).AsInt32().ForeignKey<VendorAttribute>();
         }
 
         #endregion

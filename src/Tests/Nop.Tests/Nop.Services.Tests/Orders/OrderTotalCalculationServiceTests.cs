@@ -11,6 +11,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -119,15 +120,15 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             _rewardPointsSettings = GetService<RewardPointsSettings>();
 
             _genericAttributeService= GetService<IGenericAttributeService>();
-            var checkoutAttributeService = GetService<ICheckoutAttributeService>();
+            var checkoutAttributeService = GetService<IAttributeService<CheckoutAttribute, CheckoutAttributeValue>>();
 
-            var attr = await checkoutAttributeService.GetCheckoutAttributeByIdAsync(1);
-
-            var values = await checkoutAttributeService.GetCheckoutAttributeValuesAsync(attr.Id);
+            var attr = await checkoutAttributeService.GetAttributeByIdAsync(1);
+            
+            var values = await checkoutAttributeService.GetAttributeValuesAsync(attr.Id);
 
             var val = values.FirstOrDefault(p => p.Name == "Yes")?.Id.ToString();
 
-            _checkoutAttrXml = GetService<ICheckoutAttributeParser>().AddCheckoutAttribute(string.Empty, attr, val);
+            _checkoutAttrXml = GetService<IAttributeParser<CheckoutAttribute, CheckoutAttributeValue>>().AddAttribute(string.Empty, attr, val);
 
             _discount = new Discount
             {

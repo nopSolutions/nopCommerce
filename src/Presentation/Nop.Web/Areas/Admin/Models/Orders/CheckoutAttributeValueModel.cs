@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Properties
 
-        public int CheckoutAttributeId { get; set; }
+        public int AttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
         public string Name { get; set; }

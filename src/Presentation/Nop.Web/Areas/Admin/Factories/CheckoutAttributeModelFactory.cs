@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Attributes;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
@@ -23,9 +23,9 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
@@ -38,9 +38,9 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CheckoutAttributeModelFactory(CurrencySettings currencySettings,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             IBaseAdminModelFactory baseAdminModelFactory,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
@@ -49,9 +49,9 @@ namespace Nop.Web.Areas.Admin.Factories
             MeasureSettings measureSettings)
         {
             _currencySettings = currencySettings;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
+            _baseAdminModelFactory = baseAdminModelFactory;
             _currencyService = currencyService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
@@ -81,23 +81,23 @@ namespace Nop.Web.Areas.Admin.Factories
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
 
             //get selected checkout attribute
-            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
+            var selectedAttribute = (await _checkoutAttributeParser.ParseAttributesAsync(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
             model.SelectedAttributeId = selectedAttribute?.Id ?? 0;
 
             //get selected checkout attribute values identifiers
             var selectedValuesIds = await _checkoutAttributeParser
-                .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id)).ToListAsync();
+                .ParseAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id)).ToListAsync();
 
             //get available condition checkout attributes (ignore this attribute and non-combinable attributes)
-            var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync())
-                .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition());
+            var availableConditionAttributes = (await _checkoutAttributeService.GetAllAttributesAsync())
+                .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition);
 
             model.ConditionAttributes = await availableConditionAttributes.SelectAwait(async attribute => new AttributeConditionModel
             {
                 Id = attribute.Id,
                 Name = attribute.Name,
                 AttributeControlType = attribute.AttributeControlType,
-                Values = (await _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id)).Select(value => new SelectListItem
+                Values = (await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id)).Select(value => new SelectListItem
                 {
                     Text = value.Name,
                     Value = value.Id.ToString(),
@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
-            var checkoutAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync()).ToPagedList(searchModel);
+            var checkoutAttributes = (await _checkoutAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new CheckoutAttributeListModel().PrepareToGridAsync(searchModel, checkoutAttributes, () =>
@@ -261,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get checkout attribute values
             var checkoutAttributeValues = (await _checkoutAttributeService
-                .GetCheckoutAttributeValuesAsync(checkoutAttribute.Id)).ToPagedList(searchModel);
+                .GetAttributeValuesAsync(checkoutAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CheckoutAttributeValueListModel().PrepareToGrid(searchModel, checkoutAttributeValues, () =>
@@ -315,7 +315,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
             }
 
-            model.CheckoutAttributeId = checkoutAttribute.Id;
+            model.AttributeId = checkoutAttribute.Id;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;

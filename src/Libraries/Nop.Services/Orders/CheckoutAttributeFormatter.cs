@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Html;
@@ -21,8 +23,8 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
         private readonly IHtmlFormatter _htmlFormatter;
@@ -36,8 +38,8 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public CheckoutAttributeFormatter(ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
+        public CheckoutAttributeFormatter(IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICurrencyService currencyService,
             IDownloadService downloadService,
             IHtmlFormatter htmlFormatter,
@@ -85,7 +87,7 @@ namespace Nop.Services.Orders
         {
             var result = new StringBuilder();
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(attributesXml);
+            var attributes = await _checkoutAttributeParser.ParseAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
@@ -94,7 +96,7 @@ namespace Nop.Services.Orders
                 {
                     var valueStr = valuesStr[j];
                     var formattedAttribute = string.Empty;
-                    if (!attribute.ShouldHaveValues())
+                    if (!attribute.ShouldHaveValues)
                     {
                         //no values
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
@@ -151,7 +153,7 @@ namespace Nop.Services.Orders
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(attributeValueId);
+                            var attributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(attributeValueId);
 
                             if (attributeValue != null)
                             {

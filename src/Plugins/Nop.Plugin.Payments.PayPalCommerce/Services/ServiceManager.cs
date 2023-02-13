@@ -13,7 +13,9 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.PayPalCommerce.Domain.Onboarding;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -27,6 +29,7 @@ using PayPalCheckoutSdk.Core;
 using PayPalCheckoutSdk.Orders;
 using PayPalCheckoutSdk.Payments;
 using PayPalHttp;
+using Order = PayPalCheckoutSdk.Orders.Order;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Services
 {
@@ -40,7 +43,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressService _addresService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -66,7 +69,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
         public ServiceManager(CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressService addresService,
-            ICheckoutAttributeParser checkoutAttributeParser,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
             ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
@@ -456,7 +459,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 //add checkout attributes as order items
                 var checkoutAttributes = await _genericAttributeService
                     .GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
-                var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributes);
+                var checkoutAttributeValues = _checkoutAttributeParser.ParseAttributeValues(checkoutAttributes);
                 await foreach (var (attribute, values) in checkoutAttributeValues)
                 {
                     await foreach (var attributeValue in values)

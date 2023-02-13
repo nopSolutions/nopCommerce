@@ -4,7 +4,7 @@ using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
+using Nop.Services.Attributes;
 using Nop.Web.Factories;
 using Nop.Web.Models.Customer;
 using NUnit.Framework;
@@ -14,20 +14,18 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
     [TestFixture]
     public class CustomerModelFactoryTests : WebTest
     {
+        private IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
         private ICustomerModelFactory _customerModelFactory;
         private Customer _customer;
-        private ICustomerAttributeService _customerAttributeService;
         private CustomerAttribute[] _customerAttributes;
-
 
         [OneTimeSetUp]
         public async Task SetUp()
         {
+            _customerAttributeService = GetService<IAttributeService<CustomerAttribute, CustomerAttributeValue>>();
             _customerModelFactory = GetService<ICustomerModelFactory>();
             _customer = await GetService<IWorkContext>().GetCurrentCustomerAsync();
-
-            _customerAttributeService = GetService<ICustomerAttributeService>();
-
+            
             _customerAttributes = new[]
             {
                 new CustomerAttribute
@@ -73,14 +71,14 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             };
 
             foreach (var customerAttribute in _customerAttributes) 
-                await _customerAttributeService.InsertCustomerAttributeAsync(customerAttribute);
+                await _customerAttributeService.InsertAttributeAsync(customerAttribute);
         }
 
         [OneTimeTearDown]
         public async Task TearDown()
         {
             foreach (var customerAttribute in _customerAttributes)
-                await _customerAttributeService.DeleteCustomerAttributeAsync(customerAttribute);
+                await _customerAttributeService.DeleteAttributeAsync(customerAttribute);
         }
 
         [Test]

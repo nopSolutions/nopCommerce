@@ -2,39 +2,43 @@
 using System.Text;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Domain.Attributes;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 
-namespace Nop.Services.Vendors
+namespace Nop.Services.Attributes
 {
     /// <summary>
-    /// Represents a vendor attribute formatter implementation
+    /// Attribute formatter
     /// </summary>
-    public partial class VendorAttributeFormatter : IVendorAttributeFormatter
+    public partial class
+        AttributeFormatter<TAttribute, TAttributeValue> : IAttributeFormatter<TAttribute, TAttributeValue>
+        where TAttribute : BaseAttribute
+        where TAttributeValue : BaseAttributeValue
     {
         #region Fields
 
+        private readonly IAttributeParser<TAttribute, TAttributeValue> _attributeParser;
+        private readonly IAttributeService<TAttribute, TAttributeValue> _attributeService;
         private readonly IHtmlFormatter _htmlFormatter;
         private readonly ILocalizationService _localizationService;
-        private readonly IVendorAttributeParser _vendorAttributeParser;
-        private readonly IVendorAttributeService _vendorAttributeService;
         private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public VendorAttributeFormatter(IHtmlFormatter htmlFormatter,
+        public AttributeFormatter(IAttributeParser<TAttribute, TAttributeValue> attributeParser,
+            IAttributeService<TAttribute, TAttributeValue> attributeService,
+            IHtmlFormatter htmlFormatter,
             ILocalizationService localizationService,
-            IVendorAttributeParser vendorAttributeParser,
-            IVendorAttributeService vendorAttributeService,
             IWorkContext workContext)
         {
+            _attributeParser = attributeParser;
+            _attributeService = attributeService;
             _htmlFormatter = htmlFormatter;
             _localizationService = localizationService;
-            _vendorAttributeParser = vendorAttributeParser;
-            _vendorAttributeService = vendorAttributeService;
             _workContext = workContext;
         }
 
@@ -43,50 +47,62 @@ namespace Nop.Services.Vendors
         #region Methods
 
         /// <summary>
-        /// Format vendor attributes
+        /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the formatted attributes
+        /// The task result contains the attributes
         /// </returns>
-        public virtual async Task<string> FormatAttributesAsync(string attributesXml, string separator = "<br />", bool htmlEncode = true)
+        public virtual async Task<string> FormatAttributesAsync(string attributesXml,
+            string separator = "<br />",
+            bool htmlEncode = true)
         {
             var result = new StringBuilder();
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-            var attributes = await _vendorAttributeParser.ParseVendorAttributesAsync(attributesXml);
+            var attributes = await _attributeParser.ParseAttributesAsync(attributesXml);
+
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
-                var valuesStr = _vendorAttributeParser.ParseValues(attributesXml, attribute.Id);
+                var valuesStr = _attributeParser.ParseValues(attributesXml, attribute.Id);
+
                 for (var j = 0; j < valuesStr.Count; j++)
                 {
                     var valueStr = valuesStr[j];
                     var formattedAttribute = string.Empty;
-                    if (!attribute.ShouldHaveValues())
+
+                    if (!attribute.ShouldHaveValues)
                     {
                         //no values
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
+                            var attributeName =
+                                await _localizationService.GetLocalizedAsync(attribute, a => a.Name,
+                                    currentLanguage.Id);
+
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false, false)}";
+
+                            formattedAttribute =
+                                $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            //not supported for vendor attributes
+                            //not supported for this attributes
                         }
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
+                            formattedAttribute =
+                                $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {valueStr}";
+
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -96,22 +112,24 @@ namespace Nop.Services.Vendors
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(attributeValueId);
+                            var attributeValue = await _attributeService.GetAttributeValueByIdAsync(attributeValueId);
+
                             if (attributeValue != null)
-                            {
-                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
-                            }
+                                formattedAttribute =
+                                    $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 
-                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                    if (string.IsNullOrEmpty(formattedAttribute))
                         continue;
 
                     if (i != 0 || j != 0)
                         result.Append(separator);
+
                     result.Append(formattedAttribute);
                 }
             }

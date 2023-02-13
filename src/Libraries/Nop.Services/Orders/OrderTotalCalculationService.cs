@@ -11,6 +11,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -30,7 +31,7 @@ namespace Nop.Services.Orders
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAddressService _addressService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
         private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -57,7 +58,7 @@ namespace Nop.Services.Orders
 
         public OrderTotalCalculationService(CatalogSettings catalogSettings,
             IAddressService addressService,
-            ICheckoutAttributeParser checkoutAttributeParser,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
             ICustomerService customerService,
             IDiscountService discountService,
             IGenericAttributeService genericAttributeService,
@@ -864,7 +865,7 @@ namespace Nop.Services.Orders
             {
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
-                var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+                var attributeValues = _checkoutAttributeParser.ParseAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
                     await foreach (var (attribute, values) in attributeValues)

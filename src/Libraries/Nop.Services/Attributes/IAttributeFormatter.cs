@@ -1,11 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Attributes;
 
-namespace Nop.Services.Common
+namespace Nop.Services.Attributes
 {
     /// <summary>
-    /// Checkout attribute helper
+    /// Represents an attribute formatter
     /// </summary>
-    public partial interface IAddressAttributeFormatter
+    /// <typeparam name="TAttribute">Type of the attribute (see <see cref="BaseAttribute"/>)</typeparam>
+    /// <typeparam name="TAttributeValue">Type of the attribute value (see <see cref="BaseAttributeValue"/>)</typeparam>
+    public partial interface IAttributeFormatter<TAttribute, TAttributeValue>
+        where TAttribute : BaseAttribute
+        where TAttributeValue : BaseAttributeValue
     {
         /// <summary>
         /// Formats attributes
@@ -18,7 +23,7 @@ namespace Nop.Services.Common
         /// The task result contains the attributes
         /// </returns>
         Task<string> FormatAttributesAsync(string attributesXml,
-            string separator = "<br />", 
+            string separator = "<br />",
             bool htmlEncode = true);
     }
 }

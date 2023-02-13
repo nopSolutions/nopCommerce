@@ -159,6 +159,7 @@ namespace Nop.Data.Extensions
             var propertiesToAutoMap = type
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
                 .Where(pi => pi.DeclaringType != typeof(BaseEntity) &&
+                pi.CanWrite &&
                 !pi.HasAttribute<NotMappedAttribute>() && !pi.HasAttribute<NotColumnAttribute>() &&
                 !expression.Columns.Any(x => x.Name.Equals(NameCompatibilityManager.GetColumnName(type, pi.Name), StringComparison.OrdinalIgnoreCase)) &&
                 TypeMapping.ContainsKey(GetTypeToMap(pi.PropertyType).propType));

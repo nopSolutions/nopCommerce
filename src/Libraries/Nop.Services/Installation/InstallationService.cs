@@ -3593,14 +3593,14 @@ namespace Nop.Services.Installation
                     PriceAdjustment = 0,
                     DisplayOrder = 1,
                     IsPreSelected = true,
-                    CheckoutAttributeId = ca1.Id
+                    AttributeId = ca1.Id
                 },
                 new CheckoutAttributeValue
                 {
                     Name = "Yes",
                     PriceAdjustment = 10,
                     DisplayOrder = 2,
-                    CheckoutAttributeId = ca1.Id
+                    AttributeId = ca1.Id
                 });
         }
 

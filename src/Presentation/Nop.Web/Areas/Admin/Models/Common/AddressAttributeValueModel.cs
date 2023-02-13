@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         #region Properties
 
-        public int AddressAttributeId { get; set; }
+        public int AttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
         public string Name { get; set; }

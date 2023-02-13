@@ -24,6 +24,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -56,15 +57,15 @@ namespace Nop.Services.ExportImport
 
         private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IAddressService _addressService;
+        private readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -103,15 +104,15 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
-            ICustomerActivityService customerActivityService,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
             IAddressService addressService,
+            IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> customerAttributeFormatter,
             ICategoryService categoryService,
             ICountryService countryService,
             ICurrencyService currencyService,
-            ICustomerAttributeFormatter customerAttributeFormatter,
+            ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
@@ -146,15 +147,15 @@ namespace Nop.Services.ExportImport
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
-            _customerActivityService = customerActivityService;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
+            _customerAttributeFormatter = customerAttributeFormatter;
             _forumSettings = forumSettings;
             _categoryService = categoryService;
             _countryService = countryService;
             _currencyService = currencyService;
-            _customerAttributeFormatter = customerAttributeFormatter;
+            _customerActivityService = customerActivityService;
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;

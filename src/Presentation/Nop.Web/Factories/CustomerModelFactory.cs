@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
@@ -52,10 +53,10 @@ namespace Nop.Web.Factories
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
+        private readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICountryService _countryService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
@@ -95,10 +96,10 @@ namespace Nop.Web.Factories
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             IAddressModelFactory addressModelFactory,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
+            IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             IAuthenticationPluginManager authenticationPluginManager,
             ICountryService countryService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
@@ -135,10 +136,10 @@ namespace Nop.Web.Factories
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
             _addressModelFactory = addressModelFactory;
-            _authenticationPluginManager = authenticationPluginManager;
-            _countryService = countryService;
             _customerAttributeParser = customerAttributeParser;
             _customerAttributeService = customerAttributeService;
+            _authenticationPluginManager = authenticationPluginManager;
+            _countryService = countryService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _gdprService = gdprService;
@@ -982,7 +983,7 @@ namespace Nop.Web.Factories
 
             var result = new List<CustomerAttributeModel>();
 
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var customerAttributes = await _customerAttributeService.GetAllAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerAttributeModel
@@ -993,10 +994,10 @@ namespace Nop.Web.Factories
                     AttributeControlType = attribute.AttributeControlType,
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new CustomerAttributeValueModel
@@ -1029,7 +1030,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
+                                var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)

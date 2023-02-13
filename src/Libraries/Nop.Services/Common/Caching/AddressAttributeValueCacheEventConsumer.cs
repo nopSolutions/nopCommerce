@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
+using Nop.Services.Attributes;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Common.Caching
@@ -16,7 +17,7 @@ namespace Nop.Services.Common.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(AddressAttributeValue entity)
         {
-            await RemoveAsync(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, entity.AddressAttributeId);
+            await RemoveAsync(NopAttributeDefaults.AttributeValuesByAttributeCacheKey, nameof(AddressAttribute), entity.AttributeId);
         }
     }
 }

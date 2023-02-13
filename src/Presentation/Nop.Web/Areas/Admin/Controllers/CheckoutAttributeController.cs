@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Attributes;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
@@ -26,9 +26,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICheckoutAttributeModelFactory _checkoutAttributeModelFactory;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
@@ -45,9 +45,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public CheckoutAttributeController(CurrencySettings currencySettings,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICheckoutAttributeModelFactory checkoutAttributeModelFactory,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
@@ -60,9 +60,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             MeasureSettings measureSettings)
         {
             _currencySettings = currencySettings;
-            _checkoutAttributeModelFactory = checkoutAttributeModelFactory;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeModelFactory = checkoutAttributeModelFactory;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task SaveStoreMappingsAsync(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
-            await _checkoutAttributeService.UpdateCheckoutAttributeAsync(checkoutAttribute);
+            await _checkoutAttributeService.UpdateAttributeAsync(checkoutAttribute);
 
             var existingStoreMappings =await _storeMappingService.GetStoreMappingsAsync(checkoutAttribute);
             var allStores = await _storeService.GetAllStoresAsync();
@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (model.ConditionModel.EnableCondition)
             {
-                var attribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(model.ConditionModel.SelectedAttributeId);
+                var attribute = await _checkoutAttributeService.GetAttributeByIdAsync(model.ConditionModel.SelectedAttributeId);
                 if (attribute != null)
                 {
                     switch (attribute.AttributeControlType)
@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 //for conditions we should empty values save even when nothing is selected
                                 //otherwise "attributesXml" will be empty
                                 //hence we won't be able to find a selected attribute
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(null, attribute, string.IsNullOrEmpty(selectedValue) ? string.Empty : selectedValue);
+                                attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.IsNullOrEmpty(selectedValue) ? string.Empty : selectedValue);
                             }
                             break;
                         case AttributeControlType.Checkboxes:
@@ -173,9 +173,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                                 if (selectedValues?.Any() ?? false)
                                     foreach (var value in selectedValues)
-                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, value);
+                                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml, attribute, value);
                                 else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(null, attribute, string.Empty);
+                                    attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.Empty);
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
@@ -245,7 +245,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var checkoutAttribute = model.ToEntity<CheckoutAttribute>();
-                await _checkoutAttributeService.InsertCheckoutAttributeAsync(checkoutAttribute);
+                await _checkoutAttributeService.InsertAttributeAsync(checkoutAttribute);
 
                 //locales
                 await UpdateAttributeLocalesAsync(checkoutAttribute, model);
@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(id);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(id);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -295,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(model.Id);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(model.Id);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -303,7 +303,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
                 await SaveConditionAttributesAsync(checkoutAttribute, model);
-                await _checkoutAttributeService.UpdateCheckoutAttributeAsync(checkoutAttribute);
+                await _checkoutAttributeService.UpdateAttributeAsync(checkoutAttribute);
 
                 //locales
                 await UpdateAttributeLocalesAsync(checkoutAttribute, model);
@@ -337,11 +337,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(id);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(id);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
-            await _checkoutAttributeService.DeleteCheckoutAttributeAsync(checkoutAttribute);
+            await _checkoutAttributeService.DeleteAttributeAsync(checkoutAttribute);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("DeleteCheckoutAttribute",
@@ -361,8 +361,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var checkoutAttributes = await _checkoutAttributeService.GetCheckoutAttributeByIdsAsync(selectedIds.ToArray());
-            await _checkoutAttributeService.DeleteCheckoutAttributesAsync(checkoutAttributes);
+            var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync(selectedIds.ToArray());
+            await _checkoutAttributeService.DeleteAttributesAsync(checkoutAttributes);
 
             foreach (var checkoutAttribute in checkoutAttributes)
             {
@@ -385,7 +385,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return await AccessDeniedDataTablesJson();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(searchModel.CheckoutAttributeId)
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(searchModel.CheckoutAttributeId)
                 ?? throw new ArgumentException("No checkout attribute found with the specified id");
 
             //prepare model
@@ -400,7 +400,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(checkoutAttributeId);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -418,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(model.CheckoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(model.AttributeId);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -445,7 +445,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var checkoutAttributeValue = model.ToEntity<CheckoutAttributeValue>();
-                await _checkoutAttributeService.InsertCheckoutAttributeValueAsync(checkoutAttributeValue);
+                await _checkoutAttributeService.InsertAttributeValueAsync(checkoutAttributeValue);
 
                 await UpdateValueLocalesAsync(checkoutAttributeValue, model);
 
@@ -467,12 +467,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute value with the specified id
-            var checkoutAttributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id);
+            var checkoutAttributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(id);
             if (checkoutAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeValue.CheckoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(checkoutAttributeValue.AttributeId);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -489,12 +489,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute value with the specified id
-            var checkoutAttributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(model.Id);
+            var checkoutAttributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(model.Id);
             if (checkoutAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeValue.CheckoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(checkoutAttributeValue.AttributeId);
             if (checkoutAttribute == null)
                 return RedirectToAction("List");
 
@@ -521,7 +521,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 checkoutAttributeValue = model.ToEntity(checkoutAttributeValue);
-                await _checkoutAttributeService.UpdateCheckoutAttributeValueAsync(checkoutAttributeValue);
+                await _checkoutAttributeService.UpdateAttributeValueAsync(checkoutAttributeValue);
 
                 await UpdateValueLocalesAsync(checkoutAttributeValue, model);
 
@@ -544,10 +544,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a checkout attribute value with the specified id
-            var checkoutAttributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id)
+            var checkoutAttributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No checkout attribute value found with the specified id", nameof(id));
 
-            await _checkoutAttributeService.DeleteCheckoutAttributeValueAsync(checkoutAttributeValue);
+            await _checkoutAttributeService.DeleteAttributeValueAsync(checkoutAttributeValue);
 
             return new NullJsonResult();
         }

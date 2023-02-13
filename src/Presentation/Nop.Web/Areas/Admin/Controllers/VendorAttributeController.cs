@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
@@ -19,33 +19,33 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
-        private readonly IVendorAttributeService _vendorAttributeService;
-
+        
         #endregion
 
         #region Ctor
 
-        public VendorAttributeController(ICustomerActivityService customerActivityService,
+        public VendorAttributeController(IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
+            ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IVendorAttributeModelFactory vendorAttributeModelFactory,
-            IVendorAttributeService vendorAttributeService)
+            IVendorAttributeModelFactory vendorAttributeModelFactory)
         {
+            _vendorAttributeService = vendorAttributeService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _vendorAttributeModelFactory = vendorAttributeModelFactory;
-            _vendorAttributeService = vendorAttributeService;
         }
 
         #endregion
@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var vendorAttribute = model.ToEntity<VendorAttribute>();
-                await _vendorAttributeService.InsertVendorAttributeAsync(vendorAttribute);
+                await _vendorAttributeService.InsertAttributeAsync(vendorAttribute);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("AddNewVendorAttribute",
@@ -154,7 +154,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(id);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
@@ -171,14 +171,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(model.Id);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(model.Id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 vendorAttribute = model.ToEntity(vendorAttribute);
-                await _vendorAttributeService.UpdateVendorAttributeAsync(vendorAttribute);
+                await _vendorAttributeService.UpdateAttributeAsync(vendorAttribute);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("EditVendorAttribute",
@@ -208,11 +208,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(id);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
-            await _vendorAttributeService.DeleteVendorAttributeAsync(vendorAttribute);
+            await _vendorAttributeService.DeleteAttributeAsync(vendorAttribute);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("DeleteVendorAttribute",
@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return await AccessDeniedDataTablesJson();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(searchModel.VendorAttributeId)
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(searchModel.VendorAttributeId)
                 ?? throw new ArgumentException("No vendor attribute found with the specified id");
 
             //prepare model
@@ -249,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(vendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(vendorAttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
@@ -266,7 +266,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(model.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(model.AttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
@@ -274,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var value = model.ToEntity<VendorAttributeValue>();
 
-                await _vendorAttributeService.InsertVendorAttributeValueAsync(value);
+                await _vendorAttributeService.InsertAttributeValueAsync(value);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("AddNewVendorAttributeValue",
@@ -301,12 +301,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var vendorAttributeValue = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(id);
+            var vendorAttributeValue = await _vendorAttributeService.GetAttributeValueByIdAsync(id);
             if (vendorAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(vendorAttributeValue.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(vendorAttributeValue.AttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
@@ -323,19 +323,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var vendorAttributeValue = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(model.Id);
+            var vendorAttributeValue = await _vendorAttributeService.GetAttributeValueByIdAsync(model.Id);
             if (vendorAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(vendorAttributeValue.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(vendorAttributeValue.AttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 vendorAttributeValue = model.ToEntity(vendorAttributeValue);
-                await _vendorAttributeService.UpdateVendorAttributeValueAsync(vendorAttributeValue);
+                await _vendorAttributeService.UpdateAttributeValueAsync(vendorAttributeValue);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("EditVendorAttributeValue",
@@ -363,10 +363,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var value = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(id)
+            var value = await _vendorAttributeService.GetAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No vendor attribute value found with the specified id", nameof(id));
 
-            await _vendorAttributeService.DeleteVendorAttributeValueAsync(value);
+            await _vendorAttributeService.DeleteAttributeValueAsync(value);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("DeleteVendorAttributeValue",

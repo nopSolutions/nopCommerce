@@ -21,6 +21,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
+using Nop.Services.Attributes;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -60,16 +61,16 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly HtmlEncoder _htmlEncoder;
-        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
+        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        private readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
+        private readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerModelFactory _customerModelFactory;
+       private readonly ICustomerModelFactory _customerModelFactory;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
         private readonly IDownloadService _downloadService;
@@ -111,15 +112,15 @@ namespace Nop.Web.Controllers
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             HtmlEncoder htmlEncoder,
-            IAddressAttributeParser addressAttributeParser,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
+            IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
+            IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             IAuthenticationService authenticationService,
             ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             ICustomerModelFactory customerModelFactory,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
@@ -158,15 +159,15 @@ namespace Nop.Web.Controllers
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
             _htmlEncoder = htmlEncoder;
-            _addressAttributeParser = addressAttributeParser;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
+            _addressAttributeParser = addressAttributeParser;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
             _authenticationService = authenticationService;
             _countryService = countryService;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
             _customerModelFactory = customerModelFactory;
             _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
@@ -247,7 +248,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = "";
-            var attributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var attributes = await _customerAttributeService.GetAllAttributesAsync();
             foreach (var attribute in attributes)
             {
                 var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
@@ -261,7 +262,7 @@ namespace Nop.Web.Controllers
                             {
                                 var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -275,7 +276,7 @@ namespace Nop.Web.Controllers
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                        attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -284,13 +285,13 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                            var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -302,7 +303,7 @@ namespace Nop.Web.Controllers
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
                                 var enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -1480,7 +1481,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1555,7 +1556,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

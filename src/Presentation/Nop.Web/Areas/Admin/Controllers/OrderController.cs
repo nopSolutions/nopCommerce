@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -39,8 +41,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressService _addressService;
+        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -75,8 +77,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public OrderController(IAddressAttributeParser addressAttributeParser,
-            IAddressService addressService,
+        public OrderController(IAddressService addressService,
+            IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
@@ -107,8 +109,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             OrderSettings orderSettings)
         {
-            _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
+            _addressAttributeParser = addressAttributeParser;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
@@ -1832,7 +1834,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
