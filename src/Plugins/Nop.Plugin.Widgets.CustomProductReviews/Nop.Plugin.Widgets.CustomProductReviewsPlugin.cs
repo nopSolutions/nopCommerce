@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Azure;
+using Nop.Core;
 using Nop.Core.Domain.Cms;
+using Nop.Plugin.Widgets.CustomCustomProductReviews.Services;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -29,6 +31,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
 
 
@@ -41,7 +44,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext)
         {
             _customProdutReviewSettings = customProdutReviewSettings;
             _actionContextAccessor = actionContextAccessor;
@@ -49,6 +52,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             _settingService = settingService;
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -94,7 +98,13 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
-        {   
+        {
+            var store =await _storeContext.GetCurrentStoreAsync();
+            string host=store.Hosts;
+            host = EncryptService.Encrypt(host);
+            var version = "1.0.0";
+            version = "CustomProductReviews" + " " + version;
+            version= EncryptService.Encrypt(version);
             //settings
             await _settingService.SaveSettingAsync(new CustomProductReviewsSettings
             {
