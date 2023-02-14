@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Topic template search model</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic template list model
+        /// The task result contains the topic template list model
         /// </returns>
         public virtual async Task<TopicTemplateListModel> PrepareTopicTemplateListModelAsync(TopicTemplateSearchModel searchModel)
         {
@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Topic template search model</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic template search model
+        /// The task result contains the topic template search model
         /// </returns>
         public virtual Task<TopicTemplateSearchModel> PrepareTopicTemplateSearchModelAsync(TopicTemplateSearchModel searchModel)
         {

@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Topic search model</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic search model
+        /// The task result contains the topic search model
         /// </returns>
         public virtual async Task<TopicSearchModel> PrepareTopicSearchModelAsync(TopicSearchModel searchModel)
         {
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Topic search model</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic list model
+        /// The task result contains the topic list model
         /// </returns>
         public virtual async Task<TopicListModel> PrepareTopicListModelAsync(TopicSearchModel searchModel)
         {
@@ -143,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelAsync(TopicModel model, Topic topic, bool excludeProperties = false)
         {

@@ -66,7 +66,7 @@ namespace Nop.Services.Topics
         /// <param name="topicId">The topic identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic
+        /// The task result contains the topic
         /// </returns>
         public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
         {
@@ -162,7 +162,7 @@ namespace Nop.Services.Topics
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opics
+        /// The task result contains the topics
         /// </returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, string keywords,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
