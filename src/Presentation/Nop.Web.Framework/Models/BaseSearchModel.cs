@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.Models
         public string Draw { get; set; }
 
         /// <summary>
-        /// Gets or sets skiping number of rows count. Paging first record indicator.
+        /// Gets or sets skipping number of rows count. Paging first record indicator.
         /// </summary>
         public int Start { get; set; }
 
