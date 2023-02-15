@@ -85,7 +85,7 @@ namespace Nop.Plugin.Misc.AbcCore.CustomNop
             // ABC: overriding here
             var configuration = new
             {
-                FILES_ROOT = "images/uploaded/Bricks",
+                FILES_ROOT = "images/uploaded/default",
                 SESSION_PATH_KEY = existingConfiguration?.SESSION_PATH_KEY ?? string.Empty,
                 THUMBS_VIEW_WIDTH = existingConfiguration?.THUMBS_VIEW_WIDTH ?? "140",
                 THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",
