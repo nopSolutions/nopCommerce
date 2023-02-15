@@ -12,8 +12,7 @@ namespace Nop.Plugin.Misc.AbcCore
         public bool IsDebugMode { get; private set; }
         public string MobilePhoneNumber { get; private set; }
         public string GoogleMapsGeocodingAPIKey { get; private set; }
-
-        public bool IsPickupOnlyMode { get; private set; }
+        public bool IsFedExMode { get; private set; }
 
         public bool IsValid()
         {
@@ -31,7 +30,7 @@ namespace Nop.Plugin.Misc.AbcCore
                 IsDebugMode = model.IsDebugMode,
                 MobilePhoneNumber = model.MobilePhoneNumber,
                 GoogleMapsGeocodingAPIKey = model.GoogleMapsGeocodingAPIKey,
-                IsPickupOnlyMode = model.IsPickupOnlyMode
+                IsFedExMode = model.IsFedExMode
             };
         }
 
@@ -44,7 +43,7 @@ namespace Nop.Plugin.Misc.AbcCore
                 IsDebugMode = IsDebugMode,
                 MobilePhoneNumber = MobilePhoneNumber,
                 GoogleMapsGeocodingAPIKey = GoogleMapsGeocodingAPIKey,
-                IsPickupOnlyMode = IsPickupOnlyMode
+                IsFedExMode = IsFedExMode
             };
         }
         public OdbcConnection GetBackendDbConnection()

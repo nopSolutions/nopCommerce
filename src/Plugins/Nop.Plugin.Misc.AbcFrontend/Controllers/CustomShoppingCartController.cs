@@ -216,6 +216,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             ProductAttributeMapping hdProductAttribute = null;
             ProductAttributeMapping pickupProductAttribute = null;
+            ProductAttributeMapping fedExProductAttribute = null;
 
             var pams =  await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
 
@@ -231,23 +232,20 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                     case "Pickup":
                         pickupProductAttribute = pam;
                         break;
+                    case "FedEx":
+                        fedExProductAttribute = pam;
+                        break;
                 }
             }
 
             // ABC: set up for Pickup only mode - force redirect to PDP
-            if (pickupProductAttribute != null && _coreSettings.IsPickupOnlyMode)
+            if (pickupProductAttribute != null && (_coreSettings.IsFedExMode && fedExProductAttribute == null))
             {
                 return Json(new
                 {
                     redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
                 });
             }
-
-            // home delivery is default, so if it is home delivered, add the attribute no matter what
-            // if (hdProductAttribute != null)
-            // {
-            //     attributes = await _attributeUtilities.InsertHomeDeliveryAttributeAsync(product, attributes);
-            // }
 
             //-------------------------------------END CUSTOM CODE------------------------------------------
 

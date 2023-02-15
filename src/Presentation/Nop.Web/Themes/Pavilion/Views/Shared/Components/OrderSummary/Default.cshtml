@@ -46,7 +46,7 @@
                                     Model.Items.FirstOrDefault(i => i.Warnings.Contains("Please remove item from cart to continue.")) != null;
 
     Html.AddCssFileParts("~/Plugins/AbcWarehouse.HomeDeliveryStatusWidget/Content/loading.css");
-    var isPickupModeOnly = await settingService.GetSettingByKeyAsync<bool>("coresettings.ispickuponlymode");
+    var isFedExMode = await settingService.GetSettingByKeyAsync<bool>("coresettings.isfedexmode");
 }
 <style>
    .spinner > div {

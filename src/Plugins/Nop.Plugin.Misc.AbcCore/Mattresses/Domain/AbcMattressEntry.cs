@@ -50,7 +50,7 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses.Domain
                     return 41;
                 case "California King":
                     return 50;
-                case "California King-Flexhead":
+                case "Cal/King-Flexhead":
                     return 51;
                 default:
                     throw new ArgumentException("Invalid mattress size provided.");

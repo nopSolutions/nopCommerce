@@ -63,6 +63,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 AdditionalFee = manualPaymentSettings.AdditionalFee,
                 AdditionalFeePercentage = manualPaymentSettings.AdditionalFeePercentage,
                 TransactModeValues = await manualPaymentSettings.TransactMode.ToSelectListAsync(),
+                AbcCustomCardName = manualPaymentSettings.AbcCustomCardName,
                 ActiveStoreScopeConfiguration = storeScope
             };
             if (storeScope > 0)
@@ -92,6 +93,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             manualPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
             manualPaymentSettings.AdditionalFee = model.AdditionalFee;
             manualPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+            manualPaymentSettings.AbcCustomCardName = model.AbcCustomCardName;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -100,7 +102,8 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             await _settingService.SaveSettingOverridablePerStoreAsync(manualPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(manualPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(manualPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
-            
+            await _settingService.SaveSettingOverridablePerStoreAsync(manualPaymentSettings, x => x.AbcCustomCardName, model.AbcCustomCardName_OverrideForStore, storeScope, false);
+
             //now clear settings cache
             await _settingService.ClearCacheAsync();
 

@@ -195,8 +195,8 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header.",
                     [CoreLocales.GoogleMapsGeocodingAPIKey] = "Google Maps Geocoding API Key",
                     [CoreLocales.GoogleMapsGeocodingAPIKeyHint] = "API key for handling geocoding services, including delivery options/pickup in store.",
-                    [CoreLocales.IsPickupOnlyMode] = "Pickup Only Mode",
-                    [CoreLocales.IsPickupOnlyModeHint] = "Turns on pick-up only mode."
+                    [CoreLocales.IsFedExMode] = "FedEx Mode",
+                    [CoreLocales.IsFedExModeHint] = "Turns on FedEx mode (products require 'FedEx' attribute for delivery, intended for Mickey)."
                 }
             );
         }

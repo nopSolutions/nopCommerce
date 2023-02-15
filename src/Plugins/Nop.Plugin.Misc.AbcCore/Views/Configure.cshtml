@@ -54,11 +54,12 @@
 							<div class="col-md-9">
 								<nop-editor asp-for="GoogleMapsGeocodingAPIKey" />
 								<span asp-validation-for="GoogleMapsGeocodingAPIKey"></span>
-								<nop-label asp-for="IsPickupOnlyMode" />
+                            <div class="col-md-3">
+								<nop-label asp-for="IsFedExMode" />
 							</div>
 							<div class="col-md-9">
-								<nop-editor asp-for="IsPickupOnlyMode" />
-								<span asp-validation-for="IsPickupOnlyMode"></span>
+								<nop-editor asp-for="IsFedExMode" />
+								<span asp-validation-for="IsFedExMode"></span>
 							</div>
 						</div>
 						<div class="form-group row">

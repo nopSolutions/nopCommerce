@@ -18,8 +18,8 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         [NopResourceDisplayName(CoreLocales.GoogleMapsGeocodingAPIKey)]
         public string GoogleMapsGeocodingAPIKey { get; set; }
-        
-        [NopResourceDisplayName(CoreLocales.IsPickupOnlyMode)]
-        public bool IsPickupOnlyMode { get; set; }
+
+        [NopResourceDisplayName(CoreLocales.IsFedExMode)]
+        public bool IsFedExMode { get; set; }
     }
 }

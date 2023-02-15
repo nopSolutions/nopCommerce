@@ -139,6 +139,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
                 "Pickup",
                 "Haul Away (Delivery)",
                 "Haul Away (Delivery/Install)"
+                "FedEx"
             }.Contains(m.Name)).ToList();
         }
 

@@ -8,6 +8,10 @@ namespace Nop.Plugin.Payments.Manual.Models
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AbcCustomCardName")]
+        public string AbcCustomCardName { get; set; }
+        public bool AbcCustomCardName_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }

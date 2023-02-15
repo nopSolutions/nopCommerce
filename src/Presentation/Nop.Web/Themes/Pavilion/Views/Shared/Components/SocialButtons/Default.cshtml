@@ -12,6 +12,8 @@
     var instagramUrl = await settingService.GetSettingByKeyAsync("pavilionthemesettings.instagramurl", String.Empty, storeId, true);
     var pinterestUrl = await settingService.GetSettingByKeyAsync("pavilionthemesettings.pinteresturl", String.Empty, storeId, true);
     var vimeoUrl = await settingService.GetSettingByKeyAsync("pavilionthemesettings.vimeourl", String.Empty, storeId, true);
+    var linkedInUrl = await settingService.GetSettingByKeyAsync("pavilionthemesettings.linkedinurl", String.Empty, storeId, true);
+    var tikTokUrl = await settingService.GetSettingByKeyAsync("pavilionthemesettings.tiktokurl", String.Empty, storeId, true);
 }
 
 <ul class="social-sharing">
@@ -42,5 +44,13 @@
     @if (Model.NewsEnabled)
     {
         <li class="rss"><a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})" aria-label="@T("Footer.FollowUs.RSS")"></a></li>
+    }
+    @if (!string.IsNullOrEmpty(linkedInUrl))
+    {
+        <li class="linkedin"><a target="_blank" href="@linkedInUrl" rel="noopener noreferrer" aria-label="LinkedIn"></a></li>
+    }
+    @if (!string.IsNullOrEmpty(tikTokUrl))
+    {
+        <li class="tiktok"><a target="_blank" href="@tikTokUrl" rel="noopener noreferrer" aria-label="TikTok"></a></li>
     }
 </ul>

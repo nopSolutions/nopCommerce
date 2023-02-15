@@ -21,5 +21,7 @@ namespace Nop.Plugin.Payments.Manual
         /// Gets or sets an additional fee
         /// </summary>
         public decimal AdditionalFee { get; set; }
+
+        public string AbcCustomCardName { get; set; }
     }
 }

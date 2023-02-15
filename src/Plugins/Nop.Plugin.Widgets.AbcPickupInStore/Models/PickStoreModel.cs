@@ -9,6 +9,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Models
         public Shop SelectedShop { get; set; }
         public string PickupInStoreText { get; set; }
         public string GoogleMapsAPIKey { get; set; }
-        public bool IsPickupOnlyMode { get; set; }
+        public bool IsFedExMode { get; set; }
+        public bool HasFedExAttribute { get; set; }
     }
 }
