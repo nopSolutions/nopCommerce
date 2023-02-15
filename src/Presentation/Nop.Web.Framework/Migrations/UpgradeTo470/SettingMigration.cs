@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -25,6 +26,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
             {
                 customerSettings.PasswordMaxLength = 64;
                 settingService.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
+            }
+
+            var securitySettings = settingService.LoadSetting<SecuritySettings>();
+            if (!settingService.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
+            {
+                securitySettings.UseAesEncryptionAlgorithm = false;
+                settingService.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
             }
         }
 
