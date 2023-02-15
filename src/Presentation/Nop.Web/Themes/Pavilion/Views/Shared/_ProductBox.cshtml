@@ -451,7 +451,7 @@
                     <input type="hidden" name="size" value="@mattressSize" /> 
                 </form>
             }
-            else if (hasDeliveryOptions)
+            else if (hasDeliveryOptions && !Model.ProductPrice.DisableBuyButton)
             {
                 <button type="button"
                         class="button-2 product-box-add-to-cart-button"
