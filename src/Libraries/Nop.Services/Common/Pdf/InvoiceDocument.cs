@@ -120,7 +120,7 @@ namespace Nop.Services.Common.Pdf
 
                 var logoContainer = row.ConstantItem(65).Height(65);
 
-                if (Source.LogoData is not null)
+                if (Source.LogoData is not null && Source.LogoData.Length != 0)
                     logoContainer.Image(Source.LogoData, ImageScaling.FitArea);
             });
         }
