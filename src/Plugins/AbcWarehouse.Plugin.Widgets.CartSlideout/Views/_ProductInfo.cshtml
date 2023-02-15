@@ -1,6 +1,13 @@
 @model AbcWarehouse.Plugin.Widgets.CartSlideout.Models.ProductInfoModel;
 
-<img id="cart-slideout__product-image" src="@Model.ImageUrl" style="float: left; padding-right: 0.5rem; max-width: 120px; max-height: 100px" />
-<div id="cart-slideout__product-name">@Model.Name</div>
-<div id="cart-slideout__product-description">@Model.Description</div>
-<div id="cart-slideout__product-price" style="margin-top: 0.25rem;">@Model.Price</div>
+<img id="cart-slideout__product-image" src="@Model.ImageUrl" style="max-width: 120px; max-height: 100px" />
+<div id="cart-slideout__product-info-description">
+    <div id="cart-slideout__product-name">@Model.Name</div>
+    <div id="cart-slideout__product-description">@Model.Description</div>
+    <br>
+    @if (!string.IsNullOrWhiteSpace(Model.OldPrice))
+    {
+        <div id="cart-slideout__product-price" style="text-decoration: line-through">@Model.OldPrice</div>
+    }
+    <div id="cart-slideout__product-price" style="font-weight: bold; color: #bb1b1b">@Model.Price</div>
+</div>

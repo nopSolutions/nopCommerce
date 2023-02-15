@@ -48,64 +48,15 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             if (await product.IsAddToCartToSeePriceAsync())
             {
                 return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", (
-                    await _priceFormatter.FormatPriceAsync(0M),
-                    await _priceFormatter.FormatPriceAsync(0M),
                     "Add to Cart to See Price"
                 ));
             }
 
-            decimal delivery = 0M;
-            decimal warranty = 0M;
             decimal unitPrice = (await _shoppingCartService.GetUnitPriceAsync(sci, false)).unitPrice;
-            var attributesXml = sci.AttributesXml;
-            var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml);
-            ProductAttributeMapping deliveryPam = null;
-            ProductAttributeMapping haulawayPam = null;
-            ProductAttributeMapping warrantyPam = null;
-            foreach (var pam in pams)
-            {
-                var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
-                switch (pa.Name)
-                {
-                    case AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName:
-                        deliveryPam = pam;
-                        break;
-                    case AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName:
-                    case AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName:
-                        haulawayPam = pam;
-                        break;
-                    case AbcDeliveryConsts.WarrantyProductAttributeName:
-                        warrantyPam = pam;
-                        break;
-                }
-            }
-
-            if (deliveryPam != null)
-            {
-                var pav = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, deliveryPam.Id)).FirstOrDefault();
-                var priceAdjustment = pav.PriceAdjustment;
-                delivery = priceAdjustment;
-            }
-
-            if (haulawayPam != null)
-            {
-                var pav = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, haulawayPam.Id)).FirstOrDefault();
-                var priceAdjustment = pav.PriceAdjustment;
-                delivery += priceAdjustment;
-            }
-
-            if (warrantyPam != null)
-            {
-                var pav = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, warrantyPam.Id)).FirstOrDefault();
-                var priceAdjustment = pav.PriceAdjustment;
-                warranty = priceAdjustment;
-            }
 
             string subtotal = $"Subtotal: {await _priceFormatter.FormatPriceAsync(unitPrice)}";
 
             return View("~/Plugins/Widgets.CartSlideout/Views/_Subtotal.cshtml", (
-                await _priceFormatter.FormatPriceAsync(delivery),
-                await _priceFormatter.FormatPriceAsync(warranty),
                 subtotal
             ));
         }

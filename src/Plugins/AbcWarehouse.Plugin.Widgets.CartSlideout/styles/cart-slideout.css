@@ -134,7 +134,8 @@ i.warranty-info {
 }
 
 .cart-slideout__product-info {
-    padding: 1rem 0 3rem 0;
+    display: flex;
+    padding: 1rem 0 1rem 0;
 }
 
 .cart-slideout__product-name {
