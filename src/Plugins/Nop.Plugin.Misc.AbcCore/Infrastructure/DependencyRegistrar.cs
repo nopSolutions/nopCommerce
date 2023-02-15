@@ -12,7 +12,6 @@ using Nop.Plugin.Misc.AbcCore.Factories;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
 using Nop.Web.Factories;
 using Nop.Services.Media.RoxyFileman;
-using Nop.Plugin.Misc.AbcCore.CustomNop;
 
 namespace Nop.Plugin.Misc.AbcCore.Infrastructure
 {
@@ -61,7 +60,6 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<ICustomManufacturerService, CustomManufacturerService>();
             services.AddScoped<ICustomNopDataProvider, CustomMsSqlDataProvider>();
             services.AddScoped<ArchiveService>();
-            services.AddScoped<IRoxyFilemanService, AbcFileRoxyFilemanService>();
         }
     }
 }

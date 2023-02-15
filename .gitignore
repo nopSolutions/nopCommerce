@@ -245,6 +245,3 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 
 # Automation
 automation/node_modules
-
-# Roxy Fileman override
-src/Presentation/Nop.Web/wwwroot/lib/Roxy_Fileman/conf.json
