@@ -9880,16 +9880,67 @@
     <Value>Check/money order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Configure.Text">
-    <Value><![CDATA[You can configure each payment method by clicking the appropriate <b>Configure</b> button.]]></Value>
+    <Value><![CDATA[You can configure each payment method by clicking the appropriate <b>Configure</b> button. Now we’ll configure the PayPal Commerce payment method.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Configure.Title">
-    <Value>Configure a payment method</Value>
-  </LocaleResource>
+    <Value>Configure PayPal Commerce</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Text">
     <Value><![CDATA[This is a special payment plugin that allows all orders to be successfully entered on the website, but it does NOT really charge a customer or make any calls to any live payment gateway. This payment method is recommended if you want to perform one of the following: <ul><li>Process all orders offline</li><li>Process them manually via another back-office system</li><li>Test the site end-to-end before going live</li></ul>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Title">
     <Value>Credit card (manual)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text">
+    <Value><![CDATA[If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title">
+    <Value>Specify API credentials</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Configured.Text">
+    <Value><![CDATA[These settings are different from the basic ones, you have already configured the PayPal Commerce plugin!]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Configured.Title">
+    <Value>Configured</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text">
+    <Value><![CDATA[After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b> and <b>Secret</b>, and paste them into these fields.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title">
+    <Value>Credentials</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Text">
+    <Value><![CDATA[Choose the <b>Payment type</b> to either capture payment immediately (<b>Capture</b>) or <b>Authorize</b> payment for an order after order creation.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Title">
+    <Value>Payment type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Prominently.Text">
+    <Value><![CDATA[Logos and banners are a great way to let your customers know that you choose PayPal to securely process their payments. This panel allows you to customize the display options for the PayPal buttons and logo on your store pages.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Prominently.Title">
+    <Value>Feature PayPal Prominently</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Text">
+    <Value><![CDATA[Enter your email address and let PayPal check everything out by clicking the <b>Save</b> button.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Text2">
+    <Value><![CDATA[If everything is OK, you will see the green notification and a newly added <b>Sign up for PayPal</b> button. Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Title">
+    <Value>Register an account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text">
+    <Value><![CDATA[Use sandbox if you want to test the payment method first.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title">
+    <Value>Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text">
+    <Value><![CDATA[You have two options to do this: you can either register an account on the PayPal website or you can do this from the plugin configuration page. Let’s register an account from the plugin configuration page.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title">
+    <Value>Create a PayPal account</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Text">
     <Value>You can see all the payment methods (plugins) allowed to use in your store on this page. However, you can always find much more in our marketplace.</Value>
@@ -9898,10 +9949,10 @@
     <Value>Payment methods</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPal.Text">
-    <Value><![CDATA[If you want to process payments online, we’d recommend you to set up the PayPal Smart Payment Buttons payment method. PayPal Checkout with Smart Payment Buttons gives your buyers a simplified and secure checkout experience. Read more about how to set this plugin <a href="{0}" target="_blank">here</a>.]]></Value>
+    <Value><![CDATA[If you want to process payments online, we’d recommend you to set up the PayPal Commerce payment method. PayPal Commerce gives your buyers a simplified and secure checkout experience. Learn how to set this plugin <a href="{0}" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPal.Title">
-    <Value>PayPal Smart Payment Buttons</Value>
+    <Value>PayPal Commerce</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Text">
     <Value><![CDATA[This two-position <b>Basic/Advanced</b> switch allows you to switch between the page display modes. For convenience of use, the most frequent settings are shown in the Basic mode. If you cannot find a required setting on a page, switch to the Advanced mode to see all the available settings.]]></Value>
