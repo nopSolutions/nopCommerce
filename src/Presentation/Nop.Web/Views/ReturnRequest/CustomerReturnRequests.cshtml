@@ -22,6 +22,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerReturnRequests")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerReturnRequestsTop, additionalData = Model })
         @foreach (var item in Model.Items)
         {
             <div class="section request-item">
@@ -67,5 +68,6 @@
                 </ul>
             </div>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerReturnRequestsBottom, additionalData = Model })
     </div>
 </div>
