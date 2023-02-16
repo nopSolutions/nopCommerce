@@ -10,12 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
@@ -59,6 +61,7 @@ namespace Nop.Services.ExportImport
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -86,6 +89,7 @@ namespace Nop.Services.ExportImport
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
+        private readonly SecuritySettings _securitySettings;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -103,6 +107,7 @@ namespace Nop.Services.ExportImport
             ICustomNumberFormatter customNumberFormatter,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
+            IGenericAttributeService genericAttributeService,
             IHttpClientFactory httpClientFactory,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -130,6 +135,7 @@ namespace Nop.Services.ExportImport
             IVendorService vendorService,
             IWorkContext workContext,
             MediaSettings mediaSettings,
+            SecuritySettings securitySettings,
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
@@ -143,6 +149,7 @@ namespace Nop.Services.ExportImport
             _customNumberFormatter = customNumberFormatter;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
+            _genericAttributeService = genericAttributeService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _languageService = languageService;
@@ -170,6 +177,7 @@ namespace Nop.Services.ExportImport
             _vendorService = vendorService;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
+            _securitySettings = securitySettings;
             _taxSettings = taxSettings;
             _vendorSettings = vendorSettings;
         }
@@ -1678,6 +1686,252 @@ namespace Nop.Services.ExportImport
                 DefaultWorksheet = worksheet,
                 LocalizedWorksheets = localizedWorksheets
             };
+        }
+
+        /// <summary>
+        /// Import customers from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ImportCustomersFromXlsxAsync(Stream stream)
+        {
+            using var workbook = new XLWorkbook(stream);
+
+            var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+            //the columns
+            var metadata = GetWorkbookMetadata<Customer>(workbook, languages);
+            var defaultWorksheet = metadata.DefaultWorksheet;
+            var defaultProperties = metadata.DefaultProperties;
+
+            var manager = new PropertyManager<Customer, Language>(defaultProperties, _catalogSettings);
+
+            if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
+            {
+                manager.SetSelectList("VatNumberStatus",
+                    await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false));
+            }
+
+            var iRow = 2;
+            var rolesToSave = new List<int>();
+            var allRoles = await _customerService.GetAllCustomerRolesAsync();
+            var countries = await _countryService.GetAllCountriesAsync();
+            var states = await _stateProvinceService.GetStateProvincesAsync();
+
+            while (true)
+            {
+                var allColumnsAreEmpty = manager.GetDefaultProperties
+                    .Select(property => defaultWorksheet.Row(iRow).Cell(property.PropertyOrderPosition))
+                    .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
+
+                if (allColumnsAreEmpty)
+                    break;
+
+                manager.ReadDefaultFromXlsx(defaultWorksheet, iRow);
+
+                var customerGuid = manager.GetDefaultProperty("CustomerGuid").GuidValue;
+                var customer = await _customerService.GetCustomerByGuidAsync(customerGuid) ??
+                               await _customerService.GetCustomerByEmailAsync(manager.GetDefaultProperty("Email").StringValue);
+
+                int? avatarPictureId = null;
+                string signature = null;
+                string password = null;
+                string passwordSalt = null;
+
+                var isNew = customer == null;
+
+                if (isNew)
+                    customer = new Customer
+                    {
+                        CustomerGuid = Guid.Empty.Equals(customerGuid) ? Guid.NewGuid() : customerGuid,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                foreach (var property in manager.GetDefaultProperties)
+                {
+                    switch (property.PropertyName)
+                    {
+                        case "Email":
+                            customer.Email = property.StringValue;
+                            break;
+                        case "Username":
+                            customer.Username = property.StringValue;
+                            break;
+                        case "IsTaxExempt":
+                            customer.IsTaxExempt = property.BooleanValue;
+                            break;
+                        case "AffiliateId":
+                            customer.AffiliateId = property.IntValue;
+                            break;
+                        case "Vendor":
+                            if(!string.IsNullOrEmpty(property.StringValue))
+                                if (int.TryParse(property.StringValue, out var vendorId))
+                                    customer.VendorId = vendorId;
+                                else
+                                {
+                                    var vendors = await _vendorService.GetAllVendorsAsync(property.StringValue);
+                                    customer.VendorId = vendors.FirstOrDefault()?.Id ?? 0;
+                                }
+                            else
+                                customer.VendorId = 0;
+                            break;
+                        case "Active":
+                            customer.Active = property.BooleanValue;
+                            break;
+                        case "CustomerRoles":
+                            var roles = property.StringValue.Split(", ");
+
+                            foreach (var role in roles)
+                                if (int.TryParse(role, out var roleId))
+                                    rolesToSave.Add(roleId);
+                                else
+                                {
+                                    var currentRole = allRoles.FirstOrDefault(r =>
+                                        r.Name.Equals(role, StringComparison.InvariantCultureIgnoreCase));
+
+                                    if (currentRole != null)
+                                        rolesToSave.Add(currentRole.Id);
+                                }
+                            break;
+                        case "CreatedOnUtc":
+                            if (DateTime.TryParse(property.StringValue, out var date))
+                                customer.CreatedOnUtc = date;
+                            break;
+                        case "FirstName":
+                            customer.FirstName = property.StringValue;
+                            break;
+                        case "LastName":
+                            customer.LastName = property.StringValue;
+                            break;
+                        case "Gender":
+                            customer.Gender = property.StringValue;
+                            break;
+                        case "Company":
+                            customer.Company = property.StringValue;
+                            break;
+                        case "StreetAddress":
+                            customer.StreetAddress = property.StringValue;
+                            break;
+                        case "StreetAddress2":
+                            customer.StreetAddress2 = property.StringValue;
+                            break;
+                        case "ZipPostalCode":
+                            customer.ZipPostalCode = property.StringValue;
+                            break;
+                        case "City":
+                            customer.City = property.StringValue;
+                            break;
+                        case "County":
+                            customer.County = property.StringValue;
+                            break;
+                        case "Country":
+                            if (int.TryParse(property.StringValue, out var countryId))
+                                customer.CountryId = countryId;
+                            else
+                            {
+                                var country = countries.FirstOrDefault(c =>
+                                    c.Name.Equals(property.StringValue, StringComparison.InvariantCultureIgnoreCase));
+
+                                if (country != null)
+                                    customer.CountryId = country.Id;
+                            }
+                            break;
+                        case "StateProvince":
+                            if (int.TryParse(property.StringValue, out var stateId))
+                                customer.StateProvinceId = stateId;
+                            else
+                            {
+                                var state = states.FirstOrDefault(s =>
+                                    s.Name.Equals(property.StringValue, StringComparison.InvariantCultureIgnoreCase));
+
+                                if (state != null)
+                                    customer.StateProvinceId = state.Id;
+                            }
+                            break;
+                        case "Phone":
+                            customer.Phone = property.StringValue;
+                            break;
+                        case "Fax":
+                            customer.Fax = property.StringValue;
+                            break;
+                        case "VatNumber":
+                            customer.VatNumber = property.StringValue;
+                            break;
+                        case "VatNumberStatus":
+                            customer.VatNumberStatusId = property.IntValue;
+                            break;
+                        case "TimeZone":
+                            customer.TimeZoneId = property.StringValue;
+                            break;
+                        case "AvatarPictureId":
+                            avatarPictureId = property.IntValueNullable;
+                            break;
+                        case "Signature":
+                            signature = property.StringValue;
+                            break;
+                        case "CustomCustomerAttributesXml":
+                            customer.CustomCustomerAttributesXML = property.StringValue;
+                            break;
+                        case "Password":
+                            password = property.StringValue;
+                            break;
+                        case "PasswordSalt":
+                            passwordSalt = property.StringValue;
+                            break;
+                    }
+                }
+
+                if (isNew)
+                    await _customerService.InsertCustomerAsync(customer);
+                else
+                    await _customerService.UpdateCustomerAsync(customer);
+                
+                var customerRoles = await _customerService.GetCustomerRolesAsync(customer);
+                
+                foreach (var roleId in rolesToSave)
+                {
+                    var role = allRoles.FirstOrDefault(r => r.Id == roleId);
+
+                    if(role == null || customerRoles.Any(cr=>cr.Id == roleId))
+                        continue;
+                    
+                    await _customerService.AddCustomerRoleMappingAsync(
+                        new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = roleId });
+                }
+
+                if (!isNew && rolesToSave.Any())
+                    foreach (var customerRole in customerRoles.Where(cr=>!rolesToSave.Contains(cr.Id)).ToList())
+                        await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
+
+                if (avatarPictureId.HasValue)
+                    await _genericAttributeService.SaveAttributeAsync(customer,
+                    NopCustomerDefaults.AvatarPictureIdAttribute, avatarPictureId.Value);
+
+                if (!string.IsNullOrEmpty(signature))
+                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute,
+                    signature);
+
+                if (_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword &&
+                    !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(passwordSalt))
+                {
+                    var lastPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
+                    if (!lastPassword.Password.Equals(password) || lastPassword.PasswordSalt.Equals(passwordSalt))
+                        await _customerService.InsertCustomerPasswordAsync(new CustomerPassword
+                        {
+                            CustomerId = customer.Id,
+                            Password = password,
+                            PasswordSalt = passwordSalt,
+                            PasswordFormat = PasswordFormat.Hashed,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                }
+
+                iRow++;
+            }
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ImportCustomers",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportCustomers"), iRow - 2));
         }
 
         /// <summary>

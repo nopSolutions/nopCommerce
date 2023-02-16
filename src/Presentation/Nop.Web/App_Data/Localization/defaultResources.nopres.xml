@@ -1104,6 +1104,9 @@
   <LocaleResource Name="ActivityLog.ImportCategories">
     <Value>{0} categories were imported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportCustomers">
+    <Value>{0} customers were imported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
   </LocaleResource>
@@ -11924,6 +11927,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Impersonate.Inactive">
     <Value>This customer is inactive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Imported">
+    <Value>Customers have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ImportFromExcelTip">
+    <Value>Imported customers are distinguished by customer GUID. If the customer GUID already exists, then its details will be updated. If GUID not exists we try to use email address as an identifier. You may leave customer GUID empty to new customers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Info">
     <Value>Customer info</Value>

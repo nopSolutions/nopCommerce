@@ -67,6 +67,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"] = "Video URL is required.",
                 //6567
                 ["Admin.Configuration.Settings.Catalog.DisplayAllPicturesOnCatalogPages.Hint"] = "When enabled, customers will see a slider at the bottom of each picture block. It'll be visible only when a product has more than one picture.",
+                //5312
+                ["Admin.Customers.Customers.Imported"] = "Customers have been imported successfully.",
+                ["Admin.Customers.Customers.ImportFromExcelTip"] = "Imported customers are distinguished by customer GUID. If the customer GUID already exists, then its details will be updated. If GUID not exists we try to use email address as an identifier. You may leave customer GUID empty to new customers.",
+                ["ActivityLog.ImportCustomers"] = "{0} customers were imported",
             }, languageId);
 
             #endregion

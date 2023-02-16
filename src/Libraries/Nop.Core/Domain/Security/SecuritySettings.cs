@@ -32,5 +32,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
         /// </summary>
         public bool AllowNonAsciiCharactersInHeaders { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow export and import customers with hashed password
+        /// </summary>
+        public bool AllowStoreOwnerExportImportCustomersWithHashedPassword { get; set; }
     }
 }

@@ -3249,7 +3249,8 @@ namespace Nop.Services.Installation
                 AdminAreaAllowedIpAddresses = null,
                 HoneypotEnabled = false,
                 HoneypotInputName = "hpinput",
-                AllowNonAsciiCharactersInHeaders = true
+                AllowNonAsciiCharactersInHeaders = true,
+                AllowStoreOwnerExportImportCustomersWithHashedPassword = true
             });
 
             await settingService.SaveSettingAsync(new ShippingSettings
@@ -8909,6 +8910,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "ImportProducts",
                     Enabled = true,
                     Name = "Products were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportCustomers",
+                    Enabled = true,
+                    Name = "Customers were imported"
                 },
                 new ActivityLogType
                 {
