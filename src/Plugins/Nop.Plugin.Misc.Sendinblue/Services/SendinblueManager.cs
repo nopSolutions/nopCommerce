@@ -1019,7 +1019,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     (CategoryEnum.Normal, SendinblueDefaults.LanguageAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Float),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute}]", null),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalMonthSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute},{SendinblueDefaults.OrderDateServiceAttribute},>,NOW(-30)]", null),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderCountServiceAttribute, $"COUNT[{SendinblueDefaults.OrderIdServiceAttribute}]", null),
