@@ -47,9 +47,10 @@ namespace Nop.Core.Caching
         /// <returns>The list of removed keys</returns>
         public IEnumerable<string> RemoveByPrefix(string prefix)
         {
-            return _keys.Prune(prefix, out var subtree)
-                ? subtree?.Keys
-                : Enumerable.Empty<string>();
+            if (!_keys.Prune(prefix, out var subtree) || subtree?.Keys == null)
+                return Enumerable.Empty<string>();
+
+            return subtree.Keys;
         }
 
         /// <summary>
