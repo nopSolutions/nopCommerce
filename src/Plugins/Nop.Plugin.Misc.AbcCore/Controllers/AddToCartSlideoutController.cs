@@ -191,17 +191,35 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             Product product,
             ShoppingCartItem sci = null)
         {
+            var productId = product.Id;
+
             if (sci == null)
             {
+                // we need to get the default home delivery option
+                var deliveryPa = await _abcProductAttributeService.GetProductAttributeByNameAsync(
+                    AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
+                );
+                var deliveryPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
+                    productId
+                )).First(pam => pam.ProductAttributeId == deliveryPa.Id);
+                var deliveryPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(
+                    deliveryPam.Id
+                )).First(pav => pav.IsPreSelected);
+
                 sci = new ShoppingCartItem()
                 {
                     CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
-                    ProductId = product.Id
+                    ProductId = product.Id,
+                    AttributesXml = _productAttributeParser.AddProductAttribute(
+                        "",
+                        deliveryPam,
+                        deliveryPav.Id.ToString()
+                    )
                 };
             }
 
             return new CartSlideoutInfo() {
-                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = product.Id } ),
+                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId } ),
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci } ),
                 DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",
@@ -217,7 +235,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                         updateCartItem = sci
                     }),
                 ShoppingCartItemId = sci?.Id ?? 0,
-                ProductId = product.Id
+                ProductId = productId
             };
         }
     }

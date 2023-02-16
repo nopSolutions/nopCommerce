@@ -52,7 +52,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
                 ImageUrl = pictureUrl,
                 Name = productName,
                 Description = await GetProductDescriptionAsync(product),
-                OldPrice = shouldShowPrice ?
+                OldPrice = shouldShowPrice && product.OldPrice != product.Price ?
                     await _priceFormatter.FormatPriceAsync(product.OldPrice) :
                     string.Empty,
                 Price = shouldShowPrice ?

@@ -2,6 +2,7 @@ USE [NOPCommerce]
 UPDATE Store
 SET Url = 'http://localhost:5000/'
 WHERE Url = 'https://www.abcwarehouse.com/'
+OR Url = 'https://stage.abcwarehouse.com/'
 
 UPDATE Store
 SET SslEnabled = 0
