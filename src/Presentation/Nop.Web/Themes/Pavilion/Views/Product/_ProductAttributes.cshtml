@@ -146,6 +146,10 @@
                                             }
                                         </li>
                                     }
+                                    @if (attribute.Name == "Delivery/Pickup Options")
+                                    {
+                                        <div class="cart-slideout__pickup-in-store"></div>
+                                    }
                                     @if (attribute.Name == "Warranty")
                                     {
                                         <input id="warranty-none" type="radio" name="@(controlId)" value="0" />

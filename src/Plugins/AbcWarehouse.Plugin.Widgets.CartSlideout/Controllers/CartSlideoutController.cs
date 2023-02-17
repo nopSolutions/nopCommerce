@@ -54,10 +54,13 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
             var disabledAttributeMappingIds = new List<int>();
-            var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            foreach (var attribute in attributes)
+            var pams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+            foreach (var pam in pams)
             {
-                var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributeXml);
+                // get the "pickup" delivery options pav (not the actual store)
+                var pavs = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+
+                var conditionMet = await _productAttributeParser.IsConditionMetAsync(pam, attributeXml);
                 if (!conditionMet.HasValue)
                 {
                     continue;
@@ -65,11 +68,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 
                 if (conditionMet.Value)
                 {
-                    enabledAttributeMappingIds.Add(attribute.Id);
+                    enabledAttributeMappingIds.Add(pam.Id);
                 }
                 else
                 {
-                    disabledAttributeMappingIds.Add(attribute.Id);
+                    disabledAttributeMappingIds.Add(pam.Id);
                 }
             }
 
@@ -80,11 +83,23 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 AttributesXml = attributeXml
             };
 
+            var isPickup = false;
+            foreach (var element in form)
+            {
+                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(int.Parse(element.Value.ToString()));
+                if (pav.Name == AbcDeliveryConsts.PickupProductAttributeValueName)
+                {
+                    isPickup = true;
+                    break;
+                }
+            }
+
             return Json(new
             {
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci }),
                 EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
                 DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
+                IsPickup = isPickup
             });
         }
 

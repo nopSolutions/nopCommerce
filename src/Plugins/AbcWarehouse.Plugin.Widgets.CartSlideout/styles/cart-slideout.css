@@ -74,6 +74,10 @@
     color: #333;
 }
 
+.cart-slideout__pickup-in-store p {
+    margin: 0 !important;
+}
+
 .cart-slideout__pickup-in-store button {
     margin-right: 0.5rem;
     border: 2px solid #78de9c;

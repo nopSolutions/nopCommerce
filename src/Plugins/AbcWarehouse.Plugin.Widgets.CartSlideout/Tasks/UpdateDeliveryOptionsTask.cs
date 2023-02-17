@@ -253,7 +253,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 newPickupPav = new ProductAttributeValue()
                 {
                     ProductAttributeMappingId = deliveryOptionsPam.Id,
-                    Name = "Pickup In-Store Or Curbside (FREE)",
+                    Name = AbcDeliveryConsts.PickupProductAttributeValueName,
                     // Used as the current placeholder for pickup in store
                     Cost = 1,
                     PriceAdjustment = 0,

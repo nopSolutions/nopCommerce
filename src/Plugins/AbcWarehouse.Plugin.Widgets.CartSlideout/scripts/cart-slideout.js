@@ -13,14 +13,11 @@ const checkButton = document.querySelector(".cart-slideout__check-delivery-optio
 const deliveryOptions = document.querySelector('.cart-slideout__delivery-options');
 const deliveryNotAvailable = document.querySelector('.cart-slideout__delivery-not-available');
 
-const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
-
 const deliveryOptionsInformation = document.querySelector('.delivery-options-information');
 const warrantyInformation = document.querySelector('.warranty-information');
 
 var cartSlideoutShoppingCartItemId = 0;
 var productId = 0;
-var isPickup = false;
 var editMode = false;
 
 // Event listeners for updating the check delivery options button:
@@ -89,32 +86,17 @@ function hideCartSlideout() {
         deliveryOptions.style.display = "none";
         deliveryNotAvailable.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
-        pickupInStoreOptions.style.display = "none";
 
-        isPickup = false;
-
-        hideDeliveryOptionsInformation();
-        hideWarrantyInformation();
+        deliveryOptionsInformation.style.display = "none";
+        warrantyInformation.style.display = "none";
 
         document.body.classList.remove("scrollYRemove");
     // }
 }
 
-function hideDeliveryOptionsInformation() {
-    deliveryOptionsInformation.style.display = "none";
-}
-
-function hideWarrantyInformation() {
-    warrantyInformation.style.display = "none";
-}
-
 // Checks currently open sub-screen and goes to the appropriate screen
 function back() {
-    if (pickupInStoreOptions.style.display === "block") {
-        pickupInStoreOptions.style.display = "none";
-
-        deliveryOptions.style.display = "block";
-    } else if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
+    if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
         deliveryNotAvailable.style.display = "none";
         deliveryOptions.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
@@ -147,24 +129,26 @@ function updateCartSlideoutHtml(response) {
 
 async function selectStoreAsync(shopId)
 {
-    const payload = {
-        ShoppingCartItemId: cartSlideoutShoppingCartItemId,
-        ShopId: shopId
-    }
-    const response = await fetch('/AddToCart/SelectPickupStore', {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    })
-    if (response.status != 200) {
-        alert('Error occurred when selecting pickup store.');
-        return;
-    }
+    // console.log(`add shop with id ${shopId}`);
+    // return;
 
-    pickupInStoreOptions.style.display = "none";
-    deliveryOptions.style.display = "block";
+    // const payload = {
+    //     ShoppingCartItemId: cartSlideoutShoppingCartItemId,
+    //     ShopId: shopId
+    // }
+    // const response = await fetch('/AddToCart/SelectPickupStore', {
+    //     method: 'POST',
+    //     headers: {
+    //         'content-type': 'application/json'
+    //     },
+    //     body: JSON.stringify(payload)
+    // })
+    // if (response.status != 200) {
+    //     alert('Error occurred when selecting pickup store.');
+    //     return;
+    // }
+
+    // deliveryOptions.style.display = "block";
 }
 
 function setAttributeListeners() {
@@ -203,7 +187,10 @@ function setAttributeListeners() {
                     })
                 });
 
-                isPickup = responseJson.IsPickup;
+                const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
+                pickupInStoreOptions.style.display = responseJson.IsPickup ?
+                    "block" :
+                    "none";
 
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
             })

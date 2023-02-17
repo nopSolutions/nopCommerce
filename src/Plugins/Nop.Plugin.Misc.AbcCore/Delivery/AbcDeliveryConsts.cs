@@ -10,5 +10,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         public const string LegacyPickupInStoreProductAttributeName = "Pickup";
 
         public const string HaulAwayTextPrompt = "Haul Away";
+
+        public const string PickupProductAttributeValueName = "Pickup In-Store Or Curbside (FREE)";
     }
 }

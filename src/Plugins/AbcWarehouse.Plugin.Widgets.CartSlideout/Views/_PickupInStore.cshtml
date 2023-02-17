@@ -2,21 +2,21 @@
 
 @model List<ProductStock>
 
-<h2>Select Pick-Up Location</h2><i style="margin-left: 0.3rem;" class="fas fa-info-circle delivery-options-info"></i>
+<h2>Select Pick-Up Location</h2>
 @foreach (var item in Model)
 {
     <div style="margin: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
-        <div>
+        <div style="margin-right: 1rem">
             <h3>@item.Shop.Name</h3>
             @Html.Raw(@item.Shop.ShortDescription)
         </div>
         @if (@item.Available)
         {
-            <button class="available" onclick="selectStoreAsync(@item.Shop.Id)">@item.Message</button>
+            <a class="available" onclick="selectStoreAsync(@item.Shop.Id)">@item.Message</a>
         }
         else
         {
-            <button class="not-available" disabled>Not Available</button>
+            <a class="not-available" disabled>Not Available</a>
         }
     </div>
 }

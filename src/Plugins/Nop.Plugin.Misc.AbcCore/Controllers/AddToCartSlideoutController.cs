@@ -105,50 +105,6 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SelectPickupStore([FromBody]SelectPickupStoreModel model)
-        {
-            if (model.ShoppingCartItemId == 0)
-            {
-                return BadRequest("Shopping Cart Item ID is required.");
-            }
-            if (model.ShopId == 0)
-            {
-                return BadRequest("Shop ID is required.");
-            }
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
-            var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == model.ShoppingCartItemId);
-            if (shoppingCartItem == null)
-            {
-                return BadRequest($"Unable to find shopping cart item with id {model.ShoppingCartItemId}");
-            }
-
-            var pickupPa = await _abcProductAttributeService.GetProductAttributeByNameAsync("Pickup");
-            var pickupPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
-                shoppingCartItem.ProductId)).First(pam => pam.ProductAttributeId == pickupPa.Id);
-            var shop = await _shopService.GetShopByIdAsync(model.ShopId);
-
-            shoppingCartItem.AttributesXml = _productAttributeParser.AddProductAttribute(
-                shoppingCartItem.AttributesXml,
-                pickupPam,
-                // will need to add pickupMsg in here
-                shop.Name + "\nAvailable: 1 to 3 days"// + pickupMsg
-            );
-            
-            await _shoppingCartService.UpdateShoppingCartItemAsync(
-                    customer,
-                    shoppingCartItem.Id,
-                    shoppingCartItem.AttributesXml,
-                    shoppingCartItem.CustomerEnteredPrice,
-                    shoppingCartItem.RentalStartDateUtc,
-                    shoppingCartItem.RentalEndDateUtc,
-                    shoppingCartItem.Quantity);
-
-            return Ok();
-        }
-
         public async Task<IActionResult> GetEditCartItemInfo(int? shoppingCartItemId, int? zip)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
