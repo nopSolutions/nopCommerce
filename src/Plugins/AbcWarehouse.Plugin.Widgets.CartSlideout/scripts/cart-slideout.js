@@ -19,6 +19,7 @@ const warrantyInformation = document.querySelector('.warranty-information');
 var cartSlideoutShoppingCartItemId = 0;
 var productId = 0;
 var editMode = false;
+var selectedShop = "";
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
@@ -127,28 +128,17 @@ function updateCartSlideoutHtml(response) {
     }
 }
 
-async function selectStoreAsync(shopId)
+async function selectStoreAsync(shopId, message)
 {
-    // console.log(`add shop with id ${shopId}`);
-    // return;
+    var elements = document.querySelectorAll("button[id^='select_store_'");
+    elements.forEach(e => e.classList.remove("selected"));
 
-    // const payload = {
-    //     ShoppingCartItemId: cartSlideoutShoppingCartItemId,
-    //     ShopId: shopId
-    // }
-    // const response = await fetch('/AddToCart/SelectPickupStore', {
-    //     method: 'POST',
-    //     headers: {
-    //         'content-type': 'application/json'
-    //     },
-    //     body: JSON.stringify(payload)
-    // })
-    // if (response.status != 200) {
-    //     alert('Error occurred when selecting pickup store.');
-    //     return;
-    // }
+    var selectedElement = document.querySelector(`#select_store_${shopId}`);
+    selectedElement.classList.add("selected");
 
-    // deliveryOptions.style.display = "block";
+    selectedShop = `${shopId};${message}`
+
+    return;
 }
 
 function setAttributeListeners() {
@@ -275,10 +265,16 @@ function getCookie(cookieName) {
 
 function AddToCart()
 {
+    var payload = $('#delivery-options, #product-details-form').serialize();
+    if (selectedShop != "")
+    {
+        payload += `&selectedShopId=${selectedShop}`;
+    }
+
     $.ajax({
         cache: false,
         url: `/addproducttocart/details/${productId}/1`,
-        data: $('#delivery-options, #product-details-form').serialize(),
+        data: payload,
         type: "POST",
         success: function(response) {
             if (response.redirect) {

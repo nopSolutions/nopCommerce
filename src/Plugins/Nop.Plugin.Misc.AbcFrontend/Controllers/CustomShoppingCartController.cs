@@ -50,6 +50,9 @@ using Newtonsoft.Json;
 using Nop.Plugin.Misc.AbcFrontend.Models;
 using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Plugin.Misc.AbcCore;
+using Nop.Plugin.Misc.AbcCore.Nop;
+using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Shops;
+using SevenSpikes.Nop.Plugins.StoreLocator.Services;
 
 namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 {
@@ -58,7 +61,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
+        private readonly IAbcProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
@@ -73,6 +76,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly CoreSettings _coreSettings;
+        private readonly IShopService _shopService;
 
         public CustomShoppingCartController(
             CaptchaSettings captchaSettings,
@@ -93,7 +97,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
-            IProductAttributeService productAttributeService,
+            IAbcProductAttributeService productAttributeService,
             IProductService productService,
             IShippingService shippingService,
             IShoppingCartModelFactory shoppingCartModelFactory,
@@ -115,7 +119,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             IBackendStockService backendStockService,
             IProductAbcDescriptionService productAbcDescriptionService,
             IWidgetPluginManager widgetPluginManager,
-            CoreSettings coreSettings
+            CoreSettings coreSettings,
+            IShopService shopService
         ) : base(captchaSettings, customerSettings, checkoutAttributeParser, checkoutAttributeService,
             currencyService, customerActivityService, customerService, discountService,
             downloadService, genericAttributeService, giftCardService, localizationService,
@@ -143,6 +148,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             _productAbcDescriptionService = productAbcDescriptionService;
             _widgetPluginManager = widgetPluginManager;
             _coreSettings = coreSettings;
+            _shopService = shopService;
         }
 
         //add product to cart using AJAX
@@ -412,6 +418,28 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             //product and gift card attributes
             var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, addToCartWarnings);
+
+            // ABC: need to add the pick up in store option if it was provided
+            foreach (var element in form)
+            {
+                if (element.Key.ToString() == "selectedShopId")
+                {
+                    var legacyPickupPa = await _productAttributeService.GetProductAttributeByNameAsync("Pickup");
+                    var pams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(productId);
+                    var pickupPam = pams.FirstOrDefault(pam => pam.ProductAttributeId == legacyPickupPa.Id);
+
+                    var valueParts = element.Value.ToString().Split(";");
+                    var shopId = int.Parse(valueParts[0]);
+                    var pickupMsg = valueParts[1];
+                    var shop = await _shopService.GetShopByIdAsync(shopId);
+
+                    attributes = _productAttributeParser.AddProductAttribute(
+                        attributes,
+                        pickupPam,
+                        shop.Name + "\nAvailable: " + pickupMsg
+                    );
+                }
+            }
 
             //rental attributes 
             _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);

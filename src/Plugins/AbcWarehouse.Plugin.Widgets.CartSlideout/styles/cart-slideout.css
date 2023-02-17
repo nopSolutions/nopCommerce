@@ -80,11 +80,16 @@
 
 .cart-slideout__pickup-in-store button {
     margin-right: 0.5rem;
-    border: 2px solid #78de9c;
+    border: 2px solid #176440;
     height: 4rem;
     background-color: white;
     width: 12rem;
     font-size: 0.8rem;
+}
+
+.cart-slideout__pickup-in-store button.selected {
+    background-color: #176440;
+    color: white;
 }
 
 .cart-slideout__pickup-in-store button.not-available {
