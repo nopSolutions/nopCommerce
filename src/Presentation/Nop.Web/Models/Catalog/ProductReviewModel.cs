@@ -11,7 +11,7 @@ namespace Nop.Web.Models.Catalog
         public int RatingSum { get; set; }
 
         public int TotalReviews { get; set; }
-        
+
         public bool AllowCustomerReviews { get; set; }
 
         public bool CanAddNewReview { get; set; }
@@ -29,17 +29,13 @@ namespace Nop.Web.Models.Catalog
 
         public int ProductId { get; set; }
 
-        public string ProductName { get; set; }
-
-        public string ProductSeName { get; set; }
-
         public IList<ProductReviewModel> Items { get; set; }
 
         public AddProductReviewModel AddProductReview { get; set; }
 
         public IList<ReviewTypeModel> ReviewTypeList { get; set; }
 
-        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }        
+        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }
     }
 
     public partial record ReviewTypeModel : BaseNopEntityModel
@@ -71,7 +67,7 @@ namespace Nop.Web.Models.Catalog
         public string CustomerName { get; set; }
 
         public bool AllowViewingProfiles { get; set; }
-        
+
         public string Title { get; set; }
 
         public string ReviewText { get; set; }
@@ -100,7 +96,7 @@ namespace Nop.Web.Models.Catalog
     {
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
-        
+
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 
@@ -111,11 +107,7 @@ namespace Nop.Web.Models.Catalog
 
         public bool CanCurrentCustomerLeaveReview { get; set; }
 
-        public bool SuccessfullyAdded { get; set; }
-
         public bool CanAddNewReview { get; set; }
-
-        public string Result { get; set; }
     }
 
     public partial record AddProductReviewReviewTypeMappingModel : BaseNopEntityModel
@@ -125,7 +117,7 @@ namespace Nop.Web.Models.Catalog
         public int ReviewTypeId { get; set; }
 
         public int Rating { get; set; }
-        
+
         public string Name { get; set; }
 
         public string Description { get; set; }

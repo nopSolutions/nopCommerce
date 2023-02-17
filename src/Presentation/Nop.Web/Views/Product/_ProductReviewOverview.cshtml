@@ -19,20 +19,19 @@
         @if (Model.TotalReviews > 0)
         {
             <div class="product-review-links">
-                <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@Model.TotalReviews
+                <a href="#productreviews">@Model.TotalReviews
                     @T("Reviews.Overview.Reviews")</a>
                 
                 @if (Model.CanAddNewReview)
                 {
-                    <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+                    <span class="separator">|</span> <a href="#addreview">@T("Reviews.Overview.AddNew")</a>
                 }
-                
             </div>            
         }
         else
         {
             <div class="product-no-reviews">
-                <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+                <a href="#addreview">@T("Reviews.Overview.First")</a>
             </div>
         }
     </div>

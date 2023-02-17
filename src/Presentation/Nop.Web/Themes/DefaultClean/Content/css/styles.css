@@ -2157,6 +2157,8 @@ label, label + * {
 .product-review-box .rating div {
   height: 14px;
   background: url('../images/rating2.png') repeat-x;
+  font-size: 0px;
+  line-height: 0px;
 }
 
 .product-review-links a {

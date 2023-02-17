@@ -81,7 +81,7 @@ namespace Nop.Web.Factories
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly VendorSettings _vendorSettings;        
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -1652,6 +1652,8 @@ namespace Nop.Web.Factories
             //product review overview
             model.ProductReviewOverview = await PrepareProductReviewOverviewModelAsync(product);
 
+            model.ProductReviews = await PrepareProductReviewsModelAsync(product);
+
             //tier prices
             if (product.HasTierPrices && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
@@ -1718,28 +1720,25 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the product reviews model
         /// </summary>
-        /// <param name="model">Product reviews model</param>
         /// <param name="product">Product</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the product reviews model
         /// </returns>
-        public virtual async Task<ProductReviewsModel> PrepareProductReviewsModelAsync(ProductReviewsModel model, Product product)
+        public virtual async Task<ProductReviewsModel> PrepareProductReviewsModelAsync(Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
-            model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
-            model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
+            var model = new ProductReviewsModel
+            {
+                ProductId = product.Id
+            };
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             var productReviews = await _productService.GetAllProductReviewsAsync(
-                approved: true, 
+                approved: true,
                 productId: product.Id,
                 storeId: _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
