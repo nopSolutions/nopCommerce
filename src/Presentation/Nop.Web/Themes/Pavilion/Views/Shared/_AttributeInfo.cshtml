@@ -102,9 +102,9 @@
         mattressProtector = mattressProtector.Trim();
     }
 
-    var showMattress = mattressSize != null &&
-                       mattressBase != null &&
-                       mattressFrame != null &&
+    var showMattress = mattressSize != null ||
+                       mattressBase != null ||
+                       mattressFrame != null ||
                        mattressProtector != null;
 }
 

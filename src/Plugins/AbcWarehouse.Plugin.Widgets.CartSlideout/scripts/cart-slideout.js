@@ -19,7 +19,7 @@ const deliveryOptionsInformation = document.querySelector('.delivery-options-inf
 const warrantyInformation = document.querySelector('.warranty-information');
 
 var cartSlideoutShoppingCartItemId = 0;
-var cartSlideoutProductId = 0;
+var productId = 0;
 var isPickup = false;
 var editMode = false;
 
@@ -32,7 +32,7 @@ async function checkDeliveryShippingAvailabilityAsync() {
 
     const zip = zipCodeInput.value;
     document.cookie = `customerZipCode=${zip}`;
-    const response = await fetch(`/AddToCart/GetDeliveryOptions?zip=${zip}&productId=${cartSlideoutProductId}`);
+    const response = await fetch(`/AddToCart/GetDeliveryOptions?zip=${zip}&productId=${productId}`);
     if (response.status != 200) {
         alert('Error occurred when checking delivery options.');
         updateCheckDeliveryAvailabilityButton();
@@ -140,7 +140,7 @@ function updateCartSlideoutHtml(response) {
         updateCheckDeliveryAvailabilityButton();
         $('.cart-slideout__delivery-options').html(response.slideoutInfo.DeliveryOptionsHtml);
         setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
-        cartSlideoutProductId = response.slideoutInfo.ProductId;
+        productId = response.slideoutInfo.ProductId;
         cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
     }
 }
@@ -170,11 +170,11 @@ async function selectStoreAsync(shopId)
 function setAttributeListeners() {
     setInformationalIconListeners();
 
-    // TODO: Refactor this
     var deliveryOptions = document.querySelectorAll('.cart-slideout__delivery-options [name^=product_attribute_]');
+    if (deliveryOptions.length < 2) { return; }
     for (option in deliveryOptions) {
         deliveryOptions[option].onclick = function() {
-            fetch(`/slideout_attributechange?productId=${cartSlideoutProductId}`, {
+            fetch(`/slideout_attributechange?productId=${productId}`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -257,10 +257,15 @@ async function editCartItemAsync(shoppingCartItemId) {
 
 async function addCartItemAsync(productId) {
     editMode = true;
-    var zip = getCookie('customerZipCode');
 
     AjaxCart.setLoadWaiting(true);
-    const response = await fetch(`/AddToCart/GetAddCartItemInfo?productId=${productId}`);
+    const response = await fetch(`/AddToCart/GetAddCartItemInfo?productId=${productId}`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: $('#product-details-form').serialize()
+    });
     if (response.status != 200) {
         alert('Error occurred when getting delivery information.');
         AjaxCart.setLoadWaiting(false);
@@ -285,8 +290,8 @@ function AddToCart()
 {
     $.ajax({
         cache: false,
-        url: `/addproducttocart/details/${cartSlideoutProductId}/1`,
-        data: $('#delivery-options').serialize(),
+        url: `/addproducttocart/details/${productId}/1`,
+        data: $('#delivery-options, #product-details-form').serialize(),
         type: "POST",
         success: function(response) {
             if (response.redirect) {

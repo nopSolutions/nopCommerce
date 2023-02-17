@@ -21,6 +21,7 @@ using Nop.Core.Domain.Orders;
 using Newtonsoft.Json;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Nop.Plugin.Misc.AbcCore.Controllers
 {
@@ -155,7 +156,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
 
-            var slideoutInfo = await GetSlideoutInfoAsync(product, shoppingCartItem);
+            var slideoutInfo = await GetSlideoutInfoAsync(product, "");
 
             return Json(new
             {
@@ -166,12 +167,14 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             });
         }
 
-        public async Task<IActionResult> GetAddCartItemInfo(int productId)
+        [HttpPost]
+        public async Task<IActionResult> GetAddCartItemInfo(int productId, IFormCollection form)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var product = await _productService.GetProductByIdAsync(productId);
 
-            var slideoutInfo = await GetSlideoutInfoAsync(product);
+            var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, new List<string>());
+            var slideoutInfo = await GetSlideoutInfoAsync(product, attributes);
 
             return Json(new
             {
@@ -189,34 +192,31 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
 
         private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
             Product product,
-            ShoppingCartItem sci = null)
+            string attributes)
         {
             var productId = product.Id;
+            
+            // we need to get the default home delivery option
+            var deliveryPa = await _abcProductAttributeService.GetProductAttributeByNameAsync(
+                AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
+            );
+            var deliveryPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
+                productId
+            )).First(pam => pam.ProductAttributeId == deliveryPa.Id);
+            var deliveryPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(
+                deliveryPam.Id
+            )).First(pav => pav.IsPreSelected);
 
-            if (sci == null)
+            ShoppingCartItem sci = new ShoppingCartItem()
             {
-                // we need to get the default home delivery option
-                var deliveryPa = await _abcProductAttributeService.GetProductAttributeByNameAsync(
-                    AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
-                );
-                var deliveryPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
-                    productId
-                )).First(pam => pam.ProductAttributeId == deliveryPa.Id);
-                var deliveryPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(
-                    deliveryPam.Id
-                )).First(pav => pav.IsPreSelected);
-
-                sci = new ShoppingCartItem()
-                {
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
-                    ProductId = product.Id,
-                    AttributesXml = _productAttributeParser.AddProductAttribute(
-                        "",
-                        deliveryPam,
-                        deliveryPav.Id.ToString()
-                    )
-                };
-            }
+                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                ProductId = product.Id,
+                AttributesXml = _productAttributeParser.AddProductAttribute(
+                    attributes,
+                    deliveryPam,
+                    deliveryPav.Id.ToString()
+                )
+            };
 
             return new CartSlideoutInfo() {
                 ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId } ),
@@ -234,7 +234,6 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                         },
                         updateCartItem = sci
                     }),
-                ShoppingCartItemId = sci?.Id ?? 0,
                 ProductId = productId
             };
         }

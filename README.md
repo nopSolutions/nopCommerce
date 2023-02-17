@@ -13,6 +13,10 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 7. Delete BACPAC: `rm NOP.bacpac`
 8. Connect to DB within Codespace and run contents of `configureDb.sql`
 9. Copy `appSettings.json`, `plugins.json`, `dataSettings.json` into Nop.Web/App_Data
+10. After starting up, uninstall the following plugins unless required:
+    1. HTML Widgets
+    1. Product Ribbons
+    1. CRON Tasks
 
 ## Handling Fatal Error
 

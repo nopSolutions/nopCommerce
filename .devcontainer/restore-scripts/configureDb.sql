@@ -25,3 +25,5 @@ SET Value = ''
 WHERE Name = 'synchronypaymentsettings.merchantpassword'
     OR Name = 'storelocatorsettings.googleapikey'
 
+UPDATE ScheduleTask
+SET Enabled = 0
