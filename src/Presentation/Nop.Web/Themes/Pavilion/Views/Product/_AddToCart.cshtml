@@ -2,6 +2,11 @@
 @using Nop.Core.Domain.Orders
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Models.Catalog
+
+@* ABC: custom *@
+@using Nop.Plugin.Misc.AbcCore.Nop
+@inject IAbcProductAttributeService abcProductAttributeService
+
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
     <input asp-for="UpdatedShoppingCartItemId" type="hidden" />
@@ -29,6 +34,7 @@
         @if (!Model.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
+                @* ABC: we hide quantities
                 <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
                 @if (Model.AllowedQuantities.Count > 0)
                 {
@@ -67,12 +73,23 @@
                             });
                         });
                     </script>
-                }
+                } *@
                 @{
                     var addToCartText = "";
-                    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+
+                    // Delivery options
+                    if (await abcProductAttributeService.ProductHasDeliveryOptionsAsync(Model.ProductId))
+                    {
+                        <button type="button"
+                            id="add-to-cart-button-@Model.ProductId"
+                            class="button-1 add-to-cart-button"
+                            onclick="addCartItemAsync(@Model.ProductId)"><span>Delivery</span>
+                        </button>
+                    }
+                    else if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
                     {
                         addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+                        <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.ShoppingCart})', '#product-details-form');return false;" />
                     }
                     else
                     {
@@ -85,8 +102,8 @@
                         {
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
+                        <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.ShoppingCart})', '#product-details-form');return false;" />
                     }
-                    <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.ShoppingCart})', '#product-details-form');return false;" />
                 }
             </div>
             if (!string.IsNullOrEmpty(Model.PreOrderAvailabilityStartDateTimeUserTime))

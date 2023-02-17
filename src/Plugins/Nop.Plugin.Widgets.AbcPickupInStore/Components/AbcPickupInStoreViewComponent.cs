@@ -84,6 +84,12 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                 productId = (int)additionalData;
             }
 
+            Product product = await _productService.GetProductByIdAsync(productId);
+            if (await product.HasDeliveryOptionsAsync())
+            {
+                return Content("");
+            }
+
             // clearance store specific
             var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
             if (storeUrl.Contains("clearance"))
@@ -103,7 +109,6 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             // normal abc store
             else
             {
-                Product product = await _productService.GetProductByIdAsync(productId);
                 if (productId > 0)
                 {
                     // if the buy button is disabled, do not show any UI about

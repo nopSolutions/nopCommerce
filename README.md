@@ -13,3 +13,8 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 7. Delete BACPAC: `rm NOP.bacpac`
 8. Connect to DB within Codespace and run contents of `configureDb.sql`
 9. Copy `appSettings.json`, `plugins.json`, `dataSettings.json` into Nop.Web/App_Data
+
+## Handling Fatal Error
+
+To solve the fatal error that occurs on Codespaces from time to time, stop and start
+the codespace.
