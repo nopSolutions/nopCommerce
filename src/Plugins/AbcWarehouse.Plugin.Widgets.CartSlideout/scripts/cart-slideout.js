@@ -15,6 +15,11 @@ const deliveryNotAvailable = document.querySelector('.cart-slideout__delivery-no
 
 const deliveryOptionsInformation = document.querySelector('.delivery-options-information');
 const warrantyInformation = document.querySelector('.warranty-information');
+const addToCartButton = document.querySelector('#cart-slideout__add-to-cart');
+
+const title = document.querySelector('.cart-slideout__title');
+const goToCartButton = document.querySelector('#cart-slideout__go-to-cart');
+const continueShoppingButton = document.querySelector('#cart-slideout__continue-shopping');
 
 var cartSlideoutShoppingCartItemId = 0;
 var productId = 0;
@@ -52,8 +57,10 @@ function openDeliveryOptions(response) {
     deliveryOptions.style.display = "none";
 
     if (response.isDeliveryAvailable) {
+        addToCartButton.disabled = false;
         deliveryOptions.style.display = "block";
     } else {
+        addToCartButton.disabled = true;
         deliveryNotAvailable.style.display = "block";
     }
 
@@ -75,6 +82,8 @@ function showCartSlideout(response) {
 
     CartSlideoutOverlay.style.display = "block";
     CartSlideout.style.display = "flex";
+    addToCartButton.disabled = true;
+
     document.body.classList.add("scrollYRemove");
 }
 
@@ -91,21 +100,25 @@ function hideCartSlideout() {
         deliveryOptionsInformation.style.display = "none";
         warrantyInformation.style.display = "none";
 
+        addToCartButton.disabled = true;
+
+        addToCartButton.style.display = "block";
+        title.style.display = "none";
+        goToCartButton.style.display = "none";
+        continueShoppingButton.style.display = "none";
+
         document.body.classList.remove("scrollYRemove");
     // }
 }
 
-// Checks currently open sub-screen and goes to the appropriate screen
 function back() {
-    if (deliveryOptions.style.display === "block" || deliveryNotAvailable.style.display === "block") {
-        deliveryNotAvailable.style.display = "none";
-        deliveryOptions.style.display = "none";
-        cartSlideoutBackButton.style.display = "none";
+    addToCartButton.disabled = true;
 
-        deliveryInput.style.display = "block";
-    } else {
-        console.log('Unable to find existing state for back button.');
-    }
+    deliveryNotAvailable.style.display = "none";
+    deliveryOptions.style.display = "none";
+    cartSlideoutBackButton.style.display = "none";
+
+    deliveryInput.style.display = "block";
 }
 
 function updateCartSlideoutHtml(response) {
@@ -130,13 +143,14 @@ function updateCartSlideoutHtml(response) {
 
 async function selectStoreAsync(shopId, message)
 {
-    var elements = document.querySelectorAll("button[id^='select_store_'");
-    elements.forEach(e => e.classList.remove("selected"));
+    resetSelectStoreButtons();
 
     var selectedElement = document.querySelector(`#select_store_${shopId}`);
     selectedElement.classList.add("selected");
 
     selectedShop = `${shopId};${message}`
+
+    addToCartButton.disabled = false;
 
     return;
 }
@@ -181,6 +195,13 @@ function setAttributeListeners() {
                 pickupInStoreOptions.style.display = responseJson.IsPickup ?
                     "block" :
                     "none";
+
+                if (!responseJson.IsPickup) {
+                    resetSelectStoreButtons();
+                    selectedShop = "";
+                }
+
+                addToCartButton.disabled = responseJson.IsPickup && selectedShop === "";
 
                 $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
             })
@@ -265,6 +286,10 @@ function getCookie(cookieName) {
 
 function AddToCart()
 {
+    cartSlideoutBackButton.style.display = "none";
+    deliveryOptions.style.display = "none";
+    addToCartButton.disabled = true;
+
     var payload = $('#delivery-options, #product-details-form').serialize();
     if (selectedShop != "")
     {
@@ -277,15 +302,19 @@ function AddToCart()
         data: payload,
         type: "POST",
         success: function(response) {
-            if (response.redirect) {
-                location.href = response.redirect;
-                return true;
-            }
-            return false;
+            addToCartButton.style.display = "none";
+            title.style.display = "block";
+            goToCartButton.style.display = "block";
+            continueShoppingButton.style.display = "block";
         },
         error: function() {
             alert('Error when adding item to cart.');
         }
     });
     return false;
+}
+
+function resetSelectStoreButtons() {
+    var elements = document.querySelectorAll("button[id^='select_store_'");
+    elements.forEach(e => e.classList.remove("selected"));
 }

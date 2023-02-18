@@ -17,6 +17,7 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     1. HTML Widgets
     1. Product Ribbons
     1. CRON Tasks
+    1. PowerReviews
 
 ## Handling Fatal Error
 

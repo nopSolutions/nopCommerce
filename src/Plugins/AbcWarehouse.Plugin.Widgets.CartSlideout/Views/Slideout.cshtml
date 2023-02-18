@@ -16,6 +16,9 @@
         <i class="fas fa-arrow-left"></i>
     </a>
     <a href="javascript:void(0)" class="close" onclick="hideCartSlideout()">&times;</a>
+    <div class="cart-slideout__title" style="display: none">
+        <i class="fas fa-check-circle" style="color: "></i> Item Added to Cart
+    </div>
     <div class="cart-slideout__product-info"></div>
     <hr />
   </div>
@@ -42,7 +45,9 @@
   <div class="cart-slideout__buttons">
       <div class="cart-slideout__subtotal"></div>
       <div class="cart-slideout__buttons__add">
-          <input type="button" value="Add to Cart" onclick="AddToCart()" />
+          <input type="button" id="cart-slideout__add-to-cart" value="Add to Cart" onclick="AddToCart()" disabled />
+          <input type="button" id="cart-slideout__go-to-cart" class="secondary" value="Go to Cart" onclick="window.location.href = '/cart'" style="display: none" />
+          <input type="button" id="cart-slideout__continue-shopping" class="secondary" value="Continue Shopping" onclick="hideCartSlideout()" style="display: none" />
       </div>
   </div>
 </div>

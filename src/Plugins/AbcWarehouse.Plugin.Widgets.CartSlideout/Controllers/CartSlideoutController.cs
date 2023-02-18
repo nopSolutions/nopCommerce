@@ -87,7 +87,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             foreach (var element in form)
             {
                 var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(int.Parse(element.Value.ToString()));
-                if (pav.Name == AbcDeliveryConsts.PickupProductAttributeValueName)
+                if (pav?.Name == AbcDeliveryConsts.PickupProductAttributeValueName)
                 {
                     isPickup = true;
                     break;
