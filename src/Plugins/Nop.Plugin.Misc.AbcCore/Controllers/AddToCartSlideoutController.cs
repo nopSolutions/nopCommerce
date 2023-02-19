@@ -105,14 +105,19 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             });
         }
 
-        public async Task<IActionResult> GetEditCartItemInfo(int? shoppingCartItemId, int? zip)
+        public async Task<IActionResult> GetEditCartItemInfo(int? shoppingCartItemId)
         {
+            if (shoppingCartItemId == null || shoppingCartItemId == 0)
+            {
+                return BadRequest("Shopping cart item ID must be provided.");
+            }
+
             var customer = await _workContext.GetCurrentCustomerAsync();
             var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer);
             var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
 
-            var slideoutInfo = await GetSlideoutInfoAsync(product, "");
+            var slideoutInfo = await GetSlideoutInfoAsync(product, shoppingCartItem);
 
             return Json(new
             {
@@ -130,28 +135,6 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             var product = await _productService.GetProductByIdAsync(productId);
 
             var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, new List<string>());
-            var slideoutInfo = await GetSlideoutInfoAsync(product, attributes);
-
-            return Json(new
-            {
-                slideoutInfo
-            }, new JsonSerializerSettings() 
-            { 
-                NullValueHandling = NullValueHandling.Ignore 
-            });
-        }
-
-        private double Distance(double lat1, double lng1, double lat2, double lng2)
-        {
-            return Math.Pow(Math.Pow(lat1 - lat2, 2) + Math.Pow(lng1 - lng2, 2), 0.5);
-        }
-
-        private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
-            Product product,
-            string attributes)
-        {
-            var productId = product.Id;
-            
             // we need to get the default home delivery option
             var deliveryPa = await _abcProductAttributeService.GetProductAttributeByNameAsync(
                 AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
@@ -174,6 +157,28 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                 )
             };
 
+            var slideoutInfo = await GetSlideoutInfoAsync(product, sci);
+
+            return Json(new
+            {
+                slideoutInfo
+            }, new JsonSerializerSettings() 
+            { 
+                NullValueHandling = NullValueHandling.Ignore 
+            });
+        }
+
+        private double Distance(double lat1, double lng1, double lat2, double lng2)
+        {
+            return Math.Pow(Math.Pow(lat1 - lat2, 2) + Math.Pow(lng1 - lng2, 2), 0.5);
+        }
+
+        private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
+            Product product,
+            ShoppingCartItem sci)
+        {
+            var productId = product.Id;
+
             return new CartSlideoutInfo() {
                 ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId } ),
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci } ),
@@ -190,6 +195,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                         },
                         updateCartItem = sci
                     }),
+                ShoppingCartItemId = sci.Id,
                 ProductId = productId
             };
         }

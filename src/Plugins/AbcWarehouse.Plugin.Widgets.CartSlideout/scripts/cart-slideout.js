@@ -88,9 +88,9 @@ function showCartSlideout(response) {
 }
 
 function hideCartSlideout() {
-    // if (editMode) {
-    //     location.reload();
-    // } else {
+    if (editMode) {
+        location.reload();
+    } else {
         CartSlideoutOverlay.style.display = "none";
         CartSlideout.style.display = "none";
         deliveryOptions.style.display = "none";
@@ -108,7 +108,7 @@ function hideCartSlideout() {
         continueShoppingButton.style.display = "none";
 
         document.body.classList.remove("scrollYRemove");
-    // }
+    }
 }
 
 function back() {
@@ -230,10 +230,10 @@ function setInformationalIconListeners() {
 
 async function editCartItemAsync(shoppingCartItemId) {
     editMode = true;
-    var zip = getCookie('customerZipCode');
+    addToCartButton.value = "Update Item";
 
     AjaxCart.setLoadWaiting(true);
-    const response = await fetch(`/AddToCart/GetEditCartItemInfo?shoppingCartItemId=${shoppingCartItemId}&zip=${zip}`);
+    const response = await fetch(`/AddToCart/GetEditCartItemInfo?shoppingCartItemId=${shoppingCartItemId}`);
     if (response.status != 200) {
         alert('Error occurred when editing cart item.');
         AjaxCart.setLoadWaiting(false);
@@ -243,19 +243,9 @@ async function editCartItemAsync(shoppingCartItemId) {
 
     const responseJson = await response.json();
     showCartSlideout(responseJson);
-
-    // now we'll need to show warranty options, or pickup options, or delivery options
-    cartSlideoutBackButton.style.display = "block";
-    deliveryInput.style.display = "none";
-
-    deliveryOptions.style.display = "block";
-
-    document.querySelector('.cart-slideout__buttons__cart').style.display = "none";
 }
 
 async function addCartItemAsync(productId) {
-    editMode = true;
-
     AjaxCart.setLoadWaiting(true);
     const response = await fetch(`/AddToCart/GetAddCartItemInfo?productId=${productId}`, {
         method: 'POST',
@@ -295,17 +285,25 @@ function AddToCart()
     {
         payload += `&selectedShopId=${selectedShop}`;
     }
+    if (cartSlideoutShoppingCartItemId != 0)
+    {
+        payload += `&addtocart_${productId}.UpdatedShoppingCartItemId=${cartSlideoutShoppingCartItemId}`;
+    }
 
     $.ajax({
         cache: false,
         url: `/addproducttocart/details/${productId}/1`,
         data: payload,
         type: "POST",
-        success: function(response) {
+        success: function() {
             addToCartButton.style.display = "none";
             title.style.display = "block";
             goToCartButton.style.display = "block";
-            continueShoppingButton.style.display = "block";
+            if (editMode) {
+                title.innerHTML = "<i class='fas fa-check-circle'></i> Item Updated"
+            } else {
+                continueShoppingButton.style.display = "block";
+            }
         },
         error: function() {
             alert('Error when adding item to cart.');
