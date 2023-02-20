@@ -22,6 +22,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerProductReviews")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerProductReviewsTop, additionalData = Model })
         @if (Model.ProductReviews.Count > 0)
         {
             foreach (var review in Model.ProductReviews)
@@ -100,4 +101,5 @@
             </div>
         }
     </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerProductReviewsBottom, additionalData = Model })
 </div>

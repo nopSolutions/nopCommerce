@@ -17,6 +17,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerForumSubscriptionsTop, additionalData = Model })
         @if (Model.ForumSubscriptions.Count > 0)
         {
             <div class="description">
@@ -97,5 +98,6 @@
                 @T("Account.ForumSubscriptions.NoSubscriptions")
             </div>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerForumSubscriptionsBottom, additionalData = Model })
     </div>
 </div>

@@ -17,6 +17,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerAddressesTop, additionalData = Model })
         @if (Model.Addresses.Count > 0)
         {
                 <div class="address-list">
@@ -162,5 +163,6 @@
         <div class="add-button">
             <button type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">@T("Common.AddNew")</button>
         </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerAddressesBottom, additionalData = Model })
     </div>
 </div>
