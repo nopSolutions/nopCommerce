@@ -155,7 +155,7 @@ namespace Nop.Core.Domain.Customers
         public int AffiliateId { get; set; }
 
         /// <summary>
-        /// Gets or sets the vendor identifier with which this customer is associated (maganer)
+        /// Gets or sets the vendor identifier with which this customer is associated (manager)
         /// </summary>
         public int VendorId { get; set; }
 
@@ -164,7 +164,7 @@ namespace Nop.Core.Domain.Customers
         /// <remarks>The same as if we run ShoppingCartItems.Count > 0
         /// We use this property for performance optimization:
         /// if this property is set to false, then we do not need to load "ShoppingCartItems" navigation property for each page load
-        /// It's used only in a couple of places in the presenation layer
+        /// It's used only in a couple of places in the presentation layer
         /// </remarks>
         /// </summary>
         public bool HasShoppingCartItems { get; set; }

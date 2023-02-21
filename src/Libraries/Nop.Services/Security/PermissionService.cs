@@ -255,7 +255,7 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission record</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
+        /// The task result contains the true - authorized; otherwise, false
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(PermissionRecord permission)
         {
@@ -269,7 +269,7 @@ namespace Nop.Services.Security
         /// <param name="customer">Customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
+        /// The task result contains the true - authorized; otherwise, false
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(PermissionRecord permission, Customer customer)
         {
@@ -288,7 +288,7 @@ namespace Nop.Services.Security
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
+        /// The task result contains the true - authorized; otherwise, false
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(string permissionRecordSystemName)
         {
@@ -302,7 +302,7 @@ namespace Nop.Services.Security
         /// <param name="customer">Customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
+        /// The task result contains the true - authorized; otherwise, false
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(string permissionRecordSystemName, Customer customer)
         {
@@ -326,7 +326,7 @@ namespace Nop.Services.Security
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - authorized; otherwise, false
+        /// The task result contains the true - authorized; otherwise, false
         /// </returns>
         public virtual async Task<bool> AuthorizeAsync(string permissionRecordSystemName, int customerRoleId)
         {

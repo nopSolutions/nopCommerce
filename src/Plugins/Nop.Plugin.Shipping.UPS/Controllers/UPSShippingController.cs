@@ -98,7 +98,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
             model.AvailablePackagingTypes = (await PackagingType.CustomerSuppliedPackage.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text?.TrimStart('_'), item.Value)).ToList();
-            model.AvaliablePackingTypes = (await PackingType.PackByDimensions.ToSelectListAsync(false))
+            model.AvailablePackingTypes = (await PackingType.PackByDimensions.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
             model.AvailableCarrierServices = (await DeliveryService.Standard.ToSelectListAsync(false))
                 .Select(item =>
@@ -106,8 +106,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));
             }).ToList();
-            model.AvaliableWeightTypes = new List<SelectListItem> { new SelectListItem("LBS", "LBS"), new SelectListItem("KGS", "KGS") };
-            model.AvaliableDimensionsTypes = new List<SelectListItem> { new SelectListItem("IN", "IN"), new SelectListItem("CM", "CM") };
+            model.AvailableWeightTypes = new List<SelectListItem> { new SelectListItem("LBS", "LBS"), new SelectListItem("KGS", "KGS") };
+            model.AvailableDimensionsTypes = new List<SelectListItem> { new SelectListItem("IN", "IN"), new SelectListItem("CM", "CM") };
 
             //check measures
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };

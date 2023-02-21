@@ -16,9 +16,9 @@ namespace Nop.Plugin.Shipping.UPS.Models
             AvailableCustomerClassifications = new List<SelectListItem>();
             AvailablePickupTypes = new List<SelectListItem>();
             AvailablePackagingTypes = new List<SelectListItem>();
-            AvaliablePackingTypes = new List<SelectListItem>();
-            AvaliableWeightTypes = new List<SelectListItem>();
-            AvaliableDimensionsTypes = new List<SelectListItem>();
+            AvailablePackingTypes = new List<SelectListItem>();
+            AvailableWeightTypes = new List<SelectListItem>();
+            AvailableDimensionsTypes = new List<SelectListItem>();
         }
 
         #endregion
@@ -73,18 +73,18 @@ namespace Nop.Plugin.Shipping.UPS.Models
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackingType")]
         public int PackingType { get; set; }
-        public IList<SelectListItem> AvaliablePackingTypes { get; set; }
+        public IList<SelectListItem> AvailablePackingTypes { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Tracing")]
         public bool Tracing { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.WeightType")]
         public string WeightType { get; set; }
-        public IList<SelectListItem> AvaliableWeightTypes { get; set; }
+        public IList<SelectListItem> AvailableWeightTypes { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.DimensionsType")]
         public string DimensionsType { get; set; }
-        public IList<SelectListItem> AvaliableDimensionsTypes { get; set; }
+        public IList<SelectListItem> AvailableDimensionsTypes { get; set; }
 
         #endregion
     }
