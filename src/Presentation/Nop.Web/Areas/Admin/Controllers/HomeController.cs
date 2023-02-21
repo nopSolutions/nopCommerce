@@ -12,6 +12,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Home;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -98,6 +99,48 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _settingService.SaveSettingAsync(_adminAreaSettings);
 
             return Content("Setting changed");
+        }
+
+        public virtual async Task<IActionResult> GetPopularSearchTerm()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PreparePopularSearchTermReportModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetBestsellersBriefReportByAmount()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareBestsellersBriefReportByAmountModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetBestsellersBriefReportByQuantity()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareBestsellersBriefReportByQuantityModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetLatestOrders()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareLatestOrdersModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetOrderIncomplete()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareOrderIncompleteModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetOrderAverage()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareOrderAverageModelAsync(model);
+            return PartialView("Table", model);
         }
 
         #endregion
