@@ -51,6 +51,7 @@ namespace Nop.Services.Customers
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -77,7 +78,8 @@ namespace Nop.Services.Customers
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings)
         {
             _customerSettings = customerSettings;
             _genericAttributeService = genericAttributeService;
@@ -101,6 +103,7 @@ namespace Nop.Services.Customers
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -401,9 +404,9 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-           
+
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
-            
+
             return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
@@ -710,6 +713,36 @@ namespace Nop.Services.Customers
             await _customerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
 
             return totalRecordsDeleted;
+        }
+
+        /// <summary>
+        /// Gets a tax display type for the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        public virtual async Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //default tax display type
+            var taxDisplayType = _taxSettings.TaxDisplayType;
+
+            //whether customers are allowed to select tax display type and the customer has previously saved one
+            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer.TaxDisplayTypeId.HasValue)
+                taxDisplayType = (TaxDisplayType)customer.TaxDisplayTypeId.Value;
+            else
+            {
+                //default tax type by customer roles
+                var defaultRoleTaxDisplayType = await GetCustomerDefaultTaxDisplayTypeAsync(customer);
+                if (defaultRoleTaxDisplayType.HasValue)
+                    taxDisplayType = defaultRoleTaxDisplayType.Value;
+            }
+
+            return taxDisplayType;
         }
 
         /// <summary>
