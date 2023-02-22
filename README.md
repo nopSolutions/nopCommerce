@@ -19,6 +19,18 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     1. CRON Tasks
     1. PowerReviews
 
+## Installing Apache Solr
+
+To set up Apache Solr for the seaarch plugin, run the following commands:
+
+```
+wget https://www.apache.org/dyn/closer.lua/solr/solr/9.1.1/solr-9.1.1.tgz?action=download
+mv solr-9.1.1.tgz\?action\=download solr-9.1.1.tgz
+tar -xzf solr-9.1.1.tgz solr-9.1.1/bin/install_solr_service.sh --strip-components=2
+sudo bash ./install_solr_service.sh solr-9.1.1.tgz
+rm -rf solr-9.1.1.tgz install_solr_service.sh
+```
+
 ## Handling Fatal Error
 
 To solve the fatal error that occurs on Codespaces from time to time, stop and start

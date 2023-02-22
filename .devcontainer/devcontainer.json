@@ -10,14 +10,15 @@
 	"settings": {
 		"mssql.connections": [
 			{
-				"server": "localhost,1433",
-				"database": "",
+				"server": "localhost",
+				"database": "NOPCommerce",
 				"authenticationType": "SqlLogin",
 				"user": "sa",
 				"password": "P@ssw0rd",
 				"emptyPasswordInput": false,
-				"savePassword": false,
-				"profileName": "mssql-container"
+				"savePassword": true,
+				"profileName": "mssql-container",
+				"trustServerCertificate": true
 			}
 		]
 	},
@@ -29,7 +30,8 @@
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
+    // 8983: Apache Solr
+	"forwardPorts": [8983],
 
 	// [Optional] To reuse of your local HTTPS dev cert:
 	//

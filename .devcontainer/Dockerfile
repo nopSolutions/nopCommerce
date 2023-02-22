@@ -20,3 +20,10 @@ RUN bash ./installSQLtools.sh \
 
 # Provides sqlcmd access
 RUN sudo ln -s /opt/mssql-tools/bin/* /usr/local/bin/
+
+# Remove yarn (it's producing GPG error)
+RUN rm /etc/apt/sources.list.d/yarn.list
+
+# Install Java
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends openjdk-11-jdk
