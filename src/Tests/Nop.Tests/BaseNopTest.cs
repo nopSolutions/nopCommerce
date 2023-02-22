@@ -106,7 +106,6 @@ namespace Nop.Tests
 
         private static void Init()
         {
-
             var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
 
             dataProvider.CreateDatabase(null);
@@ -167,7 +166,7 @@ namespace Nop.Tests
             var typeFinder = new AppDomainTypeFinder();
             Singleton<ITypeFinder>.Instance = typeFinder;
 
-            var mAssemblies = typeFinder.FindClassesOfType<AutoReversingMigration>()
+            var mAssemblies = typeFinder.FindClassesOfType<ForwardOnlyMigration>()
                 .Select(t => t.Assembly)
                 .Distinct()
                 .ToArray();
@@ -422,7 +421,7 @@ namespace Nop.Tests
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
                 // set accessor for the connection string
                 .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
-                .AddScoped<IMigrationManager, TestMigrationManager>()
+                .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
                 .ConfigureRunner(rb =>
                     rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()

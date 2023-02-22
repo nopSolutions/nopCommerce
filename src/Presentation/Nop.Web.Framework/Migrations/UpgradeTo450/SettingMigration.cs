@@ -11,7 +11,7 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
-    [NopMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopUpdateMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>

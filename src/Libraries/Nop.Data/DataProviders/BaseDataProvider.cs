@@ -135,15 +135,13 @@ namespace Nop.Data.DataProviders
             var typeFinder = Singleton<ITypeFinder>.Instance;
             var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
                 .Select(t => t.Assembly)
-                .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
+                .Where(assembly => !assembly.FullName?.Contains("FluentMigrator.Runner") ?? false)
                 .Distinct()
                 .ToArray();
 
             //mark update migrations as applied
-            foreach (var assembly in mAssemblies)
-            {
+            foreach (var assembly in mAssemblies) 
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
-            }
         }
 
         /// <summary>
