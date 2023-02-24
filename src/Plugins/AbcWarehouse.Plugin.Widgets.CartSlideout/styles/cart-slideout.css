@@ -152,9 +152,7 @@ i.warranty-info {
 }
 
 .cart-slideout__delivery-zip-code {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: right;
 }
 
 .cart-slideout__delivery-zip-code input {
@@ -162,6 +160,7 @@ i.warranty-info {
     height: 2rem;
     font-size: 1rem;
     padding-left: 0.15rem;
+    margin-left: 0.5rem;
 }
 
 .cart-slideout__subtotal {
