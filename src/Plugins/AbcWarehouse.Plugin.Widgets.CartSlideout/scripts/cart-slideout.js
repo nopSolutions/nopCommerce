@@ -34,7 +34,15 @@ zipCodeInput.addEventListener('keypress', function(event) {
       checkDeliveryShippingAvailabilityAsync();
     }
 });
-CartSlideoutOverlay.addEventListener('onclick', hideCartSlideout);
+CartSlideoutOverlay.addEventListener('click', hideCartSlideout);
+
+function hideDeliveryOptionsInformation() {
+    deliveryOptionsInformation.style.display = "none";
+}
+
+function hideWarrantyInformation() {
+    warrantyInformation.style.display = "none";
+}
 
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
@@ -56,6 +64,7 @@ async function checkDeliveryShippingAvailabilityAsync() {
     }
     setInformationalIconListeners();
     updateCheckDeliveryAvailabilityButton();
+    updateAttributes();
 }
 
 function openDeliveryOptions(response) {
@@ -104,8 +113,8 @@ function hideCartSlideout() {
         deliveryNotAvailable.style.display = "none";
         cartSlideoutBackButton.style.display = "none";
 
-        deliveryOptionsInformation.style.display = "none";
-        warrantyInformation.style.display = "none";
+        hideDeliveryOptionsInformation();
+        hideWarrantyInformation();
 
         addToCartButton.disabled = true;
 
@@ -168,55 +177,57 @@ function setAttributeListeners() {
     var deliveryOptions = document.querySelectorAll('.cart-slideout__delivery-options [name^=product_attribute_]');
     if (deliveryOptions.length < 2) { return; }
     for (option in deliveryOptions) {
-        deliveryOptions[option].onclick = function() {
-            fetch(`/slideout_attributechange?productId=${productId}`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-                },
-                body: $('#delivery-options').serialize()
-            })
-            .then(response => response.json())
-            .then(responseJson => {
-                // update possible conditional options
-                responseJson.DisabledAttributeMappingIds.forEach(id => {
-                    var options = document.querySelectorAll(`[id$='_${id}']`);
-                    options.forEach(option => {
-                        option.style.display = "none";
-                        // Uncheck the hidden option
-                        var checkbox = option.querySelector(`input[id^='product_attribute_${id}_']`);
-                        if (checkbox !== undefined && checkbox !== null) {
-                            checkbox.checked = false;
-                        }
-                    })
-                });
-
-                responseJson.EnabledAttributeMappingIds.forEach(id => {
-                    var options = document.querySelectorAll(`[id$='_${id}']`);
-                    options.forEach(option => {
-                        option.style.display = "block";
-                    })
-                });
-
-                const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
-                pickupInStoreOptions.style.display = responseJson.IsPickup ?
-                    "block" :
-                    "none";
-
-                if (!responseJson.IsPickup) {
-                    resetSelectStoreButtons();
-                    selectedShop = "";
-                }
-
-                addToCartButton.disabled = responseJson.IsPickup && selectedShop === "";
-
-                $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        }
+        deliveryOptions[option].onclick = function() { updateAttributes(); };
     }
+}
+
+function updateAttributes() {
+    fetch(`/slideout_attributechange?productId=${productId}`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: $('#delivery-options').serialize()
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+        // update possible conditional options
+        responseJson.DisabledAttributeMappingIds.forEach(id => {
+            var options = document.querySelectorAll(`[id$='_${id}']`);
+            options.forEach(option => {
+                option.style.display = "none";
+                // Uncheck the hidden option
+                var checkbox = option.querySelector(`input[id^='product_attribute_${id}_']`);
+                if (checkbox !== undefined && checkbox !== null) {
+                    checkbox.checked = false;
+                }
+            })
+        });
+
+        responseJson.EnabledAttributeMappingIds.forEach(id => {
+            var options = document.querySelectorAll(`[id$='_${id}']`);
+            options.forEach(option => {
+                option.style.display = "block";
+            })
+        });
+
+        const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
+        pickupInStoreOptions.style.display = responseJson.IsPickup ?
+            "block" :
+            "none";
+
+        if (!responseJson.IsPickup) {
+            resetSelectStoreButtons();
+            selectedShop = "";
+        }
+
+        addToCartButton.disabled = responseJson.IsPickup && selectedShop === "";
+
+        $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
+    })
+    .catch(err => {
+        console.log(err)
+    })
 }
 
 function setInformationalIconListeners() {

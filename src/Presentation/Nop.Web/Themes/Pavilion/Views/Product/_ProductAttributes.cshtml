@@ -34,7 +34,7 @@
                 // custom: change Warranty to Extended Warranty
                 textPrompt = textPrompt == "Warranty" ? "Extended Warranty" : textPrompt;
                 // custom: configure hidden items
-                var isHidden = attribute.IsHiddenPreload() || attribute.Name == "Haul Away (Delivery/Install)" ?
+                var isHidden = attribute.IsHiddenPreload() ?
                     "display:none" :
                     "";
                 
