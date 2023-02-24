@@ -34,6 +34,7 @@ zipCodeInput.addEventListener('keypress', function(event) {
       checkDeliveryShippingAvailabilityAsync();
     }
 });
+CartSlideoutOverlay.addEventListener('onclick', hideCartSlideout);
 
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
