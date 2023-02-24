@@ -28,6 +28,12 @@ var selectedShop = "";
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
+zipCodeInput.addEventListener('keypress', function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      checkDeliveryShippingAvailabilityAsync();
+    }
+});
 
 async function checkDeliveryShippingAvailabilityAsync() {
     zipCodeInput.disabled = true;
