@@ -54,6 +54,5 @@ namespace Nop.Core.Infrastructure
         /// <param name="type">Type of service</param>
         /// <returns>Resolved service</returns>
         object ResolveUnregistered(Type type);
-
     }
 }

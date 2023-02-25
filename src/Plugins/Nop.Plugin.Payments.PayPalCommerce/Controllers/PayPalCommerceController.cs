@@ -71,7 +71,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
         /// <summary>
         /// Prepare credentials and onboarding model properties
         /// </summary>
-        /// <param name="model">Comfiguration model</param>
+        /// <param name="model">Configuration model</param>
         /// <param name="settings">Plugin settings</param>
         /// <param name="storeId">Store id</param>
         /// <returns>A task that represents the asynchronous operation</returns>
