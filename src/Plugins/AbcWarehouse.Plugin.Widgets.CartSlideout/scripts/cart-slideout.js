@@ -261,6 +261,10 @@ async function editCartItemAsync(shoppingCartItemId) {
 
     const responseJson = await response.json();
     showCartSlideout(responseJson);
+
+    deliveryInput.style.display = "none";
+    deliveryOptions.style.display = "block";
+    updateAttributes();
 }
 
 async function addCartItemAsync(productId) {
