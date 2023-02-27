@@ -231,7 +231,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets the manufacturers by category identifier
         /// </summary>
-        /// <param name="categoryId">Cateogry identifier</param>
+        /// <param name="categoryId">Category identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturers
@@ -251,13 +251,14 @@ namespace Nop.Services.Catalog
                 select p;
 
             var store = await _storeContext.GetCurrentStoreAsync();
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             //apply store mapping constraints
             productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, store.Id);
 
             //apply ACL constraints
-            productsQuery = await _aclService.ApplyAcl(productsQuery, currentCustomer);
+            productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
 
             var subCategoryIds = _catalogSettings.ShowProductsFromSubcategories
                 ? await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)
@@ -281,7 +282,7 @@ namespace Nop.Services.Catalog
                 select m;
 
             var key = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId.ToString());
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId, store, customerRoleIds);
 
             return await _staticCacheManager.GetAsync(key, async () => await manufacturersQuery.Distinct().ToListAsync());
         }
