@@ -159,9 +159,7 @@ namespace Nop.Services.Html.CodeFormatter
             {
                 return "<span class=\"kwrd\">" + match + "</span>";
             }
-
-            System.Diagnostics.Debug.Assert(false, "None of the above!");
-
+            
             return string.Empty; //none of the above
         }
     }

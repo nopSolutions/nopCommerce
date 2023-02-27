@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Localization;
-using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
@@ -18,21 +18,21 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IVendorAttributeService _vendorAttributeService;
-
+        
         #endregion
 
         #region Ctor
 
-        public VendorAttributeModelFactory(ILocalizationService localizationService,
-            ILocalizedModelFactory localizedModelFactory,
-            IVendorAttributeService vendorAttributeService)
+        public VendorAttributeModelFactory(IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
+            ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory)
         {
+            _vendorAttributeService = vendorAttributeService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
-            _vendorAttributeService = vendorAttributeService;
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get vendor attributes
-            var vendorAttributes = (await _vendorAttributeService.GetAllVendorAttributesAsync()).ToPagedList(searchModel);
+            var vendorAttributes = (await _vendorAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new VendorAttributeListModel().PrepareToGridAsync(searchModel, vendorAttributes, () =>
@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             //get vendor attribute values
-            var vendorAttributeValues = (await _vendorAttributeService.GetVendorAttributeValuesAsync(vendorAttribute.Id)).ToPagedList(searchModel);
+            var vendorAttributeValues = (await _vendorAttributeService.GetAttributeValuesAsync(vendorAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new VendorAttributeValueListModel().PrepareToGrid(searchModel, vendorAttributeValues, () =>
@@ -218,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
             }
 
-            model.VendorAttributeId = vendorAttribute.Id;
+            model.AttributeId = vendorAttribute.Id;
 
             //prepare localized models
             if (!excludeProperties)

@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Caching;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Nop.Services.Vendors.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(VendorAttributeValue entity)
         {
-            await RemoveAsync(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, entity.VendorAttributeId);
+            await RemoveAsync(NopAttributeDefaults.AttributeValuesByAttributeCacheKey, nameof(VendorAttribute), entity.AttributeId);
         }
     }
 }

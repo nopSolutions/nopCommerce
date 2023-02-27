@@ -16,6 +16,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common.Pdf;
 using Nop.Services.Configuration;
@@ -44,8 +45,8 @@ namespace Nop.Services.Common
         private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressService _addressService;
+        private readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -80,8 +81,8 @@ namespace Nop.Services.Common
         public PdfService(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressService addressService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
             ICountryService countryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
@@ -110,11 +111,11 @@ namespace Nop.Services.Common
             VendorSettings vendorSettings)
         {
             _addressSettings = addressSettings;
-            _addressService = addressService;
             _catalogSettings = catalogSettings;
-            _countryService = countryService;
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _addressAttributeFormatter = addressAttributeFormatter;
+            _countryService = countryService;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;

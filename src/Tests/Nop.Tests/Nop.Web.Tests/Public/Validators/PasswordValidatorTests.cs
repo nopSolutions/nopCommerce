@@ -50,6 +50,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 32,
                 PasswordRequireLowercase = true
             };
 
@@ -72,6 +73,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 32,
                 PasswordRequireUppercase = true                
             };
 
@@ -94,6 +96,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 32,
                 PasswordRequireDigit = true
             };
 
@@ -116,6 +119,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
+                PasswordMaxLength = 32,
                 PasswordRequireNonAlphanumeric = true
             };
 

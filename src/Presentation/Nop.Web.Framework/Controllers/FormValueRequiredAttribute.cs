@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -107,10 +106,9 @@ namespace Nop.Web.Framework.Controllers
                             break;
                     }
                 }
-                catch (Exception exc)
+                catch
                 {
                     //try-catch to ensure that no exception is throw
-                    Debug.WriteLine(exc.Message);
                 }
             }
             return false;

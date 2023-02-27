@@ -18,6 +18,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http.Extensions;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -54,9 +55,9 @@ namespace Nop.Web.Factories
         private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -105,9 +106,9 @@ namespace Nop.Web.Factories
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
             IAddressModelFactory addressModelFactory,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -152,9 +153,9 @@ namespace Nop.Web.Factories
             _commonSettings = commonSettings;
             _customerSettings = customerSettings;
             _addressModelFactory = addressModelFactory;
-            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
@@ -216,8 +217,7 @@ namespace Nop.Web.Factories
             var store = await _storeContext.GetCurrentStoreAsync();
             var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
             var checkoutAttributes =
-                await _checkoutAttributeService.GetAllCheckoutAttributesAsync(store.Id,
-                    excludeShippableAttributes);
+                await _checkoutAttributeService.GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
                 var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
@@ -236,10 +236,10 @@ namespace Nop.Web.Factories
                         .ToList();
                 }
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
@@ -288,7 +288,7 @@ namespace Nop.Web.Factories
 
                             //select new values
                             var selectedValues =
-                                _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
+                                _checkoutAttributeParser.ParseAttributeValues(selectedCheckoutAttributes);
                             foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
                                 foreach (var item in attributeModel.Values)
                                     if (attributeValue.Id == item.Id)
@@ -1042,7 +1042,7 @@ namespace Nop.Web.Factories
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
                     var checkoutAttributesExist = (await _checkoutAttributeService
-                        .GetAllCheckoutAttributesAsync(store.Id, !requiresShipping))
+                        .GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, !requiresShipping))
                         .Any();
 
                     var minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmountAsync(cart);

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
+using Nop.Services.Attributes;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
@@ -18,7 +18,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
 
@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public CustomerAttributeModelFactory(ICustomerAttributeService customerAttributeService,
+        public CustomerAttributeModelFactory(IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory)
         {
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer attributes
-            var customerAttributes = (await _customerAttributeService.GetAllCustomerAttributesAsync()).ToPagedList(searchModel);
+            var customerAttributes = (await _customerAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new CustomerAttributeListModel().PrepareToGridAsync(searchModel, customerAttributes, () =>
@@ -176,7 +176,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get customer attribute values
             var customerAttributeValues = (await _customerAttributeService
-                .GetCustomerAttributeValuesAsync(customerAttribute.Id)).ToPagedList(searchModel);
+                .GetAttributeValuesAsync(customerAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAttributeValueListModel().PrepareToGrid(searchModel, customerAttributeValues, () =>
@@ -219,7 +219,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
             }
 
-            model.CustomerAttributeId = customerAttribute.Id;
+            model.AttributeId = customerAttribute.Id;
 
             //prepare localized models
             if (!excludeProperties)

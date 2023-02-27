@@ -234,7 +234,6 @@ namespace Nop.Core.Infrastructure
                     msg += e.Message + Environment.NewLine;
 
                 var fail = new Exception(msg, ex);
-                Debug.WriteLine(fail.Message, fail);
 
                 throw fail;
             }

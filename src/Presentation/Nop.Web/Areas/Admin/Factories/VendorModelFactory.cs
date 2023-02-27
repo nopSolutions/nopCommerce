@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -31,14 +32,14 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICurrencyService _currencyService;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
+        private readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
+        private readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorAttributeParser _vendorAttributeParser;
-        private readonly IVendorAttributeService _vendorAttributeService;
         private readonly IVendorService _vendorService;
         private readonly VendorSettings _vendorSettings;
 
@@ -50,14 +51,14 @@ namespace Nop.Web.Areas.Admin.Factories
             ICurrencyService currencyService,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
+            IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
+            IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IUrlRecordService urlRecordService,
-            IVendorAttributeParser vendorAttributeParser,
-            IVendorAttributeService vendorAttributeService,
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
@@ -65,14 +66,14 @@ namespace Nop.Web.Areas.Admin.Factories
             _currencyService = currencyService;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _urlRecordService = urlRecordService;
-            _vendorAttributeParser = vendorAttributeParser;
-            _vendorAttributeService = vendorAttributeService;
             _vendorService = vendorService;
             _vendorSettings = vendorSettings;
         }
@@ -118,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //get available vendor attributes
-            var vendorAttributes = await _vendorAttributeService.GetAllVendorAttributesAsync();
+            var vendorAttributes = await _vendorAttributeService.GetAllAttributesAsync();
             foreach (var attribute in vendorAttributes)
             {
                 var attributeModel = new VendorModel.VendorAttributeModel
@@ -129,10 +130,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     AttributeControlType = attribute.AttributeControlType
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _vendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _vendorAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new VendorModel.VendorAttributeValueModel
@@ -162,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _vendorAttributeParser.ParseVendorAttributeValuesAsync(selectedVendorAttributes);
+                                    var selectedValues = await _vendorAttributeParser.ParseAttributeValuesAsync(selectedVendorAttributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)

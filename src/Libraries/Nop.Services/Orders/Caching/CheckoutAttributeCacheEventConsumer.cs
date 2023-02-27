@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
 using System.Threading.Tasks;
+using Nop.Services.Attributes;
 
 namespace Nop.Services.Orders.Caching
 {
@@ -16,7 +17,7 @@ namespace Nop.Services.Orders.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(CheckoutAttribute entity)
         {
-            await RemoveAsync(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity);
+            await RemoveAsync(NopAttributeDefaults.AttributeValuesByAttributeCacheKey, nameof(CheckoutAttribute), entity);
         }
     }
 }

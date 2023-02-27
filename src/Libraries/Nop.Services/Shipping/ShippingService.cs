@@ -9,13 +9,13 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Orders;
 using Nop.Services.Shipping.Pickup;
 
 namespace Nop.Services.Shipping
@@ -28,7 +28,7 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -52,7 +52,7 @@ namespace Nop.Services.Shipping
         #region Ctor
 
         public ShippingService(IAddressService addressService,
-            ICheckoutAttributeParser checkoutAttributeParser,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
             ICountryService countryService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -547,7 +547,7 @@ namespace Nop.Services.Shipping
             var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
             if (string.IsNullOrEmpty(checkoutAttributesXml))
                 return totalWeight;
-            var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+            var attributeValues = _checkoutAttributeParser.ParseAttributeValues(checkoutAttributesXml);
             foreach (var attributeValue in await attributeValues.SelectMany(x => x.values).ToListAsync())
                 totalWeight += attributeValue.WeightAdjustment;
 

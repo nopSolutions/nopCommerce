@@ -14,6 +14,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Http.Extensions;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -41,9 +42,9 @@ namespace Nop.Web.Controllers
         private readonly AddressSettings _addressSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;        
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
+        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
         private readonly ICheckoutModelFactory _checkoutModelFactory;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
@@ -74,9 +75,9 @@ namespace Nop.Web.Controllers
         public CheckoutController(AddressSettings addressSettings,
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            IAddressAttributeParser addressAttributeParser,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
+            IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
             ICheckoutModelFactory checkoutModelFactory,
             ICountryService countryService,
             ICustomerService customerService,
@@ -103,9 +104,9 @@ namespace Nop.Web.Controllers
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
-            _addressAttributeParser = addressAttributeParser;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
+            _addressAttributeParser = addressAttributeParser;
             _checkoutModelFactory = checkoutModelFactory;
             _countryService = countryService;
             _customerService = customerService;
@@ -268,7 +269,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Address can't be loaded");
 
                 //custom address attributes
-                var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
                 var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
 
                 if (customAttributeWarnings.Any()) 
@@ -677,7 +678,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -835,7 +836,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1548,7 +1549,7 @@ namespace Nop.Web.Controllers
                     var newAddress = model.BillingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                    var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
                     var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
@@ -1710,7 +1711,7 @@ namespace Nop.Web.Controllers
                     var newAddress = model.ShippingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+                    var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
                     var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {

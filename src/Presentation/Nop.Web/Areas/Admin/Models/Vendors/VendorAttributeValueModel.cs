@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
 
         #region Properties
 
-        public int VendorAttributeId { get; set; }
+        public int AttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.VendorAttributes.Values.Fields.Name")]
         public string Name { get; set; }

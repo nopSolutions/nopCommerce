@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         #region Properties
 
-        public int CustomerAttributeId { get; set; }
+        public int AttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
         public string Name { get; set; }

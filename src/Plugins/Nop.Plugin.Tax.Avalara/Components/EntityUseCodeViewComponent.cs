@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Tax.Avalara.Models.EntityUseCode;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -32,7 +33,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -46,7 +47,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Ctor
 
         public EntityUseCodeViewComponent(AvalaraTaxManager avalaraTaxManager,
-            ICheckoutAttributeService checkoutAttributeService,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -149,7 +150,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (widgetZone.Equals(AdminWidgetZones.CheckoutAttributeDetailsBlock))
             {
                 model.PrecedingElementId = nameof(CheckoutAttributeModel.IsTaxExempt);
-                entity = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(entityModel.Id);
+                entity = await _checkoutAttributeService.GetAttributeByIdAsync(entityModel.Id);
             }
 
             //try to get previously saved entity use code

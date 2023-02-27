@@ -14,6 +14,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -38,8 +39,8 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
@@ -71,8 +72,8 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
@@ -1191,17 +1192,17 @@ namespace Nop.Services.Orders
                 return warnings;
 
             //selected attributes
-            var attributes1 = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttributesXml);
+            var attributes1 = await _checkoutAttributeParser.ParseAttributesAsync(checkoutAttributesXml);
 
             //existing checkout attributes
             var excludeShippableAttributes = !await ShoppingCartRequiresShippingAsync(shoppingCart);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributesAsync(store.Id, excludeShippableAttributes);
+            var attributes2 = await _checkoutAttributeService.GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, excludeShippableAttributes);
 
             //validate conditional attributes only (if specified)
             attributes2 = await attributes2.WhereAwait(async x =>
             {
-                var conditionMet = await _checkoutAttributeParser.IsConditionMetAsync(x, checkoutAttributesXml);
+                var conditionMet = await _checkoutAttributeParser.IsConditionMetAsync(x.ConditionAttributeXml, checkoutAttributesXml);
                 return !conditionMet.HasValue || conditionMet.Value;
             }).ToListAsync();
 

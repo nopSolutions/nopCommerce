@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Services.Common;
+using Nop.Services.Attributes;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -20,8 +20,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        private readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
 
@@ -29,8 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AddressAttributeModelFactory(IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
+        public AddressAttributeModelFactory(IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
+            IAttributeService<AddressAttribute, AddressAttributeValue> addressAttributeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory)
         {
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get address attributes
-            var addressAttributes = (await _addressAttributeService.GetAllAddressAttributesAsync()).ToPagedList(searchModel);
+            var addressAttributes = (await _addressAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new AddressAttributeListModel().PrepareToGridAsync(searchModel, addressAttributes, () =>
@@ -179,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(addressAttribute));
 
             //get address attribute values
-            var addressAttributeValues = (await _addressAttributeService.GetAddressAttributeValuesAsync(addressAttribute.Id)).ToPagedList(searchModel);
+            var addressAttributeValues = (await _addressAttributeService.GetAttributeValuesAsync(addressAttribute.Id)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new AddressAttributeValueListModel().PrepareToGrid(searchModel, addressAttributeValues, () =>
@@ -222,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
             }
 
-            model.AddressAttributeId = addressAttribute.Id;
+            model.AttributeId = addressAttribute.Id;
 
             //prepare localized models
             if (!excludeProperties)
@@ -242,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            var attributes = await _addressAttributeService.GetAllAddressAttributesAsync();
+            var attributes = await _addressAttributeService.GetAllAttributesAsync();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddressModel.AddressAttributeModel
@@ -253,10 +253,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     AttributeControlType = attribute.AttributeControlType,
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _addressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _addressAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressModel.AddressAttributeValueModel
@@ -284,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                 item.IsPreSelected = false;
 
                             //select new values
-                            var selectedValues = await _addressAttributeParser.ParseAddressAttributeValuesAsync(selectedAddressAttributes);
+                            var selectedValues = await _addressAttributeParser.ParseAttributeValuesAsync(selectedAddressAttributes);
                             foreach (var attributeValue in selectedValues)
                                 foreach (var item in attributeModel.Values)
                                     if (attributeValue.Id == item.Id)

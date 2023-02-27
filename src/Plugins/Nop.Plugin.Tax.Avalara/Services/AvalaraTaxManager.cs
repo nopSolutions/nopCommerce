@@ -15,6 +15,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -35,7 +36,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly IAddressService _addressService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -67,7 +69,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
         public AvalaraTaxManager(AvalaraTaxSettings avalaraTaxSettings,
             IAddressService addressService,
-            ICheckoutAttributeParser checkoutAttributeParser,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICountryService countryService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -586,7 +589,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributesAsync(Order order)
         {
             //get checkout attributes values
-            var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
+            var attributeValues = _checkoutAttributeParser.ParseAttributeValues(order.CheckoutAttributesXml);
             return await attributeValues.SelectManyAwait(async attributeWithValues =>
             {
                 var attribute = attributeWithValues.attribute;

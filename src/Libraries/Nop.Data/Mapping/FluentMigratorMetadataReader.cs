@@ -5,7 +5,6 @@ using System.Reflection;
 using FluentMigrator.Expressions;
 using LinqToDB.Mapping;
 using LinqToDB.Metadata;
-using LinqToDB.SqlQuery;
 using Nop.Core;
 
 namespace Nop.Data.Mapping
@@ -47,6 +46,9 @@ namespace Nop.Data.Mapping
                 var entityField = entityDescriptor.Fields.SingleOrDefault(cd => cd.Name.Equals(NameCompatibilityManager.GetColumnName(type, memberInfo.Name), StringComparison.OrdinalIgnoreCase));
 
                 if (entityField is null)
+                    return null;
+
+                if (!(memberInfo as PropertyInfo)?.CanWrite ?? false)
                     return null;
 
                 var columnSystemType = (memberInfo as PropertyInfo)?.PropertyType ?? typeof(string);

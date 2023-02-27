@@ -8,12 +8,12 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -43,7 +43,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -59,7 +59,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
         public EventConsumer(AvalaraTaxManager avalaraTaxManager,
             AvalaraTaxSettings avalaraTaxSettings,
-            ICheckoutAttributeService checkoutAttributeService,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
@@ -183,7 +183,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 CustomerModel customerModel => (BaseEntity)await _customerService.GetCustomerByIdAsync(customerModel.Id),
                 CustomerRoleModel customerRoleModel => await _customerService.GetCustomerRoleByIdAsync(customerRoleModel.Id),
                 ProductModel productModel => await _productService.GetProductByIdAsync(productModel.Id),
-                CheckoutAttributeModel checkoutAttributeModel => await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeModel.Id),
+                CheckoutAttributeModel checkoutAttributeModel => await _checkoutAttributeService.GetAttributeByIdAsync(checkoutAttributeModel.Id),
                 _ => null
             };
             if (entity == null)
