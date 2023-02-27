@@ -347,8 +347,9 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="orderItems">Collection of order items</param>
         /// <param name="language">Language</param>
+        /// <param name="shipmentItems">Collection of shipment items; when using to prepare shipment items</param>
         /// <returns>A task that contains collection of product entries</returns>
-        protected virtual async Task<List<ProductItem>> GetOrderProductItemsAsync(Order order, IList<OrderItem> orderItems, Language language)
+        protected virtual async Task<List<ProductItem>> GetOrderProductItemsAsync(Order order, IList<OrderItem> orderItems, Language language, IList<ShipmentItem> shipmentItems = null)
         {
             var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? await _vendorService.GetVendorsByProductIdsAsync(orderItems.Select(item => item.ProductId).ToArray()) : new List<Vendor>();
 
@@ -399,7 +400,9 @@ namespace Nop.Services.Common
                 productItem.Price = unitPrice;
 
                 //qty
-                productItem.Quantity = oi.Quantity.ToString();
+                productItem.Quantity = shipmentItems is null ?
+                    oi.Quantity.ToString() : 
+                    shipmentItems.FirstOrDefault(x => x.OrderItemId == oi.Id).Quantity.ToString();
 
                 //total
                 string subTotal;
@@ -819,7 +822,7 @@ namespace Nop.Services.Common
                 ShipmentNumberText = shipment.Id.ToString(),
                 OrderNumberText = order.CustomOrderNumber,
                 Address = await GetShippingAddressAsync(language, order),
-                Products = await GetOrderProductItemsAsync(order, orderItems, language)
+                Products = await GetOrderProductItemsAsync(order, orderItems, language, shipmentItems)
             };
 
             await using var pdfStream = new MemoryStream();
