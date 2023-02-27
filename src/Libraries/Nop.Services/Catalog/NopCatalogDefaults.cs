@@ -204,13 +204,20 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <remarks>
         /// {0} : category ID
+        /// {1} : store ID
+        /// {2} : customer role Ids
         /// </remarks>
-        public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}", ManufacturersByCategoryPrefix);
+        public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}.{1}.{2}", ManufacturersByCategoryWithIdPrefix, ManufacturersByCategoryPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ManufacturersByCategoryPrefix => "Nop.manufacturer.bycategory.";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ManufacturersByCategoryWithIdPrefix => "Nop.manufacturer.bycategory.{0}.";
 
         #endregion
 
