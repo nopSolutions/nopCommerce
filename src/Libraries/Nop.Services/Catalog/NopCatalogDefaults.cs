@@ -49,7 +49,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : parent category ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}", CategoriesByParentCategoryPrefix);
@@ -151,7 +151,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey ProductCategoriesByProductCacheKey => new("Nop.productcategory.byproduct.{0}-{1}-{2}-{3}", ProductCategoriesByProductPrefix);
@@ -186,7 +186,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}", ProductManufacturersByProductPrefix);
