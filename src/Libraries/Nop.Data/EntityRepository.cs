@@ -115,6 +115,28 @@ namespace Nop.Data
             return query.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
         }
 
+        /// <summary>
+        /// Transactionally deletes a list of entities
+        /// </summary>
+        /// <param name="entities">Entities to delete</param>
+        protected virtual async Task DeleteAsync(IList<TEntity> entities)
+        {
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            await _dataProvider.BulkDeleteEntitiesAsync(entities);
+            transaction.Complete();
+        }
+
+        /// <summary>
+        /// Soft-deletes <see cref="ISoftDeletedEntity"/> entities
+        /// </summary>
+        /// <param name="entities">Entities to delete</param>
+        protected virtual async Task DeleteAsync<T>(IList<T> entities) where T : ISoftDeletedEntity, TEntity
+        {
+            foreach (var entity in entities)
+                entity.Deleted = true;
+            await _dataProvider.UpdateEntitiesAsync(entities);
+        }
+
         #endregion
 
         #region Methods
@@ -603,29 +625,10 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            var softDeletedEntities = new List<TEntity>();
-            var hardDeletedEntities = new List<TEntity>();
-            foreach (var entity in entities)
-            {
-                if (entity is ISoftDeletedEntity softDeletedEntity)
-                {
-                    softDeletedEntity.Deleted = true;
-                    softDeletedEntities.Add(entity);
-                }
-                else
-                {
-                    hardDeletedEntities.Add(entity);
-                }
-            }
+            if (!entities.Any())
+                return;
 
-            if (softDeletedEntities.Count > 0)
-                await _dataProvider.UpdateEntitiesAsync(softDeletedEntities);
-            if (hardDeletedEntities.Count > 0)
-            {
-                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-                await _dataProvider.BulkDeleteEntitiesAsync(hardDeletedEntities);
-                transaction.Complete();
-            }
+            await DeleteAsync(entities);
 
             //event notification
             if (!publishEvent)
