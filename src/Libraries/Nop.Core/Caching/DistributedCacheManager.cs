@@ -177,7 +177,7 @@ namespace Nop.Core.Caching
                 {
                     item = (T)await lazy.Value;
 
-                    if (key.CacheTime == 0)
+                    if (key.CacheTime == 0 || item == null)
                         return item;
 
                     setTask = _distributedCache.SetStringAsync(
@@ -235,10 +235,10 @@ namespace Nop.Core.Caching
             
             try
             {
+                _ongoing.TryAdd(key.Key, lazy);
                 // await the lazy task in order to force value creation instead of directly setting data
                 // this way, other cache manager instances can access it while it is being set
                 SetLocal(key.Key, await lazy.Value);
-                _ongoing.TryAdd(key.Key, lazy);
                 await _distributedCache.SetStringAsync(key.Key, JsonConvert.SerializeObject(data), PrepareEntryOptions(key));
             }
             finally
