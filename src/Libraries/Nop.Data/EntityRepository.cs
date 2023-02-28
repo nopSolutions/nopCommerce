@@ -190,7 +190,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
-            if (!ids?.Any() ?? true)
+            if (ids?.Any() != true)
                 return new List<TEntity>();
 
             async Task<IList<TEntity>> getByIdsAsync()
@@ -198,14 +198,15 @@ namespace Nop.Data
                 var query = AddDeletedFilter(Table, includeDeleted);
 
                 //get entries
-                var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
+                var entriesById = await query
+                    .Where(entry => ids.Contains(entry.Id))
+                    .ToDictionaryAsync(entry => entry.Id);
 
                 //sort by passed identifiers
                 var sortedEntries = new List<TEntity>();
                 foreach (var id in ids)
                 {
-                    var sortedEntry = entries.Find(entry => entry.Id == id);
-                    if (sortedEntry != null)
+                    if (entriesById.TryGetValue(id, out var sortedEntry))
                         sortedEntries.Add(sortedEntry);
                 }
 
@@ -602,21 +603,27 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            if (entities.OfType<ISoftDeletedEntity>().Any())
+            var softDeletedEntities = new List<TEntity>();
+            var hardDeletedEntities = new List<TEntity>();
+            foreach (var entity in entities)
             {
-                foreach (var entity in entities)
+                if (entity is ISoftDeletedEntity softDeletedEntity)
                 {
-                    if (entity is ISoftDeletedEntity softDeletedEntity)
-                    {
-                        softDeletedEntity.Deleted = true;
-                        await _dataProvider.UpdateEntityAsync(entity);
-                    }
+                    softDeletedEntity.Deleted = true;
+                    softDeletedEntities.Add(entity);
+                }
+                else
+                {
+                    hardDeletedEntities.Add(entity);
                 }
             }
-            else
+
+            if (softDeletedEntities.Count > 0)
+                await _dataProvider.UpdateEntitiesAsync(softDeletedEntities);
+            if (hardDeletedEntities.Count > 0)
             {
                 using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-                await _dataProvider.BulkDeleteEntitiesAsync(entities);
+                await _dataProvider.BulkDeleteEntitiesAsync(hardDeletedEntities);
                 transaction.Complete();
             }
 
