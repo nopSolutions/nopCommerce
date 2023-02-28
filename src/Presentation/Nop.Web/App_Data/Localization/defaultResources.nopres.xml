@@ -7945,7 +7945,7 @@
     <Value>A value indicating whether pictures are stored in database or file system.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
-    <Value>NOTE: Do not forget to backup your database before changing this option</Value>
+    <Value>NOTE: Do not forget to backup your database before changing this option. It is not recommended to change this setting in production environment.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDefaultImage">
     <Value>Default image</Value>

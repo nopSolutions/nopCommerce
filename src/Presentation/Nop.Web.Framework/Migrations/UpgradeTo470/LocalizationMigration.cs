@@ -101,6 +101,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6555
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks"] = "Addresses of known proxy networks",
                 ["Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint"] = "Specify a list of IP CIDR notations (comma separated) to accept forwarded headers. e.g. 172.64.0.0/13,162.158.0.0/15",
+                //#6602
+                ["Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note"] = "NOTE: Do not forget to backup your database before changing this option. It is not recommended to change this setting in production environment.",
             }, languageId);
 
             #endregion
