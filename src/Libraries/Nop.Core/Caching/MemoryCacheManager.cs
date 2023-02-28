@@ -143,7 +143,7 @@ namespace Nop.Core.Caching
         {
             var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
 
-            return value != null ? await value : defaultValue;
+            return value != null ? (await value) ?? defaultValue : defaultValue;
         }
 
         /// <summary>
