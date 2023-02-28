@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Lets Encrypt Free SSL",
+  "SystemName": "Misc.LetsEncrypt",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Tsoukalis George",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.LetsEncrypt.dll",
+  "Description": "This plugin enables free SSL with LetsEncrypt in NopCommerce"
+}
