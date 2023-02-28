@@ -35,3 +35,24 @@ rm -rf solr-9.1.1.tgz install_solr_service.sh
 
 To solve the fatal error that occurs on Codespaces from time to time, stop and start
 the codespace.
+
+## Installing Let's Encrypt Certificate
+
+Before doing this, you'll need to:
+* Install `certbot` and `openssl` on server.
+* Open port 80.
+* nopCommerce Let's Encrypt Plugin is enabled.
+
+1. RDP into server, run:
+```
+# create cert
+certbot certonly --webroot -w C:/NopAbc/wwwroot -d <DOMAIN>
+
+# convert cert to pfx
+2. `& 'C:/Program Files/OpenSSL-Win64/bin/openssl.exe' pkcs12 -macalg SHA1 -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -export -out cert.pfx -inkey C:/Certbot/live/DOMAIN/privkey.pem -in C:/Certbot/live/DOMAIN/cert.pem`
+```
+3. Import cert into IIS.
+4. Update HTTPS binding.
+5. Restart App Pool.
+6. Run SSL Test.
+7. Close firewall if needed.
