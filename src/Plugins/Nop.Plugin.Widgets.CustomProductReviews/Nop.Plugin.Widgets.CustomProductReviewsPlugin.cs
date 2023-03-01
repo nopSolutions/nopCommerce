@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Azure;
@@ -33,6 +34,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IWebHelper _webHelper;
 
 
         #endregion
@@ -44,7 +46,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
-            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext)
+            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext, IWebHelper webHelper)
         {
             _customProdutReviewSettings = customProdutReviewSettings;
             _actionContextAccessor = actionContextAccessor;
@@ -53,6 +55,8 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
             _storeContext = storeContext;
+            _webHelper=webHelper;
+            
         }
 
         #endregion
@@ -99,8 +103,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
-            var store =await _storeContext.GetCurrentStoreAsync();
-            string host=store.Hosts;
+
+            Uri myUri = new Uri(_webHelper.GetStoreLocation());
+            string host = myUri.Host;
+
+
             host = EncryptService.Encrypt(host);
             var version = "1.0.0";
             version = "CustomProductReviews" + " " + version;
@@ -109,7 +116,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             await _settingService.SaveSettingAsync(new CustomProductReviewsSettings
             {
                 WidgetZone = PublicWidgetZones.ProductReviewsPageTop,
-                data = "testdata",
+                data = host+","+version,
                 MaximumFile = 5,
                 MaximumSize = 1073741824
 

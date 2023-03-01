@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Widgets.What3wor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Payments.Iyzico", "Plugins\Nop.Plugin.Payments.Iyzico\Nop.Plugin.Payments.Iyzico.csproj", "{BD1C5367-A9D6-4F4B-A6DF-491711F39940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.CustomProductReviews", "Plugins\Nop.Plugin.Widgets.CustomProductReviews\Nop.Plugin.Widgets.CustomProductReviews.csproj", "{EC190740-52EB-4519-AE39-FA8086E8A855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Widgets.CustomProductReviews", "Plugins\Nop.Plugin.Widgets.CustomProductReviews\Nop.Plugin.Widgets.CustomProductReviews.csproj", "{EC190740-52EB-4519-AE39-FA8086E8A855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

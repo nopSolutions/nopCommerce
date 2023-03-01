@@ -9,26 +9,32 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Services
     public static class EncryptService
     {
 
-        public static string Encrypt(string plainText )
+        public static byte[] GetBytes(string input, Encoding encoding)
+        {
+            return encoding.GetBytes(input);
+        }
+        public static string Encrypt(string plainText)
         {
             // Check arguments.
             Aes myAes = Aes.Create();
-            byte[] IV = myAes.IV;
-           var Key= myAes.Key = Encoding.UTF8.GetBytes("1234567890aA+");
-            if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+
+
+            byte[] passwordBytes = GetBytes("1234567890aA+", new UTF8Encoding());
+            byte[] aesKey = SHA256Managed.Create().ComputeHash(passwordBytes);
+            byte[] aesIV = MD5.Create().ComputeHash(passwordBytes);
+            myAes.Key = aesKey;
+            myAes.IV = aesIV;
+            myAes.Mode = CipherMode.ECB;
+            myAes.Padding = PaddingMode.PKCS7;
+
             byte[] encrypted;
 
             // Create an Aes object
             // with the specified key and IV.
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
+                aesAlg.Key = myAes.Key;
+                aesAlg.IV = myAes.IV;
 
 
                 // Create an encryptor to perform the stream transform.
@@ -55,17 +61,20 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Services
 
         public static string Decrypt(string plaintxt)
         {
-            // Check arguments.
+
+            var cipherText = Convert.FromBase64String(plaintxt);
             Aes myAes = Aes.Create();
-            byte[] IV = myAes.IV;
-            var Key = myAes.Key = Encoding.UTF8.GetBytes("1234567890aA+");
-            var cipherText = Encoding.UTF8.GetBytes(plaintxt);
-            if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException("cipherText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+
+
+            byte[] passwordBytes = GetBytes("1234567890aA+", new UTF8Encoding());
+            byte[] aesKey = SHA256Managed.Create().ComputeHash(passwordBytes);
+            byte[] aesIV = MD5.Create().ComputeHash(passwordBytes);
+            myAes.Key = aesKey;
+            myAes.IV = aesIV;
+            myAes.Mode = CipherMode.ECB;
+            myAes.Padding = PaddingMode.PKCS7;
+
+            byte[] encrypted;
 
             // Declare the string used to hold
             // the decrypted text.
@@ -75,8 +84,8 @@ namespace Nop.Plugin.Widgets.CustomCustomProductReviews.Services
             // with the specified key and IV.
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
+                aesAlg.Key = myAes.Key;
+                aesAlg.IV = myAes.IV;
 
                 // Create a decryptor to perform the stream transform.
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
