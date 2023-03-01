@@ -240,6 +240,8 @@ namespace Nop.Services.Catalog
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
+            string stockMessage;
+
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (combination != null)
             {
@@ -249,32 +251,36 @@ namespace Nop.Services.Catalog
                 {
                     if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
                     {
-                        return product.DisplayStockQuantity
-                            //display "low stock" with stock quantity
-                            ? string.Format(await _localizationService.GetResourceAsync("Products.Availability.LowStockWithQuantity"), stockQuantity)
-                            //display "low stock" without stock quantity
-                            : await _localizationService.GetResourceAsync("Products.Availability.LowStock");
+                        stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "low stock" with stock quantity
+                        string.Format(await _localizationService.GetResourceAsync("Products.Availability.LowStockWithQuantity"), stockQuantity)
+                        :
+                        //display "low stock" without stock quantity
+                        await _localizationService.GetResourceAsync("Products.Availability.LowStock");
                     }
                     else
                     {
-                        return product.DisplayStockQuantity
-                            //display "in stock" with stock quantity
-                            ? string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
-                            //display "in stock" without stock quantity
-                            : await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                        stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "in stock" with stock quantity
+                        string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
+                        :
+                        //display "in stock" without stock quantity
+                        await _localizationService.GetResourceAsync("Products.Availability.InStock");
                     }
                 }
                 else
                 {
                     if (combination.AllowOutOfStockOrders)
                     {
-                        return await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                        stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
                     }
                     else
                     {
                         var productAvailabilityRange = await
                             _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
-                        return productAvailabilityRange == null
+                        stockMessage = productAvailabilityRange == null
                             ? await _localizationService.GetResourceAsync("Products.Availability.OutOfStock")
                             : string.Format(await _localizationService.GetResourceAsync("Products.Availability.AvailabilityRange"),
                                 await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
@@ -286,43 +292,42 @@ namespace Nop.Services.Catalog
                 //no combination configured
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
-                    var selectedIds = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
-                        .Where(pa => pa.IsRequired)
-                        .Select(pa => pa.Id)
-                        .ToHashSet();
-                    var exIds = (await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
-                        .Select(pa => pa.Id);
+                    var allIds = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).Where(pa => pa.IsRequired).Select(pa => pa.Id).ToList();
+                    var exIds = (await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml)).Select(pa => pa.Id).ToList();
 
-                    var allCount = selectedIds.Count;
-                    selectedIds.IntersectWith(exIds);
+                    var selectedIds = allIds.Intersect(exIds).ToList();
 
-                    if (selectedIds.Count != allCount)
-                    {
+                    if (selectedIds.Count() != allIds.Count)
                         if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
                             return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                         else
                         {
-                            var attributes = (await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id))
-                                .Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders)
-                                .SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml));
+                            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
 
-                            if (await attributes.AnyAsync(a => selectedIds.Overlaps(a.Select(a => a.Id))))
+                            combinations = combinations.Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders).ToList();
+
+                            var attributes = await combinations.SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml)).ToListAsync();
+
+                            var flag = attributes.SelectMany(a => a).Any(a => selectedIds.Contains(a.Id));
+
+                            if (flag)
                                 return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                         }
-                    }
 
                     var productAvailabilityRange = await
                         _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
-                    return productAvailabilityRange == null
+                    stockMessage = productAvailabilityRange == null
                         ? await _localizationService.GetResourceAsync("Products.Availability.OutOfStock")
                         : string.Format(await _localizationService.GetResourceAsync("Products.Availability.AvailabilityRange"),
                             await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
                 }
                 else
                 {
-                    return await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                    stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
                 }
             }
+
+            return stockMessage;
         }
 
         /// <summary>
