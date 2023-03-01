@@ -115,18 +115,18 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            var value = _memoryCache.GetOrCreate(
+            var value = await _memoryCache.GetOrCreate(
                 key.Key,
                 entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(key));
                     return new Lazy<Task<T>>(acquire, true);
-                })?.Value;
+                }).Value;
 
-            if (value != null)
-                return await value;
+            if (value == null)
+                await RemoveAsync(key);
 
-            return default;
+            return value;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Nop.Core.Caching
         {
             var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
 
-            return value != null ? await value : defaultValue;
+            return value != null ? (await value) ?? defaultValue : defaultValue;
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Nop.Core.Caching
             if (disposing)
                 // don't dispose of the MemoryCache, as it is injected
                 _clearToken.Dispose();
-            
+
             _disposed = true;
         }
 
