@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using StackExchange.Redis;
 
 namespace Nop.Services.Caching
@@ -24,6 +30,8 @@ namespace Nop.Services.Caching
         private readonly ICacheKeyManager _keyManager;
         private readonly IMemoryCache _memoryCache;
         private readonly IRedisConnectionWrapper _connection;
+        private readonly ConcurrentQueue<string> _messageQueue = new();
+        private readonly Timer _timer;
 
         #endregion
 
@@ -31,13 +39,21 @@ namespace Nop.Services.Caching
 
         public RedisSynchronizedMemoryCache(IMemoryCache memoryCache,
             IRedisConnectionWrapper connectionWrapper,
-            ICacheKeyManager cacheKeyManager)
+            ICacheKeyManager cacheKeyManager,
+            AppSettings appSettings)
         {
             _processId = $"{Guid.NewGuid()}:{Environment.ProcessId}";
 
             _memoryCache = memoryCache;
             _keyManager = cacheKeyManager;
             _connection = connectionWrapper;
+
+            var publishIntervalMs = appSettings.Get<DistributedCacheConfig>().PublishIntervalMs;
+            if (publishIntervalMs > 0)
+            {
+                var timeSpan = TimeSpan.FromMilliseconds(publishIntervalMs);
+                _timer = new(_ => PublishQueuedChangeEvents(), null, timeSpan, timeSpan);
+            }
 
             Subscribe();
         }
@@ -55,12 +71,16 @@ namespace Nop.Services.Caching
             var subscriber = _connection.GetSubscriber();
             subscriber.Subscribe(channel + "*", (redisChannel, value) =>
             {
-                if (value == _processId) 
+                var publisher = ((string)redisChannel).Replace(channel, "");
+                if (publisher == _processId)
                     return;
 
-                var key = ((string)redisChannel).Replace(channel, "");
-                _memoryCache.Remove(key);
-                _keyManager.RemoveKey(key);
+                var keys = JsonConvert.DeserializeObject<string[]>(value);
+                foreach (var key in keys)
+                {
+                    _memoryCache.Remove(key);
+                    _keyManager.RemoveKey(key);
+                }
             });
         }
 
@@ -70,15 +90,44 @@ namespace Nop.Services.Caching
         protected string ChannelPrefix => $"__change@{_connection.GetDatabase().Database}__{_connection.Instance}__:";
 
         /// <summary>
-        /// Publish change event on key channel
+        /// Enqueue or publish change event
         /// </summary>
         /// <param name="key"></param>
         protected void PublishChangeEvent(object key)
         {
-            var subscriber = _connection.GetSubscriber();
-
             var stringKey = key.ToString();
-            subscriber.Publish($"{ChannelPrefix}{stringKey}", _processId, CommandFlags.FireAndForget);
+            if (_timer == null)
+                BatchPublishChangeEvents(stringKey);
+            else
+                _messageQueue.Enqueue(stringKey);
+        }
+
+        /// <summary>
+        /// Publish accumulated change events on key channel
+        /// </summary>
+        protected void PublishQueuedChangeEvents()
+        {
+            IEnumerable<string> getKeys()
+            {
+                while (_messageQueue.TryDequeue(out var key))
+                    yield return key;
+            }
+            BatchPublishChangeEvents(getKeys().Distinct().ToArray());
+        }
+
+        /// <summary>
+        /// Publish change events on key channel
+        /// </summary>
+        protected void BatchPublishChangeEvents(params string[] keys)
+        {
+            if (keys.Length == 0)
+                return;
+
+            var subscriber = _connection.GetSubscriber();
+            subscriber.Publish(
+                $"{ChannelPrefix}{_processId}",
+                JsonConvert.SerializeObject(keys),
+                CommandFlags.FireAndForget);
         }
 
         /// <summary>
@@ -101,7 +150,7 @@ namespace Nop.Services.Caching
                     break;
             }
         }
-        
+
         #endregion
 
         /// <summary>
