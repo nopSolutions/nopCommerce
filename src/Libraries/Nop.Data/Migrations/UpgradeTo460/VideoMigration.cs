@@ -22,7 +22,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
             {
                 Create.TableFor<ProductVideo>();
             }
-
         }
 
         public override void Down()
