@@ -17,7 +17,7 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopUpdateMigration("2022-07-20 00:00:01", "4.60.0", UpdateMigrationType.Data)]
+    [NopUpdateMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
@@ -112,7 +112,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.Fax = getAttributeValue(customerAttributes, nameof(Customer.Fax), castToString);
                     customer.VatNumber = getAttributeValue(customerAttributes, nameof(Customer.VatNumber), castToString);
                     customer.TimeZoneId = getAttributeValue(customerAttributes, nameof(Customer.TimeZoneId), castToString);
-                    customer.CustomCustomerAttributesXML = getAttributeValue<string>(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
+                    customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
                     customer.CountryId = getAttributeValue(customerAttributes, nameof(Customer.CountryId), castToInt);
                     customer.StateProvinceId = getAttributeValue(customerAttributes, nameof(Customer.StateProvinceId), castToInt);
                     customer.VatNumberStatusId = getAttributeValue(customerAttributes, nameof(Customer.VatNumberStatusId), castToInt);
@@ -212,7 +212,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             //#5809
             if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
             {
-                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                var _ = _dataProvider.InsertEntity(
                     new ScheduleTask
                     {
                         Name = "Delete inactive customers (GDPR)",
@@ -276,7 +276,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             //#3651
             if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.OrderProcessingCustomerNotification, StringComparison.InvariantCultureIgnoreCase) == 0))
             {
-                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                var _ = _dataProvider.InsertEntity(
                     new MessageTemplate
                     {
                         Name = MessageTemplateSystemNames.OrderProcessingCustomerNotification,
