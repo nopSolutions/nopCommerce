@@ -25,18 +25,18 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly IProductService _productService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
-        private readonly IShipmentService _shipmentService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly IRepository<OrderNote> _orderNoteRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
+        protected readonly IRepository<RecurringPayment> _recurringPaymentRepository;
+        protected readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
+        protected readonly IShipmentService _shipmentService;
 
         #endregion
 

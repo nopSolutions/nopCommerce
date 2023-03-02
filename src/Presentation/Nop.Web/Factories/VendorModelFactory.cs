@@ -24,16 +24,16 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
-        private readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
+        protected readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 

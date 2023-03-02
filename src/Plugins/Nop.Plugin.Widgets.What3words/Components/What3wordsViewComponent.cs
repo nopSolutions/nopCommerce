@@ -13,10 +13,10 @@ namespace Nop.Plugin.Widgets.What3words.Components
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly What3wordsSettings _what3WordsSettings;
+        protected readonly ILogger _logger;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly What3wordsSettings _what3WordsSettings;
 
         #endregion
 

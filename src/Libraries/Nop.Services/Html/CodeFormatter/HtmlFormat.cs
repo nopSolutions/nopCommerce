@@ -38,9 +38,9 @@ namespace Nop.Services.Html.CodeFormatter
     /// </remarks>
     public partial class HtmlFormat : SourceFormat
     {
-        private readonly CSharpFormat csf; //to format embedded C# code
-        private readonly JavaScriptFormat jsf; //to format client-side JavaScript code
-        private readonly Regex attribRegex;
+        protected readonly CSharpFormat _csf; //to format embedded C# code
+        protected readonly JavaScriptFormat _jsf; //to format client-side JavaScript code
+        protected readonly Regex _attributeRegex;
 
         /// <summary/>
         public HtmlFormat()
@@ -62,10 +62,10 @@ namespace Nop.Services.Html.CodeFormatter
                 + regAttributes + ")|(" + regEntity + ")";
 
             CodeRegex = new Regex(regAll, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            attribRegex = new Regex(regAttributeMatch, RegexOptions.Singleline);
+            _attributeRegex = new Regex(regAttributeMatch, RegexOptions.Singleline);
 
-            csf = new CSharpFormat();
-            jsf = new JavaScriptFormat();
+            _csf = new CSharpFormat();
+            _jsf = new JavaScriptFormat();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Nop.Services.Html.CodeFormatter
         /// <param name="match">The <see cref="Match"/> resulting from a 
         /// single regular expression match.</param>
         /// <returns>A string containing the HTML code fragment.</returns>
-        private string AttributeMatchEval(Match match)
+        protected string AttributeMatchEval(Match match)
         {
             if (match.Groups[1].Success) //attribute value
                 return "<span class=\"kwrd\">" + match + "</span>";
@@ -98,7 +98,7 @@ namespace Nop.Services.Html.CodeFormatter
             if (match.Groups[1].Success) //JavaScript code
             {
                 //string s = match.ToString();
-                return jsf.FormatSubCode(match.ToString());
+                return _jsf.FormatSubCode(match.ToString());
             }
 
             if (match.Groups[2].Success) //comment
@@ -128,7 +128,7 @@ namespace Nop.Services.Html.CodeFormatter
 
             if (match.Groups[4].Success) //asp C# code
             {
-                return csf.FormatSubCode(match.ToString());
+                return _csf.FormatSubCode(match.ToString());
             }
 
             if (match.Groups[5].Success) //tag delimiter
@@ -143,7 +143,7 @@ namespace Nop.Services.Html.CodeFormatter
 
             if (match.Groups[7].Success) //attributes
             {
-                return attribRegex.Replace(match.ToString(), AttributeMatchEval);
+                return _attributeRegex.Replace(match.ToString(), AttributeMatchEval);
             }
 
             if (match.Groups[8].Success) //entity

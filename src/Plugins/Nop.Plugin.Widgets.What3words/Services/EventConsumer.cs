@@ -27,13 +27,13 @@ namespace Nop.Plugin.Widgets.What3words.Services
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly What3wordsSettings _what3WordsSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly What3wordsSettings _what3WordsSettings;
 
         #endregion
 
@@ -153,6 +153,5 @@ namespace Nop.Plugin.Widgets.What3words.Services
         }
 
         #endregion
-
     }
 }

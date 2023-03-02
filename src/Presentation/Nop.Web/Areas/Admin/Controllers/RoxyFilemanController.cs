@@ -20,9 +20,9 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IRoxyFilemanService _roxyFilemanService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

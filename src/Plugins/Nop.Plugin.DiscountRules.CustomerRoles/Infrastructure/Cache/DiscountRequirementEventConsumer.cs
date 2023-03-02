@@ -13,7 +13,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
     {
         #region Fields
         
-        private readonly ISettingService _settingService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

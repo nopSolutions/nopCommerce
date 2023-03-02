@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

@@ -20,10 +20,10 @@ namespace Nop.Plugin.Shipping.UPS
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
-        private readonly UPSService _upsService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly UPSService _upsService;
 
         #endregion
 

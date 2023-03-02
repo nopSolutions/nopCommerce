@@ -10,7 +10,7 @@ namespace Nop.Plugin.Widgets.What3words.Controllers
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
+        protected readonly ICountryService _countryService;
 
         #endregion
 

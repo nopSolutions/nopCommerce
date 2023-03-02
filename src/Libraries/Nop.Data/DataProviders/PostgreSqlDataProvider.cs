@@ -10,9 +10,7 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Data.DataProviders.LinqToDB;
-using Nop.Data.Migrations;
 using Npgsql;
 
 namespace Nop.Data.DataProviders
@@ -21,7 +19,7 @@ namespace Nop.Data.DataProviders
     {
         #region Fields
 
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new LinqToDBPostgreSQLDataProvider(), true);
+        protected static readonly Lazy<IDataProvider> _dataProvider = new(() => new LinqToDBPostgreSQLDataProvider(), true);
 
         #endregion
 
@@ -40,6 +38,10 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
+        /// <summary>
+        /// Gets the connection string builder
+        /// </summary>
+        /// <returns>The connection string builder</returns>
         protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
@@ -64,7 +66,7 @@ namespace Nop.Data.DataProviders
         /// <param name="dataConnection">A database connection object</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Returns the name of the sequence, or NULL if no sequence is associated with the column</returns>
-        private string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
+        protected virtual string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
         {
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));

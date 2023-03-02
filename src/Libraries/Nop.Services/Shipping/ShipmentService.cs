@@ -20,14 +20,14 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<Shipment> _shipmentRepository;
+        protected readonly IRepository<ShipmentItem> _siRepository;
+        protected readonly IShippingPluginManager _shippingPluginManager;
 
         #endregion
 

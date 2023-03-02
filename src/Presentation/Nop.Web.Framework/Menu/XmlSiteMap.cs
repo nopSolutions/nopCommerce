@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.OpenUrlInNewTab = booleanResult;
         }
 
-        private static string GetStringValueFromAttribute(XmlNode node, string attributeName)
+        protected static string GetStringValueFromAttribute(XmlNode node, string attributeName)
         {
             string value = null;
 

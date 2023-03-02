@@ -13,18 +13,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Indicates whether the input is disabled
-        /// </summary>
-        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
-        public string IsDisabled { set; get; }
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
 
         #endregion
 
@@ -58,6 +48,16 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             await base.ProcessAsync(context, output);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Indicates whether the input is disabled
+        /// </summary>
+        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
+        public string IsDisabled { set; get; }
 
         #endregion
     }

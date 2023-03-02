@@ -33,17 +33,17 @@ namespace Nop.Plugin.Payments.CyberSource.Services
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

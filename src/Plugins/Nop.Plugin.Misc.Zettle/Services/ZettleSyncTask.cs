@@ -10,8 +10,8 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly ZettleService _zettleService;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly ZettleService _zettleService;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 

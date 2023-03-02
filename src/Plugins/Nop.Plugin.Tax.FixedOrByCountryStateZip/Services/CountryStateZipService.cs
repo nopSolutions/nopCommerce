@@ -14,7 +14,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     {
         #region Fields
 
-        private readonly IRepository<TaxRate> _taxRateRepository;
+        protected readonly IRepository<TaxRate> _taxRateRepository;
 
         #endregion
 

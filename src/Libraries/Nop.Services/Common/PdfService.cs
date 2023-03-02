@@ -42,37 +42,37 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressService _addressService;
-        private readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly ISettingService _settingService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMeasureService _measureService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly ISettingService _settingService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MeasureSettings _measureSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -145,7 +145,7 @@ namespace Nop.Services.Common
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Get billing address

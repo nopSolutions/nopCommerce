@@ -10,7 +10,7 @@ namespace Nop.Web.Models.Boards
             ForumTopics = new List<ForumTopicRowModel>();
         }
 
-        public IList<ForumTopicRowModel> ForumTopics { get; private set; }
+        public IList<ForumTopicRowModel> ForumTopics { get; protected set; }
 
         public bool ViewAllLinkEnabled { get; set; }
 

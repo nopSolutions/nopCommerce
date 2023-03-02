@@ -16,8 +16,8 @@ namespace Nop.Services.Plugins.Marketplace
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly NopHttpClient _nopHttpClient;
+        protected readonly ILogger _logger;
+        protected readonly NopHttpClient _nopHttpClient;
 
         #endregion
 

@@ -35,8 +35,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly IWebHelper _webHelper;
-            private readonly SecuritySettings _securitySettings;
+            protected readonly IWebHelper _webHelper;
+            protected readonly SecuritySettings _securitySettings;
 
             #endregion
 

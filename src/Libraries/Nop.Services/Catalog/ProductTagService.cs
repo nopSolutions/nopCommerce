@@ -20,15 +20,15 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclService _aclService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
+        protected readonly IRepository<ProductTag> _productTagRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

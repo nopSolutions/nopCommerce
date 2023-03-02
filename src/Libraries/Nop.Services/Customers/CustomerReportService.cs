@@ -20,10 +20,10 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Order> _orderRepository;
 
         #endregion
 

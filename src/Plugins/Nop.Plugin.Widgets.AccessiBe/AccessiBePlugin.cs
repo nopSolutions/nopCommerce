@@ -23,12 +23,12 @@ namespace Nop.Plugin.Widgets.AccessiBe
     {
         #region Fields
 
-        private readonly AccessiBeSettings _accessiBeSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly AccessiBeSettings _accessiBeSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
 
 
         #endregion

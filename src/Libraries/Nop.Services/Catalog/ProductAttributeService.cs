@@ -16,13 +16,13 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductAttribute> _productAttributeRepository;
+        protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
+        protected readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

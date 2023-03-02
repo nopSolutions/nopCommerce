@@ -16,7 +16,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 

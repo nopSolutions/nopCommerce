@@ -25,14 +25,14 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 

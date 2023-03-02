@@ -16,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IMeasureService _measureService;
-        private readonly MeasureSettings _measureSettings;
+        protected readonly IMeasureService _measureService;
+        protected readonly MeasureSettings _measureSettings;
 
         #endregion
 

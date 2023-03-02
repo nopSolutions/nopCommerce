@@ -45,41 +45,41 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INopHtmlHelper _nopHtmlHelper;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeContext _themeContext;
-        private readonly IThemeProvider _themeProvider;
-        private readonly ITopicService _topicService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly MediaSettings _mediaSettings;
-        private readonly NewsSettings _newsSettings;
-        private readonly RobotsTxtSettings _robotsTxtSettings;
-        private readonly SitemapSettings _sitemapSettings;
-        private readonly SitemapXmlSettings _sitemapXmlSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IForumService _forumService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeContext _themeContext;
+        protected readonly IThemeProvider _themeProvider;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly NewsSettings _newsSettings;
+        protected readonly RobotsTxtSettings _robotsTxtSettings;
+        protected readonly SitemapSettings _sitemapSettings;
+        protected readonly SitemapXmlSettings _sitemapXmlSettings;
+        protected readonly StoreInformationSettings _storeInformationSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 

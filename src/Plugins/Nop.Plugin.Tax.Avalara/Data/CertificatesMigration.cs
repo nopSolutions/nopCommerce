@@ -13,10 +13,10 @@ namespace Nop.Plugin.Tax.Avalara.Data
     {
         #region Fields
 
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

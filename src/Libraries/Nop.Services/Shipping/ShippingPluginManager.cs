@@ -16,7 +16,7 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly ShippingSettings _shippingSettings;
+        protected readonly ShippingSettings _shippingSettings;
 
         #endregion
 

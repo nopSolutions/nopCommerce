@@ -21,13 +21,13 @@ namespace Nop.Plugin.Pickup.PickupInStore
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStorePickupPointService _storePickupPointService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStorePickupPointService _storePickupPointService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

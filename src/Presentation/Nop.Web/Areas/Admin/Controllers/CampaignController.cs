@@ -22,18 +22,18 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly ICampaignModelFactory _campaignModelFactory;
-        private readonly ICampaignService _campaignService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly ICampaignModelFactory _campaignModelFactory;
+        protected readonly ICampaignService _campaignService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
 
         #endregion
 

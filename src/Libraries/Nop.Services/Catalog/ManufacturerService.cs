@@ -22,19 +22,19 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
+        protected readonly IRepository<Manufacturer> _manufacturerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

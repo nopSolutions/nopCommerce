@@ -19,15 +19,15 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly IHomeModelFactory _homeModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected readonly AdminAreaSettings _adminAreaSettings;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly IHomeModelFactory _homeModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

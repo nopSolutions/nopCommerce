@@ -19,9 +19,9 @@ namespace Nop.Data
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

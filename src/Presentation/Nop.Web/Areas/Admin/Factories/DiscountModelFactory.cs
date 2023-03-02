@@ -30,20 +30,20 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IDiscountPluginManager _discountPluginManager;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

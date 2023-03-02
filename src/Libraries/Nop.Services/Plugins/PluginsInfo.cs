@@ -18,11 +18,20 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
-        private List<string> _installedPluginNames = new();
-        private IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
+        protected const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
+        protected List<string> _installedPluginNames = new();
+        protected IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
 
         protected readonly INopFileProvider _fileProvider;
+
+        #endregion
+        
+        #region Ctor
+        
+        public PluginsInfo(INopFileProvider fileProvider)
+        {
+            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+        }
 
         #endregion
 
@@ -151,15 +160,6 @@ namespace Nop.Services.Plugins
             result = result.OrderBy(item => item.PluginDescriptor.DisplayOrder).ToList();
 
             return result;
-        }
-
-        #endregion
-
-        #region Ctor
-        
-        public PluginsInfo(INopFileProvider fileProvider)
-        {
-            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
 
         #endregion

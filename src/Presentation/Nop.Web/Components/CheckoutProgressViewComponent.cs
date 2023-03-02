@@ -8,7 +8,7 @@ namespace Nop.Web.Components
 {
     public partial class CheckoutProgressViewComponent : NopViewComponent
     {
-        private readonly ICheckoutModelFactory _checkoutModelFactory;
+        protected readonly ICheckoutModelFactory _checkoutModelFactory;
 
         public CheckoutProgressViewComponent(ICheckoutModelFactory checkoutModelFactory)
         {

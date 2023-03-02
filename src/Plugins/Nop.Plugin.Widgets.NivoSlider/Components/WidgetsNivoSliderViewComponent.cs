@@ -13,11 +13,11 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 {
     public class WidgetsNivoSliderViewComponent : NopViewComponent
     {
-        private readonly IStoreContext _storeContext;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ISettingService _settingService;
-        private readonly IPictureService _pictureService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ISettingService _settingService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IWebHelper _webHelper;
 
         public WidgetsNivoSliderViewComponent(IStoreContext storeContext, 
             IStaticCacheManager staticCacheManager, 

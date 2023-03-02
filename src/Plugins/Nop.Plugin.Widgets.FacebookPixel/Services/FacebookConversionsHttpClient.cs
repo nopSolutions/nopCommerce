@@ -14,7 +14,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 

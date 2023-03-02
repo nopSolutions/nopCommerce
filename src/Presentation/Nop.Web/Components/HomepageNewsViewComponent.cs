@@ -8,8 +8,8 @@ namespace Nop.Web.Components
 {
     public partial class HomepageNewsViewComponent : NopViewComponent
     {
-        private readonly INewsModelFactory _newsModelFactory;
-        private readonly NewsSettings _newsSettings;
+        protected readonly INewsModelFactory _newsModelFactory;
+        protected readonly NewsSettings _newsSettings;
 
         public HomepageNewsViewComponent(INewsModelFactory newsModelFactory, NewsSettings newsSettings)
         {

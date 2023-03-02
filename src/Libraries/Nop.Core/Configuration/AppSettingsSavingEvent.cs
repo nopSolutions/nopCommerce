@@ -17,15 +17,6 @@ namespace Nop.Core.Configuration
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets configurations to save
-        /// </summary>
-        public IList<IConfig> Configurations { get; private set; }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -39,6 +30,15 @@ namespace Nop.Core.Configuration
             else
                 Configurations.Add(config);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets configurations to save
+        /// </summary>
+        public IList<IConfig> Configurations { get; protected set; }
 
         #endregion
     }

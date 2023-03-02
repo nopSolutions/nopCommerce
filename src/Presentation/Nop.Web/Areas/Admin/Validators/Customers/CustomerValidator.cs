@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             SetDatabaseValidationRules<Customer>(mappingEntityAccessor);
         }
 
-        private async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
+        protected virtual async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
         {
             var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();

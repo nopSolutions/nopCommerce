@@ -8,8 +8,8 @@ namespace Nop.Web.Components
 {
     public partial class NewsletterBoxViewComponent : NopViewComponent
     {
-        private readonly CustomerSettings _customerSettings;
-        private readonly INewsletterModelFactory _newsletterModelFactory;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly INewsletterModelFactory _newsletterModelFactory;
 
         public NewsletterBoxViewComponent(CustomerSettings customerSettings, INewsletterModelFactory newsletterModelFactory)
         {

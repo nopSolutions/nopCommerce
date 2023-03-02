@@ -11,13 +11,13 @@ namespace Nop.Services.Html
     {
         #region Fields
 
-        private const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
-        private const int MAX_LENGTH = 50;
+        protected const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
+        protected const int MAX_LENGTH = 50;
 
         /// <summary>
         /// The regular expression used to parse links.
         /// </summary>
-        private static readonly Regex _regex = new("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regex = new("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Services.Html
         /// <summary>
         /// Shortens any absolute URL to a specified maximum length
         /// </summary>
-        private static string ShortenUrl(string url, int max)
+        protected static string ShortenUrl(string url, int max)
         {
             if (url.Length <= max)
                 return url;

@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
         
-        private readonly ILanguageService _languageService;
+        protected readonly ILanguageService _languageService;
 
         #endregion
 

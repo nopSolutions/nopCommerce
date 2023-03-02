@@ -14,7 +14,7 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly TaxSettings _taxSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

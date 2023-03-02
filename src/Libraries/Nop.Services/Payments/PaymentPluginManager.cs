@@ -17,8 +17,8 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly ISettingService _settingService;
-        private readonly PaymentSettings _paymentSettings;
+        protected readonly ISettingService _settingService;
+        protected readonly PaymentSettings _paymentSettings;
 
         #endregion
 

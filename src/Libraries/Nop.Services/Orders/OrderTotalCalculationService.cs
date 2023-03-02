@@ -29,28 +29,28 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAddressService _addressService;
-        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITaxService _taxService;
-        private readonly IWorkContext _workContext;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITaxService _taxService;
+        protected readonly IWorkContext _workContext;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

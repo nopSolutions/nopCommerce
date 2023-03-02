@@ -8,7 +8,7 @@ namespace Nop.Web.Components
 {
     public partial class WidgetViewComponent : NopViewComponent
     {
-        private readonly IWidgetModelFactory _widgetModelFactory;
+        protected readonly IWidgetModelFactory _widgetModelFactory;
 
         public WidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {

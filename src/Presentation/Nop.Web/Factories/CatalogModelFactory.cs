@@ -39,35 +39,35 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly IPictureService _pictureService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISearchTermService _searchTermService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -138,6 +138,11 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Gets the category simple model
+        /// </summary>
+        /// <param name="elem">Category (simple) xml</param>
+        /// <returns>Category simple model</returns>
         protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
         {
             var model = new CategorySimpleModel

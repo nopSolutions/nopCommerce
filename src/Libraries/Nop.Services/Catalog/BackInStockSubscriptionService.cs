@@ -16,10 +16,10 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion
 

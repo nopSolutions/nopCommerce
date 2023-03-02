@@ -16,7 +16,7 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private readonly IRedisConnectionWrapper _connectionWrapper;
+        protected readonly IRedisConnectionWrapper _connectionWrapper;
 
         #endregion
 

@@ -16,7 +16,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 

@@ -31,21 +31,21 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
     {
         #region Fields
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly INotificationService _notificationService;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly MessageTemplatesSettings _messageTemplatesSettings;
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IMessageTemplateService _messageTemplateService;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MessageTemplatesSettings _messageTemplatesSettings;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
@@ -93,7 +93,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         /// </summary>
         /// <param name="model">Model</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task PrepareModelAsync(ConfigurationModel model)
+        protected async Task PrepareModelAsync(ConfigurationModel model)
         {
             //load settings for active store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();

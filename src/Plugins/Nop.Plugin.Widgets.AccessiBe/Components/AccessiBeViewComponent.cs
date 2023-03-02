@@ -14,8 +14,8 @@ namespace Nop.Plugin.Widgets.AccessiBe.Components
     {
         #region Fields
 
-        private readonly AccessiBeService _accessiBeService;
-        private readonly AccessiBeSettings _accessiBeSettings;
+        protected readonly AccessiBeService _accessiBeService;
+        protected readonly AccessiBeSettings _accessiBeSettings;
 
         #endregion
 

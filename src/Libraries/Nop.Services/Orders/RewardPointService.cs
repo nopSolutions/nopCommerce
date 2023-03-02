@@ -17,10 +17,10 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 

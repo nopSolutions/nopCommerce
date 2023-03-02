@@ -20,7 +20,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a cached value indicating whether the database is installed. We need this value invariable during installation process
         /// </summary>
-        private static bool? _databaseIsInstalled;
+        protected static bool? _databaseIsInstalled;
 
         #endregion
 

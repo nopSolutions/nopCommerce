@@ -18,16 +18,16 @@ namespace Nop.Core.Caching
         #region Fields
 
         // Flag: Has Dispose already been called?
-        private bool _disposed;
+        protected bool _disposed;
 
-        private readonly IMemoryCache _memoryCache;
+        protected readonly IMemoryCache _memoryCache;
 
         /// <summary>
         /// Holds the keys known by this nopCommerce instance
         /// </summary>
-        private readonly ICacheKeyManager _keyManager;
+        protected readonly ICacheKeyManager _keyManager;
 
-        private static CancellationTokenSource _clearToken = new();
+        protected static CancellationTokenSource _clearToken = new();
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <returns>Cache entry options</returns>
-        private MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
+        protected virtual MemoryCacheEntryOptions PrepareEntryOptions(CacheKey key)
         {
             //set expiration time for the passed cache key
             var options = new MemoryCacheEntryOptions
@@ -65,7 +65,14 @@ namespace Nop.Core.Caching
             return options;
         }
 
-        private void OnEviction(object key, object value, EvictionReason reason, object state)
+        /// <summary>
+        /// The callback method which gets called when a cache entry expires.
+        /// </summary>
+        /// <param name="key">The key of the entry being evicted.</param>
+        /// <param name="value">The value of the entry being evicted.</param>
+        /// <param name="reason">The <see cref="EvictionReason"/>.</param>
+        /// <param name="state">The information that was passed when registering the callback.</param>
+        protected virtual void OnEviction(object key, object value, EvictionReason reason, object state)
         {
             switch (reason)
             {

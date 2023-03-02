@@ -27,12 +27,12 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Gets HTML helper
         /// </summary>
-        public INopHtmlHelper Helper { get; private set; }
+        public INopHtmlHelper Helper { get; protected set; }
 
         /// <summary>
         /// Gets overridden route name
         /// </summary>
-        public string OverriddenRouteName { get; private set; }
+        public string OverriddenRouteName { get; protected set; }
 
         #endregion
 

@@ -15,9 +15,9 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IRepository<MeasureDimension> _measureDimensionRepository;
-        private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly MeasureSettings _measureSettings;
+        protected readonly IRepository<MeasureDimension> _measureDimensionRepository;
+        protected readonly IRepository<MeasureWeight> _measureWeightRepository;
+        protected readonly MeasureSettings _measureSettings;
 
         #endregion
 

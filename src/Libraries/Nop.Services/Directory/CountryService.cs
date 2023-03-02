@@ -18,11 +18,11 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<Country> _countryRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<Country> _countryRepository;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 

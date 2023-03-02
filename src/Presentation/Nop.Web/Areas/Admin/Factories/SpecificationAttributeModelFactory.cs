@@ -18,10 +18,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
 
         #endregion
 

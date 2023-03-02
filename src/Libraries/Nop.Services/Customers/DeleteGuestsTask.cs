@@ -11,8 +11,8 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ICustomerService _customerService;
 
         #endregion
 

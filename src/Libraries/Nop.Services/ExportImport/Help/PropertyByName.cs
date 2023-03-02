@@ -12,7 +12,7 @@ namespace Nop.Services.ExportImport.Help
     /// <typeparam name="L">Language</typeparam>
     public partial class PropertyByName<T, L>
     {
-        private object _propertyValue;
+        protected object _propertyValue;
 
         /// <summary>
         /// Ctor

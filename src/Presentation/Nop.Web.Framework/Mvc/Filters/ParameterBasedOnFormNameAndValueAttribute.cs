@@ -35,9 +35,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly string _formKeyName;
-            private readonly string _formValue;
-            private readonly string _actionParameterName;
+            protected readonly string _formKeyName;
+            protected readonly string _formValue;
+            protected readonly string _actionParameterName;
 
             #endregion
 

@@ -10,10 +10,9 @@ namespace Nop.Services.Html.CodeFormatter
     {
         #region Fields
 
-        //private static Regex regexCode1 = new Regex(@"(?<begin>\[code:(?<lang>.*?)(?:;ln=(?<linenumbers>(?:on|off)))?(?:;alt=(?<altlinenumbers>(?:on|off)))?(?:;(?<title>.*?))?\])(?<code>.*?)(?<end>\[/code\])", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static readonly Regex _regexHtml = new("<[^>]*>", RegexOptions.Compiled);
+        protected static readonly Regex _regexHtml = new("<[^>]*>", RegexOptions.Compiled);
 
-        private static readonly Regex _regexCode = new(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexCode = new(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 
@@ -24,7 +23,7 @@ namespace Nop.Services.Html.CodeFormatter
         /// </summary>
         /// <param name="match">Match</param>
         /// <returns>Formatted text</returns>
-        private static string CodeEvaluatorSimple(Match match)
+        protected static string CodeEvaluatorSimple(Match match)
         {
             if (!match.Success)
                 return match.Value;
@@ -48,7 +47,7 @@ namespace Nop.Services.Html.CodeFormatter
         /// </summary>
         /// <param name="html">HTML</param>
         /// <returns>Formatted text</returns>
-        private static string StripHtml(string html)
+        protected static string StripHtml(string html)
         {
             if (string.IsNullOrEmpty(html))
                 return string.Empty;
@@ -62,7 +61,7 @@ namespace Nop.Services.Html.CodeFormatter
         /// <param name="options">Whatever options were set in the regex groups.</param>
         /// <param name="text">Send the e.body so it can get formatted.</param>
         /// <returns>The formatted string of the match.</returns>
-        private static string Highlight(HighlightOptions options, string text)
+        protected static string Highlight(HighlightOptions options, string text)
         {
             switch (options.Language)
             {

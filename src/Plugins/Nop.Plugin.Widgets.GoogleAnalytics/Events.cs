@@ -27,19 +27,19 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         IConsumer<OrderPaidEvent>,
         IConsumer<EntityDeletedEvent<Order>>
     {
-        private readonly IAddressService _addressService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICountryService _countryService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IAddressService _addressService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICountryService _countryService;
+        protected readonly IHttpClientFactory _httpClientFactory;
+        protected readonly ILogger _logger;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(IAddressService addressService,
             ICategoryService categoryService,
@@ -70,7 +70,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             _widgetPluginManager = widgetPluginManager;
         }
 
-        private string FixIllegalJavaScriptChars(string text)
+        protected string FixIllegalJavaScriptChars(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
@@ -81,13 +81,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<bool> IsPluginEnabledAsync()
+        protected async Task<bool> IsPluginEnabledAsync()
         {
             return await _widgetPluginManager.IsPluginActiveAsync("Widgets.GoogleAnalytics");
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ProcessOrderEventAsync(Order order, bool add)
+        protected async Task ProcessOrderEventAsync(Order order, bool add)
         {
             try
             {

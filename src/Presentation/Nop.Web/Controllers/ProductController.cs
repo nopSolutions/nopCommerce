@@ -35,34 +35,34 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICompareProductsService _compareProductsService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILocalizationService _localizationService;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
-        private readonly IReviewTypeService _reviewTypeService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly ShippingSettings _shippingSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICompareProductsService _compareProductsService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        protected readonly IReviewTypeService _reviewTypeService;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly ShippingSettings _shippingSettings;
 
         #endregion
 

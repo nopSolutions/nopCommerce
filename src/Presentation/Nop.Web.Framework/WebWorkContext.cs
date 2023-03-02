@@ -31,28 +31,28 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
-        private readonly CookieSettings _cookieSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUserAgentHelper _userAgentHelper;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CookieSettings _cookieSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAuthenticationService _authenticationService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUserAgentHelper _userAgentHelper;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly TaxSettings _taxSettings;
 
-        private Customer _cachedCustomer;
-        private Customer _originalCustomerIfImpersonated;
-        private Vendor _cachedVendor;
-        private Language _cachedLanguage;
-        private Currency _cachedCurrency;
-        private TaxDisplayType? _cachedTaxDisplayType;
+        protected Customer _cachedCustomer;
+        protected Customer _originalCustomerIfImpersonated;
+        protected Vendor _cachedVendor;
+        protected Language _cachedLanguage;
+        protected Currency _cachedCurrency;
+        protected TaxDisplayType? _cachedTaxDisplayType;
 
         #endregion
 

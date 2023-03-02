@@ -19,12 +19,12 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPaymentService _paymentService;
-        private readonly OrderSettings _orderSettings;
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
 
         #endregion
 

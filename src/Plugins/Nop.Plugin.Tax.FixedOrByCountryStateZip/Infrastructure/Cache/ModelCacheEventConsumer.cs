@@ -35,9 +35,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
 
         #region Fields
 
-        private readonly ICountryStateZipService _taxRateService;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ICountryStateZipService _taxRateService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

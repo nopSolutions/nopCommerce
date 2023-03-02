@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPictureService _pictureService;
+        protected readonly IPictureService _pictureService;
 
         #endregion
 

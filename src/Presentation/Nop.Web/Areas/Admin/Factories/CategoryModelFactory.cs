@@ -26,19 +26,19 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly IDiscountService _discountService;
-        private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProductService _productService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 

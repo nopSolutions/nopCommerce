@@ -15,7 +15,7 @@ namespace Nop.Core.Configuration
     {
         #region Fields
 
-        private static Dictionary<string, int> _configurationOrder;
+        protected static Dictionary<string, int> _configurationOrder;
 
         #endregion
 

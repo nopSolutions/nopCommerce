@@ -13,7 +13,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
     {
         #region Fields
 
-        private readonly IRepository<CyberSourceCustomerToken> _customerTokenRepository;
+        protected readonly IRepository<CyberSourceCustomerToken> _customerTokenRepository;
 
         #endregion
 

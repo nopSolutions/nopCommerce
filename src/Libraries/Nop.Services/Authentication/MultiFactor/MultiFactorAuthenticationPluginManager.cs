@@ -14,7 +14,7 @@ namespace Nop.Services.Authentication.MultiFactor
     {
         #region Fields
 
-        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+        protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
         #endregion
 
@@ -86,6 +86,5 @@ namespace Nop.Services.Authentication.MultiFactor
         }
 
         #endregion
-
     }
 }

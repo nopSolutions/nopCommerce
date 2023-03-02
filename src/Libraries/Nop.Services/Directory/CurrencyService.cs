@@ -16,10 +16,10 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
-        private readonly IRepository<Currency> _currencyRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
+        protected readonly IRepository<Currency> _currencyRepository;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 

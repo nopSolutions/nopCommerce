@@ -21,16 +21,16 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IPermissionService _permissionService;
-        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        protected readonly IReturnRequestService _returnRequestService;
+        protected readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion Fields
 

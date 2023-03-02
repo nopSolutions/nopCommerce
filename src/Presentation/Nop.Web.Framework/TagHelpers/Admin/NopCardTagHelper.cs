@@ -16,65 +16,18 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string NAME_ATTRIBUTE_NAME = "asp-name";
-        private const string TITLE_ATTRIBUTE_NAME = "asp-title";
-        private const string HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME = "asp-hide-block-attribute-name";
-        private const string IS_HIDE_ATTRIBUTE_NAME = "asp-hide";
-        private const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
-        private const string CARD_ICON_ATTRIBUTE_NAME = "asp-icon";
+        protected const string NAME_ATTRIBUTE_NAME = "asp-name";
+        protected const string TITLE_ATTRIBUTE_NAME = "asp-title";
+        protected const string HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME = "asp-hide-block-attribute-name";
+        protected const string IS_HIDE_ATTRIBUTE_NAME = "asp-hide";
+        protected const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
+        protected const string CARD_ICON_ATTRIBUTE_NAME = "asp-icon";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Title of the card
-        /// </summary>
-        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Name of the card
-        /// </summary>
-        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Name of the hide attribute of the card
-        /// </summary>
-        [HtmlAttributeName(HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME)]
-        public string HideBlockAttributeName { get; set; }
-
-        /// <summary>
-        /// Indicates whether a block is hidden or not
-        /// </summary>
-        [HtmlAttributeName(IS_HIDE_ATTRIBUTE_NAME)]
-        public bool IsHide { get; set; }
-
-        /// <summary>
-        /// Indicates whether a card is advanced or not
-        /// </summary>
-        [HtmlAttributeName(IS_ADVANCED_ATTRIBUTE_NAME)]
-        public bool IsAdvanced { get; set; }
-
-        /// <summary>
-        /// Card icon
-        /// </summary>
-        [HtmlAttributeName(CARD_ICON_ATTRIBUTE_NAME)]
-        public string CardIconIsAdvanced { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -167,6 +120,53 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             card.InnerHtml.AppendHtml(childContent.GetContent());
             output.Content.AppendHtml(await card.RenderHtmlContentAsync());
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Title of the card
+        /// </summary>
+        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Name of the card
+        /// </summary>
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Name of the hide attribute of the card
+        /// </summary>
+        [HtmlAttributeName(HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME)]
+        public string HideBlockAttributeName { get; set; }
+
+        /// <summary>
+        /// Indicates whether a block is hidden or not
+        /// </summary>
+        [HtmlAttributeName(IS_HIDE_ATTRIBUTE_NAME)]
+        public bool IsHide { get; set; }
+
+        /// <summary>
+        /// Indicates whether a card is advanced or not
+        /// </summary>
+        [HtmlAttributeName(IS_ADVANCED_ATTRIBUTE_NAME)]
+        public bool IsAdvanced { get; set; }
+
+        /// <summary>
+        /// Card icon
+        /// </summary>
+        [HtmlAttributeName(CARD_ICON_ATTRIBUTE_NAME)]
+        public string CardIconIsAdvanced { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

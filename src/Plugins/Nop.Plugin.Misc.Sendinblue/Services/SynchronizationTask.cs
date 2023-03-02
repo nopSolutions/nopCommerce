@@ -10,7 +10,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 

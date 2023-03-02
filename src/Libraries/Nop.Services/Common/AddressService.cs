@@ -17,12 +17,12 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
-        private readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        protected readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
+        protected readonly ICountryService _countryService;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 

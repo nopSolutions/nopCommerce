@@ -49,45 +49,45 @@ namespace Nop.Services.ExportImport
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAddressService _addressService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomNumberFormatter _customNumberFormatter;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILogger _logger;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IMeasureService _measureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IShippingService _shippingService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ICustomNumberFormatter _customNumberFormatter;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IHttpClientFactory _httpClientFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly ILogger _logger;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IMeasureService _measureService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly IServiceScopeFactory _serviceScopeFactory;
+        protected readonly IShippingService _shippingService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -178,7 +178,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
-        private static ExportedAttributeType GetTypeOfExportedAttribute(IXLWorksheet defaultWorksheet, List<IXLWorksheet> localizedWorksheets, PropertyManager<ExportProductAttribute, Language> productAttributeManager, PropertyManager<ExportSpecificationAttribute, Language> specificationAttributeManager, int iRow)
+        protected virtual ExportedAttributeType GetTypeOfExportedAttribute(IXLWorksheet defaultWorksheet, List<IXLWorksheet> localizedWorksheets, PropertyManager<ExportProductAttribute, Language> productAttributeManager, PropertyManager<ExportSpecificationAttribute, Language> specificationAttributeManager, int iRow)
         {
             productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
 
@@ -204,7 +204,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private static async Task SetOutLineForSpecificationAttributeRowAsync(object cellValue, IXLWorksheet worksheet, int endRow)
+        protected virtual async Task SetOutLineForSpecificationAttributeRowAsync(object cellValue, IXLWorksheet worksheet, int endRow)
         {
             var attributeType = (cellValue ?? string.Empty).ToString();
 
@@ -222,7 +222,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private static void CopyDataToNewFile(ImportProductMetadata metadata, IXLWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
+        protected virtual void CopyDataToNewFile(ImportProductMetadata metadata, IXLWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
         {
             using var stream = new FileStream(filePath, FileMode.OpenOrCreate);
             // ok, we can run the real code of the sample now
@@ -316,7 +316,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task LogPictureInsertErrorAsync(string picturePath, Exception ex)
+        protected virtual async Task LogPictureInsertErrorAsync(string picturePath, Exception ex)
         {
             var extension = _fileProvider.GetFileExtension(picturePath);
             var name = _fileProvider.GetFileNameWithoutExtension(picturePath);
@@ -641,7 +641,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task ImportCategoryLocalizedAsync(Category category, WorkbookMetadata<Category> metadata, PropertyManager<Category, Language> manager, int iRow, IList<Language> languages)
+        protected virtual async Task ImportCategoryLocalizedAsync(Category category, WorkbookMetadata<Category> metadata, PropertyManager<Category, Language> manager, int iRow, IList<Language> languages)
         {
             if (!metadata.LocalizedWorksheets.Any())
                 return;
@@ -692,7 +692,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task ImportManufaturerLocalizedAsync(Manufacturer manufacturer, WorkbookMetadata<Manufacturer> metadata, PropertyManager<Manufacturer, Language> manager, int iRow, IList<Language> languages)
+        protected virtual async Task ImportManufaturerLocalizedAsync(Manufacturer manufacturer, WorkbookMetadata<Manufacturer> metadata, PropertyManager<Manufacturer, Language> manager, int iRow, IList<Language> languages)
         {
             if (!metadata.LocalizedWorksheets.Any())
                 return;
@@ -922,7 +922,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportSpecificationAttributeAsync(ImportProductMetadata metadata, Product lastLoadedProduct, IList<Language> languages, int iRow)
+        protected virtual async Task ImportSpecificationAttributeAsync(ImportProductMetadata metadata, Product lastLoadedProduct, IList<Language> languages, int iRow)
         {
             var specificationAttributeManager = metadata.SpecificationAttributeManager;
             if (!_catalogSettings.ExportImportProductSpecificationAttributes || lastLoadedProduct == null || specificationAttributeManager.IsCaption)
@@ -994,7 +994,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<string> DownloadFileAsync(string urlString, IList<string> downloadedFiles)
+        protected virtual async Task<string> DownloadFileAsync(string urlString, IList<string> downloadedFiles)
         {
             if (string.IsNullOrEmpty(urlString))
                 return string.Empty;
@@ -1033,7 +1033,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<ImportProductMetadata> PrepareImportProductDataAsync(IXLWorkbook workbook, IList<Language> languages)
+        protected virtual async Task<ImportProductMetadata> PrepareImportProductDataAsync(IXLWorkbook workbook, IList<Language> languages)
         {
             //the columns
             var metadata = GetWorkbookMetadata<Product>(workbook, languages);
@@ -1326,7 +1326,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportProductsFromSplitedXlsxAsync(IXLWorksheet worksheet, ImportProductMetadata metadata)
+        protected virtual async Task ImportProductsFromSplitedXlsxAsync(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             foreach (var path in SplitProductFile(worksheet, metadata))
             {
@@ -1348,7 +1348,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private IList<string> SplitProductFile(IXLWorksheet worksheet, ImportProductMetadata metadata)
+        protected virtual IList<string> SplitProductFile(IXLWorksheet worksheet, ImportProductMetadata metadata)
         {
             var fileIndex = 1;
             var fileName = Guid.NewGuid().ToString();
@@ -1381,7 +1381,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<(ImportOrderMetadata, IXLWorksheet)> PrepareImportOrderDataAsync(IXLWorkbook workbook)
+        protected virtual async Task<(ImportOrderMetadata, IXLWorksheet)> PrepareImportOrderDataAsync(IXLWorkbook workbook)
         {
             var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
 
@@ -1551,7 +1551,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages)
+        protected virtual async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages)
         {
             if (metadata.LocalizedWorksheets.Any())
             {
@@ -3075,7 +3075,7 @@ namespace Nop.Services.ExportImport
 
             public List<int> StoresIds { get; }
 
-            public Category Category { get; private set; }
+            public Category Category { get; protected set; }
 
             public string Key { get; }
 

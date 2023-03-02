@@ -19,12 +19,12 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICampaignService _campaignService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICampaignService _campaignService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
 
         #endregion
 

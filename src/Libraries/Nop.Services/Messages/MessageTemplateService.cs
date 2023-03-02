@@ -17,12 +17,12 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 

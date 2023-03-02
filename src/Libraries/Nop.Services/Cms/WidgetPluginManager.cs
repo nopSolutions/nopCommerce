@@ -16,7 +16,7 @@ namespace Nop.Services.Cms
     {
         #region Fields
 
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

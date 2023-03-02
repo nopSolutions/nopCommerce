@@ -9,68 +9,91 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// A thread-safe implementation of a trie, or prefix tree
     /// </summary>
-    public class ConcurrentTrie<TValue>
+    public partial class ConcurrentTrie<TValue>
     {
-        private class TrieNode
-        {
-            private readonly ReaderWriterLockSlim _lock = new();
-            private (bool hasValue, TValue value) _value;
-            public readonly ConcurrentDictionary<char, TrieNode> Children = new();
+        #region Fields
 
-            public bool GetValue(out TValue value)
-            {
-                _lock.EnterReadLock();
-                try
-                {
-                    (var hasValue, value) = _value;
-                    return hasValue;
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
-            }
+        protected readonly TrieNode _root;
+        protected readonly string _prefix;
 
-            public void SetValue(TValue value)
-            {
-                SetValue(value, true);
-            }
+        #endregion
 
-            public void RemoveValue()
-            {
-                SetValue(default, false);
-            }
-
-            private void SetValue(TValue value, bool hasValue)
-            {
-                _lock.EnterWriteLock();
-                try
-                {
-                    _value = (hasValue, value);
-                }
-                finally
-                {
-                    _lock.ExitWriteLock();
-                }
-            }
-        }
-
-        private readonly TrieNode _root;
-        private readonly string _prefix;
-
-        public IEnumerable<string> Keys => Search(string.Empty).Select(kv => kv.Key);
-        public IEnumerable<TValue> Values => Search(string.Empty).Select(kv => kv.Value);
-
+        #region Ctor
 
         public ConcurrentTrie() : this(new(), string.Empty)
         {
         }
 
-        private ConcurrentTrie(TrieNode root, string prefix)
+        protected ConcurrentTrie(TrieNode root, string prefix)
         {
             _root = root;
             _prefix = prefix;
         }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Adds a node if key does not already exist.
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <returns>The <see cref="TrieNode"/> item</returns>
+        protected virtual TrieNode GetOrAddNode(string key)
+        {
+            var node = _root;
+
+            foreach (var c in key)
+                node = node.Children.GetOrAdd(c, _ => new());
+
+            return node;
+        }
+
+        /// <summary>
+        /// Try to find the node by key
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <param name="node">The <see cref="TrieNode"/> item</param>
+        /// <returns>True if item is exists</returns>
+        protected virtual bool Find(string key, out TrieNode node)
+        {
+            node = _root;
+
+            foreach (var c in key)
+                if (!node.Children.TryGetValue(c, out node))
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Remove the node
+        /// </summary>
+        /// <param name="node">The <see cref="TrieNode"/> item</param>
+        /// <param name="key">The key</param>
+        /// <returns>True if item is deleted</returns>
+        protected virtual bool Remove(TrieNode node, string key)
+        {
+            if (key.Length == 0)
+            {
+                if (node.GetValue(out _))
+                    node.RemoveValue();
+
+                return !node.Children.IsEmpty;
+            }
+
+            var c = key[0];
+
+            if (node.Children.TryGetValue(c, out var child))
+                if (!Remove(child, key[1..]))
+                    node.Children.TryRemove(new(c, child));
+
+            return true;
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Attempts to get the value associated with the specified key
@@ -80,7 +103,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>
         /// True if the key was found, otherwise false
         /// </returns>
-        public bool TryGetValue(string key, out TValue value)
+        public virtual bool TryGetValue(string key, out TValue value)
         {
             if (key is null)
                 throw new ArgumentNullException(nameof(key));
@@ -94,7 +117,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="key">The key of the new item (case-insensitive)</param>
         /// <param name="value">The value to be associated with <paramref name="key"/></param>
-        public void Add(string key, TValue value)
+        public virtual void Add(string key, TValue value)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentException($"'{nameof(key)}' cannot be null or empty.", nameof(key));
@@ -105,7 +128,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Clears the trie
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             _root.Children.Clear();
         }
@@ -117,7 +140,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>
         /// All key-value pairs for keys starting with <paramref name="prefix"/>
         /// </returns>
-        public IEnumerable<KeyValuePair<string, TValue>> Search(string prefix)
+        public virtual IEnumerable<KeyValuePair<string, TValue>> Search(string prefix)
         {
             if (prefix is null)
                 throw new ArgumentNullException(nameof(prefix));
@@ -143,7 +166,7 @@ namespace Nop.Core.Infrastructure
         /// Removes the item with the given key, if present
         /// </summary>
         /// <param name="key">The key of the item to be removed (case-insensitive)</param>
-        public void Remove(string key)
+        public virtual void Remove(string key)
         {
             Remove(_root, key);
         }
@@ -156,7 +179,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>
         /// The existing value for the given key, if found, otherwise the newly inserted value
         /// </returns>
-        public TValue GetOrAdd(string key, Func<TValue> valueFactory)
+        public virtual TValue GetOrAdd(string key, Func<TValue> valueFactory)
         {
             var node = GetOrAddNode(key);
             if (node.GetValue(out var value))
@@ -174,7 +197,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>
         /// True if the prefix was successfully removed from the trie, otherwise false
         /// </returns>
-        public bool Prune(string prefix, out ConcurrentTrie<TValue> subtree)
+        public virtual bool Prune(string prefix, out ConcurrentTrie<TValue> subtree)
         {
             if (string.IsNullOrEmpty(prefix))
                 throw new ArgumentException($"'{nameof(prefix)}' cannot be null or empty.", nameof(prefix));
@@ -195,40 +218,90 @@ namespace Nop.Core.Infrastructure
             return true;
         }
 
-        private TrieNode GetOrAddNode(string key)
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Keys
+        /// </summary>
+        public virtual IEnumerable<string> Keys => Search(string.Empty).Select(kv => kv.Key);
+
+        /// <summary>
+        /// Values
+        /// </summary>
+        public virtual IEnumerable<TValue> Values => Search(string.Empty).Select(kv => kv.Value);
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// A thread-safe implementation of a trie node
+        /// </summary>
+        protected class TrieNode
         {
-            var node = _root;
-            foreach (var c in key)
-                node = node.Children.GetOrAdd(c, _ => new());
-            return node;
+            #region Fields
+
+            protected readonly ReaderWriterLockSlim _lock = new();
+            protected (bool hasValue, TValue value) _value;
+
+            #endregion
+
+            #region Utilities
+
+            protected virtual void SetValue(TValue value, bool hasValue)
+            {
+                _lock.EnterWriteLock();
+
+                try
+                {
+                    _value = (hasValue, value);
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+
+            #endregion
+
+            #region Methods
+
+            public virtual bool GetValue(out TValue value)
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    (var hasValue, value) = _value;
+
+                    return hasValue;
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+
+            public virtual void SetValue(TValue value)
+            {
+                SetValue(value, true);
+            }
+
+            public virtual void RemoveValue()
+            {
+                SetValue(default, false);
+            }
+
+            #endregion
+
+            #region Properties
+
+            public readonly ConcurrentDictionary<char, TrieNode> Children = new();
+
+            #endregion
         }
 
-        private bool Find(string key, out TrieNode node)
-        {
-            node = _root;
-            foreach (var c in key)
-            {
-                if (!node.Children.TryGetValue(c, out node))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool Remove(TrieNode node, string key)
-        {
-            if (key.Length == 0)
-            {
-                if (node.GetValue(out _))
-                    node.RemoveValue();
-                return !node.Children.IsEmpty;
-            }
-            var c = key[0];
-            if (node.Children.TryGetValue(c, out var child))
-            {
-                if (!Remove(child, key[1..]))
-                    node.Children.TryRemove(new(c, child));
-            }
-            return true;
-        }
+        #endregion
     }
 }

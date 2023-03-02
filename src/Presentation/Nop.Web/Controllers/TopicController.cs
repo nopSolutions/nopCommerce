@@ -15,12 +15,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicModelFactory _topicModelFactory;
-        private readonly ITopicService _topicService;
+        protected readonly IAclService _aclService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly ITopicModelFactory _topicModelFactory;
+        protected readonly ITopicService _topicService;
 
         #endregion
 

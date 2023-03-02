@@ -26,18 +26,17 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private static BlobContainerClient _blobContainerClient;
-        private static BlobServiceClient _blobServiceClient;
-        private static bool _azureBlobStorageAppendContainerName;
-        private static bool _isInitialized;
-        private static string _azureBlobStorageConnectionString;
-        private static string _azureBlobStorageContainerName;
-        private static string _azureBlobStorageEndPoint;
+        protected static BlobContainerClient _blobContainerClient;
+        protected static BlobServiceClient _blobServiceClient;
+        protected static bool _azureBlobStorageAppendContainerName;
+        protected static bool _isInitialized;
+        protected static string _azureBlobStorageConnectionString;
+        protected static string _azureBlobStorageContainerName;
+        protected static string _azureBlobStorageEndPoint;
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
-        private readonly object _locker = new();
+        protected readonly object _locker = new();
 
         #endregion
 
@@ -71,7 +70,6 @@ namespace Nop.Services.Media
                   mediaSettings)
         {
             _staticCacheManager = staticCacheManager;
-            _mediaSettings = mediaSettings;
 
             OneTimeInit(appSettings);
         }

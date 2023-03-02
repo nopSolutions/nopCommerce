@@ -19,13 +19,13 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly SeoSettings _seoSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Affiliate> _affiliateRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly SeoSettings _seoSettings;
 
         #endregion
 

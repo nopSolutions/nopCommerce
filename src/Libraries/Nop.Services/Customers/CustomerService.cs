@@ -29,29 +29,29 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IRepository<Address> _customerAddressRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
-        private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IRepository<Address> _customerAddressRepository;
+        protected readonly IRepository<BlogComment> _blogCommentRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
+        protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
+        protected readonly IRepository<CustomerRole> _customerRoleRepository;
+        protected readonly IRepository<ForumPost> _forumPostRepository;
+        protected readonly IRepository<ForumTopic> _forumTopicRepository;
+        protected readonly IRepository<GenericAttribute> _gaRepository;
+        protected readonly IRepository<NewsComment> _newsCommentRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<ProductReview> _productReviewRepository;
+        protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
+        protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

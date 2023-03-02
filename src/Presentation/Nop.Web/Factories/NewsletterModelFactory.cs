@@ -12,8 +12,8 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ILocalizationService _localizationService;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ILocalizationService _localizationService;
 
         #endregion
 

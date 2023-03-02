@@ -7,7 +7,7 @@ namespace Nop.Web.Components
 {
     public partial class CustomerNavigationViewComponent : NopViewComponent
     {
-        private readonly ICustomerModelFactory _customerModelFactory;
+        protected readonly ICustomerModelFactory _customerModelFactory;
 
         public CustomerNavigationViewComponent(ICustomerModelFactory customerModelFactory)
         {

@@ -14,10 +14,9 @@ namespace Nop.Web.Framework.Factories
     /// </summary>
     public partial class DiscountSupportedModelFactory : IDiscountSupportedModelFactory
     {
-
         #region Fields
 
-        private readonly IDiscountService _discountService;
+        protected readonly IDiscountService _discountService;
 
         #endregion
 

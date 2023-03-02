@@ -21,16 +21,16 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IProductService _productService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IProductService _productService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

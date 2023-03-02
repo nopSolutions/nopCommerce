@@ -8,7 +8,7 @@ namespace Nop.Web.Components
 {
     public partial class HomepagePollsViewComponent : NopViewComponent
     {
-        private readonly IPollModelFactory _pollModelFactory;
+        protected readonly IPollModelFactory _pollModelFactory;
 
         public HomepagePollsViewComponent(IPollModelFactory pollModelFactory)
         {

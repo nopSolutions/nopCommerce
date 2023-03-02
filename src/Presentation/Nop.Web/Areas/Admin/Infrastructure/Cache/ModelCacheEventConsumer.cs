@@ -32,7 +32,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

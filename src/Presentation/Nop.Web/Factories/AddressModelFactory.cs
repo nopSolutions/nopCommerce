@@ -23,14 +23,14 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
-        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
-        private readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IWorkContext _workContext;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        protected readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

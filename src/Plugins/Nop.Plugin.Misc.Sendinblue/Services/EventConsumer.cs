@@ -25,8 +25,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly MarketingAutomationManager _marketingAutomationManager;
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly MarketingAutomationManager _marketingAutomationManager;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 

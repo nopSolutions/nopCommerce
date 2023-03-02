@@ -23,11 +23,11 @@ namespace Nop.Core
     {
         #region Fields  
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IHostApplicationLifetime _hostApplicationLifetime;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly Lazy<IStoreContext> _storeContext;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IHostApplicationLifetime _hostApplicationLifetime;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly Lazy<IStoreContext> _storeContext;
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace Nop.Core
 
             try
             {
-                if (_httpContextAccessor.HttpContext.Request == null)
+                if (_httpContextAccessor.HttpContext?.Request == null)
                     return false;
             }
             catch (Exception)

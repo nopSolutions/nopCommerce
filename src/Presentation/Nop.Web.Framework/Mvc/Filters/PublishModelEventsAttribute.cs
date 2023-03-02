@@ -50,8 +50,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IEventPublisher _eventPublisher;
+            protected readonly bool _ignoreFilter;
+            protected readonly IEventPublisher _eventPublisher;
 
             #endregion
 

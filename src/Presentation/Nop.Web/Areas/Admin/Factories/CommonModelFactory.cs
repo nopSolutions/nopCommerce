@@ -55,46 +55,46 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
-        private readonly IMeasureService _measureService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPluginService _pluginService;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly IServiceCollection _serviceCollection;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
-        private readonly NopHttpClient _nopHttpClient;
-        private readonly ProxySettings _proxySettings;
+        protected readonly AppSettings _appSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMaintenanceService _maintenanceService;
+        protected readonly IMeasureService _measureService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IPluginService _pluginService;
+        protected readonly IProductService _productService;
+        protected readonly IReturnRequestService _returnRequestService;
+        protected readonly ISearchTermService _searchTermService;
+        protected readonly IServiceCollection _serviceCollection;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly MeasureSettings _measureSettings;
+        protected readonly NopHttpClient _nopHttpClient;
+        protected readonly ProxySettings _proxySettings;
 
         #endregion
 
@@ -507,7 +507,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of system warning models</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task PreparePluginsOverrideSameInterfaceWarningModelAsync(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePluginsOverrideSameInterfaceWarningModelAsync(IList<SystemWarningModel> models)
         {
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
@@ -542,7 +542,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of system warning models</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task PreparePluginsCollisionsWarningModelAsync(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePluginsCollisionsWarningModelAsync(IList<SystemWarningModel> models)
         {
             var assemblyCollisions = _pluginService.GetAssemblyCollisions();
 
@@ -575,7 +575,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of system warning models</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task PrepareIncompatibleWarningModelAsync(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareIncompatibleWarningModelAsync(IList<SystemWarningModel> models)
         {
             foreach (var incompatiblePlugin in _pluginService.GetIncompatiblePlugins())
             {

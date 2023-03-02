@@ -153,7 +153,7 @@ namespace Nop.Services.Html.CodeFormatter
         protected abstract string MatchEval(Match match);
 
         //does the formatting job
-        private string FormatCode(string source, bool lineNumbers, 
+        protected string FormatCode(string source, bool lineNumbers, 
             bool alternate, bool embedStyleSheet, bool subCode)
         {
             //replace special characters

@@ -19,9 +19,9 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 

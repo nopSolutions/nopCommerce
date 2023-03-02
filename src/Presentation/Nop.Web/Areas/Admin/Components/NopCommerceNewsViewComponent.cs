@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly IHomeModelFactory _homeModelFactory;
+        protected readonly IHomeModelFactory _homeModelFactory;
 
         #endregion
 

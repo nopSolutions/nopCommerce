@@ -21,22 +21,22 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Default properties
         /// </summary>
-        private readonly Dictionary<string, PropertyByName<T, L>> _defaultProperties;
+        protected readonly Dictionary<string, PropertyByName<T, L>> _defaultProperties;
 
         /// <summary>
         /// Localized properties
         /// </summary>
-        private readonly Dictionary<string, PropertyByName<T, L>> _localizedProperties;
+        protected readonly Dictionary<string, PropertyByName<T, L>> _localizedProperties;
 
         /// <summary>
         /// Catalog settings
         /// </summary>
-        private readonly CatalogSettings _catalogSettings;
+        protected readonly CatalogSettings _catalogSettings;
 
         /// <summary>
         /// Languages
         /// </summary>
-        private readonly IList<L> _languages;
+        protected readonly IList<L> _languages;
 
         /// <summary>
         /// Ctor

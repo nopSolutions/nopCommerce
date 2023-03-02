@@ -14,7 +14,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
+        protected readonly ICustomerService _customerService;
 
         #endregion
 

@@ -27,16 +27,16 @@ namespace Nop.Plugin.Tax.Avalara.Components
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

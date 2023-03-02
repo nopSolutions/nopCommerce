@@ -22,12 +22,12 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 

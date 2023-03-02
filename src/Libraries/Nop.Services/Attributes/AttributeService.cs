@@ -19,9 +19,9 @@ namespace Nop.Services.Attributes
     {
         #region Fields
 
-        private readonly IRepository<TAttribute> _attributeRepository;
-        private readonly IRepository<TAttributeValue> _attributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<TAttribute> _attributeRepository;
+        protected readonly IRepository<TAttributeValue> _attributeValueRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

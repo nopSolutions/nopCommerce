@@ -17,10 +17,10 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
+        protected readonly CommonSettings _commonSettings;
         
-        private readonly IRepository<Log> _logRepository;
-        private readonly IWebHelper _webHelper;
+        protected readonly IRepository<Log> _logRepository;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

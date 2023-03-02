@@ -46,9 +46,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly ICustomerService _customerService;
-            private readonly IWorkContext _workContext;
+            protected readonly bool _ignoreFilter;
+            protected readonly ICustomerService _customerService;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 

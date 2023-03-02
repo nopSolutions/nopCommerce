@@ -15,7 +15,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<EmailAccount> _emailAccountRepository;
+        protected readonly IRepository<EmailAccount> _emailAccountRepository;
 
         #endregion
 

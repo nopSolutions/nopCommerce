@@ -16,14 +16,14 @@ namespace Nop.Services.Caching
         #region Fields
 
         protected readonly string _processId;
-        private bool _disposed;
+        protected bool _disposed;
 
         /// <summary>
         /// Holds the keys known by this nopCommerce instance
         /// </summary>
-        private readonly ICacheKeyManager _keyManager;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IRedisConnectionWrapper _connection;
+        protected readonly ICacheKeyManager _keyManager;
+        protected readonly IMemoryCache _memoryCache;
+        protected readonly IRedisConnectionWrapper _connection;
 
         #endregion
 

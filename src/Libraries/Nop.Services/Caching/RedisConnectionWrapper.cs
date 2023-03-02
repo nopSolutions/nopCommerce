@@ -18,9 +18,9 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private readonly SemaphoreSlim _connectionLock = new(1, 1);
-        private volatile IConnectionMultiplexer _connection;
-        private readonly RedisCacheOptions _options;
+        protected readonly SemaphoreSlim _connectionLock = new(1, 1);
+        protected volatile IConnectionMultiplexer _connection;
+        protected readonly RedisCacheOptions _options;
 
         #endregion
 
@@ -35,9 +35,14 @@ namespace Nop.Services.Caching
 
         #region Utilities
 
-        private async Task<IConnectionMultiplexer> ConnectAsync()
+        /// <summary>
+        /// Create a new ConnectionMultiplexer instance
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task<IConnectionMultiplexer> ConnectAsync()
         {
             IConnectionMultiplexer connection;
+
             if (_options.ConnectionMultiplexerFactory is null)
             {
                 if (_options.ConfigurationOptions is not null)
@@ -56,7 +61,11 @@ namespace Nop.Services.Caching
             return connection;
         }
 
-        private IConnectionMultiplexer Connect()
+        /// <summary>
+        /// Create a new ConnectionMultiplexer instance
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IConnectionMultiplexer Connect()
         {
             IConnectionMultiplexer connection;
 
@@ -75,7 +84,7 @@ namespace Nop.Services.Caching
         /// Get connection to Redis servers, and reconnects if necessary
         /// </summary>
         /// <returns></returns>
-        protected async Task<IConnectionMultiplexer> GetConnectionAsync()
+        protected virtual async Task<IConnectionMultiplexer> GetConnectionAsync()
         {
             if (_connection?.IsConnected == true)
                 return _connection;
@@ -104,7 +113,7 @@ namespace Nop.Services.Caching
         /// Get connection to Redis servers, and reconnects if necessary
         /// </summary>
         /// <returns></returns>
-        protected IConnectionMultiplexer GetConnection()
+        protected virtual IConnectionMultiplexer GetConnection()
         {
             if (_connection?.IsConnected == true)
                 return _connection;

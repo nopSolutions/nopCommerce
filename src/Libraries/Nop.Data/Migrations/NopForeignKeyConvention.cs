@@ -11,7 +11,7 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="foreignKey">The foreign key definition</param>
         /// <returns>Name of a foreign key</returns>
-        private string GetForeignKeyName(ForeignKeyDefinition foreignKey)
+        protected virtual string GetForeignKeyName(ForeignKeyDefinition foreignKey)
         {
             var foreignColumns = string.Join('_', foreignKey.ForeignColumns);
             var primaryColumns = string.Join('_', foreignKey.PrimaryColumns);

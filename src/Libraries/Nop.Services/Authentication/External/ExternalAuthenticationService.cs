@@ -26,22 +26,22 @@ namespace Nop.Services.Authentication.External
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly ICustomerRegistrationService _customerRegistrationService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 

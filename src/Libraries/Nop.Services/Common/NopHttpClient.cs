@@ -21,14 +21,14 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly HttpClient _httpClient;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly AdminAreaSettings _adminAreaSettings;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly HttpClient _httpClient;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

@@ -17,13 +17,13 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly GoogleAuthenticatorService _googleAuthenticatorService;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly GoogleAuthenticatorService _googleAuthenticatorService;
+        protected readonly ICustomerRegistrationService _customerRegistrationService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -114,6 +114,5 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         #endregion
-
     }
 }

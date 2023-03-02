@@ -14,7 +14,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
     {
         #region Fields
 
-        private readonly IRepository<TaxTransactionLog> _taxTransactionLogRepository;
+        protected readonly IRepository<TaxTransactionLog> _taxTransactionLogRepository;
 
         #endregion
 

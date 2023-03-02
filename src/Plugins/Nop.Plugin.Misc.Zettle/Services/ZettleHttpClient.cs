@@ -19,10 +19,10 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly HttpClient _httpClient;
+        protected readonly ZettleSettings _zettleSettings;
 
-        private string _accessToken;
+        protected string _accessToken;
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// Get access token
         /// </summary>
         /// <returns>The asynchronous task whose result contains access token</returns>
-        private async Task<string> GetAccessTokenAsync()
+        protected async Task<string> GetAccessTokenAsync()
         {
             if (!string.IsNullOrEmpty(_accessToken))
                 return _accessToken;

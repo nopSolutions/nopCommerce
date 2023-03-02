@@ -13,11 +13,11 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
     {
         #region Fields
 
-        private readonly AccessiBeSettings _accessiBeSettings;
-        private readonly ILogger _logger;
-        private readonly IStoreContext _storeContext;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly AccessiBeSettings _accessiBeSettings;
+        protected readonly ILogger _logger;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
+        protected async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        private async Task<bool> PluginActiveAsync()
+        protected async Task<bool> PluginActiveAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();

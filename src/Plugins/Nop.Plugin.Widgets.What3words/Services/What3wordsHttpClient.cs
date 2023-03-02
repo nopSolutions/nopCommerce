@@ -15,7 +15,7 @@ namespace Nop.Plugin.Widgets.What3words.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 

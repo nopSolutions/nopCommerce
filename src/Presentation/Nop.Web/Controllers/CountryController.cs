@@ -9,7 +9,7 @@ namespace Nop.Web.Controllers
 	{
         #region Fields
 
-        private readonly ICountryModelFactory _countryModelFactory;
+        protected readonly ICountryModelFactory _countryModelFactory;
         
         #endregion
         

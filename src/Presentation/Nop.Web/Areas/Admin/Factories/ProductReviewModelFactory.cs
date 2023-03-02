@@ -25,16 +25,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductService _productService;
-        private readonly IReviewTypeService _reviewTypeService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IProductService _productService;
+        protected readonly IReviewTypeService _reviewTypeService;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

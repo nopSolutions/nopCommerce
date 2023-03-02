@@ -25,17 +25,17 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 

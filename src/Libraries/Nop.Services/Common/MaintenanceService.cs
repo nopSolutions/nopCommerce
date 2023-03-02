@@ -13,7 +13,7 @@ namespace Nop.Services.Common
     {
         #region Fields
        
-        private readonly INopFileProvider _fileProvider;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 

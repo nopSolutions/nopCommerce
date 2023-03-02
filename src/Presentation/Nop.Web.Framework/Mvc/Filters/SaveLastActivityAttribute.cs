@@ -34,9 +34,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly CustomerSettings _customerSettings;
-            private readonly IRepository<Customer> _customerRepository;
-            private readonly IWorkContext _workContext;
+            protected readonly CustomerSettings _customerSettings;
+            protected readonly IRepository<Customer> _customerRepository;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 

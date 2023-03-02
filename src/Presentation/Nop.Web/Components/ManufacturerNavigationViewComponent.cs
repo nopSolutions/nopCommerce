@@ -9,8 +9,8 @@ namespace Nop.Web.Components
 {
     public partial class ManufacturerNavigationViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
 
         public ManufacturerNavigationViewComponent(CatalogSettings catalogSettings, ICatalogModelFactory catalogModelFactory)
         {

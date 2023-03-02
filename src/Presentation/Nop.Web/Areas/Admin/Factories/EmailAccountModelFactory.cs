@@ -16,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IEmailAccountService _emailAccountService;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly IEmailAccountService _emailAccountService;
 
         #endregion
 

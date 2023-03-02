@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Data.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -14,7 +13,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<SearchTerm> _searchTermRepository;
+        protected readonly IRepository<SearchTerm> _searchTermRepository;
 
         #endregion
 

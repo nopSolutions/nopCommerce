@@ -7,7 +7,7 @@ namespace Nop.Web.Components
 {
     public partial class PrivateMessagesInboxViewComponent : NopViewComponent
     {
-        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        protected readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 
         public PrivateMessagesInboxViewComponent(IPrivateMessagesModelFactory privateMessagesModelFactory)
         {

@@ -11,10 +11,10 @@ namespace Nop.Web.Components
 {
     public partial class HomepageProductsViewComponent : NopViewComponent
     {
-        private readonly IAclService _aclService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IAclService _aclService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IStoreMappingService _storeMappingService;
 
         public HomepageProductsViewComponent(IAclService aclService,
             IProductModelFactory productModelFactory,

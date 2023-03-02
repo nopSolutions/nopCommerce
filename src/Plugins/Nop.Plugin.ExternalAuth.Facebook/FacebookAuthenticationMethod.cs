@@ -17,9 +17,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

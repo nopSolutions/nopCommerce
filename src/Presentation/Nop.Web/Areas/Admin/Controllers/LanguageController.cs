@@ -27,21 +27,21 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Const
 
-        private const string FLAGS_PATH = @"images\flags";
+        protected const string FLAGS_PATH = @"images\flags";
 
         #endregion
 
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILanguageModelFactory _languageModelFactory;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILanguageModelFactory _languageModelFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 

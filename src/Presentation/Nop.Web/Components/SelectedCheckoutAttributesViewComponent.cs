@@ -7,7 +7,7 @@ namespace Nop.Web.Components
 {
     public partial class SelectedCheckoutAttributesViewComponent : NopViewComponent
     {
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
 
         public SelectedCheckoutAttributesViewComponent(IShoppingCartModelFactory shoppingCartModelFactory)
         {

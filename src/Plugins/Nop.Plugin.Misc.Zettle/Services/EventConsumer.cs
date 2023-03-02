@@ -34,13 +34,13 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly ZettleRecordService _zettleRecordService;
-        private readonly ZettleService _zettleService;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly ZettleRecordService _zettleRecordService;
+        protected readonly ZettleService _zettleService;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 

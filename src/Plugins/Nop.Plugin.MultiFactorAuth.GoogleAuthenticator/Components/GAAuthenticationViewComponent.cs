@@ -13,7 +13,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components
     {
         #region Fields
 
-        private readonly AuthenticationModelFactory _authenticationModelFactory;
+        protected readonly AuthenticationModelFactory _authenticationModelFactory;
 
         #endregion
 

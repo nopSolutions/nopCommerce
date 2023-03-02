@@ -16,9 +16,9 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<StateProvince> _stateProvinceRepository;
 
         #endregion
 

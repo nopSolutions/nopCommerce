@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -9,14 +9,14 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     /// <summary>
     /// Represents model binder for numeric types
     /// </summary>
-    public class InvariantNumberModelBinder : IModelBinder
+    public partial class InvariantNumberModelBinder : IModelBinder
     {
 
         #region Fields
 
-        private delegate bool TryParseNumber<T>(string value, NumberStyles styles, IFormatProvider provider, out T result) where T : struct;
-        private readonly IModelBinder _globalizedBinder;
-        private readonly NumberStyles _supportedStyles;
+        protected delegate bool TryParseNumber<T>(string value, NumberStyles styles, IFormatProvider provider, out T result) where T : struct;
+        protected readonly IModelBinder _globalizedBinder;
+        protected readonly NumberStyles _supportedStyles;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
         #region Utils
 
-        private T? TryParse<T>(string value, TryParseNumber<T> handler) where T : struct
+        protected virtual T? TryParse<T>(string value, TryParseNumber<T> handler) where T : struct
         {
             if (!string.IsNullOrWhiteSpace(value) && handler(value, _supportedStyles, CultureInfo.InvariantCulture, out var parseResult))
                 return parseResult;

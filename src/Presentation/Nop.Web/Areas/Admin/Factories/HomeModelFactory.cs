@@ -19,14 +19,14 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ILogger _logger;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly NopHttpClient _nopHttpClient;
+        protected readonly AdminAreaSettings _adminAreaSettings;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ILogger _logger;
+        protected readonly IOrderModelFactory _orderModelFactory;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly NopHttpClient _nopHttpClient;
 
         #endregion
 

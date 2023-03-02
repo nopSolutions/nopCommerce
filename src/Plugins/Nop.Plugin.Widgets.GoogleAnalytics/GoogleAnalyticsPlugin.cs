@@ -18,9 +18,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
-        private readonly ISettingService _settingService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly ISettingService _settingService;
 
         #endregion
 
@@ -130,9 +130,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         #endregion
 
+        #region Properties
+
         /// <summary>
         /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
         /// </summary>
         public bool HideInWidgetList => false;
+
+        #endregion
     }
 }

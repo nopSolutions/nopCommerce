@@ -17,46 +17,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
-        private const string ACTION_ATTRIBUTE_NAME = "asp-action";
-        private const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
+        protected const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
+        protected const string ACTION_ATTRIBUTE_NAME = "asp-action";
+        protected const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
 
         #endregion
-
-        #region Properties
-
-        protected IHtmlGenerator Generator { get; set; }
-
-        /// <summary>
-        /// Button identifier
-        /// </summary>
-        [HtmlAttributeName(BUTTON_ID_ATTRIBUTE_NAME)]
-        public string ButtonId { get; set; }
-
-        /// <summary>
-        /// Delete action name
-        /// </summary>
-        [HtmlAttributeName(ACTION_ATTRIBUTE_NAME)]
-        public string Action { get; set; }
-
-        /// <summary>
-        /// Additional confirm text
-        /// </summary>
-        [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
-        public string ConfirmText { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -128,6 +97,37 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
+
+        #endregion
+
+        #region Properties
+
+        protected IHtmlGenerator Generator { get; set; }
+
+        /// <summary>
+        /// Button identifier
+        /// </summary>
+        [HtmlAttributeName(BUTTON_ID_ATTRIBUTE_NAME)]
+        public string ButtonId { get; set; }
+
+        /// <summary>
+        /// Delete action name
+        /// </summary>
+        [HtmlAttributeName(ACTION_ATTRIBUTE_NAME)]
+        public string Action { get; set; }
+
+        /// <summary>
+        /// Additional confirm text
+        /// </summary>
+        [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
+        public string ConfirmText { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

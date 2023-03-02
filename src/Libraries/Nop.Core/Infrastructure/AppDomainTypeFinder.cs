@@ -16,8 +16,8 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
-        private bool _ignoreReflectionErrors = true;
-        protected INopFileProvider _fileProvider;
+        protected readonly bool _ignoreReflectionErrors = true;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
-        private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
+        protected virtual void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {

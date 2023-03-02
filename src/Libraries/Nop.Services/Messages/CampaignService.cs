@@ -16,13 +16,13 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEmailSender _emailSender;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IRepository<Campaign> _campaignRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly ITokenizer _tokenizer;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEmailSender _emailSender;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IRepository<Campaign> _campaignRepository;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITokenizer _tokenizer;
 
         #endregion
 

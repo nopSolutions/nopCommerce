@@ -9,9 +9,9 @@ namespace Nop.Web.Areas.Admin.Components
 {
     public partial class AclDisabledWarningViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
 
         public AclDisabledWarningViewComponent(CatalogSettings catalogSettings,
             ISettingService settingService,

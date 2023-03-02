@@ -16,7 +16,7 @@ namespace Nop.Services.Media.RoxyFileman
         #region Fields
 
         protected readonly IRoxyFilemanFileProvider _fileProvider;
-        private readonly IWorkContext _workContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

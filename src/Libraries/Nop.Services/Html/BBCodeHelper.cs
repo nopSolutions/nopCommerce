@@ -11,15 +11,15 @@ namespace Nop.Services.Html
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
+        protected readonly CommonSettings _commonSettings;
 
-        private static readonly Regex _regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexItalic = new(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexUnderLine = new(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexUrl1 = new(@"\[url\=(https?:.+?)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexUrl2 = new(@"\[url\](https?:.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexQuote = new(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex _regexImg = new(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexBold = new(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexItalic = new(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexUnderLine = new(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexUrl1 = new(@"\[url\=(https?:.+?)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexUrl2 = new(@"\[url\](https?:.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexQuote = new(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected static readonly Regex _regexImg = new(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 

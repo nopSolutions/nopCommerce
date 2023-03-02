@@ -10,8 +10,8 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
     {
         #region Fields
 
-        private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
-        private readonly ISettingService _settingService;
+        protected readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

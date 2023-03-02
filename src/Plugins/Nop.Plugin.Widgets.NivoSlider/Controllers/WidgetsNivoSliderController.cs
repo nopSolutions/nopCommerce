@@ -19,12 +19,12 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
     [AutoValidateAntiforgeryToken]
     public class WidgetsNivoSliderController : BasePluginController
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
 
         public WidgetsNivoSliderController(ILocalizationService localizationService,
             INotificationService notificationService,

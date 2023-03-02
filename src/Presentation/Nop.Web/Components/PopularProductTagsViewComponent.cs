@@ -9,8 +9,8 @@ namespace Nop.Web.Components
 {
     public partial class PopularProductTagsViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
 
         public PopularProductTagsViewComponent(CatalogSettings catalogSettings, ICatalogModelFactory catalogModelFactory)
         {

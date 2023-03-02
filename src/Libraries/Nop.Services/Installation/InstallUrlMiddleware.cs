@@ -13,7 +13,7 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly RequestDelegate _next;
+        protected readonly RequestDelegate _next;
 
         #endregion
 

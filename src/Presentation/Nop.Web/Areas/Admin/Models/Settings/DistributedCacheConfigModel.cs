@@ -28,7 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string TableName { get; set; } = "DistributedCache";
 
         [NopResourceDisplayName("Admin.Configuration.AppSettings.DistributedCache.InstanceName")]
-        public string InstanceName { get; private set; } = string.Empty;
+        public string InstanceName { get; protected set; } = string.Empty;
 
         #endregion
     }

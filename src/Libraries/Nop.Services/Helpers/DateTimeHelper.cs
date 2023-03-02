@@ -13,8 +13,8 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IWorkContext _workContext;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

@@ -16,8 +16,8 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<GenericAttribute> _genericAttributeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

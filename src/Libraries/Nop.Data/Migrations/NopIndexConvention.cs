@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="index">The index definition</param>
         /// <returns>Name of an index</returns>
-        private string GetIndexName(IndexDefinition index)
+        protected virtual string GetIndexName(IndexDefinition index)
         {
             return _dataProvider.GetIndexName(index.TableName, string.Join('_', index.Columns.Select(c => c.Name)));
         }

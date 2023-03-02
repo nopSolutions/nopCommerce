@@ -15,7 +15,7 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private readonly DistributedCacheConfig _distributedCacheConfig;
+        protected readonly DistributedCacheConfig _distributedCacheConfig;
 
         #endregion
 
@@ -33,9 +33,16 @@ namespace Nop.Services.Caching
 
         #region Utilities
 
-        protected async Task PerformActionAsync(SqlCommand command, params SqlParameter[] parameters)
+        /// <summary>
+        /// Performs SQL command
+        /// </summary>
+        /// <param name="command">SQL command</param>
+        /// <param name="parameters">Parameters for SQL command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PerformActionAsync(SqlCommand command, params SqlParameter[] parameters)
         {
             var conn = new SqlConnection(_distributedCacheConfig.ConnectionString);
+
             try
             {
                 await conn.OpenAsync();

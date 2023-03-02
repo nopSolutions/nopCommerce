@@ -19,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ITemplateModelFactory _templateModelFactory;
-        private readonly ITopicTemplateService _topicTemplateService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly ITemplateModelFactory _templateModelFactory;
+        protected readonly ITopicTemplateService _topicTemplateService;
 
         #endregion
 

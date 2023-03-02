@@ -10,7 +10,7 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

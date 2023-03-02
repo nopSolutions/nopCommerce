@@ -18,11 +18,11 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<VendorNote> _vendorNoteRepository;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<Vendor> _vendorRepository;
+        protected readonly IRepository<VendorNote> _vendorNoteRepository;
 
         #endregion
 

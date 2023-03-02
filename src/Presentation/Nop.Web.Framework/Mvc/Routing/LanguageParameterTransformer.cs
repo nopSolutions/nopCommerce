@@ -15,8 +15,8 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
 
         #endregion
 

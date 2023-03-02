@@ -27,25 +27,25 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<ShippingMethodCountryMapping> _shippingMethodCountryMappingRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        protected readonly IRepository<ShippingMethodCountryMapping> _shippingMethodCountryMappingRepository;
+        protected readonly IRepository<Warehouse> _warehouseRepository;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace Nop.Services.Shipping
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if there are multiple items; otherwise false
         /// </returns>
-        protected async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
+        protected virtual async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
         {
             //no items
             if (!items.Any())

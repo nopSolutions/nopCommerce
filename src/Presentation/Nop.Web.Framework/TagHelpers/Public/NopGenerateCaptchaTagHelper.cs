@@ -15,21 +15,10 @@ namespace Nop.Web.Framework.TagHelpers.Public
     [HtmlTargetElement("nop-captcha", TagStructure = TagStructure.WithoutEndTag)]
     public partial class NopGenerateCaptchaTagHelper : TagHelper
     {
-        #region Properties
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -82,6 +71,17 @@ namespace Nop.Web.Framework.TagHelpers.Public
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Content.SetHtmlContent(captchaHtmlContent);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

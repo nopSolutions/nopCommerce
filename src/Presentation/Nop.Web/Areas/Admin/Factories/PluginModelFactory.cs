@@ -31,22 +31,22 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPluginService _pluginService;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly OfficialFeedManager _officialFeedManager;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IPluginService _pluginService;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly OfficialFeedManager _officialFeedManager;
 
         #endregion
 

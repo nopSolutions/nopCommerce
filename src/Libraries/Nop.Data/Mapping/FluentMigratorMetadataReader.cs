@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping
     {
         #region Fields
 
-        private readonly IMappingEntityAccessor _mappingEntityAccessor;
+        protected readonly IMappingEntityAccessor _mappingEntityAccessor;
 
         #endregion
 
@@ -31,6 +31,13 @@ namespace Nop.Data.Mapping
 
         #region Utils
 
+        /// <summary>
+        /// Gets attributes of specified type, associated with specified type member
+        /// </summary>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <param name="type">Attributes owner type</param>
+        /// <param name="memberInfo">Attributes owner member</param>
+        /// <returns>Attribute of specified type</returns>
         protected T GetAttribute<T>(Type type, MemberInfo memberInfo) where T : Attribute
         {
             var attribute = Types.GetOrAdd((type, memberInfo), _ =>
@@ -71,6 +78,14 @@ namespace Nop.Data.Mapping
             return (T)attribute;
         }
 
+        /// <summary>
+        /// Gets attributes of specified type, associated with specified type
+        /// </summary>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <param name="type">Attributes owner type</param>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="memberInfo">Attributes owner member</param>
+        /// <returns>Attributes of specified type</returns>
         protected T[] GetAttributes<T>(Type type, Type attributeType, MemberInfo memberInfo = null)
             where T : Attribute
         {

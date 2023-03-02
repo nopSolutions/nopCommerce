@@ -13,7 +13,7 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly IRepository<TaxCategory> _taxCategoryRepository;
+        protected readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 

@@ -14,13 +14,13 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private static readonly object _locker = new();
-        private static readonly Regex _firstMobileDeviceRegex;
-        private static readonly Regex _secondMobileDeviceRegex;
+        protected static readonly object _locker = new();
+        protected static readonly Regex _firstMobileDeviceRegex;
+        protected static readonly Regex _secondMobileDeviceRegex;
 
-        private readonly AppSettings _appSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
+        protected readonly AppSettings _appSettings;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 

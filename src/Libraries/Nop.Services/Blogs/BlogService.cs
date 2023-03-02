@@ -17,10 +17,10 @@ namespace Nop.Services.Blogs
     {
         #region Fields
 
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<BlogComment> _blogCommentRepository;
+        protected readonly IRepository<BlogPost> _blogPostRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 

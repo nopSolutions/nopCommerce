@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
@@ -13,7 +13,7 @@ namespace Nop.Services.Media.RoxyFileman
     {
         #region Fields
 
-        private static Dictionary<string, string> _languageResources;
+        protected static Dictionary<string, string> _languageResources;
 
         #endregion
 

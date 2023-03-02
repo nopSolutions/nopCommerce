@@ -23,23 +23,23 @@ namespace Nop.Services.Forums
     {
         #region Fields
 
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
-        private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly SeoSettings _seoSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Forum> _forumRepository;
+        protected readonly IRepository<ForumGroup> _forumGroupRepository;
+        protected readonly IRepository<ForumPost> _forumPostRepository;
+        protected readonly IRepository<ForumPostVote> _forumPostVoteRepository;
+        protected readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
+        protected readonly IRepository<ForumTopic> _forumTopicRepository;
+        protected readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly SeoSettings _seoSettings;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task UpdateForumStatsAsync(int forumId)
+        protected virtual async Task UpdateForumStatsAsync(int forumId)
         {
             if (forumId == 0) 
                 return;
@@ -153,7 +153,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task UpdateForumTopicStatsAsync(int forumTopicId)
+        protected virtual async Task UpdateForumTopicStatsAsync(int forumTopicId)
         {
             if (forumTopicId == 0) 
                 return;
@@ -203,7 +203,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="customerId">The customer identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task UpdateCustomerStatsAsync(int customerId)
+        protected virtual async Task UpdateCustomerStatsAsync(int customerId)
         {
             if (customerId == 0) 
                 return;

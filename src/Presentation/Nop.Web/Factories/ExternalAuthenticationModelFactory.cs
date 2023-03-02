@@ -14,9 +14,9 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

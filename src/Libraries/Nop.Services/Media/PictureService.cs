@@ -28,18 +28,18 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRepository<PictureBinary> _pictureBinaryRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
-        private readonly ISettingService _settingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILogger _logger;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IRepository<Picture> _pictureRepository;
+        protected readonly IRepository<PictureBinary> _pictureBinaryRepository;
+        protected readonly IRepository<ProductPicture> _productPictureRepository;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 

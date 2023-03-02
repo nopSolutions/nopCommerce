@@ -17,21 +17,29 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
+        #region Ctor
+
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="webHostEnvironment">Hosting environment</param>
         public NopFileProvider(IWebHostEnvironment webHostEnvironment)
-            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath)! : webHostEnvironment.ContentRootPath)
         {
             WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
                 ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
                 : webHostEnvironment.WebRootPath;
         }
 
+        #endregion
+
         #region Utilities
 
-        private static void DeleteDirectoryRecursive(string path)
+        /// <summary>
+        /// Depth-first recursive delete
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void DeleteDirectoryRecursive(string path)
         {
             Directory.Delete(path, true);
             const int maxIterationToWait = 10;
@@ -44,8 +52,10 @@ namespace Nop.Core.Infrastructure
             while (Directory.Exists(path))
             {
                 curIteration += 1;
+
                 if (curIteration > maxIterationToWait)
                     return;
+
                 Thread.Sleep(100);
             }
         }

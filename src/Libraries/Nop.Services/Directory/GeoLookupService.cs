@@ -1,4 +1,7 @@
 ﻿//This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+//more info: http://maxmind.github.io/GeoIP2-dotnet/
+//more info: https://github.com/maxmind/GeoIP2-dotnet
+//more info: http://dev.maxmind.com/geoip/geoip2/geolite2/
 
 using System;
 using MaxMind.GeoIP2;
@@ -16,8 +19,8 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
+        protected readonly ILogger _logger;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -50,19 +53,9 @@ namespace Nop.Services.Directory
                 var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
                 var reader = new DatabaseReader(databasePath);
                 var omni = reader.Country(ipAddress);
+
                 return omni;
-                //more info: http://maxmind.github.io/GeoIP2-dotnet/
-                //more info: https://github.com/maxmind/GeoIP2-dotnet
-                //more info: http://dev.maxmind.com/geoip/geoip2/geolite2/
-                //Console.WriteLine(omni.Country.IsoCode); // 'US'
-                //Console.WriteLine(omni.Country.Name); // 'United States'
-                //Console.WriteLine(omni.Country.Names["zh-CN"]); // '美国'
-                //Console.WriteLine(omni.MostSpecificSubdivision.Name); // 'Minnesota'
-                //Console.WriteLine(omni.MostSpecificSubdivision.IsoCode); // 'MN'
-                //Console.WriteLine(omni.City.Name); // 'Minneapolis'
-                //Console.WriteLine(omni.Postal.Code); // '55455'
-                //Console.WriteLine(omni.Location.Latitude); // 44.9733
-                //Console.WriteLine(omni.Location.Longitude); // -93.2323
+                
             }
             //catch (AddressNotFoundException exc)
             catch (GeoIP2Exception)

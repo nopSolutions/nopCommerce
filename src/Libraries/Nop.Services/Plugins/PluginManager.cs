@@ -15,10 +15,10 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPluginService _pluginService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IPluginService _pluginService;
 
-        private readonly Dictionary<string, IList<TPlugin>> _plugins = new();
+        protected readonly Dictionary<string, IList<TPlugin>> _plugins = new();
 
         #endregion
 
