@@ -92,14 +92,12 @@ namespace Nop.Services.Caching
         /// <summary>
         /// Enqueue or publish change event
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">The evicted cache key to be published</param>
         protected void PublishChangeEvent(object key)
         {
             var stringKey = key.ToString();
-            if (_timer == null)
-                BatchPublishChangeEvents(stringKey);
-            else
-                _messageQueue.Enqueue(stringKey);
+            if (_timer == null) BatchPublishChangeEvents(stringKey);
+            else _messageQueue.Enqueue(stringKey);
         }
 
         /// <summary>
@@ -195,6 +193,7 @@ namespace Nop.Services.Caching
             {
                 var subscriber = _connection.GetSubscriber();
                 subscriber.Unsubscribe(ChannelPrefix + "*");
+                _timer.Dispose();
 
                 _disposed = true;
             }
