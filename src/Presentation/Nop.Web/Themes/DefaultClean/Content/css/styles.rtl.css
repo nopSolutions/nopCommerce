@@ -560,6 +560,22 @@ label, label + * {
   text-align: center;
 }
 
+.cart .product-quantity div.up {
+  background: url('../images/vote-up.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
+.cart .product-quantity div.down {
+  background: url('../images/vote-down.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
 .cart td.subtotal,
 .data-table td.total {
   white-space: nowrap;
