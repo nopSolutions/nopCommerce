@@ -87,7 +87,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 
             //return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
 
-            //Todo:videp view sorunu çöz
+            
             var model = new ProductReviewModel();
             if (additionalData.GetType() == model.GetType())
             {

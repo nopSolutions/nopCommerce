@@ -25,17 +25,33 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Migrations
         /// Collect the UP migration expressions
         /// </summary>
         public override void Up() {
-            
-            Create.TableFor<Video>();
+            try
+            {
+                Create.TableFor<Video>();
             Create.TableFor<CustomProductReviewMapping>();
             Create.TableFor<VideoBinary>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
 
+            }
         }     
         public override void Down()
         {
+            try
+            {
+
             Delete.Table("CustomProductReviewMapping");
             Delete.Table("Video");
             Delete.Table("VideoBinary");
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                
+            }
 
 
         }

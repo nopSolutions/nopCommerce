@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomProductReviews.Services;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Infrastructure
 {
@@ -23,6 +24,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Infrastructure
             services.AddScoped<ICustomProductReviewMappingService, CustomProductReviewMappingService>();
             services.AddSingleton<IBackgroundQueue,BackgroundQueue>();
             services.AddHostedService<QueueService>();
+            services.AddScoped<IPluginService, PluginService>();
         }
 
         public void Configure(IApplicationBuilder application)

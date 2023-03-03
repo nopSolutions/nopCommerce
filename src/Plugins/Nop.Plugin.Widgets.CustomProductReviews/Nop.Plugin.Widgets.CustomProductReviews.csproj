@@ -102,6 +102,9 @@
     <None Update="Views\CustomProductReviews\_ProductReviewHelpfulness.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Views\Denied.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Views\_ProductReviewHelpfulness.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

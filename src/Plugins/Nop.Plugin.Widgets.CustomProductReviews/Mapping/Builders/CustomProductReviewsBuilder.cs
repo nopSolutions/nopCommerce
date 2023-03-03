@@ -15,7 +15,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Mapping.Builders
 
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            //TODO:mappingler sıçtı çöz
+           
             table
                 .WithColumn(nameof(CustomProductReviewMapping.Id)).AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn(nameof(CustomProductReviewMapping.DisplayOrder)).AsInt32().Nullable()

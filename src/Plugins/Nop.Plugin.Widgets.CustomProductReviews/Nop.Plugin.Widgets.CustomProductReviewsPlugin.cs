@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Policy;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomCustomProductReviews.Services;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -35,6 +47,9 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWebHelper _webHelper;
+        private IPluginsInfo _pluginsInfo;
+        private readonly IPluginService _pluginService;
+
 
 
         #endregion
@@ -46,7 +61,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
-            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext, IWebHelper webHelper)
+            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext, IWebHelper webHelper,IPluginService pluginService)
         {
             _customProdutReviewSettings = customProdutReviewSettings;
             _actionContextAccessor = actionContextAccessor;
@@ -56,7 +71,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             _urlHelperFactory = urlHelperFactory;
             _storeContext = storeContext;
             _webHelper=webHelper;
-            
+            _pluginService = pluginService;
+
+
+
+
         }
 
         #endregion
@@ -79,9 +98,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         /// A task that represents the asynchronous operation
         /// The task result contains the widget zones
         /// </returns>
-        public Task<IList<string>> GetWidgetZonesAsync()
+        public async Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { _customProdutReviewSettings.WidgetZone,PublicWidgetZones.ProductDetailsBottom });
+            return await Task.FromResult<IList<string>>(new List<string> { _customProdutReviewSettings.WidgetZone, PublicWidgetZones.ProductDetailsBottom });
+           
+           
         }
 
         /// <summary>
@@ -97,12 +118,22 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             return "CustomProductReviews";
         }
 
+
         /// <summary>
         /// Install plugin
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
+
+            try
+            {
+                _pluginsInfo = Singleton<IPluginsInfo>.Instance;
+
+
+                var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             Uri myUri = new Uri(_webHelper.GetStoreLocation());
             string host = myUri.Host;
@@ -111,30 +142,68 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             host = EncryptService.Encrypt(host);
             var version = "1.0.0";
             version = "CustomProductReviews" + " " + version;
-            version= EncryptService.Encrypt(version);
-            //settings
-            await _settingService.SaveSettingAsync(new CustomProductReviewsSettings
+            version = EncryptService.Encrypt(version);
+            string json = host + "," + version;
+            json = JsonConvert.SerializeObject(json);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var result = await client.PostAsync("https://hdtvapp.tk/CustomerData", content);
+            var jsonString = await result.Content.ReadAsStringAsync();
+            bool rool = JsonConvert.DeserializeObject<bool>(jsonString);
+            if (rool)
             {
-                WidgetZone = PublicWidgetZones.ProductReviewsPageTop,
-                data = host+","+version,
-                MaximumFile = 5,
-                MaximumSize = 1073741824
 
-            });
-         
-         
+                //settings
+                await _settingService.SaveSettingAsync(new CustomProductReviewsSettings
+                {
+                    WidgetZone = PublicWidgetZones.ProductReviewsPageTop,
+                    data = json,
+                    MaximumFile = 5,
+                    MaximumSize = 1073741824
+                });
 
 
-            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+
+
+                await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+                {
+                    ["Plugins.Widgets.CustomProductReviews.Fields.Enabled"] = "Enable",
+                    ["Plugins.Widgets.CustomProductReviews.Fields.Enabled.Hint"] = "Check to activate this widget.",
+                    ["Plugins.Widgets.CustomProductReviews.Fields.Script"] = "Installation script",
+                    ["Plugins.Widgets.CustomProductReviews.Fields.Script.Hint"] =
+                        "Find your unique installation script on the Installation tab in your account and then copy it into this field.",
+                    ["Plugins.Widgets.CustomProductReviews.Fields.Script.Required"] =
+                        "Installation script is required",
+                });
+
+                await base.InstallAsync();
+            }
+            else
             {
-                ["Plugins.Widgets.CustomProductReviews.Fields.Enabled"] = "Enable",
-                ["Plugins.Widgets.CustomProductReviews.Fields.Enabled.Hint"] = "Check to activate this widget.",
-                ["Plugins.Widgets.CustomProductReviews.Fields.Script"] = "Installation script",
-                ["Plugins.Widgets.CustomProductReviews.Fields.Script.Hint"] = "Find your unique installation script on the Installation tab in your account and then copy it into this field.",
-                ["Plugins.Widgets.CustomProductReviews.Fields.Script.Required"] = "Installation script is required",
-            });
+                try
+                {
+                    //var pluginToInstall = _pluginsInfo.PluginNamesToInstall.FirstOrDefault(plugin => plugin.SystemName.Equals("Nop.Plugin.Widgets.CustomProductReviews"));
+                    //_pluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
+                    //_pluginsInfo.PluginNamesToUninstall.Add("Nop.Plugin.Widgets.CustomProductReviews");
+                    //await _pluginsInfo.SaveAsync();
+                    _pluginService.ResetChanges();
+                    await _pluginService.PreparePluginToUninstallAsync("Nop.Plugin.Widgets.CustomProductReviews");
+                    await _pluginService.UninstallPluginsAsync();
 
-            await base.InstallAsync();
+                    //_webHelper.RestartAppDomain();
+                }
+                catch 
+                {
+                   
+                }
+                    // _pluginsInfo.PluginNamesToUninstall.Add("Nop.Plugin.Widgets.CustomProductReviews");
+
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+               
+            }
         }
 
         /// <summary>

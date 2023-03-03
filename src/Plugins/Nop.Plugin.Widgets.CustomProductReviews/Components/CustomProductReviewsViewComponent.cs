@@ -14,9 +14,11 @@ using Nop.Plugin.Widgets.CustomProductReviews.Controllers;
 using Nop.Core.Domain.Orders;
 using Nop.Core;
 using System.Collections.Generic;
+using LinqToDB.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Widgets.CustomProductReviews.Components
 {
@@ -36,11 +38,12 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         private readonly IOrderService _orderService;
         private readonly ICustomerService _customerService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IPluginService _pluginService;
         #endregion
 
         #region Ctor
 
-        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings,IProductService productService, IProductModelFactory productModelFactory,IWidgetModelFactory widgetModelFactory, IWorkContext workContext, IOrderService orderService, ICustomerService customerService, CatalogSettings catalogSettings,ILocalizationService localizationService)
+        public CustomProductReviewsViewComponent(CustomProductReviewsSettings customProductReviewsSettings,IProductService productService, IProductModelFactory productModelFactory,IWidgetModelFactory widgetModelFactory, IWorkContext workContext, IOrderService orderService, ICustomerService customerService, CatalogSettings catalogSettings,ILocalizationService localizationService,IPluginService pluginService)
         {
         _customProductReviewsSettings = customProductReviewsSettings;                                                                                                                                                
             _productService = productService;                                                                                                                                                                             
@@ -51,6 +54,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
             _customerService = customerService;
             _catalogSettings = catalogSettings;
             _localizationService = localizationService;
+            _pluginService= pluginService;;
         }
 
         #endregion
@@ -97,42 +101,58 @@ namespace Nop.Plugin.Widgets.CustomProductReviews.Components
         }
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
-            var model = new ProductReviewsModel();
-            var productDetailModel = new ProductDetailsModel();
-
-         
-
-            if (additionalData.GetType()== model.GetType())
+            if (_customProductReviewsSettings.data.IsNullOrEmpty())
             {
-                model = (ProductReviewsModel)additionalData;
+
+
+                await _pluginService.UninstallPluginsAsync();
+            await _pluginService.DeletePluginsAsync();
+            return View("~/Plugins/Widgets.CustomProductReviews/Views/Denied.html");
+
+
+
+
             }
             else
             {
-                productDetailModel = (ProductDetailsModel)additionalData;
-                int productId=productDetailModel.Id;
-                var product = await _productService.GetProductByIdAsync(productId);
+                var model = new ProductReviewsModel();
+                var productDetailModel = new ProductDetailsModel();
 
 
-                model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
 
-                await ValidateProductReviewAvailabilityAsync(product);
-
-                //default value
-                model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-
-                //default value for all additional review types
-                if (model.ReviewTypeList.Count > 0)
-                    foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
-                    {
-                        additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
-                    }
+                if (additionalData.GetType() == model.GetType())
+                {
+                    model = (ProductReviewsModel)additionalData;
+                }
+                else
+                {
+                    productDetailModel = (ProductDetailsModel)additionalData;
+                    int productId = productDetailModel.Id;
+                    var product = await _productService.GetProductByIdAsync(productId);
 
 
+                    model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
+
+                    await ValidateProductReviewAvailabilityAsync(product);
+
+                    //default value
+                    model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+
+                    //default value for all additional review types
+                    if (model.ReviewTypeList.Count > 0)
+                        foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
+                        {
+                            additionalProductReview.Rating = additionalProductReview.IsRequired
+                                ? _catalogSettings.DefaultProductRatingValue
+                                : 0;
+                        }
+
+
+                }
+
+
+                return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml", model);
             }
-
-
-            return View("~/Plugins/Widgets.CustomProductReviews/Views/ProductReviewComponent.cshtml",model);
-
         }
 
         #endregion
