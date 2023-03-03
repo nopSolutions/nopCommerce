@@ -95,12 +95,19 @@
                     $('#distributed-cache-table-name').showElement();
                     $('#distributed-cache-publish-interval').hideElement();
                     break;
-                case @((int)DistributedCacheType.RedisSynchronizedMemory):
-                    $('#distributed-cache-publish-interval').showElement();
-                default:
+                case @((int)DistributedCacheType.Redis):
+                    $('#distributed-cache-publish-interval').hideElement();
                     $('#distributed-cache-schema-name').hideElement();
                     $('#distributed-cache-table-name').hideElement();
                     $('#distributed-cache-instance-name').showElement();
+                    break;
+                case @((int)DistributedCacheType.RedisSynchronizedMemory):
+                    $('#distributed-cache-publish-interval').showElement();
+                    $('#distributed-cache-schema-name').hideElement();
+                    $('#distributed-cache-table-name').hideElement();
+                    $('#distributed-cache-instance-name').showElement();
+                default:
+                    break;
             }
         } else {
             $('#distributed-cache-connection-string').hideElement();
