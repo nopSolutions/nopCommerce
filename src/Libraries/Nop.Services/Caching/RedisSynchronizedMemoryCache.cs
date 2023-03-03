@@ -191,9 +191,9 @@ namespace Nop.Services.Caching
         {
             if (!_disposed)
             {
+                _timer?.Dispose();
                 var subscriber = _connection.GetSubscriber();
                 subscriber.Unsubscribe(ChannelPrefix + "*");
-                _timer.Dispose();
 
                 _disposed = true;
             }
