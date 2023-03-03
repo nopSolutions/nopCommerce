@@ -93,6 +93,7 @@
                 case @((int)DistributedCacheType.SqlServer):
                     $('#distributed-cache-schema-name').showElement();
                     $('#distributed-cache-table-name').showElement();
+                    $('#distributed-cache-instance-name').hideElement();
                     $('#distributed-cache-publish-interval').hideElement();
                     break;
                 case @((int)DistributedCacheType.Redis):
