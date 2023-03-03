@@ -115,6 +115,7 @@ namespace Nop.Services.Caching
 
         /// <summary>
         /// Publish change events on key channel
+        /// <param name="keys">The evicted entries to publish on the key channel.</param>
         /// </summary>
         protected void BatchPublishChangeEvents(params string[] keys)
         {
