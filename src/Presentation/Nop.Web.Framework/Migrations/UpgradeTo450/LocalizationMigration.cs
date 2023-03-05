@@ -175,29 +175,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
                 ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
             }, languageId);
-
+            
             // rename locales
-            var localesToRename = new[]
+            this.RenameLocales(new Dictionary<string, string>
             {
                 //#5834
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint" }
-            };
-
-            foreach (var lang in languages)
-            {
-                foreach (var locale in localesToRename)
-                {
-                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
-                    if (lsr != null)
-                    {
-                        lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResource(lsr);
-                    }
-                }
-            }
+                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint"
+            }, languages, localizationService);
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

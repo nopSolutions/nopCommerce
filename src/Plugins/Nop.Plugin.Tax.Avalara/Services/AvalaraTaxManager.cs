@@ -1159,7 +1159,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 if (_avalaraTaxSettings.UseTaxRateTables)
                 {
                     var taxRates = await GetTaxRatesFromFileAsync();
-                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == address.ZipPostalCode);
+                    var taxRate = taxRates.FirstOrDefault(record => address.ZipPostalCode?.StartsWith(record.Zip) ?? false);
                     if (taxRate?.TotalTax is null)
                         throw new NopException($"No rate found for zip code {address.ZipPostalCode}");
 
@@ -1198,7 +1198,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return await _staticCacheManager.GetAsync(key, async () => await HandleFunctionAsync(async () =>
                 {
                     var taxRates = await GetTaxRatesFromFileAsync();
-                    var taxRate = taxRates.FirstOrDefault(record => record.Zip == taxRateRequest.Address.ZipPostalCode);
+                    var taxRate = taxRates.FirstOrDefault(record => taxRateRequest.Address.ZipPostalCode?.StartsWith(record.Zip) ?? false);
                     return taxRate?.TotalTax * 100;
                 }));
             }

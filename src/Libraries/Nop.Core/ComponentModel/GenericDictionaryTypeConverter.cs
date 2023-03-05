@@ -69,12 +69,12 @@ namespace Nop.Core.ComponentModel
             {
                 var keyValueStr = string.IsNullOrEmpty(item) ? Array.Empty<string>() : item.Split(',').Select(x => x.Trim()).ToArray();
                 if (keyValueStr.Length != 2)
-                    break;
+                    continue;
 
                 object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
                 object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
                 if (dictionaryKey == null || dictionaryValue == null)
-                    break;
+                    continue;
 
                 if (!result.ContainsKey((K)dictionaryKey))
                     result.Add((K)dictionaryKey, (V)dictionaryValue);

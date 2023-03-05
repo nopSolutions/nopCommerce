@@ -656,13 +656,10 @@ namespace Nop.Web.Factories
             {
                 async Task<PictureModel> preparePictureModelAsync(Picture picture)
                 {
-                    //we use the Task.WhenAll method to control that both image thumbs was created in same time.
-                    //without this method, sometimes there were situations when one of the pictures was not generated on time
+                    //we have to keep the url generation order "full size -> preview" because picture can be updated twice
                     //this section of code requires detailed analysis in the future
-                    var picResultTasks = await Task.WhenAll(_pictureService.GetPictureUrlAsync(picture, pictureSize), _pictureService.GetPictureUrlAsync(picture));
-
-                    var (imageUrl, _) = picResultTasks[0];
-                    var (fullSizeImageUrl, _) = picResultTasks[1];
+                    (var fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+                    (var imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
 
                     //var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
                     //customization
@@ -1054,12 +1051,13 @@ namespace Nop.Web.Factories
                             valueModel.ImageSquaresPictureModel = await _staticCacheManager.GetAsync(productAttributeImageSquarePictureCacheKey, async () =>
                             {
                                 var imageSquaresPicture = await _pictureService.GetPictureByIdAsync(attributeValue.ImageSquaresPictureId);
-                                string fullSizeImageUrl, imageUrl;
-                                (imageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize);
-                                (fullSizeImageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture);
+
+                                (var fullSizeImageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture);
+                                (var imageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize);
 
                                 if (imageSquaresPicture != null)
                                 {
+
                                     return new PictureModel
                                     {
                                         FullSizeImageUrl = fullSizeImageUrl,
@@ -1275,9 +1273,8 @@ namespace Nop.Web.Factories
                 var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
                 var defaultPicture = pictures.FirstOrDefault();
 
-                string fullSizeImageUrl, imageUrl, thumbImageUrl;
-                (imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, defaultPictureSize, !isAssociatedProduct);
-                (fullSizeImageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, 0, !isAssociatedProduct);
+                (var fullSizeImageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, 0, !isAssociatedProduct);
+                (var imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, defaultPictureSize, !isAssociatedProduct);
 
                 //customization
                 defaultPicture = await CustomizeProductPictureAsync(product);
@@ -1285,16 +1282,16 @@ namespace Nop.Web.Factories
                 var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = imageUrl,
-                    FullSizeImageUrl = fullSizeImageUrl
+                    FullSizeImageUrl = fullSizeImageUrl,
+                    //"title" attribute
+                    Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
+                        defaultPicture.TitleAttribute :
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName),
+                    //"alt" attribute
+                    AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
+                        defaultPicture.AltAttribute :
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName)
                 };
-                //"title" attribute
-                defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
-                    defaultPicture.TitleAttribute :
-                    string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName);
-                //"alt" attribute
-                defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
-                    defaultPicture.AltAttribute :
-                    string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName);
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
@@ -1302,9 +1299,9 @@ namespace Nop.Web.Factories
                 {
                     var picture = pictures[i];
 
-                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, defaultPictureSize, !isAssociatedProduct);
                     (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                    (thumbImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
+                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, defaultPictureSize, !isAssociatedProduct);
+                    (var thumbImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
 
                     var pictureModel = new PictureModel
                     {

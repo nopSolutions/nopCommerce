@@ -8,7 +8,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-07 00:00:00", "4.60.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
+    [NopMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -84,79 +84,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFProductCatalog.SKU",
 
             });
-
-            #endregion
-
-            #region Rename locales
-
-            var localesToRename = new[]
-            {
-                //#6255
-                new { Name = "Forum.BreadCrumb.HomeTitle", NewName = "Forum.Breadcrumb.HomeTitle" },
-                new { Name = "Forum.BreadCrumb.ForumHomeTitle", NewName = "Forum.Breadcrumb.ForumHomeTitle" },
-                new { Name = "Forum.BreadCrumb.ForumGroupTitle", NewName = "Forum.Breadcrumb.ForumGroupTitle" },
-                new { Name = "Forum.BreadCrumb.ForumTitle", NewName = "Forum.Breadcrumb.ForumTitle" },
-                new { Name = "Forum.BreadCrumb.TopicTitle", NewName = "Forum.Breadcrumb.TopicTitle" },
-
-                
-                //#3511
-                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize" },
-                new { Name = "Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint", NewName = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint" },
-
-                //#7
-                new { Name = "Admin.Catalog.Products.Pictures", NewName =  "Admin.Catalog.Products.Multimedia.Pictures"},
-                new { Name = "Admin.Catalog.Products.Pictures.AddNew", NewName = "Admin.Catalog.Products.Multimedia.Pictures.AddNew"},
-                new { Name = "Admin.Catalog.Products.Pictures.Alert.PictureAdd", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture"},
-                new { Name = "Admin.Catalog.Products.Pictures.Fields.Picture.Hint", NewName = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint"},
-                new { Name = "Admin.Catalog.Products.Copy.CopyImages", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia"},
-                new { Name = "Admin.Catalog.Products.Copy.CopyImages.Hint", NewName = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint"},
-
-                //#43
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.DefaultTitle.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint", NewName = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint" },
-
-                //4622
-                new { Name = "PDFInvoice.ProductName", NewName = "Pdf.Product.Name" },
-                new { Name = "PDFInvoice.SKU", NewName = "Pdf.Product.Sku" },
-                new { Name = "PDFInvoice.VendorName", NewName = "Pdf.Product.VendorName" },
-                new { Name = "PDFProductCatalog.Weight", NewName = "Pdf.Product.Weight" },
-                new { Name = "PDFInvoice.ProductPrice", NewName = "Pdf.Product.Price" },
-                new { Name = "PDFInvoice.ProductQuantity", NewName = "Pdf.Product.Quantity" },
-                new { Name = "PDFProductCatalog.StockQuantity", NewName = "Pdf.Product.StockQuantity" },
-                new { Name = "PDFInvoice.ProductTotal", NewName = "Pdf.Product.Total" },
-                new { Name = "PDFInvoice.RewardPoints", NewName = "Pdf.RewardPoints" },
-                new { Name = "PDFInvoice.TaxRate", NewName = "Pdf.TaxRate" },
-                new { Name = "PDFInvoice.GiftCardInfo", NewName = "Pdf.GiftCardInfo" },
-
-            };
-
-            foreach (var lang in languages)
-            {
-                foreach (var locale in localesToRename)
-                {
-                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
-                    if (lsr is not null)
-                    {
-                        lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResource(lsr);
-                    }
-                }
-            }
 
             #endregion
 
@@ -401,6 +328,64 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
                 ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container. If disabled, then the default .Net IoC container will be used.",
             }, languageId);
+
+            #endregion
+
+            #region Rename locales
+
+            this.RenameLocales(new Dictionary<string, string>
+            {
+                //#6255
+                ["Forum.BreadCrumb.HomeTitle"] = "Forum.Breadcrumb.HomeTitle",
+                ["Forum.BreadCrumb.ForumHomeTitle"] = "Forum.Breadcrumb.ForumHomeTitle",
+                ["Forum.BreadCrumb.ForumGroupTitle"] = "Forum.Breadcrumb.ForumGroupTitle",
+                ["Forum.BreadCrumb.ForumTitle"] = "Forum.Breadcrumb.ForumTitle",
+                ["Forum.BreadCrumb.TopicTitle"] = "Forum.Breadcrumb.TopicTitle",
+
+                //#3511
+                ["Admin.Configuration.Settings.Catalog.NewProductsNumber"] = "Admin.Configuration.Settings.Catalog.NewProductsPageSize",
+                ["Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint"] = "Admin.Configuration.Settings.Catalog.NewProductsPageSize.Hint",
+
+                //#7
+                ["Admin.Catalog.Products.Pictures"] = "Admin.Catalog.Products.Multimedia.Pictures",
+                ["Admin.Catalog.Products.Pictures.AddNew"] = "Admin.Catalog.Products.Multimedia.Pictures.AddNew",
+                ["Admin.Catalog.Products.Pictures.Alert.PictureAdd"] = "Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd",
+                ["Admin.Catalog.Products.Pictures.Fields.DisplayOrder"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder",
+                ["Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder.Hint",
+                ["Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute",
+                ["Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute.Hint",
+                ["Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute",
+                ["Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute.Hint",
+                ["Admin.Catalog.Products.Pictures.Fields.Picture"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture",
+                ["Admin.Catalog.Products.Pictures.Fields.Picture.Hint"] = "Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture.Hint",
+                ["Admin.Catalog.Products.Copy.CopyImages"] = "Admin.Catalog.Products.Copy.CopyMultimedia",
+                ["Admin.Catalog.Products.Copy.CopyImages.Hint"] = "Admin.Catalog.Products.Copy.CopyMultimedia.Hint",
+
+                //#43
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription"] = "Admin.Configuration.Stores.Fields.DefaultMetaDescription",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription.Hint"] = "Admin.Configuration.Stores.Fields.DefaultMetaDescription.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords"] = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint"] = "Admin.Configuration.Stores.Fields.DefaultMetaKeywords.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultTitle"] = "Admin.Configuration.Stores.Fields.DefaultTitle",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint"] = "Admin.Configuration.Stores.Fields.DefaultTitle.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Admin.Configuration.Stores.Fields.HomepageDescription",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "Admin.Configuration.Stores.Fields.HomepageDescription.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle"] = "Admin.Configuration.Stores.Fields.HomepageTitle",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint"] = "Admin.Configuration.Stores.Fields.HomepageTitle.Hint",
+
+                //4622
+                ["PDFInvoice.ProductName"] = "Pdf.Product.Name",
+                ["PDFInvoice.SKU"] = "Pdf.Product.Sku",
+                ["PDFInvoice.VendorName"] = "Pdf.Product.VendorName",
+                ["PDFProductCatalog.Weight"] = "Pdf.Product.Weight",
+                ["PDFInvoice.ProductPrice"] = "Pdf.Product.Price",
+                ["PDFInvoice.ProductQuantity"] = "Pdf.Product.Quantity",
+                ["PDFProductCatalog.StockQuantity"] = "Pdf.Product.StockQuantity",
+                ["PDFInvoice.ProductTotal"] = "Pdf.Product.Total",
+                ["PDFInvoice.RewardPoints"] = "Pdf.RewardPoints",
+                ["PDFInvoice.TaxRate"] = "Pdf.TaxRate",
+                ["PDFInvoice.GiftCardInfo"] = "Pdf.GiftCardInfo"
+            }, languages, localizationService);
 
             #endregion
         }

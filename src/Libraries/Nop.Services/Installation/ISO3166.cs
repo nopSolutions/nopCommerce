@@ -214,7 +214,7 @@ namespace Nop.Services.Installation
                 new ISO3166Country("Niue", "NU", "NIU", 570, new[] { "683" }),
                 new ISO3166Country("Norfolk Island", "NF", "NFK", 574, new[] { "672" }),
                 new ISO3166Country("Northern Mariana Islands", "MP", "MNP", 580, new[] { "1 670" }),
-                new ISO3166Country("Norway", "NO", "NOR", 578, new[] { "47" }, localizationInfo: new[] { new LocalizationInfo("nn-NO", "Norwegian") }),
+                new ISO3166Country("Norway", "NO", "NOR", 578, new[] { "47" }, localizationInfo: new[] { new LocalizationInfo("nb-NO", "Norwegian") }),
                 new ISO3166Country("Oman", "OM", "OMN", 512, new[] { "968" }, localizationInfo: new[] { new LocalizationInfo("ar-OM", "Arabic") }),
                 new ISO3166Country("Pakistan", "PK", "PAK", 586, new[] { "92" }),
                 new ISO3166Country("Palau", "PW", "PLW", 585, new[] { "680" }),
