@@ -154,6 +154,24 @@ namespace Nop.Services.Common
         }
 
         /// <summary>
+        /// Subscribe to nopCommerce newsletters during installation
+        /// </summary>
+        /// <param name="email">Admin email</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the result string
+        /// </returns>
+        public virtual async Task<HttpResponseMessage> SubscribeNewslettersAsync(string email)
+        {
+            //prepare URL to request
+            var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath,
+                WebUtility.UrlEncode(email))
+                .ToLowerInvariant();
+
+            return await _httpClient.GetAsync(url);
+        }
+
+        /// <summary>
         /// Get a response regarding available categories of marketplace extensions
         /// </summary>
         /// <returns>

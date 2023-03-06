@@ -30,6 +30,7 @@ namespace Nop.Web.Models.Install
         public bool ConnectionStringRaw { get; set; }
 
         public bool InstallRegionalResources { get; set; }
+        public bool SubscribeNewsletters { get; set; }
 
         public string DatabaseName { get; set; }
         public string ServerName { get; set; }
