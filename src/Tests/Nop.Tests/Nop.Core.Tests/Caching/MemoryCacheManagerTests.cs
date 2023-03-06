@@ -136,7 +136,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         public async Task CanGetAsObject()
         {
             var key = new CacheKey("some_key_1");
-            await _staticCacheManager.SetAsync(new CacheKey("some_key_1"), 1);
+            await _staticCacheManager.SetAsync(key, 1);
             var obj = await _staticCacheManager.GetAsync(key);
             obj.Should().Be(1);
             obj = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"));
