@@ -230,10 +230,7 @@ namespace Nop.Core.Caching
         /// </returns>
         public async Task<object> GetAsync(CacheKey key)
         {
-            var value = await _distributedCache.GetStringAsync(key.Key);
-            if (value == null)
-                return null;
-            return JsonConvert.DeserializeObject(value);
+            return await GetAsync<object>(key);
         }
 
         /// <summary>
