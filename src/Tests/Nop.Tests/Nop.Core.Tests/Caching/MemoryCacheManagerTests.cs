@@ -131,5 +131,16 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
                 new CacheKey("some_key_1"),
                 Task<object> () => throw new ApplicationException()));
         }
+
+        [Test]
+        public async Task CanGetAsObject()
+        {
+            var key = new CacheKey("some_key_1");
+            await _staticCacheManager.SetAsync(new CacheKey("some_key_1"), 1);
+            var obj = await _staticCacheManager.GetAsync(key);
+            obj.Should().Be(1);
+            obj = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"));
+            obj.Should().BeNull();
+        }
     }
 }
