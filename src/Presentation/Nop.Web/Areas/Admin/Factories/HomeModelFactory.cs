@@ -1,14 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Home;
+using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Areas.Admin.Models.Reports;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -21,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly ICommonModelFactory _commonModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
@@ -34,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
             ICommonModelFactory commonModelFactory,
+            ILocalizationService localizationService,
             ILogger logger,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
@@ -43,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _adminAreaSettings = adminAreaSettings;
             _commonModelFactory = commonModelFactory;
+            _localizationService = localizationService;
             _logger = logger;
             _orderModelFactory = orderModelFactory;
             _settingService = settingService;
@@ -70,10 +81,294 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
-            //prepare nested search models
-            await _commonModelFactory.PreparePopularSearchTermSearchModelAsync(model.PopularSearchTerms);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByAmount);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByQuantity);
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare popular search term report model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PreparePopularSearchTermReportModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var searchModel = new PopularSearchTermSearchModel();
+            searchModel = await _commonModelFactory.PreparePopularSearchTermSearchModelAsync(searchModel);
+
+            model.Name = "search-term-report-grid";
+            model.UrlRead = new DataUrl("PopularSearchTermsReport", "Common", null);
+            model.Length = searchModel.Length;
+            model.LengthMenu = searchModel.AvailablePageSizes;
+            model.Dom = "<'row'<'col-md-12't>>" +
+            "<'row margin-t-5'" +
+            "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+            "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+            ">";
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PopularSearchTermModel.Keyword))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SearchTermReport.Keyword")
+                },
+                new ColumnProperty(nameof(PopularSearchTermModel.Count))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SearchTermReport.Count")
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare bestsellers brief by amount report model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PrepareBestsellersBriefReportByAmountModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var searchModel = new BestsellerBriefSearchModel();
+            searchModel = await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(searchModel);
+
+            model.Name = "bestsellers-byamount-grid";
+            model.UrlRead = new DataUrl("BestsellersBriefReportByAmountList", "Order", new RouteValueDictionary { [nameof(searchModel.OrderBy)] = OrderByEnum.OrderByTotalAmount });
+            model.Length = searchModel.PageSize;
+            model.Dom = "<'row'<'col-md-12't>>" +
+                       "<'row margin-t-5'" +
+                         "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                         "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                       ">";
+            model.ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(BestsellerModel.ProductName))
+                    {
+                        Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.Name")
+                    },
+                    new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                    {
+                        Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
+                    },
+                    new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                    {
+                        Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
+                    },
+                    new ColumnProperty(nameof(BestsellerModel.ProductId))
+                    {
+                        Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
+                        Width = "80",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                    }
+                };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare bestsellers brief by quantity report model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PrepareBestsellersBriefReportByQuantityModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var searchModel = new BestsellerBriefSearchModel();
+            searchModel = await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(searchModel);
+
+            model.Name = "bestsellers-byquantity-grid";
+            model.UrlRead = new DataUrl("BestsellersBriefReportByQuantityList", "Order", new RouteValueDictionary { [nameof(searchModel.OrderBy)] = OrderByEnum.OrderByQuantity });
+            model.Length = searchModel.PageSize;
+            model.Dom = "<'row'<'col-md-12't>>" +
+                  "<'row margin-t-5'" +
+                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                  ">";
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BestsellerModel.ProductName))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.Name")
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
+                },
+                new ColumnProperty(nameof(BestsellerModel.ProductId))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
+                    Width = "80",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        
+        /// <summary>
+        /// Prepare latest orders model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PrepareLatestOrdersModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.Name = "orders-grid";
+            model.UrlRead = new DataUrl("OrderList", "Order", null);
+            model.Length = 5;
+            model.Dom = "<'row'<'col-md-12't>>" +
+                  "<'row margin-t-5'" +
+                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                  ">";
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.CustomOrderNumber"),
+                    Width = "80"
+                },
+                new ColumnProperty(nameof(OrderModel.OrderStatus))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.OrderStatus"),
+                    Width = "100",
+                    Render = new RenderCustom("renderColumnOrderStatus")
+                },
+                new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.Customer"),
+                    Width = "250",
+                    Render = new RenderCustom("renderColumnCustomerEmail")
+                },
+                new ColumnProperty(nameof(OrderModel.CreatedOn))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.CreatedOn"),
+                    Width = "100",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(OrderModel.Id))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
+                    Width = "50",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare incomplete orders report model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PrepareOrderIncompleteModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.Name = "incomplete-order-report-grid";
+            model.UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null);
+            model.Length = int.MaxValue;
+            model.Paging = false;
+            model.Info = false;
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Item")
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Total"),
+                    Width = "50"
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Count"),
+                    Width = "120",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order average report model
+        /// </summary>
+        /// <param name="model">DataTables model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dashboard model
+        /// </returns>
+        public virtual async Task<DataTablesModel> PrepareOrderAverageModelAsync(DataTablesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.Name = "average-order-report-grid";
+            model.UrlRead = new DataUrl("OrderAverageReportList", "Order", null);
+            model.Length = int.MaxValue;
+            model.Paging = false;
+            model.Info = false;
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.OrderStatus")
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumTodayOrders")
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisWeekOrders")
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisMonthOrders")
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisYearOrders")
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
+                {
+                    Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumAllTimeOrders")
+                }
+            };
 
             return model;
         }
