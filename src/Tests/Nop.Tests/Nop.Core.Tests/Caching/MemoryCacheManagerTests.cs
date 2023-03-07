@@ -149,13 +149,23 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
 
             await _staticCacheManager.RemoveAsync(cacheKey);
 
-            Assert.ThrowsAsync<ApplicationException>(() => _staticCacheManager.GetAsync(
+            Assert.ThrowsAsync<ApplicationException>(() => _staticCacheManager.GetAsync<object>(
                 cacheKey,
-                Task<object> () => throw new ApplicationException()));
+                () => throw new ApplicationException()));
 
             //should not cache exception
             rez = await _staticCacheManager.GetAsync(cacheKey, () => (object)1);
             rez.Should().Be(1);
+
+            await _staticCacheManager.RemoveAsync(cacheKey);
+
+            Assert.ThrowsAsync<ApplicationException>(() => _staticCacheManager.GetAsync<object>(
+                cacheKey,
+                () => throw new ApplicationException()));
+
+            //should not cache exception
+            rez = await _staticCacheManager.GetAsync(cacheKey);
+            rez.Should().BeNull();
         }
 
         [Test]

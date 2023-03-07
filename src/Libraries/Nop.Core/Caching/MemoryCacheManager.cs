@@ -193,13 +193,19 @@ namespace Nop.Core.Caching
                 return null;
             try
             {
-                var task = (Task)entry.GetType().GetProperty("Value").GetValue(entry);
+                if (entry.GetType().GetProperty("Value")?.GetValue(entry) is not Task task)
+                    return null;
+
                 await task;
-                return task.GetType().GetProperty("Result").GetValue(task);
+
+                return task.GetType().GetProperty("Result")!.GetValue(task);
             }
             catch
             {
-                return null;
+                //if a cached function throws an exception, remove it from the cache
+                await RemoveAsync(key);
+
+                throw;
             }
         }
 
