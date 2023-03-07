@@ -1,10 +1,10 @@
 ﻿{
   "Group": "Payment methods",
-  "FriendlyName": "Iyzico",
+  "FriendlyName": "Credit Card",
   "SystemName": "Payments.Iyzico",
   "Version": "1.00",
   "SupportedVersions": [ "4.50" ],
-  "Author": "Silver Bilgi Teknolojileri | silverteknoloji.com.tr",
+  "Author": "Genius Software",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.Iyzico.dll",
   "Description": "Iyzico sanal pos entegrasyonudur."

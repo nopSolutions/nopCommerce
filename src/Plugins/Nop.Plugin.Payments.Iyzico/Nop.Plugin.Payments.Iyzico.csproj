@@ -59,6 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Iyzipay" Version="2.1.55" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Iyzipay.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

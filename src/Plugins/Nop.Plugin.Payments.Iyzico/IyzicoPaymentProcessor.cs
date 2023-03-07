@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nop.Services.Logging;
+using Nop.Services.ScheduleTasks;
 
 namespace Nop.Plugin.Payments.Iyzico
 {
@@ -29,15 +31,18 @@ namespace Nop.Plugin.Payments.Iyzico
     /// </summary>
     public class IyzicoPaymentProcessor : BasePlugin, IPaymentMethod
     {
+        /// <summary>
+        /// https://github.com/iyzico/iyzipay-dotnet
+        /// https://github.com/andrejpk/Nop.Plugin.Payments.Stripe/blob/master/Nop.Plugin.Payments.Stripe/StripePaymentProcessor.cs
+        /// 
+        /// </summary>
         #region Fields
 
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
-        private readonly IPaymentIyzicoService _paymentIyzicoService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IyzicoPaymentSettings _iyzicoPaymentSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ICustomerService _customerService;
@@ -49,6 +54,12 @@ namespace Nop.Plugin.Payments.Iyzico
         private readonly ICurrencyService _currencyService;
         private readonly IWorkContext _workContext;
         private readonly ICategoryService _categoryService;
+        private readonly ILogger _logger;
+        private readonly IScheduleTaskService _scheduleTaskService;
+
+        private readonly IPaymentIyzicoService _paymentIyzicoService;
+        private readonly IyzicoPaymentSettings _iyzicoPaymentSettings;
+
 
         #endregion
 
@@ -72,7 +83,7 @@ namespace Nop.Plugin.Payments.Iyzico
             ITaxService taxService,
             ICurrencyService currencyService,
             IWorkContext workContext,
-            ICategoryService categoryService)
+            ICategoryService categoryService, ILogger logger,IScheduleTaskService scheduleTaskService)
         {
             _localizationService = localizationService;
             _paymentService = paymentService;
@@ -92,6 +103,8 @@ namespace Nop.Plugin.Payments.Iyzico
             _currencyService = currencyService;
             _workContext = workContext;
             _categoryService = categoryService;
+            _logger = logger;
+            _scheduleTaskService = scheduleTaskService;
 
             if (_iyzicoPaymentSettings.UseToPaymentPopup)
             {
