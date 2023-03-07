@@ -45,8 +45,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Tax.Avalara
 RUN dotnet build Nop.Plugin.Tax.Avalara.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Tax.FixedOrByCountryStateZip
 RUN dotnet build Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Widgets.AccessiBe
-RUN dotnet build Nop.Plugin.Widgets.AccessiBe.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.FacebookPixel
 RUN dotnet build Nop.Plugin.Widgets.FacebookPixel.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.GoogleAnalytics
