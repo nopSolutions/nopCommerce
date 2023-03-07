@@ -76,6 +76,10 @@ namespace Nop.Services.Caching
                     return;
 
                 var keys = JsonConvert.DeserializeObject<string[]>(value);
+
+                if (keys == null)
+                    return;
+
                 foreach (var key in keys)
                 {
                     _memoryCache.Remove(key);
@@ -96,8 +100,11 @@ namespace Nop.Services.Caching
         protected void PublishChangeEvent(object key)
         {
             var stringKey = key.ToString();
-            if (_timer == null) BatchPublishChangeEvents(stringKey);
-            else _messageQueue.Enqueue(stringKey);
+
+            if (_timer == null) 
+                BatchPublishChangeEvents(stringKey);
+            else 
+                _messageQueue.Enqueue(stringKey);
         }
 
         /// <summary>
@@ -110,6 +117,7 @@ namespace Nop.Services.Caching
                 while (_messageQueue.TryDequeue(out var key))
                     yield return key;
             }
+
             BatchPublishChangeEvents(getKeys().Distinct().ToArray());
         }
 
