@@ -133,8 +133,7 @@ namespace Nop.Services.Orders
                     where rr.ReturnRequestStatusId != cancelledStatusId
                     group rr by new
                     {
-                        rr.OrderItemId,
-                        rr.Quantity
+                        rr.OrderItemId
                     } into g
                     select new
                     {
