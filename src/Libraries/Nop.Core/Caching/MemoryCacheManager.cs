@@ -115,13 +115,25 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            return await _memoryCache.GetOrCreate(
+            var task = _memoryCache.GetOrCreate(
                 key.Key,
                 entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(key));
                     return new Lazy<Task<T>>(acquire, true);
-                }).Value;
+                });
+
+            try
+            {
+                return await task!.Value;
+            }
+            catch
+            {
+                //if a cached function throws an exception, remove it from the cache
+                await RemoveAsync(key);
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -138,7 +150,17 @@ namespace Nop.Core.Caching
         {
             var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
 
-            return value != null ? await value : defaultValue;
+            try
+            {
+                return value != null ? await value : defaultValue;
+            }
+            catch
+            {
+                //if a cached function throws an exception, remove it from the cache
+                await RemoveAsync(key);
+
+                throw;
+            }
         }
 
         /// <summary>
