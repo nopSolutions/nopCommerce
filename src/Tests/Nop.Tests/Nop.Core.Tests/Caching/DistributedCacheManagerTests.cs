@@ -189,5 +189,16 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             value.Should().Be(0);
             xs.Sum().Should().Be(1);
         }
+
+        [Test]
+        public async Task CanGetAsObject()
+        {
+            var key = new CacheKey("some_key_1");
+            await _staticCacheManager.SetAsync(key, 1);
+            var obj = await _staticCacheManager.GetAsync(key);
+            obj.Should().Be(1);
+            obj = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"));
+            obj.Should().BeNull();
+        }
     }
 }

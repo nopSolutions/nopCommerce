@@ -128,7 +128,7 @@ namespace Nop.Core.Caching
             _ongoing.TryRemove(key, out _);
             await _distributedCache.RemoveAsync(key);
 
-            if(!removeFromInstance)
+            if (!removeFromInstance)
                 return;
 
             RemoveLocal(key);
@@ -221,6 +221,19 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
+        /// Get a cached item as an <see cref="object"/> instance, or null on a cache miss.
+        /// </summary>
+        /// <param name="key">Cache key</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key, or null if none was found
+        /// </returns>
+        public async Task<object> GetAsync(CacheKey key)
+        {
+            return await GetAsync<object>(key);
+        }
+
+        /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
@@ -232,7 +245,7 @@ namespace Nop.Core.Caching
                 return;
 
             var lazy = new Lazy<Task<object>>(() => Task.FromResult(data as object), true);
-            
+
             try
             {
                 _ongoing.TryAdd(key.Key, lazy);

@@ -179,6 +179,31 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
+        /// Get a cached item as an <see cref="object"/> instance, or null on a cache miss.
+        /// </summary>
+        /// <param name="key">Cache key</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key, or null if none was found
+        /// </returns>
+        public async Task<object> GetAsync(CacheKey key)
+        {
+            var entry = _memoryCache.Get(key.Key);
+            if (entry == null)
+                return null;
+            try
+            {
+                var task = (Task)entry.GetType().GetProperty("Value").GetValue(entry);
+                await task;
+                return task.GetType().GetProperty("Result").GetValue(task);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>

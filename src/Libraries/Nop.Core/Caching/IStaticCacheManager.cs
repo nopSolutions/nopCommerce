@@ -45,6 +45,16 @@ namespace Nop.Core.Caching
         Task<T> GetAsync<T>(CacheKey key, T defaultValue = default);
 
         /// <summary>
+        /// Get a cached item as an <see cref="object"/> instance, or null on a cache miss.
+        /// </summary>
+        /// <param name="key">Cache key</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key, or null if none was found
+        /// </returns>
+        Task<object> GetAsync(CacheKey key);
+
+        /// <summary>
         /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
