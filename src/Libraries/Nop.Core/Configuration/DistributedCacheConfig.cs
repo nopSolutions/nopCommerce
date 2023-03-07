@@ -39,5 +39,13 @@ namespace Nop.Core.Configuration
         /// Useful when one wants to partition a single Redis server for use with multiple apps, e.g. by setting InstanceName to "development" and "production".
         /// </summary>
         public string InstanceName { get; private set; } = "nopCommerce";
+
+        /// <summary>
+        /// Gets or sets the Redis event publish interval in milliseconds.
+        /// Used when distributed cache is enabled and DistributedCacheType property is set as RedisSynchronizedMemory.
+        /// If greater than zero, events will be buffered for this long before being published in batch, in order to reduce server load.
+        /// If zero, events are published when they are raised, without buffering.
+        /// </summary>
+        public int PublishIntervalMs { get; private set; } = 500;
     }
 }

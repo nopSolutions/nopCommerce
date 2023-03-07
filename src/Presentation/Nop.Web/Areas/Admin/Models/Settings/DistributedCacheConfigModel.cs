@@ -30,6 +30,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.DistributedCache.InstanceName")]
         public string InstanceName { get; private set; } = string.Empty;
 
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.DistributedCache.PublishIntervalMs")]
+        public int PublishIntervalMs { get; private set; }
+
         #endregion
     }
 }

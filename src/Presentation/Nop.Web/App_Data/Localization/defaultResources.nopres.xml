@@ -4593,6 +4593,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.InstanceName.Hint">
     <Value>Specify the instance name (by default "nopCommerce")</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.PublishIntervalMs">
+    <Value>Publish interval (ms)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.PublishIntervalMs.Hint">
+    <Value>Specify the interval to publish key change events, in milliseconds</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.EnvironmentVariablesWarning">
     <Value>Warning! The current setting value is overridden in environment variables</Value>
   </LocaleResource>
