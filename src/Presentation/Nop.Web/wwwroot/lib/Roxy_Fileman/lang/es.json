@@ -74,7 +74,7 @@
 "Copy":"Copiar",
 "Paste":"Pegar",
 "E_CopyFile":"Error al copiar archivo",
-"E_CopyFileInvalisPath":"No puede copiar el archivo- la ruta de acceso no existe",
+"E_CopyFileInvalidPath":"No puede copiar el archivo- la ruta de acceso no existe",
 "E_CopyDirInvalidPath":"No puede copiar el directorio- la ruta de acceso no existe",
 "E_CreateArchive":"Error creating zip archive.",
 "E_UploadingFile":"error"

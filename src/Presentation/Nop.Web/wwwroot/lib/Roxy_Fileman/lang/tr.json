@@ -74,7 +74,7 @@
 "Copy":"Kopyala",
 "Paste":"Yapıştır",
 "E_CopyFile":"Dosya Kopyalama Hatası",
-"E_CopyFileInvalisPath":"Dosya kopyalanamıyor - yol geçerli değil",
+"E_CopyFileInvalidPath":"Dosya kopyalanamıyor - yol geçerli değil",
 "E_CopyDirInvalidPath":"Klasör kopyalanamıyor - yol geçerli değil",
 "E_CreateArchive":"Zip dosyası oluşturma hatası.",
 "E_UploadingFile":"hata"
