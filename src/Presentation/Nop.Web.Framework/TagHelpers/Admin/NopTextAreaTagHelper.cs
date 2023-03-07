@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -79,7 +77,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     output.Attributes.Add(key, value);
                 }
             }
-            
+
             //additional parameters
             var rowsNumber = output.Attributes.ContainsName("rows") ? output.Attributes["rows"].Value : 4;
             output.Attributes.SetAttribute("rows", rowsNumber);

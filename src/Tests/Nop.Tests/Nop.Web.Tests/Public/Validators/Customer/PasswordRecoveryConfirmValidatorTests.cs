@@ -9,7 +9,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
     public class PasswordRecoveryConfirmValidatorTests : BaseNopTest
     {
         private PasswordRecoveryConfirmValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -88,6 +88,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
                 ConfirmNewPassword = "some password"
             };
             _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.NewPassword);
-        }                
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Orders;
-using Nop.Services.Caching;
-using System.Threading.Tasks;
 using Nop.Services.Attributes;
+using Nop.Services.Caching;
 
 namespace Nop.Services.Orders.Caching
 {

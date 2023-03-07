@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -53,7 +50,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
@@ -71,7 +68,7 @@ namespace Nop.Web.Controllers
             var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModelAsync(pageNumber, tab);
             return View(model);
         }
-        
+
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
@@ -157,7 +154,7 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
-            return RedirectToRoute("PrivateMessages", new {tab = "sent"});
+            return RedirectToRoute("PrivateMessages", new { tab = "sent" });
         }
 
         public virtual async Task<IActionResult> SendPM(int toCustomerId, int? replyToMessageId)

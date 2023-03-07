@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using NUnit.Framework;
@@ -49,7 +47,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
         public async Task TearDown()
         {
             var product = await _productService.GetProductByIdAsync(1);
-            foreach (var productWarehouseInventory in await _productService.GetAllProductWarehouseInventoryRecordsAsync(1)) 
+            foreach (var productWarehouseInventory in await _productService.GetAllProductWarehouseInventoryRecordsAsync(1))
                 await _productService.DeleteProductWarehouseInventoryAsync(productWarehouseInventory);
 
             product.ManageInventoryMethod = ManageInventoryMethod.DontManageStock;
@@ -320,7 +318,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(1900, 1, 1), new DateTime(1901, 1, 1)).Should().Be(12);
             _productService.GetRentalPeriods(product, new DateTime(1900, 1, 1), new DateTime(1911, 1, 1)).Should().Be(132);
             _productService.GetRentalPeriods(product, new DateTime(1900, 8, 31), new DateTime(1901, 8, 30)).Should().Be(12);
-            
+
             //rental period length = 2 months
             product.RentalPriceLength = 2;
             //the same date
@@ -365,7 +363,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2015, 3, 7)).Should().Be(1);
             //more than two year
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).Should().Be(2);
-        } 
+        }
 
         #endregion
     }

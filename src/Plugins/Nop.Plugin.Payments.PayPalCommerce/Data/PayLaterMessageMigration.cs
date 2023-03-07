@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
@@ -58,7 +57,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Data
             //settings
             if (!_settingService.SettingExists(_payPalCommerceSettings, settings => settings.DisplayPayLaterMessages))
                 _payPalCommerceSettings.DisplayPayLaterMessages = false;
-            
+
             _settingService.SaveSetting(_payPalCommerceSettings);
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Common;
+﻿using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -37,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the maintenance model
         /// </returns>
         Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model);
-        
+
         /// <summary>
         /// Prepare paged backup file list model
         /// </summary>

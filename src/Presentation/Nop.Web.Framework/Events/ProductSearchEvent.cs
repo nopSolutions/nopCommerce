@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Framework.Events
+﻿namespace Nop.Web.Framework.Events
 {
     /// <summary>
     /// Product search event

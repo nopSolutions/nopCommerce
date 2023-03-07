@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Services.Common
+﻿namespace Nop.Services.Common
 {
     /// <summary>
     ///  Maintenance service interface

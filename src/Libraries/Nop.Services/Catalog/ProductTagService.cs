@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
@@ -106,8 +102,8 @@ namespace Nop.Services.Catalog
         protected virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
         {
             var query = from pt in _productTagRepository.Table
-                where pt.Name == name
-                select pt;
+                        where pt.Name == name
+                        select pt;
 
             var productTag = await query.FirstOrDefaultAsync();
             return productTag;
@@ -218,7 +214,7 @@ namespace Nop.Services.Catalog
         {
             return await _productTagRepository.GetByIdsAsync(productTagIds);
         }
-        
+
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
@@ -228,7 +224,7 @@ namespace Nop.Services.Catalog
         {
             await _productProductTagMappingRepository.InsertAsync(tagMapping);
         }
-        
+
         /// <summary>
         /// Updates the product tag
         /// </summary>
@@ -309,7 +305,7 @@ namespace Nop.Services.Catalog
                 return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
-        
+
         /// <summary>
         /// Update product tags
         /// </summary>

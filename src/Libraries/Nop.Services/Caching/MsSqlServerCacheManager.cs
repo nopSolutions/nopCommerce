@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Nop.Core.Caching;

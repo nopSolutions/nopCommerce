@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FluentMigrator;
 using FluentMigrator.Expressions;
 using FluentMigrator.Infrastructure;

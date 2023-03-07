@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -379,7 +375,7 @@ namespace Nop.Services.Orders
             updatedOrder.OrderTax = taxTotal;
             updatedOrder.TaxRates = taxRates.Aggregate(string.Empty, (current, next) =>
                 $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
-            
+
             return taxTotal;
         }
 
@@ -845,7 +841,7 @@ namespace Nop.Services.Orders
 
                 var (sciExclTax, taxRate) = await _taxService.GetProductPriceAsync(product, sciSubTotal, false, customer);
                 var (sciInclTax, _) = await _taxService.GetProductPriceAsync(product, sciSubTotal, true, customer);
-                
+
                 subTotalWithoutDiscountExclTax += sciExclTax;
                 subTotalWithoutDiscountInclTax += sciInclTax;
 
@@ -980,7 +976,7 @@ namespace Nop.Services.Orders
             //total
             await UpdateTotalAsync(updateOrderParameters, subTotalExclTax, discountAmountExclTax, shippingTotalExclTax, taxTotal);
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether shipping is free
         /// </summary>
@@ -1029,7 +1025,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the adjusted shipping rate. Applied discounts
         /// </returns>
-        public virtual async Task<(decimal adjustedShippingRate, List<Discount> appliedDiscounts)> AdjustShippingRateAsync(decimal shippingRate, IList<ShoppingCartItem> cart, 
+        public virtual async Task<(decimal adjustedShippingRate, List<Discount> appliedDiscounts)> AdjustShippingRateAsync(decimal shippingRate, IList<ShoppingCartItem> cart,
             bool applyToPickupInStore = false)
         {
             //free shipping
@@ -1075,7 +1071,7 @@ namespace Nop.Services.Orders
             return (await GetShoppingCartShippingTotalAsync(cart, includingTax)).shippingTotal;
         }
 
-        
+
         /// <summary>
         /// Gets shopping cart shipping total
         /// </summary>
@@ -1295,7 +1291,7 @@ namespace Nop.Services.Orders
 
             return (taxTotal, taxRates);
         }
-        
+
         /// <summary>
         /// Gets shopping cart total
         /// </summary>
@@ -1384,7 +1380,7 @@ namespace Nop.Services.Orders
             if (!shoppingCartShipping.HasValue)
             {
                 //we have errors
-                return (null, discountAmount, appliedDiscounts, appliedGiftCards,redeemedRewardPoints, redeemedRewardPointsAmount);
+                return (null, discountAmount, appliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount);
             }
 
             var orderTotal = resultTemp;
@@ -1411,7 +1407,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<decimal> CalculatePaymentAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
         {
-            if (!usePercentage || fee <= 0) 
+            if (!usePercentage || fee <= 0)
                 return fee;
 
             var orderTotalWithoutPaymentFee = (await GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;

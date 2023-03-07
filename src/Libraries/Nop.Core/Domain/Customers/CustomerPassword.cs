@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents a customer password

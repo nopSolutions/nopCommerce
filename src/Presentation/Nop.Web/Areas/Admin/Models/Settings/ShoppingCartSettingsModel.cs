@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -79,11 +79,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber")]
         public int MiniShoppingCartProductNumber { get; set; }
         public bool MiniShoppingCartProductNumber_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing")]
         public bool AllowCartItemEditing { get; set; }
         public bool AllowCartItemEditing_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.GroupTierPricesForDistinctShoppingCartItems")]
         public bool GroupTierPricesForDistinctShoppingCartItems { get; set; }
         public bool GroupTierPricesForDistinctShoppingCartItems_OverrideForStore { get; set; }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Reports;
@@ -246,7 +245,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = await _reportModelFactory.PrepareRegisteredCustomersReportListModelAsync(searchModel);
 
             return Json(model);
-        }        
+        }
 
         #endregion
 

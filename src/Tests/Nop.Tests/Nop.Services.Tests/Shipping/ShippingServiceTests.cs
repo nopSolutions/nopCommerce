@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Shipping;
@@ -28,7 +25,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
             _shippingPluginManager = GetService<IShippingPluginManager>();
             _shippingService = GetService<IShippingService>();
             _productService = GetService<IProductService>();
-        } 
+        }
 
         #endregion
 

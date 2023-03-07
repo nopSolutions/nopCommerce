@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -82,29 +78,32 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
             _vendor = await vendorService.GetVendorByIdAsync(1);
             _shipment = await shipmentService.GetShipmentByIdAsync(1);
             _orderNote = await orderService.GetOrderNoteByIdAsync(1);
-            _recurringPayment = new RecurringPayment {InitialOrderId = _order.Id, IsActive = true};
-            _subscription = new NewsLetterSubscription {Active = true, Email = NopTestsDefaults.AdminEmail};
+            _recurringPayment = new RecurringPayment { InitialOrderId = _order.Id, IsActive = true };
+            _subscription = new NewsLetterSubscription { Active = true, Email = NopTestsDefaults.AdminEmail };
             _product = await productService.GetProductByIdAsync(1);
-            _returnRequest = new ReturnRequest {CustomerId = _customer.Id, OrderItemId = _orderItem.Id};
+            _returnRequest = new ReturnRequest { CustomerId = _customer.Id, OrderItemId = _orderItem.Id };
             _forum = await _forumService.GetForumByIdAsync(1);
-            _forumTopic = new ForumTopic {CustomerId = _customer.Id, ForumId = _forum.Id, Subject = "Subject"};
+            _forumTopic = new ForumTopic { CustomerId = _customer.Id, ForumId = _forum.Id, Subject = "Subject" };
             await _forumService.InsertTopicAsync(_forumTopic, false);
-            _forumPost = new ForumPost { CustomerId = _customer.Id, TopicId = _forumTopic.Id, Text = "Text"};
+            _forumPost = new ForumPost { CustomerId = _customer.Id, TopicId = _forumTopic.Id, Text = "Text" };
             await _forumService.InsertPostAsync(_forumPost, false);
 
             _privateMessage = new PrivateMessage
             {
-                FromCustomerId = 1, ToCustomerId = 2, Subject = string.Empty, Text = string.Empty
+                FromCustomerId = 1,
+                ToCustomerId = 2,
+                Subject = string.Empty,
+                Text = string.Empty
             };
             _productReview = (await productService.GetAllProductReviewsAsync()).FirstOrDefault();
             _giftCard = await giftCardService.GetGiftCardByIdAsync(1);
             _blogComment = await blogService.GetBlogCommentByIdAsync(1);
             _newsComment = await newsService.GetNewsCommentByIdAsync(1);
-            _backInStockSubscription = new BackInStockSubscription {ProductId = _product.Id, CustomerId = _customer.Id};
+            _backInStockSubscription = new BackInStockSubscription { ProductId = _product.Id, CustomerId = _customer.Id };
 
             _allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(0);
 
-            foreach (var template in _allMessageTemplates.Where(t=>!t.IsActive))
+            foreach (var template in _allMessageTemplates.Where(t => !t.IsActive))
             {
                 template.IsActive = true;
                 _notActiveTempletes.Add(template.Id);
@@ -156,7 +155,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         [Test]
         public async Task CanSendCustomerWelcomeMessage()
         {
-            await CheckData(async () => 
+            await CheckData(async () =>
                 await _workflowMessageService.SendCustomerWelcomeMessageAsync(_customer, 1));
         }
 
@@ -444,7 +443,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
             await CheckData(async () =>
                 await _workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(_product, 1));
         }
-        
+
         [Test]
         public async Task CanSendNewVatSubmittedStoreOwnerNotification()
         {

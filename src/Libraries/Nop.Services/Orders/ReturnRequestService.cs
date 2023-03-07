@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
@@ -186,8 +182,8 @@ namespace Nop.Services.Orders
             return await _returnRequestActionRepository.GetAllAsync(query =>
             {
                 return from rra in query
-                    orderby rra.DisplayOrder, rra.Id
-                    select rra;
+                       orderby rra.DisplayOrder, rra.Id
+                       select rra;
             }, cache => default);
         }
 
@@ -266,8 +262,8 @@ namespace Nop.Services.Orders
             return await _returnRequestReasonRepository.GetAllAsync(query =>
             {
                 return from rra in query
-                    orderby rra.DisplayOrder, rra.Id
-                    select rra;
+                       orderby rra.DisplayOrder, rra.Id
+                       select rra;
             }, cache => default);
         }
 

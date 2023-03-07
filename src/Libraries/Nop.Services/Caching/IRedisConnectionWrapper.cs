@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading.Tasks;
 using StackExchange.Redis;
 
 namespace Nop.Services.Caching

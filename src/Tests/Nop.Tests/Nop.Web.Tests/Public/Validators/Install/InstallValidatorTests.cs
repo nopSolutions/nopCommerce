@@ -15,7 +15,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Install
         {
             _validator = GetService<InstallValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenAdminEmailIsNullOrEmpty()
         {

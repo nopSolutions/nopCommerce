@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using System.Linq;
 using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;

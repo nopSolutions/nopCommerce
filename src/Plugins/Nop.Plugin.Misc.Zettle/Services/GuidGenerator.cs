@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Plugin.Misc.Zettle.Services
+﻿namespace Nop.Plugin.Misc.Zettle.Services
 {
     /// <summary>
     /// Used for generating UUID based on RFC 4122.

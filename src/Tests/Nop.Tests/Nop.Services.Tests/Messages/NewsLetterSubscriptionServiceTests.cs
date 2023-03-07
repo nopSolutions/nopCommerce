@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Services.Tests.Messages 
+namespace Nop.Tests.Nop.Services.Tests.Messages
 {
     [TestFixture]
     public class NewsLetterSubscriptionServiceTests : ServiceTest
@@ -48,7 +46,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
 
             NewsLetterSubscriptionConsumer.LastEventType.Should().Be(typeof(EmailUnsubscribedEvent));
         }
-        
+
         /// <summary>
         /// Verifies the insert event is fired.
         /// </summary>
@@ -137,7 +135,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         public class NewsLetterSubscriptionConsumer : IConsumer<EmailSubscribedEvent>, IConsumer<EmailUnsubscribedEvent>, IConsumer<EntityInsertedEvent<NewsLetterSubscription>>
         {
             public static Type LastEventType { get; set; }
-            
+
             public Task HandleEventAsync(EmailSubscribedEvent eventMessage)
             {
                 LastEventType = typeof(EmailSubscribedEvent);

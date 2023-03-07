@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Logging
@@ -35,7 +34,7 @@ namespace Nop.Services.Logging
         public virtual async System.Threading.Tasks.Task ExecuteAsync()
         {
             var utcNow = DateTime.UtcNow;
-            
+
             await _logger.ClearLogAsync(_commonSettings.ClearLogOlderThanDays == 0 ? null : utcNow.AddDays(-_commonSettings.ClearLogOlderThanDays));
         }
 

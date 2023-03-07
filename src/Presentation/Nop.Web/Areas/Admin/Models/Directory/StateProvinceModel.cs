@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
@@ -42,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     public partial record StateProvinceLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
         public string Name { get; set; }
     }

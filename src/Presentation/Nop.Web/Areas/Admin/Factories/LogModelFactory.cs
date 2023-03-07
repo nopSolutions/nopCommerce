@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Logging;
+﻿using Nop.Core.Domain.Logging;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Framework.Models.Extensions;
+using ILogger = Nop.Services.Logging.ILogger;
+using LogLevel = Nop.Core.Domain.Logging.LogLevel;
 
 namespace Nop.Web.Areas.Admin.Factories
 {

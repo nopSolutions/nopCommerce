@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.ScheduleTasks;
+﻿using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Services.Common;
 

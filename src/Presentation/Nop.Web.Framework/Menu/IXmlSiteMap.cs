@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Web.Framework.Menu
+﻿namespace Nop.Web.Framework.Menu
 {
     /// <summary>
     /// XML sitemap interface

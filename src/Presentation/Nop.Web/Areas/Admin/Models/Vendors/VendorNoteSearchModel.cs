@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #region Properties
 
         public int VendorId { get; set; }
-        
+
         #endregion
     }
 }

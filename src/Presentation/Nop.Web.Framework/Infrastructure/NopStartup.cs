@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,6 +55,7 @@ using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
+using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -88,7 +87,7 @@ namespace Nop.Web.Framework.Infrastructure
             //static cache manager
             var appSettings = Singleton<AppSettings>.Instance;
             var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
-  
+
             services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
 
             if (distributedCacheConfig.Enabled)
@@ -230,10 +229,10 @@ namespace Nop.Web.Framework.Infrastructure
 
             //attribute parsers
             services.AddScoped(typeof(IAttributeParser<,>), typeof(Services.Attributes.AttributeParser<,>));
-            
+
             //attribute formatter
             services.AddScoped(typeof(IAttributeFormatter<,>), typeof(AttributeFormatter<,>));
-            
+
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));
             services.AddScoped<IAuthenticationPluginManager, AuthenticationPluginManager>();

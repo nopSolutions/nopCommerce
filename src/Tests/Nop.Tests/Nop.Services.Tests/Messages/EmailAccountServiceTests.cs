@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Messages;
+﻿using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 using NUnit.Framework;
 

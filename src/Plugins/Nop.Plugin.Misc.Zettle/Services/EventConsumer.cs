@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
 using Nop.Plugin.Misc.Zettle.Domain;
 using Nop.Services.Catalog;

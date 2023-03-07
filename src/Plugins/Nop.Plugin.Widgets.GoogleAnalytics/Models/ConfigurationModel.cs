@@ -1,6 +1,6 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
-using System.ComponentModel.DataAnnotations;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
 {
@@ -28,7 +28,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.TrackingScript")]
         public string TrackingScript { get; set; }
         public bool TrackingScript_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludingTax")]
         public bool IncludingTax { get; set; }
         public bool IncludingTax_OverrideForStore { get; set; }

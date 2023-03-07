@@ -2,7 +2,7 @@
   "Group": "Misc",
   "FriendlyName": "Sendinblue",
   "SystemName": "Misc.Sendinblue",
-  "Version": "3.57",
+  "Version": "3.58",
   "SupportedVersions": [ "4.70" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

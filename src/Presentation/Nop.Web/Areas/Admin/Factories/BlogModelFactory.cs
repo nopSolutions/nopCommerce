@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -71,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return blogContentModel;
         }
-        
+
         /// <summary>
         /// Prepare paged blog post list model
         /// </summary>
@@ -299,7 +296,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare blog post search model
         /// </summary>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Nop.Services.Messages
+﻿namespace Nop.Services.Messages
 {
     /// <summary>
     /// Notification service interface

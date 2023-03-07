@@ -1,4 +1,3 @@
-﻿﻿using System.Threading.Tasks;
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Caching;

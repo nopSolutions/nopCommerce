@@ -37,7 +37,7 @@ namespace Nop.Data.Migrations
             var primaryColumns = string.Join('_', foreignKey.PrimaryColumns);
 
             var keyName = _dataProvider.CreateForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns);
-            
+
             return keyName;
         }
 

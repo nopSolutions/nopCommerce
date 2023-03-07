@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Interface denoting plug-in attributes that are displayed throughout 

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentMigrator.Expressions;
+﻿using FluentMigrator.Expressions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner.Conventions;
 

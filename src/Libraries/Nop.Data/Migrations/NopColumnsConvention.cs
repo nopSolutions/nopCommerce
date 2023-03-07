@@ -19,12 +19,12 @@ namespace Nop.Data.Migrations
         {
             var dataSettings = DataSettingsManager.LoadSettings();
 
-            if (dataSettings.DataProvider != DataProviderType.PostgreSQL) 
+            if (dataSettings.DataProvider != DataProviderType.PostgreSQL)
                 return expression;
 
             foreach (var columnDefinition in expression.Columns)
             {
-                if (columnDefinition.Type != System.Data.DbType.String) 
+                if (columnDefinition.Type != System.Data.DbType.String)
                     continue;
 
                 columnDefinition.Type = null;

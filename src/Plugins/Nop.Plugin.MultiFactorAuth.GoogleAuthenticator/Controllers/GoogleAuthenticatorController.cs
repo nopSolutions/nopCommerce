@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
@@ -30,7 +28,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         private readonly GoogleAuthenticatorService _googleAuthenticatorService;
         private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
         private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;        
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -77,7 +75,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             var model = new ConfigurationModel
             {
                 QRPixelsPerModule = _googleAuthenticatorSettings.QRPixelsPerModule,
-                BusinessPrefix = _googleAuthenticatorSettings.BusinessPrefix                
+                BusinessPrefix = _googleAuthenticatorSettings.BusinessPrefix
             };
             model.GoogleAuthenticatorSearchModel.HideSearchBlock = await _genericAttributeService
                 .GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
@@ -85,7 +83,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
@@ -128,7 +126,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GoogleAuthenticatorDelete (GoogleAuthenticatorModel model)
+        public async Task<IActionResult> GoogleAuthenticatorDelete(GoogleAuthenticatorModel model)
         {
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());

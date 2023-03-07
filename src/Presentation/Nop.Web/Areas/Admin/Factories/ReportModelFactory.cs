@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -135,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             return bestsellers;
-        }        
+        }
 
         #endregion
 
@@ -304,11 +300,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var currentStore = await _storeContext.GetCurrentStoreAsync();
-            
+
             lowStockProductModels.AddRange(await combinations.SelectAwait(async combination =>
             {
                 var product = await _productService.GetProductByIdAsync(combination.ProductId);
-                    
+
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -62,13 +58,13 @@ namespace Nop.Services.Security
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionRecordsAllCacheKey, customerRoleId);
 
             var query = from pr in _permissionRecordRepository.Table
-                join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
-                    .PermissionRecordId
-                where prcrm.CustomerRoleId == customerRoleId
-                orderby pr.Id
-                select pr;
+                        join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
+                            .PermissionRecordId
+                        where prcrm.CustomerRoleId == customerRoleId
+                        orderby pr.Id
+                        select pr;
 
-            return await _staticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -85,9 +81,9 @@ namespace Nop.Services.Security
                 return null;
 
             var query = from pr in _permissionRecordRepository.Table
-                where pr.SystemName == systemName
-                orderby pr.Id
-                select pr;
+                        where pr.SystemName == systemName
+                        orderby pr.Id
+                        select pr;
 
             var permissionRecord = await query.FirstOrDefaultAsync();
             return permissionRecord;
@@ -109,8 +105,8 @@ namespace Nop.Services.Security
             var permissions = await _permissionRecordRepository.GetAllAsync(query =>
             {
                 return from pr in query
-                    orderby pr.Name
-                    select pr;
+                       orderby pr.Name
+                       select pr;
             });
 
             return permissions;
@@ -237,7 +233,7 @@ namespace Nop.Services.Security
                 foreach (var defaultPermission in defaultPermissions)
                 {
                     var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
-                    
+
                     await DeletePermissionRecordCustomerRoleMappingAsync(permission1.Id, customerRole.Id);
                 }
 

@@ -1,12 +1,7 @@
 ﻿//Contributor : MVCContrib
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
@@ -557,11 +552,11 @@ namespace Nop.Web.Framework.UI.Paging
 
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             var url = webHelper.GetThisPageUrl(false);
-            foreach (var routeValue in routeValues) 
+            foreach (var routeValue in routeValues)
                 url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
             if (_renderEmptyParameters && parametersWithEmptyValues.Any())
-                foreach (var key in parametersWithEmptyValues) 
+                foreach (var key in parametersWithEmptyValues)
                     url = webHelper.ModifyQueryString(url, key);
 
             return url;

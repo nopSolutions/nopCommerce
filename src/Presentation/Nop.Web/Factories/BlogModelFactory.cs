@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
@@ -74,7 +70,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -271,7 +267,7 @@ namespace Nop.Web.Factories
 
             return cachedModel;
         }
-        
+
         /// <summary>
         /// Prepare blog comment model
         /// </summary>

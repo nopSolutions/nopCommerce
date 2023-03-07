@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Attributes;
 using Nop.Core.Domain.Catalog;

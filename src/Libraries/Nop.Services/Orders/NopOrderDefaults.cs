@@ -20,7 +20,7 @@ namespace Nop.Services.Orders
         /// {1} : A value indicating whether we should exclude shippable attributes
         /// </remarks>
         public static CacheKey CheckoutAttributesAllCacheKey => new("Nop.checkoutattribute.all.{0}-{1}", NopEntityCacheDefaults<CheckoutAttribute>.AllPrefix);
-        
+
         #endregion
 
         #region ShoppingCart

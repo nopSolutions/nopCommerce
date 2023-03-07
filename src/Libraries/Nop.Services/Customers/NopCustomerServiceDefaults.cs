@@ -49,7 +49,7 @@ namespace Nop.Services.Customers
         public static CacheKey CustomerByGuidCacheKey => new("Nop.customer.byguid.{0}");
 
         #endregion
-        
+
         #region Customer roles
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Nop.Services.Customers
         /// {0} : customer identifier
         /// </remarks>
         public static string CustomerCustomerRolesByCustomerPrefix => "Nop.customer.customerrole.{0}";
-        
+
         #endregion
 
         #region Addresses
@@ -137,7 +137,7 @@ namespace Nop.Services.Customers
         /// {0} : customer identifier
         /// </remarks>
         public static string CustomerAddressesByCustomerPrefix => "Nop.customer.addresses.{0}";
-        
+
         #endregion
 
         #region Customer password

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Models.Sitemap
+﻿namespace Nop.Web.Models.Sitemap
 {
     /// <summary>
     /// Represents an event that occurs when the sitemap is created

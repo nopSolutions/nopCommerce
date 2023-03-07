@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;

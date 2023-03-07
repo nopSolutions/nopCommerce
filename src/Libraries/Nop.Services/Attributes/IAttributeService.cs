@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Attributes;
+﻿using Nop.Core.Domain.Attributes;
 
 namespace Nop.Services.Attributes
 {

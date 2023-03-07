@@ -1,4 +1,3 @@
-using System;
 using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -10,11 +9,11 @@ namespace Nop.Services.Common.Pdf
     /// <summary>
     /// Represents the shipment document
     /// </summary>
-    public class ShipmentDocument: PdfDocument<ShipmentSource>
+    public class ShipmentDocument : PdfDocument<ShipmentSource>
     {
         #region Ctor
 
-        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService): base(shipmentSource, localizationService)
+        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService) : base(shipmentSource, localizationService)
         {
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 
 namespace Nop.Web.Framework.Validators
 {

@@ -14,7 +14,7 @@
         /// Gets the minor store version
         /// </summary>
         public const string MINOR_VERSION = "0";
-        
+
         /// <summary>
         /// Gets the full store version
         /// </summary>

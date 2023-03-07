@@ -9,13 +9,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
     public class ContactUsValidatorTests : BaseNopTest
     {
         private ContactUsValidator _validator;
-     
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<ContactUsValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Services.ExportImport.Help;

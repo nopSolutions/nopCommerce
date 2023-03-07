@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Data.Mapping;

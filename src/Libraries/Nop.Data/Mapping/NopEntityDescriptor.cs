@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Data.Mapping
+﻿namespace Nop.Data.Mapping
 {
     public partial class NopEntityDescriptor
     {

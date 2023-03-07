@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Common
@@ -29,7 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool IsPreSelected { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
 
         public IList<AddressAttributeValueLocalizedModel> Locales { get; set; }
 

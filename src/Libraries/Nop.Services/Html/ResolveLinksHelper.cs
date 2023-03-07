@@ -1,5 +1,4 @@
-﻿﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Nop.Services.Html
@@ -34,7 +33,7 @@ namespace Nop.Services.Html
             // Remove the protocol
             var startIndex = url.IndexOf("://", StringComparison.InvariantCultureIgnoreCase);
             if (startIndex > -1)
-                url = url[(startIndex + 3)..];                
+                url = url[(startIndex + 3)..];
 
             if (url.Length <= max)
                 return url;

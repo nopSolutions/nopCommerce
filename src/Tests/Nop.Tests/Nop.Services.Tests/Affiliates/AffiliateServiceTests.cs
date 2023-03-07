@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Affiliates;
 using Nop.Services.Common;
@@ -25,9 +24,9 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
             _addressService = GetService<IAddressService>();
             _activeAffiliate1 = new Affiliate
             {
-                Active = true, 
-                AddressId = 1, 
-                AdminComment = "Test admin comment", 
+                Active = true,
+                AddressId = 1,
+                AdminComment = "Test admin comment",
                 FriendlyUrlName = "TestActiveAffiliate1"
             };
             _activeAffiliate2 = new Affiliate
@@ -91,20 +90,20 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
         {
             var affiliates = await _affiliateService.GetAllAffiliatesAsync();
             affiliates.TotalCount.Should().Be(2);
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(showHidden:true);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(showHidden: true);
             affiliates.TotalCount.Should().Be(3);
             affiliates = await _affiliateService.GetAllAffiliatesAsync(_activeDeletedAffiliate.FriendlyUrlName);
             affiliates.TotalCount.Should().Be(0);
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(_activeAffiliate1.FriendlyUrlName,showHidden: true);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(_activeAffiliate1.FriendlyUrlName, showHidden: true);
             affiliates.TotalCount.Should().Be(1);
 
             var address = await _addressService.GetAddressByIdAsync(1);
 
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName ,showHidden: true);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName, showHidden: true);
             affiliates.TotalCount.Should().Be(3);
             affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName);
             affiliates.TotalCount.Should().Be(2);
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(loadOnlyWithOrders:true, showHidden: true);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(loadOnlyWithOrders: true, showHidden: true);
             affiliates.TotalCount.Should().Be(0);
         }
 

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Http.Extensions;
@@ -74,7 +73,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
                 return RedirectToRoute("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = GoogleAuthenticatorDefaults.SystemName });
             }
-            
+
             return RedirectToRoute("MultiFactorAuthenticationSettings");
         }
 

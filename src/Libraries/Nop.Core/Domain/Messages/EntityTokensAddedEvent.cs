@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>

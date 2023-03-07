@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Catalog;
+﻿using Nop.Services.Catalog;
 using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
@@ -37,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -61,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare paged category template list model
         /// </summary>
@@ -84,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare paged manufacturer template list model
         /// </summary>
@@ -104,10 +101,10 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = new ManufacturerTemplateListModel().PrepareToGrid(searchModel, manufacturerTemplates,
                 () => manufacturerTemplates.Select(template => template.ToModel<ManufacturerTemplateModel>()));
-            
+
             return model;
         }
-        
+
         /// <summary>
         /// Prepare paged product template list model
         /// </summary>
@@ -153,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare category template search model
         /// </summary>

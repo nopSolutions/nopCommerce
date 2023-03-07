@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Gdpr;
+﻿using Nop.Core.Domain.Gdpr;
 using Nop.Services.Customers;
 using Nop.Services.ScheduleTasks;
 
@@ -43,7 +41,7 @@ namespace Nop.Services.Gdpr
                 return;
 
             var lastActivityToUtc = DateTime.UtcNow.AddMonths(-_gdprSettings.DeleteInactiveCustomersAfterMonths);
-            var inactiveCustomers = await _customerService.GetAllCustomersAsync(lastActivityToUtc : lastActivityToUtc);
+            var inactiveCustomers = await _customerService.GetAllCustomersAsync(lastActivityToUtc: lastActivityToUtc);
 
             foreach (var customer in inactiveCustomers)
                 await _gdprService.PermanentDeleteCustomerAsync(customer);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 {
@@ -50,7 +46,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
             }
 
             bindingContext.Result = ModelBindingResult.Success(result);
-            
+
             return Task.CompletedTask;
         }
     }

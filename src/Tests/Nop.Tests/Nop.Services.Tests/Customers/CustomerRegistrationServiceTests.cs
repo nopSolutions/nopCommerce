@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
@@ -52,7 +50,8 @@ namespace Nop.Tests.Nop.Services.Tests.Customers
                     .GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
                 await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping
                 {
-                    CustomerId = customer.Id, CustomerRoleId = registeredRole.Id
+                    CustomerId = customer.Id,
+                    CustomerRoleId = registeredRole.Id
                 });
             }
 
@@ -109,7 +108,7 @@ namespace Nop.Tests.Nop.Services.Tests.Customers
 
             result.Should().Be(CustomerLoginResults.Successful);
         }
-        
+
         [Test]
         public async Task CanChangePassword()
         {
@@ -117,7 +116,7 @@ namespace Nop.Tests.Nop.Services.Tests.Customers
 
             var request = new ChangePasswordRequest("test@test.com", true, PasswordFormat.Clear, "password", "password");
             var unSuccess = await _customerRegistrationService.ChangePasswordAsync(request);
-            
+
             request = new ChangePasswordRequest("test@test.com", true, PasswordFormat.Hashed, "newpassword", "password");
             var success = await _customerRegistrationService.ChangePasswordAsync(request);
 

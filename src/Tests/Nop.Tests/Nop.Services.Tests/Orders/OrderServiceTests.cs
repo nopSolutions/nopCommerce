@@ -1,15 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Orders;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Services.Tests.Orders {
-    
+namespace Nop.Tests.Nop.Services.Tests.Orders
+{
+
     [TestFixture]
-    public class OrderServiceTests : ServiceTest 
+    public class OrderServiceTests : ServiceTest
     {
         private IOrderService _orderService;
 
@@ -20,35 +19,35 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         }
 
         [Test]
-        public async Task ItShouldReturnNullOrderWhenOrderIdIsZero() 
+        public async Task ItShouldReturnNullOrderWhenOrderIdIsZero()
         {
             var order = await _orderService.GetOrderByIdAsync(0);
             order.Should().BeNull();
         }
 
         [Test]
-        public async Task ItShouldReturnEmptyOrdersWhenOrderIdsNull() 
+        public async Task ItShouldReturnEmptyOrdersWhenOrderIdsNull()
         {
             var orders = await _orderService.GetOrdersByIdsAsync(null);
             orders.Count.Should().Be(0);
         }
 
         [Test]
-        public async Task ItShouldReturnEmptyOrdersWhenOrderIdsEmpty() 
+        public async Task ItShouldReturnEmptyOrdersWhenOrderIdsEmpty()
         {
             var orders = await _orderService.GetOrdersByIdsAsync(Array.Empty<int>());
             orders.Count.Should().Be(0);
         }
 
         [Test]
-        public async Task ItShouldReturnOrdersByIds() 
+        public async Task ItShouldReturnOrdersByIds()
         {
-            var orders = await _orderService.GetOrdersByIdsAsync(new[]{ 1, 2 });
+            var orders = await _orderService.GetOrdersByIdsAsync(new[] { 1, 2 });
             orders.Count.Should().Be(2);
         }
 
         [Test]
-        public async Task ItShouldReturnNullWhenGuidIsEmpty() 
+        public async Task ItShouldReturnNullWhenGuidIsEmpty()
         {
             var order = await _orderService.GetOrderByGuidAsync(Guid.Empty);
             order.Should().BeNull();
@@ -64,7 +63,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         }
 
         [Test]
-        public void ItShouldThrowExceptionIfOrderIsNullWhenDeleteOrder() 
+        public void ItShouldThrowExceptionIfOrderIsNullWhenDeleteOrder()
         {
             Assert.Throws(typeof(AggregateException), () => _orderService.DeleteOrderAsync(null).Wait());
         }
@@ -89,7 +88,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         }
 
         [Test]
-        public async Task ItShouldInsertOrder() 
+        public async Task ItShouldInsertOrder()
         {
             var order = new Order
             {

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Data;
+﻿using Nop.Data;
 using Nop.Plugin.Payments.CyberSource.Domain;
 
 namespace Nop.Plugin.Payments.CyberSource.Services

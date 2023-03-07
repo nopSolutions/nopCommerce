@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
@@ -60,7 +57,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             {
                 var skip = true;
 
-               foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
                 {
                     if (skip)
                     {
@@ -83,7 +80,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             foreach (var productAttributeMapping in _productAttributeMappings)
             {
-                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id)) 
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
                     attributes = _productAttributeParser.AddProductAttribute(attributes, productAttributeMapping.Key, productAttributeValue.Id.ToString());
 
                 if (delete)
@@ -100,7 +97,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             foreach (var productAttributeMapping in _productAttributeMappings)
             {
-                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id)) 
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
                     parsedAttributeValues.Contains(productAttributeValue.Id).Should().Be(!delete);
 
                 delete = !delete;
@@ -119,7 +116,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
-            
+
             var product = new Product { IsGiftCard = true, GiftCardType = GiftCardType.Virtual };
             var customer = new Customer();
             var store = new Store();
@@ -172,7 +169,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             };
             var customer = new Customer();
             var store = new Store();
-            
+
             var formattedAttributes = await _productAttributeFormatter.FormatAttributesAsync(product,
                 attributes, customer, store, "<br />", false, false);
             formattedAttributes.Should().Be("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
@@ -192,7 +189,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             };
             var customer = new Customer();
             var store = new Store();
-            
+
             var formattedAttributes = await _productAttributeFormatter.FormatAttributesAsync(product,
                 attributes, customer, store, "<br />", false, false);
             formattedAttributes.Should().Be("From: senderName 1<br />For: recipientName 1");

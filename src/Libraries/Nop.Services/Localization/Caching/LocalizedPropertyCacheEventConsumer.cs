@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Localization;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Localization.Caching
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -140,7 +136,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-        
+
         #endregion
 
         #region Methods
@@ -569,7 +565,7 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = await _forumService.GetPostByIdAsync(quote.Value);
-                    
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId);

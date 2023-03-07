@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Nop.Services.Discounts
 {
     /// <summary>

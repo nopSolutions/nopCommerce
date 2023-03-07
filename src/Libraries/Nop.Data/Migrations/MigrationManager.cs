@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using FluentMigrator;
 using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
@@ -72,7 +69,7 @@ namespace Nop.Data.Migrations
                     if (isSchemaMigration && !migrationAttribute.IsSchemaMigration)
                         return false;
 
-                    if(isApplied == !_versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
+                    if (isApplied == !_versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
                         return false;
 
                     if (exactlyProcessType && migrationProcessType != migrationAttribute.TargetMigrationProcess)
@@ -88,7 +85,7 @@ namespace Nop.Data.Migrations
 
             return migrations.Select(_migrationRunnerConventions.GetMigrationInfoForMigration);
         }
-        
+
         #endregion
 
         #region Methods

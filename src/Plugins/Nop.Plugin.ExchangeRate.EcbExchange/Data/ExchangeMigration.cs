@@ -4,7 +4,7 @@ using Nop.Data.Migrations;
 using Nop.Services.Configuration;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
-{ 
+{
     [NopMigration("2021-09-16 00:00:00", "ExchangeRate.EcbExchange 1.30. Add setting for url for ECB", MigrationProcessType.Update)]
     public class ExchangeEcbMigration : MigrationBase
     {
@@ -35,7 +35,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
         {
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
-            
+
             //settings
             if (!_settingService.SettingExists(_ecbExchangeRateSettings, settings => settings.EcbLink))
                 _ecbExchangeRateSettings.EcbLink = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";

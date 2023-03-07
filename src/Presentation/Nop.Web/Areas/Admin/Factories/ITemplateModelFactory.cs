@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Templates;
+﻿using Nop.Web.Areas.Admin.Models.Templates;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -57,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the topic template list model
         /// </returns>
         Task<TopicTemplateListModel> PrepareTopicTemplateListModelAsync(TopicTemplateSearchModel searchModel);
-        
+
         /// <summary>
         /// Prepare category template search model
         /// </summary>

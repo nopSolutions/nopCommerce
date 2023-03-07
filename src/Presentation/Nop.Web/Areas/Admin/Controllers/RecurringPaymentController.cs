@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -113,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = payment.Id });
             }
 
@@ -175,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
                 if (errors.Any())
                 {
-                    foreach(var error in errors)
+                    foreach (var error in errors)
                     {
                         _notificationService.ErrorNotification(error);
                     }

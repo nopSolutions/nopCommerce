@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -507,7 +503,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (await _orderService.IsDownloadAllowedAsync(orderItem))
                 {
-                    var downloadUrl  = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
+                    var downloadUrl = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
                     var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
@@ -515,7 +511,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
                 {
-                    var licenseUrl  = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
+                    var licenseUrl = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
                     var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(licenseLink);
@@ -1084,7 +1080,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", await ProductListToHtmlTableAsync(shipment, languageId), true));
 
-            var shipmentUrl  = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+            var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification
@@ -1102,7 +1098,7 @@ namespace Nop.Services.Messages
             var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
             tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
-            var orderNoteAttachmentUrl  = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
+            var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
@@ -1216,10 +1212,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl  = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
-            var accountActivationUrl  = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
-            var emailRevalidationUrl  = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-            var wishlistUrl  = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
+            var passwordRecoveryUrl = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+            var accountActivationUrl = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+            var emailRevalidationUrl = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
+            var wishlistUrl = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
@@ -1356,7 +1352,7 @@ namespace Nop.Services.Messages
             var product = await _productService.GetProductByIdAsync(combination.ProductId);
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var currentStore = await _storeContext.GetCurrentStoreAsync();
-            
+
             var attributes = await productAttributeFormatter.FormatAttributesAsync(product,
                 combination.AttributesXml,
                 currentCustomer,
@@ -1534,45 +1530,45 @@ namespace Nop.Services.Messages
             //groups depend on which tokens are added at the appropriate methods in IWorkflowMessageService
             return messageTemplate.Name switch
             {
-                MessageTemplateSystemNames.CustomerRegisteredStoreOwnerNotification or 
-                MessageTemplateSystemNames.CustomerWelcomeMessage or 
-                MessageTemplateSystemNames.CustomerEmailValidationMessage or 
-                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or 
+                MessageTemplateSystemNames.CustomerRegisteredStoreOwnerNotification or
+                MessageTemplateSystemNames.CustomerWelcomeMessage or
+                MessageTemplateSystemNames.CustomerEmailValidationMessage or
+                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or
                 MessageTemplateSystemNames.CustomerPasswordRecoveryMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.OrderPlacedVendorNotification or 
-                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or 
-                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or 
-                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or 
-                MessageTemplateSystemNames.OrderPaidCustomerNotification or 
-                MessageTemplateSystemNames.OrderPaidVendorNotification or 
-                MessageTemplateSystemNames.OrderPaidAffiliateNotification or 
+                MessageTemplateSystemNames.OrderPlacedVendorNotification or
+                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or
+                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or
+                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or
+                MessageTemplateSystemNames.OrderPaidCustomerNotification or
+                MessageTemplateSystemNames.OrderPaidVendorNotification or
+                MessageTemplateSystemNames.OrderPaidAffiliateNotification or
                 MessageTemplateSystemNames.OrderPlacedCustomerNotification or
                 MessageTemplateSystemNames.OrderProcessingCustomerNotification or
-                MessageTemplateSystemNames.OrderCompletedCustomerNotification or 
+                MessageTemplateSystemNames.OrderCompletedCustomerNotification or
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
-                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentSentCustomerNotification or
+                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or
                 MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 
+                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or
                 MessageTemplateSystemNames.OrderRefundedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or 
-                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or 
+                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or
+                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or
                 MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens },
 
-                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or 
+                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or
                 MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens },
 
                 MessageTemplateSystemNames.EmailAFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens },
                 MessageTemplateSystemNames.WishlistToFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens },
 
-                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or 
-                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or 
+                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or
+                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or
                 MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens },
 
                 MessageTemplateSystemNames.NewForumTopicMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
@@ -1582,7 +1578,7 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.VendorInformationChangeStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens },
                 MessageTemplateSystemNames.GiftCardNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens },
 
-                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or 
+                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or
                 MessageTemplateSystemNames.ProductReviewReplyCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens },

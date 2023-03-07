@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -64,7 +62,7 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Formats attributes
         /// </summary>

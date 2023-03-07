@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -236,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var languageId = 0;
                 var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
-                
+
                 if (order != null)
                 {
                     var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId);

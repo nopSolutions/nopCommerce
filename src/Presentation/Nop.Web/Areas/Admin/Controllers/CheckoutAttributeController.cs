@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -116,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
             await _checkoutAttributeService.UpdateAttributeAsync(checkoutAttribute);
 
-            var existingStoreMappings =await _storeMappingService.GetStoreMappingsAsync(checkoutAttribute);
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(checkoutAttribute);
             var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
@@ -261,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
 
@@ -319,10 +315,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
-            
+
             //prepare model
             model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeModelAsync(model, checkoutAttribute, true);
 

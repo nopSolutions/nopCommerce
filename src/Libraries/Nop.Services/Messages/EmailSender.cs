@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using MimeKit;
+﻿using MimeKit;
 using MimeKit.Text;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;

@@ -17,10 +17,9 @@
  *      be misrepresented as being the original software.
  * 
  *   3. This notice may not be removed or altered from any source distribution.
- */ 
+ */
 #endregion
 
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -54,10 +53,10 @@ namespace Nop.Services.Html.CodeFormatter
             const string regAttributes = @"(?<=&lt;(?!%)/?!?\??[\w:-]+).*?(?=(?<!%)/?&gt;)";
             const string regEntity = @"&amp;\w+;";
             const string regAttributeMatch = @"(=?"".*?""|=?'.*?')|([\w:-]+)";
-            
+
             //the regex object will handle all the replacements in one pass
-            var regAll = "(" + regJavaScript + ")|(" + regComment + ")|(" 
-                + regAspTag + ")|(" + regAspCode + ")|(" 
+            var regAll = "(" + regJavaScript + ")|(" + regComment + ")|("
+                + regAspTag + ")|(" + regAspCode + ")|("
                 + regTagDelimiter + ")|(" + regTagName + ")|("
                 + regAttributes + ")|(" + regEntity + ")";
 

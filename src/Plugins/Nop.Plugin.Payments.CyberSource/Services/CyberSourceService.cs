@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CyberSource.Api;
+﻿using CyberSource.Api;
 using CyberSource.Client;
 using CyberSource.Model;
 using Microsoft.AspNetCore.Http;

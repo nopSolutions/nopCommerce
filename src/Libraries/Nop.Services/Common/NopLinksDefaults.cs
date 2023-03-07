@@ -396,7 +396,7 @@
             /// Gets parameters used on admin area log
             /// </summary>
             public static string OnAdminLog => "?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details";
-            
+
             /// <summary>
             /// Gets parameters used on admin area log list
             /// </summary>

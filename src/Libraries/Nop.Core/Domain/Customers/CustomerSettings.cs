@@ -86,7 +86,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether password are have least one non alphanumeric character
         /// </summary>
         public bool PasswordRequireNonAlphanumeric { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether password are have least one digit
         /// </summary>
@@ -240,7 +240,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }        
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         #region Form fields
 
@@ -388,7 +388,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether privacy policy should accepted during registration
         /// </summary>
         public bool AcceptPrivacyPolicyEnabled { get; set; }
-        
+
         #endregion
     }
 }

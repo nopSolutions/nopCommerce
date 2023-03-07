@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentMigrator;
+﻿using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Initialization;

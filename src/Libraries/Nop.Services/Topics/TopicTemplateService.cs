@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 using Nop.Data;
 
 namespace Nop.Services.Topics
@@ -47,11 +44,11 @@ namespace Nop.Services.Topics
         /// </returns>
         public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync()
         {
-            var templates = await _topicTemplateRepository.GetAllAsync(query=>
+            var templates = await _topicTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
-                    orderby pt.DisplayOrder, pt.Id
-                    select pt;
+                       orderby pt.DisplayOrder, pt.Id
+                       select pt;
             }, cache => default);
 
             return templates;

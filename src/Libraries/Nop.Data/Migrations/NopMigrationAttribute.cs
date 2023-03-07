@@ -40,13 +40,13 @@ namespace Nop.Data.Migrations
         public NopMigrationAttribute(string dateTime, string description, MigrationProcessType targetMigrationProcess = MigrationProcessType.NoMatter) :
             this(new MigrationConfig
             {
-                DateTime=dateTime,
+                DateTime = dateTime,
                 Description = description,
                 TargetMigrationProcess = targetMigrationProcess
             })
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the NopMigrationAttribute class
         /// </summary>
@@ -94,9 +94,9 @@ namespace Nop.Data.Migrations
         public virtual bool IsSchemaMigration
         {
             get => _config.IsSchemaMigration;
-            protected  set => _config.IsSchemaMigration = value;
+            protected set => _config.IsSchemaMigration = value;
         }
-    
+
 
         /// <summary>
         /// Gets the flag which indicate whether the migration should be applied into DB on the debug mode

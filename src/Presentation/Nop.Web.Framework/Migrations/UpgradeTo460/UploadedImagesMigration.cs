@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Media;
 using Nop.Data;
 using Nop.Data.Migrations;

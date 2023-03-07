@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
@@ -23,7 +19,7 @@ namespace Nop.Services.Themes
         protected Dictionary<string, ThemeDescriptor> _themeDescriptors;
 
         #endregion
-        
+
         #region Ctor
 
         public ThemeProvider(INopFileProvider fileProvider)

@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Vendors.Caching
 {

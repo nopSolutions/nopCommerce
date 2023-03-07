@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
@@ -20,7 +18,7 @@ namespace Nop.Web.Framework.Controllers
         /// Ctor
         /// </summary>
         /// <param name="submitButtonNames">Submit button names</param>
-        public FormValueRequiredAttribute(params string[] submitButtonNames):
+        public FormValueRequiredAttribute(params string[] submitButtonNames) :
             this(FormValueRequirement.Equal, submitButtonNames)
         {
         }
@@ -29,7 +27,7 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="requirement">Requirement</param>
         /// <param name="submitButtonNames">Submit button names</param>
-        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames):
+        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames) :
             this(requirement, true, submitButtonNames)
         {
         }
@@ -96,7 +94,7 @@ namespace Nop.Web.Framework.Controllers
                                     //validate "value"
                                     foreach (var formValue in routeContext.HttpContext.Request.Form.Keys)
                                         if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
-                                        { 
+                                        {
                                             var value = routeContext.HttpContext.Request.Form[formValue];
                                             if (!string.IsNullOrEmpty(value))
                                                 return true;

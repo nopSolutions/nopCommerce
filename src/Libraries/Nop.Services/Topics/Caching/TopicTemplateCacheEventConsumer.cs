@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Topics.Caching

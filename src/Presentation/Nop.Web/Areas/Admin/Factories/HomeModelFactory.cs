@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -17,6 +11,7 @@ using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Models.DataTables;
+using ILogger = Nop.Services.Logging.ILogger;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -224,7 +219,7 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
-        
+
         /// <summary>
         /// Prepare latest orders model
         /// </summary>

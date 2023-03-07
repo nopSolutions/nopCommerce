@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
@@ -37,7 +33,7 @@ namespace Nop.Services.Logging
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -59,11 +55,11 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<IList<ActivityLogType>> GetAllActivityTypesAsync()
         {
-            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query=>
+            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query =>
             {
                 return from alt in query
-                    orderby alt.Name
-                    select alt;
+                       orderby alt.Name
+                       select alt;
             }, cache => default);
 
             return activityLogTypes;

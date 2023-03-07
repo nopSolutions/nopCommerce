@@ -80,7 +80,7 @@ namespace Nop.Services.Html
                 while (_regexQuote.IsMatch(text))
                     text = _regexQuote.Replace(text, "<b>$1 wrote:</b><div class=\"quote\">$2</div>");
 
-            if (replaceCode) 
+            if (replaceCode)
                 text = CodeFormatHelper.FormatTextSimple(text);
 
             if (replaceImg)

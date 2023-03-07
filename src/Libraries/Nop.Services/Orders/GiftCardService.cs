@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
@@ -94,16 +90,16 @@ namespace Nop.Services.Orders
                 if (purchasedWithOrderId.HasValue)
                 {
                     query = from gc in query
-                        join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
-                        where oi.OrderId == purchasedWithOrderId.Value
-                        select gc;
+                            join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                            where oi.OrderId == purchasedWithOrderId.Value
+                            select gc;
                 }
 
                 if (usedWithOrderId.HasValue)
                     query = from gc in query
-                        join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
-                        where gcuh.UsedWithOrderId == usedWithOrderId
-                        select gc;
+                            join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                            where gcuh.UsedWithOrderId == usedWithOrderId
+                            select gc;
 
                 if (createdFromUtc.HasValue)
                     query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
@@ -221,7 +217,7 @@ namespace Nop.Services.Orders
             var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
-            foreach (var giftCard in giftCards) 
+            foreach (var giftCard in giftCards)
                 await _eventPublisher.EntityUpdatedAsync(giftCard);
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.CyberSource.Services;
@@ -105,7 +103,7 @@ namespace Nop.Plugin.Payments.CyberSource.Controllers
                 var message = $"Payer authentication enrollment failed. {result?.ErrorInformation?.Message}";
                 await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
 
-                if (result?.ConsumerAuthenticationInformation is not null && 
+                if (result?.ConsumerAuthenticationInformation is not null &&
                     result.ErrorInformation?.Reason == CyberSourceDefaults.PayerAuthenticationErrorReason.ConsumerAuthenticationRequired)
                 {
                     return Json(new

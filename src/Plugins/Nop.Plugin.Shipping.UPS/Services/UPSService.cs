@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.ServiceModel;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
@@ -744,7 +739,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         private async Task<(decimal width, decimal length, decimal height)> GetDimensionsForSingleItemAsync(ShoppingCartItem item, Product product)
         {
             var items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) };
-            
+
             return await GetDimensionsAsync(items);
         }
 

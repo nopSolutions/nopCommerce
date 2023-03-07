@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Controllers

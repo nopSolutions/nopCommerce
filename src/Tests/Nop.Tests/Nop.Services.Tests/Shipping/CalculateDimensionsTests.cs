@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Shipping;
@@ -44,7 +41,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
             length.Should().Be(0);
             width.Should().Be(0);
             height.Should().Be(0);
-            
+
             items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem

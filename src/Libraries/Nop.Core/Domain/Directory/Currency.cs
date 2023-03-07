@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Directory

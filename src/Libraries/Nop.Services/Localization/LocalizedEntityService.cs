@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -188,7 +184,7 @@ namespace Nop.Services.Localization
                         lookupKey,
                         async () => (await GetAllLocalizedPropertiesAsync(languageId))
                             .ToGroupedDictionary(p => p.EntityId));
-                    
+
                     return lookup.TryGetValue(entityId, out var localizedProperties)
                         ? localizedProperties.FirstOrDefault(p => p.LocaleKeyGroup == localeKeyGroup && p.LocaleKey == localeKey)
                             ?.LocaleValue ?? string.Empty

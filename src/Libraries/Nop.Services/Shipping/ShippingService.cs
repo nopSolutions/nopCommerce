@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -220,30 +216,30 @@ namespace Nop.Services.Shipping
         public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null)
         {
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-            { 
+            {
                 return await _shippingMethodRepository.GetAllAsync(query =>
                 {
                     var query1 = from sm in query
-                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
-                        where smcm.CountryId == filterByCountryId.Value
-                        select sm.Id;
+                                 join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                                 where smcm.CountryId == filterByCountryId.Value
+                                 select sm.Id;
 
                     query1 = query1.Distinct();
 
                     var query2 = from sm in query
-                        where !query1.Contains(sm.Id)
-                        orderby sm.DisplayOrder, sm.Id
-                        select sm;
+                                 where !query1.Contains(sm.Id)
+                                 orderby sm.DisplayOrder, sm.Id
+                                 select sm;
 
                     return query2;
                 }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
             }
 
-            return await _shippingMethodRepository.GetAllAsync(query=>
+            return await _shippingMethodRepository.GetAllAsync(query =>
             {
                 return from sm in query
-                    orderby sm.DisplayOrder, sm.Id
-                    select sm;
+                       orderby sm.DisplayOrder, sm.Id
+                       select sm;
             }, cache => default);
         }
 
@@ -283,7 +279,7 @@ namespace Nop.Services.Shipping
 
             var result = await _shippingMethodCountryMappingRepository.Table
                 .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
-            
+
             return result;
         }
 
@@ -362,14 +358,14 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<IList<Warehouse>> GetAllWarehousesAsync(string name = null)
         {
-            var warehouses = await _warehouseRepository.GetAllAsync(query=>
+            var warehouses = await _warehouseRepository.GetAllAsync(query =>
             {
                 return from wh in query
-                    orderby wh.Name
-                    select wh;
+                       orderby wh.Name
+                       select wh;
             }, cache => default);
 
-            if (!string.IsNullOrEmpty(name)) 
+            if (!string.IsNullOrEmpty(name))
                 warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();
 
             return warehouses;
@@ -553,7 +549,7 @@ namespace Nop.Services.Shipping
 
             return totalWeight;
         }
-        
+
         /// <summary>
         /// Get total dimensions
         /// </summary>
@@ -640,7 +636,7 @@ namespace Nop.Services.Shipping
                     }
 
                     //associated products
-                    var (associatedProductsWidth, associatedProductsLength, associatedProductsHeight)  = await GetAssociatedProductDimensionsAsync(packageItem.ShoppingCartItem);
+                    var (associatedProductsWidth, associatedProductsLength, associatedProductsHeight) = await GetAssociatedProductDimensionsAsync(packageItem.ShoppingCartItem);
 
                     var quantity = packageItem.GetQuantity();
                     width += (productWidth + associatedProductsWidth) * quantity;

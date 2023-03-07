@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -50,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public VendorController(IAddressService addressService, 
+        public VendorController(IAddressService addressService,
             IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
             IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
             IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
@@ -258,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //parse vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-            foreach(var warning in warnings)
+            foreach (var warning in warnings)
             {
                 ModelState.AddModelError(string.Empty, warning);
             }
@@ -302,7 +298,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
@@ -343,7 +339,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //parse vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-            foreach(var warning in warnings)
+            foreach (var warning in warnings)
             {
                 ModelState.AddModelError(string.Empty, warning);
             }
@@ -422,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 

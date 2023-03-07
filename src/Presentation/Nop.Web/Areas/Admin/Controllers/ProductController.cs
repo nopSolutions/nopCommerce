@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -1695,13 +1688,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                return Json(new 
-                    { 
-                        success = false, 
-                        message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd")} {exc.Message}", 
-                    });
+                return Json(new
+                {
+                    success = false,
+                    message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd")} {exc.Message}",
+                });
             }
-            
+
             return Json(new { success = true });
         }
 
@@ -1811,7 +1804,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             if (string.IsNullOrEmpty(model.VideoUrl))
-                ModelState.AddModelError(string.Empty, 
+                ModelState.AddModelError(string.Empty,
                     await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"));
 
             if (!ModelState.IsValid)
@@ -2590,18 +2583,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
-                    
+
                     return RedirectToAction("List");
                 }
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Imported"));
-                
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
                 await _notificationService.ErrorNotificationAsync(exc);
-                
+
                 return RedirectToAction("List");
             }
         }
@@ -3011,7 +3004,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var mappings = await _productAttributeParser
                         .ParseProductAttributeMappingsAsync(combination.AttributesXml);
-                    
+
                     if (mappings?.Any(m => m.Id == productAttributeMapping.Id) == true)
                     {
                         _notificationService.ErrorNotification(
@@ -3273,7 +3266,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var combination in existedCombinations)
                 {
                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
-                    
+
                     if (attributeValues.Where(attribute => attribute.Id == id).Any())
                     {
                         return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
@@ -3541,11 +3534,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var pavModels = model.ProductAttributes.SelectMany(pa => pa.Values)
                     .Where(v => allowedAttributeIds.Any(id => id == v.Id))
                     .ToList();
-                foreach(var pavModel in pavModels)
+                foreach (var pavModel in pavModels)
                 {
                     pavModel.Checked = "checked";
                 }
-                
+
                 model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 
                 return View(model);

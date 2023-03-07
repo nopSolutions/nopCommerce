@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
 
 namespace Nop.Web.Models.Common
 {
@@ -133,12 +132,12 @@ namespace Nop.Web.Models.Common
         {
             get
             {
-                if (TotalRecords == 0 || PageSize == 0) 
+                if (TotalRecords == 0 || PageSize == 0)
                     return 0;
 
                 var num = TotalRecords / PageSize;
 
-                if ((TotalRecords % PageSize) > 0) 
+                if ((TotalRecords % PageSize) > 0)
                     num++;
 
                 return num;
@@ -235,7 +234,7 @@ namespace Nop.Web.Models.Common
                 ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0))
                 return 0;
 
-            if ((PageIndex + (IndividualPagesDisplayedCount / 2)) >= TotalPages) 
+            if ((PageIndex + (IndividualPagesDisplayedCount / 2)) >= TotalPages)
                 return (TotalPages - IndividualPagesDisplayedCount);
 
             return (PageIndex - (IndividualPagesDisplayedCount / 2));
@@ -248,14 +247,14 @@ namespace Nop.Web.Models.Common
         public int GetLastIndividualPageIndex()
         {
             var num = IndividualPagesDisplayedCount / 2;
-            if ((IndividualPagesDisplayedCount % 2) == 0) 
+            if ((IndividualPagesDisplayedCount % 2) == 0)
                 num--;
 
             if ((TotalPages < IndividualPagesDisplayedCount) ||
                 ((PageIndex + num) >= TotalPages))
                 return (TotalPages - 1);
 
-            if ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0) 
+            if ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0)
                 return (IndividualPagesDisplayedCount - 1);
 
             return PageIndex + num;

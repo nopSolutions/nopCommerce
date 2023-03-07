@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nop.Services.Tax
+﻿namespace Nop.Services.Tax
 {
     /// <summary>
     /// Represents a result of tax rate calculation

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Services.Plugins;
+﻿using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.MultiFactor
 {

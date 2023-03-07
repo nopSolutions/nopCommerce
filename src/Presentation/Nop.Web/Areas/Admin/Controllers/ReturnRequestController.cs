@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -161,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             if (product != null)
                             {
                                 var productStockChangedMessage = string.Format(await _localizationService.GetResourceAsync("Admin.ReturnRequests.QuantityReturnedToStock"), quantityToReturn);
-                                
+
                                 await _productService.AdjustInventoryAsync(product, quantityToReturn, orderItem.AttributesXml, productStockChangedMessage);
 
                                 _notificationService.SuccessNotification(productStockChangedMessage);
@@ -274,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(new ReturnRequestReasonModel(), null);
-            
+
             return View(model);
         }
 
@@ -294,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
 
-                return continueEditing 
+                return continueEditing
                     ? RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id })
                     : RedirectToAction("ReturnRequestReasonList");
             }
@@ -318,7 +315,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(null, returnRequestReason);
-            
+
             return View(model);
         }
 
@@ -345,7 +342,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
-                
+
                 return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
             }
 
@@ -363,7 +360,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a return request reason with the specified id
-            var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id) 
+            var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id)
                 ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
 
             await _returnRequestService.DeleteReturnRequestReasonAsync(returnRequestReason);
@@ -428,8 +425,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
 
-                return continueEditing 
-                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id }) 
+                return continueEditing
+                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id })
                     : RedirectToAction("ReturnRequestActionList");
             }
 
@@ -479,7 +476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
-                
+
                 return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
             }
 

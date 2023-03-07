@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 using Nop.Data;
 
 namespace Nop.Services.Stores

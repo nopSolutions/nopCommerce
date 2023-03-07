@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -481,7 +477,7 @@ namespace Nop.Services.Plugins
 
             //display all plugins on the plugin list page
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.ToList();
-            foreach (var pluginDescriptor in pluginDescriptors) 
+            foreach (var pluginDescriptor in pluginDescriptors)
                 pluginDescriptor.pluginDescriptor.ShowInPluginsList = true;
 
             //clear the uploaded directory

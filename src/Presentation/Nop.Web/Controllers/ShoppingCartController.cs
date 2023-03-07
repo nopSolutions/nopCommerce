@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -836,7 +831,7 @@ namespace Nop.Web.Controllers
             {
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
                 var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-                
+
                 //we do not calculate price of "customer enters price" option is enabled
                 var (finalPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(product,
                     currentCustomer,

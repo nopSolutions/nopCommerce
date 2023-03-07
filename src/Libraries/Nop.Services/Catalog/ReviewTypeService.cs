@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -112,9 +109,9 @@ namespace Nop.Services.Catalog
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewTypeCacheKey, productReviewId);
 
             var query = from pam in _productReviewReviewTypeMappingRepository.Table
-                orderby pam.Id
-                where pam.ProductReviewId == productReviewId
-                select pam;
+                        orderby pam.Id
+                        where pam.ProductReviewId == productReviewId
+                        select pam;
 
             var productReviewReviewTypeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -11,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         {
             ProductAttributes = new List<ProductAttributeModel>();
         }
-        
+
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }
 

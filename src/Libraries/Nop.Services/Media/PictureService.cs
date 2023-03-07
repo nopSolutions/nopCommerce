@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -16,7 +10,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SkiaSharp;
-using Svg;
 using Svg.Skia;
 
 namespace Nop.Services.Media
@@ -595,7 +588,7 @@ namespace Nop.Services.Media
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
 
             var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
-            
+
             var thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                     : $"{picture.Id:0000000}.{lastPart}";
@@ -908,14 +901,14 @@ namespace Nop.Services.Media
             //contentType is not always available 
             //that's why we manually update it here
             //https://mimetype.io/all-types/
-            if (string.IsNullOrEmpty(contentType)) 
+            if (string.IsNullOrEmpty(contentType))
                 contentType = GetPictureContentTypeByFileExtension(fileExtension);
 
             if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSVGUploads)
                 return null;
 
-            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), 
-                contentType, 
+            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile),
+                contentType,
                 _fileProvider.GetFileNameWithoutExtension(fileName),
                 validateBinary: contentType != MimeTypes.ImageSvg);
 

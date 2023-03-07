@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Authentication.External;
+﻿using Nop.Services.Authentication.External;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
 using Nop.Web.Framework.Models.Extensions;

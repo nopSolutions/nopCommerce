@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
@@ -2213,24 +2207,24 @@ namespace Nop.Services.ExportImport
                     //manufacturer mappings
                     var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsManufacturerIds[product.Id];
 
-                   var importedManufacturers = await manufacturerList
-                       .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                       .SelectAwait(async x =>
-                       {
-                           var id = allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id;
+                    var importedManufacturers = await manufacturerList
+                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .SelectAwait(async x =>
+                        {
+                            var id = allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id;
 
-                           if (id != null)
-                               return id;
+                            if (id != null)
+                                return id;
 
-                           id = int.TryParse(x, out var parsedId) ? parsedId : null;
+                            id = int.TryParse(x, out var parsedId) ? parsedId : null;
 
-                           if (!id.HasValue)
-                               //database doesn't contain the imported manufacturer
-                               //this can happen if the manufacturer was deleted during the import process
-                               await _logger.WarningAsync(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainManufacturer"), product.Name, x));
+                            if (!id.HasValue)
+                                //database doesn't contain the imported manufacturer
+                                //this can happen if the manufacturer was deleted during the import process
+                                await _logger.WarningAsync(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainManufacturer"), product.Name, x));
 
-                           return id;
-                       }).Where(id => id.HasValue).ToListAsync();
+                            return id;
+                        }).Where(id => id.HasValue).ToListAsync();
 
                     foreach (var manufacturerId in importedManufacturers)
                     {

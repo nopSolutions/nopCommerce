@@ -7,7 +7,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
     public class StoreMigration : ForwardOnlyMigration
     {
         public override void Up()
-        {   
+        {
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.Deleted)).Exists())
             {
                 //add new column

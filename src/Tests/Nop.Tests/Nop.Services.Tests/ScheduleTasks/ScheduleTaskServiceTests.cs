@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Services.ScheduleTasks;
 using NUnit.Framework;
@@ -20,9 +17,9 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
             _scheduleTaskService = GetService<IScheduleTaskService>();
             _task = new ScheduleTask
             {
-                Enabled = false, 
-                Seconds = 1, 
-                Name = "test schedule task", 
+                Enabled = false,
+                Seconds = 1,
+                Name = "test schedule task",
                 Type = typeof(TestScheduleTask).FullName
             };
 
@@ -140,7 +137,7 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
 
             tasks.Count.Should().Be(5);
             tasks.Any(p => p.Enabled == false).Should().BeFalse();
-            tasks.Any(p=>p.Id==_task.Id).Should().BeFalse();
+            tasks.Any(p => p.Id == _task.Id).Should().BeFalse();
 
             tasks = await _scheduleTaskService.GetAllTasksAsync(true);
 

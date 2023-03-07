@@ -20,7 +20,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Gets or sets the identifier of unsubscribe event webhook
         /// </summary>
-        public int UnsubscribeWebhookId { get; set; }        
+        public int UnsubscribeWebhookId { get; set; }
 
         /// <summary>
         /// Gets or sets the SMTP key (Master password)

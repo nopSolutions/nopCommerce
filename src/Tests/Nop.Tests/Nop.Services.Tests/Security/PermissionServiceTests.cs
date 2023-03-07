@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
@@ -70,12 +65,14 @@ namespace Nop.Tests.Nop.Services.Tests.Security
         {
             private readonly PermissionRecord _permissionRecord = new()
             {
-                Name = "Test name", SystemName = "Test permission record system name", Category = "Test category"
+                Name = "Test name",
+                SystemName = "Test permission record system name",
+                Category = "Test category"
             };
 
             public IEnumerable<PermissionRecord> GetPermissions()
             {
-                return new[] {_permissionRecord};
+                return new[] { _permissionRecord };
             }
 
             public HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions()

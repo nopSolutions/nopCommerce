@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using MailKit;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -729,7 +724,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                     var store = await _storeService.GetStoreByIdAsync(order.StoreId);
-                    
+
                     //values
                     var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
@@ -955,7 +950,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
                     var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                    foreach(var statusItem in statusItems)
+                    foreach (var statusItem in statusItems)
                     {
                         statusItem.Selected = true;
                     }
@@ -971,7 +966,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
                     var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                    foreach(var statusItem in statusItems)
+                    foreach (var statusItem in statusItems)
                     {
                         statusItem.Selected = true;
                     }
@@ -987,7 +982,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var ids = searchModel.ShippingStatusIds.Select(id => id.ToString());
                     var statusItems = searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                    foreach(var statusItem in statusItems)
+                    foreach (var statusItem in statusItems)
                     {
                         statusItem.Selected = true;
                     }

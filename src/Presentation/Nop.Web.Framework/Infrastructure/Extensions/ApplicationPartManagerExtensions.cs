@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
@@ -38,9 +33,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             _baseAppLibraries = new List<KeyValuePair<string, Version>>();
             _pluginLibraries = new Dictionary<string, Version>();
-            
+
             //get all libraries from /bin/{version}/ directory
-            foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")) 
+            foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"))
                 _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
 
             //get all libraries from base site directory
@@ -165,10 +160,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 AddApplicationParts(applicationPartManager, assemblyFile, pluginConfig.UseUnsafeLoadAssembly);
 
             // delete the .deps file
-            if (assemblyFile.EndsWith(".dll")) 
+            if (assemblyFile.EndsWith(".dll"))
                 _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
 
-            if (!_pluginLibraries.ContainsKey(fileProvider.GetFileName(assemblyFile))) 
+            if (!_pluginLibraries.ContainsKey(fileProvider.GetFileName(assemblyFile)))
                 _pluginLibraries.Add(fileProvider.GetFileName(assemblyFile), assembly.GetName().Version);
 
             return assembly;
@@ -223,7 +218,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //nothing found
             return false;
         }
-        
+
         #endregion
 
         #region Methods
@@ -249,7 +244,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     //ensure plugins directory is created
                     var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
                     _fileProvider.CreateDirectory(pluginsDirectory);
-                    
+
                     //ensure uploaded directory is created
                     var uploadedPath = _fileProvider.MapPath(NopPluginDefaults.UploadedPath);
                     _fileProvider.CreateDirectory(uploadedPath);
@@ -257,7 +252,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     foreach (var directory in _fileProvider.GetDirectories(uploadedPath))
                     {
                         var moveTo = _fileProvider.Combine(pluginsDirectory, _fileProvider.GetDirectoryNameOnly(directory));
-                        
+
                         if (_fileProvider.DirectoryExists(moveTo))
                             _fileProvider.DeleteDirectory(moveTo);
 
@@ -298,7 +293,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     foreach (var pluginLoadedAssemblyInfo in _loadedAssemblies)
                         assemblies.Add(new KeyValuePair<string, Version>(pluginLoadedAssemblyInfo.Key, pluginLoadedAssemblyInfo.Value.AssemblyInMemory));
 
-                    foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList()) 
+                    foreach (var pluginLibrary in _pluginLibraries.Where(item => !assemblies.Any(p => p.Key.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))).ToList())
                         assemblies.Add(new KeyValuePair<string, Version>(pluginLibrary.Key, pluginLibrary.Value));
 
                     var inMemoryAssemblies = assemblies.GroupBy(p => p.Key).Select(p => p.First())
@@ -317,7 +312,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                     throw new Exception(message, exception);
                 }
-                
+
                 PluginsInfo.AssemblyLoadedCollision = _loadedAssemblies.Select(item => item.Value)
                     .Where(loadedAssemblyInfo => loadedAssemblyInfo.Collisions.Any()).ToList();
 

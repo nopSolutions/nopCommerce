@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 
 namespace Nop.Web.Areas.Admin.Factories

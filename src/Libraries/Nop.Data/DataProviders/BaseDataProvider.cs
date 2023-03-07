@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
@@ -140,7 +136,7 @@ namespace Nop.Data.DataProviders
                 .ToArray();
 
             //mark update migrations as applied
-            foreach (var assembly in mAssemblies) 
+            foreach (var assembly in mAssemblies)
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
         }
 

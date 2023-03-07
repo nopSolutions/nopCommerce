@@ -1,13 +1,13 @@
 ﻿using FluentMigrator;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {

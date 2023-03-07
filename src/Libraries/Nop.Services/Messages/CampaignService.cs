@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -104,7 +100,7 @@ namespace Nop.Services.Messages
         {
             var campaigns = await _campaignRepository.GetAllAsync(query =>
             {
-                if (storeId > 0) 
+                if (storeId > 0)
                     query = query.Where(c => c.StoreId == storeId);
 
                 query = query.OrderBy(c => c.CreatedOnUtc);

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Common;
 using Nop.Services.Attributes;
 using Nop.Services.Localization;
@@ -302,7 +300,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModelAsync(model, addressAttribute, null, true);
-            
+
             //if we got this far, something failed, redisplay form
             return View(model);
         }

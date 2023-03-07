@@ -8,7 +8,7 @@ namespace Nop.Services.Attributes
     public static partial class NopAttributeDefaults
     {
         #region Caching defaults
-        
+
         /// <summary>
         /// Gets a key for caching attribute values of the attribute
         /// </summary>

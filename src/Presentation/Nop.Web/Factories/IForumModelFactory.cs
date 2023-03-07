@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Forums;
+﻿using Nop.Core.Domain.Forums;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Factories

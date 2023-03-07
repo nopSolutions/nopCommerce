@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Caching
 {
@@ -31,7 +29,7 @@ namespace Nop.Core.Caching
         {
             _keys.Remove(key);
         }
-        
+
         /// <summary>
         /// Remove all keys
         /// </summary>
