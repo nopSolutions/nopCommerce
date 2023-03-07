@@ -152,11 +152,17 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         }
 
         [Test]
-        public void ThrowsException()
+        public async Task SholThrowsExceptionButNotCacheIt()
         {
+            var cacheKey = new CacheKey("some_key_1");
+
             Assert.ThrowsAsync<ApplicationException>(() => _staticCacheManager.GetAsync(
-                new CacheKey("some_key_1"),
+                cacheKey,
                 Task<object> () => throw new ApplicationException()));
+
+            //should not cache exception
+            var rez = await _staticCacheManager.GetAsync(cacheKey, Task<object> () => Task.FromResult((object)1));
+            rez.Should().Be(1);
         }
 
         [Test]
