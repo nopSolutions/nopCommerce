@@ -9,9 +9,6 @@ namespace Nop.Plugin.Payments.Iyzico.Models
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.Iyzico.Fields.UseToPaymentPopup")]
-        public bool UseToPaymentPopup { get; set; }
-        public bool UseToPaymentPopup_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Iyzico.Fields.ApiKey")]
         public string ApiKey { get; set; }

@@ -18,12 +18,11 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <param name="Status">Iyzico payment status</param>
         /// <param name="errorMessage">Iyzico pending reason</param>
         /// <returns>Payment status</returns>
-        public static PaymentStatus GetPaymentStatus(string status, string paymentStatus)
+        public static PaymentStatus GetPaymentStatus(string paymentStatus)
         {
             var result = PaymentStatus.Pending;
 
-            if (status == "success")
-            {
+            
                 switch (paymentStatus.ToLowerInvariant())
                 {
                     case "success":
@@ -33,7 +32,8 @@ namespace Nop.Plugin.Payments.Iyzico
                         result = PaymentStatus.Voided;
                         break;
                 }
-            }
+            
+            
 
             return result;
         }

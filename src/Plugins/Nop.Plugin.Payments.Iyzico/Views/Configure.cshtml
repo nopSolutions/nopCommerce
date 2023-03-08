@@ -108,16 +108,6 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="UseToPaymentPopup_OverrideForStore" asp-input="UseToPaymentPopup" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="UseToPaymentPopup" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="UseToPaymentPopup" />
-                        <span asp-validation-for="UseToPaymentPopup"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
                         <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>

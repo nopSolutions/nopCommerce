@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Iyzipay;
 using Iyzipay.Model;
+using Iyzipay.Model.V2.Transaction;
 using Iyzipay.Request;
+using Iyzipay.Request.V2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -111,7 +113,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         #region Methods
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<IActionResult> PaymentConfirm(string orderGuid)
+        public async Task<IActionResult> PaymentConfirm(string orderGuid,Payment result)
         {
             //validation
             if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_orderSettings.AnonymousCheckoutAllowed)
@@ -133,22 +135,37 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
             if (order != null)
             {
-                RetrieveCheckoutFormRequest request = new()
-                {
-                    ConversationId = order.CaptureTransactionId,
-                    Token = order.CaptureTransactionResult
-                };
+                //RetrieveCheckoutFormRequest request = new()
+                //{
+                //    ConversationId = order.CaptureTransactionId,
+                //    Token = order.CaptureTransactionResult
+                //};
 
-                CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                //RetrievePaymentRequest request = new()
+                //{
+                //    ConversationId = order.CaptureTransactionId,
+                //    PaymentId = order.AuthorizationTransactionId
+                //};
 
+
+                //RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
+                //{
+                //    ConversationId = order.CaptureTransactionId,
+                //    PaymentId = order.AuthorizationTransactionId
+                //};
+
+                //TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+                // CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+               // var checkoutForm = transactionDetail.Payments.First();
                 List<string> errorStr = new();
 
-                if (string.IsNullOrEmpty(checkoutForm.ErrorMessage) == false)
-                {
-                    errorStr.Add(checkoutForm.ErrorMessage);
-                }
-
-                order.PaymentStatus = IyzicoHelper.GetPaymentStatus(checkoutForm.Status, checkoutForm.PaymentStatus);
+                //if (string.IsNullOrEmpty(transactionDetail.ErrorMessage) == false)
+                //{
+                //    errorStr.Add(transactionDetail.ErrorMessage);
+                //}
+               
+               order.PaymentStatus = IyzicoHelper.GetPaymentStatus(result.PaymentStatus);
 
                 switch (order.PaymentStatus)
                 {
@@ -168,22 +185,26 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                         if (_iyzicoPaymentSettings.IsCardStorage)
                         {
                             order.OrderStatus = OrderStatus.Processing;
-                            order.CardNumber = _encryptionService.EncryptText($"{checkoutForm.BinNumber}******{checkoutForm.LastFourDigits}");
-                            order.CardType = _encryptionService.EncryptText(checkoutForm.CardAssociation.Replace("_", " "));
-                            order.CardName = _encryptionService.EncryptText(checkoutForm.CardFamily);
+                            order.CardNumber = _encryptionService.EncryptText($"{result.BinNumber}******{result.LastFourDigits}");
+                            if (order.CustomerCurrencyCode=="TRY")
+                            {
+                                order.CardType = _encryptionService.EncryptText(result.CardAssociation.Replace("_", " "));
+                                order.CardName = _encryptionService.EncryptText(result.CardFamily);
+                            }
+
                         }
 
                         await _orderService.UpdateOrderAsync(order);
 
                         List<string> PaymentInformation = new()
                         {
-                            $"Iyzico Ödeme Id :  {checkoutForm.PaymentId}",
-                            $"Tahsilat Tutarı :  {checkoutForm.PaidPrice:C2}",
-                            $"İşlem Ücreti :  {checkoutForm.IyziCommissionRateAmount:C2}",
-                            $"Komisyon Ücreti :  {checkoutForm.IyziCommissionFee:C2}"
+                            $"Iyzico Ödeme Id :  {result.PaymentId}",
+                            $"Tahsilat Tutarı :  {result.PaidPrice:C2}",
+                            $"İşlem Ücreti :  {result.IyziCommissionRateAmount:C2}",
+                            $"Komisyon Ücreti :  {result.IyziCommissionFee:C2}"
                         };
 
-                        checkoutForm.PaymentItems.ForEach((item) =>
+                        result.PaymentItems.ForEach((item) =>
                         {
                             PaymentInformation.Add($"Ürün Id: {item.ItemId} - Ürün Tutarı : {item.PaidPrice} - İşlem Kimliği : {item.PaymentTransactionId}");
                         });
@@ -212,9 +233,9 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             await _orderProcessingService.VoidOfflineAsync(order);
 
                         await MoveShoppingCartItemsToOrderItemsAsync(order);
-                        order.OrderStatus = OrderStatus.Cancelled;
+                        //order.OrderStatus = OrderStatus.Cancelled;
 
-                        errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
+                       // errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
 
                         break;
                 }
@@ -222,7 +243,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 await _orderService.UpdateOrderAsync(order);
 
                 //sadece 1 olan işlemlerde ürünü kargoya vermelidir, 0 olan işlemler için bilgilendirme beklemelidir.
-                switch (checkoutForm.FraudStatus)
+                switch (result.FraudStatus)
                 {
                     case -1://fraud risk skoru yüksek ise ödeme işlemi reddedilir ve -1 döner. 
                         errorStr.Add($"Iyzico: İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş # {order.Id}.");
@@ -289,7 +310,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             quantity: item.Quantity);
                     });
 
-                    await DeleteOrderAsync(order);
+                  //  await DeleteOrderAsync(order);
                 }
             }
         }

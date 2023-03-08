@@ -21,6 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinqToDB.Common;
+using Nop.Plugin.Payments.Iyzico.Models;
+using Nop.Plugin.Payments.Iyzico.Validators;
 using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 
@@ -105,15 +108,6 @@ namespace Nop.Plugin.Payments.Iyzico
             _categoryService = categoryService;
             _logger = logger;
             _scheduleTaskService = scheduleTaskService;
-
-            if (_iyzicoPaymentSettings.UseToPaymentPopup)
-            {
-                PaymentMethodType = PaymentMethodType.Standard;
-            }
-            else
-            {
-                PaymentMethodType = PaymentMethodType.Redirection;
-            }
         }
 
         #endregion
@@ -153,22 +147,68 @@ namespace Nop.Plugin.Payments.Iyzico
             var shoppingCartUnitPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartSubTotal.subTotalWithDiscount, currency);
             var shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTotal.shoppingCartTotal.Value, currency);
 
-            CreateCheckoutFormInitializeRequest request = new()
+            //Taksit seçeneği seçili ise Taksit özelliğini aktif et
+            bool enableInstallment = false;
+            if (_iyzicoPaymentSettings.InstallmentNumbers.IsNullOrEmpty())
             {
-                Locale = Locale.TR.ToString(),
+                enableInstallment = false;
+            }
+            else
+            {
+                if (currency.CurrencyCode=="TRY")
+                {
+                    enableInstallment = true;
+                }
+             
+            }
+
+            //Checkout form için
+            //CreateCheckoutFormInitializeRequest request = new()
+            //{
+            //    Locale = Locale.TR.ToString(),
+            //    ConversationId = processPaymentRequest.OrderGuid.ToString(),
+            //    Price = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithoutDiscount),
+            //    PaidPrice = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithDiscount),
+            //    Currency = currency.CurrencyCode,
+            //    BasketId = processPaymentRequest.OrderGuid.ToString(),
+            //    PaymentGroup = PaymentGroup.PRODUCT.ToString(),
+            //    CallbackUrl = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}",
+            //    Buyer = await _paymentIyzicoService.GetBuyer(processPaymentRequest.CustomerId),
+            //    BasketItems = await GetBasketItems(customer, processPaymentRequest.StoreId),
+            //    BillingAddress = await _paymentIyzicoService.GetAddress(billingAddress),
+            //    ShippingAddress = await _paymentIyzicoService.GetAddress(shippingAddress),
+            //    EnabledInstallments = _iyzicoPaymentSettings.InstallmentNumbers
+            //};
+
+            //Kendi Formumuz için
+            CreatePaymentRequest request = new()
+            {
+                Locale = Locale.EN.ToString(),
                 ConversationId = processPaymentRequest.OrderGuid.ToString(),
                 Price = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithoutDiscount),
                 PaidPrice = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithDiscount),
                 Currency = currency.CurrencyCode,
                 BasketId = processPaymentRequest.OrderGuid.ToString(),
                 PaymentGroup = PaymentGroup.PRODUCT.ToString(),
-                CallbackUrl = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}",
                 Buyer = await _paymentIyzicoService.GetBuyer(processPaymentRequest.CustomerId),
                 BasketItems = await GetBasketItems(customer, processPaymentRequest.StoreId),
                 BillingAddress = await _paymentIyzicoService.GetAddress(billingAddress),
                 ShippingAddress = await _paymentIyzicoService.GetAddress(shippingAddress),
-                EnabledInstallments = _iyzicoPaymentSettings.InstallmentNumbers
+                PaymentChannel = "WEB"
             };
+            
+            PaymentCard paymentCard = new PaymentCard();
+            paymentCard.CardHolderName = processPaymentRequest.CreditCardName.ToString();
+            paymentCard.CardNumber = processPaymentRequest.CreditCardNumber.ToString();
+            paymentCard.ExpireMonth = processPaymentRequest.CreditCardExpireMonth.ToString();
+            paymentCard.ExpireYear = processPaymentRequest.CreditCardExpireYear.ToString();
+            paymentCard.Cvc = processPaymentRequest.CreditCardCvv2;
+            request.PaymentCard= paymentCard;
+            if (enableInstallment)
+            {
+                request.Installment = (from l in _iyzicoPaymentSettings.InstallmentNumbers select l).Max();
+
+            }
 
             if (string.IsNullOrEmpty(request.Buyer.Name))
             {
@@ -181,7 +221,11 @@ namespace Nop.Plugin.Payments.Iyzico
                 request.Buyer.Email = shippingAddress.Email;
             }
 
-            CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+            //Checkout form için sonuç
+            // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+            var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
 
             var result = new ProcessPaymentResult
             {
@@ -195,24 +239,26 @@ namespace Nop.Plugin.Payments.Iyzico
             else
             {
                 result.CaptureTransactionId = payment.ConversationId;
-                result.CaptureTransactionResult = payment.Token;
+                result.AuthorizationTransactionId=payment.PaymentId;
+                result.CaptureTransactionResult = payment.Status;
 
                 _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
 
                 _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
 
-                string paymentPage;
+                //string paymentPage;
 
-                if (_iyzicoPaymentSettings.UseToPaymentPopup)
-                {
-                    paymentPage = payment.CheckoutFormContent;
-                }
-                else
-                {
-                    paymentPage = payment.PaymentPageUrl;
-                }
+                //if (_iyzicoPaymentSettings.UseToPaymentPopup)
+                //{
+                //    paymentPage = payment.CheckoutFormContent;
+                //}
+                //else
+                //{
+                //    paymentPage = payment.PaymentPageUrl;
+                //}
 
-                _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+                //_httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+
             }
 
             return await Task.FromResult(result);
@@ -279,14 +325,14 @@ namespace Nop.Plugin.Payments.Iyzico
             {
                 _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
 
-                if (_iyzicoPaymentSettings.UseToPaymentPopup)
-                {
-                    _httpContextAccessor.HttpContext.Response.WriteAsync(paymentPage);
-                }
-                else
-                {
-                    _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
-                }
+                //if (_iyzicoPaymentSettings.UseToPaymentPopup)
+                //{
+                //    _httpContextAccessor.HttpContext.Response.WriteAsync(paymentPage);
+                //}
+                //else
+                //{
+                //    _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
+                //}
             }
             else
             {
@@ -417,7 +463,28 @@ namespace Nop.Plugin.Payments.Iyzico
         /// </returns>
         public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
-            return Task.FromResult<IList<string>>(new List<string>());
+            var warnings = Task.FromResult<IList<string>>(new List<string>());
+
+            //validate
+            var validator = new PaymentInfoValidator(this._localizationService);
+            var model = new PaymentInfoModel
+            {
+                CardholderName = form["CardholderName"],
+                CardNumber = form["CardNumber"],
+                CardCode = form["CardCode"],
+                ExpireMonth = form["ExpireMonth"],
+                ExpireYear = form["ExpireYear"]
+            };
+            var validationResult = validator.Validate(model);
+            if (!validationResult.IsValid)
+            {
+                var result = new List<string>();
+                result.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
+                warnings = Task.FromResult<IList<string>>(result);
+            }
+
+
+            return warnings;
         }
 
         /// <summary>
@@ -430,7 +497,15 @@ namespace Nop.Plugin.Payments.Iyzico
         /// </returns>
         public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
-            return Task.FromResult(new ProcessPaymentRequest());
+            return Task.FromResult(new ProcessPaymentRequest()
+            {
+                CreditCardType = form["CreditCardType"],
+                CreditCardName = form["CardholderName"],
+                CreditCardNumber = form["CardNumber"],
+                CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
+                CreditCardExpireYear = int.Parse(form["ExpireYear"]),
+                CreditCardCvv2 = form["CardCode"]
+            });
         }
 
         /// <summary>
@@ -551,7 +626,7 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType { get; set; } = PaymentMethodType.Redirection;
+        public PaymentMethodType PaymentMethodType { get; set; } = PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin

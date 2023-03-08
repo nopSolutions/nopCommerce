@@ -11,7 +11,7 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <summary>
         /// 
         /// </summary>
-        public bool UseToPaymentPopup { get; set; }
+     
 
         /// <summary>
         /// 
