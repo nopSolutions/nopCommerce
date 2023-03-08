@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Caching
 {
