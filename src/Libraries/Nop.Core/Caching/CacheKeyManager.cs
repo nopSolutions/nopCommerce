@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Caching
 {
@@ -12,7 +12,7 @@ namespace Nop.Core.Caching
     /// </remarks>
     public partial class CacheKeyManager : ICacheKeyManager
     {
-        protected readonly ConcurrentTrie<byte> _keys = new();
+        protected readonly ConcurrentDictionary<string, byte> _keys = new();
 
         /// <summary>
         /// Add the key
@@ -20,7 +20,7 @@ namespace Nop.Core.Caching
         /// <param name="key">The key to add</param>
         public void AddKey(string key)
         {
-            _keys.Add(key, default);
+            _keys[key] = default;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Nop.Core.Caching
         /// <param name="key">The key to remove</param>
         public void RemoveKey(string key)
         {
-            _keys.Remove(key);
+            _keys.Remove(key, out _);
         }
         
         /// <summary>
@@ -47,10 +47,11 @@ namespace Nop.Core.Caching
         /// <returns>The list of removed keys</returns>
         public IEnumerable<string> RemoveByPrefix(string prefix)
         {
-            if (!_keys.Prune(prefix, out var subtree) || subtree?.Keys == null)
-                return Enumerable.Empty<string>();
-
-            return subtree.Keys;
+            foreach (var key in _keys.Keys.Where(k => k.StartsWith(prefix)))
+            {
+                _keys.Remove(key, out _);
+                yield return key;
+            }
         }
 
         /// <summary>

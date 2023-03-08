@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Core.Tests.Caching

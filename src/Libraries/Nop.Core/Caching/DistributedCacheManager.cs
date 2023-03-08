@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ namespace Nop.Core.Caching
         /// </summary>
         protected readonly ICacheKeyManager _localKeyManager;
         protected readonly IDistributedCache _distributedCache;
-        protected readonly ConcurrentTrie<object> _perRequestCache = new();
+        protected readonly ConcurrentDictionary<string, object> _perRequestCache = new();
 
         /// <summary>
         /// Holds ongoing acquisition tasks, used to avoid duplicating work
@@ -64,7 +65,9 @@ namespace Nop.Core.Caching
         protected IEnumerable<string> RemoveByPrefixInstanceData(string prefix, params object[] prefixParameters)
         {
             var keyPrefix = PrepareKeyPrefix(prefix, prefixParameters);
-            _perRequestCache.Prune(keyPrefix, out _);
+            
+            foreach (var key in _perRequestCache.Keys.Where(k => k.StartsWith(keyPrefix)))
+                _perRequestCache.Remove(key, out _);
 
             return _localKeyManager.RemoveByPrefix(keyPrefix);
         }
@@ -90,7 +93,7 @@ namespace Nop.Core.Caching
         /// <param name="value">Value for caching</param>
         protected void SetLocal(string key, object value)
         {
-            _perRequestCache.Add(key, value);
+            _perRequestCache[key] = value;
             _localKeyManager.AddKey(key);
         }
 
@@ -100,7 +103,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         protected void RemoveLocal(string key)
         {
-            _perRequestCache.Remove(key);
+            _perRequestCache.Remove(key, out _);
             _localKeyManager.RemoveKey(key);
         }
 
