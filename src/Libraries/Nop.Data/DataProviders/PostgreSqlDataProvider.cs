@@ -252,7 +252,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = dataContext.InsertWithInt32Identity(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 dataContext.Insert(entity);
             }
@@ -277,7 +277,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 await dataContext.InsertAsync(entity);
             }
