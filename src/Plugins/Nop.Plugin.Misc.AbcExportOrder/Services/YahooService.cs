@@ -153,7 +153,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 if (hasDeliveryOptions)
                 {
                     var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
-                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old Appliance"));
+                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old "));
                     var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
                     var priceAdjustment = haulawayPav != null ?
                         haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
@@ -193,7 +193,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 if (hasDeliveryOptions)
                 {
                     var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
-                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old Appliance"));
+                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old "));
                     var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
                     var priceAdjustment = haulawayPav != null ?
                         haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :

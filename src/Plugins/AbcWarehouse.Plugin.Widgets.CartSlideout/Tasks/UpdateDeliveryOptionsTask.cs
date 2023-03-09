@@ -159,7 +159,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 var newPav = new ProductAttributeValue()
                 {
                     ProductAttributeMappingId = resultPam.Id,
-                    Name = string.Format("Remove Old Appliance ({0})", priceFormatted),
+                    Name = await GetHaulawayMessageAsync(priceFormatted, productId),
                     Cost = mapItemNumber,
                     PriceAdjustment = price,
                     IsPreSelected = false,
@@ -343,6 +343,23 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
 
             return string.Format("Home Delivery ({0}, FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
+        }
+
+        private async System.Threading.Tasks.Task<string> GetHaulawayMessageAsync(string price, int productId)
+        {
+            // If TV, change messaging
+            var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
+            foreach (var pc in productCategories)
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(pc.CategoryId);
+                var fullCategoryListNames = (await _categoryService.GetCategoryBreadCrumbAsync(category)).Select(c => c.Name);
+                if (fullCategoryListNames.Contains("TV - Video"))
+                {
+                    return string.Format("Remove Old Television ({0})", price);
+                }
+            }
+
+            return string.Format("Remove Old Appliance ({0})", price);
         }
     }
 }
