@@ -36,6 +36,9 @@ namespace Nop.Plugin.Payments.Iyzico.Components
                     new SelectListItem { Text = "Visa", Value = "visa" },
                     new SelectListItem { Text = "Master card", Value = "MasterCard" },
                     new SelectListItem { Text = "Amex", Value = "Amex" },
+                    new SelectListItem { Text = "Discover", Value = "Discover" },
+                    new SelectListItem { Text = "Diners Club", Value = "Diners Club" },
+                    new SelectListItem { Text = "JCB", Value = "JCB" }
                 }
             };
 
@@ -67,6 +70,22 @@ namespace Nop.Plugin.Payments.Iyzico.Components
                 var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
                 if (selectedYear != null)
                     selectedYear.Selected = true;
+
+                if (selectedCcType != null)
+                {
+                    if (selectedCcType.Selected)
+                    {
+                        if (selectedCcType.Text == "AMEX")
+                        {
+
+                        }
+                    }
+                }
+
+                //if (form["CreditCardType"])
+                //{
+
+                //}
             }
 
             return View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);

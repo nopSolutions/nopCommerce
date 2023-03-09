@@ -1,6 +1,7 @@
 ﻿@using Nop.Plugin.Payments.Iyzico
 @using Nop.Web.Framework.TagHelpers.Shared
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Services.Directory
 @model Nop.Plugin.Payments.Iyzico.Models.PaymentInfoModel
 @{
 	Layout = "";
@@ -8,6 +9,8 @@
 
 @inject IyzicoPaymentSettings stripePaymentSettings
 @inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+@inject Nop.Core.IWebHelper webHelper
+@inject ICurrencyService currencyService
 
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
     <tr>
@@ -15,7 +18,7 @@
             <label asp-for="CreditCardTypes">@T("Payment.SelectCreditCard"):</label>
         </td>
         <td>
-            <select asp-for="CreditCardType" asp-items="Model.CreditCardTypes" class="dropdownlists"></select>
+            <select name="CreditCardType" id="CreditCardType" data="" asp-for="CreditCardType" asp-items="Model.CreditCardTypes" class="dropdownlists"></select>
         </td>
     </tr>
     <tr>
@@ -66,6 +69,56 @@
             console.log(Stripe.card.validateCardNumber($(this).val()));
         })*@
     });
+  
+    $(function () {
+     
+        $("#CreditCardType").change(function () {
+            console.log("Card type Changed");
+            $("#CreditCardType").find("data").html = this.value;
+            console.log(this.value);
+            var t = $("input[name='__RequestVerificationToken']").val();
+            var customerCurrencyX=0;
+            if (this.value == "Amex") 
+            {
+                console.log("TRY currency");
+               @{
+                                   var returnUrl = webHelper.GetRawUrl(Context.Request);
+                   var customercurrency = @currencyService.GetCurrencyByCodeAsync("TRY").Result.Id;
+                   Url.Action("SetCurrency", "Common", new { customercurrency, returnUrl});
+
+               }
+               
+
+                    $.ajax({
+                        url: '@Url.Action("SetCurrency","Common",   new { customerCurrency = customercurrency })',
+                        type: 'POST',
+                        headers:
+                        {
+                            "RequestVerificationToken": t
+                        },                       
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+
+                            console.log("success");
+                            console.log(data);
+
+                        },
+                        error: function (xhr, resp, text) {
+                            console.log(xhr, resp, text);
+                        },
+                        complete: function () {
+                            console.log("complate");
+
+                        }
+                    });
+               // console.log(formData);
+                var result="";
+              
+            }
+        });
+
+        });
 </script>
 
 @*@if (!Model.IsGuest && Model.StoredCards.Any())
