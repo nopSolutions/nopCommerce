@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Copyright>Copyright © Silver Bilgi Teknolojileri</Copyright>
-    <Company>Silver BT, Ltd</Company>
-    <Authors>Gökhan SEVİM</Authors>
+    <Copyright>Genius Software</Copyright>
+    <Company>Genius Software</Company>
+    <Authors>Genius Software</Authors>
     <PackageLicenseUrl>https://github.com/GokhanSevim/Nop.Plugin.Payments.Iyzico/blob/main/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://download.silverteknoloji.com.tr/nopcommerce/v440/Payments.Iyzico.zip</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GokhanSevim/Nop.Plugin.Payments.Iyzico</RepositoryUrl>
