@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -542,7 +542,7 @@ namespace Nop.Services.Media.RoxyFileman
             var sourceFile = GetFileInfo(sourcePath);
 
             if (!sourceFile.Exists)
-                throw new RoxyFilemanException("E_CopyFileInvalisPath");
+                throw new RoxyFilemanException("E_CopyFileInvalidPath");
 
             var newFilePath = Path.Combine(destinationPath, sourceFile.Name);
             var destinationFile = GetFileInfo(newFilePath);
