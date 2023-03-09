@@ -455,7 +455,7 @@
             {
                 <button type="button"
                         class="button-2 product-box-add-to-cart-button"
-                        onclick="addCartItemAsync(@Model.Id)"><span>Delivery</span></button>
+                        onclick="addCartItemAsync(@Model.Id)"><span>@T("ShoppingCart.AddToCart").Text</span></button>
             }
             @* end custom *@
             else if (!Model.ProductPrice.DisableBuyButton)

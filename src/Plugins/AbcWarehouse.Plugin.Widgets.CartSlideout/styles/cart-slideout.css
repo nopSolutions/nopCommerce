@@ -185,6 +185,7 @@ i.warranty-info {
     background-color: lightgray;
     color: block;
     border: 2px solid #e1e1e1;
+    cursor: not-allowed;
 }
 
 .cart-slideout__buttons input.secondary {
@@ -203,17 +204,17 @@ i.warranty-info {
     font-size: 0.75rem;
     display: block;
     margin-left: auto;
+    background-color: #176440;
+    color: white;
+    border: 2px solid #176440;
 }
 
 .cart-slideout__check-delivery-options__btn:disabled {
     opacity: 0.25;
     cursor: not-allowed;
-}
-
-.cart-slideout__continue__btn {
-    font-size: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    background-color: transparent;
+    color: #4f4f4f;
+    border: 2px solid #e1e1e1;
 }
 
 .cart-slideout__delivery-not-available {
