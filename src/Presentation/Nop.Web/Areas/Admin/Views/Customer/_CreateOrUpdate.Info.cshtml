@@ -311,11 +311,7 @@
                 </div>
                 <script>
                 $(document).ready(function() {
-                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').data("kendoMultiSelect");
-                    newsletterSubscriptionStoreIdsInput.setOptions({
-                        newsletterSubscriptionStoreIdsInput: false,
-                        filter: "contains"
-                    });
+                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').select2();
                 });
                 </script>
             </div>
@@ -337,23 +333,16 @@
             </div>
             <script>
                 $(document).ready(function() {
-                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                    customerRoleIdsInput.setOptions({
-                        customerRoleIdsInput: false,
-                        filter: "contains"
-                    });
-
-                    @if (Model.AvailableCustomerRoles.Count == 0)
-                    {
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableCustomerRoles.Any())
+                        {
                         <text>
-                            customerRoleIdsInput.setOptions({
-                                enable: false,
-                                placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
-                            });
-                            customerRoleIdsInput._placeholder();
-                            customerRoleIdsInput._enable();
+                        disabled: true,
+                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")',
                         </text>
-                    }
+                        }
+                    });
                 });
             </script>
         </div>
