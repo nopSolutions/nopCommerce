@@ -8,6 +8,7 @@ using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.PrivateMessages;
 
@@ -263,6 +264,18 @@ namespace Nop.Web.Factories
             };
 
             return model;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// record that has a slug and page for route values. Used for Private Messages pagination
+        /// </summary>
+        public partial record PrivateMessageRouteValues : BaseRouteValues
+        {
+            public string Tab { get; set; }
         }
 
         #endregion

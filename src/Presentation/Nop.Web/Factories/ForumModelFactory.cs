@@ -17,6 +17,7 @@ using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
@@ -1069,6 +1070,36 @@ namespace Nop.Web.Factories
             };
 
             return forumModel;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
+        /// </summary>
+        public partial record ForumSubscriptionsRouteValues : BaseRouteValues
+        {
+        }
+
+        /// <summary>
+        /// record that has search options for route values. Used for Search result pagination
+        /// </summary>
+        public partial record ForumSearchRouteValues : BaseRouteValues
+        {
+            public string Searchterms { get; set; }
+            public string Advs { get; set; }
+            public string ForumId { get; set; }
+            public string Within { get; set; }
+            public string LimitDays { get; set; }
+        }
+
+        /// <summary>
+        /// record that has only page for route value. Used for Active Discussions (forums) pagination
+        /// </summary>
+        public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion

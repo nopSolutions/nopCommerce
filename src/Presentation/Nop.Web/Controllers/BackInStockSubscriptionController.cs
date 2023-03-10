@@ -11,6 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 
@@ -232,6 +233,17 @@ namespace Nop.Web.Controllers
             }
 
             return RedirectToRoute("CustomerBackInStockSubscriptions");
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
+        /// </summary>
+        public partial record BackInStockSubscriptionsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion

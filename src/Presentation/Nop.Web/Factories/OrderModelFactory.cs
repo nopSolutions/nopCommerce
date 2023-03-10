@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -24,6 +24,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Vendors;
+using Nop.Web.Infrastructure;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
@@ -737,6 +738,17 @@ namespace Nop.Web.Factories
             model.MinimumRewardPointsAmount = await _priceFormatter.FormatPriceAsync(minimumRewardPointsAmount, true, false);
 
             return model;
+        }
+
+        #endregion
+
+        #region nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Reward Points pagination
+        /// </summary>
+        public partial record RewardPointsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion
