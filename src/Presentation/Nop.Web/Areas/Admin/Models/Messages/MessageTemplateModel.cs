@@ -52,6 +52,9 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         public int DelayPeriodId { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply")]
+        public bool AllowDirectReply { get; set; }
+
         public bool HasAttachedDownload { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload")]
         [UIHint("Download")]
