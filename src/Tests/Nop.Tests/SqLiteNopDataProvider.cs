@@ -319,6 +319,21 @@ namespace Nop.Tests
         }
 
         /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type and returns a result containing multiple result sets.
+        /// Saves result values for output and reference parameters to corresponding LinqToDB.Data.DataParameter object.
+        /// </summary>
+        /// <typeparam name="T">Result set type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns result</returns>
+        public override Task<T> QueryProcMultipleAsync<T>(string procedureName, params DataParameter[] parameters)
+            where T : class
+        {
+            //stored procedure is not support by SqLite
+            return Task.FromResult<T>((T)Activator.CreateInstance(typeof(T)));
+        }
+
+        /// <summary>
         /// Executes SQL command and returns results as collection of values of specified type
         /// </summary>
         /// <typeparam name="T">Type of result items</typeparam>

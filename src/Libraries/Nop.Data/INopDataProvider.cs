@@ -280,6 +280,20 @@ namespace Nop.Data
         Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type and returns a result containing multiple result sets.
+        /// Saves result values for output and reference parameters to corresponding LinqToDB.Data.DataParameter object.
+        /// </summary>
+        /// <typeparam name="T">Result set type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns result
+        /// </returns>
+        Task<T> QueryProcMultipleAsync<T>(string procedureName, params DataParameter[] parameters)
+            where T : class;
+
+        /// <summary>
         /// Executes command and returns results as collection of values of specified type
         /// </summary>
         /// <typeparam name="T">Result record type</typeparam>
