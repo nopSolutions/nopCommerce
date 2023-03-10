@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents an information about assembly which loaded by plugins
@@ -36,7 +32,7 @@ namespace Nop.Services.Plugins
         /// Gets the short assembly name
         /// </summary>
         public string ShortName { get; }
-        
+
         /// <summary>
         /// Gets a list of all mentioned plugin-assembly pairs
         /// </summary>

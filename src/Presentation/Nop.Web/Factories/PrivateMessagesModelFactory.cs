@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Customers;
@@ -127,7 +124,7 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
                 0, customer.Id, null, null, false, string.Empty, page, pageSize);
-            
+
             foreach (var pm in list)
                 messages.Add(await PreparePrivateMessageModelAsync(pm));
 

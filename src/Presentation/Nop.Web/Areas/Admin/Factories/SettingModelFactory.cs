@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -812,7 +808,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeId);
-            
+
             model ??= new RobotsTxtSettingsModel
             {
                 AllowSitemapXml = robotsTxtSettings.AllowSitemapXml,

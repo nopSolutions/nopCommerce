@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Nop.Core.Caching
+﻿namespace Nop.Core.Caching
 {
     public interface ILocker
     {

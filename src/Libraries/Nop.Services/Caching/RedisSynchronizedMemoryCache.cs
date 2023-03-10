@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Nop.Core.Caching;
@@ -101,9 +97,9 @@ namespace Nop.Services.Caching
         {
             var stringKey = key.ToString();
 
-            if (_timer == null) 
+            if (_timer == null)
                 BatchPublishChangeEvents(stringKey);
-            else 
+            else
                 _messageQueue.Enqueue(stringKey);
         }
 

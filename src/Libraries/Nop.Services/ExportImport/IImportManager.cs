@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace Nop.Services.ExportImport
+﻿namespace Nop.Services.ExportImport
 {
     /// <summary>
     /// Import manager interface

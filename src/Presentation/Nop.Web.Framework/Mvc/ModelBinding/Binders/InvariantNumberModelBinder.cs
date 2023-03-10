@@ -1,7 +1,5 @@
-using System;
 using System.Globalization;
 using System.Numerics;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding.Binders

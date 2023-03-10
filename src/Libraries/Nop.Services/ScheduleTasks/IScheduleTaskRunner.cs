@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.ScheduleTasks;
+﻿using Nop.Core.Domain.ScheduleTasks;
 
 namespace Nop.Services.ScheduleTasks
 {

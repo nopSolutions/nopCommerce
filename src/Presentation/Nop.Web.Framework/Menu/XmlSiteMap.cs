@@ -1,10 +1,6 @@
 ﻿//code from Telerik MVC Extensions
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
@@ -82,7 +78,7 @@ namespace Nop.Web.Framework.Menu
                 //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
                 siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
             }
-            else if (!string.IsNullOrEmpty(url)) 
+            else if (!string.IsNullOrEmpty(url))
                 siteMapNode.Url = url;
 
             //image URL
@@ -98,7 +94,7 @@ namespace Nop.Web.Framework.Menu
 
             // Open URL in new tab
             var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult)) 
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult))
                 siteMapNode.OpenUrlInNewTab = booleanResult;
         }
 
@@ -110,7 +106,7 @@ namespace Nop.Web.Framework.Menu
             {
                 var attribute = node.Attributes[attributeName];
 
-                if (attribute != null) 
+                if (attribute != null)
                     value = attribute.Value;
             }
 
@@ -118,7 +114,7 @@ namespace Nop.Web.Framework.Menu
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>

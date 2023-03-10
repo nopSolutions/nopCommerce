@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Nop.Services.Themes
+﻿namespace Nop.Services.Themes
 {
     /// <summary>
     /// Represents a theme provider

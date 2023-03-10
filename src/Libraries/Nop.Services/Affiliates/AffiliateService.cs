@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
@@ -127,15 +124,15 @@ namespace Nop.Services.Affiliates
 
                 if (!string.IsNullOrWhiteSpace(firstName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                        where addr.FirstName.Contains(firstName)
-                        select aff;
+                            join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                            where addr.FirstName.Contains(firstName)
+                            select aff;
 
                 if (!string.IsNullOrWhiteSpace(lastName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                        where addr.LastName.Contains(lastName)
-                        select aff;
+                            join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                            where addr.LastName.Contains(lastName)
+                            select aff;
 
                 if (!showHidden)
                     query = query.Where(a => a.Active);
@@ -151,8 +148,8 @@ namespace Nop.Services.Affiliates
                     ordersQuery = ordersQuery.Where(o => !o.Deleted);
 
                     query = from a in query
-                        join o in ordersQuery on a.Id equals o.AffiliateId
-                        select a;
+                            join o in ordersQuery on a.Id equals o.AffiliateId
+                            select a;
                 }
 
                 query = query.Distinct().OrderByDescending(a => a.Id);

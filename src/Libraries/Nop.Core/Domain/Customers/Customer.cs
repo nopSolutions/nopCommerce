@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
@@ -255,7 +254,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public TaxDisplayType? TaxDisplayType
         {
-            get => TaxDisplayTypeId.HasValue ?(TaxDisplayType)TaxDisplayTypeId : null;
+            get => TaxDisplayTypeId.HasValue ? (TaxDisplayType)TaxDisplayTypeId : null;
             set => TaxDisplayTypeId = value.HasValue ? (int)value : null;
         }
 

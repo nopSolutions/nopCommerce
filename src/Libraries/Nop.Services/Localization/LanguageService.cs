@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
@@ -54,12 +50,12 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            
+
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
                 foreach (var activeLanguage in await GetAllLanguagesAsync())
                 {
-                    if (activeLanguage.Id == language.Id) 
+                    if (activeLanguage.Id == language.Id)
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
@@ -83,7 +79,7 @@ namespace Nop.Services.Localization
         {
             //cacheable copy
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
-            
+
             var languages = await _staticCacheManager.GetAsync(key, async () =>
             {
                 var allLanguages = await _languageRepository.GetAllAsync(query =>

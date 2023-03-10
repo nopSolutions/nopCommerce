@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents base DataTables model
@@ -173,7 +171,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or set column collection 
         /// </summary>
         public IList<ColumnProperty> ColumnCollection { get; set; }
-        
+
         #endregion
     }
 }

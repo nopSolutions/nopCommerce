@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Catalog
@@ -73,7 +72,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the price
         /// </returns>
-        Task<string> FormatOrderPriceAsync(decimal price, 
+        Task<string> FormatOrderPriceAsync(decimal price,
             decimal currencyRate, string customerCurrencyCode, bool displayCustomerCurrency,
             Currency primaryStoreCurrency, int languageId, bool? priceIncludesTax = null, bool? showTax = null);
 

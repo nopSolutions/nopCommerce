@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -206,7 +202,7 @@ namespace Nop.Services.Discounts
                 query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
                 return query;
-            }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey, 
+            }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey,
                 showHidden, couponCode ?? string.Empty, discountName ?? string.Empty, isActive)))
             .AsQueryable();
 
@@ -241,13 +237,13 @@ namespace Nop.Services.Discounts
 
             var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
 
-            var appliedDiscounts= await _staticCacheManager.GetAsync(cacheKey,
+            var appliedDiscounts = await _staticCacheManager.GetAsync(cacheKey,
                 async () =>
                 {
                     return await (from d in _discountRepository.Table
-                        join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
-                        where ad.EntityId == entity.Id
-                        select d).ToListAsync();
+                                  join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
+                                  where ad.EntityId == entity.Id
+                                  select d).ToListAsync();
                 });
 
             return appliedDiscounts;
@@ -276,7 +272,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Discounts (caching)
-        
+
         /// <summary>
         /// Gets the discount amount for the specified value
         /// </summary>
@@ -470,7 +466,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-        
+
         /// <summary>
         /// Validate discount
         /// </summary>
@@ -489,7 +485,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(customer));
 
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
-            
+
             return await ValidateDiscountAsync(discount, customer, couponCodesToValidate);
         }
 
@@ -544,10 +540,10 @@ namespace Nop.Services.Discounts
                     ShoppingCartType.ShoppingCart, storeId: store.Id);
 
                 var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
-                
+
                 if (await _productService.HasAnyGiftCardProductAsync(cartProductIds))
                 {
-                    result.Errors = new List<string> {await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
+                    result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
                     return result;
                 }
             }
@@ -559,7 +555,7 @@ namespace Nop.Services.Discounts
                 var startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
                 {
-                    result.Errors = new List<string> {await _localizationService.GetResourceAsync("ShoppingCart.Discount.NotStartedYet") };
+                    result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.NotStartedYet") };
                     return result;
                 }
             }
@@ -569,7 +565,7 @@ namespace Nop.Services.Discounts
                 var endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
                 {
-                    result.Errors = new List<string> {await _localizationService.GetResourceAsync("ShoppingCart.Discount.Expired") };
+                    result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.Expired") };
                     return result;
                 }
             }
@@ -592,8 +588,8 @@ namespace Nop.Services.Discounts
                             var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, customer.Id, null, false, 0, 1)).TotalCount;
                             if (usedTimes >= discount.LimitationTimes)
                             {
-                                result.Errors = new List<string> {await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedAnymore") };
-                                
+                                result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedAnymore") };
+
                                 return result;
                             }
                         }
@@ -674,9 +670,9 @@ namespace Nop.Services.Discounts
                 //filter by customer
                 if (customerId.HasValue && customerId.Value > 0)
                     query = from duh in query
-                        join order in _orderRepository.Table on duh.OrderId equals order.Id
-                        where order.CustomerId == customerId
-                        select duh;
+                            join order in _orderRepository.Table on duh.OrderId equals order.Id
+                            where order.CustomerId == customerId
+                            select duh;
 
                 //filter by order
                 if (orderId.HasValue && orderId.Value > 0)
@@ -685,8 +681,8 @@ namespace Nop.Services.Discounts
                 //ignore invalid orders
                 query = from duh in query
                         join order in _orderRepository.Table on duh.OrderId equals order.Id
-                        where !order.Deleted && (includeCancelledOrders || order.OrderStatusId != (int) OrderStatus.Cancelled)
-                            select duh;
+                        where !order.Deleted && (includeCancelledOrders || order.OrderStatusId != (int)OrderStatus.Cancelled)
+                        select duh;
 
                 //order
                 query = query.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc)

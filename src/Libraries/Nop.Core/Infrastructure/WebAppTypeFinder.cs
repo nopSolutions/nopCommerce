@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Nop.Core.Infrastructure
 {
@@ -50,7 +48,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Result</returns>
         public override IList<Assembly> GetAssemblies()
         {
-            if (!EnsureBinFolderAssembliesLoaded || _binFolderAssembliesLoaded) 
+            if (!EnsureBinFolderAssembliesLoaded || _binFolderAssembliesLoaded)
                 return base.GetAssemblies();
 
             _binFolderAssembliesLoaded = true;

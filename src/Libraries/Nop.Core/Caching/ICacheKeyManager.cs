@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Core.Caching
+﻿namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a cache key manager
@@ -12,13 +10,13 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">The key to add</param>
         void AddKey(string key);
-        
+
         /// <summary>
         /// Remove the key
         /// </summary>
         /// <param name="key">The key to remove</param>
         void RemoveKey(string key);
-        
+
         /// <summary>
         /// Remove all keys
         /// </summary>

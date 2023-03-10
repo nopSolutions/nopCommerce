@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
@@ -28,7 +26,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
         public WidgetsNivoSliderController(ILocalizationService localizationService,
             INotificationService notificationService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IPictureService pictureService,
             ISettingService settingService,
             IStoreContext storeContext)
@@ -112,7 +110,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>(storeScope);
 
             //get previous picture identifiers
-            var previousPictureIds = new[] 
+            var previousPictureIds = new[]
             {
                 nivoSliderSettings.Picture1Id,
                 nivoSliderSettings.Picture2Id,
@@ -168,7 +166,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
-            
+
             //get current picture identifiers
             var currentPictureIds = new[]
             {
@@ -181,14 +179,14 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
             //delete an old picture (if deleted or updated)
             foreach (var pictureId in previousPictureIds.Except(currentPictureIds))
-            { 
+            {
                 var previousPicture = await _pictureService.GetPictureByIdAsync(pictureId);
                 if (previousPicture != null)
                     await _pictureService.DeletePictureAsync(previousPicture);
             }
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
-            
+
             return await Configure();
         }
     }

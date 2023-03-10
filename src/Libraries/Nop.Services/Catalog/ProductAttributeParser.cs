@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -86,7 +82,7 @@ namespace Nop.Services.Catalog
 
             return rez;
         }
-        
+
         /// <summary>
         /// Gets selected product attribute values with the quantity entered by the customer
         /// </summary>
@@ -319,7 +315,7 @@ namespace Nop.Services.Catalog
             }
             return attributesXml;
         }
-        
+
         /// <summary>
         /// Remove an attribute
         /// </summary>
@@ -443,7 +439,7 @@ namespace Nop.Services.Catalog
             foreach (var id in ids)
             {
                 var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(id);
-                if (attribute != null) 
+                if (attribute != null)
                     result.Add(attribute);
             }
 
@@ -652,11 +648,11 @@ namespace Nop.Services.Catalog
         public virtual async Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
         {
             var attributes1 = await ParseProductAttributeMappingsAsync(attributesXml1);
-            if (ignoreNonCombinableAttributes) 
+            if (ignoreNonCombinableAttributes)
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
 
             var attributes2 = await ParseProductAttributeMappingsAsync(attributesXml2);
-            if (ignoreNonCombinableAttributes) 
+            if (ignoreNonCombinableAttributes)
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
 
             if (attributes1.Count != attributes2.Count)
@@ -805,8 +801,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             var allProductAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            
-            if (ignoreNonCombinableAttributes) 
+
+            if (ignoreNonCombinableAttributes)
                 allProductAttributeMappings = allProductAttributeMappings.Where(x => !x.IsNonCombinable()).ToList();
 
             //get all possible attribute combinations
@@ -826,7 +822,7 @@ namespace Nop.Services.Catalog
                     var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
 
                     //filter product attribute values
-                    if (allowedAttributeIds?.Any() ?? false) 
+                    if (allowedAttributeIds?.Any() ?? false)
                         attributeValues = attributeValues.Where(attributeValue => allowedAttributeIds.Contains(attributeValue.Id)).ToList();
 
                     if (!attributeValues.Any())
@@ -848,10 +844,10 @@ namespace Nop.Services.Catalog
                             foreach (var checkboxCombination in CreateCombination(attributeValues))
                             {
                                 var newXml = oldXml;
-                                foreach (var checkboxValue in checkboxCombination) 
+                                foreach (var checkboxValue in checkboxCombination)
                                     newXml = AddProductAttribute(newXml, productAttributeMapping, checkboxValue.Id.ToString());
 
-                                if (!string.IsNullOrEmpty(newXml)) 
+                                if (!string.IsNullOrEmpty(newXml))
                                     currentAttributesXml.Add(newXml);
                             }
                         }
@@ -884,7 +880,7 @@ namespace Nop.Services.Catalog
                 foreach (var attribute in allProductAttributeMappings)
                 {
                     var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
-                    if (conditionMet.HasValue && !conditionMet.Value) 
+                    if (conditionMet.HasValue && !conditionMet.Value)
                         allAttributesXml[i] = RemoveProductAttribute(attributesXml, attribute);
                 }
             }
@@ -970,11 +966,11 @@ namespace Nop.Services.Catalog
                 var ctrlEndDate = form[$"rental_end_date_{product.Id}"];
                 try
                 {
-                    startDate = DateTime.ParseExact(ctrlStartDate, 
-                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                    startDate = DateTime.ParseExact(ctrlStartDate,
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                         CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(ctrlEndDate, 
-                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                    endDate = DateTime.ParseExact(ctrlEndDate,
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                         CultureInfo.InvariantCulture);
                 }
                 catch
@@ -1133,7 +1129,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Properties
-        
+
         protected string ChildElementName { get; set; } = "ProductAttribute";
 
         #endregion

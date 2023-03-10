@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Google.Authenticator;
+﻿using Google.Authenticator;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
@@ -21,7 +18,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         private readonly IWorkContext _workContext;
         private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
         private TwoFactorAuthenticator _twoFactorAuthenticator;
-        
+
 
         #endregion
 
@@ -199,8 +196,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             var customer = await _workContext.GetCurrentCustomerAsync();
 
             return TwoFactorAuthenticator.GenerateSetupCode(
-                _googleAuthenticatorSettings.BusinessPrefix, 
-                customer.Email, 
+                _googleAuthenticatorSettings.BusinessPrefix,
+                customer.Email,
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 

@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         #endregion
 
         #region Properties
-        
+
         public CurrencyExchangeRateProviderModel ExchangeRateProviderModel { get; set; }
 
         #endregion

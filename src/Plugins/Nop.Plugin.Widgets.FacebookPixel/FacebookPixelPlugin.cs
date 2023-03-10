@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
@@ -71,7 +68,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
             widgetZones.AddRange(await _facebookPixelService.GetCustomEventsWidgetZonesAsync());
-            
+
             return widgetZones;
         }
 

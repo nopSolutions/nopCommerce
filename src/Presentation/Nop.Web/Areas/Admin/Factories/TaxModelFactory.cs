@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Tax;
+﻿using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Models.Extensions;
@@ -33,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Prepare tax provider search model
         /// </summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Attributes;
 using Nop.Services.Localization;
@@ -141,10 +139,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = customerAttribute.Id });
             }
-            
+
             //prepare model
             model = await _customerAttributeModelFactory.PrepareCustomerAttributeModelAsync(model, null, true);
 
@@ -198,7 +196,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
                 return RedirectToAction("List");
-            
+
             return RedirectToAction("Edit", new { id = customerAttribute.Id });
         }
 

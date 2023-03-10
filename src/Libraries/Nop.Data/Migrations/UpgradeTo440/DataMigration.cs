@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
@@ -138,7 +136,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
             var categoryTableName = NameCompatibilityManager.GetTableName(typeof(Category));
             var manufacturerTableName = NameCompatibilityManager.GetTableName(typeof(Manufacturer));
             var vendorTableName = NameCompatibilityManager.GetTableName(typeof(Vendor));
-            
+
             //remove column
             var priceRangesColumnName = "PriceRanges";
 
@@ -156,7 +154,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
                 Alter.Table(categoryTableName)
                     .AddColumn(priceRangeFilteringColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
-            
+
             if (!Schema.Table(manufacturerTableName).Column(priceRangeFilteringColumnName).Exists())
             {
                 Alter.Table(manufacturerTableName)

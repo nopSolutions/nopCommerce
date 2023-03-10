@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -197,7 +193,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             //create attributes in account
             var attributesErrors = await _sendinblueEmailManager.PrepareAttributesAsync();
             if (!string.IsNullOrEmpty(attributesErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {attributesErrors}");            
+                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {attributesErrors}");
         }
 
         #endregion
@@ -473,7 +469,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             //get message templates which are sending in SMS
             var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
             var messageTemplates = await allMessageTemplates
-                
+
                 .WhereAwait(async messageTemplate => await _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, SendinblueDefaults.UseSmsAttribute))
                 .ToPagedListAsync(searchModel);
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace Nop.Core.ComponentModel
+﻿namespace Nop.Core.ComponentModel
 {
     /// <summary>
     /// Provides a convenience methodology for implementing locked access to resources. 

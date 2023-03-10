@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool UsernameValidationUseRegex { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernameValidationRule")]
-        public string UsernameValidationRule { get; set; }       
+        public string UsernameValidationRule { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
         public int UserRegistrationType { get; set; }
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool StoreIpAddresses { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice")]
-        public bool EnteringEmailTwice { get; set; }        
+        public bool EnteringEmailTwice { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }

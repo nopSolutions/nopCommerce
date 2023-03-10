@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
@@ -64,7 +61,7 @@ namespace Nop.Services.Orders
                 query = query.Where(historyEntry => historyEntry.StoreId == storeId);
 
             //whether to show only the points that already activated
-            if (!showNotActivated) 
+            if (!showNotActivated)
                 query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
 
             //update points balance
@@ -230,7 +227,7 @@ namespace Nop.Services.Orders
             await InsertRewardPointsHistoryEntryAsync(newHistoryEntry);
 
             //reduce valid points of previous entries
-            if (points >= 0) 
+            if (points >= 0)
                 return newHistoryEntry.Id;
 
             var withValidPoints = (await GetRewardPointsQueryAsync(customer.Id, storeId))

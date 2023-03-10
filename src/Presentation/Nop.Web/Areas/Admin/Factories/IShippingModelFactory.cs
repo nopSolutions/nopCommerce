@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 using Nop.Web.Areas.Admin.Models.Shipping;
 
 namespace Nop.Web.Areas.Admin.Factories

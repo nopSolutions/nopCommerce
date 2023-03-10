@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Configuration;
@@ -46,7 +45,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         #endregion
 
         #region Methods
-        
+
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -96,7 +95,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.ApiSecret = model.ApiSecret;
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;
             googleAnalyticsSettings.EnableEcommerce = model.EnableEcommerce;
-            googleAnalyticsSettings.UseSandbox= model.UseSandbox;
+            googleAnalyticsSettings.UseSandbox = model.UseSandbox;
             googleAnalyticsSettings.IncludingTax = model.IncludingTax;
             googleAnalyticsSettings.IncludeCustomerId = model.IncludeCustomerId;
 

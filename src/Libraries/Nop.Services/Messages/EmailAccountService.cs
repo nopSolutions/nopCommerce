@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 
@@ -133,8 +129,8 @@ namespace Nop.Services.Messages
             var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>
             {
                 return from ea in query
-                    orderby ea.Id
-                    select ea;
+                       orderby ea.Id
+                       select ea;
             }, cache => default);
 
             return emailAccounts;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
@@ -72,9 +68,9 @@ namespace Nop.Services.Vendors
                 return null;
 
             return await (from v in _vendorRepository.Table
-                    join p in _productRepository.Table on v.Id equals p.VendorId
-                    where p.Id == productId
-                    select v).FirstOrDefaultAsync();
+                          join p in _productRepository.Table on v.Id equals p.VendorId
+                          where p.Id == productId
+                          select v).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -91,9 +87,9 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(productIds));
 
             return await (from v in _vendorRepository.Table
-                    join p in _productRepository.Table on v.Id equals p.VendorId
-                    where productIds.Contains(p.Id) && !v.Deleted && v.Active
-                    select v).Distinct().ToListAsync();
+                          join p in _productRepository.Table on v.Id equals p.VendorId
+                          where productIds.Contains(p.Id) && !v.Deleted && v.Active
+                          select v).Distinct().ToListAsync();
         }
 
         /// <summary>
@@ -110,9 +106,9 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(customerIds));
 
             return await (from v in _vendorRepository.Table
-                join c in _customerRepository.Table on v.Id equals c.VendorId
-                where customerIds.Contains(c.Id) && !v.Deleted && v.Active
-                select v).Distinct().ToListAsync();
+                          join c in _customerRepository.Table on v.Id equals c.VendorId
+                          where customerIds.Contains(c.Id) && !v.Deleted && v.Active
+                          select v).Distinct().ToListAsync();
         }
 
         /// <summary>

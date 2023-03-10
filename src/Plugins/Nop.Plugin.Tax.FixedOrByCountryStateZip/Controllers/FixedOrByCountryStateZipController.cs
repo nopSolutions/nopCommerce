@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -41,7 +38,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkContext _workContext;
-        
+
         #endregion
 
         #region Ctor
@@ -98,7 +95,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             }
 
             var model = new ConfigurationModel { CountryStateZipEnabled = _countryStateZipSettings.CountryStateZipEnabled };
-            
+
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             var stores = await _storeService.GetAllStoresAsync();

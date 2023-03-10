@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using ClosedXML.Excel;
 using FluentAssertions;
 using Nop.Core;
@@ -237,7 +232,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             manager.SetSelectList("OrderStatus", await OrderStatus.Pending.ToSelectListAsync(useLocalization: false));
             manager.SetSelectList("PaymentStatus", await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false));
             manager.SetSelectList("ShippingStatus", await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false));
-            
+
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
             PropertiesShouldEqual(order, manager, replacePairs);
 
@@ -404,7 +399,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             var product = _productRepository.Table.ToList().First();
 
-            var excelData = await _exportManager.ExportProductsToXlsxAsync(new[] {product});
+            var excelData = await _exportManager.ExportProductsToXlsxAsync(new[] { product });
             var workbook = GetWorkbook(excelData);
             var manager = await GetPropertyManagerAsync<Product>(workbook);
 

@@ -1,5 +1,4 @@
 ﻿using Nop.Core;
-using System;
 
 namespace Nop.Data.Migrations
 {
@@ -15,7 +14,7 @@ namespace Nop.Data.Migrations
         /// <param name="nopVersion">nopCommerce full version</param>
         /// <param name="migrationType">The migration type</param>
         public NopUpdateMigrationAttribute(string dateTime, string nopVersion, UpdateMigrationType migrationType) :
-            base(dateTime, nopVersion, migrationType,  MigrationProcessType.Update)
+            base(dateTime, nopVersion, migrationType, MigrationProcessType.Update)
         {
             ApplyInDbOnDebugMode = !_config.NopVersion.Equals(NopVersion.FULL_VERSION, StringComparison.CurrentCultureIgnoreCase);
         }

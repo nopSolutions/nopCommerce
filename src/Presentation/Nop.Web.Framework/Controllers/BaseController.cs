@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -60,7 +56,7 @@ namespace Nop.Web.Framework.Controllers
             await writer.FlushAsync();
             return writer.ToString();
         }
-        
+
         /// <summary>
         /// Render partial view to string
         /// </summary>

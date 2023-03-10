@@ -17,11 +17,9 @@
  *      be misrepresented as being the original software.
  * 
  *   3. This notice may not be removed or altered from any source distribution.
- */ 
+ */
 #endregion
 
-using System;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -153,7 +151,7 @@ namespace Nop.Services.Html.CodeFormatter
         protected abstract string MatchEval(Match match);
 
         //does the formatting job
-        private string FormatCode(string source, bool lineNumbers, 
+        private string FormatCode(string source, bool lineNumbers,
             bool alternate, bool embedStyleSheet, bool subCode)
         {
             //replace special characters
@@ -171,7 +169,7 @@ namespace Nop.Services.Html.CodeFormatter
             source = CodeRegex.Replace(sb.ToString(), MatchEval);
 
             sb = new StringBuilder();
-            
+
             if (embedStyleSheet)
             {
                 sb.AppendFormat("<style type=\"{0}\">\n", MimeTypes.TextCss);
@@ -203,8 +201,8 @@ namespace Nop.Services.Html.CodeFormatter
                     if (lineNumbers)
                     {
                         var order = (int)Math.Log10(i);
-                        sb.Append("<span class=\"lnum\">" 
-                            + spaces[0..(3 - order)] + i 
+                        sb.Append("<span class=\"lnum\">"
+                            + spaces[0..(3 - order)] + i
                             + ":  </span>");
                     }
 
@@ -228,7 +226,7 @@ namespace Nop.Services.Html.CodeFormatter
                 if (!subCode)
                     sb.Append("</pre>");
             }
-            
+
             return sb.ToString();
         }
     }

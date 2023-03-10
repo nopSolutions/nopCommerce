@@ -172,7 +172,7 @@ namespace Nop.Services.Common
         #endregion
 
         #region Caching defaults
-        
+
         #region Generic attributes
 
         /// <summary>

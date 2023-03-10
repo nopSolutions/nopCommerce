@@ -1,7 +1,4 @@
 ﻿using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Catalog;
@@ -42,7 +39,7 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             _dollar = await currencyService.GetCurrencyByCodeAsync("USD");
             _pound = await currencyService.GetCurrencyByCodeAsync("GBP");
         }
-        
+
         [Test]
         public async Task CanFormatPriceWithCustomCurrencyFormatting()
         {

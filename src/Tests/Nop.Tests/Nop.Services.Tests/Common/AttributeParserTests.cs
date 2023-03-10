@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using FluentAssertions;
 using Nop.Core.Domain.Attributes;
 using Nop.Core.Domain.Catalog;
@@ -43,7 +39,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
         {
             _attributesXml = $"<Attributes><{attributeType.Name} ID=\"1\"><{attributeType.Name}Value><Value>1</Value></{attributeType.Name}Value></{attributeType.Name}><{attributeType.Name} ID=\"2\"><{attributeType.Name}Value><Value>2</Value></{attributeType.Name}Value></{attributeType.Name}></Attributes>";
 
-            if (attributeType == typeof(CustomerAttribute)) 
+            if (attributeType == typeof(CustomerAttribute))
                 _parser = GetService<IAttributeParser<CustomerAttribute, CustomerAttributeValue>>();
 
             if (attributeType == typeof(VendorAttribute))
@@ -55,7 +51,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
             if (attributeType == typeof(CheckoutAttribute))
                 _parser = GetService<IAttributeParser<CheckoutAttribute, CheckoutAttributeValue>>();
         }
-        
+
 
         [OneTimeSetUp]
         public async Task SetUp()
@@ -66,7 +62,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
             _vendorAttributeService = GetService<IAttributeService<VendorAttribute, VendorAttributeValue>>();
             _addressAttributeService = GetService<IAttributeService<AddressAttribute, AddressAttributeValue>>();
             _checkoutAttributeService = GetService<IAttributeService<CheckoutAttribute, CheckoutAttributeValue>>();
-            
+
             for (var i = 0; i < 2; i++)
             {
                 BaseAttribute attribute = new CustomerAttribute
@@ -77,7 +73,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
                 await _customerAttributeService.InsertAttributeAsync((CustomerAttribute)attribute);
                 _customerAttributeIds.Add(attribute.Id);
 
-                BaseAttributeValue attributeValue = new CustomerAttributeValue { AttributeId = attribute.Id, Name = "test"};
+                BaseAttributeValue attributeValue = new CustomerAttributeValue { AttributeId = attribute.Id, Name = "test" };
                 await _customerAttributeService.InsertAttributeValueAsync((CustomerAttributeValue)attributeValue);
                 _customerAttributeValuesIds.Add(attributeValue.Id);
 
@@ -174,7 +170,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
         [OneTimeTearDown]
         public async Task TearDown()
         {
-            foreach(var id in _customerAttributeValuesIds)
+            foreach (var id in _customerAttributeValuesIds)
                 await _customerAttributeService.DeleteAttributeValueAsync(new CustomerAttributeValue { Id = id });
 
             foreach (var id in _vendorAttributeValuesIds)
@@ -226,7 +222,7 @@ namespace Nop.Tests.Nop.Services.Tests.Common
         public async Task CanAddAttribute(Type attributeType)
         {
             PrepareTestData(attributeType);
-            
+
             var attribute = (await _parser.ParseAttributesAsync(_attributesXml))[1];
             (attribute as BaseAttribute).Should().NotBeNull();
 

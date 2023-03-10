@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Caching
+﻿namespace Nop.Core.Caching
 {
     public static class CachingExtensions
     {
@@ -13,7 +11,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public static T Get<T>(this IStaticCacheManager cacheManager,CacheKey key, Func<T> acquire)
+        public static T Get<T>(this IStaticCacheManager cacheManager, CacheKey key, Func<T> acquire)
         {
             return cacheManager.GetAsync(key, acquire).GetAwaiter().GetResult();
         }

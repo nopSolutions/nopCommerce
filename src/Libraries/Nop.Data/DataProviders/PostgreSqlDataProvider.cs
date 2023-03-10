@@ -1,18 +1,12 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Data.DataProviders.LinqToDB;
-using Nop.Data.Migrations;
 using Npgsql;
 
 namespace Nop.Data.DataProviders
@@ -195,7 +189,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -258,7 +252,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = dataContext.InsertWithInt32Identity(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 dataContext.Insert(entity);
             }
@@ -283,7 +277,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 await dataContext.InsertAsync(entity);
             }

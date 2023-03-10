@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Plugins
@@ -123,7 +119,7 @@ namespace Nop.Services.Plugins
 
             return pluginBySystemName;
         }
-        
+
         /// <summary>
         /// Load active plugins
         /// </summary>

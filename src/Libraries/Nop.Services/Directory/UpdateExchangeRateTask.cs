@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Directory

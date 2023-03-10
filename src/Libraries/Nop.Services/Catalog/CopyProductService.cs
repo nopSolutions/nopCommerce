@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
-using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Security;
@@ -203,7 +198,7 @@ namespace Nop.Services.Catalog
                 foreach (var productAttributeValue in productAttributeValues)
                 {
                     var attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId)) 
+                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
                         attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
 
                     var attributeValueCopy = new ProductAttributeValue
@@ -384,7 +379,7 @@ namespace Nop.Services.Catalog
                 };
 
                 await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psaCopy);
-                
+
                 foreach (var language in allLanguages)
                 {
                     var customValue = await _localizationService.GetLocalizedAsync(productSpecificationAttribute, x => x.CustomValue, language.Id, false, false);
@@ -808,7 +803,7 @@ namespace Nop.Services.Catalog
             await CopyLocalizationDataAsync(product, productCopy);
 
             //copy product tags
-            foreach (var productTag in await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)) 
+            foreach (var productTag in await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
                 await _productTagService.InsertProductProductTagMappingAsync(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
 
             await _productService.UpdateProductAsync(productCopy);
@@ -843,7 +838,7 @@ namespace Nop.Services.Catalog
 
             //store mapping
             var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(product);
-            foreach (var id in selectedStoreIds) 
+            foreach (var id in selectedStoreIds)
                 await _storeMappingService.InsertStoreMappingAsync(productCopy, id);
 
             //customer role mapping

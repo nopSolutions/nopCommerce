@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -604,7 +599,7 @@ namespace Nop.Web.Factories
                 sb.AppendLine("User-agent: *");
 
                 //sitemap
-                if (_sitemapXmlSettings.SitemapXmlEnabled && _robotsTxtSettings.AllowSitemapXml) 
+                if (_sitemapXmlSettings.SitemapXmlEnabled && _robotsTxtSettings.AllowSitemapXml)
                     sb.AppendLine($"Sitemap: {_webHelper.GetStoreLocation()}sitemap.xml");
                 else
                     sb.AppendLine("Disallow: /sitemap.xml");
@@ -613,7 +608,7 @@ namespace Nop.Web.Factories
                 sb.AppendLine($"Host: {_webHelper.GetStoreLocation()}");
 
                 //usual paths
-                foreach (var path in _robotsTxtSettings.DisallowPaths) 
+                foreach (var path in _robotsTxtSettings.DisallowPaths)
                     sb.AppendLine($"Disallow: {path}");
 
                 //localizable paths (without SEO code)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core;
 using FluentValidation;
 using Nop.Core;
 using Nop.Core.Infrastructure;

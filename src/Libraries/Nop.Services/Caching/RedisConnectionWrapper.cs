@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
@@ -197,7 +194,7 @@ namespace Nop.Services.Caching
             await Task.WhenAll(endPoints.Select(async endPoint =>
                 await (await GetServerAsync(endPoint)).FlushDatabaseAsync()));
         }
-        
+
         /// <summary>
         /// Release all resources associated with this object
         /// </summary>

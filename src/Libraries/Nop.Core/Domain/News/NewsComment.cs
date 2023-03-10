@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.News
+﻿namespace Nop.Core.Domain.News
 {
     /// <summary>
     /// Represents a news comment

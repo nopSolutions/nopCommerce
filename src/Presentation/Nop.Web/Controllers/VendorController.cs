@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -224,7 +220,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if(!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
+                    if (!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.Picture.ErrorMessage"));
                     else
                     {
@@ -244,7 +240,7 @@ namespace Nop.Web.Controllers
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-            foreach(var warning in warnings)
+            foreach (var warning in warnings)
             {
                 ModelState.AddModelError(string.Empty, warning);
             }
@@ -262,7 +258,7 @@ namespace Nop.Web.Controllers
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
                     PictureId = pictureId,
-                    Description = WebUtility.HtmlEncode(description) 
+                    Description = WebUtility.HtmlEncode(description)
                 };
                 await _vendorService.InsertVendorAsync(vendor);
                 //search engine name (the same as vendor name)

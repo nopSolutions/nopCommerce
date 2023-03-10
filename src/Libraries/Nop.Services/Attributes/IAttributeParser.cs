@@ -1,7 +1,5 @@
-﻿using Nop.Core.Domain.Attributes;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Nop.Core.Domain.Attributes;
 
 namespace Nop.Services.Attributes
 {

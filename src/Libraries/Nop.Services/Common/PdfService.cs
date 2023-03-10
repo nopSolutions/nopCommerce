@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO.Compression;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -402,7 +397,7 @@ namespace Nop.Services.Common
 
                 //qty
                 productItem.Quantity = shipmentItems is null ?
-                    oi.Quantity.ToString() : 
+                    oi.Quantity.ToString() :
                     shipmentItems.FirstOrDefault(x => x.OrderItemId == oi.Id).Quantity.ToString();
 
                 //total

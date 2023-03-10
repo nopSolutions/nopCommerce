@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;

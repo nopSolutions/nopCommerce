@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
@@ -76,7 +72,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IQueryable<Product>> GetAvailableProductsQueryAsync()
         {
-            var productsQuery = 
+            var productsQuery =
                 from p in _productRepository.Table
                 where !p.Deleted && p.Published &&
                       (p.ParentGroupedProductId == 0 || p.VisibleIndividually) &&
@@ -443,14 +439,14 @@ namespace Nop.Services.Catalog
                 var store = await _storeContext.GetCurrentStoreAsync();
                 subCategoryIds = await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id);
             }
-            
-            var productCategoryQuery = 
+
+            var productCategoryQuery =
                 from pc in _productCategoryRepository.Table
                 where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
                       (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
                 select pc;
 
-            var result = 
+            var result =
                 from sao in _specificationAttributeOptionRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
                 join p in productsQuery on psa.ProductId equals p.Id
@@ -485,13 +481,13 @@ namespace Nop.Services.Catalog
 
             var productsQuery = await GetAvailableProductsQueryAsync();
 
-            var productManufacturerQuery = 
+            var productManufacturerQuery =
                 from pm in _productManufacturerRepository.Table
-                where pm.ManufacturerId == manufacturerId && 
+                where pm.ManufacturerId == manufacturerId &&
                       (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pm.IsFeaturedProduct)
                 select pm;
 
-            var result = 
+            var result =
                 from sao in _specificationAttributeOptionRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
                 join p in productsQuery on psa.ProductId equals p.Id
@@ -639,11 +635,11 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<Product>> GetProductsBySpecificationAttributeIdAsync(int specificationAttributeId, int pageIndex, int pageSize)
         {
             var query = from product in _productRepository.Table
-                join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id
-                where spao.SpecificationAttributeId == specificationAttributeId
-                orderby product.Name
-                select product;
+                        join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
+                        join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id
+                        where spao.SpecificationAttributeId == specificationAttributeId
+                        orderby product.Name
+                        select product;
 
             return await query.ToPagedListAsync(pageIndex, pageSize);
         }

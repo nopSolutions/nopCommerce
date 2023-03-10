@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.NivoSlider.Components;
 using Nop.Services.Cms;

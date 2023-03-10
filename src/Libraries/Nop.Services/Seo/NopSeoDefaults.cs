@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 
 namespace Nop.Services.Seo
 {

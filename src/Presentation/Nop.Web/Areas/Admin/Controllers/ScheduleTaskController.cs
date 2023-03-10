@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Services.Security;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
@@ -100,9 +98,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            if(!scheduleTask.Enabled && model.Enabled)
+            if (!scheduleTask.Enabled && model.Enabled)
                 scheduleTask.LastEnabledUtc = DateTime.UtcNow;
-            
+
             scheduleTask = model.ToEntity(scheduleTask);
 
             await _scheduleTaskService.UpdateTaskAsync(scheduleTask);

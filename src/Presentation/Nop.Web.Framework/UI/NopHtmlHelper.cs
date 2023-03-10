@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -199,7 +195,7 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Insert(0, part);
         }
-        
+
         /// <summary>
         /// Generate all title parts
         /// </summary>

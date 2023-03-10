@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Events;
@@ -125,8 +121,8 @@ namespace Nop.Services.Gdpr
             var gdprConsents = await _gdprConsentRepository.GetAllAsync(query =>
             {
                 return from c in query
-                    orderby c.DisplayOrder, c.Id
-                    select c;
+                       orderby c.DisplayOrder, c.Id
+                       select c;
             }, cache => default);
 
             return gdprConsents;
@@ -189,7 +185,7 @@ namespace Nop.Services.Gdpr
         #endregion
 
         #region GDPR log
-        
+
         /// <summary>
         /// Get all GDPR log records
         /// </summary>
@@ -209,13 +205,13 @@ namespace Nop.Services.Gdpr
         {
             return await _gdprLogRepository.GetAllPagedAsync(query =>
             {
-                if (customerId > 0) 
+                if (customerId > 0)
                     query = query.Where(log => log.CustomerId == customerId);
 
-                if (consentId > 0) 
+                if (consentId > 0)
                     query = query.Where(log => log.ConsentId == consentId);
 
-                if (!string.IsNullOrEmpty(customerInfo)) 
+                if (!string.IsNullOrEmpty(customerInfo))
                     query = query.Where(log => log.CustomerInfo == customerInfo);
 
                 if (requestType != null)
@@ -255,7 +251,7 @@ namespace Nop.Services.Gdpr
 
             await InsertLogAsync(gdprLog);
         }
-        
+
         #endregion
 
         #region Customer
@@ -288,7 +284,7 @@ namespace Nop.Services.Gdpr
             var reviewedProducts = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
             await _productService.DeleteProductReviewsAsync(productReviews);
             //update product totals
-            foreach (var product in reviewedProducts) 
+            foreach (var product in reviewedProducts)
                 await _productService.UpdateProductReviewTotalsAsync(product);
 
             //external authentication record
@@ -366,7 +362,7 @@ namespace Nop.Services.Gdpr
             customer.Username = string.Empty;
             customer.Active = false;
             customer.Deleted = true;
-            
+
             await _customerService.UpdateCustomerAsync(customer);
 
             //raise event

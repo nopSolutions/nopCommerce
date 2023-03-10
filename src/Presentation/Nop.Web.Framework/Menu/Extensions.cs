@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Nop.Web.Framework.Menu
+﻿namespace Nop.Web.Framework.Menu
 {
     /// <summary>
     /// Extensions

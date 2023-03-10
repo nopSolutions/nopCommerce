@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories
@@ -13,7 +9,7 @@ namespace Nop.Web.Framework.Factories
     public partial class LocalizedModelFactory : ILocalizedModelFactory
     {
         #region Fields
-        
+
         private readonly ILanguageService _languageService;
 
         #endregion

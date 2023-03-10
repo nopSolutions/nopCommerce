@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
 using Nop.Web.Infrastructure;
 
 namespace Nop.Web.Models.Common

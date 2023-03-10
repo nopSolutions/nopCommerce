@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Customers;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {

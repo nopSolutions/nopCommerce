@@ -1,5 +1,3 @@
-using System;
-
 namespace Nop.Services.Authentication.External
 {
     /// <summary>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
@@ -11,7 +6,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
@@ -116,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual async Task<IActionResult> List(bool showWarnings = true)
@@ -126,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = await _pluginModelFactory.PreparePluginSearchModelAsync(new PluginSearchModel());
 
-            if (!showWarnings) 
+            if (!showWarnings)
                 return View(model);
 
             var warnings = new List<SystemWarningModel>();

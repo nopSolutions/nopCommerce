@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;

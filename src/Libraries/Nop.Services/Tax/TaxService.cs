@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -525,7 +521,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //no need to calculate tax rate if passed "price" is 0
-            if (price == decimal.Zero) 
+            if (price == decimal.Zero)
                 return (price, taxRate);
 
             bool isTaxable;
@@ -668,7 +664,7 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer)
         {
             var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            
+
             return await GetPaymentMethodAdditionalFeeAsync(price, includingTax, customer);
         }
 
@@ -753,7 +749,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             var price = cav.PriceAdjustment;
-            if (ca.IsTaxExempt) 
+            if (ca.IsTaxExempt)
                 return (price, taxRate);
 
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
@@ -765,7 +761,7 @@ namespace Nop.Services.Tax
         #endregion
 
         #region VAT
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -788,7 +784,7 @@ namespace Nop.Services.Tax
             var r = new Regex(@"^(\w{2})(.*)");
             var match = r.Match(fullVatNumber);
             if (!match.Success)
-                return (VatNumberStatus.Invalid, name, address); 
+                return (VatNumberStatus.Invalid, name, address);
 
             var twoLetterIsoCode = match.Groups[1].Value;
             var vatNumber = match.Groups[2].Value;

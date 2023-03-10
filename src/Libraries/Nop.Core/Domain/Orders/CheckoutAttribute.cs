@@ -12,7 +12,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the text prompt
         /// </summary>
         public string TextPrompt { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether shippable products are required in order to display this attribute
         /// </summary>
@@ -27,7 +27,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the tax category identifier
         /// </summary>
         public int TaxCategoryId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>

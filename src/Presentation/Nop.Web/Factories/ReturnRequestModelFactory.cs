@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
@@ -68,7 +64,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -129,7 +125,7 @@ namespace Nop.Web.Factories
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
             var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
-            
+
             foreach (var returnRequest in returnRequests)
             {
                 var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);

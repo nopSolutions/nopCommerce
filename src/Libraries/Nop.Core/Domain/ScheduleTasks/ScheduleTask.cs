@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.ScheduleTasks
+﻿namespace Nop.Core.Domain.ScheduleTasks
 {
     /// <summary>
     /// Schedule task

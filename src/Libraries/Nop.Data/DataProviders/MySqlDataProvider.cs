@@ -1,10 +1,6 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -155,7 +151,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Get the current identity value
         /// </summary>

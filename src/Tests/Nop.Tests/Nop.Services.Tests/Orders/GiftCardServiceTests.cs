@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Orders;
 using NUnit.Framework;
@@ -18,7 +17,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         {
             _giftCardService = GetService<IGiftCardService>();
 
-            _giftCard1 = new GiftCard {Amount = 100, IsGiftCardActivated = true};
+            _giftCard1 = new GiftCard { Amount = 100, IsGiftCardActivated = true };
             _giftCard2 = new GiftCard { Amount = 100 };
 
             await _giftCardService.InsertGiftCardAsync(_giftCard1);
@@ -36,13 +35,13 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         public async Task CanValidateGiftCard()
         {
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 30});
+                new GiftCardUsageHistory { GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 30 });
 
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 20});
+                new GiftCardUsageHistory { GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 20 });
 
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 5});
+                new GiftCardUsageHistory { GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 5 });
 
             //valid
             var isValid = await _giftCardService.IsGiftCardValidAsync(_giftCard1);
@@ -60,7 +59,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
 
             //add usage history record
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 1000});
+                new GiftCardUsageHistory { GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 1000 });
 
             isValid = await _giftCardService.IsGiftCardValidAsync(_giftCard1);
             isValid.Should().BeFalse();
@@ -70,13 +69,13 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         public async Task CanCalculateGiftCardRemainingAmount()
         {
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 30});
+                new GiftCardUsageHistory { GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 30 });
 
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 20});
+                new GiftCardUsageHistory { GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 20 });
 
             await _giftCardService.InsertGiftCardUsageHistoryAsync(
-                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 5});
+                new GiftCardUsageHistory { GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 5 });
 
             var remainingAmount = await _giftCardService.GetGiftCardRemainingAmountAsync(_giftCard2);
             remainingAmount.Should().Be(45);

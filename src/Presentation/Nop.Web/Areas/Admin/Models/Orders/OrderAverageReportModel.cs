@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Average.SumTodayOrders")]
         public string SumTodayOrders { get; set; }
-        
+
         [NopResourceDisplayName("Admin.SalesReport.Average.SumThisWeekOrders")]
         public string SumThisWeekOrders { get; set; }
 

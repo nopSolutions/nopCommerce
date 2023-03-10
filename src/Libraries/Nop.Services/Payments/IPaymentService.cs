@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
 {
@@ -153,7 +151,7 @@ namespace Nop.Services.Payments
         /// <param name="creditCardNumber">Credit card number</param>
         /// <returns>Masked credit card number</returns>
         string GetMaskedCreditCardNumber(string creditCardNumber);
-        
+
         /// <summary>
         /// Serialize CustomValues of ProcessPaymentRequest
         /// </summary>

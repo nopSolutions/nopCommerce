@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Caching;
 using Nop.Services.Caching;
 using NUnit.Framework;

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using Nop.Core.Domain.Customers;
 using Nop.Data.Mapping;
 using Nop.Services.Customers;

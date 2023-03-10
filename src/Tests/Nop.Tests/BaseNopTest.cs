@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Resources;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
@@ -268,7 +262,7 @@ namespace Nop.Tests
             services.AddSingleton<IDistributedCache>(memoryDistributedCache);
             services.AddScoped<MemoryDistributedCacheManager>();
             services.AddSingleton(new DistributedCacheLocker(memoryDistributedCache));
-            
+
             //services
             services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
             services.AddTransient<ICategoryService, CategoryService>();
@@ -290,7 +284,7 @@ namespace Nop.Tests
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IAffiliateService, AffiliateService>();
             services.AddTransient<IVendorService, VendorService>();
-            
+
             //attribute services
             services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
 

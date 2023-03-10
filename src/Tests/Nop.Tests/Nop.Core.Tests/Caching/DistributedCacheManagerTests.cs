@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +64,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             (await _distributedCache.GetAsync("some_key_3")).Should().BeNullOrEmpty();
         }
 
-        [Test]        
+        [Test]
         public async Task CanClearCache()
         {
             using (var scope = _serviceScopeFactory.CreateScope())

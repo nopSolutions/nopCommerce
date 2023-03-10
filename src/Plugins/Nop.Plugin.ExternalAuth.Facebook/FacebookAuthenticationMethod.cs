@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Components;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;

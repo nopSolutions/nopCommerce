@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
@@ -44,7 +39,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(
-            CurrencySettings currencySettings, 
+            CurrencySettings currencySettings,
             GoogleAnalyticsHttpClient googleAnalyticsHttpClient,
             ICategoryService categoryService,
             ICurrencyService currencyService,
@@ -159,7 +154,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     items.Add(gaItem);
                 }
                 gaParams.Items = items;
-                gaEvent.Params = gaParams;                
+                gaEvent.Params = gaParams;
                 gaRequest.Events = events;
 
                 await _googleAnalyticsHttpClient.RequestAsync(gaRequest, googleAnalyticsSettings);

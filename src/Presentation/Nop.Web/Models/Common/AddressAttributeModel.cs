@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
@@ -9,7 +8,7 @@ namespace Nop.Web.Models.Boards
         {
             ForumGroups = new List<ForumGroupModel>();
         }
-        
+
         public IList<ForumGroupModel> ForumGroups { get; set; }
     }
 }

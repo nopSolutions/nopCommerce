@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace Nop.Core.Configuration
+﻿namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents the event that is raised when App Settings are saving

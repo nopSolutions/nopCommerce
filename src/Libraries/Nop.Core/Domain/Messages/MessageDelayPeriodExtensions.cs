@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// MessageDelayPeriod Extensions

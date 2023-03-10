@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -50,7 +45,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                     ["measurement_id"] = googleAnalyticsSettings.GoogleId
                 };
 
-                var uri = QueryHelpers.AddQueryString(googleAnalyticsSettings.UseSandbox ? GoogleAnalyticsDefaults.EndPointDebugUrl  : GoogleAnalyticsDefaults.EndPointUrl, query);
+                var uri = QueryHelpers.AddQueryString(googleAnalyticsSettings.UseSandbox ? GoogleAnalyticsDefaults.EndPointDebugUrl : GoogleAnalyticsDefaults.EndPointUrl, query);
 
                 _httpClient.BaseAddress = new Uri(uri);
                 _httpClient.Timeout = TimeSpan.FromSeconds(10);

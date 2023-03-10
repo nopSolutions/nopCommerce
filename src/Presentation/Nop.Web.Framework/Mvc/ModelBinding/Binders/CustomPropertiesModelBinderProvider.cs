@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
@@ -13,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
         {
             if (context.Metadata.PropertyName == nameof(BaseNopModel.CustomProperties) && context.Metadata.ModelType == typeof(Dictionary<string, string>))
                 return new CustomPropertiesModelBinder();
-            
+
             return null;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Web.Areas.Admin.Models.Localization;
 
 namespace Nop.Web.Areas.Admin.Factories

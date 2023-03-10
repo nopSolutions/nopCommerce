@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -12,7 +10,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 {
     [TestFixture]
-    public class CatalogModelFactorySpecialTests: WebTest
+    public class CatalogModelFactorySpecialTests : WebTest
     {
         private ISettingService _settingsService;
         private CatalogSettings _catalogSettings;
@@ -33,7 +31,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             _vendorSettings.AllowSearchByVendor = true;
 
             await _settingsService.SaveSettingAsync(_vendorSettings);
-            
+
             _catalogSettings = GetService<CatalogSettings>();
 
             _catalogSettings.AllowProductViewModeChanging = false;
@@ -78,21 +76,21 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task PrepareSearchModelShouldDependOnSettings()
         {
             var model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
-            
+
             model.AvailableVendors.Any().Should().BeTrue();
             model.AvailableVendors.Count.Should().Be(3);
         }
-        
+
         [Test]
         public async Task PrepareCategoryModelShouldDependOnSettings()
         {
             var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogProductsCommand());
-           
+
             model.CategoryBreadcrumb.Any().Should().BeFalse();
             model.SubCategories.Count.Should().Be(3);
             model.CatalogProductsModel.Products.Count.Should().Be(6);
         }
-        
+
         [Test]
         public async Task CanPreparePopularProductTagsModel()
         {

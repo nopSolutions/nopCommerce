@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -20,7 +19,7 @@ namespace Nop.Web.Models.Catalog
         public string Name { get; set; }
 
         public string SeName { get; set; }
-        
+
         public bool IsActive { get; set; }
     }
 }

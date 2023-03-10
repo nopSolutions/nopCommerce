@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Web.Factories;
@@ -14,7 +10,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 {
     [TestFixture]
-    public class AddressModelFactoryTests: BaseNopTest
+    public class AddressModelFactoryTests : BaseNopTest
     {
         private IAddressModelFactory _addressModelFactory;
         private IGenericAttributeService _genericAttributeService;

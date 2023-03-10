@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -72,7 +71,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Title"] = "PayPal Commerce",
                 ["Admin.ConfigurationSteps.PaymentMethods.Configure.Text"] = "You can configure each payment method by clicking the appropriate <b>Configure</b> button. Now we’ll configure the PayPal Commerce payment method.",
                 ["Admin.ConfigurationSteps.PaymentMethods.Configure.Title"] = "Configure PayPal Commerce",
-                
+
                 ["Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title"] = "Create a PayPal account",
                 ["Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text"] = "You have two options to do this: you can either register an account on the PayPal website or you can do this from the plugin configuration page. Let’s register an account from the plugin configuration page.",
                 ["Admin.ConfigurationSteps.PaymentPayPal.Register.Title"] = "Register an account",
@@ -81,7 +80,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title"] = "Specify API credentials",
                 ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text"] = "If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.",
-                
+
                 ["Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title"] = "Sandbox",
                 ["Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text"] = "Use sandbox if you want to test the payment method first.",
 

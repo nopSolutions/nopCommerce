@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
-using Nop.Core.Domain.Localization;
-using Nop.Data.Extensions;
-using Nop.Services;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
@@ -20,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class LanguageModelFactory : ILanguageModelFactory
     {
         #region Fields
-        
+
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -66,7 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -144,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available currencies
-            await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies, 
+            await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies,
                 defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare available stores

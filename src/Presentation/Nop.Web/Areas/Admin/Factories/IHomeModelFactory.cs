@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Home;
+﻿using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Areas.Admin.Factories

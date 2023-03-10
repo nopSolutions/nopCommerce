@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.ScheduleTasks;
+﻿using Nop.Services.ScheduleTasks;
 
 namespace Nop.Plugin.Misc.Zettle.Services
 {

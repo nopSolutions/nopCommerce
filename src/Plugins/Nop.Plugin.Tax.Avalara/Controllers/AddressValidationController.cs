@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
@@ -46,7 +45,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 //add address to customer collection if it's a new
-                if (isNewAddress) await _customerService.InsertCustomerAddressAsync(customer, address);
+                if (isNewAddress)
+                    await _customerService.InsertCustomerAddressAsync(customer, address);
 
                 //and update appropriate customer address
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)

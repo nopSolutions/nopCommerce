@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Nop.Core.Caching
+﻿namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a manager for caching between HTTP requests (long term caching)
@@ -69,7 +66,7 @@ namespace Nop.Core.Caching
         /// <param name="data">Value for caching</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task SetAsync<T>(CacheKey key, T data);
-        
+
         /// <summary>
         /// Remove items by cache key prefix
         /// </summary>

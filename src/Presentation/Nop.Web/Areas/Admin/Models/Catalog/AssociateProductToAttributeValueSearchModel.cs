@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -53,9 +52,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         public IList<SelectListItem> AvailableProductTypes { get; set; }
-        
+
         public bool IsLoggedInAsVendor { get; set; }
-        
+
         public AssociateProductToAttributeValueModel AssociateProductToAttributeValueModel { get; set; }
 
         #endregion

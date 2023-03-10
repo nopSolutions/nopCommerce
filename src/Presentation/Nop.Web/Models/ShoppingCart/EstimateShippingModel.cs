@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -22,7 +20,7 @@ namespace Nop.Web.Models.ShoppingCart
         public string ZipPostalCode { get; set; }
         public bool UseCity { get; set; }
         public string City { get; set; }
-        
+
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
     }
