@@ -427,9 +427,7 @@ namespace Nop.Services.ExportImport
                                 ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
-                            var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
-                                ? productsImagesIds[product.ProductItem.Id]
-                                : Array.Empty<int>();
+                            var imagesIds = productsImagesIds.TryGetValue(product.ProductItem.Id, out var value) ? value : Array.Empty<int>();
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
                                 .Select(p => p.Value)
@@ -510,9 +508,9 @@ namespace Nop.Services.ExportImport
                             var categoryName = manager.GetDefaultProperty("ParentCategoryName").StringValue;
                             if (!string.IsNullOrEmpty(categoryName))
                             {
-                                var parentCategory = allCategories.ContainsKey(categoryName)
+                                var parentCategory = allCategories.TryGetValue(categoryName, out var value)
                                     //try find category by full name with all parent category names
-                                    ? await allCategories[categoryName]
+                                    ? await value
                                     //try find category by name
                                     : await await allCategories.Values.FirstOrDefaultAwaitAsync(async c => (await c).Name.Equals(categoryName, StringComparison.InvariantCulture));
 
@@ -590,9 +588,9 @@ namespace Nop.Services.ExportImport
                 var categoryName = manager.GetDefaultProperty("Name").StringValue;
                 if (!string.IsNullOrEmpty(categoryName))
                 {
-                    category = allCategories.ContainsKey(categoryName)
+                    category = allCategories.TryGetValue(categoryName, out var value)
                         //try find category by full name with all parent category names
-                        ? await allCategories[categoryName]
+                        ? await value
                         //try find category by name
                         : await await allCategories.Values.FirstOrDefaultAwaitAsync(async c => (await c).Name.Equals(categoryName, StringComparison.InvariantCulture));
                 }
@@ -1181,13 +1179,13 @@ namespace Nop.Services.ExportImport
             {
                 var allColumnsAreEmpty = manager.GetDefaultProperties
                     .Select(property => defaultWorksheet.Row(endRow).Cell(property.PropertyOrderPosition))
-                    .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
+                    .All(cell => string.IsNullOrEmpty(cell?.Value.ToString()));
 
                 if (allColumnsAreEmpty)
                     break;
 
                 if (new[] { 1, 2 }.Select(cellNum => defaultWorksheet.Row(endRow).Cell(cellNum))
-                        .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString())) &&
+                        .All(cell => string.IsNullOrEmpty(cell?.Value.ToString())) &&
                     defaultWorksheet.Row(endRow).OutlineLevel == 0)
                 {
                     var cellValue = defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value;
@@ -1212,7 +1210,7 @@ namespace Nop.Services.ExportImport
                         case ExportedAttributeType.ProductAttribute:
                             productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow,
                                 ExportProductAttribute.ProductAttributeCellOffset);
-                            if (int.TryParse((defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value ?? string.Empty).ToString(), out var aid))
+                            if (int.TryParse(defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value.ToString(), out var aid))
                             {
                                 allAttributeIds.Add(aid);
                             }
@@ -1221,7 +1219,7 @@ namespace Nop.Services.ExportImport
                         case ExportedAttributeType.SpecificationAttribute:
                             specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow, ExportProductAttribute.ProductAttributeCellOffset);
 
-                            if (int.TryParse((defaultWorksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value ?? string.Empty).ToString(), out var saoid))
+                            if (int.TryParse(defaultWorksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value.ToString(), out var saoid))
                             {
                                 allSpecificationAttributeOptionIds.Add(saoid);
                             }
@@ -1235,7 +1233,7 @@ namespace Nop.Services.ExportImport
 
                 if (categoryCellNum > 0)
                 {
-                    var categoryIds = defaultWorksheet.Row(endRow).Cell(categoryCellNum).Value?.ToString() ?? string.Empty;
+                    var categoryIds = defaultWorksheet.Row(endRow).Cell(categoryCellNum).Value.ToString() ?? string.Empty;
 
                     if (!string.IsNullOrEmpty(categoryIds))
                         allCategories.AddRange(categoryIds
@@ -1245,7 +1243,7 @@ namespace Nop.Services.ExportImport
 
                 if (skuCellNum > 0)
                 {
-                    var sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value?.ToString() ?? string.Empty;
+                    var sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value.ToString() ?? string.Empty;
 
                     if (!string.IsNullOrEmpty(sku))
                         allSku.Add(sku);
@@ -1253,7 +1251,7 @@ namespace Nop.Services.ExportImport
 
                 if (manufacturerCellNum > 0)
                 {
-                    var manufacturerIds = defaultWorksheet.Row(endRow).Cell(manufacturerCellNum).Value?.ToString() ??
+                    var manufacturerIds = defaultWorksheet.Row(endRow).Cell(manufacturerCellNum).Value.ToString() ??
                                           string.Empty;
                     if (!string.IsNullOrEmpty(manufacturerIds))
                         allManufacturers.AddRange(manufacturerIds
@@ -1262,7 +1260,7 @@ namespace Nop.Services.ExportImport
 
                 if (limitedToStoresCellNum > 0)
                 {
-                    var storeIds = defaultWorksheet.Row(endRow).Cell(limitedToStoresCellNum).Value?.ToString() ??
+                    var storeIds = defaultWorksheet.Row(endRow).Cell(limitedToStoresCellNum).Value.ToString() ??
                                           string.Empty;
                     if (!string.IsNullOrEmpty(storeIds))
                         allStores.AddRange(storeIds
@@ -1432,7 +1430,7 @@ namespace Nop.Services.ExportImport
             {
                 var allColumnsAreEmpty = manager.GetDefaultProperties
                     .Select(property => worksheet.Row(endRow).Cell(property.PropertyOrderPosition))
-                    .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
+                    .All(cell => string.IsNullOrEmpty(cell?.Value.ToString()));
 
                 if (allColumnsAreEmpty)
                     break;
@@ -1453,14 +1451,14 @@ namespace Nop.Services.ExportImport
 
                 if (orderGuidCellNum > 0)
                 {
-                    var orderGuidString = worksheet.Row(endRow).Cell(orderGuidCellNum).Value?.ToString() ?? string.Empty;
+                    var orderGuidString = worksheet.Row(endRow).Cell(orderGuidCellNum).Value.ToString() ?? string.Empty;
                     if (!string.IsNullOrEmpty(orderGuidString) && Guid.TryParse(orderGuidString, out var orderGuid))
                         allOrderGuids.Add(orderGuid);
                 }
 
                 if (customerGuidCellNum > 0)
                 {
-                    var customerGuidString = worksheet.Row(endRow).Cell(customerGuidCellNum).Value?.ToString() ?? string.Empty;
+                    var customerGuidString = worksheet.Row(endRow).Cell(customerGuidCellNum).Value.ToString() ?? string.Empty;
                     if (!string.IsNullOrEmpty(customerGuidString) && Guid.TryParse(customerGuidString, out var customerGuid))
                         allCustomerGuids.Add(customerGuid);
                 }
@@ -1630,7 +1628,7 @@ namespace Nop.Services.ExportImport
                 {
                     var cell = worksheet.Row(1).Cell(poz);
 
-                    if (string.IsNullOrEmpty(cell?.Value?.ToString()))
+                    if (string.IsNullOrEmpty(cell?.Value.ToString()))
                         break;
 
                     poz += 1;
@@ -1658,7 +1656,7 @@ namespace Nop.Services.ExportImport
                     {
                         var cell = localizedWorksheet.Row(1).Cell(poz);
 
-                        if (string.IsNullOrEmpty(cell?.Value?.ToString()))
+                        if (string.IsNullOrEmpty(cell?.Value.ToString()))
                             break;
 
                         poz += 1;
@@ -2166,7 +2164,7 @@ namespace Nop.Services.ExportImport
                         .Select(categoryName => new CategoryKey(categoryName, storesIds))
                         .SelectAwait(async categoryKey =>
                         {
-                            var rez = (allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id) ??
+                            var rez = (allCategories.TryGetValue(categoryKey, out var value) ? value.Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id) ??
                                       allCategories.FirstOrDefault(p =>
                                     p.Key.Key.Equals(categoryKey.Key, StringComparison.InvariantCultureIgnoreCase))
                                 .Value?.Id;
@@ -2643,7 +2641,7 @@ namespace Nop.Services.ExportImport
             {
                 var allColumnsAreEmpty = manager.GetDefaultProperties
                     .Select(property => defaultWorksheet.Row(iRow).Cell(property.PropertyOrderPosition))
-                    .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
+                    .All(cell => string.IsNullOrEmpty(cell?.Value.ToString()));
 
                 if (allColumnsAreEmpty)
                     break;

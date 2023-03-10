@@ -212,7 +212,7 @@ namespace Nop.Services.ExportImport.Help
                     {
                         var fCell = fWorksheet.Row(fRow++).Cell(prop.PropertyOrderPosition);
 
-                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                        if (!fCell.IsEmpty() && fCell.Value.ToString() == dropDownElement)
                             break;
 
                         fCell.Value = dropDownElement;
@@ -223,26 +223,7 @@ namespace Nop.Services.ExportImport.Help
                 else
                 {
                     var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                    if (value is string stringValue)
-                    {
-                        cell.SetValue(stringValue);
-                    }
-                    else if (value is char charValue)
-                    {
-                        cell.SetValue(charValue);
-                    }
-                    else if (value is Guid guidValue)
-                    {
-                        cell.SetValue(guidValue);
-                    }
-                    else if (value is Enum enumValue)
-                    {
-                        cell.SetValue(enumValue);
-                    }
-                    else
-                    {
-                        cell.Value = value;
-                    }
+                    cell.SetValue((XLCellValue)value?.ToString());
                 }
                 cell.Style.Alignment.WrapText = false;
             }
@@ -293,7 +274,7 @@ namespace Nop.Services.ExportImport.Help
                     {
                         var fCell = fWorksheet.Row(fRow++).Cell(prop.PropertyOrderPosition);
 
-                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                        if (!fCell.IsEmpty() && fCell.Value.ToString() == dropDownElement)
                             break;
 
                         fCell.Value = dropDownElement;
@@ -304,26 +285,7 @@ namespace Nop.Services.ExportImport.Help
                 else
                 {
                     var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                    if (value is string stringValue)
-                    {
-                        cell.SetValue(stringValue);
-                    }
-                    else if (value is char charValue)
-                    {
-                        cell.SetValue(charValue);
-                    }
-                    else if (value is Guid guidValue)
-                    {
-                        cell.SetValue(guidValue);
-                    }
-                    else if (value is Enum enumValue)
-                    {
-                        cell.SetValue(enumValue);
-                    }
-                    else
-                    {
-                        cell.Value = value;
-                    }
+                    cell.SetValue((XLCellValue)value?.ToString());
                 }
                 cell.Style.Alignment.WrapText = false;
             }
@@ -374,7 +336,7 @@ namespace Nop.Services.ExportImport.Help
             foreach (var caption in _defaultProperties.Values)
             {
                 var cell = worksheet.Row(row).Cell(caption.PropertyOrderPosition + cellOffset);
-                cell.Value = caption;
+                cell.Value = caption.ToString();
 
                 SetCaptionStyle(cell);
             }
@@ -391,7 +353,7 @@ namespace Nop.Services.ExportImport.Help
             foreach (var caption in _localizedProperties.Values)
             {
                 var cell = worksheet.Row(row).Cell(caption.PropertyOrderPosition + cellOffset);
-                cell.Value = caption;
+                cell.Value = caption.ToString();
 
                 SetCaptionStyle(cell);
             }
@@ -420,7 +382,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public PropertyByName<T, L> GetDefaultProperty(string propertyName)
         {
-            return _defaultProperties.ContainsKey(propertyName) ? _defaultProperties[propertyName] : null;
+            return _defaultProperties.TryGetValue(propertyName, out var value) ? value : null;
         }
 
         /// <summary>
@@ -430,7 +392,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public PropertyByName<T, L> GetLocalizedProperty(string propertyName)
         {
-            return _localizedProperties.ContainsKey(propertyName) ? _localizedProperties[propertyName] : null;
+            return _localizedProperties.TryGetValue(propertyName, out var value) ? value : null;
         }
 
         /// <summary>
