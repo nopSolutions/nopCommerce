@@ -190,7 +190,8 @@ namespace Nop.Plugin.Payments.Iyzico
                 BasketItems = await GetBasketItems(customer, processPaymentRequest.StoreId),
                 BillingAddress = await _paymentIyzicoService.GetAddress(billingAddress),
                 ShippingAddress = await _paymentIyzicoService.GetAddress(shippingAddress),
-                PaymentChannel = "WEB"
+                PaymentChannel = "WEB",
+                CallbackUrl = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}"
             };
 
             //Taksit seçeneği seçili ise Taksit özelliğini aktif et
@@ -235,7 +236,8 @@ namespace Nop.Plugin.Payments.Iyzico
             //Checkout form için sonuç
             // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-            var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+            //  var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+            var payment = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
 
             var result = new ProcessPaymentResult
@@ -253,7 +255,7 @@ namespace Nop.Plugin.Payments.Iyzico
                 result.CaptureTransactionId = payment.ConversationId;
                 result.AuthorizationTransactionId=payment.PaymentId;
                 result.CaptureTransactionResult = payment.Status;
-                result.NewPaymentStatus= PaymentStatus.Paid;
+                result.NewPaymentStatus= PaymentStatus.Authorized;
                 //_httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
 
                 //_httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
