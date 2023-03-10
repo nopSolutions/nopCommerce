@@ -182,10 +182,47 @@ namespace Nop.Services.Messages
         /// <returns>Email address and name to send email fore store owner</returns>
         protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
         {
-            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ?  await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
+            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
             storeOwnerEmailAccount ??= messageTemplateEmailAccount;
 
             return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
+        }
+
+        /// <summary>
+        /// Get email and name to set ReplyTo property of email from customer 
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Email address and name when reply to email</returns>
+        protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmail(MessageTemplate messageTemplate, Customer customer)
+        {
+            if (!messageTemplate.AllowDirectReply)
+                return ("", "");
+
+            var replyToEmail = await _customerService.IsGuestAsync(customer)
+                ? string.Empty
+                : customer.Email;
+            var replyToName = await _customerService.IsGuestAsync(customer)
+                ? string.Empty 
+                : await _customerService.GetCustomerFullNameAsync(customer);
+
+            return (replyToEmail, replyToName);
+        }
+
+        /// <summary>
+        /// Get email and name to set ReplyTo property of email from order
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="order">Order</param>
+        /// <returns>Email address and name when reply to email</returns>
+        protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmail(MessageTemplate messageTemplate, Order order)
+        {
+            if (!messageTemplate.AllowDirectReply)
+                return ("", "");
+
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+            return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
         }
 
         #endregion
@@ -230,9 +267,11 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var (toEmail,toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -482,6 +521,8 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
@@ -499,8 +540,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -592,8 +635,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1132,8 +1177,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1281,8 +1328,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1626,8 +1675,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1942,7 +1993,12 @@ namespace Nop.Services.Messages
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                var vendorAddress = await _addressService.GetAddressByIdAsync(vendor.AddressId);
+                var replyToEmail = messageTemplate.AllowDirectReply ?  vendorAddress.Email : "";
+                var replyToName = messageTemplate.AllowDirectReply ? $"{vendorAddress.FirstName} {vendorAddress.LastName}" : "";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1984,7 +2040,12 @@ namespace Nop.Services.Messages
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                var vendorAddress = await _addressService.GetAddressByIdAsync(vendor.AddressId);
+                var replyToEmail = messageTemplate.AllowDirectReply ? vendorAddress.Email : "";
+                var replyToName = messageTemplate.AllowDirectReply ? $"{vendorAddress.FirstName} {vendorAddress.LastName}" : "";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2071,9 +2132,13 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
+                var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, customer);
+
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2257,8 +2322,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2283,6 +2350,8 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddBlogCommentTokensAsync(commonTokens, blogComment);
@@ -2300,8 +2369,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2326,6 +2397,8 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddNewsCommentTokensAsync(commonTokens, newsComment);
@@ -2342,9 +2415,11 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);       
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmail(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                      replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
