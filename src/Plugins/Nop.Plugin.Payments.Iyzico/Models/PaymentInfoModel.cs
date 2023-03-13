@@ -34,6 +34,8 @@ namespace Nop.Plugin.Payments.Iyzico.Models
 
         [NopResourceDisplayName("Payment.CardCode")]
         public string CardCode { get; set; }
+        public string Html { get; set; }
+        public bool PaymentResult { get; set; }
 
     }
 }

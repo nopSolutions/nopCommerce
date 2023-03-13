@@ -147,14 +147,7 @@ namespace Nop.Plugin.Payments.Iyzico
             var shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, true);
             var shoppingCartUnitPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartSubTotal.subTotalWithDiscount, currency);
             var shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTotal.shoppingCartTotal.Value, currency);
-
-
-            //RetrieveBinNumberRequest requestBin = new RetrieveBinNumberRequest();
-            //requestBin.Locale = Locale.EN.ToString();
-            //requestBin.ConversationId = "123456789";
-            //requestBin.BinNumber = "554960";
-
-            // BinNumber binNumber = BinNumber.Retrieve(requestBin, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+            
 
 
             PaymentCard paymentCard = new PaymentCard();
@@ -190,8 +183,8 @@ namespace Nop.Plugin.Payments.Iyzico
                 BasketItems = await GetBasketItems(customer, processPaymentRequest.StoreId),
                 BillingAddress = await _paymentIyzicoService.GetAddress(billingAddress),
                 ShippingAddress = await _paymentIyzicoService.GetAddress(shippingAddress),
-                PaymentChannel = "WEB",
-                CallbackUrl = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}"
+                PaymentChannel = "WEB"
+               
             };
 
             //Taksit seçeneği seçili ise Taksit özelliğini aktif et
@@ -236,9 +229,8 @@ namespace Nop.Plugin.Payments.Iyzico
             //Checkout form için sonuç
             // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-            //  var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-            var payment = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-
+              var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+            
 
             var result = new ProcessPaymentResult
             {
@@ -247,8 +239,30 @@ namespace Nop.Plugin.Payments.Iyzico
 
             if (payment.Status == "failure")
             {
-                result.AddError(payment.ErrorMessage);
-                result.NewPaymentStatus = PaymentStatus.Pending;
+                request.CallbackUrl =
+                    $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+
+                var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+                if (payment3d.Status == "failure")
+                {
+
+
+                    result.AddError(payment.ErrorMessage);
+                    result.NewPaymentStatus = PaymentStatus.Pending;
+                }
+                else
+                {
+                    //result.AvsResult= payment3d.HtmlContent;
+                    result.CaptureTransactionId = payment.ConversationId;
+                    result.AuthorizationTransactionId = payment.PaymentId;
+                    result.CaptureTransactionResult = payment.Status;
+                    result.NewPaymentStatus = PaymentStatus.Authorized;
+                    _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                    string paymentPage;
+                    paymentPage = payment3d.HtmlContent;
+                    _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+                }
             }
             else
             {
@@ -275,44 +289,6 @@ namespace Nop.Plugin.Payments.Iyzico
 
             }
 
-
-
-            //try to get an order id from custom values
-            //var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.OrderId");
-            //if (!processPaymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderId) || string.IsNullOrEmpty(orderId?.ToString()))
-            //    throw new NopException("Failed to get the PayPal order ID");
-
-            ////authorize or capture the order
-            //var (order, error) = _settings.PaymentType == PaymentType.Capture
-            //    ? await _serviceManager.CaptureAsync(_settings, orderId.ToString())
-            //    : (_settings.PaymentType == PaymentType.Authorize
-            //        ? await _serviceManager.AuthorizeAsync(_settings, orderId.ToString())
-            //        : (default, default));
-
-            //if (!string.IsNullOrEmpty(error))
-            //    return new ProcessPaymentResult { Errors = new[] { error } };
-
-            ////request succeeded
-            //var result = new ProcessPaymentResult();
-
-            //var purchaseUnit = order.PurchaseUnits
-            //    .FirstOrDefault(item => item.ReferenceId.Equals(processPaymentRequest.OrderGuid.ToString()));
-            //var authorization = purchaseUnit.Payments?.Authorizations?.FirstOrDefault();
-            //if (authorization != null)
-            //{
-            //    result.AuthorizationTransactionId = authorization.Id;
-            //    result.AuthorizationTransactionResult = authorization.Status;
-            //    result.NewPaymentStatus = PaymentStatus.Authorized;
-            //}
-            //var capture = purchaseUnit.Payments?.Captures?.FirstOrDefault();
-            //if (capture != null)
-            //{
-            //    result.CaptureTransactionId = capture.Id;
-            //    result.CaptureTransactionResult = capture.Status;
-            //    result.NewPaymentStatus = PaymentStatus.Paid;
-            //}
-
-            //return result;
 
             return await Task.FromResult(result);
         }
@@ -374,23 +350,16 @@ namespace Nop.Plugin.Payments.Iyzico
         {
             string paymentPage = _httpContextAccessor.HttpContext.Session.GetString("PaymentPage");
 
-            //if (string.IsNullOrEmpty(paymentPage) == false)
-            //{
-            //    _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
-
-            //    //if (_iyzicoPaymentSettings.UseToPaymentPopup)
-            //    //{
-            //    //    _httpContextAccessor.HttpContext.Response.WriteAsync(paymentPage);
-            //    //}
-            //    //else
-            //    //{
-            //    //    _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
-            //    //}
-            //}
-            //else
-            //{
-            //    _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
-            //}
+            if (string.IsNullOrEmpty(paymentPage) == false)
+            {
+                _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
+               
+            }
+            else
+            {
+                _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
+            }
 
             return Task.CompletedTask;
         }

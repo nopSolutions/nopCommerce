@@ -38,6 +38,22 @@ namespace Nop.Plugin.Payments.Iyzico
             return result;
         }
 
+        public static PaymentStatus GetPaymentStatus(int paymentStatus)
+        {
+            var result = PaymentStatus.Pending;
+
+
+            if (paymentStatus == 0)
+            {
+
+                result = PaymentStatus.Voided;
+            }
+            else if(paymentStatus == 1)
+            {
+                result = PaymentStatus.Paid;
+            }
+            return result;
+        }
         public static Options GetOptions(IyzicoPaymentSettings iyzicoPaymentSettings)
         {
             var options = new Options

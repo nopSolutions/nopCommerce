@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Iyzipay;
 using Iyzipay.Model;
 using Iyzipay.Model.V2.Transaction;
 using Iyzipay.Request;
 using Iyzipay.Request.V2;
+using LinqToDB.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -26,6 +28,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Web.Models.Checkout;
 
 namespace Nop.Plugin.Payments.Iyzico.Controllers
 {
@@ -55,7 +58,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IEncryptionService _encryptionService;
-
+        private IWebHelper _webHelper;
         #endregion
 
         #region Ctor
@@ -81,7 +84,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             IPaymentService paymentService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
-            IEncryptionService encryptionService)
+            IEncryptionService encryptionService, IWebHelper webHelper)
         {
             _orderProcessingService = orderProcessingService;
             _logger = logger;
@@ -106,6 +109,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             _orderTotalCalculationService = orderTotalCalculationService;
             _rewardPointService = rewardPointService;
             _encryptionService = encryptionService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -113,8 +117,9 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         #region Methods
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<IActionResult> PaymentConfirm(string orderGuid,Payment result)
+        public async Task<IActionResult> PaymentConfirm(string orderGuid)
         {
+            
             //validation
             if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
@@ -148,16 +153,31 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 //};
 
 
-                //RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
-                //{
-                //    ConversationId = order.CaptureTransactionId,
-                //    PaymentId = order.AuthorizationTransactionId
-                //};
+                RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
+                {
+                    ConversationId = order.CaptureTransactionId,
+                    PaymentId = order.AuthorizationTransactionId
+                };
 
-                //TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
                 // CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-               // var checkoutForm = transactionDetail.Payments.First();
+                TransactionDetailItem result = null;
+                if (!transactionDetail.Payments.IsNullOrEmpty())
+                {
+                   
+                    result = transactionDetail.Payments.First();
+                }
+
+                while (result is null)
+                {
+                    transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                    if (!transactionDetail.Payments.IsNullOrEmpty())
+                    {
+
+                        result = transactionDetail.Payments.First();
+                    }
+                }
                 List<string> errorStr = new();
 
                 //if (string.IsNullOrEmpty(transactionDetail.ErrorMessage) == false)
@@ -186,10 +206,17 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                         {
                             order.OrderStatus = OrderStatus.Processing;
                             order.CardNumber = _encryptionService.EncryptText($"{result.BinNumber}******{result.LastFourDigits}");
+                            order.CardCvv2 = "";
+                            order.CardExpirationMonth = "";
+                            order.CardExpirationYear = "";
                             if (order.CustomerCurrencyCode=="TRY")
                             {
-                                order.CardType = _encryptionService.EncryptText(result.CardAssociation.Replace("_", " "));
-                                order.CardName = _encryptionService.EncryptText(result.CardFamily);
+                                if (!result.CardAssociation.IsNullOrEmpty())
+                                {
+                                    order.CardType = _encryptionService.EncryptText(result.CardAssociation.Replace("_", " "));
+                                    order.CardName = _encryptionService.EncryptText(result.CardFamily);
+
+                                }
                             }
 
                         }
@@ -204,7 +231,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             $"Komisyon Ücreti :  {result.IyziCommissionFee:C2}"
                         };
 
-                        result.PaymentItems.ForEach((item) =>
+                        result.ItemTransactions.ForEach((item) =>
                         {
                             PaymentInformation.Add($"Ürün Id: {item.ItemId} - Ürün Tutarı : {item.PaidPrice} - İşlem Kimliği : {item.PaymentTransactionId}");
                         });
@@ -217,8 +244,12 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
+                        _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}{_iyzicoPaymentSettings.PaymentSuccessUrl}");
+                        string url = _webHelper.GetStoreLocation() + _iyzicoPaymentSettings.PaymentSuccessUrl;
+                        url=url.Replace("//", "/").Replace("https:/", "https://");
 
-                        return Redirect(_iyzicoPaymentSettings.PaymentSuccessUrl);
+
+                        return Redirect(url) ;
 
                     case PaymentStatus.Refunded:
 
