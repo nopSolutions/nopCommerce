@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -14,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
+        [NoTrim]
         public string PageTitleSeparator { get; set; }
         public bool PageTitleSeparator_OverrideForStore { get; set; }
 

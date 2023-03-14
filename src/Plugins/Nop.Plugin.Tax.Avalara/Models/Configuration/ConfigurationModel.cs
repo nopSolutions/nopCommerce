@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Tax.Avalara.Models.Log;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.Avalara.Models.Configuration
@@ -36,6 +37,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         public string AccountId { get; set; }
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.LicenseKey")]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string LicenseKey { get; set; }
 

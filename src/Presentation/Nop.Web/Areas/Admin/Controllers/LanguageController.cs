@@ -331,9 +331,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
-                model.ResourceName = model.ResourceName.Trim();
+                model.ResourceName = model.ResourceName;
             if (model.ResourceValue != null)
-                model.ResourceValue = model.ResourceValue.Trim();
+                model.ResourceValue = model.ResourceValue;
 
             if (!ModelState.IsValid)
             {
@@ -367,9 +367,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
-                model.ResourceName = model.ResourceName.Trim();
+                model.ResourceName = model.ResourceName;
             if (model.ResourceValue != null)
-                model.ResourceValue = model.ResourceValue.Trim();
+                model.ResourceValue = model.ResourceValue;
 
             if (!ModelState.IsValid)
             {
