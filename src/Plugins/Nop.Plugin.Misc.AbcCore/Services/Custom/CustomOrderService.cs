@@ -71,7 +71,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
         public IList<Order> GetUnsubmittedOrders()
         {
             var lastMonth = DateTime.Today.AddMonths(-1);
-            return _orderRepository.Table.Where(o => o.CreatedOnUtc > lastMonth && o.CardNumber != null).ToList();
+            return _orderRepository.Table.Where(o => o.CreatedOnUtc > lastMonth && o.CardNumber != null && !o.Deleted).ToList();
         }
 
         private static bool IsWarranty(ProductAttribute productAttribute)
