@@ -1,0 +1,565 @@
+﻿<!--
+// *************************************************************************
+// *                                                                       *
+// * nopAccelerate Plus - Solr Integration Extension for nopCommerce       *
+// * Copyright (c) Xcellence-IT. All Rights Reserved.                      *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * Email: info@nopaccelerate.com                                         *
+// * Website: http://www.nopaccelerate.com                                 *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * This  software is furnished  under a license  and  may  be  used  and *
+// * modified  only in  accordance with the terms of such license and with *
+// * the  inclusion of the above  copyright notice.  This software or  any *
+// * other copies thereof may not be provided or  otherwise made available *
+// * to any  other  person.   No title to and ownership of the software is *
+// * hereby transferred.                                                   *
+// *                                                                       *
+// * You may not reverse  engineer, decompile, defeat  license  encryption *
+// * mechanisms  or  disassemble this software product or software product *
+// * license.  Xcellence-IT may terminate this license if you don't comply *
+// * with  any  of  the  terms and conditions set forth in  our  end  user *
+// * license agreement (EULA).  In such event,  licensee  agrees to return *
+// * licensor  or destroy  all copies of software  upon termination of the *
+// * license.                                                              *
+// *                                                                       *
+// * Please see the  License file for the full End User License Agreement. *
+// * The  complete license agreement is also available on  our  website at * 
+// * http://www.nopaccelerate.com/enterprise-license                       *
+// *                                                                       *
+// *************************************************************************
+-->
+<Language Name="English" IsDefault="true" IsRightToLeft="false">
+
+  <!--#region Menu -->
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Menu.SubTitle">
+    <Value>nopAccelerate+ Search</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Fields.NopAccelerateSearch">
+    <Value>nopAccelerate Plus Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Fields.SearchSetting">
+    <Value>Search Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Fields.FacetSetting">
+    <Value>Facet Settings</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Setting Title-->
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Search.Title.FacetSetting">
+    <Value>nopAccelerate Plus facet setting</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.NopAcceleratePlus.Search.Title.SearchSetting">
+    <Value>nopAccelerate Plus search settings</Value>
+  </LocaleResource>
+  <!--#endregion-->
+
+  <!--#region Search Setting ResourceString -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.tabsearch">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.tabboost">
+    <Value>Search Boost</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearch">
+    <Value>Enable Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearch.Hint">
+    <Value>Enable Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchOperator">
+    <Value>Search Operator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchOperator.Hint">
+    <Value>Search Operator While Searching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchMinimumMatch">
+    <Value>Minimum Match</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchMinimumMatch.Hint">
+    <Value>Search Result on Mimimum should Match</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnName">
+    <Value>Search On Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnName.Hint">
+    <Value>Enable/Disable Search On Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnName">
+    <Value>Boosting on Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnName.Hint">
+    <Value>Select Boost value For Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnShortDesc">
+    <Value>Search On Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnShortDesc.Hint">
+    <Value>Enable/Disable Search On Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnShortDesc">
+    <Value>Boosting on Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnShortDesc.Hint">
+    <Value>Select Boost value For Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnFullDesc">
+    <Value>Search on Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnFullDesc.Hint">
+    <Value>Enable/Disable Search on Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnFullDesc">
+    <Value>Boosting on Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnFullDesc.Hint">
+    <Value>Select Boost value For Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnCategoryName">
+    <Value>Search on Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnCategoryName.Hint">
+    <Value>Enable/Disable Search on Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnCategoryName">
+    <Value>Boosting on Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnCategoryName.Hint">
+    <Value>Select Boost value For Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnManufacturerName">
+    <Value>Search On Manufacturer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnManufacturerName.Hint">
+    <Value>Enable/Disable Search On Manufacturer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnManufacturerName">
+    <Value>Boosting on Manufacturer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnManufacturerName.Hint">
+    <Value>Select Boost value For Manufacturer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductTagName">
+    <Value>Search on ProductTag Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductTagName.Hint">
+    <Value>Enable/Disable Search On ProductTag Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductTagName">
+    <Value>Boosting on ProductTag Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductTagName.Hint">
+    <Value>Select Boost value For ProductTag Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSku">
+    <Value>Search On SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSku.Hint">
+    <Value>Enable/Disable Search On SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSku">
+    <Value>Boosting on SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSku.Hint">
+    <Value>Select Boost value For SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnGTIN">
+    <Value>Search on GTIN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnGTIN.Hint">
+    <Value>Enable/Disable Search on GTIN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnGTIN">
+    <Value>Boosting on GTIN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnGTIN.Hint">
+    <Value>Select Boost value For GTIN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnManufacturerPartNumber">
+    <Value>Search on MPN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnManufacturerPartNumber.Hint">
+    <Value>Enable/Disable Search on MPN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnManufacturerPartNumber">
+    <Value>Boosting on MPN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnManufacturerPartNumber.Hint">
+    <Value>Select Boost value For MPN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.LowRelevancyForOutOfStock">
+    <Value>Give high relevancy to In-Stock products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.LowRelevancyForOutOfStock.Hint">
+    <Value>If checked, In-Stock products will be ranked higher in Search result.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductAttribute">
+    <Value>Search on Product Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductAttribute.Hint">
+    <Value>Enable/Disable Search on Product Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductAttribute">
+    <Value>Boosting on Product Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductAttribute.Hint">
+    <Value>Select Boost value For ProductAttrbute</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductAttributeValue">
+    <Value>Search on Product Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnProductAttributeValue.Hint">
+    <Value>Enable/Disable Search on Product Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductAttributeValue">
+    <Value>Boosting on Product Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnProductAttributeValue.Hint">
+    <Value>Select Boost value For ProductAttrbute Value</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSpecificationAttribute">
+    <Value>Search on Specification Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSpecificationAttribute.Hint">
+    <Value>Enable/Disable Search on Specification Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSpecificationAttribute">
+    <Value>Boosting on Specification Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSpecificationAttribute.Hint">
+    <Value>Select Boost value For Specification Attribute</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSpecificationAttributeValue">
+    <Value>Search on Specification Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSpecificationAttributeValue.Hint">
+    <Value>Enable/Disable Search on Specification Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSpecificationAttributeValue">
+    <Value>Boosting on Specification Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSpecificationAttributeValue.Hint">
+    <Value>Select Boost value For Specification Attribute Value</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaDescription">
+    <Value>Search on Meta Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaDescription.Hint">
+    <Value>Enable/Disable Search on Meta Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaDescription">
+    <Value>Boosting on Meta Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaDescription.Hint">
+    <Value>Select Boost value For Meta Description</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaKeywords">
+    <Value>Search on Meta Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaKeywords.Hint">
+    <Value>Enable/Disable Search on Meta Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaKeywords">
+    <Value>Boosting on Meta Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaKeywords.Hint">
+    <Value>Select Boost value For Meta Keywords</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaTitle">
+    <Value>Search on Meta Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnMetaTitle.Hint">
+    <Value>Enable/Disable Search on Meta Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaTitle">
+    <Value>Boosting on Meta Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnMetaTitle.Hint">
+    <Value>Select Boost value For Meta Title</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSlugName">
+    <Value>Search on SlugName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableSearchOnSlugName.Hint">
+    <Value>Enable/Disable Search on SlugName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSlugName">
+    <Value>Boosting on SlugName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.SearchWeightOnSlugName.Hint">
+    <Value>Select Boost value For SlugName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.WeightOnHighRelevancyForInStock">
+    <Value>Boosting on InStock Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.WeightOnHighRelevancyForInStock.Hint">
+    <Value>Select the Boosting Value for Instock Products</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.HighRelevancyForInStock">
+    <Value>High Relevancy for InStock Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.HighRelevancyForInStock.Hint">
+    <Value>High Relevancy for InStock Product</Value>
+  </LocaleResource>
+  
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableInfiniteScrolling">
+    <Value>Enable Infinite Scrolling</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.EnableInfiniteScrolling.Hint">
+    <Value>Enable/Disable Infinite Scrolling for use infinite scrolling</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.InfiniteScrollingTillPage">
+    <Value>Infinite Scrolling Till Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.InfiniteScrollingTillPage.Hint">
+    <Value>Add numaric value for load number of product for infinite scrolling on catalog page</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.ShowNoOfProductsFound">
+    <Value>Show Number Of Product Founds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.ShowNoOfProductsFound.Hint">
+    <Value>If Enable then No of Products Found String will shown on Catalog as well as Search page</Value>
+  </LocaleResource>
+
+  <!--#endregion-->
+
+
+
+  <!--#region Facet Setting -->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetFilter">
+    <Value>Enable Facet Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetFilter.Hint">
+    <Value>If checked the facet filters will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableRangePriceFilter">
+    <Value>Enable Price Range Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableRangePriceFilter.Hint">
+    <Value>If checked the price range filter will be displayed at the selected Widget Zone. The price range needs to be configured for each category.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnablePriceFilterBool">
+    <Value>Enable Price Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnablePriceFilterBool.Hint">
+    <Value>If checked the price range filter will be displayed at the selected Widget Zone. The price range needs to be configured for each category.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableSlotPriceFilter">
+    <Value>Enable Price Slot Filter for Category and Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableSlotPriceFilter.Hint">
+    <Value>If checked the price slot filter will be displayed at the selected Widget Zone. This functionality only enable for Manufacturer and Category.If you loading ProductTag and Vendor, price range slider will be loaded for Price Filter</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnCategory">
+    <Value>Enable Category Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnCategory.Hint">
+    <Value>If checked the category filter will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnCategory">
+    <Value>Category Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnCategory.Hint">
+    <Value>Display order of Category Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnManufacturer">
+    <Value>Enable Manufacturer Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnManufacturer.Hint">
+    <Value>If checked the manufacturer filter will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnManufacturer">
+    <Value>Manufacturer Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnManufacturer.Hint">
+    <Value>Display order of Manufacturer Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnVendor">
+    <Value>Enable Vendor Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnVendor.Hint">
+    <Value>If checked the vendor filter will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnVendor">
+    <Value>Vendor Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnVendor.Hint">
+    <Value>Display order of Vendor Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductTag">
+    <Value>Enable Product Tag Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductTag.Hint">
+    <Value>If checked the Product Tag filter will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductTag">
+    <Value>Product Tag Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductTag.Hint">
+    <Value>Display order of Product Tag Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.WidgetZonesNameForFacetFilter">
+    <Value>Select WidgetZone For FacetFilter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.WidgetZonesNameForFacetFilter.Hint">
+    <Value>Select the appropriate widget zone where you want to display Facet Filters.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductAttributeValue">
+    <Value>Enable Product Attribute Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductAttributeValue.Hint">
+    <Value>If checked the product attribute filter will be displayed at the selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductAttributeValue">
+    <Value>Product AttributeValue Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductAttributeValue.Hint">
+    <Value>Display order of Product AttributeValue Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnSpecificationAttributeValue">
+    <Value>Enable Product Specifications Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnSpecificationAttributeValue.Hint">
+    <Value>If checked the product specification filter will be displayed at selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnSpecificationAttributeValue">
+    <Value>Specification AttributeValue Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnSpecificationAttributeValue.Hint">
+    <Value>Display order of Product Specifications Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnStockAvailability">
+    <Value>Enable Product Stock Availability Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnStockAvailability.Hint">
+    <Value>If checked the product Stock Availability filter will be displayed at selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnStockAvailability">
+    <Value>Stock Availability Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnStockAvailability.Hint">
+    <Value>Display order of Product Stock Availability Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductRating">
+    <Value>Enable Product Rating Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetOnProductRating.Hint">
+    <Value>If checked the product rating filter will be displayed at selected Widget Zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductRating">
+    <Value>Product Rating Facet Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetDisplayOrderOnProductRating.Hint">
+    <Value>Display order of Product rating Filter where this facet will shown on page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSearchBoxCount">
+    <Value>Count when searching functionality enable in Facet Result</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSearchBoxCount.Hint">
+    <Value>Count when searching functionality enable in Facet Result.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetShowMoreOptions">
+    <Value>Enable Show More/Less option in FacetResult</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableFacetShowMoreOptions.Hint">
+    <Value>Enable Show More/Less option in FacetResult</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSortingOrder">
+    <Value>Select order in which facet should be displayed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSortingOrder.Hint">
+    <Value>Select facet field sort order which will define the display order of facet fields. You can sort it on facet count or alphabetically.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSortingOrder.Option.FacetCount">
+    <Value>Facet Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSortingOrder.Option.Alphabetically">
+    <Value>Alphabetically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.FacetSortingOrder.Option.CustomOrder">
+    <Value>Custom Order</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.DefaultStockAvailabilityControlBehaviour">
+    <Value>Default Stock Availability Control Behaviour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.DefaultStockAvailabilityControlBehaviour.Hint">
+    <Value>select stock availability for display stock availability on facet filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.DefaultStockAvailabilityControlBehaviour.Option.IncludeOutOfStock">
+    <Value>Include Out of Stocks Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.DefaultStockAvailabilityControlBehaviour.Option.ExcludeOutOfStock">
+    <Value>Exclude Out of Stocks Products</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.CollapseStatusForFacetFilter">
+    <Value>Collapse Status For Facet Filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.CollapseStatusForFacetFilter.Hint">
+    <Value>Select collapse status for facet filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.CollapseStatus.Option.Open">
+    <Value>Open</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.CollapseStatus.Option.Collapse">
+    <Value>Collapse</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableAjaxRequestFacet">
+    <Value>Enable Ajax request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Field.Facet.EnableAjaxRequestFacet.Hint">
+    <Value>Enabling this feature will use Ajax otherwise load full page on Facet selection</Value>
+  </LocaleResource>
+  <!--#endregion-->
+  <LocaleResource Name="Plugins.NopAcceleratePlus.Search.Button.Refine">
+    <Value>Refine</Value>
+  </LocaleResource>
+
+  <!--#region Validation -->
+  <LocaleResource Name="NopAcceleratePlus.Search.InfiniteScrollingTillPage.ValueRange">
+    <Value>Infinite Scrolling Till Page Must be 2 or Greater</Value>
+  </LocaleResource>
+  <LocaleResource Name="NopAcceleratePlus.Search.WeightOnHighRelevancyForInStock.ValueRange">
+    <Value>Weight on High relevancy for inStock must be 1 or Greater</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="NopAcceleratePlus.Search.Boosting.Weight.ValueRange">
+    <Value>Boosting value must be 1 or Greater</Value>
+  </LocaleResource>
+  <!--#endregion-->
+</Language>

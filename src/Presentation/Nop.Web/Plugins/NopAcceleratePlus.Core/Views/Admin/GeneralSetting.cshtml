@@ -1,0 +1,38 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Core.Models.GeneralSettingModel
+@{
+    //page title
+    ViewBag.Title = T("XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.GeneralSetting").Text;
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.GeneralSetting");
+}
+@inject Nop.Core.IWebHelper webHelper
+<link href="~/Plugins/NopAcceleratePlus.Core/Content/css/admin-search-configure.min.css" rel="stylesheet" />
+<nop-antiforgery-token />
+
+<form asp-controller="NopAcceleratePlusCore" asp-action="GeneralSetting" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.NopAcceleratePlus.Core.Fields.NopAccelerateCore") - @T("Plugins.NopAcceleratePlus.Core.Fields.GeneralSetting")
+        </h1>
+        <h1 class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </h1>
+    </div>
+    <div class="content-header clearfix">
+        @await Component.InvokeAsync("StoreScopeConfiguration")
+    </div>
+    <div asp-validation-summary="All"></div>
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="performanceconfiguration">
+                <nop-tab asp-name="tab-performance" asp-title="@T("Plugins.NopAcceleratePlus.Core.tabperformance")" asp-default="true">@await Html.PartialAsync("~/Plugins/NopAcceleratePlus.Core/Views/Admin/_PerformanceGeneralSetting.cshtml", Model)</nop-tab>
+                <nop-tab asp-name="tab-seo" asp-title="@T("Plugins.NopAcceleratePlus.Core.tabseo")">@await Html.PartialAsync("~/Plugins/NopAcceleratePlus.Core/Views/Admin/_SeoGeneralSetting.cshtml", Model)</nop-tab>
+                <nop-tab asp-name="tab-selector" asp-title="@T("Plugins.NopAcceleratePlus.Core.tabselector")">@await Html.PartialAsync("~/Plugins/NopAcceleratePlus.Core/Views/Admin/_SelectorSettings.cshtml", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+        @await Component.InvokeAsync("NopAcceleratePlusCoreVersion")
+    </div>
+</form>

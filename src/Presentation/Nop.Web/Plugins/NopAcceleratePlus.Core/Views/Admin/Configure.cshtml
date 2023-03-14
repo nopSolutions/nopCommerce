@@ -1,0 +1,895 @@
+﻿@model ConfigurationModel
+@{
+    //page title
+    ViewBag.Title = T("XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.Configure").Text;
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Core.Configure");
+}
+@inject Nop.Core.IWebHelper webHelper
+<link href="~/Plugins/NopAcceleratePlus.Core/Content/css/admin-search-configure.min.css" rel="stylesheet" />
+<link href="~/Plugins/NopAcceleratePlus.Core/Content/css/hopscotch.min.css" rel="stylesheet" />
+<nop-antiforgery-token />
+
+
+@if (!@Model.IsLicenseActive)
+{
+    <style>
+        #registerForm {
+            padding: 25px;
+            background: #fff;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+
+        .additional-text {
+            margin-bottom: 20px;
+        }
+    </style>
+    <div class="col-sm-12 col-md-8 col-lg-8" style="padding-top: 110px;float: none;margin: 0 auto;">
+        <div id="registerForm">
+            <div class="content-header clearfix" style="padding:0">
+                <h1 class="float-left">
+                    @T("Plugins.NopAcceleratePlus.Core.Fields.NopAccelerateCore")
+                </h1>
+            </div>
+            <div>
+                @Html.Raw(@Model.RegistrationForm)
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <form asp-controller="NopAcceleratePlusCore" asp-action="Configure" method="post">
+        <div class="content-header clearfix">@Html.Raw(@Model.LicenseInformation)</div>
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("XcellenceIT.Plugin.NopAcceleratePlus.Core.Title.Configure")
+            </h1>
+            <h1 class="float-right">
+                <span id="startTourBtn" class="btn btn-large btn-primary">Take a tour</span>
+                <a class="setup-download-btn" href="@Model.DownloadZipUrl"><input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.DownloadZip")" id="DownloadZip" /></a>
+                <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.WizardSetupStep")" id="WizardSetupStep" />
+                <a asp-action="ExportAll" class="btn bg-green" id="ExportSetting">
+                    <i class="fa fa-download"></i>
+                    @T("Plugins.NopAcceleratePlus.Core.Button.Export")
+                </a>
+                <button type="button" class="btn bg-olive" data-toggle="modal" data-target="#importxml-window" id="ImportSetting">
+                    <i class="fa fa-upload"></i>
+                    @T("Plugins.NopAcceleratePlus.Core.Button.Import")
+                </button>
+            </h1>
+        </div>
+        <nop-action-confirmation asp-button-id="ClearCoreData" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ClearCoreData" />
+        <nop-action-confirmation asp-button-id="MarkAllAsPending" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.MarkAllAsPending" />
+        <nop-action-confirmation asp-button-id="StopIndexing" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.StopIndexing" />
+        <nop-action-confirmation asp-button-id="ReIndexing" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ReIndexing" />
+        <nop-action-confirmation asp-button-id="ManageIncrementalTable" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ManageIncrementalTable" />
+        <nop-action-confirmation asp-button-id="WizardSetupStep" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.WizardSetupStep" />
+        <nop-action-confirmation asp-button-id="ClearNopAccCache" asp-additional-confirm="Plugins.NopAcceleratePlus.Core.Field.Button.ConfirmMessage.ClearNopAccCache" />
+        <div class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    <nop-tabs id="searchconfiguration" asp-tab-name-to-select="tab-configuration" asp-render-selected-tab-input="false">
+                        <nop-tab asp-name="tab-configuration" asp-title="@T("Plugins.NopAcceleratePlus.Core.tabconfiguration")" asp-default="true">
+                            <div class="cards-group">
+                                <div class="card card-default card-search">
+                                    <div class="card-body">
+                                        <div class="steps-section">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                                                    <div class="row">
+                                                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                                                            <div class="step-box">
+                                                                @if (Model.ManagedSchemaStatus)
+                                                                {
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                }
+                                                                <h5 class="step-title">@T("Plugins.NopAcceleratePlus.Core.Fields.ManagedSchemaStatus")</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                                                            <div class="step-box">
+                                                                @if (Model.CoreStreamBodyStatus)
+                                                                {
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                }
+                                                                <h5 class="step-title">@T("Plugins.NopAcceleratePlus.Core.Fields.CoreStreamBodyStatus")</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                                                            <div class="step-box">
+                                                                @if (Model.DbConfigFileStatus)
+                                                                {
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                }
+                                                                <h5 class="step-title">@T("Plugins.NopAcceleratePlus.Core.Fields.DbConfigFileStatus")</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                                                            <div class="step-box">
+                                                                @if (Model.DataImportRequestHandlerStatus)
+                                                                {
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                }
+                                                                <h5 class="step-title">@T("Plugins.NopAcceleratePlus.Core.Fields.DataImportRequestHandlerStatus")</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                                                            <div class="step-box">
+                                                                @if (Model.PatternHandlerStatus)
+                                                                {
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                }
+                                                                <h5 class="step-title">@T("Plugins.NopAcceleratePlus.Core.Fields.PatternHandlerStatus")</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 setup-button">
+                                                    <button type="button" class="btn btn-primary" id="CoreSetup">@T("Plugins.NopAcceleratePlus.Core.Button.CoreSetupButton")</button>
+                                                    <div style="display:none;"><nop-editor asp-for="FullCoreSetup" /></div>
+                                                    <div style="display:none;"><nop-editor asp-for="CoreUpdate" /></div>
+                                                    <div style="display:none;"><nop-editor asp-for="ShowTourTipOnFirstLoad" /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div class="status-section">
+                                            <div class="row ">
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                    <div class="progress-section">
+                                                        <h4>@T("Plugins.NopAcceleratePlus.Core.Fields.SolrIndexingStatus")</h4>
+                                                        <h4>
+                                                            <div class="progress-btn-section">
+                                                                <input type="button" class="btn btn-link" value="@T("Plugins.NopAcceleratePlus.Core.Button.Refresh")" id="Refresh" style="margin-top:-7px" />
+                                                            </div>
+                                                        </h4>
+                                                        @*<h4><button id="IndexingStatus" type="button">@T("Plugins.NopAcceleratePlus.Core.Button.SolrIndexingStatus")</button></h4>
+                                                            <h5 id="IndexinStatusMessage"></h5>*@
+                                                        <div class="stutus-info">
+                                                            <label>@T("Plugins.NopAcceleratePlus.Core.Fields.SolrStatus")</label>
+                                                            @if (Model.SolrStatus)
+                                                            {
+                                                                <span class="label label-success" id="Connected">@T("Plugins.NopAcceleratePlus.Core.Fields.Connected")</span>
+                                                                <span class="label label-danger" id="Disconnected" style="display:none;">@T("Plugins.NopAcceleratePlus.Core.Fields.Disconnected")</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="label label-success" id="Connected" style="display:none;">@T("Plugins.NopAcceleratePlus.Core.Fields.Connected")</span>
+                                                                <span class="label label-danger" id="Disconnected">@T("Plugins.NopAcceleratePlus.Core.Fields.Disconnected")</span>
+                                                            }
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="Progressbar">
+                                                                <label id="PecentageCount" class="mb-0">0%</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                                                    <div class="row progress-buttons">
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.CheckSolrConnection")" id="CheckSolrConnection" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.Reload")" id="Reload" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.StartIndexing")" id="StartIndexing" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.StopIndexing")" id="StopIndexing" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.ReIndexing")" id="ReIndexing" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.MarkAllAsPending")" id="MarkAllAsPending" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.ClearCoreData")" id="ClearCoreData" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.ManageIncrementalTable")" id="ManageIncrementalTable" />
+                                                        </div>
+                                                        <div class="progress-btn-section">
+                                                            <input type="button" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.ClearNopAccCache")" id="ClearNopAccCache" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div class="form-horizontal">
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="SolrCoreURL" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="SolrCoreURL" />
+                                                    <span asp-validation-for="SolrCoreURL"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="BatchSize" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="BatchSize" />
+                                                    <span asp-validation-for="BatchSize"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="DeleteBatchSize" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="DeleteBatchSize" />
+                                                    <span asp-validation-for="DeleteBatchSize"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="ClearCacheTime" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="ClearCacheTime" />
+                                                    <span asp-validation-for="ClearCacheTime"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="AdvanceSearchEnable" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="AdvanceSearchEnable" />
+                                                    <span asp-validation-for="AdvanceSearchEnable"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="PerformIndexingOnEntityChange" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="PerformIndexingOnEntityChange" />
+                                                    <span asp-validation-for="PerformIndexingOnEntityChange"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="EmailNotification" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="EmailNotification" />
+                                                    <span asp-validation-for="EmailNotification"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="text-center offset-md-3">
+                                                    <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" id="ConfigureSubmit" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </nop-tab>
+                        <nop-tab asp-name="tab-solrdebug" asp-title="@T("Plugins.NopAcceleratePlus.Core.tabsolrdebug")" asp-default="true">
+                            <div class="cards-group">
+                                <div class="card-group search-card">
+                                    <div class="card card-default">
+                                        <div class="card-header">
+                                            @T("Plugins.NopAcceleratePlus.Core.TabSolrDebug.Title")
+                                        </div>
+                                        <div class="content-header clearfix">
+                                            <h1 class="float-right">
+                                                <button type="button" id="solrdegugbtn" name="save" class="btn bg-blue">
+                                                    <i class="fa fa-floppy-o"></i>
+                                                    @T("Plugins.NopAcceleratePlus.Core.ExecuteButton")
+                                                </button>
+                                            </h1>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="StoreSolrQuery" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="StoreSolrQuery" />
+                                                    <span asp-validation-for="StoreSolrQuery"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="SolrQuery" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="SolrQuery" />
+                                                    <span asp-validation-for="SolrQuery"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="SolrResult" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-textarea asp-for="SolrResult" rows="15" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-md-3">
+                                                    <h2>Common Solr Queries</h2>
+                                                    <p>
+                                                        <strong>1.To Get the Full Information about the Solr & Its Version</strong><br />
+                                                        --------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8983/solr/admin/info/system?wt=json
+                                                    </p>
+                                                    <p>
+                                                        <strong>2.To Get the Solr Logs by query So we can trace the Log details of Solr</strong><br />
+                                                        ---------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8983/solr/admin/info/logging?since=0&wt=json&set=root:ERROR
+                                                    </p>
+                                                    <p>
+                                                        <strong>3.To Get All ProductAttributes & SpecificationAttributes list</strong><br />
+                                                        --------------------------------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8983/solr/CoreName/select?wt=csv&q=*:*&rows=0&fq=EntityName:Product&fl=pav_txt_m_en_*&fl=sav_txt_m_en_*
+                                                    </p>
+                                                    <p>
+                                                        <strong>4.To Get Single Product with All details</strong><br />
+                                                        --------------------------------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8984/solr/CoreName/select?fq=id:P298752&q=*:*
+                                                    </p>
+                                                    <p>
+                                                        <strong>5.To abort the DIH Indexing when indexing is running</strong><br />
+                                                        --------------------------------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8984/solr/CoreName/dataimport?command=abort
+                                                    </p>
+                                                    <p>
+                                                        <strong>6.Get the managed schema file format</strong><br />
+                                                        --------------------------------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8984/solr/CoreName/schema?wt=xml
+                                                    </p>
+                                                    <p>
+                                                        <strong>7.Query for showing the Managed-shema,db-data-config.xml,solrconfig.xml,synonyms.txt</strong><br />
+                                                        --------------------------------------------------------------------------------------------------------------------<br />
+                                                        http://localhost:8984/solr/CoreName
+                                                        /admin/file?wt=json&_=1607575925250&file=managed-schema&contentType=text/plain;charset=utf-8 <br />
+                                                        http://localhost:8984/solr/CoreName
+                                                        /admin/file?wt=json&_=1607575925250&file=db-data-config.xml&contentType=text/xml;charset=utf-8 <br />
+                                                        http://localhost:8984/solr/CoreName
+                                                        /admin/file?wt=json&_=1607577088032&file=solrconfig.xml&contentType=text/xml;charset=utf-8 <br />
+                                                        http://localhost:8984/solr/CoreName/admin/file?wt=json&_=1607577139416&file=synonyms.txt&contentType=text/plain;charset=utf-8
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nop-tab>
+                    </nop-tabs>
+                </div>@await Component.InvokeAsync("NopAcceleratePlusCoreVersion")
+            </div>
+        </div>
+    </form>
+
+    <script src="~/Plugins/NopAcceleratePlus.Core/Content/js/hopscotch.min.js"></script>
+
+    <script>
+        /* you can put your adfly_id code right here */
+        if (screen.width >= 767) {
+            $('head').append('<script src="../../Plugins/NopAcceleratePlus.Core/Content/js/custom-tour.js"><' + '/script>');
+        }
+    </script>
+
+    <div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="importxml-window-title">@T("Plugins.NopAcceleratePlus.Core.Button.Import")</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form asp-controller="NopAcceleratePlusCore" asp-action="ImportXml" method="post" enctype="multipart/form-data">
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            <ul class="common-list">
+                                <li>
+                                    <strong>@T("Plugins.NopAcceleratePlus.Core.XmlFile.Note1")</strong>@T("Plugins.NopAcceleratePlus.Core.XmlFile.Note2")
+                                </li>
+                            </ul>
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                    <div class="label-wrapper">
+                                        <label class="control-label">
+                                            @T("Plugins.NopAcceleratePlus.Core.XmlFile")
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="file" id="importxmlfile" name="importxmlfile" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="importxmlsubmit" type="submit" class="btn btn-primary" value="@T("Plugins.NopAcceleratePlus.Core.Button.Import" )" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">nopAccelerate Plus</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Model Popup Message</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+            $(document).on("change", "#StoreSolrQuery", function () {
+                var ischecked = $(this).is(':checked');
+                var postData = {
+                    StoreSolrQuery: ischecked
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        url: '@Url.Action("StoreSolrQuery", "NopAcceleratePlusCore")',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: postData,
+                        success: function (result) {
+                            if (result.success) {
+                                if (ischecked) {
+                                    showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus")", "@T("Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus.Enable")");
+                                } else {
+                                    showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus")", "@T("Plugins.NopAcceleratePlus.Core.Message.SolrDebugStatus.Disable")");
+                                }
+                            }
+                          }
+                    });
+                    return false;
+            });
+
+            $(document).keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    if ($('.nav-tabs li.nav-item a.active').attr("data-tab-name") === "tab-configuration") {
+                        $("#ConfigureSubmit").click();
+                    }
+                    else {
+                        $("#solrdegugbtn").click();
+                    }
+                    return false;
+                }
+            });
+
+            $(document).ready(function () {
+
+                CheckSolrConnection();
+
+                if ($('#FullCoreSetup').is(":checked")) {
+                    if ($('#CoreUpdate').is(":checked") == false) {
+                        $('#CoreSetup').attr("disabled", true);
+                    }
+                    else {
+                        $('#CoreSetup').removeAttr("disabled");
+                        $('#CoreSetup').html('@T("Plugins.NopAcceleratePlus.Core.Fields.CoreUpdate")');
+                    }
+                }
+                else {
+                    $('#CoreSetup').removeAttr("disabled");
+                }
+
+                $(".adminContent").removeAttr("style");
+
+                $("#ConfigureSubmit").click(function () {
+                    $("#ValidationMessage").remove();
+                    var coreURL = $("#SolrCoreURL").val();
+                    var regexPattern = /^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$/;
+                    if (regexPattern.test(coreURL) == false & coreURL.length > 0) {
+                        $("#SolrCoreURL").after("<span id='ValidationMessage' style='color: red'>@T("Plugins.NopAcceleratePlus.Core.ErrorMessage")</span>");
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+
+                $('#SolrCoreURL').keyup(function () {
+                    if ($('#SolrCoreURL').val() === "") {
+                        $("#ValidationMessage").remove();
+                    }
+                });
+
+                $("#solrdegugbtn").click(function () {
+                    var txt = $('#SolrQuery');
+                    if (txt.val() == null || txt.val() == '') {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")","@T("NopAcceleratePlus.Core.SolrQuery.Required")")
+                        return false;
+                    }
+                    var postData = {
+                        SolrQuery:$('#SolrQuery').val()
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        url: '@Url.Action("SolrDebug", "NopAcceleratePlusCore")',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: postData,
+                        success: function (result) {
+                            if (result.success) {
+                                $("#SolrResult").val(result.data);
+                              }
+                          }
+                    });
+                    return false;
+                });
+
+                // Start WizardSetupStep
+                $('#WizardSetupStep-action-confirmation-submit-button').on('click', function () {
+                    var requestUrl = '@Url.Action("WizardSetupStep", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            location.href = "GettingStarted";
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#WizardSetupStep-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // End WizardSetupStep
+
+                // Start ManageIncrementalTable
+                $('#ManageIncrementalTable-action-confirmation-submit-button').on('click', function () {
+                    var requestUrl = '@Url.Action("ManageIncrementalTable", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#ManageIncrementalTable-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // End ManageIncrementalTable
+
+                // Start Clear nopAccelerate Plus Cache
+                $('#ClearNopAccCache-action-confirmation-submit-button').on('click', function () {
+                    var requestUrl = '@Url.Action("ClearNopAccCache", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#ClearNopAccCache-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // End Clear nopAccelerate Plus Cache
+
+                // Start MarkAllAsPending
+                $('#MarkAllAsPending-action-confirmation-submit-button').on('click', function () {
+                    var requestUrl = '@Url.Action("MarkAllAsPending", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#MarkAllAsPending-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // End MarkAllAsPending
+
+                // Start CheckSolrConnection
+                $('#CheckSolrConnection').on('click', function () {
+                    var status = false;
+                    status = CheckSolrConnection();
+                    if (status == true) {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")","@T("Plugins.NopAcceleratePlus.Core.Fields.Connected.Message")");
+                    }
+                    else {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")","@T("Plugins.NopAcceleratePlus.Core.Fields.Disconnected.Message")");
+                    }
+
+                });
+                // Start CheckSolrConnection
+
+                // Start StartIndexing
+                $('#StartIndexing').on('click', function () {
+                    if ($('#FullCoreSetup').is(":checked")) {
+                        $("#StartIndexing").attr("disabled", true);
+                        $("#ReIndexing").attr("disabled", true);
+                        var requestUrl = '@Url.Action("StartIndexing", "NopAcceleratePlusCore")';
+                        $.ajax({
+                            type: 'GET',
+                            url: requestUrl,
+                            success: function (data) {
+                                Refresh();
+                                showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Message.IndexingStatus")", data);
+                                //clearInterval(myInterval);
+                                $('#StartIndexing').removeAttr("disabled");
+                                $('#ReIndexing').removeAttr("disabled");
+                            },
+                            error: function (error) {
+                                Refresh();
+                                //clearInterval(myInterval);
+                                $('#StartIndexing').removeAttr("disabled");
+                                $('#ReIndexing').removeAttr("disabled");
+                            }
+                        });
+                        return false;
+                    }
+                    else {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")", "@T("NopAcceleratePlus.Core.Validations.NeedsCoreFullSetup")");
+                    }
+                });
+                // End StartIndexing
+
+                // Start StartReIndexing
+                $('#ReIndexing-action-confirmation-submit-button').on('click', function () {
+                    if ($('#FullCoreSetup').is(":checked")) {
+                        @*var refreshCount = parseInt(@Model.PercentageCountRefreshTime);
+                        var myInterval = setInterval(Refresh, refreshCount);*@
+                        $("#StartIndexing").attr("disabled", true);
+                        $("#ReIndexing").attr("disabled", true);
+                        var requestUrl = '@Url.Action("StartReIndexing", "NopAcceleratePlusCore")';
+                        $.ajax({
+                            type: 'GET',
+                            url: requestUrl,
+                            success: function (data) {
+                                Refresh();
+                                showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Message.IndexingStatus")", data);
+                                //clearInterval(myInterval);
+                                $('#StartIndexing').removeAttr("disabled");
+                                $('#ReIndexing').removeAttr("disabled");
+                            },
+                            error: function (error) {
+                                //clearInterval(myInterval);
+                                $('#StartIndexing').removeAttr("disabled");
+                                $('#ReIndexing').removeAttr("disabled");
+                            }
+                        });
+                        $('#ReIndexing-action-confirmation').modal('toggle');
+                        return false;
+                    }
+                    else {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")", "@T("NopAcceleratePlus.Core.Validations.NeedsCoreFullSetup")");
+                    }
+
+                });
+                // End StartReIndexing
+
+                // Start StopIndexing
+                $('#StopIndexing-action-confirmation-submit-button').on('click', function () {
+                    $('#StartIndexing').removeAttr("disabled");
+                    var requestUrl = '@Url.Action("StopIndexing", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#StopIndexing-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // End StopIndexing
+
+                // Start Refresh
+                $('#Refresh').on('click', function () {
+                    Refresh();
+                });
+                // Start Refresh
+
+                // Start IndexingStatus
+                $('#IndexingStatus').on('click', function () {
+                    GetIndexingStatus();
+                });
+                // Start IndexingStatus
+
+                // Start Reload
+                $('#Reload').on('click', function () {
+                    var requestUrl = '@Url.Action("ReloadCore", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")",data)
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    return false;
+                });
+                // Start Reload
+
+                // Start ClearCoreData
+                $('#ClearCoreData-action-confirmation-submit-button').on('click', function () {
+                    var requestUrl = '@Url.Action("ClearCoreData", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            Refresh();
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    $('#ClearCoreData-action-confirmation').modal('toggle');
+                    return false;
+                });
+                // Start ClearCoreData
+
+                //Start CoreSetup
+                $('#CoreSetup').on('click', function () {
+                    $('.throbber-header').html("@T("Plugins.NopAcceleratePlus.Solr.Wizard.SolrSetup.CoreSetup")");
+                    $(".throbber").show();
+                    var requestUrl = '@Url.Action("ManageSolrCore", "NopAcceleratePlusCore")';
+                    $.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        success: function (data) {
+                            if (data == "true") {
+                                location.reload(true);
+                            }
+                            else {
+                                showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")", data)
+                                $(".throbber").hide();
+                            }
+                        },
+                        error: function (error) {
+                        }
+                    });
+                    return false;
+                });
+                //End CoreSetup
+            })
+
+            function showModelPopup(title, text) {
+                $("#myModal").find(".modal-title").text(title);
+                $("#myModal").find(".modal-body").text(text);
+                $('#myModal').modal('show');
+            }
+
+            function CheckSolrConnection() {
+                var requestUrl = '@Url.Action("CheckSolrConnection", "NopAcceleratePlusCore")';
+                var result = false;
+                $.ajax({
+                    type: 'GET',
+                    url: requestUrl,
+                    async: false,
+                    success: function (data) {
+                        if (data == 'True') {
+                            $('#Connected').show();
+                            $('#Disconnected').hide();
+                            EnableButtons();
+                            Refresh();
+                            result = true;
+                        } else if (data == 'False') {
+                            $('#Connected').hide();
+                            $('#Disconnected').show();
+                            DisableButtons();
+                            result = false;
+                        }
+                    },
+                    error: function (error) {
+                        showModelPopup("@T("Plugins.NopAcceleratePlus.Core.Menu.MainTitle")", error);
+                        result = false;
+                    }
+                });
+                return result;
+            }
+
+            function DisableButtons() {
+                $('#StartIndexing').attr('disabled', true);
+                $('#ReIndexing').attr('disabled', true);
+                $('#StopIndexing').attr('disabled', true);
+                $('#Refresh').attr('disabled', true);
+                $('#Reload').attr('disabled', true);
+                $('#ClearCoreData').attr('disabled', true);
+            }
+
+            function EnableButtons() {
+                $('#StartIndexing').attr('disabled', false);
+                $('#ReIndexing').attr('disabled', false);
+                $('#StopIndexing').attr('disabled', false);
+                $('#Refresh').attr('disabled', false);
+                $('#Reload').attr('disabled', false);
+                $('#ClearCoreData').attr('disabled', false);
+            }
+
+            function Refresh() {
+                var requestUrl = '@Url.Action("PercentageCount", "NopAcceleratePlusCore")';
+                $.ajax({
+                    type: 'GET',
+                    url: requestUrl,
+                    success: function (data) {
+                        $('#Progressbar').css("width", data);
+                        $('#PecentageCount').text(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+                return false;
+            }
+
+            function GetIndexingStatus() {
+                var requestUrl = '@Url.Action("GetIndexingStatus", "NopAcceleratePlusCore")';
+                $.ajax({
+                    type: 'GET',
+                    url: requestUrl,
+                    success: function (data) {
+                        $('#IndexinStatusMessage').text(data);
+                        Refresh();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+                return false;
+            }
+
+    </script>
+}

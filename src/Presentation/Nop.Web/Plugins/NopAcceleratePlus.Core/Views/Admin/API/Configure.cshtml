@@ -1,0 +1,68 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Search.Models.API.APIConfigurationModel
+
+@{
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("XcellenceIT.Plugin.NopAcceleratePlus.Search.API");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Plugins.NopAcceleratePlus.Search.API.Admin.Configuration.Title")
+    </h1>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <form asp-controller="NopAcceleratePlusApiClient" asp-action="Configure" method="post">
+
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            @if (ViewBag.RefreshPage == true)
+            {
+                <script type="text/javascript">
+                try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+                catch (e){}
+                window.opener.location.reload();
+                window.close();
+                </script>
+            }
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Enable" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enable" />
+                                <span asp-validation-for="Enable"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DebugMode" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DebugMode" />
+                                <span asp-validation-for="DebugMode"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="APIKey" />
+                            </div>
+                            <div class="col-md-9">
+                                <input type="button" class="k-button" value="@T("Plugins.NopAcceleratePlus.Search.API.Admin.Configuration.APIKeyButton.Text")" onclick="javascript:OpenWindow('@Url.Action("GenerateAPIKey", new { btnId="btnRefreshProducts" , formId="appSecret-form" })', 450, 400, true)" />
+                                @Model.APIKey
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

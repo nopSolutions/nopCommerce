@@ -1,0 +1,56 @@
+﻿@model XcellenceIT.Plugin.NopAcceleratePlus.Search.Models.API.AppSecretModel
+
+@{
+      Layout = "_AdminPopupLayout";
+
+      //page title
+      ViewBag.Title = "Generate API Key";
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Plugins.NopAcceleratePlus.Search.API.Admin.Configuration.GenerateKey.Popup.Title")
+    </h1>
+</div>
+
+<form asp-controller="NopAcceleratePlusApiClient" asp-action="GenerateAPIKey" method="post"
+      asp-route-btnId="@ViewBag.btnId" asp-route-formId="@ViewBag.formId">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApplicationId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ApplicationId" />
+                                <span asp-validation-for="ApplicationId"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <p>@T("Plugins.NopAcceleratePlus.Search.API.Admin.Configuration.GenerateKey.Popup.Field.ApplicationId.Hint")</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SecretKey" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SecretKey" />
+                                <span asp-validation-for="SecretKey"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <p>@T("Plugins.NopAcceleratePlus.Search.API.Admin.Configuration.GenerateKey.Popup.Field.SecretKey.Hint")</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

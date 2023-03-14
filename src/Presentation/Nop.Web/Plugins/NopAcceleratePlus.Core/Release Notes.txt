@@ -1,0 +1,555 @@
+﻿Release Notes
+================================================================================================================================================================
+Release Date: 29 December 2021
+nopAccelerate Plus Version: 0.9.0
+
+Features
+=> Add support for nopCommerce 4.40
+=> Add Functionality for click load more button will not show until infinite page load as per configuration
+=> Sorting configuration need to make individual for searching and catalog
+
+Bug Fixes
+=> Fixed Issues. Caching issue while some update product and other catalogs.
+=> Fixed Issues. Duplicate products displayed on infinite scrolling
+=> Fixed Issues. Installation issue - tables is not creating while manually removing plugin core
+=> Fixed Issues. Catalog plugin install and uninstall then search plugin not working
+=> Fixed Issues. Product Price taking from solr without checking configuration setting
+=> Fixed Issues. Faceting of catalog not working as per configuration set in Admin
+=> Fixed Issues. Admin Product listing order by issue if nopAcceleratePlus plugin installed
+=> Fixed Issues. If we open any category/search page and then open any details page and come back again into that same and infinite scrolling not working
+
+================================================================================================================================================================
+Release Date: 12 October 2020
+nopAccelerate Plus Version: 0.8.1
+
+Features
+=> Search on Manufacturer Part Number in nopAccelerate.
+=> Use the ProductBox view Method of nopCommerce instead of nopAccelerate by just enable/disable of Setting.
+=> Show SKU in AutoComplete.
+=> Add dataimport.properties to Core directly to solr core while setting up Core.
+=> Stock availability is now localizable.
+
+Bug Fixes
+=> Fixed Issues. IgnoreAcl setting is not working as expected.
+=> Fixed Issues. Disabling the solr price should call the nopCommerce default PrepareProductOverviewModels.
+=> Fixed Issues. Indexing Issue when there are same specificationAttibutes & productAttribute.
+=> Fixed Issues. Get the Theme wise view of AjaxFiltering.
+=> Fixed Issues. Redirection issue with multiple SENAME for multiple languages.
+=> Fixed Issues. Show the Active Manufacturer,Categories & Vendor in facet Filter
+=> Fixed Issues. Alternative & title text of productbox is not showing the correct values.
+=> Fixed Issues. Resolve the Issue of Trim function with Older version of Sql Server.
+=> Fixed Issues. Resolve the Caching issue after indexing product.
+
+Does this release require to uninstall and install Plugin again?
+=> Yes
+=> Since it has 3 plugin artitecture so need to uninstall the previous Plugins & install latest Plugins.
+
+
+Does this release require to set up new core or perform re-indexing?
+=> Yes, There are some managed-schema changes
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+Release Date: 25 June 2020
+nopAccelerate Plus Version: 0.8.0
+
+Features
+=> Theme wise AjaxFilterProductBox and nopAccelerate Facet filter page.
+=> Show scroll bar instead of show/less functionality.
+=> Added Support for nopCommerce 4.30
+Bug Fixes
+=> Fixed Issues. Resolve object reference issue when Discount & tierPrice contains ',' inside any property.
+=> Fixed Issues. Show the pageNumber in URL browser even ajax call is disable.
+=> Fixed Issues. Discount is not showing properly when MaximumDiscountAmount is null in Database.
+=> Fixed Issues. Refine Button on mobile should be coming from resource string.
+=> Fixed Issues. Non-Ascii Characters are not showing the facet filter result properly.
+=> Fixed Issues. Végétale & vegetable keyword should have same result.
+=> Fixed Issues. Resolve the issue of Searching with special symbol.
+=> Fixed Issues. Auto Search Product list and Search Product list will mismatch when Add "Space" in end of search word.
+=> Fixed Issues. Facet selection does not scroll to correct position for search page.
+
+Does this release require to uninstall and install Plugin again?
+=> Yes
+=> Since it has 3 plugin artitecture so need to uninstall the previous Plugins & install latest Plugins.
+
+
+Does this release require to set up new core or perform re-indexing?
+=> Yes, There are some managed-schema changes
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+Release Date: 10 October 2019
+nopAccelerate Plus Version: 0.6.0
+
+Features
+=> Product status grid also showing the image urls.
+=> Clear cache functionality for clearing the nopAccelerate Caching.
+=> Mark all Images as Pending button on admin side.
+=> Separate image indexing time & product Indexing time in solr log.
+
+Bug Fixes
+=> Fixed Issues. Camera & photo showing the camera &amp; photo inside facet setting.
+=> Fixed Issues. UnPublish language issue with managed-schema.
+=> Fixed Issues. Pattern delimeter with comma(,) is not working.
+=> Fixed Issues. Scrolling was not loading the products on search & catalog page in some screen size(2024X1048).
+=> Fixed Issues. Indexing percentage was not counted properly.
+=> Fixed Issues. Indexing issue with wareHouseId length.
+=> Fixed Issues. Contact us page is not opening correctly when catalog plugin is enable.
+=> Fixed Issues. Skip the Indexing Cycle when Indexing gets Failed.
+=> Fixed Issues. Disable price range filter for category & manufacturer pages was missing on settings.
+=> Fixed Issues. Replace the db-data-config.xml of solr server dyanamically.
+=> Fixed Issues. Price range filter was not set the min and max values correct with multi currency.
+=> Fixed Issues. Update the Existing solr core without need to create a new core.
+=> Fixed Issues. Theme Name css not found issue when loading the search & Catalog pages.
+
+Does this release require to uninstall and install Plugin again?
+=> Yes
+=> Since there is DIH Stored procedure update so need to uninstall & install the plugin.
+
+
+Does this release require to set up new core or perform re-indexing?
+=> No 
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+Release Date: 24 October 2019
+nopAccelerate Plus Version: 0.5.0
+
+Features
+=> Performance improvement. Faster admin panel product search on Catalog > Products List. You can enable it from General Settings inside Search Plugin Settings. This uses Solr's index to offer product search instead of using nopCommerce Product search.
+=> Performance improvement. Indexing is now almost 10 times faster.
+=> Performance improvement. You can now skip generating images during indexing. Earlier it was generating images during indexing by default. Now it is configurable.
+=> Sorting orders are now localizable using language resource strings.
+=> StockAvaibility of product based on product attribute combinations quanity.
+
+Bug Fixes
+=> Fixed Issues. Product Attributes & Specifications not sorted alphabetically.
+=> Fixed Issues. Undefined field issue when getting attributes from Solr when product does not have any attribute assigned to it.
+=> Fixed Issues. Search within for Category & Manufacturer page were not sorting products by relevancy.
+=> Fixed Issues. Indexing process does not sync image preparation with indexing batch size.
+=> Fixed Issues. Facet filter was not working with double quotation mark in facet value.
+=> Fixed Issues. Solr down email notification was not replacing token for %Store.URL%.
+=> Fixed Issues. Issue with More/Less drawer display in Search within facet was not working correctly.
+=> Fixed Issues. Edit link at Product Status grid was not opening the product Edit page.
+=> Fixed Issues. It was not showing product images correctly after changing Product Name from Product edit.
+=> Fixed Issues. Exclude Out of Stocks Products facet was not working correctly for category & manufacturer pages.
+=> Fixed Issues. Facet filtering was not working with specification attribute which contains question mark.
+=> Fixed Issues. Attribute URL delimiter validation was not working with store selection.
+=> Fixed Issues. Divide by zero issue while applying facet.
+
+Does this release require to uninstall and install Plugin again?
+=> Yes
+
+Does this release require to set up new core or perform re-indexing?
+=> Yes 
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+Release Date: 30 July 2019
+nopAccelerate Plus Version: 0.4.0
+
+Feature
+=> Added a feature that allows store owner to give in-stock product higher relevancy for search results.
+=> Solr Down notification now supports multiple email addresses in a comma separated list.
+=> New licensing system implementation with Product Limit & Expiration Date.
+=> Performance improvement. Added a setting to ignore AvailableStartDateTimeUtc & AvailableEndDateTimeUtc, this improve raw Solr query performance. 
+=> Performance improvement. We now use baseController instead of basePublicController for searching products.
+=> Performance improvement. AutoComplete search is now coming within 50 ms.
+
+Bug Fixes
+=> Fixed Issues. Convert to Decimal is not working when language culture is other than English. Now it works with all language cultures. 
+=> Fixed Issues. Solr down alert was not showing on front side when admin is logged in.
+=> Fixed Issues. Solr debug query throwing object reference error when solr is down.
+=> Fixed Issues. General settings, 'Enable Ajax request' must be enabled for 'Enable Infinite Scrolling' to work.
+=> Fixed Issues. Catalog pages not showing the images for second store, when plugin is enabled. 
+=> Fixed Issues. Images does not load on Catalog Pages in Product Box when using SSL.
+=> Fixed Issues. Remove extra horizontal space from selected facet section.
+=> Fixed Issues. Reload Core & Core Setup does not work when we have ‘solr’ in the name of hostname in Solr Core URL.
+=> Fixed Issues. Remove extra unused entities from db-config.xml except Product Entity.
+=> Fixed Issues. Buttons spacing missing in configuration page.
+=> Fixed Issues. Core Setup ajax call failed when app is hosted as virtual directory ex:localhost/nopcommerce.
+=> Fixed Issues. Tour tooltip information should come only once when configure page is opened for first time in a week.
+=> Fixed Issues. Added validation for plugin settings.
+=> Fixed Issues. Spellcheck is not working correctly with SKU & GTIN.
+=> Fixed Issues. Products are not marked as Pending for Index Status when change Specification Attributes Values.
+=> Fixed Issues. Page number should contain href attribute for SEO when infinite scrolling is disabled.
+=> Fixed Issues. Infinite Scrolling & Display No. of Products found does not work when Facets are disabled.
+=> Fixed Issues. Select WidgetZone For Facet Filter is not working for Catalog Pages.
+=> Fixed Issues. Searching was considering html tags & styles for Full Description field. Now html tags & styles are stripped.
+=> Fixed Issues. License section design is broken when license is expired or when it fails to validate.
+=> Fixed Issues. Infinite scrolling is not working when Infinite Scrolling till Page is 1.
+=> Fixed Issues. Mega menu was not displayed as expected when category page loading from nopAccelerate & JavaScript minification was enabled. Now it works.
+=> Fixed Issues. Advance search option must hide when searching products from nopAccelerate plus.
+
+Does this release require to uninstall and install plugin again?
+=> Yes because change in Stored Procedure & manage shcema Structure
+
+Does this release require to setup new core or perform re-indexing?
+=> Yes, As changed the managed shcema structure
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+Release Date: 17 June 2019
+nopAccelerate Plus Version: 0.3.0.1115
+
+Bug Fixes:
+=> Fixed Issues. Implement Caching while fetching Manufacturer & Category.
+=> Fixed Issues. Default Images should load when images is not assigned to products.
+=> Fixed Issues. Click on facet value containing % is not working properly
+=> Fixed Issues. Minimum and maximum value is not set in price range
+=> Fixed Issues. Search Boost , with meta Description,keyword and title searching is not working
+=> Fixed Issues. General settings, 'Enable Infinite Scrolling' must be allow to enable when 'Enable Ajax request' enabled.
+=> Fixed Issues. search with Category name include the special characters is not working, search keyword : 'companion'^%@s'
+=> Fixed Issues. Price is not coming proper after clicking on suggested keyword when spellcheck is using.
+=> Fixed Issues. Changing the Language is not setting up the price range
+=> Fixed Issues. Search with GTIN number is not working
+=> Fixed Issues. Search within facet filter is not working with special characters. 
+
+Does this release require to uninstall and install plugin again?
+=> Yes because change in Stored Procedure & manage shcema Structure
+
+Does this release require to setup new core or perform re-indexing?
+=> Yes, As changed the managed shcema structure
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: 06 June 2019
+nopAccelerate Plus Version: 0.3.0.1056
+
+Feature:
+=> Image Indexing using DIH Instead of Atomic Updates.
+
+Bug Fixes:
+=> Fixed Issues. Clicked on Faceting checkboxes are overlapped on each-other.
+=> Fixed Issues. Code Refactoring.
+=> Fixed Issues. Solr down message on header showing still solr is connected.
+=> Fixed Issues. Search within textbox placeholder not putting correct category,manufacturer names.
+=> Fixed Issues. Hide the throbber screen when Core setup gets failed.
+=> Fixed Issues. Vendor updated price is not showing in product Box even disabled setting for 'Getting price from solr'
+=> Fixed Issues. Adding Review shows the two products in Product Box List.
+=> Fixed Issues. Viewmode change not supporting theme wise design.
+=> Fixed Issues. Collapse Issue in Mobile Screen issue fixed.
+=> Fixed Issues. Duplicates record of copyField destination after performing Atomic update using API.
+=> Fixed Issues. IN IE infinite scroll is not working.
+=> Fixed Issues. Faceting is not working when specification has & Character.
+=> Fixed Issues. Toggle Faceting is not working with Default Theme.
+=> Fixed Issues. Showing Solr Down even plugin is not enabled for catalog.
+=> Fixed Issues. Infinite scrolling is not working in RESOLUTION SIZE (height: 625).
+=> Fixed Issues. Facet collapse Issue in Mobile Screen.
+=> Fixed Issues. Design Improvement for Clear All & Clear Link on Facet.
+=> Fixed Issues. Faceting is not working with % character.
+=> Fixed Issues. Css not found issue when using Custom theme or no Template themes.
+=> Fixed Issues. Searching with small keyword(tshirt) & capital keyword(tShirt) giving different result Issue.
+=> Fixed Issues. Default pagination value when AllowCustomersToSelectPageSize is disable.
+=> Fixed Issues. Only getting required fields when Solr Query executing instead of all fields.
+=> Fixed Issues. Pagination is not working properly with native theme.
+=> Fixed Issues. Javascript throwing viewmode_href is undefined when using Venture Theme.
+=> Fixed Issues. Use theme name wise rtl theme & theme name of nopAccelerate plus.
+=> Fixed Issues. MarkAllAsPending selected,ImageStatus selected & deleted not working properly in Product Status page.
+=> Fixed Issues. Catalog/search page, with multi language, hover on product image the tool tip is common for all the products.
+=> Fixed Issues. Searching functionality in facet Result is not working with color square.
+=> Fixed Issues. Searching functionality in facet Result is not working in IE.
+=> Fixed Issues. Search in Facet , it removes 'more' option from other facets.
+=> Fixed Issues. Adding Language not properly Creating Managed Schema.
+=> Fixed Issues. Adding Language does not installing resource values of nopAccelerate search.
+=> Fixed Issues. Enable/disable facet setting not working for Vendor & ProductTag pages
+
+Does this release require to uninstall and install plugin again?
+=> Yes
+
+Does this release require to setup new core or perform re-indexing?
+=> Yes, As changed the managed shcema structure
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: 24 April 2019
+nopAccelerate Plus Version: 0.3.0.925
+
+Feature:
+=> Added 5 Star Rating when we have products with 5 Average rating of 5.
+=> Added Setup Wizard step for remotely hosted Solr instance.
+=> Implemented Index on Entity Change event. When enabled, it does not wait for Scheduled task to run indexing. This is helpful for near real-time indexing when you've frequently updated catalog. Note that it will work only after full indexing is done. And it won't index when schedule indexing is running.
+=> Performance Improvement. Added setting for ignoring 'Last Shopping Page'.
+=> Added Scroll to Top button on Search & Catalog pages.
+=> Implemented Scroll to top after facet is selected
+=> Implemented a Solr down notification, Solr is not reachable. Only Admin will see this message when logged in to admin panel. When Solr is down, we automatically load catalog and search results using default nopCommerce methods, so visitors will not see a broken page.
+=> Added a field to load dynamic Theme compatibility setting (ThemeFileName & RtlThemeFileName) to support any custom themes.
+=> Added a feature to Search within Catalog for Category, Manufaturer, Vendor & Producttag pages.
+
+
+Bug Fixes:
+=> Fixed Issues. Product box not displaying Call to price.
+=> Fixed Issues. Plugin calls some metods even if its not installed. 
+=> Fixed Issues. Solr ping monitoring implementation causing performance penalty. Newer method is much faster.
+=> Fixed Issues. Language analysis was applied on nGram field types causing wrong relevance in search results.
+=> Fixed Issues. Spell Check with multi term search phrase was suggesting wrong term in auto suggestion.
+=> Fixed Issues. Price range filter was having fixed size. Now it adjusts as per layout.
+=> Fixed Issues. Tooltip on Price range slider was not visible correctly.
+=> Fixed Issues. Mark as Pending is not working in ProductStatus.
+=> Fixed Issues. On Product Status page, product search was not working correctly.
+=> Fixed Issues. We were activating Catalog Plugin WidgetZone instaed of Search plugin, in search plugin.
+=> Fixed Issues. No Products found should not show Price range slider.
+ 
+Does this release require to uninstall and install plugin again?
+=> Yes
+
+Does this release require to setup new core or perform re-indexing?
+=> Not required.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: 5 April 2019
+nopAccelerate Plus Version: 0.3.0.862
+
+Feature:
+=> Add resource string for all active language.
+=> Setting for storing the solr-queries in solr logs.
+=> Perform Indexing on entity change
+=> Solr down message in Solr log
+
+Bug Fixes:
+=> Fixed Issues. AutoComplete is not showing product Results
+=> Fixed Issues. Solr Search boosting query issue with different language Culture.
+=> Fixed Issues. Solr debug query not returing Solr result when passing long  string solr query.
+=> Fixed Issues. Not Showing Last Attribute value in facet result even when specification & productAttribute facet is enable.
+
+Does this release require to uninstall and install plugin again?
+=> No
+
+Does this release require to setup new core or perform re-indexing?
+=> No. One can use existing Solr Core. No need to re-index.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: 1 April 2019
+nopAccelerate Plus Version: 0.3.0.850
+
+Feature:
+=> Performance Improvement. Made single request for search & facet request. This enhances performance.
+=> Made Selector Configuration dynamic so one its more configurable and no need to customize in theme views.
+=> Added a setting to log Solr queries in nopCommerce system logs. This is helpful for debug purposes.
+=> Improved the price range slider design, now we display selected min & max in nice tooltip.
+=> Improved Filter design for Mobile Screen. Filter Slide out menu now leaves some space as overlay touching on which will close filter slide out.
+
+Bug Fixes:
+=> Fixed Issues. Tours was not meant for Mobile Screen. So disabled tours for mobile screen.
+=> Fixed Issues. Displayed a message that indexing is in progress, if its already running when we click Start Indexing button.
+=> Fixed Issues. Add to Compare was displayed even if it was disabled from Catalog Settings. Now it works properly.
+=> Fixed Issues. On Catalog Settings & Catalog Facet Setting, Working tab doesn't load after saving settings. Now working tab loads as Selected Tab.
+=> Fixed Issues. Price Range does not respect custom formatting. Now it respects custom formatting. 
+
+Other tasks:
+=> Change powered by image in admin of nopAccelerate catalog & search.
+=> Added Logs for indexing start, stop or fail events.
+=> Improved License Page design.
+
+Does this release require to uninstall and install plugin again?
+=> No
+
+Does this release require to setup new core or perform re-indexing?
+=> No. One can use existing Solr Core. No need to re-index.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: March 17, 2019
+nopAccelerate Plus Version: 0.3.0.805
+
+Feature:
+=> Add Support for ActionFilter of Catalog Controller.
+=> Tour Implementation for Search Config Page.
+=> Publish event for prepare model of Catalog.
+=> Searching SKU & GTIN defined under Attribute combination.
+=> Make singlr request for search & facet request for performance.
+
+
+Bug Fixes:
+=> Fixed Issues. Get Attributes data from categoryName instead of CategoryId
+=> Fixed Issues. UnPubllished Category,Manufacturer,Vendor,ProductAttribute & specificationAttributes is showing in Facet filter
+=> Fixed Issues. Stop Indexing is not working when Stopping Cycle.
+=> Fixed Issues. Remove Perform Indexing on entity change as its implemented in wrong way
+=> Fixed Issues. Long Solr Query Execution failed when passing Value in Query Execution.
+=> Fixed Issues. Remove Code of Getting PictureIds from database.
+=> Fixed Issues. ProductAttribute & Specification Attribute Facet applying not showing product results & product result count perfectly.
+=> Fixed Issues. Resolve the Message Format while Importing setting when nopVersion & nopAccelerateVersion is not matching.
+=> Fixed Issues. Solr down Message on header of page when admin is login implemented wrongly
+=> Fixed Issues. Less/More not showing color-Square properly.
+=> Fixed Issues. Improve all wizard setup log message.
+=> Fixed Issues. Resolve the Issue when Indexing is showing the More than 100%.
+=> Fixed Issues. Resolve the Issue of String or Binary Data Truncate while Storing SystemNames for Activate WidgetNames. 
+
+
+Is Uninstallation & Installation is Required ?
+=> Yes
+
+Is New Core required to Setup ?
+=> Yes
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: March 08, 2019
+nopAccelerate Plus Version: 0.3.0.744
+
+Feature:
+=> Add RTL (Right-To-Left) Support for Default Theme
+
+Bug Fixes:
+=> Fixed Issues. Resolve the Price Slot Showing Search Box functionality
+=> Fixed Issues. Less/More not showing Proper result after search with keyword in Facet Textbox
+=> Fixed Issues. Pagenumber issue with page size.
+=> Fixed Issues. Currency showing in price range slider is different than showing in product section
+=> Fixed Issues. Resolve the Facet query issue with comma(,) containing string.
+=> Fixed Issues. Synonyms file should also been generated & putted over solr using our plugin.
+=> Fixed Issues. Resolve the Issue of Selected Min & Max string issue.
+=> Fixed Issues. Link is missing in Wizard Setup Process when solr to sql test in Solr configuration step
+=> Fixed Issues. Remove recurring method call during URL prepare of facet.
+
+
+Is Uninstallation & Installation is Required ?
+=> No
+
+Is New Core required to Setup ?
+=> No
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: March 01, 2019
+nopAccelerate Plus Version: 0.3.0.727
+
+Feature:
+=> Navigate to Getting Started and Wizard setup once again when skip by User.
+
+Bug Fixes:
+=> Fixed Issues. Move AjaxRequest Facet setting from Facet Setting to Search setting
+=> Fixed Issues. Change Resource String & SiteMenu ResourceString
+=> Fixed Issues. Sample Url format displaying on SEO setting
+=> Fixed Issues. Licensing Issue of Catalog plugin when license is expired.
+=> Fixed Issues. nopAccelerate Plus Catalog Settings plugin -> category tab -> 'Show No Of Product Founds' -> the 'No' must be as 'Number'
+=> Fixed Issues. nopAccelerate Plus Catalog Settings plugin -> category tab -> 'Infinite Scrolling Till Page' -> hint text -> spelled wrong - 'numaric' must be 'numeric'
+=> Fixed Issues. Nopaccelerate search plugins -> Wizard set-up -> Download link is not redirected properly
+=> Fixed Issues. Catalog Facet Setting Should not be Visiable if catalog Setting license is not Activated Yet.
+=> Fixed Issues. Change the desing of Wizard Setup form.
+=> Fixed Issues. Resolve the Issue of not Showing the DID you mean section even with wrong spell.
+=> Fixed Issues. Catalog facet filters are enabled -> hence it will show the attribute filter of default nopcommerce on catalog pages.
+=> Fixed Issues. StoreWise Setting is not working for Front Side
+=> Fixed Issues. Resolve the obfusation Issue
+=> Fixed Issues. Indexing failed using DIH with some products because of ProductAttributeList & SpecificationAttributeList.
+=> Fixed Issues. Creating Managed schema gets failed when working with sk & tn language
+=> Fixed Issues. Price Slot Facet Selection Name should be the Same as shown in Facet Filter.
+
+Is Uninstallation & Installation is Required ?
+=> Yes,Uninstallation of previous plugin & Installation of New plugin is required Because We have implemented facet catalog setting.
+
+Is New Core required to Setup ?
+=> Yes,Because We have changed manage schema structure so we need to perform indexing again.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: February 22, 2019
+nopAccelerate Plus Version: 0.3.0.696
+
+Feature:
+=> Wizard String should be coming from Resource String.
+=> Upgrade the Wizard Setup Page design.
+=> Facet setting should be separate for catalog settings.
+=> Export-Import Functionality for CatalogFacetSettings.
+
+Bug Fixes:
+=> Fixed Issues. CheckBox is not showing properly on Wizard Setup Steps.
+=> Fixed Issues. Show no of product not found on page load even after (show no of product) setting is enable
+=> Fixed Issues. No PriceFilter Request When searching with wrong keyword first time.
+=> Fixed Issues. Remote Hosting for Solr on Wizard setup is working.
+=> Fixed Issues. Validation for SolrCore is not showing validation messages.
+=> Fixed Issues. Change SiteMenu Resource Strings for both Plugins.
+=> Fixed Issues. Fixed issue for special character into URL
+=> Fixed Issues. Resolve the Show/Hide Setting Functionality within Facet filter.
+=> Fixed Issues. ProductAttributes & Specifications attributes are coming in facet even not apply any category  when getting attributes from Solr is enable.
+=> Fixed Issues. Remove Some unwanted Constants of NopCommerce Defaults.
+=> Fixed Issues. Replace Sweet Alert from Admin & use alert that is natively supported in nopCommerce.
+=> Fixed Issues. mm should match does not work as expected
+=> Fixed Issues. Proper design should be there on License page
+=> Fixed Issues. WizardSetup & GettingStarted stil open even though licensing is not done for search plugin.
+
+Is Uninstallation & Installation is Required ?
+=> Yes,Uninstallation of previous plugin & Installation of New plugin is required Because We have implemented facet catalog setting.
+
+Is New Core required to Setup ?
+=> Yes,Because We have changed manage schema structure so we need to perform indexing again.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: February 15, 2019
+nopAccelerate Plus Version: 0.3.0.666
+
+Feature:
+=> Configurate Page UI Enhancement.
+=> SEO Friendly Url Structure.
+
+Bug Fixes:
+=> Fixed Issues. Import -Export Setting with Catalog setting is not working properly.
+=> Fixed Issues. Catalog wise settings not working for enable infinite scrolling,show no of product,Enable Ajax request.
+=> Fixed Issues. License key Page for Search Plugin & Catalog plugin some times throws thread Exception.
+=> Fixed Issues. General Setting should be placed on 2nd place after Configure.
+=> Fixed Issues. Relevency should be Relevancy in Sorting options on catalog page as well as search page.
+=> Fixed Issues. Change Seo to SEO Name on Tab of General Setting.
+=> Fixed Issues. Change Seo to SEO Name on Tab of General Setting.
+=> Fixed Issues. If enable search is disabled then other two settings & search boost tab should not be display in Search setting.
+=> Fixed Issues. Catalog Setting should only be visible when enable Catalog setting is enable.
+=> Fixed Issues. Wrong searching on ProductAttributeValue & SpecificationAttributeValue.
+=> Fixed Issues. No of Product found in Facet & search result in productbox when featured product is associalted with category.
+=> Fixed Issues. Short parameter names for facet
+=> Fixed Issues. Remove Schedule_ManageIncremetalSolrProduct scheduled & button on configure page to manage incremental table of nopAccelerate
+=> Fixed Issues. Disable Facet should load nopCommerce Facets & display result based on facet.
+=> Fixed Issues. Single Url Attribute Delimiter instead of 3 Separate delimiter.
+
+
+Is Uninstallation & Installation is Required ?
+=> Yes,Uninstallation of previous plugin & Installation of New plugin is required Because We have moved so catalog setting.
+
+Is New Core required to Setup ?
+=> Yes,Because We have changed manage schema structure so we need to perform indexing again.
+
+================================================================================================================================================================
+================================================================================================================================================================
+================================================================================================================================================================
+
+Release Date: February 08, 2019
+nopAccelerate Plus Version: 0.3.0
+
+Feature:
+=> Config Page UI Enhancement
+=> SEO Enhancements contains No-Index & canonial url management. 
+=> License Implementation on Catalog Plugin.
+=> Separate Catalog Setting & Search Settings.
+=> Separate General Setting Instead of Performance Setting.
+
+Bug Fixes:
+=> Fixed Issues. Price Slot & Price Range Proper Implementation for Catalog Settings.
+=> Fixed Issues. Proper version no & plugin version name management for catalog plugin.
+=> Fixed Issues. Export setting also contains catalog setting in Export file.
+=> Fixed Issues. PageSize Options is working properly with Ajax Filter.
+=> Fixed Issues. ViewMode option is working Properly with Ajax Filter.
+
+Is Uninstallation & Installation is Required ?
+=> Yes,Uninstallation of previous plugin & Installation of New plugin is required Because We have moved so catalog setting.
+
+Is New Core required to Setup ?
+=> Yes,So need to Indexing again.
