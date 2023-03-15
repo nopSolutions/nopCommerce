@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string InstanceName { get; protected set; } = string.Empty;
 
         [NopResourceDisplayName("Admin.Configuration.AppSettings.DistributedCache.PublishIntervalMs")]
-        public int PublishIntervalMs { get; private set; }
+        public int PublishIntervalMs { get; protected set; }
 
         #endregion
     }

@@ -16,44 +16,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string NAME_ATTRIBUTE_NAME = "asp-name";
-        private const string TITLE_ATTRIBUTE_NAME = "asp-title";
-        private const string DEFAULT_ATTRIBUTE_NAME = "asp-default";
+        protected const string NAME_ATTRIBUTE_NAME = "asp-name";
+        protected const string TITLE_ATTRIBUTE_NAME = "asp-title";
+        protected const string DEFAULT_ATTRIBUTE_NAME = "asp-default";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Title of the tab
-        /// </summary>
-        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
-        public string Title { set; get; }
-
-        /// <summary>
-        /// Indicates whether the tab is default
-        /// </summary>
-        [HtmlAttributeName(DEFAULT_ATTRIBUTE_NAME)]
-        public string IsDefault { set; get; }
-
-        /// <summary>
-        /// Name of the tab
-        /// </summary>
-        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
-        public string Name { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -157,6 +128,35 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //generate nothing
             output.SuppressOutput();
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Title of the tab
+        /// </summary>
+        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
+        public string Title { set; get; }
+
+        /// <summary>
+        /// Indicates whether the tab is default
+        /// </summary>
+        [HtmlAttributeName(DEFAULT_ATTRIBUTE_NAME)]
+        public string IsDefault { set; get; }
+
+        /// <summary>
+        /// Name of the tab
+        /// </summary>
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
+        public string Name { set; get; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }
