@@ -18,12 +18,12 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IWorkContext _workContext;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

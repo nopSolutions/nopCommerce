@@ -23,16 +23,16 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly Lazy<IInstallationLocalizationService> _locService;
-        private readonly Lazy<IInstallationService> _installationService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly Lazy<IPermissionService> _permissionService;
-        private readonly Lazy<IPluginService> _pluginService;
-        private readonly Lazy<IStaticCacheManager> _staticCacheManager;
-        private readonly Lazy<IUploadService> _uploadService;
-        private readonly Lazy<IWebHelper> _webHelper;
-        private readonly Lazy<NopHttpClient> _nopHttpClient;
+        protected readonly AppSettings _appSettings;
+        protected readonly Lazy<IInstallationLocalizationService> _locService;
+        protected readonly Lazy<IInstallationService> _installationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly Lazy<IPermissionService> _permissionService;
+        protected readonly Lazy<IPluginService> _pluginService;
+        protected readonly Lazy<IStaticCacheManager> _staticCacheManager;
+        protected readonly Lazy<IUploadService> _uploadService;
+        protected readonly Lazy<IWebHelper> _webHelper;
+        protected readonly Lazy<NopHttpClient> _nopHttpClient;
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace Nop.Web.Controllers
 
         #region Utilites
 
-        private InstallModel PrepareCountryList(InstallModel model)
+        protected virtual InstallModel PrepareCountryList(InstallModel model)
         {
             if (!model.InstallRegionalResources)
                 return model;
@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
             return model;
         }
 
-        private InstallModel PrepareLanguageList(InstallModel model)
+        protected virtual InstallModel PrepareLanguageList(InstallModel model)
         {
             foreach (var lang in _locService.Value.GetAvailableLanguages())
             {
@@ -106,7 +106,7 @@ namespace Nop.Web.Controllers
             return model;
         }
 
-        private InstallModel PrepareAvailableDataProviders(InstallModel model)
+        protected virtual InstallModel PrepareAvailableDataProviders(InstallModel model)
         {
             model.AvailableDataProviders.AddRange(
                 _locService.Value.GetAvailableProviderTypes()

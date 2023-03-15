@@ -12,7 +12,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
+        protected readonly CurrencySettings _currencySettings;
 
         #endregion
 

@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class ForumBreadcrumbViewComponent : NopViewComponent
     {
-        private readonly IForumModelFactory _forumModelFactory;
+        protected readonly IForumModelFactory _forumModelFactory;
 
         public ForumBreadcrumbViewComponent(IForumModelFactory forumModelFactory)
         {

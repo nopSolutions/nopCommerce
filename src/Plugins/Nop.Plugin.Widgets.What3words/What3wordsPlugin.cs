@@ -18,11 +18,11 @@ namespace Nop.Plugin.Widgets.What3words
     {
         #region Fields
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

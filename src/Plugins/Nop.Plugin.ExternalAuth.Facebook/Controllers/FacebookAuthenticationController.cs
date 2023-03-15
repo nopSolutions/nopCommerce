@@ -21,16 +21,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
     {
         #region Fields
 
-        private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

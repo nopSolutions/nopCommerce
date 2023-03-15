@@ -35,27 +35,27 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressService _addresService;
-        private readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILogger _logger;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IProductService _productService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly OnboardingHttpClient _onboardingHttpClient;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAddressService _addresService;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IProductService _productService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly OnboardingHttpClient _onboardingHttpClient;
 
         #endregion
 
@@ -119,7 +119,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result; error message if exists
         /// </returns>
-        private async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
+        protected async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        private static async Task<TResult> HandleCheckoutRequestAsync<TRequest, TResult>(PayPalCommerceSettings settings, TRequest request)
+        protected static async Task<TResult> HandleCheckoutRequestAsync<TRequest, TResult>(PayPalCommerceSettings settings, TRequest request)
             where TRequest : HttpRequest where TResult : class
         {
             //prepare common request params
@@ -198,7 +198,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        private static async Task<TResult> HandleCoreRequestAsync<TRequest, TResult>(PayPalCommerceSettings settings, TRequest request)
+        protected static async Task<TResult> HandleCoreRequestAsync<TRequest, TResult>(PayPalCommerceSettings settings, TRequest request)
             where TRequest : BraintreeHttp.HttpRequest where TResult : class
         {
             //prepare common request params

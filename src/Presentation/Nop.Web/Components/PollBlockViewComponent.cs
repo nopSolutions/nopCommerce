@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class PollBlockViewComponent : NopViewComponent
     {
-        private readonly IPollModelFactory _pollModelFactory;
+        protected readonly IPollModelFactory _pollModelFactory;
 
         public PollBlockViewComponent(IPollModelFactory pollModelFactory)
         {

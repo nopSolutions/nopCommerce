@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
 
         #endregion
 

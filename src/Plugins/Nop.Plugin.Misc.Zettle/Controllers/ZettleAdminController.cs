@@ -31,21 +31,21 @@ namespace Nop.Plugin.Misc.Zettle.Controllers
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly TaxSettings _taxSettings;
-        private readonly ZettleRecordService _zettleRecordService;
-        private readonly ZettleService _zettleService;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly ZettleRecordService _zettleRecordService;
+        protected readonly ZettleService _zettleService;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 

@@ -14,9 +14,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 

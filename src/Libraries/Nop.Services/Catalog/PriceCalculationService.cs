@@ -17,16 +17,16 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

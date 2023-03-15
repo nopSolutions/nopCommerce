@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class CurrencySelectorViewComponent : NopViewComponent
     {
-        private readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICommonModelFactory _commonModelFactory;
 
         public CurrencySelectorViewComponent(ICommonModelFactory commonModelFactory)
         {

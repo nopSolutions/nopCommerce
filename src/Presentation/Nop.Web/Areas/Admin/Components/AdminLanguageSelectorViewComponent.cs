@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICommonModelFactory _commonModelFactory;
 
         #endregion
 

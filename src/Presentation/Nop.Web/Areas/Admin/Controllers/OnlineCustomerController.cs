@@ -9,8 +9,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly IPermissionService _permissionService;
+        protected readonly ICustomerModelFactory _customerModelFactory;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 

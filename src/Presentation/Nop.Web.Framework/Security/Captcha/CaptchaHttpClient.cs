@@ -13,9 +13,9 @@ namespace Nop.Web.Framework.Security.Captcha
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly HttpClient _httpClient;
-        private readonly IWebHelper _webHelper;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly HttpClient _httpClient;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

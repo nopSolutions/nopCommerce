@@ -14,20 +14,20 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
-        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
-        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
-        private readonly IRepository<SpecificationAttributeGroup> _specificationAttributeGroupRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
+        protected readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
+        protected readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
+        protected readonly IRepository<SpecificationAttributeGroup> _specificationAttributeGroupRepository;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -69,7 +69,13 @@ namespace Nop.Services.Catalog
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <summary>
+        /// Gets the available products query
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the available products query
+        /// </returns>
         protected virtual async Task<IQueryable<Product>> GetAvailableProductsQueryAsync()
         {
             var productsQuery =

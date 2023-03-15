@@ -46,8 +46,8 @@ namespace Nop.Services.Attributes
         /// Gets attribute values
         /// </summary>
         /// <param name="valuesStr">string value attribute identifiers</param>
-        /// <returns></returns>
-        protected async IAsyncEnumerable<TAttributeValue> GetValuesAsync(IList<string> valuesStr)
+        /// <returns>Attribute values</returns>
+        protected virtual async IAsyncEnumerable<TAttributeValue> GetValuesAsync(IList<string> valuesStr)
         {
             foreach (var valueStr in valuesStr)
             {

@@ -18,9 +18,9 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly INopFileProvider _fileProvider;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeProvider _themeProvider;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeProvider _themeProvider;
 
         #endregion
 

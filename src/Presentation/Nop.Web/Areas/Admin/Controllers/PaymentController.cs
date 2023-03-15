@@ -22,17 +22,17 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPaymentModelFactory _paymentModelFactory;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
+        protected readonly ICountryService _countryService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPaymentModelFactory _paymentModelFactory;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly PaymentSettings _paymentSettings;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace Nop.Services.Authentication.External
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         #endregion
 

@@ -23,7 +23,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         public static CacheKey PICTURE_URL_MODEL_KEY = new("Nop.plugins.widgets.nivoslider.pictureurl-{0}-{1}", PICTURE_URL_PATTERN_KEY);
         public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivoslider";
 
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         public ModelCacheEventConsumer(IStaticCacheManager staticCacheManager)
         {
@@ -35,11 +35,13 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         {
             await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
+
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
+
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Setting> eventMessage)
         {

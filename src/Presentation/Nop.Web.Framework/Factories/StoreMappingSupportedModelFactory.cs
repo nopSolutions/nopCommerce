@@ -13,8 +13,8 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
 
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 

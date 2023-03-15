@@ -16,10 +16,10 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
     {
         #region Fields
 
-        private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly ILogger _logger;
-        private readonly IWebHelper _webHelper;
+        protected readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly ILogger _logger;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -40,7 +40,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         #region Utilities
 
-        // Convert string to a valid Base64 encoded string
+        /// <summary>
+        /// Convert string to a valid Base64 encoded string
+        /// </summary>
         protected static string DecodeUrlBase64(string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -113,6 +115,5 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         }
 
         #endregion
-
     }
 }

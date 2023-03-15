@@ -15,8 +15,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IScheduleTaskService _scheduleTaskService;
 
         #endregion
 

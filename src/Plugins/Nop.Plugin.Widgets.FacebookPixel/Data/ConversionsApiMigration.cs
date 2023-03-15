@@ -13,8 +13,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Data
     {
         #region Fields
 
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
 
         #endregion
 

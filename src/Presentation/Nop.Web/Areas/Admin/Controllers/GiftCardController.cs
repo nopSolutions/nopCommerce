@@ -23,20 +23,20 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardModelFactory _giftCardModelFactory;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGiftCardModelFactory _giftCardModelFactory;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 

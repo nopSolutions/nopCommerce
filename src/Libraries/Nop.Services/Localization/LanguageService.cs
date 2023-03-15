@@ -14,11 +14,11 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<Language> _languageRepository;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly IRepository<Language> _languageRepository;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 

@@ -11,12 +11,12 @@ namespace Nop.Web.Controllers
 {
     public partial class DownloadController : BasePublicController
     {
-        private readonly CustomerSettings _customerSettings;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly IWorkContext _workContext;
 
         public DownloadController(CustomerSettings customerSettings,
             IDownloadService downloadService,

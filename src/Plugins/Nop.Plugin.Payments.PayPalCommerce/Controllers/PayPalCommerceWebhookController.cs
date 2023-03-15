@@ -7,8 +7,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
     {
         #region Fields
 
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
 
         #endregion
 

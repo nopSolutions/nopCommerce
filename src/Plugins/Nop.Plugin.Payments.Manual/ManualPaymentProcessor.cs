@@ -20,11 +20,11 @@ namespace Nop.Plugin.Payments.Manual
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
-        private readonly ManualPaymentSettings _manualPaymentSettings;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly ManualPaymentSettings _manualPaymentSettings;
 
         #endregion
 

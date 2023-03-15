@@ -46,7 +46,7 @@ namespace Nop.Core.Caching
         /// Clear all data on this instance
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected void ClearInstanceData()
+        protected virtual void ClearInstanceData()
         {
             _perRequestCache.Clear();
             _localKeyManager.Clear();
@@ -58,7 +58,7 @@ namespace Nop.Core.Caching
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
         /// <returns>The removed keys</returns>
-        protected IEnumerable<string> RemoveByPrefixInstanceData(string prefix, params object[] prefixParameters)
+        protected virtual IEnumerable<string> RemoveByPrefixInstanceData(string prefix, params object[] prefixParameters)
         {
             var keyPrefix = PrepareKeyPrefix(prefix, prefixParameters);
             _perRequestCache.Prune(keyPrefix, out _);
@@ -71,7 +71,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <returns>Cache entry options</returns>
-        private static DistributedCacheEntryOptions PrepareEntryOptions(CacheKey key)
+        protected virtual DistributedCacheEntryOptions PrepareEntryOptions(CacheKey key)
         {
             //set expiration time for the passed cache key
             return new DistributedCacheEntryOptions
@@ -85,7 +85,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="value">Value for caching</param>
-        protected void SetLocal(string key, object value)
+        protected virtual void SetLocal(string key, object value)
         {
             _perRequestCache.Add(key, value);
             _localKeyManager.AddKey(key);
@@ -95,7 +95,7 @@ namespace Nop.Core.Caching
         /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Cache key</param>
-        protected void RemoveLocal(string key)
+        protected virtual void RemoveLocal(string key)
         {
             _perRequestCache.Remove(key);
             _localKeyManager.RemoveKey(key);
@@ -106,7 +106,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
-        protected async Task<(bool isSet, T item)> TryGetItemAsync<T>(string key)
+        protected virtual async Task<(bool isSet, T item)> TryGetItemAsync<T>(string key)
         {
             var json = await _distributedCache.GetStringAsync(key);
 
@@ -120,7 +120,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Cache key</param>
         /// <param name="removeFromInstance">Remove from instance</param>
-        protected async Task RemoveAsync(string key, bool removeFromInstance = true)
+        protected virtual async Task RemoveAsync(string key, bool removeFromInstance = true)
         {
             _ongoing.TryRemove(key, out _);
             await _distributedCache.RemoveAsync(key);

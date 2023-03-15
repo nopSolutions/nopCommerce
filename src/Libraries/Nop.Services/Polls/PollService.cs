@@ -12,10 +12,10 @@ namespace Nop.Services.Polls
     {
         #region Fields
 
-        private readonly IRepository<Poll> _pollRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<Poll> _pollRepository;
+        protected readonly IRepository<PollAnswer> _pollAnswerRepository;
+        protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 

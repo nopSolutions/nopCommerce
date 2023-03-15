@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class TopMenuViewComponent : NopViewComponent
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
 
         public TopMenuViewComponent(ICatalogModelFactory catalogModelFactory)
         {

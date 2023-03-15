@@ -17,14 +17,14 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
-
+        protected readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
+        
         #endregion
 
         #region Ctor

@@ -15,12 +15,12 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeContext _themeContext;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly ICustomerService _customerService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeContext _themeContext;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

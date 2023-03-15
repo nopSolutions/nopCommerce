@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class SocialButtonsViewComponent : NopViewComponent
     {
-        private readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICommonModelFactory _commonModelFactory;
 
         public SocialButtonsViewComponent(ICommonModelFactory commonModelFactory)
         {

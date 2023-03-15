@@ -13,8 +13,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly IStoreContext _storeContext;
-        private readonly SendinblueSettings _sendinblueSettings;
+        protected readonly IStoreContext _storeContext;
+        protected readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 

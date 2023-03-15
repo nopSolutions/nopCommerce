@@ -10,7 +10,7 @@ namespace Nop.Core.Configuration
     {
         #region Fields
 
-        private readonly Dictionary<Type, IConfig> _configurations = new();
+        protected readonly Dictionary<Type, IConfig> _configurations;
 
         #endregion
 
@@ -25,17 +25,7 @@ namespace Nop.Core.Configuration
         }
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets raw configuration parameters
-        /// </summary>
-        [JsonExtensionData]
-        public Dictionary<string, JToken> Configuration { get; set; }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -62,6 +52,16 @@ namespace Nop.Core.Configuration
                 _configurations[config.GetType()] = config;
             }
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets raw configuration parameters
+        /// </summary>
+        [JsonExtensionData]
+        public Dictionary<string, JToken> Configuration { get; set; }
 
         #endregion
     }

@@ -11,7 +11,7 @@ namespace Nop.Services.ScheduleTasks
     {
         #region Fields
 
-        private readonly IRepository<ScheduleTask> _taskRepository;
+        protected readonly IRepository<ScheduleTask> _taskRepository;
 
         #endregion
 

@@ -10,8 +10,8 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly ILogger _logger;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly ILogger _logger;
 
         #endregion
 

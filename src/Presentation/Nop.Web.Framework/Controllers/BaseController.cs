@@ -199,7 +199,7 @@ namespace Nop.Web.Framework.Controllers
         /// A task that represents the asynchronous operation
         /// The task result contains the access denied JSON data
         /// </returns>
-        protected async Task<JsonResult> AccessDeniedDataTablesJson()
+        protected virtual async Task<JsonResult> AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 

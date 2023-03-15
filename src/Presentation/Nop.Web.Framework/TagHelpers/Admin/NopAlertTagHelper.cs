@@ -15,39 +15,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string ALERT_NAME_ID = "asp-alert-id";
-        private const string ALERT_MESSAGE_NAME = "asp-alert-message";
+        protected const string ALERT_NAME_ID = "asp-alert-id";
+        protected const string ALERT_MESSAGE_NAME = "asp-alert-message";
 
         #endregion
-
-        #region Properties
-
-        protected IHtmlGenerator Generator { get; set; }
-
-        /// <summary>
-        /// Alert identifier
-        /// </summary>
-        [HtmlAttributeName(ALERT_NAME_ID)]
-        public string AlertId { get; set; }
-
-        /// <summary>
-        /// Additional confirm text
-        /// </summary>
-        [HtmlAttributeName(ALERT_MESSAGE_NAME)]
-        public string Message { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -112,6 +87,31 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
+
+        #endregion
+
+        #region Properties
+
+        protected IHtmlGenerator Generator { get; set; }
+
+        /// <summary>
+        /// Alert identifier
+        /// </summary>
+        [HtmlAttributeName(ALERT_NAME_ID)]
+        public string AlertId { get; set; }
+
+        /// <summary>
+        /// Additional confirm text
+        /// </summary>
+        [HtmlAttributeName(ALERT_MESSAGE_NAME)]
+        public string Message { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

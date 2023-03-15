@@ -18,15 +18,15 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        private readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
-        private const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
+        protected readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
+        protected const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
 
         #endregion
 
         #region Fields
 
-        private readonly IRepository<StorePickupPoint> _storePickupPointRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<StorePickupPoint> _storePickupPointRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

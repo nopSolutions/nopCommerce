@@ -15,13 +15,13 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMeasureService _measureService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IWorkContext _workContext;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

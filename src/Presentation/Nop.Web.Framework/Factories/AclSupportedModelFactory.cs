@@ -14,8 +14,8 @@ namespace Nop.Web.Framework.Factories
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
+        protected readonly IAclService _aclService;
+        protected readonly ICustomerService _customerService;
 
         #endregion
 

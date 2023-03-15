@@ -13,11 +13,11 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class LanguageModelFactory : ILanguageModelFactory
     {
         #region Fields
-
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
         #endregion
 

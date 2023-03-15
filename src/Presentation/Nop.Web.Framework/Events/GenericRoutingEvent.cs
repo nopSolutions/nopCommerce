@@ -25,17 +25,17 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Gets HTTP context
         /// </summary>
-        public HttpContext HttpContext { get; private set; }
+        public HttpContext HttpContext { get; protected set; }
 
         /// <summary>
         /// Gets route values associated with the current match
         /// </summary>
-        public RouteValueDictionary RouteValues { get; private set; }
+        public RouteValueDictionary RouteValues { get; protected set; }
 
         /// <summary>
         /// Gets record found by the URL slug
         /// </summary>
-        public UrlRecord UrlRecord { get; private set; }
+        public UrlRecord UrlRecord { get; protected set; }
 
         /// <summary>
         /// Gets a value indicating whether the event was handled and values should be used without further processing

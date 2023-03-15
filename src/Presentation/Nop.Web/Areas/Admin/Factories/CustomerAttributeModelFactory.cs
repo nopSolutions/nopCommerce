@@ -15,9 +15,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
 
         #endregion
 

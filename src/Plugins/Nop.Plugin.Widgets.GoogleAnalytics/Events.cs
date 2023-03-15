@@ -24,19 +24,19 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         IConsumer<OrderPaidEvent>,
         IConsumer<OrderRefundedEvent>
     {
-        private readonly CurrencySettings _currencySettings;
-        private readonly GoogleAnalyticsHttpClient _googleAnalyticsHttpClient;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly GoogleAnalyticsHttpClient _googleAnalyticsHttpClient;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILogger _logger;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(
             CurrencySettings currencySettings,
@@ -69,12 +69,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<bool> IsPluginEnabledAsync()
+        protected async Task<bool> IsPluginEnabledAsync()
         {
             return await _widgetPluginManager.IsPluginActiveAsync(GoogleAnalyticsDefaults.SystemName);
         }
 
-        private async Task SaveCookiesAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, Store store)
+        protected async Task SaveCookiesAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, Store store)
         {
             //try to get cookie
             var httpContext = _httpContextAccessor.HttpContext;
@@ -91,7 +91,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ProcessOrderEventAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, string eventName)
+        protected async Task ProcessOrderEventAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, string eventName)
         {
             try
             {

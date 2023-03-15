@@ -13,7 +13,7 @@ namespace Nop.Plugin.Misc.WebApi.Frontend.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 

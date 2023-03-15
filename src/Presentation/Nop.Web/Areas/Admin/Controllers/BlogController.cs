@@ -20,16 +20,16 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IBlogModelFactory _blogModelFactory;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly IBlogModelFactory _blogModelFactory;
+        protected readonly IBlogService _blogService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 

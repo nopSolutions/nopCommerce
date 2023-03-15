@@ -8,7 +8,7 @@ namespace Nop.Web.Components
     {
         #region Fields
 
-        private readonly IExternalAuthenticationModelFactory _externalAuthenticationModelFactory;
+        protected readonly IExternalAuthenticationModelFactory _externalAuthenticationModelFactory;
 
         #endregion
 

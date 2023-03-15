@@ -12,8 +12,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxPluginManager _taxPluginManager;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 

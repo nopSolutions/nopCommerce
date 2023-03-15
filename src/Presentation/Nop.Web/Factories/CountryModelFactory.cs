@@ -12,10 +12,10 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IWorkContext _workContext;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

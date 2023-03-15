@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Components
     /// </summary>
     public abstract partial class NopViewComponent : ViewComponent
     {
-        private void PublishModelPrepared<TModel>(TModel model)
+        protected virtual void PublishModelPrepared<TModel>(TModel model)
         {
             //Components are not part of the controller life cycle.
             //Hence, we could no longer use Action Filters to intercept the Models being returned
@@ -37,6 +37,7 @@ namespace Nop.Web.Framework.Components
                 eventPublisher.ModelPreparedAsync(modelCollection).Wait();
             }
         }
+
         /// <summary>
         /// Returns a result which will render the partial view with name <paramref name="viewName"/>.
         /// </summary>

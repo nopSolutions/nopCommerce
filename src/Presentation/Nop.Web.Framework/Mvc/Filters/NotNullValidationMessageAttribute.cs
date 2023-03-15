@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILocalizationService _localizationService;
+            protected readonly ILocalizationService _localizationService;
 
             #endregion
 

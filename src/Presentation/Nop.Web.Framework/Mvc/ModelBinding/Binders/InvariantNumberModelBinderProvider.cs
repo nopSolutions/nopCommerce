@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Numerics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
@@ -8,17 +8,17 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     /// <summary>
     /// Represents a model binder provider for binding numeric types
     /// </summary>
-    public class InvariantNumberModelBinderProvider : IModelBinderProvider
+    public partial class InvariantNumberModelBinderProvider : IModelBinderProvider
     {
         #region Fields
 
-        private static readonly HashSet<Type> _integerTypes = new()
+        protected static readonly HashSet<Type> _integerTypes = new()
         {
             typeof(int), typeof(long), typeof(short), typeof(sbyte),
             typeof(byte), typeof(ulong), typeof(ushort), typeof(uint), typeof(BigInteger)
         };
 
-        private static readonly HashSet<Type> _floatingPointTypes = new()
+        protected static readonly HashSet<Type> _floatingPointTypes = new()
         {
             typeof(double), typeof(decimal), typeof(float)
         };

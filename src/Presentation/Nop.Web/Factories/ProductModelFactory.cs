@@ -39,45 +39,45 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IReviewTypeService _reviewTypeService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly ITaxService _taxService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IVideoService _videoService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly SeoSettings _seoSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly IReviewTypeService _reviewTypeService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly ITaxService _taxService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IVideoService _videoService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly SeoSettings _seoSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -307,6 +307,11 @@ namespace Nop.Web.Factories
             return priceModel;
         }
 
+        /// <summary>
+        /// Prepare the simple product overview price model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="priceModel">Price model</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareSimpleProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
@@ -516,6 +521,11 @@ namespace Nop.Web.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare the grouped product overview price model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="priceModel">Price model</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareGroupedProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {

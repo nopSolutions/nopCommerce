@@ -21,20 +21,20 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly IRepository<OrderNote> _orderNoteRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result query</returns>
-        private IQueryable<OrderItem> SearchOrderItems(
+        protected virtual IQueryable<OrderItem> SearchOrderItems(
             int categoryId = 0,
             int manufacturerId = 0,
             int storeId = 0,

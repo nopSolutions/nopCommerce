@@ -15,16 +15,16 @@ namespace Nop.Data.DataProviders
     {
         #region Utils
 
-        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
+        /// <summary>
+        /// Gets the connection string builder
+        /// </summary>
+        /// <returns>The connection string builder</returns>
+        protected static SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
         }
-
-        #endregion
-
-        #region Utils
 
         /// <summary>
         /// Gets a connection to the database for a current data provider

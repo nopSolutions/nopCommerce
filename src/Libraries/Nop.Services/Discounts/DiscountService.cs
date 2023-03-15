@@ -19,16 +19,16 @@ namespace Nop.Services.Discounts
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductService _productService;
-        private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
-        private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountPluginManager _discountPluginManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<Discount> _discountRepository;
+        protected readonly IRepository<DiscountRequirement> _discountRequirementRepository;
+        protected readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace Nop.Services.Discounts
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if result is valid; otherwise false
         /// </returns>
-        protected async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
+        protected virtual async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
             var result = false;

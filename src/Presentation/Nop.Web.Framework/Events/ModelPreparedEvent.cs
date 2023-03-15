@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Gets a model
         /// </summary>
-        public T Model { get; private set; }
+        public T Model { get; protected set; }
 
         #endregion
     }

@@ -19,12 +19,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly FacebookPixelService _facebookPixelService;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

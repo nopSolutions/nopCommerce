@@ -14,11 +14,11 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        protected readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace Nop.Services.Messages
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
+        protected virtual async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
         {
             if (!publishSubscriptionEvents)
                 return;

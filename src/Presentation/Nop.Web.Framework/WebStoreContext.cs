@@ -17,13 +17,13 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository<Store> _storeRepository;
-        private readonly IStoreService _storeService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IRepository<Store> _storeRepository;
+        protected readonly IStoreService _storeService;
 
-        private Store _cachedStore;
-        private int? _cachedActiveStoreScopeConfiguration;
+        protected Store _cachedStore;
+        protected int? _cachedActiveStoreScopeConfiguration;
 
         #endregion
 

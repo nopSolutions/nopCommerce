@@ -9,7 +9,7 @@ namespace Nop.Core.Caching
     {
         #region Fields
 
-        private readonly IMemoryCache _memoryCache;
+        protected readonly IMemoryCache _memoryCache;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace Nop.Core.Caching
         /// <param name="action">The action to perform</param>
         /// <param name="cancellationTokenSource">A CancellationTokenSource for manually canceling the task</param>
         /// <returns></returns>
-        protected async Task<bool> RunAsync(string key, TimeSpan? expirationTime, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
+        protected virtual async Task<bool> RunAsync(string key, TimeSpan? expirationTime, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
         {
             var started = false;
 

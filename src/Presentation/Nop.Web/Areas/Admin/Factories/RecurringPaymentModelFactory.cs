@@ -19,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IWorkContext _workContext;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

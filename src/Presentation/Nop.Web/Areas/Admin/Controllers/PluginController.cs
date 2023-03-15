@@ -32,29 +32,29 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPluginModelFactory _pluginModelFactory;
-        private readonly IPluginService _pluginService;
-        private readonly ISettingService _settingService;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IUploadService _uploadService;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IPluginModelFactory _pluginModelFactory;
+        protected readonly IPluginService _pluginService;
+        protected readonly ISettingService _settingService;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IUploadService _uploadService;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<SearchTerm> _searchTermRepository;
+        protected readonly IRepository<SearchTerm> _searchTermRepository;
 
         #endregion
 

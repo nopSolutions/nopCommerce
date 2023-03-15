@@ -34,36 +34,36 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExportManager _exportManager;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IImportManager _importManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly OrderSettings _orderSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IExportManager _exportManager;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IImportManager _importManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderModelFactory _orderModelFactory;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly OrderSettings _orderSettings;
 
         #endregion
 

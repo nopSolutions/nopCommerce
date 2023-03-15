@@ -17,14 +17,14 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IForumService _forumService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IForumService _forumService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

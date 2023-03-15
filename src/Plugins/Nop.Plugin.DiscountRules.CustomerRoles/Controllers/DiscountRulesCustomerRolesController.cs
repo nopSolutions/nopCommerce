@@ -21,11 +21,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 
@@ -42,6 +42,20 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             _localizationService = localizationService;
             _permissionService = permissionService;
             _settingService = settingService;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Get errors message from model state
+        /// </summary>
+        /// <param name="modelState">Model state</param>
+        /// <returns>Errors message</returns>
+        protected IEnumerable<string> GetErrorsFromModelState(ModelStateDictionary modelState)
+        {
+            return ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
         }
 
         #endregion
@@ -126,15 +140,6 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             }
 
             return Ok(new { Errors = GetErrorsFromModelState(ModelState) });
-        }
-
-        #endregion
-
-        #region Utilities
-
-        private IEnumerable<string> GetErrorsFromModelState(ModelStateDictionary modelState)
-        {
-            return ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
         }
 
         #endregion

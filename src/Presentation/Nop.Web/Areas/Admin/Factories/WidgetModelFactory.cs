@@ -13,8 +13,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

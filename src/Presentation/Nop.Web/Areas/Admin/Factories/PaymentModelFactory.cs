@@ -15,10 +15,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 

@@ -15,8 +15,8 @@ namespace Nop.Plugin.Misc.WebApi.Frontend
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

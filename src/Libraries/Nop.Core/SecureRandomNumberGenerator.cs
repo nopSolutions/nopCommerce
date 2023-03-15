@@ -9,8 +9,8 @@ namespace Nop.Core
     {
         #region Field
 
-        private bool _disposed = false;
-        private readonly RandomNumberGenerator _rng;
+        protected bool _disposed;
+        protected readonly RandomNumberGenerator _rng;
 
         #endregion
 

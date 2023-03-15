@@ -26,15 +26,15 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly ServiceManager _serviceManager;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly ServiceManager _serviceManager;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Controllers
         /// <param name="settings">Plugin settings</param>
         /// <param name="storeId">Store id</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task PrepareCredentialsAsync(ConfigurationModel model, PayPalCommerceSettings settings, int storeId)
+        protected async Task PrepareCredentialsAsync(ConfigurationModel model, PayPalCommerceSettings settings, int storeId)
         {
             model.OnboardingModel.MerchantGuid = settings.MerchantGuid;
             model.OnboardingModel.SignUpUrl = settings.SignUpUrl;

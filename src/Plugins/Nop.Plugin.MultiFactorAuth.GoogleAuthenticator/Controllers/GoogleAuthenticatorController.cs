@@ -25,16 +25,15 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
     {
         #region Fields
 
-        private readonly GoogleAuthenticatorService _googleAuthenticatorService;
-        private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
-
+        protected readonly GoogleAuthenticatorService _googleAuthenticatorService;
+        protected readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;        
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

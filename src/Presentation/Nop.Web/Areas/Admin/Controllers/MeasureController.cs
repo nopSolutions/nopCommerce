@@ -17,13 +17,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureModelFactory _measureModelFactory;
-        private readonly IMeasureService _measureService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly MeasureSettings _measureSettings;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMeasureModelFactory _measureModelFactory;
+        protected readonly IMeasureService _measureService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly MeasureSettings _measureSettings;
 
         #endregion
 

@@ -88,8 +88,8 @@ namespace Nop.Web.Infrastructure.Cache
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

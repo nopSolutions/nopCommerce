@@ -21,12 +21,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly ISettingService _settingService;
-        private readonly ITokenizer _tokenizer;
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ISettingService _settingService;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
@@ -72,11 +69,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 tokenizer,
                 messagesSettings)
         {
-            _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
-            _queuedEmailService = queuedEmailService;
             _settingService = settingService;
-            _tokenizer = tokenizer;
             _sendinblueEmailManager = sendinblueEmailManager;
         }
 
@@ -90,7 +84,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="messageTemplate">Message template</param>
         /// <param name="tokens">Tokens</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task SendSmsNotificationAsync(MessageTemplate messageTemplate, IEnumerable<Token> tokens)
+        protected async Task SendSmsNotificationAsync(MessageTemplate messageTemplate, IEnumerable<Token> tokens)
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
@@ -153,7 +147,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        private async Task<int?> SendEmailNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, IEnumerable<Token> tokens,
+        protected async Task<int?> SendEmailNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,
@@ -211,6 +205,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             await _queuedEmailService.InsertQueuedEmailAsync(email);
             return email.Id;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Send notification

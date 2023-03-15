@@ -9,13 +9,13 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
     {
         #region Fields
 
-        private static readonly Regex _specialCharRemoveRegex;
-        private static readonly Regex _americanExpressRegx;
-        private static readonly Regex _discoverRegx;
-        private static readonly Regex _mastercardRegx;
-        private static readonly Regex _visaRegx;
-        private static readonly Regex _dinersClubRegx;
-        private static readonly Regex _jcbRegx;
+        protected static readonly Regex _specialCharRemoveRegex;
+        protected static readonly Regex _americanExpressRegx;
+        protected static readonly Regex _discoverRegx;
+        protected static readonly Regex _mastercardRegx;
+        protected static readonly Regex _visaRegx;
+        protected static readonly Regex _dinersClubRegx;
+        protected static readonly Regex _jcbRegx;
 
         #endregion
 

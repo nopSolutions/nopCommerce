@@ -13,10 +13,10 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 

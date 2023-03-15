@@ -9,7 +9,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
 
         #endregion
 

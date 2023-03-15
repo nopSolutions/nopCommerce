@@ -13,38 +13,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string ID_ATTRIBUTE_NAME = "id";
-        private const string TAB_NAME_TO_SELECT_ATTRIBUTE_NAME = "asp-tab-name-to-select";
-        private const string RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME = "asp-render-selected-tab-input";
+        protected const string ID_ATTRIBUTE_NAME = "id";
+        protected const string TAB_NAME_TO_SELECT_ATTRIBUTE_NAME = "asp-tab-name-to-select";
+        protected const string RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME = "asp-render-selected-tab-input";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Name of the tab which should be selected
-        /// </summary>
-        [HtmlAttributeName(TAB_NAME_TO_SELECT_ATTRIBUTE_NAME)]
-        public string TabNameToSelect { set; get; }
-
-        /// <summary>
-        /// Indicates whether the tab is default
-        /// </summary>
-        [HtmlAttributeName(RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME)]
-        public string RenderSelectedTabInput { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -162,6 +139,29 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             output.Attributes.SetAttribute("class", classValue);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Name of the tab which should be selected
+        /// </summary>
+        [HtmlAttributeName(TAB_NAME_TO_SELECT_ATTRIBUTE_NAME)]
+        public string TabNameToSelect { set; get; }
+
+        /// <summary>
+        /// Indicates whether the tab is default
+        /// </summary>
+        [HtmlAttributeName(RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME)]
+        public string RenderSelectedTabInput { set; get; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

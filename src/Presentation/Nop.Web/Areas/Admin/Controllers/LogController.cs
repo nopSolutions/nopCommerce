@@ -14,12 +14,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly ILogModelFactory _logModelFactory;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly ILogModelFactory _logModelFactory;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 

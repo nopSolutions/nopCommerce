@@ -47,31 +47,31 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
-        private readonly INopDataProvider _dataProvider;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGdprService _gdprService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
-        private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IThemeProvider _themeProvider;
-        private readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
-        private readonly IWorkContext _workContext;
+        protected readonly AppSettings _appSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGdprService _gdprService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IThemeProvider _themeProvider;
+        protected readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

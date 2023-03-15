@@ -11,8 +11,8 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IRepository<ProductVideo> _productVideoRepository;
-        private readonly IRepository<Video> _videoRepository;
+        protected readonly IRepository<ProductVideo> _productVideoRepository;
+        protected readonly IRepository<Video> _videoRepository;
 
         #endregion
 

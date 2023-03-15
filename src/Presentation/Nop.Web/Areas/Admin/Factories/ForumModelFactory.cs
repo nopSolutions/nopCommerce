@@ -14,8 +14,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IForumService _forumService;
 
         #endregion
 

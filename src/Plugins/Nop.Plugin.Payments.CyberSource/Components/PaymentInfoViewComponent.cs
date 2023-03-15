@@ -17,12 +17,12 @@ namespace Nop.Plugin.Payments.CyberSource.Components
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly INotificationService _notificationService;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly INotificationService _notificationService;
+        protected readonly IWorkContext _workContext;
+        protected readonly OrderSettings _orderSettings;
 
         #endregion
 

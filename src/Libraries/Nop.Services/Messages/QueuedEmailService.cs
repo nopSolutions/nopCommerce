@@ -11,7 +11,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+        protected readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
         #endregion
 

@@ -20,16 +20,16 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IShippingService _shippingService;
-        private readonly IStateProvinceService _stateProvinceService;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IShippingService _shippingService;
+        protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 

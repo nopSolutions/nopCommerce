@@ -19,20 +19,20 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
     {
         #region Fields
 
-        private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
+        protected const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -69,7 +69,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         #region Utilities
 
-        private static string FixIllegalJavaScriptChars(string text)
+        protected static string FixIllegalJavaScriptChars(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
@@ -80,7 +80,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<Order> GetLastOrderAsync()
+        protected async Task<Order> GetLastOrderAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -90,7 +90,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<string> GetEcommerceScriptAsync(Order order)
+        protected async Task<string> GetEcommerceScriptAsync(Order order)
         {
             var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsSettings.GoogleId);

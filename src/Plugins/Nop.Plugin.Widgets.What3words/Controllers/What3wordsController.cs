@@ -20,15 +20,15 @@ namespace Nop.Plugin.Widgets.What3words.Controllers
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly What3wordsHttpClient _what3WordsHttpClient;
-        private readonly What3wordsSettings _what3WordsSettings;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly What3wordsHttpClient _what3WordsHttpClient;
+        protected readonly What3wordsSettings _what3WordsSettings;
 
         #endregion
 

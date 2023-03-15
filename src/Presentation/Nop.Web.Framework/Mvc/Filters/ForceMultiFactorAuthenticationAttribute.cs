@@ -33,11 +33,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly IGenericAttributeService _genericAttributeService;
-            private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-            private readonly IPermissionService _permissionService;
-            private readonly IWorkContext _workContext;
-            private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+            protected readonly IGenericAttributeService _genericAttributeService;
+            protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+            protected readonly IPermissionService _permissionService;
+            protected readonly IWorkContext _workContext;
+            protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
             #endregion
 

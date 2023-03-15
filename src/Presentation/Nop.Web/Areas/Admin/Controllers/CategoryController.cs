@@ -28,25 +28,25 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICategoryModelFactory _categoryModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IExportManager _exportManager;
-        private readonly IImportManager _importManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryModelFactory _categoryModelFactory;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IExportManager _exportManager;
+        protected readonly IImportManager _importManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

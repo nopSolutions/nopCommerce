@@ -15,12 +15,12 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<PermissionRecord> _permissionRecordRepository;
-        private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<PermissionRecord> _permissionRecordRepository;
+        protected readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

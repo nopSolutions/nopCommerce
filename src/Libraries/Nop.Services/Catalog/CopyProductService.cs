@@ -16,22 +16,22 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVideoService _videoService;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVideoService _videoService;
 
         #endregion
 

@@ -16,13 +16,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IScheduleTaskModelFactory _scheduleTaskModelFactory;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IScheduleTaskRunner _taskRunner;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IScheduleTaskModelFactory _scheduleTaskModelFactory;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly IScheduleTaskRunner _taskRunner;
 
         #endregion
 

@@ -12,10 +12,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPermissionService _permissionService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly IShoppingCartService _shoppingCartService;
         #endregion
 
         #region Ctor

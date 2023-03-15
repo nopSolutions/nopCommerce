@@ -15,14 +15,14 @@ namespace Nop.Plugin.Payments.CyberSource.Controllers
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

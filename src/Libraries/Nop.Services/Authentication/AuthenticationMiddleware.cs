@@ -14,7 +14,7 @@ namespace Nop.Services.Authentication
     {
         #region Fields
 
-        private readonly RequestDelegate _next;
+        protected readonly RequestDelegate _next;
 
         #endregion
 
@@ -25,15 +25,6 @@ namespace Nop.Services.Authentication
             Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
             _next = next ?? throw new ArgumentNullException(nameof(next));
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IAuthenticationSchemeProvider Schemes { get; set; }
 
         #endregion
 
@@ -91,6 +82,15 @@ namespace Nop.Services.Authentication
 
             await _next(context);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Scheme provider
+        /// </summary>
+        public IAuthenticationSchemeProvider Schemes { get; set; }
 
         #endregion
     }

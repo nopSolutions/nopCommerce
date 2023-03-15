@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class FaviconViewComponent : NopViewComponent
     {
-        private readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICommonModelFactory _commonModelFactory;
 
         public FaviconViewComponent(ICommonModelFactory commonModelFactory)
         {

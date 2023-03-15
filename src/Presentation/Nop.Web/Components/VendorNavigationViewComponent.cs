@@ -7,8 +7,8 @@ namespace Nop.Web.Components
 {
     public partial class VendorNavigationViewComponent : NopViewComponent
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly VendorSettings _vendorSettings;
 
         public VendorNavigationViewComponent(ICatalogModelFactory catalogModelFactory,
             VendorSettings vendorSettings)

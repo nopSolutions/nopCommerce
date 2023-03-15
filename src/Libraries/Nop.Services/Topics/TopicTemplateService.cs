@@ -10,7 +10,7 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
+        protected readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
 

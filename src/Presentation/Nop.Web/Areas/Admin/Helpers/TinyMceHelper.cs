@@ -8,9 +8,9 @@ namespace Nop.Web.Areas.Admin.Helpers
     /// </summary>
     public partial class TinyMceHelper : ITinyMceHelper
     {
-        private readonly INopFileProvider _nopFileProvider;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IWorkContext _workContext;
+        protected readonly INopFileProvider _nopFileProvider;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly IWorkContext _workContext;
 
         public TinyMceHelper(INopFileProvider nopFileProvider, IWebHostEnvironment webHostEnvironment, IWorkContext workContext)
         {

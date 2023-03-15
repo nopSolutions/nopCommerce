@@ -12,10 +12,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Data
     {
         #region Fields
 
-        private readonly PayPalCommerceSettings _payPalCommerceSettings;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
+        protected readonly PayPalCommerceSettings _payPalCommerceSettings;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

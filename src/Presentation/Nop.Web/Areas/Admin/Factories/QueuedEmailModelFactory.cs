@@ -15,10 +15,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IQueuedEmailService _queuedEmailService;
 
         #endregion
 

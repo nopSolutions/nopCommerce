@@ -32,16 +32,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        protected readonly FacebookPixelService _facebookPixelService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
 

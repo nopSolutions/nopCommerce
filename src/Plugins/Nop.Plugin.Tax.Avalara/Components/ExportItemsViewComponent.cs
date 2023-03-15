@@ -13,8 +13,8 @@ namespace Nop.Plugin.Tax.Avalara.Components
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 

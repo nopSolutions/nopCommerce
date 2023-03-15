@@ -14,12 +14,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPollModelFactory _pollModelFactory;
-        private readonly IPollService _pollService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPollModelFactory _pollModelFactory;
+        protected readonly IPollService _pollService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

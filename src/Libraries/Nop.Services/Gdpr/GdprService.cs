@@ -23,21 +23,21 @@ namespace Nop.Services.Gdpr
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerService _customerService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INewsService _newsService;
-        private readonly IProductService _productService;
-        private readonly IRepository<GdprConsent> _gdprConsentRepository;
-        private readonly IRepository<GdprLog> _gdprLogRepository;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreService _storeService;
+        protected readonly IAddressService _addressService;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly IBlogService _blogService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IForumService _forumService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly INewsService _newsService;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<GdprConsent> _gdprConsentRepository;
+        protected readonly IRepository<GdprLog> _gdprLogRepository;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 

@@ -12,9 +12,9 @@ namespace Nop.Services.Themes
     {
         #region Fields
 
-        private static readonly object _locker = new();
+        protected static readonly object _locker = new();
 
-        private readonly INopFileProvider _fileProvider;
+        protected readonly INopFileProvider _fileProvider;
 
         protected Dictionary<string, ThemeDescriptor> _themeDescriptors;
 

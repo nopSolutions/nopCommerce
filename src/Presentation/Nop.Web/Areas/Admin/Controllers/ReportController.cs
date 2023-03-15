@@ -9,8 +9,8 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IReportModelFactory _reportModelFactory;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IReportModelFactory _reportModelFactory;
 
         #endregion
 

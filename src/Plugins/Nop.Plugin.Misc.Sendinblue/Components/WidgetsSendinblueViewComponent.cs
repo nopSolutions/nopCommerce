@@ -12,9 +12,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IWorkContext _workContext;
-        private readonly SendinblueSettings _sendinblueSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IWorkContext _workContext;
+        protected readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 

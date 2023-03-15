@@ -19,15 +19,15 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMigrationManager _migrationManager;
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IPluginsInfo _pluginsInfo;
-        private readonly IWebHelper _webHelper;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IMigrationManager _migrationManager;
+        protected readonly ILogger _logger;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IPluginsInfo _pluginsInfo;
+        protected readonly IWebHelper _webHelper;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -189,12 +189,11 @@ namespace Nop.Services.Plugins
             return pluginDescriptor.Author.Contains(author, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        protected virtual void DeletePluginData(Type pluginType)
-        {
-            var assembly = Assembly.GetAssembly(pluginType);
-            _migrationManager.ApplyDownMigrations(assembly);
-        }
-
+        /// <summary>
+        /// Insert plugin data
+        /// </summary>
+        /// <param name="pluginType">Plugin type</param>
+        /// <param name="migrationProcessType">Migration process type</param>
         protected virtual void InsertPluginData(Type pluginType, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
         {
             var assembly = Assembly.GetAssembly(pluginType);
@@ -206,19 +205,7 @@ namespace Nop.Services.Plugins
                 _migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
             }
         }
-
-        protected virtual bool PluginsUploaded()
-        {
-            var pluginsDirectories =
-                _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath));
-
-            if (!pluginsDirectories.Any())
-                return false;
-
-            return pluginsDirectories.Any(d =>
-                _fileProvider.GetFiles(d, "*.dll").Any() || _fileProvider.GetFiles(d, "plugin.json").Any());
-        }
-
+        
         #endregion
 
         #region Methods
@@ -578,7 +565,8 @@ namespace Nop.Services.Plugins
                     await plugin.UninstallAsync();
 
                     //clear plugin data on the database
-                    DeletePluginData(descriptor.pluginDescriptor.PluginType);
+                    var assembly = Assembly.GetAssembly(descriptor.pluginDescriptor.PluginType);
+                    _migrationManager.ApplyDownMigrations(assembly);
 
                     //remove plugin system name from appropriate lists
                     _pluginsInfo.InstalledPlugins.Remove(descriptor.pluginDescriptor);
@@ -662,7 +650,7 @@ namespace Nop.Services.Plugins
             return _pluginsInfo.PluginNamesToInstall.Any()
                    || _pluginsInfo.PluginNamesToUninstall.Any()
                    || _pluginsInfo.PluginNamesToDelete.Any()
-                   || PluginsUploaded();
+                   || IsPluginsUploaded;
         }
 
         /// <summary>
@@ -711,6 +699,29 @@ namespace Nop.Services.Plugins
         public virtual IList<PluginLoadedAssemblyInfo> GetAssemblyCollisions()
         {
             return _pluginsInfo.AssemblyLoadedCollision;
+        }
+
+        #endregion
+
+        #region Properties
+        
+        /// <summary>
+        /// Indicates whether new or updated plugins have been uploaded.
+        /// True - if the plugins were loaded, false otherwise
+        /// </summary>
+        protected virtual bool IsPluginsUploaded
+        {
+            get
+            {
+                var pluginsDirectories =
+                    _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath));
+
+                if (!pluginsDirectories.Any())
+                    return false;
+
+                return pluginsDirectories.Any(d =>
+                    _fileProvider.GetFiles(d, "*.dll").Any() || _fileProvider.GetFiles(d, "plugin.json").Any());
+            }
         }
 
         #endregion

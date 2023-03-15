@@ -12,7 +12,7 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly SecuritySettings _securitySettings;
+        protected readonly SecuritySettings _securitySettings;
 
         #endregion
 
@@ -27,7 +27,13 @@ namespace Nop.Services.Security
 
         #region Utilities
 
-        private static byte[] EncryptTextToMemory(string data, SymmetricAlgorithm provider)
+        /// <summary>
+        /// Encrypt text
+        /// </summary>
+        /// <param name="data">Text to encrypt</param>
+        /// <param name="provider">Encryption algorithm</param>
+        /// <returns>Encrypted data</returns>
+        protected static byte[] EncryptTextToMemory(string data, SymmetricAlgorithm provider)
         {
             using var ms = new MemoryStream();
             using (var cs = new CryptoStream(ms, provider.CreateEncryptor(), CryptoStreamMode.Write))
@@ -40,15 +46,27 @@ namespace Nop.Services.Security
             return ms.ToArray();
         }
 
-        private static string DecryptTextFromMemory(byte[] data, SymmetricAlgorithm provider)
+        /// <summary>
+        /// Decrypt text
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="provider">Encryption algorithm</param>
+        /// <returns>Decrypted text</returns>
+        protected static string DecryptTextFromMemory(byte[] data, SymmetricAlgorithm provider)
         {
             using var ms = new MemoryStream(data);
             using var cs = new CryptoStream(ms, provider.CreateDecryptor(), CryptoStreamMode.Read);
             using var sr = new StreamReader(cs, Encoding.Unicode);
+            
             return sr.ReadToEnd();
         }
 
-        private SymmetricAlgorithm GetEncryptionAlgorithm(string encryptionKey)
+        /// <summary>
+        /// Gets encryption algorithm
+        /// </summary>
+        /// <param name="encryptionKey">Encryption key</param>
+        /// <returns>Encryption algorithm</returns>
+        protected virtual SymmetricAlgorithm GetEncryptionAlgorithm(string encryptionKey)
         {
             if (string.IsNullOrEmpty(encryptionKey))
                 throw new ArgumentNullException(nameof(encryptionKey));

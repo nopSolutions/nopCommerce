@@ -7,8 +7,8 @@ namespace Nop.Web.Components
 {
     public partial class BlogTagsViewComponent : NopViewComponent
     {
-        private readonly BlogSettings _blogSettings;
-        private readonly IBlogModelFactory _blogModelFactory;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly IBlogModelFactory _blogModelFactory;
 
         public BlogTagsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
         {

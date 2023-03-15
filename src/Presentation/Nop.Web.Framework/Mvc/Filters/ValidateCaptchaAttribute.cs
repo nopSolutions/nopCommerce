@@ -43,11 +43,11 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Fields
 
-            private readonly string _actionParameterName;
-            private readonly CaptchaHttpClient _captchaHttpClient;
-            private readonly CaptchaSettings _captchaSettings;
-            private readonly ILogger _logger;
-            private readonly IWorkContext _workContext;
+            protected readonly string _actionParameterName;
+            protected readonly CaptchaHttpClient _captchaHttpClient;
+            protected readonly CaptchaSettings _captchaSettings;
+            protected readonly ILogger _logger;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 

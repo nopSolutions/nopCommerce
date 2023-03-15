@@ -23,15 +23,15 @@ namespace Nop.Plugin.Tax.Avalara
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

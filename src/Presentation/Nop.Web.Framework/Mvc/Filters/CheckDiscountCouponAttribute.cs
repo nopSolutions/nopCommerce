@@ -37,11 +37,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
-            private readonly IDiscountService _discountService;
-            private readonly ILocalizationService _localizationService;
-            private readonly INotificationService _notificationService;
-            private readonly IWorkContext _workContext;
+            protected readonly ICustomerService _customerService;
+            protected readonly IDiscountService _discountService;
+            protected readonly ILocalizationService _localizationService;
+            protected readonly INotificationService _notificationService;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 

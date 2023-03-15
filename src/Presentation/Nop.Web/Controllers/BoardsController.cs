@@ -18,15 +18,15 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IForumModelFactory _forumModelFactory;
-        private readonly IForumService _forumService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IForumModelFactory _forumModelFactory;
+        protected readonly IForumService _forumService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly ISettingService _settingService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

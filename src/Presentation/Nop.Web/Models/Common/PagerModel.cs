@@ -7,19 +7,19 @@ namespace Nop.Web.Models.Common
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
+        protected readonly ILocalizationService _localizationService;
 
-        private int _individualPagesDisplayedCount;
-        private int _pageIndex = -2;
-        private int _pageSize;
+        protected int _individualPagesDisplayedCount;
+        protected int _pageIndex = -2;
+        protected int _pageSize;
 
-        private bool? _showFirst;
-        private bool? _showIndividualPages;
-        private bool? _showLast;
-        private bool? _showNext;
-        private bool? _showPagerItems;
-        private bool? _showPrevious;
-        private bool? _showTotalSummary;
+        protected bool? _showFirst;
+        protected bool? _showIndividualPages;
+        protected bool? _showLast;
+        protected bool? _showNext;
+        protected bool? _showPagerItems;
+        protected bool? _showPrevious;
+        protected bool? _showTotalSummary;
 
         #endregion Fields
 

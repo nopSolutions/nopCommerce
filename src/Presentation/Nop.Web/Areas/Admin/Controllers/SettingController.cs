@@ -53,29 +53,29 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGdprService _gdprService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly ISettingModelFactory _settingModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly IUploadService _uploadService;
+        protected readonly AppSettings _appSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGdprService _gdprService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly ISettingModelFactory _settingModelFactory;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IUploadService _uploadService;
 
         #endregion
 

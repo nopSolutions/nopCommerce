@@ -33,19 +33,19 @@ namespace Nop.Plugin.Payments.PayPalCommerce
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

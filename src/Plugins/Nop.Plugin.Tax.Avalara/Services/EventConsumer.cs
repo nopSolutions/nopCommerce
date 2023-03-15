@@ -38,17 +38,17 @@ namespace Nop.Plugin.Tax.Avalara.Services
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

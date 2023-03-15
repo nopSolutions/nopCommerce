@@ -12,10 +12,10 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly IRepository<ActivityLog> _activityLogRepository;
-        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly IRepository<ActivityLog> _activityLogRepository;
+        protected readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

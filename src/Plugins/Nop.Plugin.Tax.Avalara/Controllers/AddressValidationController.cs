@@ -12,10 +12,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICustomerService _customerService;
-        private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IWorkContext _workContext;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

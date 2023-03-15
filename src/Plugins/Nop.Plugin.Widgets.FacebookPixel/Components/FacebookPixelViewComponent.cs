@@ -14,7 +14,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Components
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
+        protected readonly FacebookPixelService _facebookPixelService;
 
         #endregion
 

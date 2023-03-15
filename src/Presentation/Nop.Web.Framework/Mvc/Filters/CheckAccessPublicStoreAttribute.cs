@@ -42,8 +42,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IPermissionService _permissionService;
+            protected readonly bool _ignoreFilter;
+            protected readonly IPermissionService _permissionService;
 
             #endregion
 

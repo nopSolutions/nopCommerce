@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class PrivateMessagesSentItemsViewComponent : NopViewComponent
     {
-        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        protected readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 
         public PrivateMessagesSentItemsViewComponent(IPrivateMessagesModelFactory privateMessagesModelFactory)
         {

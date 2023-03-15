@@ -17,10 +17,10 @@ namespace Nop.Plugin.Payments.CyberSource.Components
     {
         #region Fields
 
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

@@ -12,12 +12,12 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ZettleRecord> _repository;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly IRepository<Category> _categoryRepository;
+        protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ZettleRecord> _repository;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the prepared records; the number of products that were not added
         /// </returns>
-        private async Task<(List<ZettleRecord> Records, int InvalidProducts)> PrepareRecordsToAddAsync(List<int> productIds)
+        protected async Task<(List<ZettleRecord> Records, int InvalidProducts)> PrepareRecordsToAddAsync(List<int> productIds)
         {
             var products = await _productRepository.GetByIdsAsync(productIds, null, false);
             var productsWithSku = products.Where(product => !string.IsNullOrEmpty(product.Sku)).ToList();

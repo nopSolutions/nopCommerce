@@ -9,8 +9,8 @@ namespace Nop.Web.Framework.Factories
     public partial class LocalizedModelFactory : ILocalizedModelFactory
     {
         #region Fields
-
-        private readonly ILanguageService _languageService;
+        
+        protected readonly ILanguageService _languageService;
 
         #endregion
 

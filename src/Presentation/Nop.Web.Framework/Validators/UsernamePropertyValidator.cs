@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Validators
     /// </summary>
     public partial class UsernamePropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
-        private readonly CustomerSettings _customerSettings;
+        protected readonly CustomerSettings _customerSettings;
 
         public override string Name => "UsernamePropertyValidator";
 

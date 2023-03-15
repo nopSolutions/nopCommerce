@@ -21,13 +21,13 @@ namespace Nop.Plugin.Misc.Zettle
     {
         #region Fields
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly MediaSettings _mediaSettings;
-        private readonly ZettleService _zettleService;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly ZettleService _zettleService;
 
         #endregion
 

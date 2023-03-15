@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Themes
     /// </summary>
     public class ThemeableViewLocationExpander : IViewLocationExpander
     {
-        private const string THEME_KEY = "nop.themename";
+        protected const string THEME_KEY = "nop.themename";
 
         /// <summary>
         /// Invoked by a Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine to determine the

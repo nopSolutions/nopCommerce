@@ -7,8 +7,8 @@ namespace Nop.Core.Caching
     {
         #region Fields
 
-        private static readonly string _running = JsonConvert.SerializeObject(TaskStatus.Running);
-        private readonly IDistributedCache _distributedCache;
+        protected static readonly string _running = JsonConvert.SerializeObject(TaskStatus.Running);
+        protected readonly IDistributedCache _distributedCache;
 
         #endregion
 

@@ -9,7 +9,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly OrderSettings _orderSettings;
+        protected readonly OrderSettings _orderSettings;
 
         #endregion
 

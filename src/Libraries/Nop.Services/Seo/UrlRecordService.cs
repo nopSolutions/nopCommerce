@@ -15,15 +15,15 @@ namespace Nop.Services.Seo
     {
         #region Fields
 
-        private static readonly object _lock = new();
-        private static Dictionary<string, string> _seoCharacterTable;
+        protected static readonly object _lock = new();
+        protected static Dictionary<string, string> _seoCharacterTable;
 
-        private readonly ILanguageService _languageService;
-        private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly SeoSettings _seoSettings;
+        protected readonly ILanguageService _languageService;
+        protected readonly IRepository<UrlRecord> _urlRecordRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly SeoSettings _seoSettings;
 
         #endregion
 

@@ -10,10 +10,10 @@ namespace Nop.Web.Components
 {
     public partial class OrderSummaryViewComponent : NopViewComponent
     {
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         public OrderSummaryViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
             IShoppingCartService shoppingCartService,

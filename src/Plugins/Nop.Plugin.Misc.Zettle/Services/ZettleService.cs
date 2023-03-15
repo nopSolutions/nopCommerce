@@ -29,22 +29,22 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDiscountService _discountService;
-        private readonly ILogger _logger;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly ZettleHttpClient _zettleHttpClient;
-        private readonly ZettleRecordService _zettleRecordService;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILogger _logger;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly ZettleHttpClient _zettleHttpClient;
+        protected readonly ZettleRecordService _zettleRecordService;
+        protected readonly ZettleSettings _zettleSettings;
 
-        private Dictionary<string, string> _locations = new();
+        protected Dictionary<string, string> _locations = new();
 
         #endregion
 
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result; error if exists
         /// </returns>
-        private async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
+        protected async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// </summary>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportDiscountsAsync(StringBuilder log)
+        protected async Task ImportDiscountsAsync(StringBuilder log)
         {
             //if enabled
             if (!_zettleSettings.DiscountSyncEnabled)
@@ -177,7 +177,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// </summary>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportDeletedAsync(StringBuilder log)
+        protected async Task ImportDeletedAsync(StringBuilder log)
         {
             log.AppendLine("Delete products...");
 
@@ -223,7 +223,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// </summary>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportImageChangedAsync(StringBuilder log)
+        protected async Task ImportImageChangedAsync(StringBuilder log)
         {
             log.AppendLine("Change images...");
 
@@ -281,7 +281,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// </summary>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ImportInventoryTrackingAsync(StringBuilder log)
+        protected async Task ImportInventoryTrackingAsync(StringBuilder log)
         {
             log.AppendLine("Update inventory tracking...");
 
@@ -338,7 +338,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// </summary>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<Import> ImportCreatedOrUpdatedAsync(StringBuilder log)
+        protected async Task<Import> ImportCreatedOrUpdatedAsync(StringBuilder log)
         {
             log.AppendLine("Create and update products...");
 
@@ -511,7 +511,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// <param name="update">Whether to update existing images</param>
         /// <param name="log">Log message</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task UploadImagesAsync(IList<ZettleRecord> records, bool update, StringBuilder log)
+        protected async Task UploadImagesAsync(IList<ZettleRecord> records, bool update, StringBuilder log)
         {
             //ensure MediaSettings.UseAbsoluteImagePath is enabled (used for images uploading)
             if (!_mediaSettings.UseAbsoluteImagePath)
@@ -578,7 +578,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// A task that represents the asynchronous operation
         /// The task result contains list of balance changes
         /// </returns>
-        private async Task<CreateTrackingRequest.ProductBalanceChange> PrepareInventoryBalanceChangeAsync(InventoryBalanceChangeType changeType,
+        protected async Task<CreateTrackingRequest.ProductBalanceChange> PrepareInventoryBalanceChangeAsync(InventoryBalanceChangeType changeType,
             (ZettleRecord Record, int StockQuantity, int? QuantityAdjustment) productRecord,
             List<(ZettleRecord Record, int StockQuantity, int? QuantityAdjustment)> combinationRecords)
         {
@@ -663,7 +663,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// <param name="changeType">Inventory balance change type</param>
         /// <param name="productChanges">List of product changes</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task UpdateInventoryBalanceAsync(InventoryBalanceChangeType changeType, List<CreateTrackingRequest.ProductBalanceChange> productChanges)
+        protected async Task UpdateInventoryBalanceAsync(InventoryBalanceChangeType changeType, List<CreateTrackingRequest.ProductBalanceChange> productChanges)
         {
             if (!productChanges.Any())
                 return;
@@ -691,7 +691,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// A task that represents the asynchronous operation
         /// The task result contains location UUID
         /// </returns>
-        private async Task<string> GetLocationAsync(string type)
+        protected async Task<string> GetLocationAsync(string type)
         {
             if (!_locations.TryGetValue(type, out var _))
             {

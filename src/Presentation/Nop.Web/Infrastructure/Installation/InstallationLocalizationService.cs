@@ -16,11 +16,11 @@ namespace Nop.Web.Infrastructure.Installation
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IWebHelper _webHelper;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IWebHelper _webHelper;
 
-        private IList<InstallationLanguage> _availableLanguages;
+        protected IList<InstallationLanguage> _availableLanguages;
 
         #endregion
 

@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.UpgradeTo450
     [NopUpdateMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Data)]
     public class DataMigration : Migration
     {
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         public DataMigration(INopDataProvider dataProvider)
         {

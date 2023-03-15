@@ -38,51 +38,51 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomNumberFormatter _customNumberFormatter;
-        private readonly IDiscountService _discountService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ICustomNumberFormatter _customNumberFormatter;
+        protected readonly IDiscountService _discountService;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderService _orderService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductService _productService;
+        protected readonly IReturnRequestService _returnRequestService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -179,198 +179,6 @@ namespace Nop.Services.Orders
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
-        }
-
-        #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// PlaceOrder container
-        /// </summary>
-        protected partial class PlaceOrderContainer
-        {
-            public PlaceOrderContainer()
-            {
-                Cart = new List<ShoppingCartItem>();
-                AppliedDiscounts = new List<Discount>();
-                AppliedGiftCards = new List<AppliedGiftCard>();
-            }
-
-            /// <summary>
-            /// Customer
-            /// </summary>
-            public Customer Customer { get; set; }
-
-            /// <summary>
-            /// Customer language
-            /// </summary>
-            public Language CustomerLanguage { get; set; }
-
-            /// <summary>
-            /// Affiliate identifier
-            /// </summary>
-            public int AffiliateId { get; set; }
-
-            /// <summary>
-            /// TAx display type
-            /// </summary>
-            public TaxDisplayType CustomerTaxDisplayType { get; set; }
-
-            /// <summary>
-            /// Selected currency
-            /// </summary>
-            public string CustomerCurrencyCode { get; set; }
-
-            /// <summary>
-            /// Customer currency rate
-            /// </summary>
-            public decimal CustomerCurrencyRate { get; set; }
-
-            /// <summary>
-            /// Billing address
-            /// </summary>
-            public Address BillingAddress { get; set; }
-
-            /// <summary>
-            /// Shipping address
-            /// </summary>
-            public Address ShippingAddress { get; set; }
-
-            /// <summary>
-            /// Shipping status
-            /// </summary>
-            public ShippingStatus ShippingStatus { get; set; }
-
-            /// <summary>
-            /// Selected shipping method
-            /// </summary>
-            public string ShippingMethodName { get; set; }
-
-            /// <summary>
-            /// Shipping rate computation method system name
-            /// </summary>
-            public string ShippingRateComputationMethodSystemName { get; set; }
-
-            /// <summary>
-            /// Is pickup in store selected?
-            /// </summary>
-            public bool PickupInStore { get; set; }
-
-            /// <summary>
-            /// Selected pickup address
-            /// </summary>
-            public Address PickupAddress { get; set; }
-
-            /// <summary>
-            /// Is recurring shopping cart
-            /// </summary>
-            public bool IsRecurringShoppingCart { get; set; }
-
-            /// <summary>
-            /// Initial order (used with recurring payments)
-            /// </summary>
-            public Order InitialOrder { get; set; }
-
-            /// <summary>
-            /// Checkout attributes
-            /// </summary>
-            public string CheckoutAttributeDescription { get; set; }
-
-            /// <summary>
-            /// Shopping cart
-            /// </summary>
-            public string CheckoutAttributesXml { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public IList<ShoppingCartItem> Cart { get; set; }
-
-            /// <summary>
-            /// Applied discounts
-            /// </summary>
-            public List<Discount> AppliedDiscounts { get; set; }
-
-            /// <summary>
-            /// Applied gift cards
-            /// </summary>
-            public List<AppliedGiftCard> AppliedGiftCards { get; set; }
-
-            /// <summary>
-            /// Order subtotal (incl tax)
-            /// </summary>
-            public decimal OrderSubTotalInclTax { get; set; }
-
-            /// <summary>
-            /// Order subtotal (excl tax)
-            /// </summary>
-            public decimal OrderSubTotalExclTax { get; set; }
-
-            /// <summary>
-            /// Subtotal discount (incl tax)
-            /// </summary>
-            public decimal OrderSubTotalDiscountInclTax { get; set; }
-
-            /// <summary>
-            /// Subtotal discount (excl tax)
-            /// </summary>
-            public decimal OrderSubTotalDiscountExclTax { get; set; }
-
-            /// <summary>
-            /// Shipping (incl tax)
-            /// </summary>
-            public decimal OrderShippingTotalInclTax { get; set; }
-
-            /// <summary>
-            /// Shipping (excl tax)
-            /// </summary>
-            public decimal OrderShippingTotalExclTax { get; set; }
-
-            /// <summary>
-            /// Payment additional fee (incl tax)
-            /// </summary>
-            public decimal PaymentAdditionalFeeInclTax { get; set; }
-
-            /// <summary>
-            /// Payment additional fee (excl tax)
-            /// </summary>
-            public decimal PaymentAdditionalFeeExclTax { get; set; }
-
-            /// <summary>
-            /// Tax
-            /// </summary>
-            public decimal OrderTaxTotal { get; set; }
-
-            /// <summary>
-            /// VAT number
-            /// </summary>
-            public string VatNumber { get; set; }
-
-            /// <summary>
-            /// Tax rates
-            /// </summary>
-            public string TaxRates { get; set; }
-
-            /// <summary>
-            /// Order total discount amount
-            /// </summary>
-            public decimal OrderDiscountAmount { get; set; }
-
-            /// <summary>
-            /// Redeemed reward points
-            /// </summary>
-            public int RedeemedRewardPoints { get; set; }
-
-            /// <summary>
-            /// Redeemed reward points amount
-            /// </summary>
-            public decimal RedeemedRewardPointsAmount { get; set; }
-
-            /// <summary>
-            /// Order total
-            /// </summary>
-            public decimal OrderTotal { get; set; }
         }
 
         #endregion
@@ -495,7 +303,7 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentRequest">payment info holder</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        private async Task PrepareAndValidateRecurringShoppingAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        protected virtual async Task PrepareAndValidateRecurringShoppingAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
         {
             var (recurringCyclesError, recurringCycleLength, recurringCyclePeriod, recurringTotalCycles) = await _shoppingCartService.GetRecurringCycleInfoAsync(details.Cart);
 
@@ -516,7 +324,7 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentRequest">payment info holder</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        protected async Task PrepareAndValidateTotalsAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        protected virtual async Task PrepareAndValidateTotalsAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
         {
             var (discountAmountInclTax, discountAmountExclTax, appliedDiscounts, subTotalWithoutDiscountInclTax,
                     subTotalWithoutDiscountExclTax, _, _, _) =
@@ -591,7 +399,7 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentRequest">payment info holder</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        protected async Task PrepareAndValidateShippingInfoAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        protected virtual async Task PrepareAndValidateShippingInfoAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
         {
             //shipping info
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(details.Cart))
@@ -654,7 +462,7 @@ namespace Nop.Services.Orders
         /// <param name="currentCurrency">The working currency</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        protected async Task PrepareAndValidateShoppingCartAndCheckoutAttributesAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
+        protected virtual async Task PrepareAndValidateShoppingCartAndCheckoutAttributesAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
         {
             //checkout attributes
             details.CheckoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
@@ -705,7 +513,7 @@ namespace Nop.Services.Orders
         /// <param name="details">PlaceOrder container</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        protected async Task PrepareAndValidateBillingAddressAsync(PlaceOrderContainer details)
+        protected virtual async Task PrepareAndValidateBillingAddressAsync(PlaceOrderContainer details)
         {
             if (details.Customer.BillingAddressId is null)
                 throw new NopException("Billing address is not provided");
@@ -729,7 +537,7 @@ namespace Nop.Services.Orders
         /// <param name="currentCurrency">The working currency</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         /// <exception cref="NopException">Validation problems</exception>
-        protected async Task PrepareAndValidateCustomerAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
+        protected virtual async Task PrepareAndValidateCustomerAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
         {
             details.Customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
 
@@ -3401,6 +3209,198 @@ namespace Nop.Services.Orders
                 result = 0;
 
             return result;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// PlaceOrder container
+        /// </summary>
+        protected partial class PlaceOrderContainer
+        {
+            public PlaceOrderContainer()
+            {
+                Cart = new List<ShoppingCartItem>();
+                AppliedDiscounts = new List<Discount>();
+                AppliedGiftCards = new List<AppliedGiftCard>();
+            }
+
+            /// <summary>
+            /// Customer
+            /// </summary>
+            public Customer Customer { get; set; }
+
+            /// <summary>
+            /// Customer language
+            /// </summary>
+            public Language CustomerLanguage { get; set; }
+
+            /// <summary>
+            /// Affiliate identifier
+            /// </summary>
+            public int AffiliateId { get; set; }
+
+            /// <summary>
+            /// TAx display type
+            /// </summary>
+            public TaxDisplayType CustomerTaxDisplayType { get; set; }
+
+            /// <summary>
+            /// Selected currency
+            /// </summary>
+            public string CustomerCurrencyCode { get; set; }
+
+            /// <summary>
+            /// Customer currency rate
+            /// </summary>
+            public decimal CustomerCurrencyRate { get; set; }
+
+            /// <summary>
+            /// Billing address
+            /// </summary>
+            public Address BillingAddress { get; set; }
+
+            /// <summary>
+            /// Shipping address
+            /// </summary>
+            public Address ShippingAddress { get; set; }
+
+            /// <summary>
+            /// Shipping status
+            /// </summary>
+            public ShippingStatus ShippingStatus { get; set; }
+
+            /// <summary>
+            /// Selected shipping method
+            /// </summary>
+            public string ShippingMethodName { get; set; }
+
+            /// <summary>
+            /// Shipping rate computation method system name
+            /// </summary>
+            public string ShippingRateComputationMethodSystemName { get; set; }
+
+            /// <summary>
+            /// Is pickup in store selected?
+            /// </summary>
+            public bool PickupInStore { get; set; }
+
+            /// <summary>
+            /// Selected pickup address
+            /// </summary>
+            public Address PickupAddress { get; set; }
+
+            /// <summary>
+            /// Is recurring shopping cart
+            /// </summary>
+            public bool IsRecurringShoppingCart { get; set; }
+
+            /// <summary>
+            /// Initial order (used with recurring payments)
+            /// </summary>
+            public Order InitialOrder { get; set; }
+
+            /// <summary>
+            /// Checkout attributes
+            /// </summary>
+            public string CheckoutAttributeDescription { get; set; }
+
+            /// <summary>
+            /// Shopping cart
+            /// </summary>
+            public string CheckoutAttributesXml { get; set; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public IList<ShoppingCartItem> Cart { get; set; }
+
+            /// <summary>
+            /// Applied discounts
+            /// </summary>
+            public List<Discount> AppliedDiscounts { get; set; }
+
+            /// <summary>
+            /// Applied gift cards
+            /// </summary>
+            public List<AppliedGiftCard> AppliedGiftCards { get; set; }
+
+            /// <summary>
+            /// Order subtotal (incl tax)
+            /// </summary>
+            public decimal OrderSubTotalInclTax { get; set; }
+
+            /// <summary>
+            /// Order subtotal (excl tax)
+            /// </summary>
+            public decimal OrderSubTotalExclTax { get; set; }
+
+            /// <summary>
+            /// Subtotal discount (incl tax)
+            /// </summary>
+            public decimal OrderSubTotalDiscountInclTax { get; set; }
+
+            /// <summary>
+            /// Subtotal discount (excl tax)
+            /// </summary>
+            public decimal OrderSubTotalDiscountExclTax { get; set; }
+
+            /// <summary>
+            /// Shipping (incl tax)
+            /// </summary>
+            public decimal OrderShippingTotalInclTax { get; set; }
+
+            /// <summary>
+            /// Shipping (excl tax)
+            /// </summary>
+            public decimal OrderShippingTotalExclTax { get; set; }
+
+            /// <summary>
+            /// Payment additional fee (incl tax)
+            /// </summary>
+            public decimal PaymentAdditionalFeeInclTax { get; set; }
+
+            /// <summary>
+            /// Payment additional fee (excl tax)
+            /// </summary>
+            public decimal PaymentAdditionalFeeExclTax { get; set; }
+
+            /// <summary>
+            /// Tax
+            /// </summary>
+            public decimal OrderTaxTotal { get; set; }
+
+            /// <summary>
+            /// VAT number
+            /// </summary>
+            public string VatNumber { get; set; }
+
+            /// <summary>
+            /// Tax rates
+            /// </summary>
+            public string TaxRates { get; set; }
+
+            /// <summary>
+            /// Order total discount amount
+            /// </summary>
+            public decimal OrderDiscountAmount { get; set; }
+
+            /// <summary>
+            /// Redeemed reward points
+            /// </summary>
+            public int RedeemedRewardPoints { get; set; }
+
+            /// <summary>
+            /// Redeemed reward points amount
+            /// </summary>
+            public decimal RedeemedRewardPointsAmount { get; set; }
+
+            /// <summary>
+            /// Order total
+            /// </summary>
+            public decimal OrderTotal { get; set; }
         }
 
         #endregion

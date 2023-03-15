@@ -14,14 +14,14 @@ namespace Nop.Web.Components
 {
     public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly IOrderReportService _orderReportService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly IOrderReportService _orderReportService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
 
         public ProductsAlsoPurchasedViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,

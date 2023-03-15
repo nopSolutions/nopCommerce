@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class TopicBlockViewComponent : NopViewComponent
     {
-        private readonly ITopicModelFactory _topicModelFactory;
+        protected readonly ITopicModelFactory _topicModelFactory;
 
         public TopicBlockViewComponent(ITopicModelFactory topicModelFactory)
         {

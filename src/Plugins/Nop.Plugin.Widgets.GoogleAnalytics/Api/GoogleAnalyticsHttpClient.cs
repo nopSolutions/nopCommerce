@@ -13,7 +13,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 

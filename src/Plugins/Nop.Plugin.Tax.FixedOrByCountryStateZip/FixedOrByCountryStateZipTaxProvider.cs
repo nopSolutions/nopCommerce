@@ -23,19 +23,19 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
     {
         #region Fields
 
-        private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
-        private readonly ICountryStateZipService _taxRateService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentService _paymentService;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
-        private readonly TaxSettings _taxSettings;
+        protected readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
+        protected readonly ICountryStateZipService _taxRateService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly ITaxService _taxService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

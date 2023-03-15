@@ -12,7 +12,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly MessageTemplatesSettings _messageTemplatesSettings;
+        protected readonly MessageTemplatesSettings _messageTemplatesSettings;
 
         #endregion
 

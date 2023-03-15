@@ -14,12 +14,12 @@ namespace Nop.Plugin.Payments.CyberSource.Services
     {
         #region Fields
 
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
 
         #endregion
 

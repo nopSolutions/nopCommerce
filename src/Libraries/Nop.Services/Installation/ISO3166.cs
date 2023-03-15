@@ -318,34 +318,34 @@
         /// <summary>
         ///English short name of country
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         /// <summary>
         /// Two-letter country code
         /// </summary>
-        public string Alpha2 { get; private set; }
+        public string Alpha2 { get; protected set; }
 
         /// <summary>
         /// three-letter country code which allow a better visual association between the codes and the country names than the alpha-2 codes
         /// </summary>
-        public string Alpha3 { get; private set; }
+        public string Alpha3 { get; protected set; }
 
         /// <summary>
         /// Three-digit country code which are identical to those developed and maintained by the United Nations Statistics Division
         /// </summary>
-        public int NumericCode { get; private set; }
+        public int NumericCode { get; protected set; }
 
         /// <summary>
         /// Phone codes
         /// </summary>
-        public string[] DialCodes { get; private set; }
+        public string[] DialCodes { get; protected set; }
 
         /// <summary>
         /// Belonging to the European Union
         /// </summary>
-        public bool SubjectToVat { get; private set; }
+        public bool SubjectToVat { get; protected set; }
 
-        public IEnumerable<LocalizationInfo> LocalizationInfo { get; private set; }
+        public IEnumerable<LocalizationInfo> LocalizationInfo { get; protected set; }
     }
 
     public partial class LocalizationInfo
@@ -356,8 +356,8 @@
             Language = language;
         }
 
-        public string Culture { get; private set; }
+        public string Culture { get; protected set; }
 
-        public string Language { get; private set; }
+        public string Language { get; protected set; }
     }
 }

@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class SearchBoxViewComponent : NopViewComponent
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
 
         public SearchBoxViewComponent(ICatalogModelFactory catalogModelFactory)
         {

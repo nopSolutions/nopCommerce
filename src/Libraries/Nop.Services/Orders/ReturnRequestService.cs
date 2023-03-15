@@ -12,11 +12,11 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IRepository<ReturnRequest> _returnRequestRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ReturnRequest> _returnRequestRepository;
+        protected readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
+        protected readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly IRepository<Product> _productRepository;
 
         #endregion
 

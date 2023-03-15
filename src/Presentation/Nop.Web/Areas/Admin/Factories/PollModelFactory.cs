@@ -18,12 +18,12 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly IPollService _pollService;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILanguageService _languageService;
+        protected readonly IPollService _pollService;
+        protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
         #endregion
 

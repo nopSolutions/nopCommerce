@@ -13,10 +13,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ITopicTemplateService _topicTemplateService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly ITopicTemplateService _topicTemplateService;
 
         #endregion
 

@@ -16,7 +16,7 @@ namespace Nop.Services.Media.RoxyFileman
         #region Fields
 
         protected INopFileProvider _nopFileProvider;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 

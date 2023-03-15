@@ -14,14 +14,14 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     {
         #region Constants
 
-        private const string LINK_TAG_NAME = "link";
-        private const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
-        private const string HREF_ATTRIBUTE_NAME = "href";
+        protected const string LINK_TAG_NAME = "link";
+        protected const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
+        protected const string HREF_ATTRIBUTE_NAME = "href";
 
         #endregion
 
         #region Fields
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
 
         #endregion
 

@@ -10,7 +10,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        protected readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
 
         #endregion
 

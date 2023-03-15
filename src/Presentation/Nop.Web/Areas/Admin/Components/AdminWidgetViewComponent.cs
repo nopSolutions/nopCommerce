@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly IWidgetModelFactory _widgetModelFactory;
+        protected readonly IWidgetModelFactory _widgetModelFactory;
 
         #endregion
 

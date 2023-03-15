@@ -10,8 +10,8 @@ namespace Nop.Services.Shipping.Date
     {
         #region Fields
 
-        private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
+        protected readonly IRepository<DeliveryDate> _deliveryDateRepository;
+        protected readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
 
         #endregion
 

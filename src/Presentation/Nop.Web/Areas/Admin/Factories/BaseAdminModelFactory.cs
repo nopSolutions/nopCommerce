@@ -34,29 +34,29 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPluginService _pluginService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IShippingService _shippingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IVendorService _vendorService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly IPluginService _pluginService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly ITopicTemplateService _topicTemplateService;
+        protected readonly IVendorService _vendorService;
 
         #endregion
 

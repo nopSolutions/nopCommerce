@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -27,18 +27,18 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
     {
         #region Fields
 
-        private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
-        private readonly ICountryService _countryService;
-        private readonly ICountryStateZipService _taxRateService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-
+        protected readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
+        protected readonly ICountryService _countryService;
+        protected readonly ICountryStateZipService _taxRateService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        
         #endregion
 
         #region Ctor

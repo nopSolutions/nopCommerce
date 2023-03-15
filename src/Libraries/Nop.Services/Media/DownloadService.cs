@@ -11,7 +11,7 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IRepository<Download> _downloadRepository;
+        protected readonly IRepository<Download> _downloadRepository;
 
         #endregion
 

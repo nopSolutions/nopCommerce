@@ -11,8 +11,8 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class RemotePost
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IWebHelper _webHelper;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IWebHelper _webHelper;
 
         /// <summary>
         /// Gets or sets a remote URL

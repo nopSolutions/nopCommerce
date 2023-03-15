@@ -28,24 +28,24 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICustomerService _customerService;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITokenizer _tokenizer;
-        private readonly MessagesSettings _messagesSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMessageTemplateService _messageTemplateService;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITokenizer _tokenizer;
+        protected readonly MessagesSettings _messagesSettings;
 
         #endregion
 

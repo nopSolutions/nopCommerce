@@ -25,21 +25,22 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     public partial class NopScriptTagHelper : UrlResolutionTagHelper
     {
         #region Constants
-        private const string SCRIPT_TAG_NAME = "script";
-        private const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
-        private const string DEBUG_SRC_ATTRIBUTE_NAME = "asp-debug-src";
-        private const string LOCATION_ATTRIBUTE_NAME = "asp-location";
-        private const string SRC_ATTRIBUTE_NAME = "src";
+
+        protected const string SCRIPT_TAG_NAME = "script";
+        protected const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
+        protected const string DEBUG_SRC_ATTRIBUTE_NAME = "asp-debug-src";
+        protected const string LOCATION_ATTRIBUTE_NAME = "asp-location";
+        protected const string SRC_ATTRIBUTE_NAME = "src";
 
         #endregion
 
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IAssetPipeline _assetPipeline;
-        private readonly INopHtmlHelper _nopHtmlHelper;
-        private readonly IWebHelper _webHelper;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly AppSettings _appSettings;
+        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
 
@@ -62,9 +63,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
-        private static async Task<string> BuildInlineScriptTagAsync(TagHelperOutput output)
+        protected static async Task<string> BuildInlineScriptTagAsync(TagHelperOutput output)
         {
             //get JavaScript
             var scriptTag = new TagBuilder(SCRIPT_TAG_NAME);
@@ -80,7 +81,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             return await scriptTag.RenderHtmlContentAsync() + Environment.NewLine;
         }
 
-        private void ProcessSrcAttribute(TagHelperContext context, TagHelperOutput output)
+        protected void ProcessSrcAttribute(TagHelperContext context, TagHelperOutput output)
         {
             if (!string.IsNullOrEmpty(DebugSrc) && _webHostEnvironment.IsDevelopment())
                 Src = DebugSrc;
@@ -99,7 +100,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 Src = srcAttribute;
         }
 
-        private void ProcessAsset(TagHelperOutput output, WebOptimizerConfig woConfig)
+        protected void ProcessAsset(TagHelperOutput output, WebOptimizerConfig woConfig)
         {
             if (string.IsNullOrEmpty(Src))
                 return;
@@ -199,6 +200,5 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         public string Src { get; set; }
 
         #endregion
-
     }
 }

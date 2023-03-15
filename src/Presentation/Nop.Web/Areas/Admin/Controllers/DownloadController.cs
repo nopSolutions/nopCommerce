@@ -11,10 +11,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IWorkContext _workContext;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILogger _logger;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

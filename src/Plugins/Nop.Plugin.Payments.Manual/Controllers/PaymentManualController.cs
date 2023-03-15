@@ -18,12 +18,12 @@ namespace Nop.Plugin.Payments.Manual.Controllers
     public class PaymentManualController : BasePaymentController
     {
         #region Fields
-
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
+        
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 

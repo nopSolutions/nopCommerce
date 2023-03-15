@@ -11,21 +11,11 @@ namespace Nop.Web.Framework.TagHelpers.Public
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Indicates whether the input is disabled
-        /// </summary>
-        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
-        public string Postfix { get; set; }
-
-        #endregion
-
+        
         #region Ctor
 
         public LabelTagHelper(IHtmlGenerator generator) : base(generator)
@@ -54,6 +44,16 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             await base.ProcessAsync(context, output);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Indicates whether the input is disabled
+        /// </summary>
+        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
+        public string Postfix { get; set; }
 
         #endregion
     }

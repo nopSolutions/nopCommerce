@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
 
         #endregion
 

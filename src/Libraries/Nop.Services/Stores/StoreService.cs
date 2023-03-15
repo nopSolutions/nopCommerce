@@ -10,7 +10,7 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
+        protected readonly IRepository<Store> _storeRepository;
 
         #endregion
 
@@ -40,6 +40,7 @@ namespace Nop.Services.Stores
                 return parsedValues.ToArray();
 
             var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            
             foreach (var host in hosts)
             {
                 var tmp = host.Trim();

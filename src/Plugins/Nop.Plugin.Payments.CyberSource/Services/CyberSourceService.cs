@@ -24,21 +24,21 @@ namespace Nop.Plugin.Payments.CyberSource.Services
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly ProxySettings _proxySettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILogger _logger;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly ProxySettings _proxySettings;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the result; error message if exists
         /// </returns>
-        private async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
+        protected async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// <returns>
         /// Client configuration
         /// </returns>
-        private Configuration GetConfiguration()
+        protected Configuration GetConfiguration()
         {
             var config = new Dictionary<string, string>
             {
@@ -182,7 +182,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the authorized response
         /// </returns>
-        private async Task<PtsV2PaymentsPost201Response> AuthorizeAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
+        protected async Task<PtsV2PaymentsPost201Response> AuthorizeAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
             bool capture, bool saveCardOnFile)
         {
             var cardNumber = CreditCardHelper.RemoveSpecialCharacters(processPaymentRequest.CreditCardNumber);
@@ -237,7 +237,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the authorized response
         /// </returns>
-        private async Task<PtsV2PaymentsPost201Response> AuthorizeWithTokenAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
+        protected async Task<PtsV2PaymentsPost201Response> AuthorizeWithTokenAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
             int customerTokenId, bool capture, string authenticationTransactionId)
         {
             if (_cyberSourceSettings.PaymentConnectionMethod == ConnectionMethodType.FlexMicroForm &&
@@ -309,7 +309,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the authorized response
         /// </returns>
-        private async Task<PtsV2PaymentsPost201Response> AuthorizeWithTransientTokenAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
+        protected async Task<PtsV2PaymentsPost201Response> AuthorizeWithTransientTokenAsync(Nop.Services.Payments.ProcessPaymentRequest processPaymentRequest,
             string transientToken, bool capture, bool saveCardOnFile, string authenticationTransactionId)
         {
             //ensure that flex microform flow is enabled
@@ -374,7 +374,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the order information
         /// </returns>
-        private async Task<Ptsv2paymentsOrderInformation> PrepareOrderInformationAsync(int customerId, decimal orderTotal)
+        protected async Task<Ptsv2paymentsOrderInformation> PrepareOrderInformationAsync(int customerId, decimal orderTotal)
         {
             var currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
             if (string.IsNullOrEmpty(currency))

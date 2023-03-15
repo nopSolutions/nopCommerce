@@ -11,9 +11,9 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
-        private readonly IRepository<ReviewType> _reviewTypeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
+        protected readonly IRepository<ReviewType> _reviewTypeRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

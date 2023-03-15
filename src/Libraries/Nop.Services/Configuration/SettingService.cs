@@ -16,8 +16,8 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<Setting> _settingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 

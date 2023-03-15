@@ -14,11 +14,11 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IRepository<GiftCard> _giftCardRepository;
+        protected readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
         #endregion
 
         #region Ctor

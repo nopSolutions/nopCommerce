@@ -11,9 +11,9 @@ namespace Nop.Services.Gdpr
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IGdprService _gdprService;
-        private readonly GdprSettings _gdprSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGdprService _gdprService;
+        protected readonly GdprSettings _gdprSettings;
 
         #endregion
 

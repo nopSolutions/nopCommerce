@@ -7,8 +7,8 @@ namespace Nop.Web.Components
 {
     public partial class ProfilePostsViewComponent : NopViewComponent
     {
-        private readonly ICustomerService _customerService;
-        private readonly IProfileModelFactory _profileModelFactory;
+        protected readonly ICustomerService _customerService;
+        protected readonly IProfileModelFactory _profileModelFactory;
 
         public ProfilePostsViewComponent(ICustomerService customerService, IProfileModelFactory profileModelFactory)
         {

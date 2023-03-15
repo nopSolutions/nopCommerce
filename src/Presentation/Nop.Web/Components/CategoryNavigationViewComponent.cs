@@ -6,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class CategoryNavigationViewComponent : NopViewComponent
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
 
         public CategoryNavigationViewComponent(ICatalogModelFactory catalogModelFactory)
         {

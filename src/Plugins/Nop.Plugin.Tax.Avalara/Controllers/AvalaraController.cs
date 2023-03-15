@@ -28,18 +28,18 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
     {
         #region Fields
 
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
