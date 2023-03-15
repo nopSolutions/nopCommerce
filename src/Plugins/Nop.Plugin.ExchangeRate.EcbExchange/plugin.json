@@ -2,7 +2,7 @@
   "Group": "Exchange rate providers",
   "FriendlyName": "ECB exchange rate provider",
   "SystemName": "CurrencyExchange.ECB",
-  "Version": "1.34",
+  "Version": "4.70.1",
   "SupportedVersions": [ "4.70" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

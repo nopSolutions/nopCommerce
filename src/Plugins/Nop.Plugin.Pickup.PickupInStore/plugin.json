@@ -2,7 +2,7 @@
   "Group": "Pickup points",
   "FriendlyName": "Pickup in store",
   "SystemName": "Pickup.PickupInStore",
-  "Version": "1.48",
+  "Version": "4.70.1",
   "SupportedVersions": [ "4.70" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

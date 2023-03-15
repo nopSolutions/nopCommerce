@@ -1,11 +1,11 @@
 ﻿{
   "Group": "Widgets",
-  "FriendlyName": "Google Analytics 4",
+  "FriendlyName": "Google Analytics",
   "SystemName": "Widgets.GoogleAnalytics",
-  "Version": "2.02",
+  "Version": "4.70.1",
   "SupportedVersions": [ "4.70" ],
-  "Author": "nopCommerce team",
+  "Author": "nopCommerce team, Nicolas Muniere",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Widgets.GoogleAnalytics.dll",
-  "Description": "This plugin integrates with Google Analytics 4. It keeps track of statistics about the visitors and ecommerce conversion on your website"
+  "Description": "This plugin integrates with Google Analytics. It keeps track of statistics about the visitors and ecommerce conversion on your website"
 }
