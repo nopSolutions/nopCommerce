@@ -140,6 +140,14 @@ namespace Nop.Services.Common
         public static string NopInstallationCompletedPath => "installation-completed?version={0}&local={1}&email={2}&url={3}&language={4}&culture={5}";
 
         /// <summary>
+        /// Gets a path to request the nopCommerce official site to subscribe to the nopCommerce newsletters
+        /// </summary>
+        /// <remarks>
+        /// {0} : subscriber email
+        /// </remarks>
+        public static string NopSubscribeNewslettersPath => "subscribe-newsletters?&email={0}";
+
+        /// <summary>
         /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions
         /// </summary>
         /// <remarks>

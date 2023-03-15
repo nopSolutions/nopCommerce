@@ -133,6 +133,7 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
+                SubscribeNewsletters = true,
                 InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
                 DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
                 CreateDatabaseIfNotExists = false,
@@ -220,6 +221,18 @@ namespace Nop.Web.Controllers
                 }
 
                 dataProvider.InitializeDatabase();
+
+                if (model.SubscribeNewsletters)
+                {
+                    try
+                    {
+                        var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
 
                 var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
                 var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
