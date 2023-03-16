@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
@@ -17,6 +18,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         public bool GoogleId_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.ApiSecret")]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string ApiSecret { get; set; }
         public bool ApiSecret_OverrideForStore { get; set; }

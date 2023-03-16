@@ -452,8 +452,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var customerUserName = model.Username?.Trim();
-                var customerEmail = model.Email?.Trim();
+                var customerUserName = model.Username;
+                var customerEmail = model.Email;
                 var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
 
                 var loginResult = await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
@@ -628,7 +628,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var customer = await _customerService.GetCustomerByEmailAsync(model.Email.Trim());
+                var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
                     //save token and current date
@@ -820,8 +820,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var customerUserName = model.Username?.Trim();
-                var customerEmail = model.Email?.Trim();
+                var customerUserName = model.Username;
+                var customerEmail = model.Email;
 
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,
@@ -1201,7 +1201,7 @@ namespace Nop.Web.Controllers
                     //username 
                     if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
-                        var userName = model.Username.Trim();
+                        var userName = model.Username;
                         if (!customer.Username.Equals(userName, StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
@@ -1214,7 +1214,7 @@ namespace Nop.Web.Controllers
                         }
                     }
                     //email
-                    var email = model.Email.Trim();
+                    var email = model.Email;
                     if (!customer.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //change email

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Payments.CyberSource.Models
@@ -26,6 +27,7 @@ namespace Nop.Plugin.Payments.CyberSource.Models
         public bool KeyId_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.CyberSource.Fields.SecretKey")]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string SecretKey { get; set; }
         public bool SecretKey_OverrideForStore { get; set; }

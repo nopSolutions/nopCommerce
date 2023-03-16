@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 {
     /// <summary>
-    /// Represents a model binder provider for CustomProperties
+    /// Represents a model binder provider for specific properties
     /// </summary>
     public class CustomPropertiesModelBinderProvider : IModelBinderProvider
     {
@@ -12,6 +12,9 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
         {
             if (context.Metadata.PropertyName == nameof(BaseNopModel.CustomProperties) && context.Metadata.ModelType == typeof(Dictionary<string, string>))
                 return new CustomPropertiesModelBinder();
+
+            if (!context.Metadata.IsComplexType && context.Metadata.ModelType == typeof(string)) 
+                return new StringModelBinder();
 
             return null;
         }

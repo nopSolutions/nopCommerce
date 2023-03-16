@@ -1762,8 +1762,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SecuritySettings.EncryptionKey == null)
                     model.SecuritySettings.EncryptionKey = string.Empty;
 
-                model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
-
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
                 if (string.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
                     throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort"));
@@ -1939,10 +1937,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
@@ -1972,10 +1970,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
