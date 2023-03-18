@@ -173,7 +173,7 @@ namespace Nop.Plugin.Payments.Iyzico
             CreatePaymentRequest request = new()
             {
                 Locale = Locale.EN.ToString(),
-                ConversationId = processPaymentRequest.OrderGuid.ToString(),
+                ConversationId = processPaymentRequest.OrderGuid.ToString().Replace("-",string.Empty),
                 Price = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithoutDiscount),
                 PaidPrice = IyzicoHelper.ToDecimalStringInvariant(shoppingCartUnitPriceWithDiscount),
                 Currency = currency.CurrencyCode,
@@ -269,12 +269,14 @@ namespace Nop.Plugin.Payments.Iyzico
                 result.CaptureTransactionId = payment.ConversationId;
                 result.AuthorizationTransactionId=payment.PaymentId;
                 result.CaptureTransactionResult = payment.Status;
-                result.NewPaymentStatus= PaymentStatus.Authorized;
-                //_httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
+                result.NewPaymentStatus= PaymentStatus.Pending;
 
-                //_httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
 
-                //string paymentPage;
+                _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
+
+                _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+
+                string paymentPage;
 
                 //if (_iyzicoPaymentSettings.UseToPaymentPopup)
                 //{
@@ -284,8 +286,9 @@ namespace Nop.Plugin.Payments.Iyzico
                 //{
                 //    paymentPage = payment.PaymentPageUrl;
                 //}
-
-                //_httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+                paymentPage = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                
+                _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
 
             }
 
@@ -472,7 +475,7 @@ namespace Nop.Plugin.Payments.Iyzico
                 throw new ArgumentNullException(nameof(order));
 
             //it's not a redirection payment method. So we always return false
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.EMMA;
 using Iyzipay;
 using Iyzipay.Model;
 using Iyzipay.Model.V2.Transaction;
@@ -145,39 +146,45 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 //    ConversationId = order.CaptureTransactionId,
                 //    Token = order.CaptureTransactionResult
                 //};
-
-                //RetrievePaymentRequest request = new()
-                //{
-                //    ConversationId = order.CaptureTransactionId,
-                //    PaymentId = order.AuthorizationTransactionId
-                //};
-
-
-                RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
+                Payment result = null;
+                RetrievePaymentRequest request1 = new()
                 {
                     ConversationId = order.CaptureTransactionId,
                     PaymentId = order.AuthorizationTransactionId
                 };
 
-                TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                Payment payment = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+                if (payment != null)
+                {
+                    result = payment;
+                }
+                //RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
+                //{
+                //    PaymentConversationId = order.CaptureTransactionId,
+                //    PaymentId = order.AuthorizationTransactionId,
+                //    ConversationId = "test123"
+                //};
+
+                //TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
                 // CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-                TransactionDetailItem result = null;
-                if (!transactionDetail.Payments.IsNullOrEmpty())
-                {
+                
+                //if (!transactionDetail.Payments.IsNullOrEmpty())
+                //{
                    
-                    result = transactionDetail.Payments.First();
-                }
+                //    result = transactionDetail.Payments.First();
+                //}
 
-                while (result is null)
-                {
-                    transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-                    if (!transactionDetail.Payments.IsNullOrEmpty())
-                    {
+                //while (result is null)
+                //{
+                //    transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                //    if (!transactionDetail.Payments.IsNullOrEmpty())
+                //    {
 
-                        result = transactionDetail.Payments.First();
-                    }
-                }
+                //        result = transactionDetail.Payments.First();
+                //    }
+                //}
                 List<string> errorStr = new();
 
                 //if (string.IsNullOrEmpty(transactionDetail.ErrorMessage) == false)
@@ -185,7 +192,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 //    errorStr.Add(transactionDetail.ErrorMessage);
                 //}
                
-               order.PaymentStatus = IyzicoHelper.GetPaymentStatus(result.PaymentStatus);
+               order.PaymentStatus = IyzicoHelper.GetPaymentStatus(result.Status);
 
                 switch (order.PaymentStatus)
                 {
@@ -231,7 +238,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             $"Komisyon Ücreti :  {result.IyziCommissionFee:C2}"
                         };
 
-                        result.ItemTransactions.ForEach((item) =>
+                        result.PaymentItems.ForEach((item) =>
                         {
                             PaymentInformation.Add($"Ürün Id: {item.ItemId} - Ürün Tutarı : {item.PaidPrice} - İşlem Kimliği : {item.PaymentTransactionId}");
                         });
@@ -244,12 +251,14 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
-                        _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}{_iyzicoPaymentSettings.PaymentSuccessUrl}");
-                        string url = _webHelper.GetStoreLocation() + _iyzicoPaymentSettings.PaymentSuccessUrl;
-                        url=url.Replace("//", "/").Replace("https:/", "https://");
-
-
-                        return Redirect(url) ;
+                        string url = $"{_webHelper.GetStoreLocation()}{_iyzicoPaymentSettings.PaymentSuccessUrl}";
+                        // _httpContextAccessor.HttpContext.Response.Redirect(url);
+                        // string url = _webHelper.GetStoreLocation() + _iyzicoPaymentSettings.PaymentSuccessUrl;
+                        //url=url.Replace("//", "/").Replace("https:/", "https://");
+                        //Redirect(url)
+                        
+                    break;
+                        
 
                     case PaymentStatus.Refunded:
 
@@ -302,6 +311,11 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
                     _httpContextAccessor.HttpContext.Response.Cookies.Append("iyzicoMessage", string.Join("<br>", errorStr));
                 }
+                CheckoutCompletedModel model=new CheckoutCompletedModel();
+                model.OrderId = order.Id;
+                return View("~/Views/Checkout/Completed.cshtml", model);
+                //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+               
             }
             else
             {
