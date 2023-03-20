@@ -5,9 +5,9 @@
     <div id="cart-slideout__product-name">@Model.Name</div>
     <div id="cart-slideout__product-description">@Model.Description</div>
     <br>
+    <span id="cart-slideout__product-price" style="font-weight: bold; color: #bb1b1b; margin-right: 0.75rem">@Model.Price</span>
     @if (!string.IsNullOrWhiteSpace(Model.OldPrice))
     {
-        <div id="cart-slideout__product-price" style="text-decoration: line-through">@Model.OldPrice</div>
+        <span id="cart-slideout__product-price" style="text-decoration: line-through; font-size: 8pt">@Model.OldPrice</span>
     }
-    <div id="cart-slideout__product-price" style="font-weight: bold; color: #bb1b1b">@Model.Price</div>
 </div>

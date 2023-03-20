@@ -32,7 +32,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
             var warrantyModel = models.FirstOrDefault(m => m.Name == AbcDeliveryConsts.WarrantyProductAttributeName);
             if (warrantyModel != null)
             {
-                warrantyModel.Values = warrantyModel.Values.OrderByDescending(v => v.PriceAdjustment).ToList();
+                warrantyModel.Values = warrantyModel.Values.OrderBy(v => v.PriceAdjustment).ToList();
             }
 
             // This will only work for Pavilion theme, will need to be adjusted for Pacific

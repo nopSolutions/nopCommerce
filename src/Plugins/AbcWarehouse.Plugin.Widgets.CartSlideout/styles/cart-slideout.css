@@ -22,7 +22,6 @@
     background-color: #fff;
     overflow-x: hidden; /* Disable horizontal scroll */
     display: none;
-    padding: 2.5rem 1rem 1rem;
 }
 
 .cart-slideout {
@@ -48,9 +47,13 @@
     margin-left: 50px;
 }
 
+.cart-slideout__header {
+    padding: 2.5rem 1rem 0 1rem;
+}
+
 /* Cart Slideout Content */
 .cart-slideout__content {
-    padding: 1rem 0;
+    padding: 1rem;
     flex-grow: 2;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -60,18 +63,27 @@
     display: none;
 }
 
+/* Product Info */
+#cart-slideout__product-name {
+    font-weight: bold;
+}
+#cart-slideout__product-description {
+    font-size: 8pt;
+}
 
 /* Cart Slideout Pickup In Store */
-
+.cart-slideout__pickup-in-store {
+    padding-top: 20px;
+}
 .cart-slideout__pickup-in-store h2 {
-    color: #333;
+    color: #4f4f4f;
 }
 
 .cart-slideout__pickup-in-store h2 {
     display: inline;
     /* this should match text-prompt */
     font-size: 1.1rem;
-    color: #333;
+    color: #4f4f4f;
 }
 
 .cart-slideout__pickup-in-store p {
@@ -81,10 +93,10 @@
 .cart-slideout__pickup-in-store button {
     margin-right: 0.5rem;
     border: 2px solid #176440;
-    height: 4rem;
+    height: 2.7rem;
     background-color: white;
     width: 12rem;
-    font-size: 0.8rem;
+    font-size: 9pt;
 }
 
 .cart-slideout__pickup-in-store button.selected {
@@ -165,8 +177,14 @@ i.warranty-info {
 
 .cart-slideout__subtotal {
     text-align: right;
-    color: #bb1b1b;
+    color: #A11717;
     font-size: 1.25rem;
+}
+
+.cart-slideout__buttons {
+    padding: 0.5rem 1rem 1rem 1rem;
+    background-color: #F3F3F3;
+    border-top: 1px solid #4f4f4f;
 }
 
 .cart-slideout__buttons input {
@@ -230,6 +248,7 @@ i.warranty-info {
     margin: 0;
 }
 .cart-slideout .attributes .text-prompt {
+    color: #4f4f4f;
     font-size: 1.1rem;
 }
 .cart-slideout dt {
@@ -246,6 +265,7 @@ i.warranty-info {
     touch-action: none !important;
     -webkit-overflow-scrolling: touch !important;
 }
+
 
 @media (min-width: 768px)
 {
