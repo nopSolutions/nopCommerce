@@ -21,12 +21,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Core;
 using LinqToDB.Common;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Iyzico.Models;
 using Nop.Plugin.Payments.Iyzico.Validators;
 using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Nop.Plugin.Payments.Iyzico
 {
@@ -169,6 +172,7 @@ namespace Nop.Plugin.Payments.Iyzico
             //    shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTotal.shoppingCartTotal.Value, currency); 
             //}
 
+
             //Ödeme isteği başlıkları
             CreatePaymentRequest request = new()
             {
@@ -229,22 +233,25 @@ namespace Nop.Plugin.Payments.Iyzico
             //Checkout form için sonuç
             // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-              var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+          
+            var ThdRequest = request;
+
+            ThdRequest.CallbackUrl =
+                $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
             
+
+              var payment3d = ThreedsInitialize.Create(ThdRequest, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
             var result = new ProcessPaymentResult
             {
                 AllowStoringCreditCardNumber = _iyzicoPaymentSettings.IsCardStorage
             };
 
-            if (payment.Status == "failure")
+            if (payment3d.Status == "failure")
             {
-                request.CallbackUrl =
-                    $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-                var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-
-                if (payment3d.Status == "failure")
+                if (payment.Status == "failure")
                 {
 
 
@@ -253,42 +260,44 @@ namespace Nop.Plugin.Payments.Iyzico
                 }
                 else
                 {
-                    //result.AvsResult= payment3d.HtmlContent;
+
                     result.CaptureTransactionId = payment.ConversationId;
                     result.AuthorizationTransactionId = payment.PaymentId;
                     result.CaptureTransactionResult = payment.Status;
                     result.NewPaymentStatus = PaymentStatus.Authorized;
-                    _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+
+
+                    //_httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
+
+                   // _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+
                     string paymentPage;
-                    paymentPage = payment3d.HtmlContent;
+
+                    //if (_iyzicoPaymentSettings.UseToPaymentPopup)
+                    //{
+                    //    paymentPage = payment.CheckoutFormContent;
+                    //}
+                    //else
+                    //{
+                    //    paymentPage = payment.PaymentPageUrl;
+                    //}
+                    paymentPage = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+
                     _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+
                 }
             }
             else
             {
-                result.CaptureTransactionId = payment.ConversationId;
-                result.AuthorizationTransactionId=payment.PaymentId;
-                result.CaptureTransactionResult = payment.Status;
-                result.NewPaymentStatus= PaymentStatus.Pending;
-
-
-                _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
-
-                _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
-
+                result.CaptureTransactionId = payment3d.ConversationId;
+                result.AuthorizationTransactionId = "";
+                result.CaptureTransactionResult = payment3d.Status;
+                result.NewPaymentStatus = PaymentStatus.Authorized;
+              //  _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 string paymentPage;
-
-                //if (_iyzicoPaymentSettings.UseToPaymentPopup)
-                //{
-                //    paymentPage = payment.CheckoutFormContent;
-                //}
-                //else
-                //{
-                //    paymentPage = payment.PaymentPageUrl;
-                //}
-                paymentPage = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                paymentPage = payment3d.HtmlContent;
+                _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
                 
-                _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
 
             }
 
@@ -352,19 +361,23 @@ namespace Nop.Plugin.Payments.Iyzico
         public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             string paymentPage = _httpContextAccessor.HttpContext.Session.GetString("PaymentPage");
+            string thHtml = _httpContextAccessor.HttpContext.Session.GetString("3dsPage");
 
             if (string.IsNullOrEmpty(paymentPage) == false)
             {
                 _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
-               
+                _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
             }
-            else
+
+            if (string.IsNullOrEmpty(thHtml) == false)
             {
+                //_httpContextAccessor.HttpContext.Session.Remove("3dsPage");
                 _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
             }
 
             return Task.CompletedTask;
+            //return Task.FromResult(new ProcessPaymentResult() { Errors = new[] { "Capture method not supported" } });
         }
 
         /// <summary>

@@ -19,6 +19,10 @@ namespace Nop.Plugin.Payments.Iyzico.Infrastructure
             //Cancel
             endpointRouteBuilder.MapControllerRoute("Plugin.Payments.Iyzico.CancelOrder", "Plugins/PaymentIyzico/CancelOrder",
                  new { controller = "PaymentIyzico", action = "CancelOrder" });
+            endpointRouteBuilder.MapControllerRoute("View3ds",
+                "Plugins/PaymentIyzico/View3ds",
+                new { controller = "PaymentIyzicoPC", action = "ThView" });
+          
         }
 
         /// <summary>
