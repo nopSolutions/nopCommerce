@@ -3270,7 +3270,7 @@ namespace Nop.Services.Installation
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true,
                 ConsiderAssociatedProductsDimensions = true,
-                ShipSeparatelyOneItemEach = true,
+                ShipSeparatelyOneItemEach = false,
                 RequestDelay = 300,
                 ShippingSorting = ShippingSortingEnum.Position,
             });
