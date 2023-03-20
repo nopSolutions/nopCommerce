@@ -259,6 +259,9 @@ namespace Nop.Web.Factories
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
+                if (model.CountryId == 0)
+                    model.CountryId = _customerSettings.DefaultCountryId ?? 0;
+
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
                 foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
@@ -423,7 +426,7 @@ namespace Nop.Web.Factories
             model.CountyEnabled = _customerSettings.CountyEnabled;
             model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;
+            model.CountryRequired = _customerSettings.CountryRequired;            
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
             model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
             model.PhoneEnabled = _customerSettings.PhoneEnabled;
@@ -448,6 +451,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
+                model.CountryId = _customerSettings.DefaultCountryId ?? 0;
                 var currentLanguage = await _workContext.GetWorkingLanguageAsync();
                 foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
@@ -457,7 +461,7 @@ namespace Nop.Web.Factories
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
-                }
+                }                
 
                 if (_customerSettings.StateProvinceEnabled)
                 {

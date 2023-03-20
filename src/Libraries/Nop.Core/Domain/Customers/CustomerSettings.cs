@@ -355,6 +355,11 @@ namespace Nop.Core.Domain.Customers
         public bool CountryRequired { get; set; }
 
         /// <summary>
+        /// Gets or sets a Default Country
+        /// </summary>
+        public int? DefaultCountryId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'State / province' is enabled
         /// </summary>
         public bool StateProvinceEnabled { get; set; }

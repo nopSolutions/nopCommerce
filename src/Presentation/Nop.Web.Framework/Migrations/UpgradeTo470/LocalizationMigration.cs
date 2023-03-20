@@ -105,7 +105,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6167
                 ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow Direct Reply",
                 ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply.Hint"] = "When checked, the store owner can reply directly to the customer's email address from mailbox when a customer-related message is received.",
-
+                //6640
+                ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry"] = "Default Country",
+                ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry.Hint"] = "Select the default country for address form fields. This can speed up the checkout process.",
+                ["Admin.Configuration.Settings.CustomerUser.DefaultCountry"] = "Default Country",
+                ["Admin.Configuration.Settings.CustomerUser.DefaultCountry.Hint"] = "Select the default country for customer form fields. This can speed up the registration process.",
             }, languageId);
 
             #endregion

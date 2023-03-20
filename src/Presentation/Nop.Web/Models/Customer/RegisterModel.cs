@@ -102,7 +102,7 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Country")]
         public int CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
-
+        
         public bool StateProvinceEnabled { get; set; }
         public bool StateProvinceRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.StateProvince")]

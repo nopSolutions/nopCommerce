@@ -1562,11 +1562,17 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare customer settings model
             model.CustomerSettings = await PrepareCustomerSettingsModelAsync();
 
+            //prepare CustomerSettings list availableCountries
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.CustomerSettings.AvailableCountries);
+            
             //prepare multi-factor authentication settings model
             model.MultiFactorAuthenticationSettings = await PrepareMultiFactorAuthenticationSettingsModelAsync();
 
             //prepare address settings model
             model.AddressSettings = await PrepareAddressSettingsModelAsync();
+
+            //prepare AddressSettings list availableCountries
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.AddressSettings.AvailableCountries);
 
             //prepare date time settings model
             model.DateTimeSettings = await PrepareDateTimeSettingsModelAsync();

@@ -127,7 +127,7 @@ var Billing = {
       $('#billing-new-address-form').show();
       $('#edit-billing-address-button').hide();
       $('#delete-billing-address-button').hide();
-    } else {
+    } else {      
       $('#billing-new-address-form').hide();
       $('#edit-billing-address-button').show();
       $('#delete-billing-address-button').show();
@@ -136,6 +136,11 @@ var Billing = {
     Billing.initializeCountrySelect();
   },
 
+  setDefaultCountry: function (defaultCountry) {
+    $('select option[value="' + defaultCountry + '"]').prop('selected', true);
+    $('#opc-billing select[data-trigger="country-select"] option:selected').change()
+  },
+  
   resetSelectedAddress: function() {
     var selectElement = $('#billing-address-select');
     if (selectElement) {

@@ -23,7 +23,7 @@
                 }
             <div>
                 <select name="billing_address_id" id="billing-address-select" class="address-select"
-                        title="" onchange="Billing.resetBillingForm();Billing.newAddress(!this.value)">
+                    title="" onchange="Billing.resetBillingForm();Billing.setDefaultCountry(@(Model.BillingNewAddress.DefaultCountryId??0));Billing.newAddress(!this.value)">
                     @foreach (var address in Model.ExistingAddresses)
                     {
                         var addressLine = "";
