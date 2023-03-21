@@ -345,7 +345,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 return RedirectToAction("History", "Order");
             }
 
-            return Redirect(_iyzicoPaymentSettings.PaymentErrorUrl);
+            return Redirect("https://localhost:59857/en/onepagecheckout#opc-payment_info");
         }
 
 
@@ -361,9 +361,10 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                     model.Html = thHtml;
                     model.PaymentResult = false;
 
-                    //  var orderTotalHtml = await RenderViewComponentToStringAsync("PaymentIyzico",  model );
-                  
-                    return  View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
+                //  var orderTotalHtml = await RenderViewComponentToStringAsync("PaymentIyzico",  model );
+                View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
+                
+                    return Redirect("https://localhost:59857/en/onepagecheckout#opc-payment_info");
                 //return View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
 
 

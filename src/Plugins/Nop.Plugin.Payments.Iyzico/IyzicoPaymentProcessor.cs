@@ -292,7 +292,7 @@ namespace Nop.Plugin.Payments.Iyzico
                 result.CaptureTransactionId = payment3d.ConversationId;
                 result.AuthorizationTransactionId = "";
                 result.CaptureTransactionResult = payment3d.Status;
-                result.NewPaymentStatus = PaymentStatus.Authorized;
+                result.NewPaymentStatus = PaymentStatus.Pending;
               //  _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 string paymentPage;
                 paymentPage = payment3d.HtmlContent;
@@ -376,7 +376,22 @@ namespace Nop.Plugin.Payments.Iyzico
                 _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
             }
 
-            return Task.CompletedTask;
+            if (postProcessPaymentRequest.Order.PaymentStatus==PaymentStatus.Paid)
+            {
+                //return Task.CompletedTask;
+                if ((DateTime.UtcNow - postProcessPaymentRequest.Order.CreatedOnUtc).TotalSeconds < 5)
+                    return Task.FromResult(false);
+
+                return Task.FromResult(true);
+            }
+            else
+            {
+                if ((DateTime.UtcNow - postProcessPaymentRequest.Order.CreatedOnUtc).TotalSeconds < 5)
+                    return Task.FromResult(false);
+
+                return Task.FromResult(true);
+            }
+         
             //return Task.FromResult(new ProcessPaymentResult() { Errors = new[] { "Capture method not supported" } });
         }
 
@@ -665,7 +680,7 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType { get; set; } = PaymentMethodType.Standard;
+        public PaymentMethodType PaymentMethodType { get; set; } = PaymentMethodType.Redirection;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
