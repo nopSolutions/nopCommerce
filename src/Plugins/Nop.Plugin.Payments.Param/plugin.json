@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Param Payment",
+  "SystemName": "Payments.Param",
+  "Version": "1.90",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Webtorn Team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Param.dll",
+  "Description": "Pay with credit card via the param."
+}

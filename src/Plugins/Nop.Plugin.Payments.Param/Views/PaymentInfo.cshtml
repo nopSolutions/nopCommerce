@@ -1,0 +1,340 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Param.Models.PaymentInfoModel
+@using Nop.Web.Framework;
+@using System.Globalization;
+
+@if (!Model.Status)
+{
+    <div style="background:#fff3cd;color:#664d03;padding:1rem;-moz-border-radius:.25rem;-webkit-border-radius:.25rem;border-radius:.25rem;border: 1px solid #ffecb5;">@Model.Message</div>
+}
+else
+{
+    <script>
+        try {
+            console.log($().jquery);
+        } catch (e) {
+            document.write('<script src="https://code.jquery.com/jquery-3.5.0.js" type="text/javascript"><\/script>');
+        }
+    </script>
+    <table width="100%" cellspacing="2" cellpadding="1" border="0">
+
+        <tr>
+            <td>
+                @if ((string)ViewBag.Lang == "tr-TR")
+                {
+                    @Html.Label("Total", "Sepet Toplamı:");
+                }
+                else
+                {
+                    @Html.Label("SubTotal", "Cart Total:");
+                }
+            </td>
+            <td>
+                <input type="text" name="SubTotal" id="SubTotal" value="@ViewBag.SubTotalStr" style="width:60px" disabled />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.CardholderName, false):
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.CardholderName, new { style = "width:165px", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.CardholderName)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.CardNumber, false):
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.CardNumber, new { style = "width:165px", autocomplete = "off", maxlength = 16, oninput = "this.value = this.value.replace(/[^\\d]+/, '')" })
+                @Html.ValidationMessageFor(model => model.CardNumber)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.ExpireMonth, false):
+            </td>
+            <td>
+                @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths)
+                /
+                @Html.DropDownListFor(model => model.ExpireYear, Model.ExpireYears)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.CardCode, false):
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.CardCode, new { style = "width:60px", autocomplete = "off", maxlength = 3, oninput = "this.value = this.value.replace(/[^\\d]+/, '')" })
+                @Html.ValidationMessageFor(model => model.CardCode)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @if ((string)ViewBag.Lang == "tr-TR")
+                {
+                    @Html.Label("BankName", "Banka Adıı:");
+                }
+                else
+                {
+                    @Html.Label("BankName", "Bank Name:");
+                }
+            </td>
+            <td>
+                @Html.TextBox("BankName", "", new { style = "width:150px", @disabled = "true" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @if ((string)ViewBag.Lang == "tr-TR")
+                {
+                    @Html.Label("taksit", "Taksit:");
+                }
+                else
+                {
+                    @Html.Label("taksit", "Installment:");
+                }
+            </td>
+            <td>
+                <select name="taksit" id="taksit" disabled>
+                </select>
+            </td>
+        </tr>
+        @Html.HiddenFor(model => model.SanalPOSID)
+        @Html.HiddenFor(model => model.Installment)
+        @Html.HiddenFor(model => model.Rate)
+        @for (byte i = 0; i < 10; i++)
+        {
+            <input type="hidden" name="@("st"+i.ToString())" value="@ViewBag.SubTotal" />
+        }
+    </table>
+    <br />
+    @if (ViewBag.TP_Ozel_Oran_Liste is not null)
+    {
+        <iframe id="installment-frame" frameBorder="0" scrolling="no" srcdoc='
+        <table id="installment-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-sm-1"></th>
+                    <th>Banka</th>
+                    <th>3 Taksit</th>
+                    <th>6 Taksit</th>
+                    <th>9 Taksit</th>
+                    <th>12 Taksit</th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+            @foreach (var oran in ViewBag.TP_Ozel_Oran_Liste)
+            {
+                @if(float.Parse(oran.MO_03) < 0 && float.Parse(oran.MO_06) < 0 && float.Parse(oran.MO_09) < 0) { continue; }
+
+                <tr class="sanalPosID" sp-id="@((string)oran.SanalPOS_ID)">
+                    <td class="col-sm-1"><img src="@((string)oran.Kredi_Karti_Banka_Gorsel)"></td>
+                    <td>
+                        @((string)oran.Kredi_Karti_Banka)
+                    </td>
+
+                    <td class="oranCol" taksit="3" oran="@((string)oran.MO_03)">
+                        <label>%@(double.Parse(oran.MO_03, CultureInfo.InvariantCulture))</label>
+                        <p class="total">
+                            @((double.Parse(ViewBag.SubTotal)*(100+double.Parse(oran.MO_03, CultureInfo.InvariantCulture))/100).ToString("C", new CultureInfo((string)ViewBag.Lang)))
+                        </p>
+                    </td>
+
+                    <td class="oranCol" taksit="6" oran="@((string)oran.MO_06)">
+                        <label>%@(double.Parse(oran.MO_06, CultureInfo.InvariantCulture))</label>
+                        <p class="total">
+                            @((double.Parse(ViewBag.SubTotal)*(100+double.Parse(oran.MO_06, CultureInfo.InvariantCulture))/100).ToString("C", new CultureInfo((string)ViewBag.Lang)))
+                        </p>
+                    </td>
+
+                    <td class="oranCol" taksit="9" oran="@((string)oran.MO_09)">
+                        <label>%@(double.Parse(oran.MO_09, CultureInfo.InvariantCulture))</label>
+                        <p class="total">
+                            @((double.Parse(ViewBag.SubTotal)*(100+double.Parse(oran.MO_09, CultureInfo.InvariantCulture))/100).ToString("C", new CultureInfo((string)ViewBag.Lang)))
+                        </p>
+                    </td>
+
+                    <td class="oranCol" taksit="12" oran="@((string)oran.MO_12)">
+                        <label>%@(double.Parse(oran.MO_12, CultureInfo.InvariantCulture))</label>
+                        <p class="total">
+                            @((double.Parse(ViewBag.SubTotal)*(100+double.Parse(oran.MO_12, CultureInfo.InvariantCulture))/100).ToString("C", new CultureInfo((string)ViewBag.Lang)))
+                        </p>
+                    </td>
+                </tr>
+            }
+            <b>@((string)ViewBag.TP_Ozel_Oran_Sonuc)</b>
+            </tbody>
+        </table>
+
+
+        <style>
+            thead {
+                background-color: bisque;
+            }
+            tr:nth-child(even) {
+                background-color: #eeeeee;
+            }
+
+            table#installment-table {
+                margin-bottom: 10px;
+                width: 100%;
+                border: 1px solid #ccc;
+            }
+
+            table#installment-table tr {
+                height: 80px;
+            }
+            p.total {
+                padding: 5px;
+                background-color: #cccfff;
+                width: 80%;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+        </style>
+        ' style="border:0;width:100%;height:750px;"></iframe>
+    }
+    <script>
+        var cardcode = '';
+        var totalStr = '@(ViewBag.SubTotalStr)';
+        var total = @(((string)ViewBag.SubTotal).Replace(",", "."));
+        var sanalPOS_ID = '';
+
+        $('select#ExpireMonth option:eq(0)').prop('selected', true);
+        $('select#ExpireYear option:eq(0)').prop('selected', true);
+
+        $("select#taksit").on('change', function () {
+            if($(this).val() == 1) {
+                $('input#SubTotal').val(totalStr);
+
+                let iFrame = $("iframe#installment-frame").contents().find('body');
+                $(iFrame).find("tr[sp-id='" + sanalPOS_ID + "']").each(function () {
+                    $(this).find("td[taksit='" + $(this).val() + "']").css('border', '2px dotted #00000');
+                });
+                $('input#Installment').val('1');
+                $('input#Rate').val('1');
+            }
+            else {
+                let price = $(this).find('option:selected').attr('price');
+                let oran = $(this).find('option:selected').attr('oran');
+                $('input#SubTotal').val(price);
+                $('input#Rate').val(oran);
+                $('input#Installment').val($(this).val());
+
+                let element = $('tr.order-total td.cart-total-right span.value-summary strong');
+                let ordertotal = $('input#SubTotal').val().replace('₺', '').replace('TL', '').replace(' ', '').replace(',', '.');
+                let shipment = $('tr.shipping-cost td.cart-total-right span.value-summary').text().replace('₺', '').replace('TL', '').replace(' ', '').replace(',', '.');
+                let toplam = parseFloat(ordertotal) + parseFloat(shipment);
+
+                if ($('input#SubTotal').val().includes('₺')) {
+                    $(element).text('₺' + toplam.toFixed(2));
+                }
+                if ($('input#SubTotal').val().includes('TL')) {
+                    $(element).text(toplam.toFixed(2) + ' TL');
+                }
+            }
+        });
+
+        $("input#CardNumber").on('propertychange input', function () {
+            let _cardcode = $(this).val();
+
+            if (_cardcode.length == 16) {
+                cardcode = _cardcode.substring(0, 6);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/PaymentParam/BIN_SanalPos',
+                    data: 'cardCode=' + cardcode,
+                    success: function (result) {
+                        if (result !== undefined && result !== null && typeof result == "object") {
+                            if(result.error !== undefined && result.error !== null){
+                                alert(result.error);
+                                return;
+                            } else {
+                                let kart_Banka = result.Kart_Banka;
+                                sanalPOS_ID = result.SanalPOS_ID;
+                                let kart_Brand = result.Kart_Brand;
+                                let kart_Tip = result.Kart_Tip;
+
+                                $('input#SanalPOSID').val(sanalPOS_ID);
+                                $('input#BankName').val(kart_Banka + ' / ' + kart_Brand + ' / ' + kart_Tip);
+                                $('input#Installment').val('1');
+                                $('input#Rate').val('1');
+
+                                let iFrame = $("iframe#installment-frame").contents().find('body');
+
+                                $(iFrame).find('tr[sp-id]').each(function () {
+                                    if($(this).attr('sp-id') == sanalPOS_ID) {
+                                        $('select#taksit').empty();
+                                        $('select#taksit').append('<option value="1"></option>');
+
+                                        $(this).find("td[oran]").each(function () {
+                                            let oran = $(this).attr('oran');
+                                            let taksit = $(this).attr('taksit');
+                                            let price = $(this).find('p.total').text();
+
+                                            if (typeof oran != undefined && oran != '' && typeof taksit != undefined && taksit != '' && kart_Tip == 'Credit') {
+                                                $('select#taksit').append('<option sp-id="' + sanalPOS_ID + '" oran="' + oran + '" price="' + price.trim() + '" value="' + taksit + '">' + taksit + '</option>');
+                                                $('select#taksit').removeAttr('disabled');
+                                            }
+                                        });
+
+                                        //$('input#SubTotal').val(totalStr);
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    complete: function () {
+                    }
+                });
+            }
+            else {
+                $('input#BankName').val('');
+                $('input#SubTotal').val(totalStr);
+                $('select#taksit').attr('disabled', 'true');
+                $('select#taksit').empty();
+                $('input#SanalPOSID').val('');
+                $('input#Installment').val('1');
+                $('input#Rate').val('1');
+            }
+        });
+
+        $(document).on('ajaxComplete', function (event, request, settings) {
+            if (settings.type == 'POST' && settings.url.includes('/checkout/OpcSavePaymentInfo')) {
+
+                let element = $('tr.order-total td.cart-total-right span.value-summary strong');
+                let ordertotal = $('input#SubTotal').val().replace('₺', '').replace('TL', '').replace(' ', '').replace(',', '.');
+                let shipment = 0;
+                if($('tr.shipping-cost td.cart-total-right span.value-summary').length) {
+                    shipment = $('tr.shipping-cost td.cart-total-right span.value-summary').text().replace('₺', '').replace('TL', '').replace(' ', '').replace(',', '.');                   
+                }       
+                let toplam = parseFloat(ordertotal) + parseFloat(shipment);
+                if ($('input#SubTotal').val().includes('₺')) {
+                    $(element).text('₺' + toplam.toFixed(2));
+                }
+                if ($('input#SubTotal').val().includes('TL')) {
+                    $(element).text(toplam.toFixed(2) + ' TL');
+                }
+
+            }
+        });
+
+
+        //$(document).ready(function () {
+        //    let form = $("div.section.payment-info>form");
+        //    $(form).attr('method', 'post');
+        //    $(form).attr('action', '/checkout/confirm');
+        //});
+    </script>
+}
