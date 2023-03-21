@@ -15,7 +15,10 @@ namespace Nop.Plugin.Misc.AbcFrontend.Extensions
         {
             return model.TextPrompt == "Box Spring or Adjustable Base" ||
                    model.TextPrompt == "Mattress Protector" ||
-                   model.TextPrompt == "Frame";
+                   model.TextPrompt == "Frame" ||
+                   model.Name == "Delivery/Pickup Options" ||
+                   model.Name == "Haul Away (Delivery)" ||
+                   model.Name == "Haul Away (Delivery/Install)";
         }
     }
 }
