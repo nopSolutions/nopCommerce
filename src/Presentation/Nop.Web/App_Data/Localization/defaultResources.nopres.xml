@@ -17823,6 +17823,9 @@
   <LocaleResource Name="GiftCardAttribute.From.Virtual">
     <Value><![CDATA[From: {0} <{1}>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Header.SkipNavigation.Text">
+    <Value>Skip Navigation</Value>
+  </LocaleResource>
   <LocaleResource Name="Homepage">
     <Value>Home page</Value>
   </LocaleResource>

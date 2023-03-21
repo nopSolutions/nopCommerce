@@ -105,7 +105,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6167
                 ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow Direct Reply",
                 ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply.Hint"] = "When checked, the store owner can reply directly to the customer's email address from mailbox when a customer-related message is received.",
-
+                //5023
+                ["Header.SkipNavigation.Text"] = "Skip Navigation",
             }, languageId);
 
             #endregion
