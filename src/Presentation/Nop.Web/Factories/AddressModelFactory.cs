@@ -229,6 +229,9 @@ namespace Nop.Web.Factories
                     model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
                 }
 
+                if (addressSettings.DefaultCountryId != null)
+                    model.CountryId = model.CountryId ?? addressSettings.DefaultCountryId;
+
                 foreach (var c in countries)
                 {
                     model.AvailableCountries.Add(new SelectListItem
@@ -240,7 +243,7 @@ namespace Nop.Web.Factories
                 }
 
                 if (addressSettings.StateProvinceEnabled)
-                {
+                {                    
                     var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
@@ -290,6 +293,7 @@ namespace Nop.Web.Factories
             model.PhoneRequired = addressSettings.PhoneRequired;
             model.FaxEnabled = addressSettings.FaxEnabled;
             model.FaxRequired = addressSettings.FaxRequired;
+            model.DefaultCountryId = addressSettings.DefaultCountryId;
 
             //customer attribute services
             if (_addressAttributeService != null && _addressAttributeParser != null)

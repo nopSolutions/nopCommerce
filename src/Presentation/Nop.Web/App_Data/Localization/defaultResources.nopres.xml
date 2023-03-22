@@ -6402,6 +6402,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
     <Value>Check if 'County / region' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry">
+    <Value>Default Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry.Hint">
+    <Value>Select the default country for address form fields. This can speed up the checkout process.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description">
     <Value>You can create and manage the address form fields available during checkout.</Value>
   </LocaleResource>
@@ -6608,6 +6614,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultAvatarEnabled.Hint">
     <Value>A value indicating whether to display default user avatar.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultCountry">
+    <Value>Default Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultCountry.Hint">
+    <Value>Select the default country for customer form fields. This can speed up the registration process.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat">
     <Value>Default password format</Value>
