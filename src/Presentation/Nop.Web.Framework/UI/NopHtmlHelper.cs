@@ -565,9 +565,12 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCssFiles()
-        {
+        {            
             if (_cssParts.Count == 0)
                 return HtmlString.Empty;
+
+            if (_actionContextAccessor.ActionContext == null)
+                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
 
             var result = new StringBuilder();
 
@@ -599,9 +602,6 @@ namespace Nop.Web.Framework.UI
             var styles = _cssParts
                     .Where(item => !woConfig.EnableCssBundling || item.ExcludeFromBundle || !item.IsLocal)
                     .Distinct();
-
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
 
             foreach (var item in styles)
             {
