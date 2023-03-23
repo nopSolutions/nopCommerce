@@ -471,6 +471,7 @@ namespace Nop.Web.Factories
                     if (strikeThroughPrice > decimal.Zero)
                     {
                         priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
+                        priceModel.OldPriceValue = strikeThroughPrice;
                     }
                     else
                     {
