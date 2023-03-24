@@ -29,7 +29,7 @@ namespace Nop.Plugin.Payments.Iyzico
                         result = PaymentStatus.Paid;
                         break;
                     default:
-                        result = PaymentStatus.Voided;
+                        result = PaymentStatus.Refunded;
                         break;
                 }
             

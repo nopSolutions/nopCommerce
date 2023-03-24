@@ -15,13 +15,7 @@
 
 @if (Model.PaymentResult == false)
 {
-
-    <div id="3dsRequest">
-
-        <iframe>
-            @Html.Raw(Model.Html)
-        </iframe>
-    </div>
+    @Html.Raw(Model.Html)
 }
 else
 {

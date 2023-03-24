@@ -63,6 +63,7 @@ namespace Nop.Plugin.Payments.Iyzico
         private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IOrderService _orderService;
 
         private readonly IPaymentIyzicoService _paymentIyzicoService;
         private readonly IyzicoPaymentSettings _iyzicoPaymentSettings;
@@ -90,7 +91,7 @@ namespace Nop.Plugin.Payments.Iyzico
             ITaxService taxService,
             ICurrencyService currencyService,
             IWorkContext workContext,
-            ICategoryService categoryService, ILogger logger,IScheduleTaskService scheduleTaskService)
+            ICategoryService categoryService, ILogger logger,IScheduleTaskService scheduleTaskService, IOrderService orderService)
         {
             _localizationService = localizationService;
             _paymentService = paymentService;
@@ -112,6 +113,7 @@ namespace Nop.Plugin.Payments.Iyzico
             _categoryService = categoryService;
             _logger = logger;
             _scheduleTaskService = scheduleTaskService;
+            _orderService = orderService;
         }
 
         #endregion
@@ -247,6 +249,8 @@ namespace Nop.Plugin.Payments.Iyzico
                 AllowStoringCreditCardNumber = _iyzicoPaymentSettings.IsCardStorage
             };
 
+            
+                
             if (payment3d.Status == "failure")
             {
                 var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
@@ -256,7 +260,7 @@ namespace Nop.Plugin.Payments.Iyzico
 
 
                     result.AddError(payment.ErrorMessage);
-                    result.NewPaymentStatus = PaymentStatus.Pending;
+                    result.NewPaymentStatus = PaymentStatus.Refunded;
                 }
                 else
                 {
@@ -265,11 +269,19 @@ namespace Nop.Plugin.Payments.Iyzico
                     result.AuthorizationTransactionId = payment.PaymentId;
                     result.CaptureTransactionResult = payment.Status;
                     result.NewPaymentStatus = PaymentStatus.Authorized;
+                    result.AuthorizationTransactionResult = "standard";
+                   
+
+
+
+
+
+
 
 
                     //_httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
 
-                   // _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                    // _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
 
                     string paymentPage;
 
@@ -289,15 +301,25 @@ namespace Nop.Plugin.Payments.Iyzico
             }
             else
             {
+                Payment resultP = null;
+                RetrievePaymentRequest request1 = new()
+                {
+                    PaymentConversationId = payment3d.ConversationId
+                };
+
+                Payment payment = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
                 result.CaptureTransactionId = payment3d.ConversationId;
-                result.AuthorizationTransactionId = "";
+                result.AuthorizationTransactionId = payment.PaymentId;
                 result.CaptureTransactionResult = payment3d.Status;
                 result.NewPaymentStatus = PaymentStatus.Pending;
               //  _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 string paymentPage;
                 paymentPage = payment3d.HtmlContent;
                 _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
-                
+                result.AuthorizationTransactionResult = "3d";
+                   
+               
 
             }
 
@@ -358,38 +380,44 @@ namespace Nop.Plugin.Payments.Iyzico
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
+        public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             string paymentPage = _httpContextAccessor.HttpContext.Session.GetString("PaymentPage");
             string thHtml = _httpContextAccessor.HttpContext.Session.GetString("3dsPage");
-
+            
             if (string.IsNullOrEmpty(paymentPage) == false)
             {
-                _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                //_httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
-                _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
+                //_httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
+                await Task.CompletedTask;
             }
 
             if (string.IsNullOrEmpty(thHtml) == false)
             {
                 //_httpContextAccessor.HttpContext.Session.Remove("3dsPage");
-                _httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
+                //_httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
+
+                string url = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/ThView";
+                _httpContextAccessor.HttpContext.Response.Redirect(url);
+                await Task.CompletedTask;
             }
 
             if (postProcessPaymentRequest.Order.PaymentStatus==PaymentStatus.Paid)
             {
                 //return Task.CompletedTask;
                 if ((DateTime.UtcNow - postProcessPaymentRequest.Order.CreatedOnUtc).TotalSeconds < 5)
-                    return Task.FromResult(false);
-
-                return Task.FromResult(true);
+                await Task.FromResult(false);
+                
+                    
+                await Task.FromResult(true);
             }
             else
             {
                 if ((DateTime.UtcNow - postProcessPaymentRequest.Order.CreatedOnUtc).TotalSeconds < 5)
-                    return Task.FromResult(false);
+                    await Task.FromResult(false);
 
-                return Task.FromResult(true);
+                await Task.FromResult(true);
             }
          
             //return Task.FromResult(new ProcessPaymentResult() { Errors = new[] { "Capture method not supported" } });

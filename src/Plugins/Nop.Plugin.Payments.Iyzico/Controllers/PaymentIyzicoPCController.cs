@@ -15,6 +15,8 @@ using LinqToDB.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -34,6 +36,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Controllers;
+using Nop.Web.Factories;
 using Nop.Web.Models.Checkout;
 
 namespace Nop.Plugin.Payments.Iyzico.Controllers
@@ -63,7 +66,8 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointService _rewardPointService;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IEncryptionService _encryptionService; 
+        private readonly ICheckoutModelFactory _checkoutModelFactory;
         private IWebHelper _webHelper;
         #endregion
 
@@ -90,7 +94,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             IPaymentService paymentService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
-            IEncryptionService encryptionService, IWebHelper webHelper)
+            IEncryptionService encryptionService, IWebHelper webHelper,ICheckoutModelFactory checkoutModelFactory)
         {
             _orderProcessingService = orderProcessingService;
             _logger = logger;
@@ -116,6 +120,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             _rewardPointService = rewardPointService;
             _encryptionService = encryptionService;
             _webHelper = webHelper;
+            _checkoutModelFactory = checkoutModelFactory;
         }
 
         #endregion
@@ -125,7 +130,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> PaymentConfirm(string orderGuid)
         {
-            
+            string errorUrl = $"{_webHelper.GetStoreLocation()}{_iyzicoPaymentSettings.PaymentErrorUrl.Replace("/","")}";
             //validation
             if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
@@ -146,206 +151,192 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
             if (order != null)
             {
-                //RetrieveCheckoutFormRequest request = new()
-                //{
-                //    ConversationId = order.CaptureTransactionId,
-                //    Token = order.CaptureTransactionResult
-                //};
-
-                string thHtml = _httpContextAccessor.HttpContext.Session.GetString("3dsPage");
                
-                if (thHtml != null)
+                if (!order.AuthorizationTransactionResult.IsNullOrEmpty())
                 {
+                    List<string> errorStr = new();
+                    PaymentResource result=null;
+                    if (order.AuthorizationTransactionResult == "3d")
+                    {
+                        var request = new CreateThreedsPaymentRequest();
+                        request.Locale = Locale.EN.ToString();
+                        request.ConversationId = order.CaptureTransactionId;
+                        request.PaymentId = order.AuthorizationTransactionId;
+                        //request.ConversationData = "conversation data";
+                        var threedsPayment = ThreedsPayment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                        result = threedsPayment;
+                        order.PaymentStatus = IyzicoHelper.GetPaymentStatus(result.Status);
+                    }
+                    else
+                    {
+                        var request = new RetrievePaymentRequest();
+                        request.Locale = Locale.EN.ToString();
+                        request.ConversationId = order.CaptureTransactionId;
+                        request.PaymentId = order.AuthorizationTransactionId;
+                        request.PaymentConversationId = order.CaptureTransactionId;
 
-                await ThView();
+                        result = Payment.Retrieve(request,  IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
+                    }
 
-                }
-                else
-                {
+                    
 
-                    Payment result = null;
-                RetrievePaymentRequest request1 = new()
-                {
-                    ConversationId = order.CaptureTransactionId, PaymentId = order.AuthorizationTransactionId
-                };
-
-                Payment payment = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-
-                if (payment != null)
-                {
-                    result = payment;
-                }
                    
-                
-                //RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest()
-                //{
-                //    PaymentConversationId = order.CaptureTransactionId,
-                //    PaymentId = order.AuthorizationTransactionId,
-                //    ConversationId = "test123"
-                //};
 
-                //TransactionDetail transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                  
+                  
 
-                // CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-                //if (!transactionDetail.Payments.IsNullOrEmpty())
-                //{
 
-                //    result = transactionDetail.Payments.First();
-                //}
+                   
 
-                //while (result is null)
-                //{
-                //    transactionDetail = TransactionDetail.Retrieve(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-                //    if (!transactionDetail.Payments.IsNullOrEmpty())
-                //    {
+                    switch (order.PaymentStatus)
+                    {
+                        case PaymentStatus.Authorized:
+                        case PaymentStatus.Paid:
 
-                //        result = transactionDetail.Payments.First();
-                //    }
-                //}
-                List<string> errorStr = new();
-
-                //if (string.IsNullOrEmpty(transactionDetail.ErrorMessage) == false)
-                //{
-                //    errorStr.Add(transactionDetail.ErrorMessage);
-                //}
-
-                order.PaymentStatus = IyzicoHelper.GetPaymentStatus(result.Status);
-
-                switch (order.PaymentStatus)
-                {
-                    case PaymentStatus.Authorized:
-                    case PaymentStatus.Paid:
-
-                        if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
-                        {
-                            await _orderProcessingService.MarkAsAuthorizedAsync(order);
-                        }
-
-                        if (_orderProcessingService.CanMarkOrderAsPaid(order))
-                        {
-                            await _orderProcessingService.MarkOrderAsPaidAsync(order);
-                        }
-
-                        if (_iyzicoPaymentSettings.IsCardStorage)
-                        {
-                            order.OrderStatus = OrderStatus.Processing;
-                            order.CardNumber =
-                                _encryptionService.EncryptText($"{result.BinNumber}******{result.LastFourDigits}");
-                            order.CardCvv2 = "";
-                            order.CardExpirationMonth = "";
-                            order.CardExpirationYear = "";
-                            if (order.CustomerCurrencyCode == "TRY")
+                            if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
                             {
-                                if (!result.CardAssociation.IsNullOrEmpty())
-                                {
-                                    order.CardType =
-                                        _encryptionService.EncryptText(result.CardAssociation.Replace("_", " "));
-                                    order.CardName = _encryptionService.EncryptText(result.CardFamily);
-
-                                }
+                                await _orderProcessingService.MarkAsAuthorizedAsync(order);
                             }
 
-                        }
+                            if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                            {
+                                await _orderProcessingService.MarkOrderAsPaidAsync(order);
+                            }
 
-                        await _orderService.UpdateOrderAsync(order);
+                            if (_iyzicoPaymentSettings.IsCardStorage)
+                            {
+                                order.OrderStatus = OrderStatus.Processing;
+                                order.CardNumber =
+                                    _encryptionService.EncryptText($"{result.BinNumber}******{result.LastFourDigits}");
+                                order.CardCvv2 = "";
+                                order.CardExpirationMonth = "";
+                                order.CardExpirationYear = "";
+                                if (order.CustomerCurrencyCode == "TRY")
+                                {
+                                    if (!result.CardAssociation.IsNullOrEmpty())
+                                    {
+                                        order.CardType =
+                                            _encryptionService.EncryptText(result.CardAssociation.Replace("_", " "));
+                                        order.CardName = _encryptionService.EncryptText(result.CardFamily);
 
-                        List<string> PaymentInformation = new()
-                        {
+                                    }
+                                }
+
+                            }
+
+                            await _orderService.UpdateOrderAsync(order);
+
+                            List<string> PaymentInformation = new()
+                            {
                             $"Iyzico Ödeme Id :  {result.PaymentId}",
                             $"Tahsilat Tutarı :  {result.PaidPrice:C2}",
                             $"İşlem Ücreti :  {result.IyziCommissionRateAmount:C2}",
                             $"Komisyon Ücreti :  {result.IyziCommissionFee:C2}"
-                        };
+                            };
 
-                        result.PaymentItems.ForEach((item) =>
-                        {
-                            PaymentInformation.Add(
-                                $"Ürün Id: {item.ItemId} - Ürün Tutarı : {item.PaidPrice} - İşlem Kimliği : {item.PaymentTransactionId}");
-                        });
+                            result.PaymentItems.ForEach((item) =>
+                            {
+                                PaymentInformation.Add(
+                                    $"Ürün Id: {item.ItemId} - Ürün Tutarı : {item.PaidPrice} - İşlem Kimliği : {item.PaymentTransactionId}");
+                            });
 
-                        //order note
-                        await _orderService.InsertOrderNoteAsync(new OrderNote
-                        {
-                            OrderId = order.Id,
-                            Note = string.Join(" | ", PaymentInformation),
-                            DisplayToCustomer = false,
-                            CreatedOnUtc = DateTime.UtcNow
-                        });
-                        string url = $"{_webHelper.GetStoreLocation()}{_iyzicoPaymentSettings.PaymentSuccessUrl}";
-                        // _httpContextAccessor.HttpContext.Response.Redirect(url);
-                        // string url = _webHelper.GetStoreLocation() + _iyzicoPaymentSettings.PaymentSuccessUrl;
-                        //url=url.Replace("//", "/").Replace("https:/", "https://");
-                        //Redirect(url)
+                            //order note
+                            await _orderService.InsertOrderNoteAsync(new OrderNote
+                            {
+                                OrderId = order.Id,
+                                Note = string.Join(" | ", PaymentInformation),
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                           
 
-                        break;
+                            break;
 
 
-                    case PaymentStatus.Refunded:
+                        case PaymentStatus.Refunded:
 
-                        order.OrderStatus = OrderStatus.Cancelled;
+                            order.OrderStatus = OrderStatus.Cancelled;
+                            errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
 
-                        break;
+                            break;
 
-                    case PaymentStatus.Pending:
-                    case PaymentStatus.Voided:
+                        case PaymentStatus.Pending:
+                        case PaymentStatus.Voided:
 
-                        if (_orderProcessingService.CanVoidOffline(order))
-                            await _orderProcessingService.VoidOfflineAsync(order);
+                            if (_orderProcessingService.CanVoidOffline(order))
+                                await _orderProcessingService.VoidOfflineAsync(order);
 
-                        await MoveShoppingCartItemsToOrderItemsAsync(order);
-                        //order.OrderStatus = OrderStatus.Cancelled;
+                            await MoveShoppingCartItemsToOrderItemsAsync(order);
+                            order.OrderStatus = OrderStatus.Cancelled;
 
-                        // errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
+                             errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
 
-                        break;
-                }
+                            break;
 
-                await _orderService.UpdateOrderAsync(order);
+                    }
 
-                //sadece 1 olan işlemlerde ürünü kargoya vermelidir, 0 olan işlemler için bilgilendirme beklemelidir.
-                switch (result.FraudStatus)
-                {
-                    case -1: //fraud risk skoru yüksek ise ödeme işlemi reddedilir ve -1 döner. 
-                        errorStr.Add(
-                            $"Iyzico: İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş # {order.Id}.");
-                        break;
-                    case 0: //ödeme işlemi daha sonradan incelenip karar verilecekse 0 döner.
-                        errorStr.Add(
-                            $"Iyzico: İşleme ait Fraud riski bulunduğu için ödeme incelemeye alınmıştır. Sipariş # {order.Id}.");
-                        break;
-                }
 
-                if (errorStr.Any())
-                {
-                    errorStr.ForEach((err) =>
+                    await _orderService.UpdateOrderAsync(order);
+
+                    //sadece 1 olan işlemlerde ürünü kargoya vermelidir, 0 olan işlemler için bilgilendirme beklemelidir.
+                    switch (result.FraudStatus)
                     {
-                        //log
-                        _logger.ErrorAsync(err);
-                        //order note
-                        _orderService.InsertOrderNoteAsync(new OrderNote
-                        {
-                            OrderId = order.Id, Note = err, DisplayToCustomer = true, CreatedOnUtc = DateTime.UtcNow
-                        });
-                    });
+                        case -1: //fraud risk skoru yüksek ise ödeme işlemi reddedilir ve -1 döner. 
+                            errorStr.Add(
+                                $"Iyzico: İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş # {order.Id}.");
+                            break;
+                        case 0: //ödeme işlemi daha sonradan incelenip karar verilecekse 0 döner.
+                            errorStr.Add(
+                                $"Iyzico: İşleme ait Fraud riski bulunduğu için ödeme incelemeye alınmıştır. Sipariş # {order.Id}.");
+                            break;
+                    }
 
-                    _httpContextAccessor.HttpContext.Response.Cookies.Append("iyzicoMessage",
-                        string.Join("<br>", errorStr));
+                    if (errorStr.Any())
+                    {
+                        errorStr.ForEach((err) =>
+                        {
+                            //log
+                            _logger.ErrorAsync(err);
+                            //order note
+                            _orderService.InsertOrderNoteAsync(new OrderNote
+                            {
+                                OrderId = order.Id,
+                                Note = err,
+                                DisplayToCustomer = true,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                        });
+
+                        _httpContextAccessor.HttpContext.Response.Cookies.Append("iyzicoMessage",
+                            string.Join("<br>", errorStr));
+
+                        return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+                    }
+                    else
+                    {
+                        return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+
+                    }
+
+                    
+                    //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
                 }
 
-                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
-                //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+
             }
-        }
             else
             {
                 await _logger.ErrorAsync($"Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
+                var modelD = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(CheckoutProgressStep.Confirm);
+                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
 
-                return RedirectToAction("History", "Order");
             }
 
-            return Redirect("https://localhost:59857/en/onepagecheckout#opc-payment_info");
+            var model = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(CheckoutProgressStep.Confirm);
+            return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+            //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id }); 
         }
 
 
@@ -362,9 +353,9 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                     model.PaymentResult = false;
 
                 //  var orderTotalHtml = await RenderViewComponentToStringAsync("PaymentIyzico",  model );
-                View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
                 
-                    return Redirect("https://localhost:59857/en/onepagecheckout#opc-payment_info");
+                
+                    return View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
                 //return View("~/Plugins/Payments.Iyzico/Views/PaymentInfo.cshtml", model);
 
 
