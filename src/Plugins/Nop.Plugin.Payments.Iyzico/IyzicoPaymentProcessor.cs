@@ -30,6 +30,8 @@ using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Nop.Core.Domain.Logging;
+using StackExchange.Profiling.Internal;
 
 namespace Nop.Plugin.Payments.Iyzico
 {
@@ -248,23 +250,43 @@ namespace Nop.Plugin.Payments.Iyzico
                 AllowStoringCreditCardNumber = _iyzicoPaymentSettings.IsCardStorage
             };
 
-            
-                
+            string paymentInfo = "";
+            try
+            {
+                paymentInfo = payment.ToJson();
+            }
+            catch
+            {
+
+            }
+
             if (payment.Status == "failure")
             {
+                _logger.ErrorAsync(payment.ErrorMessage+"/"+payment.ErrorCode+"/"+payment.ErrorGroup+"/"+paymentInfo);
                 request.CallbackUrl =
                     $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
                 var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-                if (payment3d.Status == "failure")
+                paymentInfo = "";
+                try
+                {
+                    paymentInfo = payment3d.ToJson();
+                }
+                catch
                 {
 
+                }
+                if (payment3d.Status == "failure")
+                {
+                    _logger.ErrorAsync(payment3d.ErrorMessage + "/" + payment3d.ErrorCode + "/" + payment3d.ErrorGroup + "/" + paymentInfo);
 
                     result.AddError(payment3d.ErrorMessage);
                     result.NewPaymentStatus = PaymentStatus.Refunded;
                 }
                 else
                 {
+                   
+                    _logger.InsertLogAsync(LogLevel.Information,"iyzicoPaymentLog",payment3d.Status + "/" + paymentInfo);
                     RetrievePaymentRequest request1 = new()
                     {
                         PaymentConversationId = payment3d.ConversationId
@@ -294,6 +316,7 @@ namespace Nop.Plugin.Payments.Iyzico
                 result.NewPaymentStatus = PaymentStatus.Authorized;
                 result.AuthorizationTransactionResult = "standard";
 
+                _logger.InsertLogAsync(LogLevel.Information, "iyzicoPaymentLog", payment.Status + "/" + paymentInfo);
 
                 string paymentPage;
 

@@ -180,16 +180,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
                     }
 
-                    
 
-                   
-
-                  
-                  
-
-
-
-                   
 
                     switch (order.PaymentStatus)
                     {
