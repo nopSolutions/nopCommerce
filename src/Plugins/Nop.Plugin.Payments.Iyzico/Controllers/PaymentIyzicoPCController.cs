@@ -156,6 +156,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 {
                     List<string> errorStr = new();
                     PaymentResource result=null;
+
                     if (order.AuthorizationTransactionResult == "3d")
                     {
                         var request = new CreateThreedsPaymentRequest();
@@ -329,12 +330,12 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             else
             {
                 await _logger.ErrorAsync($"Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
-                var modelD = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(CheckoutProgressStep.Confirm);
+               
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
 
             }
 
-            var model = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(CheckoutProgressStep.Confirm);
+            
             return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id }); 
         }

@@ -12,7 +12,6 @@
 @inject Nop.Core.IWebHelper webHelper
 @inject ICurrencyService currencyService
 
-
 @if (Model.PaymentResult == false)
 {
     @Html.Raw(Model.Html)
@@ -67,18 +66,10 @@ else
         </tr>
     </table>
 }
+<script type="text/javascript">
 
-<script>
-    $(function () {
-        @*$("#@Html.IdFor(model => model.CardNumber)").change(function () {
-            console.log("Card number changed.");
-            debugger;
-            console.log(Stripe.card.validateCardNumber($(this).val()));
-        })*@
-    });
-  
-    $(function () {
-     
+    $(function ()
+    {     
         $("#CreditCardType").change(function () {
             console.log("Card type Changed");
             $("#CreditCardType").find("data").html = this.value;
@@ -118,8 +109,7 @@ else
                             console.log("complate");
 
                         }
-                    });
-               // console.log(formData);
+                    });          
                 var result="";
               
             }

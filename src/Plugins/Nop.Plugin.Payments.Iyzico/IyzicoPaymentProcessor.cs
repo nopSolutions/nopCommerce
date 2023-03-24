@@ -236,14 +236,13 @@ namespace Nop.Plugin.Payments.Iyzico
             // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
           
-            var ThdRequest = request;
+             ;
 
-            ThdRequest.CallbackUrl =
-                $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+           
             
 
-              var payment3d = ThreedsInitialize.Create(ThdRequest, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-
+              
+            var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
             var result = new ProcessPaymentResult
             {
                 AllowStoringCreditCardNumber = _iyzicoPaymentSettings.IsCardStorage
@@ -251,75 +250,59 @@ namespace Nop.Plugin.Payments.Iyzico
 
             
                 
-            if (payment3d.Status == "failure")
+            if (payment.Status == "failure")
             {
-                var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                request.CallbackUrl =
+                    $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-                if (payment.Status == "failure")
+                if (payment3d.Status == "failure")
                 {
 
 
-                    result.AddError(payment.ErrorMessage);
+                    result.AddError(payment3d.ErrorMessage);
                     result.NewPaymentStatus = PaymentStatus.Refunded;
                 }
                 else
                 {
+                    RetrievePaymentRequest request1 = new()
+                    {
+                        PaymentConversationId = payment3d.ConversationId
+                    };
 
-                    result.CaptureTransactionId = payment.ConversationId;
-                    result.AuthorizationTransactionId = payment.PaymentId;
-                    result.CaptureTransactionResult = payment.Status;
-                    result.NewPaymentStatus = PaymentStatus.Authorized;
-                    result.AuthorizationTransactionResult = "standard";
+                    var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+                    result.CaptureTransactionId = payment3d.ConversationId;
+                    result.AuthorizationTransactionId = paymentRes.PaymentId;
+                    result.CaptureTransactionResult = payment3d.Status;
+                    result.NewPaymentStatus = PaymentStatus.Pending;
                    
-
-
-
-
-
-
-
-
-                    //_httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
-
-                    // _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
-
                     string paymentPage;
+                    paymentPage = payment3d.HtmlContent;
+                    _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
 
-                    //if (_iyzicoPaymentSettings.UseToPaymentPopup)
-                    //{
-                    //    paymentPage = payment.CheckoutFormContent;
-                    //}
-                    //else
-                    //{
-                    //    paymentPage = payment.PaymentPageUrl;
-                    //}
-                    paymentPage = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                    result.AuthorizationTransactionResult = "3d";
 
-                    _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
 
                 }
             }
             else
             {
-                Payment resultP = null;
-                RetrievePaymentRequest request1 = new()
-                {
-                    PaymentConversationId = payment3d.ConversationId
-                };
-
-                Payment payment = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
-
-                result.CaptureTransactionId = payment3d.ConversationId;
+                result.CaptureTransactionId = payment.ConversationId;
                 result.AuthorizationTransactionId = payment.PaymentId;
-                result.CaptureTransactionResult = payment3d.Status;
-                result.NewPaymentStatus = PaymentStatus.Pending;
-              //  _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                result.CaptureTransactionResult = payment.Status;
+                result.NewPaymentStatus = PaymentStatus.Authorized;
+                result.AuthorizationTransactionResult = "standard";
+
+
                 string paymentPage;
-                paymentPage = payment3d.HtmlContent;
-                _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
-                result.AuthorizationTransactionResult = "3d";
-                   
-               
+
+                paymentPage = $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+
+                _httpContextAccessor.HttpContext.Session.SetString("PaymentPage", paymentPage);
+
+
+
 
             }
 
@@ -343,6 +326,7 @@ namespace Nop.Plugin.Payments.Iyzico
             //define function to create item
             BasketItem createItem(decimal price, string productId, string productName, string categoryName, BasketItemType itemType = BasketItemType.PHYSICAL)
             {
+               
                 return new BasketItem
                 {
                     Id = productId,
@@ -359,10 +343,14 @@ namespace Nop.Plugin.Payments.Iyzico
                 var price = IyzicoHelper.ToDecimalInvariant(_shoppingCartService.GetUnitPriceAsync(sci, true).Result.unitPrice);
                 var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPriceAsync(product, price, true, customer);
                 var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartUnitPriceWithDiscountBase.Result.price, _workContext.GetWorkingCurrencyAsync().Result);
+                var productName = product.Name;
 
+                if (!product.Sku.IsNullOrEmpty())
+                    productName = productName + "(" + product.Sku + ")";
+                
                 return createItem(shoppingCartUnitPriceWithDiscount.Result * sci.Quantity,
                     product.Id.ToString(),
-                    product.Name,
+                    productName,
                     _categoryService.GetProductCategoriesByProductIdAsync(sci.ProductId).Result.Aggregate(",", (all, pc) =>
                     {
                         var res = _categoryService.GetCategoryByIdAsync(pc.CategoryId).Result.Name;
@@ -387,7 +375,7 @@ namespace Nop.Plugin.Payments.Iyzico
             
             if (string.IsNullOrEmpty(paymentPage) == false)
             {
-                //_httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
+                _httpContextAccessor.HttpContext.Session.Remove("PaymentPage");
                 _httpContextAccessor.HttpContext.Response.Redirect(paymentPage);
                 //_httpContextAccessor.HttpContext.Response.Redirect($"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={postProcessPaymentRequest.Order.OrderGuid}");
                 await Task.CompletedTask;
