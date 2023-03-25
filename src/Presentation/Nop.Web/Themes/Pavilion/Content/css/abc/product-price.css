@@ -8,6 +8,7 @@
 
 .overview .prices .product-price {
     color: #B70000;
+    display: inline-block;
 }
 
 .you-save-amt {
