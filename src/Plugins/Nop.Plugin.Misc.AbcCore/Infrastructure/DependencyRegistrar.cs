@@ -60,6 +60,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<ICustomManufacturerService, CustomManufacturerService>();
             services.AddScoped<ICustomNopDataProvider, CustomMsSqlDataProvider>();
             services.AddScoped<ArchiveService>();
+            services.AddScoped<ICheckoutModelFactory, AbcCheckoutModelFactory>();
         }
     }
 }
