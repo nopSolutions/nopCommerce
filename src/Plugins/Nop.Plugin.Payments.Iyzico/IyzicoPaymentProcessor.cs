@@ -260,53 +260,59 @@ namespace Nop.Plugin.Payments.Iyzico
 
             }
 
+           var errorCodeList = new List<string> { "10051", "10041", "10043", "10054", "10084", "10034", "10093", "10206", "10207", "10208", "10209", "10210", "10211", "10213", "10214", "10215", "10216", "10219", "10222","10223","10225","10226","10227","10229","10232" };
+
             if (payment.Status == "failure")
             {
-                _logger.ErrorAsync(payment.ErrorMessage+"/"+payment.ErrorCode+"/"+payment.ErrorGroup+"/"+paymentInfo);
-                request.CallbackUrl =
-                    $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
-                var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                if (!errorCodeList.Contains(payment.ErrorCode))
+                {
+                    _logger.ErrorAsync(payment.ErrorMessage + "/" + payment.ErrorCode + "/" + payment.ErrorGroup + "/" + paymentInfo);
+                    request.CallbackUrl =
+                        $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
+                    var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-                paymentInfo = "";
-                try
-                {
-                    paymentInfo = payment3d.ToJson();
-                }
-                catch
-                {
-
-                }
-                if (payment3d.Status == "failure")
-                {
-                    _logger.ErrorAsync(payment3d.ErrorMessage + "/" + payment3d.ErrorCode + "/" + payment3d.ErrorGroup + "/" + paymentInfo);
-
-                    result.AddError(payment3d.ErrorMessage);
-                    result.NewPaymentStatus = PaymentStatus.Refunded;
-                }
-                else
-                {
-                   
-                    _logger.InsertLogAsync(LogLevel.Information,"iyzicoPaymentLog",payment3d.Status + "/" + paymentInfo);
-                    RetrievePaymentRequest request1 = new()
+                    paymentInfo = "";
+                    try
                     {
-                        PaymentConversationId = payment3d.ConversationId
-                    };
+                        paymentInfo = payment3d.ToJson();
+                    }
+                    catch
+                    {
 
-                    var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                    }
+                    if (payment3d.Status == "failure")
+                    {
+                        _logger.ErrorAsync(payment3d.ErrorMessage + "/" + payment3d.ErrorCode + "/" + payment3d.ErrorGroup + "/" + paymentInfo);
 
-                    result.CaptureTransactionId = payment3d.ConversationId;
-                    result.AuthorizationTransactionId = paymentRes.PaymentId;
-                    result.CaptureTransactionResult = payment3d.Status;
-                    result.NewPaymentStatus = PaymentStatus.Pending;
-                   
-                    string paymentPage;
-                    paymentPage = payment3d.HtmlContent;
-                    _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
+                        result.AddError(payment3d.ErrorMessage);
+                        result.NewPaymentStatus = PaymentStatus.Refunded;
+                    }
+                    else
+                    {
 
-                    result.AuthorizationTransactionResult = "3d";
+                        _logger.InsertLogAsync(LogLevel.Information, "iyzicoPaymentLog", payment3d.Status + "/" + paymentInfo);
+                        RetrievePaymentRequest request1 = new()
+                        {
+                            PaymentConversationId = payment3d.ConversationId
+                        };
+
+                        var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
+                        result.CaptureTransactionId = payment3d.ConversationId;
+                        result.AuthorizationTransactionId = paymentRes.PaymentId;
+                        result.CaptureTransactionResult = payment3d.Status;
+                        result.NewPaymentStatus = PaymentStatus.Pending;
+
+                        string paymentPage;
+                        paymentPage = payment3d.HtmlContent;
+                        _httpContextAccessor.HttpContext.Session.SetString("3dsPage", paymentPage);
+
+                        result.AuthorizationTransactionResult = "3d";
 
 
+                    }
                 }
+                result.AddError(payment.ErrorMessage);
             }
             else
             {
@@ -315,6 +321,7 @@ namespace Nop.Plugin.Payments.Iyzico
                 result.CaptureTransactionResult = payment.Status;
                 result.NewPaymentStatus = PaymentStatus.Authorized;
                 result.AuthorizationTransactionResult = "standard";
+              
 
                 _logger.InsertLogAsync(LogLevel.Information, "iyzicoPaymentLog", payment.Status + "/" + paymentInfo);
 
@@ -471,9 +478,120 @@ namespace Nop.Plugin.Payments.Iyzico
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
+        public async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
         {
-            return Task.FromResult(new RefundPaymentResult { Errors = new[] { "Refund method not supported" } });
+            var result = new RefundPaymentResult();
+            if (!refundPaymentRequest.IsPartialRefund)
+            {
+                var request = new CreateRefundRequest();
+                request.ConversationId = refundPaymentRequest.Order.Id.ToString();
+                request.Locale = Locale.EN.ToString();
+                request.PaymentTransactionId = refundPaymentRequest.Order.AuthorizationTransactionId;
+                request.Price = IyzicoHelper.ToDecimalStringInvariant(refundPaymentRequest.AmountToRefund);
+                request.Ip = refundPaymentRequest.Order.CustomerIp;
+                request.Currency = refundPaymentRequest.Order.CustomerCurrencyCode;
+
+                RetrievePaymentRequest request1 = new()
+                {
+                    PaymentConversationId = refundPaymentRequest.Order.CaptureTransactionId
+                };
+                try
+                {
+
+                    var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                if (paymentRes.Status=="success")
+                {
+                    if (!paymentRes.PaymentItems.IsNullOrEmpty())
+                    {
+                        request.PaymentTransactionId = paymentRes.PaymentItems.First().PaymentTransactionId;
+                    }
+                }
+                }
+                catch
+                {
+                }
+                var refund = Refund.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                if (refund.Status == "success")
+                {
+                    result.NewPaymentStatus = PaymentStatus.Refunded;
+                    try
+                    {
+
+                    List<string> PaymentInformation = new()
+                    {
+                        $"Iyzico Refund Id :  {refund.PaymentId}",
+                        $"Transaction Id :  {refund.PaymentTransactionId}",
+                        $"Refund Amount :  {refund.Price:C2}",
+                        
+                    };
+
+                    //order note
+                    await _orderService.InsertOrderNoteAsync(new OrderNote
+                    {
+                        OrderId = refundPaymentRequest.Order.Id,
+                        Note = string.Join(" | ", PaymentInformation),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+
+                    }
+                    catch 
+                    {
+                       
+                    }
+                }
+                else
+                {
+                    result.Errors.Add(refund.ErrorMessage);
+                }
+            }
+            else
+            {
+                var request = new CreateAmountBasedRefundRequest();
+                request.ConversationId = refundPaymentRequest.Order.Id.ToString();
+                request.Locale = Locale.EN.ToString();
+                request.PaymentId = refundPaymentRequest.Order.AuthorizationTransactionId;
+                request.Price = IyzicoHelper.ToDecimalStringInvariant(refundPaymentRequest.AmountToRefund);
+                request.Ip = refundPaymentRequest.Order.CustomerIp;
+               
+
+                var refund = Refund.CreateAmountBasedRefundRequest(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                if (refund.Status=="success")
+                {
+                    result.NewPaymentStatus = PaymentStatus.PartiallyRefunded;
+                    try
+                    {
+
+                        List<string> PaymentInformation = new()
+                        {
+                            $"Iyzico Refund Id :  {refund.PaymentId}",
+                            $"Transaction Id :  {refund.PaymentTransactionId}",
+                            $"Refund Amount :  {refund.Price:C2}",
+
+                        };
+
+                        //order note
+                        await _orderService.InsertOrderNoteAsync(new OrderNote
+                        {
+                            OrderId = refundPaymentRequest.Order.Id,
+                            Note = string.Join(" | ", PaymentInformation),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                else
+                {
+                    result.Errors.Add(refund.ErrorMessage);
+                }
+            }
+
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -484,9 +602,77 @@ namespace Nop.Plugin.Payments.Iyzico
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
+        public async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
         {
-            return Task.FromResult(new VoidPaymentResult { Errors = new[] { "Void method not supported" } });
+            var result = new VoidPaymentResult();
+           
+                var request = new CreateRefundRequest();
+                request.ConversationId = voidPaymentRequest.Order.Id.ToString();
+                request.Locale = Locale.EN.ToString();
+                request.PaymentTransactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
+                request.Price = IyzicoHelper.ToDecimalStringInvariant(voidPaymentRequest.Order.OrderTotal);
+                request.Ip = voidPaymentRequest.Order.CustomerIp;
+                request.Currency = voidPaymentRequest.Order.CustomerCurrencyCode;
+
+                RetrievePaymentRequest request1 = new()
+                {
+                    PaymentConversationId = voidPaymentRequest.Order.CaptureTransactionId
+                };
+                try
+                {
+
+                    var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                    if (paymentRes.Status == "success")
+                    {
+                        if (!paymentRes.PaymentItems.IsNullOrEmpty())
+                        {
+                            request.PaymentTransactionId = paymentRes.PaymentItems.First().PaymentTransactionId;
+                        }
+                    }
+                }
+                catch
+                {
+                }
+                    
+                var refund = Refund.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+                if (refund.Status == "success")
+                {
+                    result.NewPaymentStatus = PaymentStatus.Refunded;
+                    try
+                    {
+
+                        List<string> PaymentInformation = new()
+                        {
+                            $"Iyzico Refund Id :  {refund.PaymentId}",
+                            $"Transaction Id :  {refund.PaymentTransactionId}",
+                            $"Refund Amount :  {refund.Price:C2}",
+
+                        };
+
+                        //order note
+                        await _orderService.InsertOrderNoteAsync(new OrderNote
+                        {
+                            OrderId = voidPaymentRequest.Order.Id,
+                            Note = string.Join(" | ", PaymentInformation),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                else
+                {
+                    result.Errors.Add(refund.ErrorMessage);
+                }
+            
+
+
+
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -699,17 +885,17 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund => false;
+        public bool SupportPartiallyRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund => false;
+        public bool SupportRefund => true;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid => false;
+        public bool SupportVoid => true;
 
         /// <summary>
         /// Gets a recurring payment type of payment method

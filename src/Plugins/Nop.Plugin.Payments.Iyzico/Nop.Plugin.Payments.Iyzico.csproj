@@ -15,12 +15,12 @@
     You need to set this parameter to true if your plugin has a nuget package 
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageIcon>logo.png</PackageIcon>
 
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Content\css\iyzicoAdminStyle.min.css" />
-    <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
@@ -31,7 +31,7 @@
     <Content Include="Content\css\iyzicoAdminStyle.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="logo.jpg">
+    <Content Include="logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
@@ -64,6 +64,13 @@
     <PackageReference Include="Iyzipay" Version="2.1.55">
       <GeneratePathProperty>True</GeneratePathProperty>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <!-- This target execute after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
