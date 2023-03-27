@@ -738,7 +738,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
             CreateMap<AddressAttributeValueModel, AddressAttributeValue>();
 
-            CreateMap<AddressSettings, AddressSettingsModel>();
+            CreateMap<AddressSettings, AddressSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<AddressSettingsModel, AddressSettings>()
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
 
@@ -766,7 +767,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore());
             CreateMap<CustomerRoleModel, CustomerRole>();
 
-            CreateMap<CustomerSettings, CustomerSettingsModel>();
+            CreateMap<CustomerSettings, CustomerSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<CustomerSettingsModel, CustomerSettings>()
                 .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
                 .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())
