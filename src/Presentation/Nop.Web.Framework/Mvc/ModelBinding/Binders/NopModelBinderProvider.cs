@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     /// <summary>
     /// Represents a model binder provider for specific properties
     /// </summary>
-    public class CustomPropertiesModelBinderProvider : IModelBinderProvider
+    public class NopModelBinderProvider : IModelBinderProvider
     {
         IModelBinder IModelBinderProvider.GetBinder(ModelBinderProviderContext context)
         {
