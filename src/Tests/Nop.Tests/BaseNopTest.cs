@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using System.Resources;
 using FluentAssertions;
 using FluentMigrator;
@@ -108,8 +109,11 @@ namespace Nop.Tests
 
             var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
 
+            var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
+            var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
+
             _serviceProvider.GetService<IInstallationService>()
-                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, regionInfo, cultureInfo).Wait();
             _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
 
             var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
