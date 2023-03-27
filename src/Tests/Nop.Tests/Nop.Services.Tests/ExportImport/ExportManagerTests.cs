@@ -117,25 +117,44 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                     continue;
 
                 var objectPropertyValue = objectProperty.GetValue(actual);
+                var propertyValue = property.PropertyValue;
 
-                if (objectProperty.PropertyType == typeof(Guid))
-                    objectPropertyValue = objectPropertyValue.ToString();
+                if (propertyValue is XLCellValue { IsBlank: true }) 
+                    propertyValue = null;
 
-                if (objectProperty.PropertyType == typeof(string))
-                    objectPropertyValue = (property.PropertyValue?.ToString() == string.Empty && objectPropertyValue == null) ? string.Empty : objectPropertyValue;
+                switch (objectPropertyValue)
+                {
+                    case int:
+                        propertyValue = property.IntValue;
+                        break;
+                    case Guid:
+                        propertyValue = property.GuidValue;
+                        break;
+                    case string:
+                        propertyValue = property.StringValue;
+                        break;
+                    case DateTime time: ;
+                        objectPropertyValue = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
+                        if (DateTime.TryParse(property.StringValue, out var date))
+                            propertyValue = date;
+                        else
+                            propertyValue = null;
+                        break;
+                    case bool:
+                        propertyValue = property.BooleanValue;
+                        break;
+                    case decimal:
+                        propertyValue = property.DecimalValue;
+                        break;
+                }   
 
                 if (objectProperty.PropertyType.IsEnum)
+                {
                     objectPropertyValue = (int)objectPropertyValue;
+                    propertyValue = property.IntValue;
+                }
 
-                //https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Extensions/ObjectExtensions.cs#L61
-                if (objectProperty.PropertyType == typeof(DateTime))
-                    objectPropertyValue = DateTime.FromOADate(double.Parse(((DateTime)objectPropertyValue).ToOADate().ToString("G15", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture));
-
-                if (objectProperty.PropertyType == typeof(DateTime?))
-                    objectPropertyValue = objectPropertyValue != null ? DateTime.FromOADate(double.Parse(((DateTime?)objectPropertyValue)?.ToOADate().ToString("G15", CultureInfo.InvariantCulture))) : null;
-
-                //https://github.com/ClosedXML/ClosedXML/issues/544
-                property.PropertyValue.Should().Be(objectPropertyValue ?? "", $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
+                propertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
             }
 
             return actual;
@@ -261,14 +280,14 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             PropertiesShouldEqual(testBillingAddress, manager, replacePairs, "CreatedOnUtc", "BillingCountry");
 
             var country = await _countryService.GetCountryByAddressAsync(testBillingAddress);
-            manager.GetDefaultProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.Should().Be(country.Name);
+            manager.GetDefaultProperties.First(p => p.PropertyName == "BillingCountry").StringValue.Should().Be(country.Name);
 
             const string shippingPattern = "Shipping";
             replacePairs = addressFields.ToDictionary(p => shippingPattern + p, p => p);
             var testShippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
             PropertiesShouldEqual(testShippingAddress, manager, replacePairs, "CreatedOnUtc", "ShippingCountry");
             country = await _countryService.GetCountryByAddressAsync(testShippingAddress);
-            manager.GetDefaultProperties.First(p => p.PropertyName == "ShippingCountry").PropertyValue.Should().Be(country.Name);
+            manager.GetDefaultProperties.First(p => p.PropertyName == "ShippingCountry").StringValue.Should().Be(country.Name);
         }
 
         [Test]
