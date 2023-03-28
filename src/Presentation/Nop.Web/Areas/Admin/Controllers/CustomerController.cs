@@ -58,6 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IForumService _forumService;
         protected readonly IGdprService _gdprService;
         protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IImportManager _importManager;
         protected readonly ILocalizationService _localizationService;
         protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         protected readonly INotificationService _notificationService;
@@ -95,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IForumService forumService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
+            IImportManager importManager,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INotificationService notificationService,
@@ -128,6 +130,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _forumService = forumService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
+            _importManager = importManager;
             _localizationService = localizationService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _notificationService = notificationService;
@@ -1714,6 +1717,39 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ImportExcel(IFormFile importexcelfile)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            if (await _workContext.GetCurrentVendorAsync() != null)
+                //a vendor can not import customer
+                return AccessDeniedView();
+
+            try
+            {
+                if ((importexcelfile?.Length ?? 0) > 0)
+                    await _importManager.ImportCustomersFromXlsxAsync(importexcelfile.OpenReadStream());
+                else
+                {
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
+
+                    return RedirectToAction("List");
+                }
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Imported"));
+
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+
                 return RedirectToAction("List");
             }
         }

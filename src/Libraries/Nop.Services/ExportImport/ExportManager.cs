@@ -15,6 +15,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -52,15 +53,16 @@ namespace Nop.Services.ExportImport
 
         protected readonly AddressSettings _addressSettings;
         protected readonly CatalogSettings _catalogSettings;
+        protected readonly SecuritySettings _securitySettings;
+        protected readonly ICustomerActivityService _customerActivityService;
         protected readonly CustomerSettings _customerSettings;
         protected readonly DateTimeSettings _dateTimeSettings;
         protected readonly ForumSettings _forumSettings;
         protected readonly IAddressService _addressService;
-        protected readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
         protected readonly ICategoryService _categoryService;
         protected readonly ICountryService _countryService;
         protected readonly ICurrencyService _currencyService;
-        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
         protected readonly ICustomerService _customerService;
         protected readonly IDateRangeService _dateRangeService;
         protected readonly IDateTimeHelper _dateTimeHelper;
@@ -99,6 +101,7 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
+            SecuritySettings securitySettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
@@ -142,6 +145,7 @@ namespace Nop.Services.ExportImport
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
+            _securitySettings = securitySettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
@@ -1994,7 +1998,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("Phone", (p, l) => p.Phone, !_customerSettings.PhoneEnabled),
                 new PropertyByName<Customer, Language>("Fax", (p, l) => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer, Language>("VatNumber", (p, l) => p.VatNumber),
-                new PropertyByName<Customer, Language>("VatNumberStatusId", (p, l) => p.VatNumberStatusId),
                 new PropertyByName<Customer, Language>("VatNumberStatus", (p, l) => p.VatNumberStatusId)
                 {
                     DropDownElements = await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false)
@@ -2003,9 +2006,36 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("AvatarPictureId", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
                 new PropertyByName<Customer, Language>("ForumPostCount", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
                 new PropertyByName<Customer, Language>("Signature", async (p, l) => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
-                new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p))
-            }, _catalogSettings);
+                new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p)),
+                new PropertyByName<Customer, Language>("CustomCustomerAttributesXml", (p, l) => p.CustomCustomerAttributesXML),
+                new PropertyByName<Customer, Language>("Password", async (p, l) =>
+                {
+                    if (!_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword)
+                        return string.Empty;
 
+                    var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if (password.PasswordFormat == PasswordFormat.Hashed)
+                        return password.Password;
+
+                    return string.Empty;
+                },  !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
+                new PropertyByName<Customer, Language>("PasswordSalt", async (p, l) =>
+                {
+                    if (!_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword)
+                        return string.Empty;
+
+                    var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if (password.PasswordFormat == PasswordFormat.Hashed)
+                        return password.PasswordSalt;
+
+                    return string.Empty;
+
+                }, !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
+
+            }, _catalogSettings);
+            
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportCustomers",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));

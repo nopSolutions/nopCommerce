@@ -41,13 +41,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 settingService.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
             }
 
+            if (!settingService.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
+            {
+                securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword = true;
+                settingService.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
+            }
+
             var addressSettings = settingService.LoadSetting<AddressSettings>();
             if (!settingService.SettingExists(addressSettings, settings => settings.DefaultCountryId))
             {
                 addressSettings.DefaultCountryId = null;
                 settingService.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
             }
-
         }
 
         public override void Down()
