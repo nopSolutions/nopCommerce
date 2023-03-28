@@ -2007,13 +2007,16 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("ForumPostCount", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
                 new PropertyByName<Customer, Language>("Signature", async (p, l) => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
                 new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p)),
-                new PropertyByName<Customer, Language>("CustomCustomerAttributesXml", (p, l) => p.CustomCustomerAttributesXML),
+                new PropertyByName<Customer, Language>("CustomCustomerAttributesXML", (p, l) => p.CustomCustomerAttributesXML),
                 new PropertyByName<Customer, Language>("Password", async (p, l) =>
                 {
                     if (!_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword)
                         return string.Empty;
 
                     var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if(password == null) 
+                        return string.Empty;
 
                     if (password.PasswordFormat == PasswordFormat.Hashed)
                         return password.Password;
@@ -2026,6 +2029,9 @@ namespace Nop.Services.ExportImport
                         return string.Empty;
 
                     var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if(password == null)
+                        return string.Empty;
 
                     if (password.PasswordFormat == PasswordFormat.Hashed)
                         return password.PasswordSalt;

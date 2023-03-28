@@ -33,6 +33,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
     {
         #region Fields
 
+        private CustomerSettings _customerSettings;
         private CatalogSettings _catalogSettings;
         private IAddressService _addressService;
         private ICategoryService _categoryService;
@@ -56,6 +57,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
         [OneTimeSetUp]
         public async Task SetUp()
         {
+            _customerSettings = GetService<CustomerSettings>();
             _catalogSettings = GetService<CatalogSettings>();
             _addressService = GetService<IAddressService>();
             _categoryService = GetService<ICategoryService>();
@@ -319,11 +321,6 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
         [Test]
         public async Task CanExportCustomersToXlsx()
         {
-            var replacePairs = new Dictionary<string, string>
-            {
-                { "VatNumberStatus", "VatNumberStatusId" }
-            };
-
             var customers = await _customerService.GetAllCustomersAsync();
 
             var excelData = await _exportManager.ExportCustomersToXlsxAsync(customers);
@@ -339,19 +336,58 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             manager.SetSelectList("VatNumberStatus", await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false));
 
             var customer = customers.First();
-
-            var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "CustomerRoles", "ShoppingCartItems",
+            
+            var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "ShoppingCartItems",
                 "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
                 "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId",
                 "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
-                "DateOfBirth", "StreetAddress", "StreetAddress2", "ZipPostalCode", "City", "County", "CountryId",
-                "StateProvinceId", "Phone", "Fax", "VatNumberStatusId", "TimeZoneId", "CustomCustomerAttributesXML",
+                "DateOfBirth", "CountryId",
+                "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
                 "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId" };
 
+            if (!_customerSettings.FirstNameEnabled) 
+                ignore.Add("FirstName");
+            
+            if (!_customerSettings.LastNameEnabled)
+                ignore.Add("LastName");
+
+            if (!_customerSettings.GenderEnabled)
+                ignore.Add("Gender");
+
+            if (!_customerSettings.CompanyEnabled)
+                ignore.Add("Company");
+
+            if (!_customerSettings.StreetAddressEnabled)
+                ignore.Add("StreetAddress");
+
+            if (!_customerSettings.StreetAddress2Enabled)
+                ignore.Add("StreetAddress2");
+
+            if (!_customerSettings.ZipPostalCodeEnabled)
+                ignore.Add("ZipPostalCode");
+
+            if (!_customerSettings.CityEnabled)
+                ignore.Add("City");
+
+            if (!_customerSettings.CountyEnabled)
+                ignore.Add("County");
+
+            if (!_customerSettings.CountryEnabled)
+                ignore.Add("Country");
+
+            if(!_customerSettings.StateProvinceEnabled)
+                ignore.Add("StateProvince");
+
+            if(!_customerSettings.PhoneEnabled)
+                ignore.Add("Phone");
+
+            if(!_customerSettings.FaxEnabled)
+                ignore.Add("Fax");
+
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
-            PropertiesShouldEqual(customer, manager, replacePairs);
+            PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
         }
 
         [Test]

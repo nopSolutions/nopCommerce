@@ -1861,7 +1861,7 @@ namespace Nop.Services.ExportImport
                         case "Signature":
                             signature = property.StringValue;
                             break;
-                        case "CustomCustomerAttributesXml":
+                        case "CustomCustomerAttributesXML":
                             customer.CustomCustomerAttributesXML = property.StringValue;
                             break;
                         case "Password":
