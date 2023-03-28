@@ -30,8 +30,10 @@ using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using StackExchange.Profiling.Internal;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Plugin.Payments.Iyzico
 {
@@ -66,9 +68,12 @@ namespace Nop.Plugin.Payments.Iyzico
         private readonly ILogger _logger;
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IOrderService _orderService;
+        private readonly ILanguageService _languageService;
 
         private readonly IPaymentIyzicoService _paymentIyzicoService;
         private readonly IyzicoPaymentSettings _iyzicoPaymentSettings;
+        private readonly ICountryService _countryService;
+
 
 
         #endregion
@@ -93,7 +98,14 @@ namespace Nop.Plugin.Payments.Iyzico
             ITaxService taxService,
             ICurrencyService currencyService,
             IWorkContext workContext,
-            ICategoryService categoryService, ILogger logger,IScheduleTaskService scheduleTaskService, IOrderService orderService)
+            ICategoryService categoryService,
+            ILogger logger,
+            IScheduleTaskService scheduleTaskService,
+            IOrderService orderService,
+            ILanguageService languageService,
+            ICountryService countryService
+            
+            )
         {
             _localizationService = localizationService;
             _paymentService = paymentService;
@@ -116,6 +128,10 @@ namespace Nop.Plugin.Payments.Iyzico
             _logger = logger;
             _scheduleTaskService = scheduleTaskService;
             _orderService = orderService;
+            _languageService = languageService;
+            _countryService = countryService;
+            
+
         }
 
         #endregion
@@ -149,6 +165,19 @@ namespace Nop.Plugin.Payments.Iyzico
                 throw new NopException("Customer shipping address not set!");
 
             var currency = await _workContext.GetWorkingCurrencyAsync();
+
+            var currenctLanguage = await _workContext.GetWorkingLanguageAsync();
+
+            Country country = null;
+            try
+            {
+                country= await _countryService.GetCountryByIdAsync(shippingAddress.CountryId.Value);
+            }
+            catch
+            {
+               
+            }
+             
 
             var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true);
             var shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, true);
@@ -195,6 +224,28 @@ namespace Nop.Plugin.Payments.Iyzico
                
             };
 
+            try
+            {
+           
+            if (currenctLanguage.LanguageCulture=="tr")
+            {
+                if (country!=null)
+                {
+                    if (country.Name.Contains("Turkey") || country.Name.Contains("Türkiye"))
+                    {
+                        request.Locale = Locale.TR.ToString();
+                    }
+                }
+            }
+
+          
+            }
+            catch
+            {
+               
+            }
+
+
             //Taksit seçeneği seçili ise Taksit özelliğini aktif et
             bool enableInstallment = false;
             if (_iyzicoPaymentSettings.InstallmentNumbers.IsNullOrEmpty())
@@ -207,8 +258,14 @@ namespace Nop.Plugin.Payments.Iyzico
                 {
                     if (processPaymentRequest.CreditCardType!="Amex")
                     {
-                        enableInstallment = true;
-                        request.Locale = Locale.TR.ToString();
+                        if (country != null)
+                        {
+                            if (country.Name.Contains("Turkey") || country.Name.Contains("Türkiye"))
+                            {
+                                enableInstallment = true;
+                                request.Locale = Locale.TR.ToString();
+                            }
+                        }
                     }
                   
                 }
@@ -234,16 +291,9 @@ namespace Nop.Plugin.Payments.Iyzico
                 request.Buyer.Email = shippingAddress.Email;
             }
 
-            //Checkout form için sonuç
-            // CheckoutFormInitialize payment = CheckoutFormInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
-          
-             ;
 
-           
-            
 
-              
             var payment = Payment.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
             var result = new ProcessPaymentResult
             {
@@ -266,7 +316,7 @@ namespace Nop.Plugin.Payments.Iyzico
             {
                 if (!errorCodeList.Contains(payment.ErrorCode))
                 {
-                    _logger.ErrorAsync(payment.ErrorMessage + "/" + payment.ErrorCode + "/" + payment.ErrorGroup + "/" + paymentInfo);
+                    await _logger.ErrorAsync(payment.ErrorMessage + "/" + payment.ErrorCode + "/" + payment.ErrorGroup + "/" + paymentInfo);
                     request.CallbackUrl =
                         $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
                     var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
@@ -282,7 +332,7 @@ namespace Nop.Plugin.Payments.Iyzico
                     }
                     if (payment3d.Status == "failure")
                     {
-                        _logger.ErrorAsync(payment3d.ErrorMessage + "/" + payment3d.ErrorCode + "/" + payment3d.ErrorGroup + "/" + paymentInfo);
+                        await _logger.ErrorAsync(payment3d.ErrorMessage + "/" + payment3d.ErrorCode + "/" + payment3d.ErrorGroup + "/" + paymentInfo);
 
                         result.AddError(payment3d.ErrorMessage);
                         result.NewPaymentStatus = PaymentStatus.Refunded;
@@ -290,13 +340,14 @@ namespace Nop.Plugin.Payments.Iyzico
                     else
                     {
 
-                        _logger.InsertLogAsync(LogLevel.Information, "iyzicoPaymentLog", payment3d.Status + "/" + paymentInfo);
+                        await _logger.InsertLogAsync(LogLevel.Information, "iyzicoPaymentLog", payment3d.Status + "/" + paymentInfo);
                         RetrievePaymentRequest request1 = new()
                         {
                             PaymentConversationId = payment3d.ConversationId
                         };
 
                         var paymentRes = Payment.Retrieve(request1, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
+
 
                         result.CaptureTransactionId = payment3d.ConversationId;
                         result.AuthorizationTransactionId = paymentRes.PaymentId;
@@ -309,10 +360,26 @@ namespace Nop.Plugin.Payments.Iyzico
 
                         result.AuthorizationTransactionResult = "3d";
 
+                        //sepeti temp olarak yükle
+                        try
+                        {
+
+                       
+                        var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
+                       
+                         _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
+                        }
+                        catch 
+                        {
+                           
+                        }
 
                     }
                 }
-                result.AddError(payment.ErrorMessage);
+                else
+                {
+                    result.AddError(payment.ErrorMessage);
+                }
             }
             else
             {
@@ -516,23 +583,27 @@ namespace Nop.Plugin.Payments.Iyzico
                     result.NewPaymentStatus = PaymentStatus.Refunded;
                     try
                     {
+                        string refundIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundIdTxt");
+                        string transactionIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.transactionIdTxt");
+                        string refundAmountTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundAmountTxt");
 
-                    List<string> PaymentInformation = new()
-                    {
-                        $"Iyzico Refund Id :  {refund.PaymentId}",
-                        $"Transaction Id :  {refund.PaymentTransactionId}",
-                        $"Refund Amount :  {refund.Price:C2}",
-                        
-                    };
+                        var resTxt = refundIdTxt + refund.PaymentId + Environment.NewLine +
+                                     transactionIdTxt + refund.PaymentTransactionId + Environment.NewLine +
+                                     refundAmountTxt + String.Format("{C2}", refund.Price);
+                        List<string> PaymentInformation = new()
+                        {
+                            resTxt
 
-                    //order note
-                    await _orderService.InsertOrderNoteAsync(new OrderNote
-                    {
-                        OrderId = refundPaymentRequest.Order.Id,
-                        Note = string.Join(" | ", PaymentInformation),
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow
-                    });
+                        };
+                        //order note
+                        await _orderService.InsertOrderNoteAsync(new OrderNote
+                        {
+                            OrderId = refundPaymentRequest.Order.Id,
+                            Note = string.Join(" | ", PaymentInformation),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+
+                        });
 
                     }
                     catch 
@@ -562,14 +633,16 @@ namespace Nop.Plugin.Payments.Iyzico
                     try
                     {
 
-                        List<string> PaymentInformation = new()
-                        {
-                            $"Iyzico Refund Id :  {refund.PaymentId}",
-                            $"Transaction Id :  {refund.PaymentTransactionId}",
-                            $"Refund Amount :  {refund.Price:C2}",
+                        string refundIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundIdTxt");
+                        string transactionIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.transactionIdTxt");
+                        string refundAmountTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundAmountTxt");
 
-                        };
-
+                   
+                       
+                        List<string> PaymentInformation =new List<string>();
+                        PaymentInformation.Add(refundIdTxt + refund.PaymentId);
+                        PaymentInformation.Add(transactionIdTxt + refund.PaymentTransactionId);
+                        PaymentInformation.Add(refundAmountTxt + refund.Price);
                         //order note
                         await _orderService.InsertOrderNoteAsync(new OrderNote
                         {
@@ -578,6 +651,11 @@ namespace Nop.Plugin.Payments.Iyzico
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
+
+
+
+
+                       
 
                     }
                     catch
@@ -640,12 +718,16 @@ namespace Nop.Plugin.Payments.Iyzico
                     result.NewPaymentStatus = PaymentStatus.Refunded;
                     try
                     {
+                        string refundIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundIdTxt");
+                        string transactionIdTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.transactionIdTxt");
+                        string refundAmountTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.refundAmountTxt");
 
+                        var resTxt = refundIdTxt + refund.PaymentId + Environment.NewLine +
+                                     transactionIdTxt + refund.PaymentTransactionId + Environment.NewLine +
+                                     refundAmountTxt + String.Format("{C2}", refund.Price);
                         List<string> PaymentInformation = new()
                         {
-                            $"Iyzico Refund Id :  {refund.PaymentId}",
-                            $"Transaction Id :  {refund.PaymentTransactionId}",
-                            $"Refund Amount :  {refund.Price:C2}",
+                            resTxt
 
                         };
 
@@ -810,37 +892,128 @@ namespace Nop.Plugin.Payments.Iyzico
         public override async Task InstallAsync()
         {
             //locales
-            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            var languages =await _languageService.GetAllLanguagesAsync();
+            Language enLanguage=null;
+            Language trLanguage = null;
+            if (languages.Count>0)
             {
-                ["Plugins.Payments.Iyzico.Instructions"] = "Iyzico sanal pos entegrasyonunuza ait ayarları düzenleyebilirsiniz.",
-                ["Plugins.Payments.Iyzico.Fields.UseToPaymentPopup"] = "Ödeme Sayfası Popup Görünüm",
-                ["Plugins.Payments.Iyzico.Fields.UseToPaymentPopup.Hint"] = "Ödeme sayfasının mevcut pencere içerisinde popup olarak açılmasını sağlar.",
-                ["Plugins.Payments.Iyzico.PaymentMethodDescription"] = "Kredi/Banka kartı ile ödeme",
-                ["Plugins.Payments.Iyzico.AccountInfo"] = "Iyzico Api Bilgilerinizi Tanımlayın",
-                ["Plugins.Payments.Iyzico.Fields.ApiKey"] = "Api Key",
-                ["Plugins.Payments.Iyzico.Fields.ApiKey.Hint"] = "Iyzico kontrol panelinizde yer alan Api Key bilginizi girin.",
-                ["Plugins.Payments.Iyzico.Fields.ApiSecret"] = "Api Secret",
-                ["Plugins.Payments.Iyzico.Fields.ApiSecret.Hint"] = "Iyzico kontrol panelinizde yer alan Api Secret bilginizi girin.",
-                ["Plugins.Payments.Iyzico.Fields.ApiUrl"] = "Api Url",
-                ["Plugins.Payments.Iyzico.Fields.ApiUrl.Hint"] = "Iyzico kontrol panelinizde yer alan Api Url bilginizi girin.",
-                ["Plugins.Payments.Iyzico.VirtualPosInfo"] = "Iyzico Ödeme Ayarlarınızı Tanımlayın",
-                ["Plugins.Payments.Iyzico.Fields.IsCardStorage"] = "Kart Bilgilerini Sakla",
-                ["Plugins.Payments.Iyzico.Fields.IsCardStorage.Hint"] = "Bu seçenek, Iyzico tarafından iletilen kredi kartı bilgilerinin ilk altı hanesini ve son dört hanesini veritabanında saklar (herhangi bir üçüncü taraf işlemciye gönderilmez).",
-                ["Plugins.Payments.Iyzico.Fields.PaymentSuccessUrl"] = "Ödeme Başarılı Url",
-                ["Plugins.Payments.Iyzico.Fields.PaymentSuccessUrl.Hint"] = "Iyzico sanal pos ödemesi başarılı bir şekilde gerçekleştirildiğinde yönlendirilecek sayfa (url) bilgisinizi tanımlayabilirsiniz. Varsayılan: /checkout/completed/",
-                ["Plugins.Payments.Iyzico.Fields.PaymentErrorUrl"] = "Ödeme Başarısız Url",
-                ["Plugins.Payments.Iyzico.Fields.PaymentErrorUrl.Hint"] = "Iyzico sanal pos ödemesi başarısız olduğunda yönlendirilecek sayfa (url) bilgisinizi tanımlayabilirsiniz. Varsayılan: /onepagecheckout/",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers"] = "Taksit Seçenekleri",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers.Hint"] = "Iyzico panelinizde taksit seçenekleri aktif ise tarafınıza tanımlı taksit seçeneklerini kullanmak için işaretleyebilirsiniz.",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumber2"] = "2 Taksit",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumber3"] = "3 Taksit",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumber6"] = "6 Taksit",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumber9"] = "9 Taksit",
-                ["Plugins.Payments.Iyzico.Fields.InstallmentNumber12"] = "12 Taksit",
-                ["Plugins.Payments.Iyzico.Fields.RedirectionTip"] = "Siparişi tamamlamak için ödeme sistemine yönlendirileceksiniz.",
-                ["Plugins.Payments.Iyzico.Fields.PopupTip"] = "Siparişi tamamlamak için ödeme penceresi açılacaktır."
-             
-            });
+                foreach (var language in languages)
+                {
+                    if (language.UniqueSeoCode=="en")
+                    {
+                        enLanguage= language;
+                    }
+                    else if (language.UniqueSeoCode == "tr")
+                    {
+                        trLanguage = language;
+                    }
+                    
+                }
+            }
+
+        
+
+            if (enLanguage!=null)
+            {
+                await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+                {
+                    ["Plugins.Payments.Iyzico.Instructions"] = "You can edit the settings of your Iyzico virtual pos integration.",
+                    ["Plugins.Payments.Iyzico.PaymentMethodDescription"] = "Payment by Credit/Debit card",
+                    ["Plugins.Payments.Iyzico.AccountInfo"] = "Define Your Iyzico Api Information",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey"] = "Api Key",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey.Hint"] = "Enter your Api Key information on your Iyzico control panel.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret"] = "Api Secret",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret.Hint"] = "Enter your Api Secret information on your Iyzico control panel.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl"] = "Api Url",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl.Hint"] = "Enter your Api Url information on your Iyzico control panel.",
+                    ["Plugins.Payments.Iyzico.VirtualPosInfo"] = "Define Your Iyzico Payment Settings",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage"] = "Store Card Information",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage.Hint"] = "This option stores the first six digits and the last four digits of the credit card information transmitted by Iyzico in the database (not sent to any third party processors).",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers"] = "Installment Options",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers.Hint"] = "If the installment options are active on your Iyzico panel, you can mark them to use the installment options defined by you.",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber2"] = "2 Installments",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber3"] = "3 Installments",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber6"] = "6 Installments",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber9"] = "9 Installments",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber12"] = "12 Installments",
+                    ["Plugins.Payments.Iyzico.Fields.RedirectionTip"] = "You will be directed to the payment system to complete the order.",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed"] = "Payment Failed",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentErrors"] = "Payment Errors",
+                    ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Refund Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "Transaction Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = "Refund Amount : ",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Payment Failed. Order Number #"
+                },enLanguage.Id);
+            }
+
+            if (trLanguage != null)
+            {
+                await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+                {
+                    ["Plugins.Payments.Iyzico.Instructions"] = "Iyzico sanal pos entegrasyonunuza ait ayarları düzenleyebilirsiniz.",
+                    ["Plugins.Payments.Iyzico.PaymentMethodDescription"] = "Kredi/Banka kartı ile ödeme",
+                    ["Plugins.Payments.Iyzico.AccountInfo"] = "Iyzico Api Bilgilerinizi Tanımlayın",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey"] = "Api Key",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey.Hint"] = "Iyzico kontrol panelinizde yer alan Api Key bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret"] = "Api Secret",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret.Hint"] = "Iyzico kontrol panelinizde yer alan Api Secret bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl"] = "Api Url",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl.Hint"] = "Iyzico kontrol panelinizde yer alan Api Url bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.VirtualPosInfo"] = "Iyzico Ödeme Ayarlarınızı Tanımlayın",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage"] = "Kart Bilgilerini Sakla",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage.Hint"] = "Bu seçenek, Iyzico tarafından iletilen kredi kartı bilgilerinin ilk altı hanesini ve son dört hanesini veritabanında saklar (herhangi bir üçüncü taraf işlemciye gönderilmez).",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers"] = "Taksit Seçenekleri",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers.Hint"] = "Iyzico panelinizde taksit seçenekleri aktif ise tarafınıza tanımlı taksit seçeneklerini kullanmak için işaretleyebilirsiniz.",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber2"] = "2 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber3"] = "3 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber6"] = "6 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber9"] = "9 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber12"] = "12 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.RedirectionTip"] = "Siparişi tamamlamak için ödeme sistemine yönlendirileceksiniz.",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed"] = "Ödeme Başarısız",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentErrors"] = "Ödeme Hataları",
+                    ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Geri Ödeme Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "İşlem Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = " Geri Ödeme Tutarı : ",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #"
+
+                }, trLanguage.Id);
+            }
+
+            if (trLanguage==null)
+            {
+                //Default Fields
+                await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+                {
+                    ["Plugins.Payments.Iyzico.Instructions"] = "Iyzico sanal pos entegrasyonunuza ait ayarları düzenleyebilirsiniz.",
+                    ["Plugins.Payments.Iyzico.PaymentMethodDescription"] = "Kredi/Banka kartı ile ödeme",
+                    ["Plugins.Payments.Iyzico.AccountInfo"] = "Iyzico Api Bilgilerinizi Tanımlayın",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey"] = "Api Key",
+                    ["Plugins.Payments.Iyzico.Fields.ApiKey.Hint"] = "Iyzico kontrol panelinizde yer alan Api Key bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret"] = "Api Secret",
+                    ["Plugins.Payments.Iyzico.Fields.ApiSecret.Hint"] = "Iyzico kontrol panelinizde yer alan Api Secret bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl"] = "Api Url",
+                    ["Plugins.Payments.Iyzico.Fields.ApiUrl.Hint"] = "Iyzico kontrol panelinizde yer alan Api Url bilginizi girin.",
+                    ["Plugins.Payments.Iyzico.VirtualPosInfo"] = "Iyzico Ödeme Ayarlarınızı Tanımlayın",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage"] = "Kart Bilgilerini Sakla",
+                    ["Plugins.Payments.Iyzico.Fields.IsCardStorage.Hint"] = "Bu seçenek, Iyzico tarafından iletilen kredi kartı bilgilerinin ilk altı hanesini ve son dört hanesini veritabanında saklar (herhangi bir üçüncü taraf işlemciye gönderilmez).",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers"] = "Taksit Seçenekleri",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumbers.Hint"] = "Iyzico panelinizde taksit seçenekleri aktif ise tarafınıza tanımlı taksit seçeneklerini kullanmak için işaretleyebilirsiniz.",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber2"] = "2 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber3"] = "3 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber6"] = "6 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber9"] = "9 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.InstallmentNumber12"] = "12 Taksit",
+                    ["Plugins.Payments.Iyzico.Fields.RedirectionTip"] = "Siparişi tamamlamak için ödeme sistemine yönlendirileceksiniz.",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed"] = "Ödeme Başarısız",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentErrors"] = "Ödeme Hataları",
+                    ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Geri Ödeme Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "İşlem Id : ",
+                    ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = " Geri Ödeme Tutarı : ",
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #"
+                });
+            }
+       
 
             await base.InstallAsync();
         }

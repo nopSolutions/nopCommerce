@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Iyzipay;
 using Iyzipay.Model;
@@ -20,6 +21,7 @@ using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
@@ -136,6 +138,11 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                 return Challenge();
 
             Order order = null;
+            var currenctLanguage = await _workContext.GetWorkingLanguageAsync();
+            
+            
+
+
 
             if (string.IsNullOrEmpty(orderGuid) == false)
             {
@@ -179,6 +186,19 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                         result = Payment.Retrieve(request,  IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
 
                     }
+                    string paymentFailedOrder = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.PaymentFailed.Order");
+
+                    try
+                    {
+
+                    
+                    paymentFailedOrder = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.PaymentFailed.Order", currenctLanguage.Id);
+                    }
+                    catch
+                    {
+                       
+                    }
+
 
 
 
@@ -250,9 +270,16 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                         case PaymentStatus.Refunded:
 
                             order.OrderStatus = OrderStatus.Cancelled;
-                            errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
+                            // errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
+                            //Plugins.Payments.Iyzico.Fields.PaymentFailed.Order
+                           
+                            errorStr.Add(paymentFailedOrder+ order.Id);
+                            errorStr.Add(result.ErrorMessage);
+                            
+
 
                             break;
+
 
                         case PaymentStatus.Pending:
                         case PaymentStatus.Voided:
@@ -263,7 +290,8 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             await MoveShoppingCartItemsToOrderItemsAsync(order);
                             order.OrderStatus = OrderStatus.Cancelled;
 
-                             errorStr.Add($"Ödeme başarısız. Sipariş # {order.Id}.");
+                             paymentFailedOrder = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.PaymentFailed.Order");
+                            errorStr.Add(paymentFailedOrder + order.Id);
 
                             break;
 
@@ -301,10 +329,27 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             });
                         });
 
-                        _httpContextAccessor.HttpContext.Response.Cookies.Append("iyzicoMessage",
-                            string.Join("<br>", errorStr));
+                        //buraya fail ekranına yönlendirme ekle
 
-                        return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+                        PaymentErrorModel model = new PaymentErrorModel();
+                        foreach (var error in errorStr)
+                        {
+                            model.Warnings.Add(error);
+                        }
+
+                        //_httpContextAccessor.HttpContext.Response.Cookies.Append("iyzicoMessage", string.Join("<br>", errorStr));
+                        try
+                        {
+
+                       
+                        await MoveShoppingCartItemsToOrderItemsAsync(order);
+                        await DeleteOrderAsync(order);
+                        }
+                        catch 
+                        {
+                            
+                        }
+                        return View("~/Plugins/Payments.Iyzico/Views/PaymentError.cshtml", model);
                     }
                     else
                     {
@@ -321,8 +366,11 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             else
             {
                 await _logger.ErrorAsync($"Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
-               
-                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+
+                PaymentErrorModel model = new PaymentErrorModel();
+                model.Warnings.Add("Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
+                
+                return  View("~/Plugins/Payments.Iyzico/Views/PaymentError.cshtml", model);
 
             }
 
@@ -361,9 +409,8 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
         protected virtual async Task MoveShoppingCartItemsToOrderItemsAsync(Order order)
         {
             var Customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-
-            var CartString = _httpContextAccessor.HttpContext.Request.Cookies["CurrentShopCartTemp"];
-
+            
+            var CartString= _httpContextAccessor.HttpContext.Request.Cookies["CurrentShopCartTemp"];
             if (string.IsNullOrEmpty(CartString) == false)
             {
                 IList<ShoppingCartItem> CartList = JsonConvert.DeserializeObject<IList<ShoppingCartItem>>(CartString);
@@ -405,8 +452,8 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             //if it already was cancelled, then there's no need to make the following adjustments
             //(such as reward points, inventory, recurring payments)
             //they already was done when cancelling the order
-            if (order.OrderStatus != OrderStatus.Cancelled)
-            {
+            //if (order.OrderStatus != OrderStatus.Cancelled)
+            //{
                 //return (add) back redeemded reward points
                 await ReturnBackRedeemedRewardPointsAsync(order);
                 //reduce (cancel) back reward points (previously awarded for this order)
@@ -440,7 +487,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                     await _productService.AdjustInventoryAsync(product, orderItem.Quantity, orderItem.AttributesXml,
                         string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                 }
-            }
+            
 
             //deactivate gift cards
             if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)

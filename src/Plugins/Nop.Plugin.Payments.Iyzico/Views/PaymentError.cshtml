@@ -1,0 +1,69 @@
+﻿@model Nop.Plugin.Payments.Iyzico.Models.PaymentErrorModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    // var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    //title, meta
+}
+@if (Model.Warnings.Count > 0)
+{
+    var checkoutUrl = "";
+                
+               
+    checkoutUrl = Url.RouteUrl("Checkout");
+<div class="checkout-data">
+   
+  
+</div>
+<div class="page checkout-page order-completed-page">
+   
+    <div class="page-title">
+            <h1>@T("Plugins.Payments.Iyzico.Fields.PaymentFailed")</h1>
+        <h1>Payment Failed</h1>
+    </div>
+    <div class="page-body checkout-data">
+      @*  @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedTop, additionalData = Model })*@
+        <div class="section order-completed">
+            <div class="title">
+                @*   <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>*@
+               @* <strong>Payment Failed</strong>*@
+            </div>
+            <div class="details">
+               @* <div class="order-number">
+                    <strong>@T("Checkout.OrderNumber"): @Model.CustomOrderNumber</strong>
+                </div>*@
+              
+                    <div class="section confirm-order">
+                        <h2>@T("Plugins.Payments.Iyzico.Fields.PaymentErrors")</h2>
+
+                        @if (Model.Warnings.Count > 0)
+                        {
+                            <div class="message-error">
+                                <ul>
+                                    @foreach (var warning in Model.Warnings)
+                                    {
+                                        <li>@warning</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+               
+                
+            </div>
+            <div class="buttons">
+               
+               
+                
+                @*<button type="button" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("Homepage")')">@T("Checkout.ThankYou.Continue")</button>*@
+                    <button type="submit" class="button-1 productAddedToCartWindowCheckout" onclick="setLocation('@checkoutUrl');"><span>@T("ShoppingCart.Mini.ViewCart")</span></button>
+
+
+            </div>
+        </div>
+@*        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
+*@    </div>
+    </div>
+}
