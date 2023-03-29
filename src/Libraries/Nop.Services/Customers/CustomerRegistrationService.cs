@@ -429,6 +429,11 @@ namespace Nop.Services.Customers
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             if (currentCustomer?.Id != customer.Id)
             {
+                if (currentCustomer.AffiliateId != 0)
+                {
+                    customer.AffiliateId = currentCustomer.AffiliateId;
+                    await _customerService.UpdateCustomerAsync(customer);
+                }
                 //migrate shopping cart
                 await _shoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
 
