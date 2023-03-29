@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace Nop.Core.Infrastructure
+﻿namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// A striped ReaderWriterLock wrapper
