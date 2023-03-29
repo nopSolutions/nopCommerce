@@ -8,9 +8,9 @@ namespace Nop.Core.Infrastructure
     public partial class ConcurrentTrie<TValue>
     {
         #region Fields
-        private volatile TrieNode _root = new();
-        private readonly StripedReaderWriterLock _locks = new();
-        private readonly ReaderWriterLockSlim _structureLock = new();
+        protected volatile TrieNode _root = new();
+        protected readonly StripedReaderWriterLock _locks = new();
+        protected readonly ReaderWriterLockSlim _structureLock = new();
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Nop.Core.Infrastructure
         {
         }
 
-        private ConcurrentTrie(TrieNode subtreeRoot)
+        protected ConcurrentTrie(TrieNode subtreeRoot)
         {
             _root.Children[subtreeRoot.Label[0]] = subtreeRoot;
         }
@@ -486,7 +486,7 @@ namespace Nop.Core.Infrastructure
 
         protected class TrieNode
         {
-            private class ValueWrapper
+            protected class ValueWrapper
             {
                 public readonly TValue Value;
 
@@ -497,11 +497,11 @@ namespace Nop.Core.Infrastructure
             }
 
             // used to avoid keeping a separate boolean flag that would use another byte per node
-            private static readonly ValueWrapper _deleted = new(default);
+            protected static readonly ValueWrapper _deleted = new(default);
 
             public readonly string Label;
             public readonly Dictionary<char, TrieNode> Children = new();
-            private volatile ValueWrapper _value;
+            protected volatile ValueWrapper _value;
 
             public bool IsDeleted => _value == _deleted;
             public bool HasValue => _value != null && !IsDeleted;
