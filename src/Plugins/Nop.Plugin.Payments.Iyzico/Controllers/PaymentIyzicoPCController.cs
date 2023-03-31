@@ -299,17 +299,16 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
 
                     await _orderService.UpdateOrderAsync(order);
-
+                    string froudTxtfail = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.Fraoud.Fail");
+                    string froudTxtreview = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.Fraoud.Review");
                     //sadece 1 olan işlemlerde ürünü kargoya vermelidir, 0 olan işlemler için bilgilendirme beklemelidir.
                     switch (result.FraudStatus)
                     {
                         case -1: //fraud risk skoru yüksek ise ödeme işlemi reddedilir ve -1 döner. 
-                            errorStr.Add(
-                                $"Iyzico: İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş # {order.Id}.");
+                            errorStr.Add(froudTxtfail + order.Id);
                             break;
                         case 0: //ödeme işlemi daha sonradan incelenip karar verilecekse 0 döner.
-                            errorStr.Add(
-                                $"Iyzico: İşleme ait Fraud riski bulunduğu için ödeme incelemeye alınmıştır. Sipariş # {order.Id}.");
+                            errorStr.Add(froudTxtreview +order.Id);
                             break;
                     }
 
@@ -329,8 +328,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
                             });
                         });
 
-                        //buraya fail ekranına yönlendirme ekle
-
+                       
                         PaymentErrorModel model = new PaymentErrorModel();
                         foreach (var error in errorStr)
                         {
@@ -357,18 +355,18 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
                     }
 
-                    
-                    //return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
                 }
 
 
             }
             else
             {
+                string orderNotfoundTxt = await _localizationService.GetResourceAsync("Plugins.Payments.Iyzico.Fields.Order.NotFound");
+              
                 await _logger.ErrorAsync($"Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
 
                 PaymentErrorModel model = new PaymentErrorModel();
-                model.Warnings.Add("Iyzico: Sipariş Bulunamadı! Sipariş #{orderGuid}");
+                model.Warnings.Add(orderNotfoundTxt+orderGuid);
                 
                 return  View("~/Plugins/Payments.Iyzico/Views/PaymentError.cshtml", model);
 

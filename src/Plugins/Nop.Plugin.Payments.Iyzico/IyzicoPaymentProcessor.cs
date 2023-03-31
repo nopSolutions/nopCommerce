@@ -194,17 +194,7 @@ namespace Nop.Plugin.Payments.Iyzico
             paymentCard.Cvc = processPaymentRequest.CreditCardCvv2;
             paymentCard.CardAlias = processPaymentRequest.CreditCardType;
 
-            //if (processPaymentRequest.CreditCardType=="AMEX")
-            //{
-            //     cart = await _shoppingCartService.GetShoppingCartAsync(customer: customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
-                
-
-            //   shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true);
-            //    shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, true);
-            //    shoppingCartUnitPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartSubTotal.subTotalWithDiscount, currency);
-            //    shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(shoppingCartTotal.shoppingCartTotal.Value, currency); 
-            //}
-
+         
 
             //Ödeme isteği başlıkları
             CreatePaymentRequest request = new()
@@ -363,11 +353,7 @@ namespace Nop.Plugin.Payments.Iyzico
                         //sepeti temp olarak yükle
                         try
                         {
-
-                       
-                        var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
-                       
-                         _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("CurrentShopCartTemp", JsonConvert.SerializeObject(cart));
                         }
                         catch 
                         {
@@ -911,7 +897,10 @@ namespace Nop.Plugin.Payments.Iyzico
                 }
             }
 
-        
+            
+            
+           
+            
 
             if (enLanguage!=null)
             {
@@ -942,7 +931,10 @@ namespace Nop.Plugin.Payments.Iyzico
                     ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Refund Id : ",
                     ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "Transaction Id : ",
                     ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = "Refund Amount : ",
-                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Payment Failed. Order Number #"
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Payment Failed. Order Number #", 
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Fail"] = "The payment was not accepted because the fraud risk of the transaction is high. Order #", 
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Review"] = "Since there is a Fraud risk related to the transaction, the payment has been taken under review. Order #",
+                    ["Plugins.Payments.Iyzico.Fields.Order.NotFound"] = "Order Not Found! Order #"
                 },enLanguage.Id);
             }
 
@@ -975,13 +967,18 @@ namespace Nop.Plugin.Payments.Iyzico
                     ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Geri Ödeme Id : ",
                     ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "İşlem Id : ",
                     ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = " Geri Ödeme Tutarı : ",
-                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #"
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Fail"] = "İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Review"] = "İşleme ait Fraud riski bulunduğu için ödeme incelemeye alınmıştır. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Order.NotFound"] = "Sipariş Bulunamadı! Sipariş #"
 
                 }, trLanguage.Id);
             }
 
             if (trLanguage==null)
             {
+              
+                
                 //Default Fields
                 await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
                 {
@@ -1010,7 +1007,10 @@ namespace Nop.Plugin.Payments.Iyzico
                     ["Plugins.Payments.Iyzico.Fields.refundIdTxt"] = "Iyzico Geri Ödeme Id : ",
                     ["Plugins.Payments.Iyzico.Fields.transactionIdTxt"] = "İşlem Id : ",
                     ["Plugins.Payments.Iyzico.Fields.refundAmountTxt"] = " Geri Ödeme Tutarı : ",
-                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #"
+                    ["Plugins.Payments.Iyzico.Fields.PaymentFailed.Order"] = "Ödeme başarısız. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Fail"] = "İşleme ait Fraud riski yüksek olduğu için ödeme kabul edilmemiştir. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Fraoud.Review"] = "İşleme ait Fraud riski bulunduğu için ödeme incelemeye alınmıştır. Sipariş #",
+                    ["Plugins.Payments.Iyzico.Fields.Order.NotFound"] = "Sipariş Bulunamadı! Sipariş #"
                 });
             }
        
