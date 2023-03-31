@@ -30,6 +30,16 @@ namespace Nop.Data.Migrations.UpgradeTo470
                         Name = "Customers were imported"
                     }
                 );
+            //6660 new activity log type for update plugin
+            if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "UpdatePlugin", StringComparison.InvariantCultureIgnoreCase) == 0))
+                _dataProvider.InsertEntity(
+                    new ActivityLogType
+                    {
+                        SystemKeyword = "UpdatePlugin",
+                        Enabled = true,
+                        Name = "Update a plugin"
+                    }
+                );
         }
 
         public override void Down()

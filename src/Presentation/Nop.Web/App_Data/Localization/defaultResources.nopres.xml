@@ -889,7 +889,7 @@
     <Value>Deleted an order (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeletePlugin">
-    <Value>Deleted a plugin (FriendlyName: '{0}')</Value>
+    <Value>Deleted a plugin (FriendlyName: '{0}' version: {1})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteProduct">
     <Value>Deleted a product ('{0}')</Value>
@@ -1123,7 +1123,7 @@
     <Value>{0} newsletter subscriptions were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.InstallNewPlugin">
-    <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
+    <Value>Installed a new plugin (FriendlyName: '{0}' version: {1})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
@@ -1168,7 +1168,10 @@
     <Value>Public store. Viewed a product details page ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UninstallPlugin">
-    <Value>Uninstalled a plugin (FriendlyName: '{0}')</Value>
+    <Value>Uninstalled a plugin (FriendlyName: '{0}' version: {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UpdatePlugin">
+    <Value>Updated plugin (FriendlyName: '{0}' from version: {1} to version: {2})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UploadNewIcons">
     <Value>Uploaded a new favicon and app icons for store (ID = '{0}')</Value>

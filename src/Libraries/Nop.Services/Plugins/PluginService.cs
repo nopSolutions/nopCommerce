@@ -205,7 +205,7 @@ namespace Nop.Services.Plugins
                 _migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -518,7 +518,7 @@ namespace Nop.Services.Plugins
                     //activity log
                     var customer = await _customerService.GetCustomerByGuidAsync(pluginToInstall.CustomerGuid ?? Guid.Empty);
                     await customerActivityService.InsertActivityAsync(customer, "InstallNewPlugin",
-                        string.Format(await localizationService.GetResourceAsync("ActivityLog.InstallNewPlugin"), descriptor.pluginDescriptor.SystemName));
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.InstallNewPlugin"), descriptor.pluginDescriptor.SystemName, descriptor.pluginDescriptor.Version));
 
                     //mark the plugin as installed
                     descriptor.pluginDescriptor.Installed = true;
@@ -574,7 +574,7 @@ namespace Nop.Services.Plugins
 
                     //activity log
                     await customerActivityService.InsertActivityAsync("UninstallPlugin",
-                        string.Format(await localizationService.GetResourceAsync("ActivityLog.UninstallPlugin"), descriptor.pluginDescriptor.SystemName));
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.UninstallPlugin"), descriptor.pluginDescriptor.SystemName, descriptor.pluginDescriptor.Version));
 
                     //mark the plugin as uninstalled
                     descriptor.pluginDescriptor.Installed = false;
@@ -626,7 +626,7 @@ namespace Nop.Services.Plugins
 
                     //activity log
                     await customerActivityService.InsertActivityAsync("DeletePlugin",
-                        string.Format(await localizationService.GetResourceAsync("ActivityLog.DeletePlugin"), descriptor.pluginDescriptor.SystemName));
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.DeletePlugin"), descriptor.pluginDescriptor.SystemName, descriptor.pluginDescriptor.Version));
                 }
                 catch (Exception exception)
                 {
@@ -659,6 +659,10 @@ namespace Nop.Services.Plugins
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePluginsAsync()
         {
+            //do not inject services via constructor because it'll cause circular references
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+
             foreach (var installedPlugin in _pluginsInfo.InstalledPlugins)
             {
                 var newVersion = _pluginsInfo.PluginDescriptors.FirstOrDefault(pd =>
@@ -675,6 +679,10 @@ namespace Nop.Services.Plugins
 
                 //run the plugin update logic
                 await newVersion.pluginDescriptor.Instance<IPlugin>().UpdateAsync(installedPlugin.Version, newVersion.pluginDescriptor.Version);
+
+                //activity log                
+                await customerActivityService.InsertActivityAsync("UpdatePlugin",
+                    string.Format(await localizationService.GetResourceAsync("ActivityLog.UpdatePlugin"), newVersion.pluginDescriptor.SystemName, installedPlugin.Version, newVersion.pluginDescriptor.Version));
 
                 //update installed plugin info
                 installedPlugin.Version = newVersion.pluginDescriptor.Version;
@@ -704,7 +712,7 @@ namespace Nop.Services.Plugins
         #endregion
 
         #region Properties
-        
+
         /// <summary>
         /// Indicates whether new or updated plugins have been uploaded.
         /// True - if the plugins were loaded, false otherwise

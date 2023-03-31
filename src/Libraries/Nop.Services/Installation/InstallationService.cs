@@ -8980,6 +8980,12 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     Name = "Uninstall a plugin"
                 },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UpdatePlugin",
+                    Enabled = true,
+                    Name = "Update a plugin"
+                },
                 //public store activities
                 new ActivityLogType
                 {

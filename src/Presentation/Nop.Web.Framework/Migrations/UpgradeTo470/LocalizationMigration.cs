@@ -118,6 +118,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Customers.Customers.Imported"] = "Customers have been imported successfully.",
                 ["Admin.Customers.Customers.ImportFromExcelTip"] = "Imported customers are distinguished by customer GUID. If the customer GUID already exists, then its details will be updated. If GUID not exists we try to use email address as an identifier. You may leave customer GUID empty to new customers.",
                 ["ActivityLog.ImportCustomers"] = "{0} customers were imported",
+                //6660
+                ["ActivityLog.DeletePlugin"] = "Deleted a plugin (FriendlyName: '{0}' version: {1})",
+                ["ActivityLog.InstallNewPlugin"] = "Installed a new plugin (FriendlyName: '{0}' version: {1})",
+                ["ActivityLog.UninstallPlugin"] = "Uninstalled a plugin (FriendlyName: '{0}' version: {1})",
+                ["ActivityLog.UpdatePlugin"] = "Updated plugin (FriendlyName: '{0}' from version: {1} to version: {2})",
             }, languageId);
 
             #endregion
