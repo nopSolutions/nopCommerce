@@ -61,26 +61,6 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="PaymentSuccessUrl_OverrideForStore" asp-input="PaymentSuccessUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="PaymentSuccessUrl" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="PaymentSuccessUrl" asp-required="true" />
-                        <span asp-validation-for="PaymentSuccessUrl"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="PaymentErrorUrl_OverrideForStore" asp-input="PaymentErrorUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="PaymentErrorUrl" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="PaymentErrorUrl" asp-required="true" />
-                        <span asp-validation-for="PaymentErrorUrl"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="InstallmentNumbers_OverrideForStore" asp-input="InstallmentNumbers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="InstallmentNumbers" />
                     </div>
