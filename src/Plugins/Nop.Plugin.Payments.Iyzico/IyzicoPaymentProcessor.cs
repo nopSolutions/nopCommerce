@@ -879,6 +879,7 @@ namespace Nop.Plugin.Payments.Iyzico
         public override async Task InstallAsync()
         {
             //locales
+            bool languageInstalled = false;
             var languages =await _languageService.GetAllLanguagesAsync();
             Language enLanguage=null;
             Language trLanguage = null;
@@ -898,10 +899,10 @@ namespace Nop.Plugin.Payments.Iyzico
                 }
             }
 
-            
-            
+
+
            
-            
+
 
             if (enLanguage!=null)
             {
@@ -937,6 +938,7 @@ namespace Nop.Plugin.Payments.Iyzico
                     ["Plugins.Payments.Iyzico.Fields.Fraoud.Review"] = "Since there is a Fraud risk related to the transaction, the payment has been taken under review. Order #",
                     ["Plugins.Payments.Iyzico.Fields.Order.NotFound"] = "Order Not Found! Order #"
                 },enLanguage.Id);
+                languageInstalled = true;
             }
 
             if (trLanguage != null)
@@ -974,12 +976,11 @@ namespace Nop.Plugin.Payments.Iyzico
                     ["Plugins.Payments.Iyzico.Fields.Order.NotFound"] = "Sipariş Bulunamadı! Sipariş #"
 
                 }, trLanguage.Id);
+                languageInstalled = true;
             }
 
-            if (trLanguage==null)
+            if (languageInstalled == false)
             {
-              
-                
                 //Default Fields
                 await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
                 {
