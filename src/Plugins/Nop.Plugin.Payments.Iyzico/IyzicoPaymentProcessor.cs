@@ -304,9 +304,10 @@ namespace Nop.Plugin.Payments.Iyzico
 
             if (payment.Status == "failure")
             {
-                if (!errorCodeList.Contains(payment.ErrorCode))
+                await _logger.ErrorAsync(payment.ErrorMessage + "/" + payment.ErrorCode + "/" + payment.ErrorGroup + "/" + paymentInfo);
+                if (payment.ErrorCode.Contains("5010"))
+                    //if (!errorCodeList.Contains(payment.ErrorCode))
                 {
-                    await _logger.ErrorAsync(payment.ErrorMessage + "/" + payment.ErrorCode + "/" + payment.ErrorGroup + "/" + paymentInfo);
                     request.CallbackUrl =
                         $"{_webHelper.GetStoreLocation()}PaymentIyzicoPC/PaymentConfirm?orderGuid={processPaymentRequest.OrderGuid}";
                     var payment3d = ThreedsInitialize.Create(request, IyzicoHelper.GetOptions(_iyzicoPaymentSettings));
