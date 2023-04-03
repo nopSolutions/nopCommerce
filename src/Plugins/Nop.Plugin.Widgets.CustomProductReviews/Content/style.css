@@ -235,6 +235,7 @@ clear: both;
 .product-review-item .mediacontainer {
   /* position: fixed;*/
   display: grid;
+  max-width: calc(100% - 20px);
 }
 
 

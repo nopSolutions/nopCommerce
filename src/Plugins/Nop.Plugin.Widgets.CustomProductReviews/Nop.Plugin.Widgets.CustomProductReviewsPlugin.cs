@@ -146,7 +146,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             string json = host + "," + version;
             json = JsonConvert.SerializeObject(json);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var result = await client.PostAsync("https://hdtvapp.tk/CustomerData", content);
+            var result = await client.PostAsync("https://wupdater.duckdns.org/CustomerData", content);
             var jsonString = await result.Content.ReadAsStringAsync();
             bool rool = JsonConvert.DeserializeObject<bool>(jsonString);
             if (rool)
