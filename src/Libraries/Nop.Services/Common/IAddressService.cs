@@ -96,5 +96,18 @@ namespace Nop.Services.Common
         /// </summary>
         /// <returns>A deep copy of address</returns>
         Address CloneAddress(Address address);
+
+        /// <summary>
+        /// Address format
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="htmlEncode">Encode to HTML</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// Address line, array address fields
+        /// </returns> 
+        Task<(string, KeyValuePair<AddressField, string>[])> FormatAddressAsync(Address address, int languageId = 0, string separator = ", ", bool htmlEncode = false);
     }
 }

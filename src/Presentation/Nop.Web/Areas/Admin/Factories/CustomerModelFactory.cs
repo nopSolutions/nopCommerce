@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -49,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected readonly ForumSettings _forumSettings;
         protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
         protected readonly IAffiliateService _affiliateService;
         protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
         protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
@@ -77,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected readonly IStoreContext _storeContext;
         protected readonly IStoreService _storeService;
         protected readonly ITaxService _taxService;
+        protected readonly IWorkContext _workContext;
         protected readonly MediaSettings _mediaSettings;
         protected readonly RewardPointsSettings _rewardPointsSettings;
         protected readonly TaxSettings _taxSettings;
@@ -92,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
             IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
@@ -120,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             RewardPointsSettings rewardPointsSettings,
             TaxSettings taxSettings)
@@ -131,6 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _addressAttributeFormatter = addressAttributeFormatter;
             _customerAttributeParser = customerAttributeParser;
@@ -159,6 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeContext = storeContext;
             _storeService = storeService;
             _taxService = taxService;
+            _workContext = workContext;
             _mediaSettings = mediaSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _taxSettings = taxSettings;
@@ -325,37 +330,17 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var separator = "<br />";
             var addressHtmlSb = new StringBuilder("<div>");
-
-            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(model.Company))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
-
-            if (_addressSettings.StreetAddressEnabled && !string.IsNullOrEmpty(model.Address1))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
-
-            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(model.Address2))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
-
-            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
-
-            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
-
-            if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
-
-            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
-
-            if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
-                addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
+            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var (addressLine, _) = await _addressService.FormatAddressAsync(address, languageId, separator, true);
+            addressHtmlSb.Append(addressLine);
 
             var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributesAsync(address?.CustomAttributes);
             if (!string.IsNullOrEmpty(customAttributesFormatted))
             {
                 //already encoded
-                addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+                addressHtmlSb.AppendFormat($"{separator}{customAttributesFormatted}");
             }
 
             addressHtmlSb.Append("</div>");

@@ -31,5 +31,7 @@ namespace Nop.Web.Models.Checkout
         public string PickupFee { get; set; }
 
         public string OpeningHours { get; set; }
+
+        public string AddressLine { get; set; }
     }
 }

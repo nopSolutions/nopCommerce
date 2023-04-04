@@ -426,7 +426,7 @@ namespace Nop.Web.Factories
             model.CountyEnabled = _customerSettings.CountyEnabled;
             model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;            
+            model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
             model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
             model.PhoneEnabled = _customerSettings.PhoneEnabled;
@@ -461,7 +461,7 @@ namespace Nop.Web.Factories
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
-                }                
+                }
 
                 if (_customerSettings.StateProvinceEnabled)
                 {

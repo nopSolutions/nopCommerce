@@ -1257,6 +1257,9 @@
   <LocaleResource Name="Address.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Address.LineFormat">
+    <Value>{0}{1}{2}{3}{4}{5}{6}</Value>
+  </LocaleResource>
   <LocaleResource Name="Address.Other">
     <Value>Other</Value>
   </LocaleResource>
@@ -18497,6 +18500,9 @@
   </LocaleResource>
   <LocaleResource Name="Pdf.Address.VATNumber">
     <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.AddressLine">
+    <Value>Address</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.BillingInformation">
     <Value>Billing Information</Value>

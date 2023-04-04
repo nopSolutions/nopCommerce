@@ -50,6 +50,7 @@ namespace Nop.Web.Factories
         protected readonly CommonSettings _commonSettings;
         protected readonly CustomerSettings _customerSettings;
         protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
         protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
         protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
         protected readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
@@ -101,6 +102,7 @@ namespace Nop.Web.Factories
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
             IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
@@ -143,6 +145,7 @@ namespace Nop.Web.Factories
             VendorSettings vendorSettings)
         {
             _addressSettings = addressSettings;
+            _addressService = addressService;
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
@@ -706,8 +709,25 @@ namespace Nop.Web.Factories
                         County = pickupPoint.County,
                         CountryName = country?.Name ?? string.Empty,
                         StateProvinceName = state?.Name ?? string.Empty,
-                        ZipPostalCode = pickupPoint.ZipPostalCode
+                        ZipPostalCode = pickupPoint.ZipPostalCode,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id
                     };
+
+                    var address = new Address
+                    {
+                        CountryId = model.PickupAddress.CountryId,
+                        StateProvinceId = model.PickupAddress.StateProvinceId,
+                        City = model.PickupAddress.City,
+                        County = model.PickupAddress.County,
+                        Address1 = model.PickupAddress.Address1,
+
+                        ZipPostalCode = model.PickupAddress.ZipPostalCode
+                    };
+                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+                    var (_, addressFields) = await _addressService.FormatAddressAsync(address, languageId);
+
+                    model.PickupAddress.AddressFields = addressFields;
                 }
 
                 //selected shipping method

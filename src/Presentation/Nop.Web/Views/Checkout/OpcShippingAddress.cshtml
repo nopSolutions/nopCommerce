@@ -41,30 +41,7 @@
                                 var addressLine = "";
                                 addressLine += address.FirstName;
                                 addressLine += " " + address.LastName;
-                                if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
-                                {
-                                    addressLine += ", " + address.Address1;
-                                }
-                                if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
-                                {
-                                    addressLine += ", " + address.City;
-                                }
-                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
-                                {
-                                    addressLine += ", " + address.County;
-                                }
-                                if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
-                                {
-                                    addressLine += ", " + address.StateProvinceName;
-                                }
-                                if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
-                                {
-                                    addressLine += " " + address.ZipPostalCode;
-                                }
-                                if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
-                                {
-                                    addressLine += ", " + address.CountryName;
-                                }
+                                addressLine += ", " + address.AddressLine;
                                 //how should we render "FormattedCustomAddressAttributes" here?
                                 <option value="@(address.Id)">@(addressLine)</option>
                             }

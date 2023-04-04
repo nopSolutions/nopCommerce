@@ -237,6 +237,7 @@ namespace Nop.Services.Messages
                     "%Order.BillingZipPostalCode%",
                     "%Order.BillingCountry%",
                     "%Order.BillingCustomAttributes%",
+                    "%Order.BillingAddressLine%",
                     "%Order.Shippable%",
                     "%Order.ShippingMethod%",
                     "%Order.ShippingFirstName%",
@@ -253,6 +254,7 @@ namespace Nop.Services.Messages
                     "%Order.ShippingZipPostalCode%",
                     "%Order.ShippingCountry%",
                     "%Order.ShippingCustomAttributes%",
+                    "%Order.ShippingAddressLine%",
                     "%Order.PaymentMethod%",
                     "%Order.VatNumber%",
                     "%Order.CustomValues%",
@@ -954,6 +956,8 @@ namespace Nop.Services.Messages
             async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
 
             var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+            var (billingAddressLine, _) = await _addressService.FormatAddressAsync(billingAddress, languageId);
+            var (shippingAddressLine, _) = await _addressService.FormatAddressAsync(await orderAddress(order), languageId);
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
@@ -975,7 +979,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
             tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await _localizationService.GetLocalizedAsync(billingCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync(billingAddress.CustomAttributes), true));
-
+            tokens.Add(new Token("Order.BillingAddressLine", billingAddressLine));
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
             tokens.Add(new Token("Order.PickupInStore", order.PickupInStore));
@@ -993,6 +997,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.ShippingAddressLine", shippingAddressLine));
             tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
             tokens.Add(new Token("Order.IsCompletelyReadyForPickup", order.PickupInStore && !await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToReadyForPickupAsync(order)));
             tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));

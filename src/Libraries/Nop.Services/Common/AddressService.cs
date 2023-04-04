@@ -1,8 +1,11 @@
-﻿using Nop.Core.Caching;
+﻿using System.Net;
+using System.Text.RegularExpressions;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 using Nop.Services.Attributes;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Common
 {
@@ -17,6 +20,7 @@ namespace Nop.Services.Common
         protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
         protected readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
         protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
         protected readonly IRepository<Address> _addressRepository;
         protected readonly IStateProvinceService _stateProvinceService;
 
@@ -28,6 +32,7 @@ namespace Nop.Services.Common
             IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
             IAttributeService<AddressAttribute, AddressAttributeValue> addressAttributeService,
             ICountryService countryService,
+            ILocalizationService localizationService,
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
@@ -35,6 +40,7 @@ namespace Nop.Services.Common
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
             _countryService = countryService;
+            _localizationService = localizationService;
             _addressRepository = addressRepository;
             _stateProvinceService = stateProvinceService;
         }
@@ -312,6 +318,95 @@ namespace Nop.Services.Common
             return addr;
         }
 
+        /// <summary>
+        /// Address format
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="htmlEncode">Encode to HTML</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// Address line, array address fields
+        /// </returns>      
+        public virtual async Task<(string, KeyValuePair<AddressField, string>[])> FormatAddressAsync(Address address, int languageId = 0, string separator = ", ", bool htmlEncode = false)
+        {
+            var fieldsList = new KeyValuePair<AddressField, string>[7];
+
+            if (address == null)
+                return (string.Empty, fieldsList);
+
+            var format = await _localizationService.GetResourceAsync("Address.LineFormat", languageId, true, "{0}{1}{2}{3}{4}{5}{6}");
+            var indexArray = Regex.Matches(format, @"{\d}").Select(x => Convert.ToInt32(Regex.Match(x.Value, @"\d").Value)).ToArray();
+            var country = await _countryService.GetCountryByAddressAsync(address);
+            var countryName = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name, languageId) : string.Empty;
+            var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(address);
+            var stateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, languageId) : string.Empty;
+
+            var indexItem = 0;
+            foreach (var item in indexArray)
+            {
+                switch ((AddressField)item)
+                {
+                    case AddressField.Country:
+                        if (_addressSettings.CountryEnabled && !string.IsNullOrWhiteSpace(countryName))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Country, htmlEncode ? WebUtility.HtmlEncode(countryName) : countryName);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Country, string.Empty);
+                        break;
+
+                    case AddressField.StateProvince:
+                        if (_addressSettings.StateProvinceEnabled && !string.IsNullOrWhiteSpace(stateProvinceName))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.StateProvince, htmlEncode ? WebUtility.HtmlEncode(stateProvinceName) : stateProvinceName);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.StateProvince, string.Empty);
+                        break;
+
+                    case AddressField.City:
+                        if (_addressSettings.CityEnabled && !string.IsNullOrWhiteSpace(address.City))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.City, htmlEncode ? WebUtility.HtmlEncode(address.City) : address.City);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.City, string.Empty);
+                        break;
+
+                    case AddressField.County:
+                        if (_addressSettings.CountyEnabled && !string.IsNullOrWhiteSpace(address.County))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.County, htmlEncode ? WebUtility.HtmlEncode(address.County) : address.County);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.County, string.Empty);
+                        break;
+
+                    case AddressField.Address1:
+                        if (_addressSettings.StreetAddressEnabled && !string.IsNullOrWhiteSpace(address.Address1))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Address1, htmlEncode ? WebUtility.HtmlEncode(address.Address1) : address.Address1);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Address1, string.Empty);
+                        break;
+
+                    case AddressField.Address2:
+                        if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrWhiteSpace(address.Address2))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Address2, htmlEncode ? WebUtility.HtmlEncode(address.Address2) : address.Address2);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Address2, string.Empty);
+                        break;
+
+                    case AddressField.ZipPostalCode:
+                        if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrWhiteSpace(address.ZipPostalCode))
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.ZipPostalCode, htmlEncode ? WebUtility.HtmlEncode(address.ZipPostalCode) : address.ZipPostalCode);
+                        else
+                            fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.ZipPostalCode, string.Empty);
+                        break;
+                    default:
+                        break;
+                }
+                indexItem++;
+            }
+
+            var formatString = string.Format(format, fieldsList.Select(x => !string.IsNullOrEmpty(x.Value) ? $"{x.Value}{separator}" : x.Value).ToArray())
+                .TrimEnd(separator.ToArray());
+
+            return (formatString, fieldsList);
+        }
         #endregion
     }
 }
