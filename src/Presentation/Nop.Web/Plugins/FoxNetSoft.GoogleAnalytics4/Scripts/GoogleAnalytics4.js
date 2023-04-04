@@ -28,7 +28,7 @@
         GoogleGA4Helper.ReloadEvents();
 
         $(document).bind("nopAjaxCartProductAddedToCartEvent", function (e) {
-            GoogleGA4Helper.AddToCart('ga4_add_to_cart', e.productId, e.quantity);
+            GoogleGA4Helper.AddToCart('add_to_cart', e.productId, e.quantity);
             e.stopPropagation();
         });
     },
@@ -80,7 +80,7 @@
                 $(this).data('googleanalytics4', 1);
                 $(this).click({ productid: productid }, function (event) {
                     event.preventDefault();
-                    GoogleGA4Helper.AddToCart('ga4_add_to_cart', event.data.productid);
+                    GoogleGA4Helper.AddToCart('add_to_cart', event.data.productid);
                 });
             }
         });
@@ -94,7 +94,7 @@
                 $(this).data('googleanalytics4', 1);
                 $(this).click({ productid: productid }, function (event) {
                     event.preventDefault();
-                    GoogleGA4Helper.AddToCart('ga4_add_to_wishlist', event.data.productid);
+                    GoogleGA4Helper.AddToCart('add_to_wishlist', event.data.productid);
                 });
             }
         });
@@ -131,7 +131,7 @@
                     var products = $.grep(GA4_wishlistproducts, function (e) { return e.cartItemId === cartitemid; });
                     if (products.length > 0) {
                         var quantity = $('input[name="itemquantity' + cartitemid + '"]').val();
-                        GoogleGA4Helper.AddToCart('ga4_add_to_cart', products[0].productId, quantity);
+                        GoogleGA4Helper.AddToCart('add_to_cart', products[0].productId, quantity);
                     }
                 }
             });
@@ -141,7 +141,7 @@
     ProductClick: function (products, url) {
         this.WriteConsole({ 'ProductClick': products });
         dataLayer.push({
-            'event': 'ga4_select_item',
+            'event': 'select_item',
             'ecommerce': {
                 'item_list_name': products[0].list,
                 'items': products
@@ -181,7 +181,7 @@
             if (quantity == undefined)
                 quantity = 1;
             if (eventname == undefined)
-                eventname = 'ga4_addToCart';
+                eventname = 'addToCart';
             products[0].quantity = quantity;
             this.WriteConsole({ 'AddToCart': [eventname, products[0]] });
 
@@ -196,7 +196,7 @@
         }
     },
     RemoveFromCart: function (cartitemid, quantity) {
-        var eventName = 'ga4_removeFromCart';
+        var eventName = 'removeFromCart';
         var products = $.grep(GA4_cartproducts, function (e) { return e.cartItemId == cartitemid; });
         if (products.length == 0) {
             eventName = 'removeFromWishList';
