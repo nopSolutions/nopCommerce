@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using StackExchange.Redis;
 
 namespace Nop.Services.Caching
@@ -22,8 +23,9 @@ namespace Nop.Services.Caching
         public RedisCacheManager(AppSettings appSettings,
             IDistributedCache distributedCache,
             IRedisConnectionWrapper connectionWrapper,
-            ICacheKeyManager cacheKeyManager)
-            : base(appSettings, distributedCache, cacheKeyManager)
+            ICacheKeyManager cacheKeyManager,
+            IConcurrentCollection<object> concurrentCollection)
+            : base(appSettings, distributedCache, cacheKeyManager, concurrentCollection)
         {
             _connectionWrapper = connectionWrapper;
         }

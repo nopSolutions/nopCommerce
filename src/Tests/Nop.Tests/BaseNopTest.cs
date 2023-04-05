@@ -262,6 +262,8 @@ namespace Nop.Tests
             services.AddSingleton<ILocker, MemoryCacheLocker>();
             services.AddSingleton<MemoryCacheLocker>();
 
+            services.AddTransient(typeof(IConcurrentCollection<>), typeof(ConcurrentTrie<>));
+
             var memoryDistributedCache = new MemoryDistributedCache(new TestMemoryDistributedCacheoptions());
             services.AddSingleton<IDistributedCache>(memoryDistributedCache);
             services.AddScoped<MemoryDistributedCacheManager>();

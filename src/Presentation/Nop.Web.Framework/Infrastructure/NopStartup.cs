@@ -88,6 +88,8 @@ namespace Nop.Web.Framework.Infrastructure
             var appSettings = Singleton<AppSettings>.Instance;
             var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
 
+            services.AddTransient(typeof(IConcurrentCollection<>), typeof(ConcurrentTrie<>));
+
             services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
 
             if (distributedCacheConfig.Enabled)
