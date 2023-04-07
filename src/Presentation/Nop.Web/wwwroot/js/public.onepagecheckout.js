@@ -137,7 +137,7 @@ var Billing = {
   },
 
   setDefaultCountry: function (defaultCountry) {
-    $('select option[value="' + defaultCountry + '"]').prop('selected', true);
+    $('#opc-billing select[data-trigger="country-select"] option[value="' + defaultCountry + '"]').prop('selected', true);
     $('#opc-billing select[data-trigger="country-select"] option:selected').change()
   },
   
