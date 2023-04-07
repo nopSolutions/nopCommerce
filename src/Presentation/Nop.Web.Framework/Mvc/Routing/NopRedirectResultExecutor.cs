@@ -59,7 +59,13 @@ namespace Nop.Web.Framework.Mvc.Routing
                 var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
                 var isLocalUrl = urlHelper.IsLocalUrl(url);
 
-                var uri = new Uri(isLocalUrl ? $"{_webHelper.GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+                var uriStr = url;
+                if (isLocalUrl)
+                {
+                    var pathBase = context.HttpContext.Request.PathBase;
+                    uriStr = $"{_webHelper.GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) && !string.IsNullOrEmpty(pathBase) ? url.Replace(pathBase, "") : url)}";
+                }
+                var uri = new Uri(uriStr, UriKind.Absolute);
 
                 //Allowlist redirect URI schemes to http and https
                 if ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && urlHelper.IsLocalUrl(uri.AbsolutePath))
