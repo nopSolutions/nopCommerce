@@ -13,3 +13,14 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 7. Delete BACPAC: `rm NOP.bacpac`
 8. Connect to DB within Codespace and run contents of `configureDb.sql`
 9. Copy `appSettings.json`, `plugins.json`, `dataSettings.json` into Nop.Web/App_Data
+
+## Creating a Plugin
+
+1. Copy a plugin from the `/src/Plugins` folder.
+2. Update the following:
+   1. Folder name
+   2. `.csproj`
+   3. `Plugin.cs`
+   4. `logo.png`
+   5. `plugin.json` (only include the above files)
+3. Add to project with: `dotnet sln src/NopCommerce.sln add src/Plugins/PLUGIN_FOLDER/PLUGIN_CSPROJ
