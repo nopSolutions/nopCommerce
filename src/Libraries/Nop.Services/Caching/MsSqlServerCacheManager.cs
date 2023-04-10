@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Caching
 {
@@ -21,8 +22,9 @@ namespace Nop.Services.Caching
 
         public MsSqlServerCacheManager(AppSettings appSettings,
             IDistributedCache distributedCache,
-            ICacheKeyManager cacheKeyManager)
-            : base(appSettings, distributedCache, cacheKeyManager)
+            ICacheKeyManager cacheKeyManager,
+            IConcurrentCollection<object> concurrentCollection)
+            : base(appSettings, distributedCache, cacheKeyManager, concurrentCollection)
         {
             _distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
         }
