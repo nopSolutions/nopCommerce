@@ -171,7 +171,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
                 .Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/0000020_build-your-own-computer_100.jpeg");
             model.Title.Should().Be("Show details for Build your own computer");
 
-            model.FullSizeImageUrl.Should().BeNull();
+            model.FullSizeImageUrl.Should().Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/0000020_build-your-own-computer.jpeg");
             model.ThumbImageUrl.Should().BeNull();
         }
     }
