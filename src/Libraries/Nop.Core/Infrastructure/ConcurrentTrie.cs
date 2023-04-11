@@ -641,11 +641,11 @@ namespace Nop.Core.Infrastructure
             public TrieNode(string label = "")
             {
                 Label = label;
+                Children = new Dictionary<char, TrieNode>();
             }
 
             public TrieNode(ReadOnlySpan<char> label) : this(label.ToString())
             {
-                Children = new();
             }
 
             public TrieNode(string label, TrieNode node) : this(label)
