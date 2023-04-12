@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopUpdateMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Localization)]
+    [NopUpdateMigration("2022-07-20 00:01:00", "4.60.0", UpdateMigrationType.Localization)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -326,6 +326,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 //5701
                 ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
                 ["Admin.Configuration.AppSettings.Common.UseAutofac.Hint"] = "The value indicating whether to use Autofac IoC container. If disabled, then the default .Net IoC container will be used.",
+
+                //6669
+                ["Admin.Catalog.Products.SpecificationAttributes.NameFormat"] = "{0} >> {1}",
             }, languageId);
 
             #endregion
