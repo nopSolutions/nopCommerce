@@ -123,6 +123,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["ActivityLog.InstallNewPlugin"] = "Installed a new plugin (FriendlyName: '{0}' version: {1})",
                 ["ActivityLog.UninstallPlugin"] = "Uninstalled a plugin (FriendlyName: '{0}' version: {1})",
                 ["ActivityLog.UpdatePlugin"] = "Updated plugin (FriendlyName: '{0}' from version: {1} to version: {2})",
+                //6645
+                ["Address.LineFormat"] = "{0}{1}{2}{3}{4}{5}{6}",
+                ["Pdf.AddressLine"] = "Address",
             }, languageId);
 
             #endregion
