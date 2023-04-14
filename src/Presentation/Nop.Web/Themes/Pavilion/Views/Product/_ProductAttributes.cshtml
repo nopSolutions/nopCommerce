@@ -481,7 +481,7 @@
                 minPaymentFullPrice.innerText = "$" + overallPrice;
                 
                 var minMonthlyPayment = document.getElementsByClassName('min-payment-monthly-payment')[0];
-                var minimumPayment = Math.max(Math.ceil(overallPrice * 0.035), 28);
+                var minimumPayment = Math.max(Math.ceil(overallPrice * 0.035), 30);
                 minMonthlyPayment.innerText = "$" + minimumPayment;
                 
                 var months = parseInt(document.getElementsByClassName('min-payment-months')[0].innerText.split(' ')[0]);
