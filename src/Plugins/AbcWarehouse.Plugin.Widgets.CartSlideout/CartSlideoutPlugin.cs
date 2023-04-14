@@ -113,6 +113,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
                 new ProductAttribute() { Name = AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName },
                 new ProductAttribute() { Name = AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName },
                 new ProductAttribute() { Name = AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName },
+                new ProductAttribute() { Name = AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName },
+                new ProductAttribute() { Name = AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName },
             };
 
             foreach (var pa in pas)
@@ -126,7 +128,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
             var attributes = (await _productAttributeService.GetAllProductAttributesAsync()).Where(pa =>
                 pa.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ||
                 pa.Name == AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName ||
-                pa.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName);
+                pa.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName ||
+                pa.Name == AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName ||
+                pa.Name == AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName);
 
             foreach (var attribute in attributes)
             {

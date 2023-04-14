@@ -8,7 +8,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Media;
 using Nop.Web.Framework.Components;
-using Nop.Services.Catalog;
 using Nop.Plugin.Misc.AbcCore.Extensions;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components

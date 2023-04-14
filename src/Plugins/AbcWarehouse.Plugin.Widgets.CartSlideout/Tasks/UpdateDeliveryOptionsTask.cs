@@ -28,6 +28,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         private ProductAttribute _haulAwayDeliveryProductAttribute;
         private ProductAttribute _haulAwayDeliveryInstallProductAttribute;
         private ProductAttribute _pickupInStoreProductAttribute;
+        private ProductAttribute _deliveryAccessoriesProductAttribute;
+        private ProductAttribute _deliveryInstallAccessoriesProductAttribute;
 
         public UpdateDeliveryOptionsTask(
             CoreSettings coreSettings,
@@ -57,6 +59,10 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName);
             _pickupInStoreProductAttribute =
                 await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
+            _deliveryAccessoriesProductAttribute =
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
+            _deliveryInstallAccessoriesProductAttribute =
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
 
             var hasErrors = false;
 
@@ -78,13 +84,16 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                             if (deliveryOnlyPav != null)
                             {
                                 UpdateHaulawayAsync(productId, map.DeliveryHaulway, _haulAwayDeliveryProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav);
+                                UpdateAccessoriesAsync(productId, map, _deliveryAccessoriesProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav);
                             }
 
                             var deliveryInstallPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Home Delivery and Installation ("));
                             if (deliveryInstallPav != null)
                             {
                                 UpdateHaulawayAsync(productId, map.DeliveryHaulwayInstall, _haulAwayDeliveryInstallProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav);
+                                UpdateAccessoriesAsync(productId, map, _deliveryInstallAccessoriesProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav);
                             }
+
                         }
                     }
                     catch (Exception e)
@@ -124,6 +133,50 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             if (hasErrors)
             {
                 throw new NopException("Failures occured when updating product delivery options.");
+            }
+        }
+
+        private async System.Threading.Tasks.Task UpdateAccessoriesAsync(
+            int productId,
+            AbcDeliveryMap map,
+            int accessoriesProductAttributeId,
+            int deliveryOptionsPamId,
+            ProductAttributeValue deliveryPav)
+        {
+            var installKit1 = map.InstallKit_1;
+
+            var existingPam =
+                (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId)).FirstOrDefault(
+                    pam => pam.ProductAttributeId == accessoriesProductAttributeId
+                );
+            var newPam = installKit1 != 0 ? new ProductAttributeMapping()
+            {
+                ProductId = productId,
+                ProductAttributeId = accessoriesProductAttributeId,
+                AttributeControlType = AttributeControlType.Checkboxes,
+                TextPrompt = "Accessories",
+                ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
+            } : null;
+
+            var resultPam = await SaveProductAttributeMappingAsync(existingPam, newPam);
+            if (resultPam != null)
+            {
+                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault();
+
+                var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(installKit1);
+                var price = item.Price - item.Price;
+                var priceFormatted = price == 0 ? "FREE" : await _priceFormatter.FormatPriceAsync(price);
+                var newPav = new ProductAttributeValue()
+                {
+                    ProductAttributeMappingId = resultPam.Id,
+                    Name = item.Name,
+                    Cost = installKit1,
+                    PriceAdjustment = price,
+                    IsPreSelected = false,
+                    DisplayOrder = 0,
+                };
+
+                await SaveProductAttributeValueAsync(existingPav, newPav);
             }
         }
 
