@@ -182,7 +182,7 @@ namespace Nop.Plugin.Widgets.AbcSynchronyPayments.Components
         private int CalculatePayment(decimal productPrice, bool isMinimumPayment, int months)
         {
             return isMinimumPayment ?
-                (int)Math.Max(Math.Round(Math.Ceiling(productPrice * 0.035M), 2), 28) :
+                (int)Math.Max(Math.Round(Math.Ceiling(productPrice * 0.035M), 2), 30) :
                 CalculateEqualPayments(productPrice, months);
         }
 
