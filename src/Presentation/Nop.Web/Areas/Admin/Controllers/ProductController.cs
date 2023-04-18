@@ -727,8 +727,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ManufacturerPartNumber = null,
                     Gtin = null,
                     OverriddenPrice = null,
-                    NotifyAdminForQuantityBelow = 1,
-                    PictureId = 0
+                    NotifyAdminForQuantityBelow = 1
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
             }
@@ -736,10 +735,66 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task PingVideoUrlAsync(string videoUrl)
         {
-            var path = videoUrl.StartsWith("/") ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}" : videoUrl;
+            var path = videoUrl.StartsWith("/")
+                ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}"
+                : videoUrl;
 
             var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
             await client.GetStringAsync(path);
+        }
+
+        protected virtual async Task SaveAttributeCombinationPicturesAsync(Product product, ProductAttributeCombination combination, ProductAttributeCombinationModel model)
+        {
+            var existingCombinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
+            var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
+
+            //delete manufacturers
+            foreach (var existingCombinationPicture in existingCombinationPictures)
+                if (!model.PictureIds.Contains(existingCombinationPicture.PictureId) || !productPictureIds.Contains(existingCombinationPicture.PictureId))
+                    await _productAttributeService.DeleteProductAttributeCombinationPictureAsync(existingCombinationPicture);
+
+            //add manufacturers
+            foreach (var pictureId in model.PictureIds)
+            {
+                if (!productPictureIds.Contains(pictureId))
+                    continue;
+
+                if (_productAttributeService.FindProductAttributeCombinationPicture(existingCombinationPictures, combination.Id, pictureId) == null)
+                {
+                    await _productAttributeService.InsertProductAttributeCombinationPictureAsync(new ProductAttributeCombinationPicture
+                    {
+                        ProductAttributeCombinationId = combination.Id,
+                        PictureId = pictureId
+                    });
+                }
+            }
+        }
+
+        protected virtual async Task SaveAttributeValuePicturesAsync(Product product, ProductAttributeValue value, ProductAttributeValueModel model)
+        {
+            var existingValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id);
+            var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
+
+            //delete manufacturers
+            foreach (var existingValuePicture in existingValuePictures)
+                if (!model.PictureIds.Contains(existingValuePicture.PictureId) || !productPictureIds.Contains(existingValuePicture.PictureId))
+                    await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+
+            //add manufacturers
+            foreach (var pictureId in model.PictureIds)
+            {
+                if (!productPictureIds.Contains(pictureId))
+                    continue;
+
+                if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id, pictureId) == null)
+                {
+                    await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
+                    {
+                        ProductAttributeValueId = value.Id,
+                        PictureId = pictureId
+                    });
+                }
+            }
         }
 
         #endregion
@@ -3125,6 +3180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await _productAttributeService.InsertProductAttributeValueAsync(pav);
                 await UpdateLocalesAsync(pav, model);
+                await SaveAttributeValuePicturesAsync(product, pav, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -3223,6 +3279,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _productAttributeService.UpdateProductAttributeValueAsync(productAttributeValue);
 
                 await UpdateLocalesAsync(productAttributeValue, model);
+                await SaveAttributeValuePicturesAsync(product, productAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -3470,6 +3527,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
 
+                await SaveAttributeCombinationPicturesAsync(product, combination, model);
+
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity, combination.StockQuantity,
                     message: await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
@@ -3624,6 +3683,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 combination.AttributesXml = attributesXml;
 
                 await _productAttributeService.UpdateProductAttributeCombinationAsync(combination);
+
+                await SaveAttributeCombinationPicturesAsync(product, combination, model);
 
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity - previousStockQuantity, combination.StockQuantity,

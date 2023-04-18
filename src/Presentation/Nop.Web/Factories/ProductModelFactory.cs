@@ -1048,7 +1048,7 @@ namespace Nop.Web.Factories
                         }
 
                         //picture of a product attribute value
-                        valueModel.PictureId = attributeValue.PictureId;
+                        valueModel.PictureId = (await _productAttributeService.GetProductAttributeValuePicturesAsync(attributeValue.Id)).FirstOrDefault()?.PictureId ?? 0;
                     }
                 }
 
@@ -1280,6 +1280,7 @@ namespace Nop.Web.Factories
 
                     var pictureModel = new PictureModel
                     {
+                        Id = picture.Id,
                         ImageUrl = imageUrl,
                         ThumbImageUrl = thumbImageUrl,
                         FullSizeImageUrl = fullSizeImageUrl,
@@ -1509,7 +1510,8 @@ namespace Nop.Web.Factories
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc,
                 VisibleIndividually = product.VisibleIndividually,
-                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations
+                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
+                DisplayAttributeCombinationImagesOnly = product.DisplayAttributeCombinationImagesOnly
             };
 
             //automatically generate product description?

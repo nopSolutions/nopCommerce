@@ -870,16 +870,27 @@ namespace Nop.Web.Controllers
             //picture. used when we want to override a default product picture when some attribute is selected
             var pictureFullSizeUrl = string.Empty;
             var pictureDefaultSizeUrl = string.Empty;
+            var pictureIds = new List<int>();
             if (loadPicture)
             {
                 //first, try to get product attribute combination picture
-                var pictureId = (await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributeXml))?.PictureId ?? 0;
+                var pictureId = 0;
+                var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributeXml);
+                if (combination != null)
+                {
+                    var combinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
+                    pictureIds = combinationPictures.Select(cp => cp.PictureId).ToList();
+                    pictureId = combinationPictures.FirstOrDefault()?.PictureId ?? 0;
+                }
 
                 //then, let's see whether we have attribute values with pictures
                 if (pictureId == 0)
                 {
-                    pictureId = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml))
-                        .FirstOrDefault(attributeValue => attributeValue.PictureId > 0)?.PictureId ?? 0;
+                    var valuePictures = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml))
+                        .SelectManyAwait(async attributeValue => await _productAttributeService.GetProductAttributeValuePicturesAsync(attributeValue.Id))
+                        .ToListAsync();
+                    pictureIds = valuePictures.Select(vp => vp.PictureId).ToList();
+                    pictureId = valuePictures.FirstOrDefault()?.PictureId ?? 0;
                 }
 
                 if (pictureId > 0)
@@ -927,6 +938,7 @@ namespace Nop.Web.Controllers
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
                 pictureFullSizeUrl,
                 pictureDefaultSizeUrl,
+                pictureIds,
                 isFreeShipping,
                 message = errors.Any() ? errors.ToArray() : null
             });

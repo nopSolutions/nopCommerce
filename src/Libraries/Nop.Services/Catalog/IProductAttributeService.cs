@@ -171,6 +171,50 @@ namespace Nop.Services.Catalog
 
         #endregion
 
+        #region Product attribute value pictures
+
+        /// <summary>
+        /// Deletes a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture);
+
+        /// <summary>
+        /// Inserts a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture);
+
+        /// <summary>
+        /// Updates a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture);
+
+        /// <summary>
+        /// Get product attribute value pictures
+        /// </summary>
+        /// <param name="valueId">Value id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute value pictures
+        /// </returns>
+        Task<IList<ProductAttributeValuePicture>> GetProductAttributeValuePicturesAsync(int valueId);
+
+        /// <summary>
+        /// Returns a ProductAttributeValuePicture that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="valueId">Product attribute value identifier</param>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <returns>A ProductAttributeValuePicture that has the specified values; otherwise null</returns>
+        ProductAttributeValuePicture FindProductAttributeValuePicture(IList<ProductAttributeValuePicture> source, int valueId, int pictureId);
+
+        #endregion
+
         #region Predefined product attribute values
 
         /// <summary>
@@ -268,6 +312,50 @@ namespace Nop.Services.Catalog
         /// <param name="combination">Product attribute combination</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductAttributeCombinationAsync(ProductAttributeCombination combination);
+
+        #endregion
+
+        #region Product attribute combination pictures
+
+        /// <summary>
+        /// Deletes a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture);
+
+        /// <summary>
+        /// Inserts a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture);
+
+        /// <summary>
+        /// Updates a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture);
+
+        /// <summary>
+        /// Get product attribute combination pictures
+        /// </summary>
+        /// <param name="combinationId">Combination id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute combination pictures
+        /// </returns>
+        Task<IList<ProductAttributeCombinationPicture>> GetProductAttributeCombinationPicturesAsync(int combinationId);
+
+        /// <summary>
+        /// Returns a ProductAttributeCombinationPicture that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <returns>A ProductAttributeCombinationPicture that has the specified values; otherwise null</returns>
+        ProductAttributeCombinationPicture FindProductAttributeCombinationPicture(IList<ProductAttributeCombinationPicture> source, int combinationId, int pictureId);
 
         #endregion
     }

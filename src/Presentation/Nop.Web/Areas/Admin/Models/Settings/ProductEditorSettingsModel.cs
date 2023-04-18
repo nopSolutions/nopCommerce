@@ -147,6 +147,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.NotReturnable")]
         public bool NotReturnable { get; set; }
 

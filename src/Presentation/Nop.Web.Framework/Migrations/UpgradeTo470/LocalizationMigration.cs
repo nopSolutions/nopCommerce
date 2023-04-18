@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -31,6 +32,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 "Admin.Catalog.Products.Multimedia.Videos.SaveBeforeEdit",
                 //#6518
                 "Reviews.ProductReviewsFor",
+                //1934
+                "Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.Hint",
+                "Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture",
+                "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.Hint",
+                "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture",
             });
 
             #endregion
@@ -126,7 +132,15 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6645
                 ["Address.LineFormat"] = "{0}{1}{2}{3}{4}{5}{6}",
                 ["Pdf.AddressLine"] = "Address",
-            }, languageId);
+                //1934
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures"] = "Pictures",
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures"] = "Pictures",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
+                ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
+                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
+                ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
+        }, languageId);
 
             #endregion
         }

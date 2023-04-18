@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
+using Microsoft.Extensions.Options;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -570,9 +571,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(model => model.ProductAttributes, options => options.Ignore())
                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
                .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-               .ForMember(model => model.Warnings, options => options.Ignore());
+               .ForMember(model => model.Warnings, options => options.Ignore())
+               .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-               .ForMember(entity => entity.AttributesXml, options => options.Ignore());
+               .ForMember(entity => entity.AttributesXml, options => options.Ignore())
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
 
             CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
@@ -609,10 +612,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.WeightAdjustmentStr, options => options.Ignore())
                 .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
                 .ForMember(model => model.DisplayImageSquaresPicture, options => options.Ignore())
-                .ForMember(model => model.ProductPictureModels, options => options.Ignore());
+                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
+                .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
                .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
-               .ForMember(entity => entity.Quantity, options => options.Ignore());
+               .ForMember(entity => entity.Quantity, options => options.Ignore())
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
 
             CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
             CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();

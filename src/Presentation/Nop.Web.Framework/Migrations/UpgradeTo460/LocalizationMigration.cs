@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
 
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions",
                 "Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint",
-
+            
 				//4622
                 "PDFInvoice.OrderDate",
                 "PDFInvoice.Company",

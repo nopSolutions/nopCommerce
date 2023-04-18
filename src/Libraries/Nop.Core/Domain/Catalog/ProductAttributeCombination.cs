@@ -51,13 +51,14 @@
         public int NotifyAdminForQuantityBelow { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of picture associated with this combination
-        /// </summary>
-        public int PictureId { get; set; }
-
-        /// <summary>
         /// Gets or sets the minimum stock quantity
         /// </summary>
         public int MinStockQuantity { get; set; }
+
+        /// <summary>
+        /// The field is not used since 4.70 and is left only for the update process
+        /// use the <see cref="ProductAttributeCombinationPicture"/> instead
+        /// </summary>
+        public int PictureId { get; set; }
     }
 }

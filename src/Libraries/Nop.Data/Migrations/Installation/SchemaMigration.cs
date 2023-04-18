@@ -76,8 +76,10 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<SpecificationAttributeGroup>();
             Create.TableFor<SpecificationAttribute>();
             Create.TableFor<ProductAttributeCombination>();
+            Create.TableFor<ProductAttributeCombinationPicture>();
             Create.TableFor<ProductAttributeMapping>();
             Create.TableFor<ProductAttributeValue>();
+            Create.TableFor<ProductAttributeValuePicture>();
             Create.TableFor<Order>();
             Create.TableFor<OrderItem>();
             Create.TableFor<RewardPointsHistory>();

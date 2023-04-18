@@ -785,13 +785,16 @@ namespace Nop.Services.ExportImport
             var quantity = productAttributeManager.GetDefaultProperty("Quantity").IntValue;
             var isPreSelected = productAttributeManager.GetDefaultProperty("IsPreSelected").BooleanValue;
             var displayOrder = productAttributeManager.GetDefaultProperty("DisplayOrder").IntValue;
-            var pictureId = productAttributeManager.GetDefaultProperty("PictureId").IntValue;
+            var pictureIdsStr = productAttributeManager.GetDefaultProperty("PictureIds").StringValue;
             var textPrompt = productAttributeManager.GetDefaultProperty("AttributeTextPrompt").StringValue;
             var isRequired = productAttributeManager.GetDefaultProperty("AttributeIsRequired").BooleanValue;
             var attributeDisplayOrder = productAttributeManager.GetDefaultProperty("AttributeDisplayOrder").IntValue;
 
             var productAttributeMapping = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(lastLoadedProduct.Id))
                 .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+            var pictureIds = new List<int>();
+            if (!string.IsNullOrWhiteSpace(pictureIdsStr))
+                pictureIds = Array.ConvertAll(pictureIdsStr.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse).ToList();
 
             if (productAttributeMapping == null)
             {
@@ -822,6 +825,76 @@ namespace Nop.Services.ExportImport
             //var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(productAttributeValueId);
 
             var attributeControlType = (AttributeControlType)attributeControlTypeId;
+
+            async Task SaveAttributeValuePicturesAsync(Product product, ProductAttributeValue value)
+            {
+                var existingValuePictures =
+                    await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id);
+                var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id))
+                    .Select(p => p.Id).ToList();
+
+                //delete manufacturers
+                foreach (var existingValuePicture in existingValuePictures)
+                    if (pictureIds.Contains(existingValuePicture.PictureId) ||
+                        !productPictureIds.Contains(existingValuePicture.PictureId))
+                        await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+
+                //add manufacturers
+                foreach (var pictureId in pictureIds)
+                {
+                    if (!productPictureIds.Contains(pictureId))
+                        continue;
+
+                    if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id,
+                            pictureId) == null)
+                    {
+                        await _productAttributeService.InsertProductAttributeValuePictureAsync(
+                            new ProductAttributeValuePicture
+                            {
+                                ProductAttributeValueId = value.Id, PictureId = pictureId
+                            });
+                    }
+                }
+
+                if (!metadata.LocalizedWorksheets.Any())
+                    return;
+
+                foreach (var language in languages)
+                {
+                    var lWorksheet = metadata.LocalizedWorksheets.FirstOrDefault(ws =>
+                        ws.Name.Equals(language.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
+                    if (lWorksheet == null)
+                        continue;
+
+                    productAttributeManager.CurrentLanguage = language;
+                    productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow,
+                        ExportProductAttribute.ProductAttributeCellOffset);
+
+                    valueName = productAttributeManager.GetLocalizedProperty("ValueName").StringValue;
+                    textPrompt = productAttributeManager.GetLocalizedProperty("AttributeTextPrompt").StringValue;
+
+                    await _localizedEntityService.SaveLocalizedValueAsync(pav, p => p.Name, valueName, language.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMapping, p => p.TextPrompt,
+                        textPrompt, language.Id);
+
+                    switch (attributeControlType)
+                    {
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.FileUpload:
+                        case AttributeControlType.MultilineTextbox:
+                        case AttributeControlType.TextBox:
+                            if (productAttributeMapping.ValidationRulesAllowed())
+                            {
+                                var defaultValue = productAttributeManager.GetLocalizedProperty("DefaultValue")
+                                    ?.StringValue;
+                                await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMapping,
+                                    p => p.DefaultValue, defaultValue, language.Id);
+                            }
+
+                            return;
+                    }
+                }
+            }
 
             if (pav == null)
             {
@@ -860,11 +933,11 @@ namespace Nop.Services.ExportImport
                     ColorSquaresRgb = colorSquaresRgb,
                     ImageSquaresPictureId = imageSquaresPictureId,
                     CustomerEntersQty = customerEntersQty,
-                    Quantity = quantity,
-                    PictureId = pictureId
+                    Quantity = quantity
                 };
 
                 await _productAttributeService.InsertProductAttributeValueAsync(pav);
+                await SaveAttributeValuePicturesAsync(lastLoadedProduct, pav);
             }
             else
             {
@@ -881,45 +954,14 @@ namespace Nop.Services.ExportImport
                 pav.Quantity = quantity;
                 pav.IsPreSelected = isPreSelected;
                 pav.DisplayOrder = displayOrder;
-                pav.PictureId = pictureId;
 
                 await _productAttributeService.UpdateProductAttributeValueAsync(pav);
-            }
-
-            if (!metadata.LocalizedWorksheets.Any())
-                return;
-
-            foreach (var language in languages)
-            {
-                var lWorksheet = metadata.LocalizedWorksheets.FirstOrDefault(ws => ws.Name.Equals(language.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
-                if (lWorksheet == null)
-                    continue;
-
-                productAttributeManager.CurrentLanguage = language;
-                productAttributeManager.ReadLocalizedFromXlsx(lWorksheet, iRow, ExportProductAttribute.ProductAttributeCellOffset);
-
-                valueName = productAttributeManager.GetLocalizedProperty("ValueName").StringValue;
-                textPrompt = productAttributeManager.GetLocalizedProperty("AttributeTextPrompt").StringValue;
-
-                await _localizedEntityService.SaveLocalizedValueAsync(pav, p => p.Name, valueName, language.Id);
-                await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMapping, p => p.TextPrompt, textPrompt, language.Id);
-
-                switch (attributeControlType)
-                {
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    case AttributeControlType.MultilineTextbox:
-                    case AttributeControlType.TextBox:
-                        if (productAttributeMapping.ValidationRulesAllowed())
-                        {
-                            var defaultValue = productAttributeManager.GetLocalizedProperty("DefaultValue")?.StringValue;
-                            await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMapping, p => p.DefaultValue, defaultValue, language.Id);
-                        }
-
-                        return;
-                }
+                await SaveAttributeValuePicturesAsync(lastLoadedProduct, pav);
             }
         }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        
 
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ImportSpecificationAttributeAsync(ImportProductMetadata metadata, Product lastLoadedProduct, IList<Language> languages, int iRow)
@@ -2318,6 +2360,9 @@ namespace Nop.Services.ExportImport
                             break;
                         case "IsLimitedToStores":
                             product.LimitedToStores = property.BooleanValue;
+                            break;
+                        case "DisplayAttributeCombinationImagesOnly":
+                            product.DisplayAttributeCombinationImagesOnly = property.BooleanValue;
                             break;
                     }
                 }
