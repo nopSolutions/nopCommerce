@@ -1,0 +1,149 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
+                        </div>
+                        <div class="col-md-8">
+                            <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
+                        </div>
+                        <div class="col-md-8">
+                            <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-8 offset-md-4">
+                            <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                <i class="fas fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+            Name = "log-grid",
+            UrlRead = new DataUrl("LogList", "TaxTransactionLog", null),
+            SearchButtonId = "search-log",
+            Length = Model.TaxTransactionLogSearchModel.PageSize,
+            LengthMenu = Model.TaxTransactionLogSearchModel.AvailablePageSizes,
+            Filters = new List<FilterParameter>
+                {
+                new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedFrom), nameof(Model.TaxTransactionLogSearchModel)),
+                new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedTo), nameof(Model.TaxTransactionLogSearchModel))
+                },
+                ColumnCollection = new List<ColumnProperty>
+                    {
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                    {
+                    IsMasterCheckBox = true,
+                    Render = new RenderCheckBox("checkbox_log"),
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Width = "50",
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.StatusCode))
+                    {
+                    Title = T("Plugins.Tax.Avalara.Log.StatusCode").Text,
+                    Width = "100"
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Url))
+                    {
+                    Title = T("Plugins.Tax.Avalara.Log.Url").Text,
+                    Width = "200"
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.CreatedDate))
+                    {
+                    Title = T("Plugins.Tax.Avalara.Log.CreatedDate").Text,
+                    Width = "200",
+                    Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                    {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/TaxTransactionLog/View/"))
+                    }
+                    }
+                    })
+
+                                               <script>
+                $(document).ready(function() {
+                    $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                        var postData = {
+                            selectedIds: selectedIds
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: 'POST',
+                            url: '@(Url.Action("DeleteSelected", "TaxTransactionLog"))',
+                            data: postData,
+                            traditional: true,
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showAlert('deleteSelectedFailed', errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                if (jqXHR.status === 204)
+                                {
+                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                    return;
+                                }
+                                updateTable('#log-grid');
+                            }
+                        });
+                        $('#delete-selected-action-confirmation').modal('toggle');
+                        return false;
+                    });
+
+                    $('#clear-all-action-confirmation-submit-button').bind('click', function () {
+                        $.ajax({
+                            cache: false,
+                            type: 'GET',
+                            url: '@(Url.Action("ClearAll", "TaxTransactionLog"))',
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showAlert('clear-all-failed', errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                updateTable('#log-grid');
+                            }
+                        });
+                        $('#clear-all-action-confirmation').modal('toggle');
+                        return false;
+                    });
+                });
+                                               </script>
+        </div>
+        <div class="card-footer">
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.System.Log.DeleteSelected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
+            <button type="button" id="clear-all" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.System.Log.ClearLog")
+            </button>
+            <nop-action-confirmation asp-button-id="clear-all" />
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="delete-selected-failed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-alert asp-alert-id="clear-all-failed" />

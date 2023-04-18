@@ -1,0 +1,366 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default no-margin">
+        <div class="card-header">
+            @T("Plugins.Tax.Avalara.Configuration.Common")
+        </div>
+        <div class="card-body">
+            <p>
+                To enable this tax provider, you'll need to:<br />
+                <br />
+                1. <a href="https://avlr.co/3bw9ixk" target="_blank">Create an AvaTax account</a><br />
+                2. Log in at the production or development AvaTax portal<br />
+                3. Add a company and some nexus jurisdiction selections to get any tax results<br />
+                4. Fill in your AvaTax account details below<br />
+                See <a href="https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html" target="_blank">documentation</a> for more information.<br />
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AccountId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AccountId" asp-required="true" />
+                    <span asp-validation-for="AccountId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="LicenseKey" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="LicenseKey" asp-required="true" html-attributes="@(new { value = Model.LicenseKey })" />
+                    <span asp-validation-for="LicenseKey"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CompanyCode" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="CompanyCode" asp-items="Model.Companies" />
+                    <span asp-validation-for="CompanyCode"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="UseSandbox" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseSandbox" />
+                    <span asp-validation-for="UseSandbox"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EnableLogging" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableLogging" />
+                    <span asp-validation-for="EnableLogging"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default no-margin">
+        <div class="card-header">
+            @T("Plugins.Tax.Avalara.Configuration.TaxCalculation")
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CommitTransactions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CommitTransactions" />
+                    <span asp-validation-for="CommitTransactions"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ValidateAddress" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ValidateAddress" />
+                    <span asp-validation-for="ValidateAddress"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="TaxOriginAddressTypeId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="TaxOriginAddressTypeId" asp-items="@Model.TaxOriginAddressTypes" />
+                    <span asp-validation-for="TaxOriginAddressTypeId"></span>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(model => model.TaxOriginAddressTypeId)').click(changeOriginAddressType);
+                    });
+
+                    function changeOriginAddressType() {
+                        warningValidation(
+                            '@Url.Action("ChangeOriginAddressType", "Avalara")',
+                            '@Html.NameFor(model => model.TaxOriginAddressTypeId)',
+                            { typeId: $('#@Html.IdFor(model => model.TaxOriginAddressTypeId)').val() });
+                    }
+                </script>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="UseTaxRateTables" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseTaxRateTables" />
+                    <span asp-validation-for="UseTaxRateTables"></span>
+                </div>
+            </div>
+            <div class="form-group row" id="pnlGetTaxRateByAddressOnly">
+                <div class="col-md-3">
+                    <nop-label asp-for="GetTaxRateByAddressOnly" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="GetTaxRateByAddressOnly" />
+                    <span asp-validation-for="GetTaxRateByAddressOnly"></span>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#@Html.IdFor(model => model.UseTaxRateTables)').click(toggleUseTaxRateTables);
+                    toggleUseTaxRateTables();
+                });
+
+                function toggleUseTaxRateTables() {
+                    if ($('#@Html.IdFor(model => model.UseTaxRateTables)').is(':checked')) {
+                        $('#pnlGetTaxRateByAddressOnly').hideElement();
+                    }
+                    else {
+                        $('#pnlGetTaxRateByAddressOnly').showElement();
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="card card-default no-margin">
+        <div class="card-header">
+            @T("Plugins.Tax.Avalara.Configuration.Certificates")
+        </div>
+        <div class="card-body">
+            <p>
+                The AvaTax provides an easy way to manage exemption certificates - and they will automatically link to your CertCapture and CertExpress accounts!<br />
+                <a href="https://avlr.co/3bA1P1X" target="_blank">Create a CertCapture account</a><br />
+                Please note that this feature only works if you have a <a href="https://help.avalara.com/0021_Avalara_CertCapture/All_about_CertCapture/Link_CertCapture_to_AvaTax" target="_blank">CertCapture linked to your AvaTax account</a>.<br />
+                <br />
+                Before you can use exemption certificates feature, you must set up your company for exemption certificate data storage.<br />
+                To check if this is set up for a company, <b>Check connection</b> below. To request setup of exemption certificate storage for this company, push <b>Request certificate setup</b> button below.<br />
+                <br />
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EnableCertificates" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableCertificates" />
+                    <span asp-validation-for="EnableCertificates"></span>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(model => model.EnableCertificates)').click(changeEnableCertificates);
+                    });
+
+                    function changeEnableCertificates() {
+                        warningValidation(
+                            '@Url.Action("ChangeEnableCertificates", "Avalara")',
+                            '@Html.NameFor(model => model.EnableCertificates)',
+                            { enabled: $('#@Html.IdFor(model => model.EnableCertificates)').is(':checked') });
+                    }
+                </script>
+            </div>
+            <nop-nested-setting asp-for="EnableCertificates">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedCustomerRoleIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
+                                <script>
+                                $(document).ready(function() {
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                    rolesIdsInput.setOptions({
+                                        autoClose: false,
+                                        filter: 'contains'
+                                    });
+
+                                    @if (!Model.AvailableCustomerRoles.Any())
+                                    {
+                                        <text>
+                                            rolesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: 'No customer roles available'
+                                            });
+                                            rolesIdsInput._placeholder();
+                                            rolesIdsInput._enable();
+                                        </text>
+                                    }
+                                });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AutoValidateCertificate" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AutoValidateCertificate" />
+                        <span asp-validation-for="AutoValidateCertificate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AllowEditCustomer" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AllowEditCustomer" />
+                        <span asp-validation-for="AllowEditCustomer"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DisplayNoValidCertificatesMessage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisplayNoValidCertificatesMessage" />
+                        <span asp-validation-for="DisplayNoValidCertificatesMessage"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9 offset-md-3 mb-3">
+            <button type="submit" name="save" class="btn btn-primary">
+                @T("Admin.Common.Save")
+            </button>
+            @if (Model.IsConfigured)
+            {
+                <button type="submit" name="check-credentials" class="btn btn-info ml-1">
+                    @T("Plugins.Tax.Avalara.Configuration.Credentials.Button")
+                </button>
+                @if (Model.EnableCertificates)
+                {
+                    <button type="submit" name="request-certificate-setup" class="btn btn-info ml-1">
+                        @T("Plugins.Tax.Avalara.Configuration.Certificates.Button")
+                    </button>
+                }
+            }
+        </div>
+    </div>
+
+    @if (Model.IsConfigured)
+    {
+        <div class="card card-default no-margin">
+            <div class="card-header">
+                @T("Plugins.Tax.Avalara.TestTax")
+            </div>
+            <div class="card-body">
+                <script>
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(model => model.TestAddress.CountryId)').change(function () {
+                            var selectedItem = $(this).val();
+                            var ddlStates = $('#@Html.IdFor(model => model.TestAddress.StateProvinceId)');
+                            $.ajax({
+                                cache: false,
+                                type: 'GET',
+                                url: '@(Url.Action("GetStatesByCountryId", "Country"))',
+                                data: {
+                                    'countryId': selectedItem
+                                },
+                                success: function (data, textStatus, jqXHR) {
+                                    ddlStates.html('');
+                                    $.each(data, function (id, option) {
+                                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                                    });
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#states-alert').click();
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.CountryId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TestAddress.CountryId" asp-items="Model.TestAddress.AvailableCountries" />
+                        <span asp-validation-for="TestAddress.CountryId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.StateProvinceId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TestAddress.StateProvinceId" asp-items="Model.TestAddress.AvailableStates" />
+                        <span asp-validation-for="TestAddress.StateProvinceId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.City" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.City" />
+                        <span asp-validation-for="TestAddress.City"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.Address1" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.Address1" />
+                        <span asp-validation-for="TestAddress.Address1"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestAddress.ZipPostalCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestAddress.ZipPostalCode" />
+                        <span asp-validation-for="TestAddress.ZipPostalCode"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="test-tax" class="btn btn-info">
+                            @T("Plugins.Tax.Avalara.TestTax.Button")
+                        </button>
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.TestTaxResult))
+                {
+                    <div class="form-group row">
+                        <div class="col-md-12" style="white-space: pre-line">
+                            @Model.TestTaxResult
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+<nop-alert asp-alert-id="states-alert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

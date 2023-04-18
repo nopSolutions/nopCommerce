@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Nivo Slider",
+  "SystemName": "Widgets.NivoSlider",
+  "Version": "1.50",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.NivoSlider.dll",
+  "Description": "This plugin allows you to change the contents of main page slider"
+}

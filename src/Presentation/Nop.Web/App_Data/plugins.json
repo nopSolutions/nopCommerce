@@ -1,0 +1,98 @@
+﻿{
+  "InstalledPluginNames": [
+    "Obsolete field, using only for compatibility"
+  ],
+  "InstalledPlugins": [
+    {
+      "SystemName": "Payments.PayPalCommerce",
+      "Version": "1.16"
+    },
+    {
+      "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
+      "Version": "1.40"
+    },
+    {
+      "SystemName": "CurrencyExchange.ECB",
+      "Version": "1.33"
+    },
+    {
+      "SystemName": "Misc.Sendinblue",
+      "Version": "3.56"
+    },
+    {
+      "SystemName": "Misc.WebApi.Frontend",
+      "Version": "1.00"
+    },
+    {
+      "SystemName": "Misc.Zettle",
+      "Version": "1.10"
+    },
+    {
+      "SystemName": "MultiFactorAuth.GoogleAuthenticator",
+      "Version": "1.14"
+    },
+    {
+      "SystemName": "Payments.CheckMoneyOrder",
+      "Version": "1.51"
+    },
+    {
+      "SystemName": "Payments.CyberSource",
+      "Version": "1.10"
+    },
+    {
+      "SystemName": "Payments.Manual",
+      "Version": "1.60"
+    },
+    {
+      "SystemName": "Pickup.PickupInStore",
+      "Version": "1.47"
+    },
+    {
+      "SystemName": "POS",
+      "Version": "1.0"
+    },
+    {
+      "SystemName": "Shipping.FixedByWeightByTotal",
+      "Version": "2.36"
+    },
+    {
+      "SystemName": "Shipping.UPS",
+      "Version": "1.71"
+    },
+    {
+      "SystemName": "Tax.Avalara",
+      "Version": "2.68"
+    },
+    {
+      "SystemName": "Tax.FixedOrByCountryStateZip",
+      "Version": "1.44"
+    },
+    {
+      "SystemName": "Widgets.AccessiBe",
+      "Version": "1.21"
+    },
+    {
+      "SystemName": "Widgets.FacebookPixel",
+      "Version": "2.02"
+    },
+    {
+      "SystemName": "Widgets.GoogleAnalytics",
+      "Version": "1.76"
+    },
+    {
+      "SystemName": "Widgets.NivoSlider",
+      "Version": "1.50"
+    },
+    {
+      "SystemName": "Widgets.What3words",
+      "Version": "1.03"
+    },
+    {
+      "SystemName": "ExternalAuth.Facebook",
+      "Version": "1.80"
+    }
+  ],
+  "PluginNamesToUninstall": [],
+  "PluginNamesToDelete": [],
+  "PluginNamesToInstall": []
+}

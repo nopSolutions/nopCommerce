@@ -1,0 +1,159 @@
+﻿@model TaxExemptionModel
+
+@{
+    Layout = "_ColumnsTwo";
+    NopHtml.AddTitleParts(T("Plugins.Tax.Avalara.ExemptionCertificates").Text);
+    NopHtml.AppendPageCssClassParts("html-account-page");
+}
+
+<link rel="stylesheet" href="~/Plugins/Tax.Avalara/Content/css/avalara.css" />
+
+@if (!string.IsNullOrEmpty(Model.Token))
+{    
+    var scriptUrl = avalaraTaxSettings.UseSandbox ? AvalaraTaxDefaults.CertificatesSandboxScriptUrl : AvalaraTaxDefaults.CertificatesScriptUrl;
+    <script asp-location="Head" asp-exclude-from-bundle="true" src="@scriptUrl"></script>
+}
+
+@section left
+{
+    @(await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = AvalaraTaxDefaults.ExemptionCertificatesMenuTab }))
+}
+
+<script asp-location="Footer">
+@if (!string.IsNullOrEmpty(Model.Token))
+{
+<text>
+    function showCertificateForm() {
+        GenCert.init(document.getElementById('certificate-form'), {
+            token: '@Model.Token',
+            submit_to_stack: '@((!avalaraTaxSettings.AutoValidateCertificate).ToString().ToLowerInvariant())',
+            edit_purchaser: '@(avalaraTaxSettings.AllowEditCustomer.ToString().ToLowerInvariant())',
+            preview: '@(avalaraTaxSettings.PreviewCertificate.ToString().ToLowerInvariant())',
+            fill_only: '@(avalaraTaxSettings.FillOnly.ToString().ToLowerInvariant())',
+            upload_only: '@(avalaraTaxSettings.UploadOnly.ToString().ToLowerInvariant())',
+
+            //we can customize colors of buttons here
+            //primary_color: '#ff6600',
+            //secondary_color: '#ff6600',
+
+            onCertSuccess: function () {
+                displayBarNotification('@T("Plugins.Tax.Avalara.ExemptionCertificates.Add.Success")', 'success', false);
+                GenCert.hide();
+                setLocation('@Url.RouteUrl(AvalaraTaxDefaults.ExemptionCertificatesRouteName)');
+            },
+            onUpload: function () {
+                displayBarNotification('@T("Plugins.Tax.Avalara.ExemptionCertificates.Add.Success")', 'success', false);
+                GenCert.hide();
+                setLocation('@Url.RouteUrl(AvalaraTaxDefaults.ExemptionCertificatesRouteName)');
+            },
+            onCertFailure: function () {
+                displayBarNotification('@T("Plugins.Tax.Avalara.ExemptionCertificates.Add.Fail")', 'error', false);
+                GenCert.hide();
+                setLocation('@Url.RouteUrl(AvalaraTaxDefaults.ExemptionCertificatesRouteName)');
+            },
+            onCancel: function () {
+                GenCert.hide();
+            }
+        });
+        GenCert.setCustomerNumber('@Model.CustomerId');
+        GenCert.setShipZone($('#@Html.IdFor(model => model.ExposureZone)').val());
+        GenCert.show();
+        GenCert.resizeIframe('gencert_iframe', 800); /*for some reason the form is displayed in collapsed, so set its size here*/
+    }
+</text>
+}
+</script>
+
+<div class="page account-page exemption-certificates-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Plugins.Tax.Avalara.ExemptionCertificates")</h1>
+    </div>
+    <div class="page-body">
+        <div class="description">
+            @Html.Raw(T("Plugins.Tax.Avalara.ExemptionCertificates.Description", Model.Link, Url.RouteUrl("ContactUs")))
+        </div>
+        <div class="form-fields">
+            <div class="exposure-zone">
+                <div class="inputs">
+                    <label asp-for="ExposureZone" asp-postfix=":"></label>
+                    <select asp-for="ExposureZone" asp-items="Model.AvailableExposureZones"></select>
+                </div>  
+                <div class="buttons">
+                    <button type="button" class="button-1" onclick="showCertificateForm()">@T("Common.AddNew")</button>
+                </div>
+            </div>
+            <div id="certificate-form"></div>
+        </div>
+        @if (Model.Certificates.Any())
+        {
+            <div class="section exemption-certificates">
+                <div class="title">
+                    <h3>@T("Plugins.Tax.Avalara.ExemptionCertificates")</h3>
+                </div>
+                <form asp-route="ExemptionCertificates" method="post">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="exposure-zone">
+                                        @T("Plugins.Tax.Avalara.ExemptionCertificates.ExposureZone")
+                                    </th>
+                                    <th class="signed-date">
+                                        @T("Plugins.Tax.Avalara.ExemptionCertificates.SignedDate")
+                                    </th>
+                                    <th class="expiration-date">
+                                        @T("Plugins.Tax.Avalara.ExemptionCertificates.ExpirationDate")
+                                    </th>
+                                    <th class="status">
+                                        @T("Plugins.Tax.Avalara.ExemptionCertificates.Status")
+                                    </th>
+                                    <th class="download">
+                                        @T("Plugins.Tax.Avalara.ExemptionCertificates.View")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Certificates)
+                                {
+                                    <tr>
+                                        <td class="exposure-zone">
+                                            @item.ExposureZone
+                                        </td>
+                                        <td class="signed-date">
+                                            @item.SignedDate
+                                        </td>
+                                        <td class="expiration-date">
+                                            @item.ExpirationDate
+                                        </td>
+                                        <td class="status">
+                                            <span class="exemption-@item.Status">@item.Status</span>
+                                        </td>
+                                        <td class="download">
+                                            <a href="@Url.RouteUrl(AvalaraTaxDefaults.DownloadCertificateRouteName, new { id = item.Id })" title="@T("Common.View")" target="_blank" class="button-1">
+                                                @T("Common.View")
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Plugins.Tax.Avalara.ExemptionCertificates.None")
+            </div>
+        }
+    </div>
+</div>

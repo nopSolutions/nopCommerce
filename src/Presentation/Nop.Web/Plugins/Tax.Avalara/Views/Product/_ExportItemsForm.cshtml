@@ -1,0 +1,22 @@
+﻿<form asp-controller="AvalaraProduct" asp-action="ExportProducts" method="post" id="export-avalara-selected-form">
+    <script>
+        $(document).ready(function () {
+            $('#export-avalara-selected').click(function (e) {
+                e.preventDefault();
+                var ids = selectedIds.join(',');
+                if (!ids) {
+                    $('#export-avalara-selected-alert-info').text('@T("Admin.Products.NoProducts")');
+                    $('#export-avalara-selected-alert').click();
+                }
+                else {
+                    $('#export-avalara-selected-form #selectedIds').val(ids);
+                    $('#export-avalara-selected-form').submit();
+                    updateTable('#products-grid');
+                }
+                return false;
+            });
+        });
+    </script>
+    <nop-alert asp-alert-id="export-avalara-selected-alert" />
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+</form>

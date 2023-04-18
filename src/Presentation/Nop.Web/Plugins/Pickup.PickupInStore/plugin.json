@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Pickup points",
+  "FriendlyName": "Pickup in store",
+  "SystemName": "Pickup.PickupInStore",
+  "Version": "1.47",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Pickup.PickupInStore.dll",
+  "Description": "This plugin allows to configure and manage pickup points when \"Pickup in store\" option is enabled"
+}

@@ -1,0 +1,333 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    var learnMore = "<p>Learn more about the PayPal Commerce plugin configuration <a href='https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html' target='_blank'>here</a>.</p>";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+@if (Model.IsConfigured)
+{
+    @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+}
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.SetCredentialsManually)").click(toggleCredentials);
+        toggleCredentials();
+    });
+
+    function toggleCredentials() {
+        if ($('#@Html.IdFor(model => model.SetCredentialsManually)').is(':checked')) {
+            $('#pnlOnboarding').hideElement();
+            $('#pnlCredentials').showElement();
+            $('#pnlDescription').showElement();
+            @if (!Model.IsConfigured)
+            {
+                <text>
+                    $('#pnlSave').showElement();
+                    $('#pnlLearnMore').showElement();
+                </text>
+            }
+        }
+        else {
+            $('#pnlOnboarding').showElement();
+            $('#pnlCredentials').hideElement();
+            $('#pnlDescription').hideElement();
+            @if (!Model.IsConfigured)
+            {
+                <text>
+                    $('#pnlSave').hideElement();
+                    $('#pnlLearnMore').hideElement();
+                </text>
+            }
+        }
+    }
+</script>
+
+<form asp-controller="PayPalCommerce" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default card-outline card-info" id="pnlOnboarding">
+            <div class="card-header">
+                @T("Plugins.Payments.PayPalCommerce.Onboarding.Title")
+            </div>
+            <div class="card-body">
+                <p>
+                    Complete onboarding to configure the plugin automatically and start accepting PayPal payments in your store.<br />
+                    This only works in production, if you want to test the functionality first, use the sandbox mode, you need to manually create REST API app and get its credentials. If you choose the sandbox mode, then PayPal Commerce integration will be used for testing purposes.<br />
+                    <em>Read more about <a href="https://www.paypal.com/us/webapps/mpp/security/seller-protection" target="_blank">Seller Protection Policy</a>.</em>
+                </p>
+                <hr />
+                @if (Model.OnboardingModel.DisplayStatus)
+                {
+                    <div class="onboarding-step-@(Model.OnboardingModel.AccountCreated ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.AccountCreated)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PayPalCommerce.Onboarding.Process.Account")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.EmailConfirmed ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.EmailConfirmed)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PayPalCommerce.Onboarding.Process.Email")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.PaymentsReceivable ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.PaymentsReceivable)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PayPalCommerce.Onboarding.Process.Payments")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.PermissionGranted ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.PermissionGranted)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PayPalCommerce.Onboarding.Process.Permission")
+                    </div>
+                    <hr />
+                }
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Email_OverrideForStore" asp-input="Email" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Email" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Email" />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 mb-3">
+                        <button type="submit" name="onboarding" class="btn btn-primary">
+                            @T("Admin.Common.Save")
+                        </button>
+                        @if (!string.IsNullOrEmpty(Model.OnboardingModel.SignUpUrl))
+                        {
+                            <a href="@Model.OnboardingModel.SignUpUrl&displayMode=minibrowser" target="_blank" class="btn btn-info" data-paypal-onboard-complete="onboardedCallback" data-paypal-button="true">
+                                @T("Plugins.Payments.PayPalCommerce.Onboarding.Button")
+                            </a>
+                            <script src="@PayPalCommerceDefaults.Onboarding.ScriptUrl" id="paypal-js"></script>
+                            <script asp-location="Footer">
+                                function onboardedCallback(authCode, sharedId) {
+                                    var postData = {
+                                        MerchantGuid: '@Model.OnboardingModel.MerchantGuid',
+                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLowerInvariant()',
+                                        SharedId: sharedId,
+                                        AuthCode: authCode
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@Url.Action("SignUp", "PayPalCommerce")',
+                                        data: postData
+                                    });
+                                }
+                            </script>
+                        }
+                        else if (!string.IsNullOrEmpty(Model.OnboardingModel.MerchantGuid))
+                        {
+                            <button type="submit" name="revoke" class="btn btn-danger">
+                                @T("Plugins.Payments.PayPalCommerce.Onboarding.ButtonRevoke")
+                            </button>
+                        }
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        @Html.Raw(learnMore)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-default">
+            <div class="card-body">
+                <p id="pnlDescription" class="d-none">
+                    You must set up your development environment to get OAuth 2.0 client ID and secret credentials for the sandbox and live environments.<br />
+                    Follow these steps to generate REST API credentials:<br />
+                    1. <a href="https://developer.paypal.com/developer/applications" target="_blank">Log into the Developer Dashboard</a> with your PayPal account credentials. If you don't have an account, you can click on the <b>sign up</b> option.<br />
+                    2. On <b>My Apps & Credentials</b>, use the toggle to switch between live and sandbox testing apps.<br />
+                    3. Navigate to the <b>REST API apps</b> section and click <b>Create App</b>.<br />
+                    4. Type a name for your app and click <b>Create App</b>. The app details page opens and displays your credentials.<br />
+                    5. Copy and save the client ID and secret for your app.<br />
+                    6. Review your app details and save your app.<br />
+                    <br />
+                </p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SetCredentialsManually_OverrideForStore" asp-input="SetCredentialsManually" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SetCredentialsManually" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SetCredentialsManually" />
+                        <span asp-validation-for="SetCredentialsManually"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="SetCredentialsManually" id="pnlCredentials" disable-auto-generation="true">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseSandbox" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseSandbox" />
+                            <span asp-validation-for="UseSandbox"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="ClientId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ClientId" asp-required="true" />
+                            <span asp-validation-for="ClientId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="SecretKey_OverrideForStore" asp-input="SecretKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="SecretKey" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SecretKey" asp-required="true" html-attributes="@(new { value = Model.SecretKey })" />
+                            <span asp-validation-for="SecretKey"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                @if (Model.IsConfigured)
+                {
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentTypeId_OverrideForStore" asp-input="PaymentTypeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PaymentTypeId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="PaymentTypeId" asp-items="Model.PaymentTypes" />
+                            <span asp-validation-for="PaymentTypeId"></span>
+                        </div>
+                    </div>
+                    <div class="card card-default advanced-setting">
+                        <div class="card-header">
+                            @T("Plugins.Payments.PayPalCommerce.Prominently")
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Build customer trust with PayPal branding on your website.<br />
+                                Feature the PayPal button on all pages that initiate checkout. Including PayPal branding early in the checkout experience helps increase site conversion. You can also attract new customers to your site by announcing PayPal acceptance.<br />
+                                <em>TIP: You can find more PayPal logos and banners on <a href="https://www.paypal.com/gd/webapps/mpp/logo-center" target="_blank">PayPal Logo Center</a></em>
+                                <br />
+                            </p>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayButtonsOnShoppingCart_OverrideForStore" asp-input="DisplayButtonsOnShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayButtonsOnShoppingCart" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayButtonsOnShoppingCart" />
+                                    <span asp-validation-for="DisplayButtonsOnShoppingCart"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayButtonsOnProductDetails_OverrideForStore" asp-input="DisplayButtonsOnProductDetails" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayButtonsOnProductDetails" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayButtonsOnProductDetails" />
+                                    <span asp-validation-for="DisplayButtonsOnProductDetails"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayPayLaterMessages_OverrideForStore" asp-input="DisplayPayLaterMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayPayLaterMessages" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayPayLaterMessages" />
+                                    <span asp-validation-for="DisplayPayLaterMessages"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayLogoInHeaderLinks_OverrideForStore" asp-input="DisplayLogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayLogoInHeaderLinks" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayLogoInHeaderLinks" />
+                                    <span asp-validation-for="DisplayLogoInHeaderLinks"></span>
+                                </div>
+                            </div>
+                            <nop-nested-setting asp-for="DisplayLogoInHeaderLinks">
+                                <div class="form-group row advanced-setting">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="LogoInHeaderLinks_OverrideForStore" asp-input="LogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="LogoInHeaderLinks" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-textarea asp-for="LogoInHeaderLinks" />
+                                        <span asp-validation-for="LogoInHeaderLinks"></span>
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DisplayLogoInFooter_OverrideForStore" asp-input="DisplayLogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DisplayLogoInFooter" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DisplayLogoInFooter" />
+                                    <span asp-validation-for="DisplayLogoInFooter"></span>
+                                </div>
+                            </div>
+                            <nop-nested-setting asp-for="DisplayLogoInFooter">
+                                <div class="form-group row advanced-setting">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="LogoInFooter_OverrideForStore" asp-input="LogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="LogoInFooter" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-textarea asp-for="LogoInFooter" />
+                                        <span asp-validation-for="LogoInFooter"></span>
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+                        </div>
+                    </div>
+                    <div class="form-group row"></div>
+                }
+                <div class="form-group row" id="pnlSave">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+                <div class="form-group row" id="pnlLearnMore">
+                    <div class="col-12">
+                        @Html.Raw(learnMore)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

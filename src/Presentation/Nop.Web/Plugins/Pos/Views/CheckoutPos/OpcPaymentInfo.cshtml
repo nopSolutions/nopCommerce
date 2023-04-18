@@ -1,0 +1,27 @@
+﻿@using Nop.Web.Models.Checkout;
+@using Nop.Web.Components;
+@using Nop.Web.Framework.Infrastructure;
+@using Nop.Web.Framework.UI;
+@model CheckoutPaymentInfoModel
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+<div class="checkout-data">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentInfoTop, additionalData = Model })
+    <div class="section payment-info">
+        <div class="info">
+            @await Component.InvokeAsync(Model.PaymentViewComponent)
+        </div>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentInfoBottom, additionalData = Model })
+    @if (Model.DisplayOrderTotals)
+    {
+        <div class="section order-summary">
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
+        </div>
+    }
+</div>
