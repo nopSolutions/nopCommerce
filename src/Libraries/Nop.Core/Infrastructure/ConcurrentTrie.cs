@@ -589,7 +589,6 @@ namespace Nop.Core.Infrastructure
 
             protected const int MULTIPLIER = 8;
             protected readonly ReaderWriterLockSlim[] _locks;
-            protected readonly int _mask;
 
             #endregion
 
@@ -601,7 +600,6 @@ namespace Nop.Core.Infrastructure
                 if(nLocks == 0)
                     nLocks = Environment.ProcessorCount * MULTIPLIER;
 
-                _mask = nLocks - 1;
                 _locks = new ReaderWriterLockSlim[nLocks];
 
                 for (var i = 0; i < nLocks; i++)
@@ -617,7 +615,7 @@ namespace Nop.Core.Infrastructure
             /// </summary>
             public ReaderWriterLockSlim GetLock(object obj)
             {
-                return _locks[obj.GetHashCode() & _mask];
+                return _locks[obj.GetHashCode() % _locks.Length];
             }
 
             #endregion
