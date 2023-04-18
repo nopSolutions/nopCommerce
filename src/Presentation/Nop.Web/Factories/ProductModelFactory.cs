@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -49,6 +50,7 @@ namespace Nop.Web.Factories
         protected readonly IDateTimeHelper _dateTimeHelper;
         protected readonly IDownloadService _downloadService;
         protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IJsonLdModelFactory _jsonLdModelFactory;
         protected readonly ILocalizationService _localizationService;
         protected readonly IManufacturerService _manufacturerService;
         protected readonly IPermissionService _permissionService;
@@ -93,6 +95,7 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
+            IJsonLdModelFactory jsonLdModelFactory,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IPermissionService permissionService,
@@ -133,6 +136,7 @@ namespace Nop.Web.Factories
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
+            _jsonLdModelFactory = jsonLdModelFactory;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _permissionService = permissionService;
@@ -713,8 +717,12 @@ namespace Nop.Web.Factories
                 });
             }
 
+            if (_seoSettings.MicrodataEnabled)
+                breadcrumbModel.JsonLd = JsonConvert.SerializeObject(await _jsonLdModelFactory.PrepareJsonLdBreadcrumbProductAsync(breadcrumbModel), Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
             return breadcrumbModel;
         }
+
 
         /// <summary>
         /// Prepare the product tag models
@@ -1719,6 +1727,8 @@ namespace Nop.Web.Factories
                 }
                 model.InStock = model.AssociatedProducts.Any(associatedProduct => associatedProduct.InStock);
             }
+            if (_seoSettings.MicrodataEnabled)
+                model.JsonLd = JsonConvert.SerializeObject(await _jsonLdModelFactory.PrepareJsonLdProductAsync(model), Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             return model;
         }

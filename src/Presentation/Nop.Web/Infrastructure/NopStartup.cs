@@ -93,6 +93,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<Factories.ICustomerModelFactory, Factories.CustomerModelFactory>();
             services.AddScoped<Factories.IForumModelFactory, Factories.ForumModelFactory>();
             services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
+            services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
             services.AddScoped<Factories.INewsModelFactory, Factories.NewsModelFactory>();
             services.AddScoped<Factories.INewsletterModelFactory, Factories.NewsletterModelFactory>();
             services.AddScoped<Factories.IOrderModelFactory, Factories.OrderModelFactory>();

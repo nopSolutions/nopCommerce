@@ -290,5 +290,6 @@ namespace Nop.Services.Catalog
         /// The task result contains the category breadcrumb 
         /// </returns>
         Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false);
+
     }
 }
