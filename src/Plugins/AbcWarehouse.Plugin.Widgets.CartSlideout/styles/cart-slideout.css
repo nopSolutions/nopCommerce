@@ -24,6 +24,11 @@
     display: none;
 }
 
+.delivery-options-information,
+.warranty-information {
+    padding: 1rem;
+}
+
 .cart-slideout {
     flex-direction: column;
 }

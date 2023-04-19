@@ -23,6 +23,7 @@
     }
 
     var isWarrantyAlreadySelected = false;
+    var isAccessoryAlreadySelected = false;
 }
 
 @if (Model.Count > 0)
@@ -134,14 +135,18 @@
                                             string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                 attributeValue.Name :
                                                 $"{attributeValue.Name} ({attributeValue.PriceAdjustment.Trim('+')})";
-                                        // ABC: if a warranty is selected, don't select the "none" option
+                                        // ABC: if a warranty/accessory is selected, don't select the "none" option
                                         if (!isWarrantyAlreadySelected)
                                         {
                                             isWarrantyAlreadySelected = attribute.Name == "Warranty" && attributeValue.IsPreSelected;
                                         }
+                                        if (!isAccessoryAlreadySelected)
+                                        {
+                                            isAccessoryAlreadySelected = attribute.Name.Contains("Accessories") && attributeValue.IsPreSelected;
+                                        }
                                         // ABC: auto-select "Decline new hose" if it exists
                                         var isDeclineNewHose = attributeValue.Name == "Decline New Hose";
-                                        if (attribute.Name == "Accessories (Delivery)")
+                                        if (!isAccessoryAlreadySelected && attribute.Name == "Accessories (Delivery)")
                                         {
                                             attributeValue.IsPreSelected = isDeclineNewHose;
                                         }

@@ -29,10 +29,6 @@
 		"ms-mssql.mssql"
 	],
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // 8983: Apache Solr
-	"forwardPorts": [8983],
-
 	// [Optional] To reuse of your local HTTPS dev cert:
 	//
 	// 1. Export it locally using this command:

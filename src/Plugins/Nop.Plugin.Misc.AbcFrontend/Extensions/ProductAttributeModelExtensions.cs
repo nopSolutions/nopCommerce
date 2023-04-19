@@ -18,7 +18,10 @@ namespace Nop.Plugin.Misc.AbcFrontend.Extensions
                    model.TextPrompt == "Mattress Protector" ||
                    model.TextPrompt == "Frame" ||
                    model.Name == AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName ||
-                   model.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName;
+                   model.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.PickupAccessoriesProductAttributeName;
         }
     }
 }

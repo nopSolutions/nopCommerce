@@ -58,6 +58,21 @@
         warranty = warranty.Trim();
     }
 
+    var accessories = attributes.FirstOrDefault(a => a.Contains("Accessories "));
+    if (accessories != null)
+    {
+        // remove attribute name
+        accessories = accessories.Substring(accessories.IndexOf(':') + 2);
+        // change format of price difference
+        accessories = accessories.Replace('[', '(').Replace(']', ')');
+        var plusIndex = accessories.IndexOf('+');
+        if (plusIndex != -1)
+        {
+            accessories.Remove(plusIndex, 1);
+        }
+        accessories = accessories.Trim();
+    }
+
     var mattressSize = attributes.FirstOrDefault(a => a.Contains("Mattress Size: "));
     if (mattressSize != null)
     {
@@ -143,6 +158,14 @@
             <div class="abc-cart-attribute-info__section">
                 <h4>Warranty</h4>
                 <p>@Html.Raw(@warranty)</p>
+            </div>
+        }
+
+        @if (accessories != null)
+        {
+            <div class="abc-cart-attribute-info__section">
+                <h4>Accessories</h4>
+                <p>@Html.Raw(@accessories)</p>
             </div>
         }
 
