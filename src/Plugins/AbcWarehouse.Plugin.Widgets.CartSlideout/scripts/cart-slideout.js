@@ -223,6 +223,12 @@ function updateAttributes() {
 
         addToCartButton.disabled = responseJson.IsPickup && selectedShop === "";
 
+        // hide decline messaging based on selection
+        const declineNewHoseMessaging = document.querySelector('#decline-new-hose');
+        declineNewHoseMessaging.style.display = responseJson.IsDeclineNewHoseSelected ?
+            "block" :
+            "none";
+
         $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
     })
     .catch(err => {

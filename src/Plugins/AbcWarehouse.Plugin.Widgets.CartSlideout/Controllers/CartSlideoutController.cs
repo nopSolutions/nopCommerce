@@ -94,12 +94,24 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 }
             }
 
+            var isDeclineNewHoseSelected = false;
+            foreach (var element in form)
+            {
+                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(int.Parse(element.Value.ToString()));
+                if (pav?.Name == "Decline New Hose")
+                {
+                    isDeclineNewHoseSelected = true;
+                    break;
+                }
+            }
+
             return Json(new
             {
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci }),
                 EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
                 DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
-                IsPickup = isPickup
+                IsPickup = isPickup,
+                IsDeclineNewHoseSelected = isDeclineNewHoseSelected
             });
         }
 

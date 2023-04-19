@@ -7,6 +7,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         public const string HaulAwayDeliveryInstallProductAttributeName = "Haul Away (Delivery/Install)";
         public const string DeliveryAccessoriesProductAttributeName = "Accessories (Delivery)";
         public const string DeliveryInstallAccessoriesProductAttributeName = "Accessories (Delivery/Install)";
+        public const string PickupAccessoriesProductAttributeName = "Accessories (Pickup)";
         public const string WarrantyProductAttributeName = "Warranty";
 
         public const string LegacyPickupInStoreProductAttributeName = "Pickup";

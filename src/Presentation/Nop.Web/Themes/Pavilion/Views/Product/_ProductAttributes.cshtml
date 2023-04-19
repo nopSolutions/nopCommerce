@@ -139,10 +139,25 @@
                                         {
                                             isWarrantyAlreadySelected = attribute.Name == "Warranty" && attributeValue.IsPreSelected;
                                         }
+                                        // ABC: auto-select "Decline new hose" if it exists
+                                        var isDeclineNewHose = attributeValue.Name == "Decline New Hose";
+                                        if (attribute.Name == "Accessories (Delivery)")
+                                        {
+                                            attributeValue.IsPreSelected = isDeclineNewHose;
+                                        }
                                         <li>
-                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
+                                                   checked="@attributeValue.IsPreSelected"
                                                    @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                            <!-- ABC: special messaging for decline hose -->
+                                            @if (isDeclineNewHose)
+                                            {
+                                                <div id="decline-new-hose" style="color: red; font-size: 8pt">
+                                                    New hoses are recommended for all washer installations for coverage against property damage.
+                                                </div>
+                                            }
+                                            
 
                                             @if (attributeValue.CustomerEntersQty)
                                             {

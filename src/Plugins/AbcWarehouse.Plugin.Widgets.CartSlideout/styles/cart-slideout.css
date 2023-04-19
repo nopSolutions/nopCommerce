@@ -58,9 +58,11 @@
     overflow-x: hidden;
     overflow-y: scroll;
 }
-/* Hides scrollbar for Safari & Chrome */
-.cart-slideout__content::-webkit-scrollbar { 
-    display: none;
+.cart-slideout__content::-webkit-scrollbar {
+  width: 10px;
+}
+.cart-slideout__content::-webkit-scrollbar-thumb {
+  background-color: #aaa;
 }
 
 /* Product Info */

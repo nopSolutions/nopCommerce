@@ -30,6 +30,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         private ProductAttribute _pickupInStoreProductAttribute;
         private ProductAttribute _deliveryAccessoriesProductAttribute;
         private ProductAttribute _deliveryInstallAccessoriesProductAttribute;
+        private ProductAttribute _pickupAccessoriesProductAttribute;
 
         public UpdateDeliveryOptionsTask(
             CoreSettings coreSettings,
@@ -60,9 +61,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             _pickupInStoreProductAttribute =
                 await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
             _deliveryAccessoriesProductAttribute =
-                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName);
             _deliveryInstallAccessoriesProductAttribute =
-                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.LegacyPickupInStoreProductAttributeName);
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName);
+            _pickupAccessoriesProductAttribute =
+                await _abcProductAttributeService.GetProductAttributeByNameAsync(AbcDeliveryConsts.PickupAccessoriesProductAttributeName);
 
             var hasErrors = false;
 
@@ -84,16 +87,39 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                             if (deliveryOnlyPav != null)
                             {
                                 UpdateHaulawayAsync(productId, map.DeliveryHaulway, _haulAwayDeliveryProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav);
-                                UpdateAccessoriesAsync(productId, map, _deliveryAccessoriesProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav);
+                                UpdateAccessoriesAsync(
+                                    productId,
+                                    map,
+                                    _deliveryAccessoriesProductAttribute.Id,
+                                    deliveryOptionsPam.Id,
+                                    deliveryOnlyPav,
+                                    "Recommended Accessories");
                             }
 
                             var deliveryInstallPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Home Delivery and Installation ("));
                             if (deliveryInstallPav != null)
                             {
                                 UpdateHaulawayAsync(productId, map.DeliveryHaulwayInstall, _haulAwayDeliveryInstallProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav);
-                                UpdateAccessoriesAsync(productId, map, _deliveryInstallAccessoriesProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav);
+                                UpdateAccessoriesAsync(
+                                    productId,
+                                    map,
+                                    _deliveryInstallAccessoriesProductAttribute.Id,
+                                    deliveryOptionsPam.Id,
+                                    deliveryInstallPav,
+                                    "Required Accessories");
                             }
 
+                            var pickupPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Pickup In-Store Or Curbside ("));
+                            if (pickupPav != null)
+                            {
+                                UpdateAccessoriesAsync(
+                                    productId,
+                                    map,
+                                    _pickupAccessoriesProductAttribute.Id,
+                                    deliveryOptionsPam.Id,
+                                    pickupPav,
+                                    "Recommended Accessories");
+                            }
                         }
                     }
                     catch (Exception e)
@@ -141,7 +167,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             AbcDeliveryMap map,
             int accessoriesProductAttributeId,
             int deliveryOptionsPamId,
-            ProductAttributeValue deliveryPav)
+            ProductAttributeValue deliveryPav,
+            string textPrompt)
         {
             var installKit1 = map.InstallKit_1;
 
@@ -153,29 +180,64 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             {
                 ProductId = productId,
                 ProductAttributeId = accessoriesProductAttributeId,
-                AttributeControlType = AttributeControlType.Checkboxes,
-                TextPrompt = "Accessories",
+                AttributeControlType = AttributeControlType.RadioList,
+                TextPrompt = textPrompt,
+                DisplayOrder = 30,
                 ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
             } : null;
 
             var resultPam = await SaveProductAttributeMappingAsync(existingPam, newPam);
             if (resultPam != null)
             {
-                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault();
+                var isDeliveryInstall = accessoriesProductAttributeId == _deliveryInstallAccessoriesProductAttribute.Id;
 
+                // Install 1
                 var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(installKit1);
-                var price = item.Price - item.Price;
-                var priceFormatted = price == 0 ? "FREE" : await _priceFormatter.FormatPriceAsync(price);
+                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
                 var newPav = new ProductAttributeValue()
                 {
                     ProductAttributeMappingId = resultPam.Id,
-                    Name = item.Name,
+                    Name = item.Description,
                     Cost = installKit1,
-                    PriceAdjustment = price,
+                    PriceAdjustment = item.Price,
+                    IsPreSelected = isDeliveryInstall,
+                    DisplayOrder = 0,
+                };
+                await SaveProductAttributeValueAsync(existingPav, newPav);
+
+                // stop if delivery/install
+                if (isDeliveryInstall) { return; }
+
+                // Install 2
+                var installKit2 = map.InstallKit_2;
+                item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(installKit2);
+                existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
+                newPav = new ProductAttributeValue()
+                {
+                    ProductAttributeMappingId = resultPam.Id,
+                    Name = item.Description,
+                    Cost = installKit2,
+                    PriceAdjustment = item.Price,
                     IsPreSelected = false,
                     DisplayOrder = 0,
                 };
+                await SaveProductAttributeValueAsync(existingPav, newPav);
 
+                // Need to make an install 3 once that data is added to the table
+
+                // Decline
+                var decline = "Decline New Hose";
+                existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == decline);
+                newPav = new ProductAttributeValue()
+                {
+                    ProductAttributeMappingId = resultPam.Id,
+                    Name = decline,
+                    // special value used
+                    Cost = 3,
+                    PriceAdjustment = 0,
+                    IsPreSelected = true,
+                    DisplayOrder = 10,
+                };
                 await SaveProductAttributeValueAsync(existingPav, newPav);
             }
         }
@@ -294,7 +356,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             var resultDeliveryInstallPav = await SaveProductAttributeValueAsync(existingDeliveryInstallPav, newDeliveryInstallPav);
             if (resultDeliveryInstallPav != null) { results.Add(resultDeliveryInstallPav); }
 
-            // Pickup - does not need to be returned
+            // Pickup
             var existingPickupPav = existingValues.Where(pav => pav.Name.Contains("Pickup In-Store")).SingleOrDefault();
             ProductAttributeValue newPickupPav = null;
             var pams = await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(deliveryOptionsPam.ProductId);
@@ -314,7 +376,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     DisplayOrder = 0,
                 };
             }
-            await SaveProductAttributeValueAsync(existingPickupPav, newPickupPav);
+            var resultPickupPav = await SaveProductAttributeValueAsync(existingPickupPav, newPickupPav);
+            if (resultPickupPav != null) { results.Add(resultPickupPav); }
 
             return results;
         }

@@ -191,7 +191,9 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                             AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
                             AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
                             AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
-                            "Warranty"
+                            "Warranty",
+                            AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName,
+                            AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName
                         },
                         updateCartItem = sci
                     }),

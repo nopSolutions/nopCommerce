@@ -584,7 +584,10 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                         {
                             AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
                             AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
-                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName
+                            AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
+                            "Warranty",
+                            AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName,
+                            AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName
                         }
                     }),
                 ShoppingCartItemId = sci.Id,
