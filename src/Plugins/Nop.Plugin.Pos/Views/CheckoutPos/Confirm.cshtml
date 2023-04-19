@@ -1,0 +1,124 @@
+﻿@using Nop.Web.Models.Checkout;
+@using Nop.Web.Components;
+@using Nop.Web.Framework.Infrastructure;
+@using Nop.Web.Framework.UI;
+@model CheckoutConfirmModel
+@inject INopHtmlHelper _nopHtmlHelper
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    _nopHtmlHelper.AddTitleParts("Checkout");
+    //page class
+    _nopHtmlHelper.AppendPageCssClassParts("html-checkout-page");
+    _nopHtmlHelper.AppendPageCssClassParts("html-order-confirm-page");
+}
+<div class="page checkout-page order-confirm-page">
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new { step = CheckoutProgressStep.Confirm })
+    <div class="page-title">
+        <h1>Confirm your order</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmTop, additionalData = Model })
+        <div class="section confirm-order">
+            <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
+                <script asp-location="Footer">
+                    $(document).ready(function () {
+                        $('.confirm-order-next-step-button').on('click', function () {
+                            //terms of service
+                            var termOfServiceOk = true;
+                            if ($('#termsofservice').length > 0) {
+                                //terms of service element exists
+                                if (!$('#termsofservice').is(':checked')) {
+                                    $("#terms-of-service-warning-box").dialog();
+                                    termOfServiceOk = false;
+                                } else {
+                                    termOfServiceOk = true;
+                                }
+                            }
+                            if (termOfServiceOk) {
+                                //$('#confirm-order-form').submit();
+                                //$('.confirm-order-next-step-button').prop('disabled', true);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    });
+                </script>
+                @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                {
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                }
+                else
+                {
+                    if (Model.TermsOfServiceOnOrderConfirmPage)
+                    {
+                        <div id="terms-of-service-warning-box" title="Terms of service" style="display: none;">
+                            <p>Please accept the terms of service before the next step.</p>
+                        </div>
+                        <div class="terms-of-service">
+                            <input id="termsofservice" type="checkbox" name="termsofservice" />
+                            <label for="termsofservice">I agree with the terms of service and I adhere to them unconditionally</label>
+                            @if (Model.TermsOfServicePopup)
+                            {
+                                <a class="read" id="read-terms">(read)</a>
+                                <script asp-location="Footer">
+                                    $(document).ready(function() {
+                                        $('#read-terms').on('click',
+                                            function(e) {
+                                                e.preventDefault();
+                                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', 'Terms of service');
+                                            });
+                                    });
+                                </script>
+                            }
+                            else
+                            {
+                                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">(Read)</a>
+                            }
+                        </div>
+                    }
+                    <div class="buttons">
+                        <button type="submit" name="nextstep" class="button-1 confirm-order-next-step-button">Confirm</button>
+                    </div>
+                    <script asp-location="Footer">
+                        $('#confirm-order-form').on('submit',
+                            function () {
+                                var button = $(this).find('button[type="submit"][name="nextstep"]');
+                                setTimeout(function () {
+                                    button.prop('disabled', true);
+                                },
+                                0);
+                            });
+                    </script>
+                    if (Model.DisplayCaptcha)
+                    {
+                        <nop-captcha />
+                    }
+                }
+                @if (Model.Warnings.Count > 0)
+                {
+                    <div class="message-error">
+                        <ul>
+                            @foreach (var warning in Model.Warnings)
+                            {
+                                <li>@warning</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </form>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom, additionalData = Model })
+        <div class="section order-summary">
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), new { prepareAndDisplayOrderReviewData = true })
+        </div>
+    </div>
+</div>
