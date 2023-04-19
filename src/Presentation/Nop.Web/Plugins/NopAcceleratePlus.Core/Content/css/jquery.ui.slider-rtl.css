@@ -1,7 +1,0 @@
-/* Overrides for right-to-left sliders. */
-
-.ui-slider-horizontal.ui-slider-rtl .ui-slider-range-min { left: auto; right: 0; }
-.ui-slider-horizontal.ui-slider-rtl .ui-slider-range-max { left: 0; right: auto; }
-
-.ui-slider-vertical.ui-slider-rtl .ui-slider-range-min { top: 0; bottom: auto; }
-.ui-slider-vertical.ui-slider-rtl .ui-slider-range-max { top: auto; bottom: 0; }
