@@ -18,6 +18,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public Guid OrderGuid { get; set; }
 
+        public bool IsPOSorder { get; set; } = false;
+
+        public string POSUserId { get; set; }
+
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>

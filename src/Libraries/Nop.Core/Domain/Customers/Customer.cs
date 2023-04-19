@@ -14,6 +14,8 @@ namespace Nop.Core.Domain.Customers
             CustomerGuid = Guid.NewGuid();
         }
 
+        public string CreatedBy { get; set; }
+
         /// <summary>
         /// Gets or sets the customer GUID
         /// </summary>
