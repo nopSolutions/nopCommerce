@@ -745,9 +745,33 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     throw new ArgumentNullException(nameof(order));
 
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                if (customer.Email is null)
+                    return;
 
                 //create API client
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
+
+                //try to get list identifier
+                var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: order.StoreId);
+                if (listId == 0)
+                    listId = await _settingService.GetSettingByKeyAsync<int>(key);
+                if (listId == 0)
+                {
+                    await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{order.StoreId}");
+                    return;
+                }
+
+                //get all contacts of the list
+                var contacts = await client.GetContactsFromListAsync(listId);
+
+                //whether subscribed contact already in the list
+                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string, string>() } } };
+                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
+                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == customer.Email.ToLowerInvariant());
+
+                if (contactObject is null)
+                    return;
 
                 //update contact
                 var attributes = new Dictionary<string, string>
@@ -759,6 +783,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 };
                 var updateContact = new UpdateContact { Attributes = attributes };
                 await client.UpdateContactAsync(customer.Email, updateContact);
+
             }
             catch (Exception exception)
             {
