@@ -183,7 +183,6 @@ namespace Nop.Web.Factories
                             OpeningHours = point.OpeningHours
                         };
 
-                        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                         var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
                         var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
 
