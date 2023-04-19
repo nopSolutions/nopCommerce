@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
         private readonly IWebHelper _webHelper;
         private IPluginsInfo _pluginsInfo;
         private readonly IPluginService _pluginService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
 
@@ -61,7 +63,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
-            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext, IWebHelper webHelper,IPluginService pluginService)
+            IUrlHelperFactory urlHelperFactory, IStoreContext storeContext, IWebHelper webHelper,IPluginService pluginService,IHttpContextAccessor httpContextAccessor)
         {
             _customProdutReviewSettings = customProdutReviewSettings;
             _actionContextAccessor = actionContextAccessor;
@@ -72,6 +74,7 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
             _storeContext = storeContext;
             _webHelper=webHelper;
             _pluginService = pluginService;
+            _httpContextAccessor = httpContextAccessor;
 
 
 
@@ -134,8 +137,11 @@ namespace Nop.Plugin.Widgets.CustomProductReviews
                 var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            string rq = _httpContextAccessor.HttpContext.Request.PathBase;
 
-            Uri myUri = new Uri(_webHelper.GetStoreLocation());
+
+            Uri myUri = new Uri(rq);
+          
             string host = myUri.Host;
 
 
