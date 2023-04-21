@@ -1,0 +1,264 @@
+﻿@using Nop.Web.Components;
+@using Nop.Web.Models.Common;
+@using Nop.Web.Framework.Infrastructure;
+@model AddressModel
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+
+@{
+    //var countryflag = ViewBag.Country;
+    //var firstname1 = ViewBag.firstname;
+}
+
+<input class="address-id" asp-for="Id" type="hidden" />
+<div class="edit-address">
+    @if (Model.PhoneEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="PhoneNumber" asp-postfix=":"></label>
+            <input asp-for="PhoneNumber" id="ScanInput" />
+            <button type="submit" class="search-button" style=" background-color: #f9f9f9; padding: 7px; display: inline-flex; position: absolute; margin-left: 1%; border-radius: 50%; border: 0; " onclick="handleChange()">
+                <svg viewBox="0 0 24 24" style=" color: black; " width="24" height="24">
+                    <path fill="currentColor" d="M20.707 19.293l-4.52-4.52A7.939 7.939 0 0 0 16 10c0-4.411-3.589-8-8-8S0 5.589 0 10s3.589 8 8 8a7.938 7.938 0 0 0 5.773-2.427l4.52 4.52a.998.998 0 1 0 1.414-1.414zM2 10c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6z" />
+                </svg>
+            </button>
+            @if (Model.PhoneRequired)
+            {
+                <nop-required />
+            }
+
+            <span asp-validation-for="PhoneNumber"></span>
+        </div>
+    }
+    <div class="inputs">
+        <label asp-for="FirstName" asp-postfix=":"></label>
+        @if (Model.FirstName == null)
+        {
+            <input asp-for="FirstName" />
+            <nop-required />
+            <span asp-validation-for="FirstName"></span>
+        }
+        else
+        {
+
+            <input asp-for="FirstName" value="@Model.FirstName" />
+        }
+
+    </div>
+    <div class="inputs">
+        <label asp-for="LastName" asp-postfix=":"></label>
+        <input asp-for="LastName" />
+        <nop-required />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <div class="inputs">
+        <label asp-for="Email" asp-postfix=":"></label>
+        <input asp-for="Email" />
+        <nop-required />
+        <span asp-validation-for="Email"></span>
+    </div>
+    @if (Model.CompanyEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="Company" asp-postfix=":"></label>
+            <input asp-for="Company" />
+            @if (Model.CompanyRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="Company"></span>
+        </div>
+    }
+
+    <div class="inputs">
+        <label asp-for="County" asp-postfix=":"></label>
+        <input asp-for="County" style="display : none " name="countryname" />
+        <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                data-trigger="country-select"
+                data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                data-loading="#states-loading-progress"></select>
+        <nop-required />
+        <span asp-validation-for="CountryId"></span>
+        <span asp-validation-for="County"></span>
+    </div>
+
+    <div class="inputs">
+        <label asp-for="StateProvinceId" asp-postfix=":"></label>
+        <input type="text" id="StateProvince" style="    height: 36px;
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 400px; display : none" name="statename" />
+        <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
+                data-trigger="state-select">
+        </select>
+        <span id="states-loading-progress" style="display: none;" class="please-wait">Wait</span>
+        <span asp-validation-for="StateProvinceId"></span>
+    </div>
+    @if (Model.CityEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="City" asp-postfix=":"></label>
+            <input asp-for="City" />
+            @if (Model.CityRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="City"></span>
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="Address1" asp-postfix=":"></label>
+            <input asp-for="Address1" />
+            @if (Model.StreetAddressRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="Address1"></span>
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="inputs">
+            <label asp-for="Address2" asp-postfix=":"></label>
+            <input asp-for="Address2" />
+            @if (Model.StreetAddress2Required)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="Address2"></span>
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="ZipPostalCode" asp-postfix=":"></label>
+            <input asp-for="ZipPostalCode" />
+            @if (Model.ZipPostalCodeRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="ZipPostalCode"></span>
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="FaxNumber" asp-postfix=":"></label>
+            <input asp-for="FaxNumber" />
+            @if (Model.FaxRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="FaxNumber"></span>
+        </div>
+    }
+    @if (Model.CustomAddressAttributes.Count > 0)
+    {
+        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+    }
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
+</div>
+
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+
+    function handleChange() {
+        var Phonenumber = $("#ScanInput").val();
+        console.log(Phonenumber);
+        console.log("rest");
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetCustomerDetailss", "CheckoutPos")",
+            data: { Phonenumber: Phonenumber },
+            dataType: "text",
+            success: function (data) {
+                if (data != undefined) {
+                    let parsedData = JSON.parse(data)
+                    console.log("test", parsedData);
+                    $("#BillingNewAddress_FirstName").val(parsedData.posaddress.FirstName);
+                    $("#BillingNewAddress_LastName").val(parsedData.posaddress.LastName);
+                    $("#BillingNewAddress_Email").val(parsedData.posaddress.Email);
+                    $("#BillingNewAddress_Company").val(parsedData.posaddress.Company);
+                    $("#BillingNewAddress_County").val(parsedData.Country);
+                    $("#StateProvince").val(parsedData.state);
+                    $("#BillingNewAddress_City").val(parsedData.posaddress.City);
+                    $("#BillingNewAddress_Address1").val(parsedData.posaddress.StreetAddress);
+                    $("#BillingNewAddress_Address2").val(parsedData.posaddress.StreetAddress2);
+                    $("#BillingNewAddress_ZipPostalCode").val(parsedData.posaddress.ZipPostalCode);
+                    $("#BillingNewAddress_FaxNumber").val(parsedData.posaddress.Fax);
+                    //window.location.reload();
+                    // Handle the success result here
+                    var inputField = document.getElementById("BillingNewAddress_CountryId"); // get a reference to the input field
+                    if (parsedData.Country != null) {
+                        console.log("hide");
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    } else {
+                        console.log("show");
+                        inputField.style.display = "initial"; // show the input field if the flag is false
+                    }
+
+                    var inputField = document.getElementById("BillingNewAddress_StateProvinceId"); // get a reference to the input field
+                    if (parsedData.Country != null) {
+                        console.log("hide");
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    } else {
+                        console.log("show");
+                        inputField.style.display = "initial"; // show the input field if the flag is false
+                    }
+
+                    var inputField = document.getElementById("BillingNewAddress_County"); // get a reference to the input field
+                    if (parsedData.Country == null) {
+                        console.log("hide");
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    } else {
+                        console.log("show");
+                        inputField.style.display = "initial"; // show the input field if the flag is false
+                    }
+
+                    var inputField = document.getElementById("StateProvince"); // get a reference to the input field
+                    if (parsedData.Country == null) {
+                        console.log("hide");
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    } else {
+                        console.log("show");
+                        inputField.style.display = "initial"; // show the input field if the flag is false
+                    }
+
+                    var inputField = document.getElementById("BillingNewAddress_FirstName-error"); // get a reference to the input field
+                    if (parsedData.posaddress.FirstName != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                    var inputField = document.getElementById("BillingNewAddress_LastName-error"); // get a reference to the input field
+                    if (parsedData.posaddress.LastName != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                    var inputField = document.getElementById("BillingNewAddress_Email-error"); // get a reference to the input field
+                    if (parsedData.posaddress.Email != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                    var inputField = document.getElementById("BillingNewAddress_City-error"); // get a reference to the input field
+                    if (parsedData.posaddress.City != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                    var inputField = document.getElementById("BillingNewAddress_Address1-error"); // get a reference to the input field
+                    if (parsedData.posaddress.StreetAddress != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                    var inputField = document.getElementById("BillingNewAddress_ZipPostalCode-error"); // get a reference to the input field
+                    if (parsedData.posaddress.ZipPostalCode != null) {
+                        inputField.style.display = "none"; // hide the input field if the flag is true
+                    }
+                }
+            }
+        });
+    }
+
+</script>
