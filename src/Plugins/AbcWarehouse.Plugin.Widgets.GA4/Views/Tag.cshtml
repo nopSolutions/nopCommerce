@@ -11,7 +11,54 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config','@Model.GoogleTag'@Html.Raw(@debugModeText));
-  
+
+  @if (Model.ViewItemModel != null)
+  {
+    <text>
+      gtag("event", "view_item", {
+        currency: "USD",
+        value: @Model.ViewItemModel.Price,
+        items: [
+          {
+            item_id: "@Model.ViewItemModel.Sku",
+            item_name: "@Model.ViewItemModel.Name",
+            index: 0,
+            item_brand: "@Model.ViewItemModel.Brand",
+            item_category: "@Model.ViewItemModel.Category",
+            price: @Model.ViewItemModel.Price
+          }
+        ]
+      });
+    </text>
+  }
+
+  @if (Model.BeginCheckoutModel != null)
+  {
+    <text>
+      gtag("event", "begin_checkout", {
+        currency: "USD",
+        value: @Model.BeginCheckoutModel.Value,
+        items: [
+          @for (var i = 0; i < Model.BeginCheckoutModel.Items.Count(); i++)
+          {
+            var item = Model.BeginCheckoutModel.Items[i];
+            <text>
+              {
+                item_id: "@item.Sku",
+                item_name: "@item.Name",
+                index: @i,
+                item_brand: "@item.Brand",
+                item_category: "@item.Category",
+                price: @item.Price,
+                quantity: @item.Quantity
+              },
+            </text>
+          }
+        ]
+      });
+    </text>
+  }
+
   @if (Model.PurchaseModel != null)
   {
     <text>

@@ -28,6 +28,9 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
         private readonly IManufacturerService _manufacturerService;
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
 
         public GA4ViewComponent(
             GA4Settings settings,
@@ -36,7 +39,10 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
             ILogger logger,
             IManufacturerService manufacturerService,
             IOrderService orderService,
-            IProductService productService)
+            IProductService productService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
             _settings = settings;
             _categoryService = categoryService;
@@ -45,6 +51,9 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
             _manufacturerService = manufacturerService;
             _orderService = orderService;
             _productService = productService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
@@ -59,6 +68,45 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
                 GoogleTag = _settings.GoogleTag,
                 IsDebugMode = _settings.IsDebugMode
             };
+
+            if (IsPDP())
+            {
+                var productId = Convert.ToInt32(Url.ActionContext.RouteData.Values["productId"]);
+                var product = await _productService.GetProductByIdAsync(productId);
+                var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(productId)).FirstOrDefault();
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
+                var productCategories = (await _categoryService.GetProductCategoriesByProductIdAsync(productId)).FirstOrDefault();
+                var category = await _categoryService.GetCategoryByIdAsync(productCategories?.CategoryId ?? 0);
+
+                model.ViewItemModel = new GA4OrderItem()
+                {
+                    Sku = product.Sku,
+                    Name = product.Name,
+                    Brand = manufacturer?.Name,
+                    Category = category?.Name,
+                    Price = product.Price,
+                };
+            }
+
+            if (IsBeginCheckout())
+            {
+                var cart = await _shoppingCartService.GetShoppingCartAsync(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    ShoppingCartType.ShoppingCart,
+                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var value = 0M;
+                foreach (var sci in cart)
+                {
+                    value += (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice;
+                }
+                var ga4OrderItems = await GetGA4OrderItemsFromShoppingCart(cart);
+
+                model.BeginCheckoutModel = new BeginCheckoutModel()
+                {
+                    Value = value,
+                    Items = ga4OrderItems
+                };
+            }
 
             if (IsPurchase())
             {
@@ -88,6 +136,47 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
             var controller = routeData.Values["controller"];
             var action = routeData.Values["action"];
             return controller.Equals("Checkout") && action.Equals("Completed");
+        }
+
+        private bool IsBeginCheckout()
+        {
+            var routeData = Url.ActionContext.RouteData;
+            var controller = routeData.Values["controller"];
+            var action = routeData.Values["action"];
+            return controller.Equals("Checkout") && action.Equals("BillingAddress");
+        }
+
+        private bool IsPDP()
+        {
+            var routeData = Url.ActionContext.RouteData;
+            var controller = routeData.Values["controller"];
+            var action = routeData.Values["action"];
+            return controller.Equals("Product") && action.Equals("ProductDetails");
+        }
+
+        private async Task<IList<GA4OrderItem>> GetGA4OrderItemsFromShoppingCart(IList<ShoppingCartItem> shoppingCartItems)
+        {
+            var result = new List<GA4OrderItem>();
+
+            foreach (var sci in shoppingCartItems)
+            {
+                var product = await _productService.GetProductByIdAsync(sci.ProductId);
+                var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(sci.ProductId)).FirstOrDefault();
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
+                var productCategories = (await _categoryService.GetProductCategoriesByProductIdAsync(sci.ProductId)).FirstOrDefault();
+                var category = await _categoryService.GetCategoryByIdAsync(productCategories?.CategoryId ?? 0);
+                result.Add(new GA4OrderItem()
+                {
+                    Sku = product.Sku,
+                    Name = product.Name,
+                    Brand = manufacturer?.Name,
+                    Category = category?.Name,
+                    Quantity = sci.Quantity,
+                    Price = (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice
+                });
+            }
+
+            return result;
         }
 
         private async Task<IList<GA4OrderItem>> GetGA4OrderItemsFromOrderItems(IList<OrderItem> orderItems)
