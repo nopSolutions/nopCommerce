@@ -3,13 +3,11 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace AbcWarehouse.Plugin.Widgets.GA4.Models
 {
-    public class ConfigModel
+    public class GA4Model
     {
-        [Required]
-        [NopResourceDisplayName(GA4Locales.GoogleTag)]
         public string GoogleTag { get; set; }
-
-        [NopResourceDisplayName(GA4Locales.IsDebugMode)]
         public bool IsDebugMode { get; set; }
+
+        public PurchaseModel PurchaseModel { get; set; }
     }
 }

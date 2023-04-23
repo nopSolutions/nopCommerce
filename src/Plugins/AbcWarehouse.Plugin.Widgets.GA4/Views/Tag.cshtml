@@ -1,4 +1,8 @@
-@model string
+@model AbcWarehouse.Plugin.Widgets.GA4.Models.GA4Model
+
+@{
+  var debugModeText = Model.IsDebugMode ? ", { 'debug_mode':true }" : string.Empty;
+}
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=@Model"></script>
@@ -6,6 +10,35 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', '@Model');
+  gtag('config','@Model.GoogleTag'@Html.Raw(@debugModeText));
+  
+  @if (Model.PurchaseModel != null)
+  {
+    <text>
+      gtag("event", "purchase", {
+        transaction_id: @Model.PurchaseModel.OrderId,
+        value: @Model.PurchaseModel.Value,
+        tax: @Model.PurchaseModel.Tax,
+        shipping: @Model.PurchaseModel.Shipping,
+        currency: "USD",
+        items: [
+          @for (var i = 0; i < Model.PurchaseModel.OrderItems.Count(); i++)
+          {
+            var item = Model.PurchaseModel.OrderItems[i];
+            <text>
+              {
+                item_id: "@item.Sku",
+                item_name: "@item.Name",
+                index: @i,
+                item_brand: "@item.Brand",
+                item_category: "@item.Category",
+                price: @item.Price,
+                quantity: @item.Quantity
+              },
+            </text>
+          }
+        ]
+      });
+    </text>
+  }
 </script>

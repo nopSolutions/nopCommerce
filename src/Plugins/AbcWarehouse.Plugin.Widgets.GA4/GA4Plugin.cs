@@ -68,6 +68,8 @@ namespace AbcWarehouse.Plugin.Widgets.GA4
                 {
                     [GA4Locales.GoogleTag] = "Google Tag",
                     [GA4Locales.GoogleTagHint] = "Enter your Google Tag here (should start with G-).",
+                    [GA4Locales.IsDebugMode] = "Is Debug View",
+                    [GA4Locales.IsDebugModeHint] = "Turn on DebugView within Analytics account.",
                 });
         }
     }

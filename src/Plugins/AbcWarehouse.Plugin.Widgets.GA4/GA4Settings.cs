@@ -6,12 +6,14 @@ namespace AbcWarehouse.Plugin.Widgets.GA4
     public class GA4Settings : ISettings
     {
         public string GoogleTag { get; private set; }
+        public bool IsDebugMode { get; private set; }
 
         public static GA4Settings FromModel(ConfigModel model)
         {
             return new GA4Settings()
             {
                 GoogleTag = model.GoogleTag,
+                IsDebugMode = model.IsDebugMode,
             };
         }
 
@@ -20,6 +22,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4
             return new ConfigModel
             {
                 GoogleTag = GoogleTag,
+                IsDebugMode = IsDebugMode,
             };
         }
     }
