@@ -22,51 +22,51 @@
 
 <style>
 
-	.Scanstyle {
-		height: 36px;
-		border: 0;
-		background-color: #4ab2f1;
-		padding: 0 15px;
-		color: #fff;
-		text-transform: uppercase;
-		padding-bottom: 1%;
-	}
+    .Scanstyle {
+        height: 36px;
+        border: 0;
+        background-color: #4ab2f1;
+        padding: 0 15px;
+        color: #fff;
+        text-transform: uppercase;
+        padding-bottom: 1%;
+    }
 
 
 
 
-	/* ----------- iPad Air ----------- */
+    /* ----------- iPad Air ----------- */
 
-	@@media screen and (min-device-width: 820px) and (max-device-width: 1180px) {
-		.edit {
-			display: none;
-		}
+    @@media screen and (min-device-width: 820px) and (max-device-width: 1180px) {
+        .edit {
+            display: none;
+        }
 
 
-		#Specification {
-			padding: 10px;
-		}
-	}
+        #Specification {
+            padding: 10px;
+        }
+    }
 
-	/* ----------- iPad Mini ----------- */
+    /* ----------- iPad Mini ----------- */
 
-	@@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-		.edit {
-			display: none;
-		}
+    @@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        .edit {
+            display: none;
+        }
 
-		.SpecificationStyle {
-			padding: 23px;
-		}
-	}
+        .SpecificationStyle {
+            padding: 23px;
+        }
+    }
 
-	.searchBtnStyle {
-		margin-right: -2%;
-	}
+    .searchBtnStyle {
+        margin-right: -2%;
+    }
 
-	.ScantextBox {
-		margin: 0 -5px 0 0;
-	}
+    .ScantextBox {
+        margin: 0 -5px 0 0;
+    }
 
 </style>
 
@@ -78,9 +78,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-					<div id="small-search-box-form">
-						<input type="text" class="ScantextBox" id="ScanInput" autocomplete="off" name="myTextValue" value="" placeholder="Scan" aria-label="Scan Product" />
-						<button id="ScanButton" onclick="handleChange()" class="Scanstyle">Scan</button>
+                    <div id="small-search-box-form">
+                        <input type="text" class="ScantextBox" id="ScanInput" autocomplete="off" name="myTextValue" value="" placeholder="Scan" aria-label="Scan Product" />
+                        <button id="ScanButton" onclick="handleChange()" class="Scanstyle">Scan</button>
                     </div>
                 </div>
                 <div class="col-sm-6" style="display:none">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-					<div class="search-box searchBtnStyle" id="small-search-box-form">
+                    <div class="search-box searchBtnStyle" id="small-search-box-form">
                         @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
                     </div>
 
@@ -159,9 +159,10 @@
                             </thead>
                             @foreach (var item in Model.Items)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.Sku)
+                                <tr style="border: 1px solid #ddd;">
+                                    <td class="sku">
+                                        <label class="td-title">SKU - </label>
+                                        <span class="sku-number">@item.Sku</span>
                                     </td>
                                     <td class="product-picture">
                                         <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
@@ -176,13 +177,13 @@
                                         <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@testpname...</a>
                                         @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
-														<div class="SpecificationStyle" id="Specification">
-												@Html.Raw(item.AttributeInfo)
-														</div>
-										}
-										else
-										{
-														<div style="padding: 17%;" >
+                                            <div class="SpecificationStyle" id="Specification">
+                                                @Html.Raw(item.AttributeInfo)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div style="padding: 17%;">
                                             </div>
                                         }
                                         @if (!string.IsNullOrEmpty(item.RecurringInfo))
@@ -201,7 +202,7 @@
                                         {
                                             var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                             editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
-														<div class="edit-item edit">
+                                            <div class="edit-item edit">
                                                 <a href="@editCartItemUrl">Edit</a>
                                             </div>
                                         }
@@ -217,15 +218,17 @@
                                             </div>
                                         }
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.UnitPrice)
+                                    <td class="unit-price">
+                                        <label class="td-title">Price</label>
+                                        <span class="product-unit-price">@item.UnitPrice</span>
                                     </td>
-                                    <td class="qty nobr">
+                                    <td class="quantity">
+                                        <label class="td-title" for="itemquantity@(item.Id)">Qty.</label>
                                         @if (Model.IsEditable)
                                         {
                                             if (item.AllowedQuantities.Count > 0)
                                             {
-                                                <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown form-control">
+                                                <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown">
                                                     @foreach (var qty in item.AllowedQuantities)
                                                     {
                                                         <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -234,17 +237,29 @@
                                             }
                                             else
                                             {
-                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input form-control" aria-label="ShoppingCart.Quantity" style="width: auto;margin: auto;" />
+                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="Quantity" />
                                             }
-
                                         }
                                         else
                                         {
-                                            <span>@item.Quantity</span>
+                                            <span class="product-quantity">@item.Quantity</span>
                                         }
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.SubTotal)
+                                    <td class="subtotal">
+                                        <label class="td-title">Total</label>
+                                        <span class="product-subtotal">@item.SubTotal</span>
+                                        @if (!string.IsNullOrEmpty(item.Discount))
+                                        {
+                                            <div class="discount">
+                                                (You save: {0}, item.Discount)
+                                            </div>
+                                            if (item.MaximumDiscountedQty.HasValue)
+                                            {
+                                                <div class="discount-additional-info">
+                                                    (Discounted qty: {0}, item.MaximumDiscountedQty.Value)
+                                                </div>
+                                            }
+                                        }
                                     </td>
                                     <td class="remove-from-cart">
                                         @if (item.DisableRemoval)
