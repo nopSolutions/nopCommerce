@@ -9738,10 +9738,10 @@
   <browscapitem name="CheckMarkNetwork*">
     <item name="Crawler" value="true" />
   </browscapitem>
-  <browscapitem name="AddThis.com robot">
+  <browscapitem name="ShareThis.com robot">
     <item name="Crawler" value="true" />
   </browscapitem>
-  <browscapitem name="AddThis.com*">
+  <browscapitem name="ShareThis.com*">
     <item name="Crawler" value="true" />
   </browscapitem>
   <browscapitem name="Friendica">

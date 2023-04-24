@@ -6067,7 +6067,7 @@
     <Value>Share button code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode.Hint">
-    <Value>A page share button code. By default, we're using AddThis service.</Value>
+    <Value>A page share button code. By default, we're using ShareThis service.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product review possible only after product purchasing</Value>

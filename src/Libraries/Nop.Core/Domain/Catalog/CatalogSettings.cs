@@ -100,7 +100,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowShareButton { get; set; }
 
         /// <summary>
-        /// Gets or sets a share code (e.g. AddThis button code)
+        /// Gets or sets a share code (e.g. ShareThis button code)
         /// </summary>
         public string PageShareCode { get; set; }
 

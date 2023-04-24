@@ -126,6 +126,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //6645
                 ["Address.LineFormat"] = "{0}{1}{2}{3}{4}{5}{6}",
                 ["Pdf.AddressLine"] = "Address",
+
+                //6678
+                ["Admin.Configuration.Settings.Catalog.PageShareCode.Hint"] = "A page share button code. By default, we're using ShareThis service.",
             }, languageId);
 
             #endregion
