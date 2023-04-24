@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -33,6 +35,8 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.ShoppingCart;
+using System.Text;
 
 namespace Nop.Web.Controllers
 {
@@ -77,6 +81,8 @@ namespace Nop.Web.Controllers
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -117,7 +123,9 @@ namespace Nop.Web.Controllers
             IOrderModelFactory orderModelFactory,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPriceFormatter priceFormatter,
-            IRewardPointService rewardPointService)
+            IRewardPointService rewardPointService,
+            IShoppingCartModelFactory shoppingCartModelFactory,
+            IHttpContextAccessor httpContextAccessor)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -155,6 +163,8 @@ namespace Nop.Web.Controllers
             _orderTotalCalculationService = orderTotalCalculationService;
             _priceFormatter = priceFormatter;
             _rewardPointService = rewardPointService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -423,6 +433,17 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Completed(int? orderId)
         {
+            var emailBytes = _httpContextAccessor.HttpContext.Session.Get("Email");
+
+            string input = Encoding.ASCII.GetString(emailBytes);
+
+            string[] parts = input.Trim('\"').Split('@');
+
+            string email = parts[0] + "@" + parts[1];
+
+            var customerdetails = await _customerService.GetCustomerByEmailAsync(email.ToString());
+
+
             //validation
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
@@ -461,11 +482,14 @@ namespace Nop.Web.Controllers
             ordersList.ShippingStatus = ShippingStatus.Shipped;
             ordersList.IsPOSorder = true;
             ordersList.POSUserId = _workContext.GetCurrentCustomerAsync().Result.Email;
+            //var models = await _orderModelFactory.PrepareOrderDetailsModelAsync(ordersList);
+            //var customerid = await _customerService.GetCustomerByEmailAsync(models.BillingAddress.Email);
+            ordersList.CustomerId = customerdetails.Id;
+            ordersList.BillingAddressId = (int)customerdetails.BillingAddressId;
             var models = await _orderModelFactory.PrepareOrderDetailsModelAsync(ordersList);
-            var customerid = await _customerService.GetCustomerByEmailAsync(models.BillingAddress.Email);
-            ordersList.CustomerId = customerid.Id;
-            await _orderModelFactory.PrepareOrderDetailsModelAsync(ordersList);
-            _orderService.UpdateOrderAsync(ordersList);
+            await _orderService.UpdateOrderAsync(ordersList);
+
+            _httpContextAccessor.HttpContext.Session.Remove("Email");
             return View("~/Plugins/Pos/Views/Details.cshtml", models);
         }
         /// <summary>
@@ -1664,6 +1688,7 @@ namespace Nop.Web.Controllers
 
                 var newAddress = model.BillingNewAddress;
 
+                HttpContext.Session.Set("Email", newAddress.Email);
 
                 var customer1 = await _customerService.GetCustomerByEmailAsync(newAddress.Email);
 
@@ -1694,13 +1719,16 @@ namespace Nop.Web.Controllers
 
                     await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customerID.Id, CustomerRoleId = customerrole });
                 }
-
-                customer1.Phone = getcustomer.PhoneNumber;
-                customer1.StreetAddress = getcustomer.Address1;
-                customer1.StreetAddress2 = getcustomer.Address2;
-                customer1.ZipPostalCode = getcustomer.ZipPostalCode;
-                customer1.Fax = getcustomer.FaxNumber;
-                await _customerService.UpdateCustomerAsync(customer1);
+                else
+                {
+                customer1.Email = getcustomer.Email;
+                    customer1.Phone = getcustomer.PhoneNumber;
+                    customer1.StreetAddress = getcustomer.Address1;
+                    customer1.StreetAddress2 = getcustomer.Address2;
+                    customer1.ZipPostalCode = getcustomer.ZipPostalCode;
+                    customer1.Fax = getcustomer.FaxNumber;
+                    await _customerService.UpdateCustomerAsync(customer1);
+                }
 
                 if (billingAddressId > 0)
                 {
@@ -1709,7 +1737,6 @@ namespace Nop.Web.Controllers
                         ?? throw new Exception(await _localizationService.GetResourceAsync("Checkout.Address.NotFound"));
 
                     customer1.BillingAddressId = address.Id;
-
 
                     await _customerService.UpdateCustomerAsync(customer1);
                 }
@@ -1759,16 +1786,13 @@ namespace Nop.Web.Controllers
                         if (address.StateProvinceId == 0)
                             address.StateProvinceId = null;
 
-
-                        
-
                         await _addressService.InsertAddressAsync(address);
 
                         await _customerService.InsertCustomerAddressAsync(customer1, address);
 
                     }
-
-                    customer1.BillingAddressId = address.Id;
+                        customer1.BillingAddressId = address.Id;
+                    
 
                     await _customerService.UpdateCustomerAsync(customer1);
                 }
@@ -2199,8 +2223,8 @@ namespace Nop.Web.Controllers
                     if (!_orderSettings.OnePageCheckoutEnabled)
                         throw new Exception("One page checkout is disabled");
 
-                    if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                        throw new Exception("Anonymous checkout is not allowed");
+                    //if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                    //    throw new Exception("Anonymous checkout is not allowed");
 
                     //prevent 2 orders being placed within an X seconds time frame
                     if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))

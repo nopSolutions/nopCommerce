@@ -31,7 +31,24 @@
         text-decoration: none;
         color: inherit;
     }
-
+	@@media only screen 
+    and (min-device-width: 768px) 
+    and (max-device-width: 1024px) 
+    and (-webkit-min-device-pixel-ratio: 1) 
+    and (device-aspect-ratio: 4:3) {
+        /* Add your CSS code here for the input box */
+		.gotocart {
+			float: left;
+			/* min-width: 86px; */
+			height: 36px;
+			border: 0;
+			background-color: #4ab2f1;
+			padding: 0 15px;
+			text-align: center;
+			color: #fff;
+			text-transform: uppercase;
+		}
+    }
     .gotocart {
         border: 0;
         background-color: #4ab2f1;
@@ -42,7 +59,6 @@
         align-items: center;
         display: inline-flex;
         border-radius: 0%;
-        /*width: 37%;*/
     }
 </style>
 

@@ -12,6 +12,7 @@
     <None Remove="Views\GoToPos.cshtml" />
     <None Remove="Views\Neworder.cshtml" />
     <None Remove="Views\UserDetails.cshtml" />
+    <None Remove="Views\_OrderReviewData.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
      <Content Include="Views\Orderlist.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\OrderSummary.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_OrderReviewData.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <!--Checkout-->
@@ -90,6 +97,10 @@
     </Content>
     <Content Include="Views\CheckoutPos\_CreateOrUpdateAddress.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_OrderReviewData.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 

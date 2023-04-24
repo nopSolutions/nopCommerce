@@ -41,7 +41,7 @@
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutConfirmBottom, additionalData = Model })
     <div class="section order-summary">
-        @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), new { prepareAndDisplayOrderReviewData = true })
+        @await Component.InvokeAsync(typeof(Nop.Plugin.Pos.Components.OrderSummaryPOSViewComponent), new { prepareAndDisplayOrderReviewData = false })
     </div>
     @if (string.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {

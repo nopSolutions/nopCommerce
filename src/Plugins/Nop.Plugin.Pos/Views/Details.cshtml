@@ -13,6 +13,27 @@
 @using Nop.Web.Models.Order;
 @using Nop.Web.Framework.UI;
 @inject INopHtmlHelper NopHtml;
+<style>
+	.order-details-area {
+		display: flex;
+	}
+	/*iPad Air*/
+	@@media screen and (min-device-width: 820px) and (max-device-width: 1180px) {
+
+		#SpecificationStyleIfEmpty {
+			padding: 15%;
+		}
+	}
+
+	/*iPad Mini*/
+	@@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+
+		#SpecificationStyleIfEmpty {
+			padding: 6%;
+		}
+	}
+
+</style>
 
 @{
     if (!Model.PrintMode)
@@ -67,9 +88,9 @@
             </ul>
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageOverview, additionalData = Model })
         </div>
-        <div class="order-details-area">
-            <div class="billing-info-wrap">
-                <div class="billing-info">
+		<div class="order-details-area">
+			<div class="billing-info-wrap">
+				<div class="billing-info">
                     <div class="title">
                         <strong>Billing Address</strong>
                     </div>
@@ -233,7 +254,7 @@
             </div>
             @if (Model.IsShippable)
             {
-                <div class="shipping-info-wrap">
+				<div class="shipping-info-wrap">
                     <div class="shipping-info">
                         <div class="title">
                             <strong>@(Model.PickupInStore ? ("Pickup point address") : ("Shipping Address"))</strong>
@@ -519,6 +540,7 @@
                 </div>
             </div>
         }
+        
         @if (Model.Items.Count > 0)
         {
             if (!Model.PrintMode && Model.OrderNotes.Count > 0)
@@ -643,20 +665,24 @@
                                         </td>
                                     }
                                     <td class="product">
-                                        @if (!Model.PrintMode)
-                                        {
-                                            <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
-                                        }
-                                        else
-                                        {
-                                            @item.ProductName
-                                        }
-                                        @if (!string.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <div class="attributes">
-                                                @Html.Raw(item.AttributeInfo)
-                                            </div>
-                                        }
+										@{
+											var pname = item.ProductName;
+											var testpname = pname.Substring(0, 12);
+										}
+										<a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@testpname...</a>
+
+										@if (!string.IsNullOrEmpty(item.AttributeInfo))
+										{
+
+											<div id="SpecificationStyle">
+												@Html.Raw(item.AttributeInfo)
+											</div>
+										}
+										else
+										{
+											<div id="SpecificationStyleIfEmpty">
+											</div>
+										}
                                         @if (!string.IsNullOrEmpty(item.RentalInfo))
                                         {
                                             <div class="rental-info">

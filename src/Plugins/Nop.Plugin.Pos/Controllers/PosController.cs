@@ -840,7 +840,6 @@ namespace Nop.Plugin.Pos.Controllers
 
             if (order == null)
                 return Challenge();
-
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
             return View("~/Plugins/Pos/Views/Details.cshtml", model);
         }
