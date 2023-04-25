@@ -20,16 +20,18 @@
 	/*iPad Air*/
 	@@media screen and (min-device-width: 820px) and (max-device-width: 1180px) {
 
-		#SpecificationStyleIfEmpty {
-			padding: 15%;
+		
+		.SpecificationStyle {
+			display:none;
 		}
 	}
 
 	/*iPad Mini*/
 	@@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 
-		#SpecificationStyleIfEmpty {
-			padding: 6%;
+
+		.SpecificationStyle {
+			display: none;
 		}
 	}
 
@@ -674,13 +676,8 @@
 										@if (!string.IsNullOrEmpty(item.AttributeInfo))
 										{
 
-											<div id="SpecificationStyle">
+											<div class="SpecificationStyle">
 												@Html.Raw(item.AttributeInfo)
-											</div>
-										}
-										else
-										{
-											<div id="SpecificationStyleIfEmpty">
 											</div>
 										}
                                         @if (!string.IsNullOrEmpty(item.RentalInfo))
