@@ -8661,6 +8661,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
     <Value>1 reward point =</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Expired">
+    <Value>Unused reward points from {0} have expired</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRedeemedRate">
     <Value>Maximum redeemed rate</Value>
   </LocaleResource>
