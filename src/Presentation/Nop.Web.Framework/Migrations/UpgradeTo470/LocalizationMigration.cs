@@ -129,6 +129,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 //6678
                 ["Admin.Configuration.Settings.Catalog.PageShareCode.Hint"] = "A page share button code. By default, we're using ShareThis service.",
+
+                //6682
+                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage"] = "Show in newsletter block",
+                ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage.Hint"] = "Check to show CAPTCHA in newsletter block when subscribing.",
             }, languageId);
 
             #endregion

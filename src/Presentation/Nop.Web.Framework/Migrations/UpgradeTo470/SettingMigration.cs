@@ -53,6 +53,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 addressSettings.DefaultCountryId = null;
                 settingService.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
             }
+
+            var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
+            //#6682
+            if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
+            {
+                captchaSettings.ShowOnNewsletterPage = false;
+                settingService.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
+            }
         }
 
         public override void Down()
