@@ -170,13 +170,21 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             ProductAttributeValue deliveryPav,
             string textPrompt)
         {
-            var installKit1 = map.InstallKit_1;
+            var abcDeliveryAccessories = await _abcDeliveryService.GetAbcDeliveryAccessoriesByCategoryId(map.CategoryId);
+            if (!abcDeliveryAccessories.Any()) { return; }
+
+            var isDeliveryInstall = accessoriesProductAttributeId == _deliveryInstallAccessoriesProductAttribute.Id;
+            if (isDeliveryInstall)
+            {
+                abcDeliveryAccessories = abcDeliveryAccessories.Where(da => da.IsDeliveryInstall).ToList();
+            }
+            if (!abcDeliveryAccessories.Any()) { return; }
 
             var existingPam =
                 (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId)).FirstOrDefault(
                     pam => pam.ProductAttributeId == accessoriesProductAttributeId
                 );
-            var newPam = installKit1 != 0 ? new ProductAttributeMapping()
+            var newPam = new ProductAttributeMapping()
             {
                 ProductId = productId,
                 ProductAttributeId = accessoriesProductAttributeId,
@@ -184,61 +192,45 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 TextPrompt = textPrompt,
                 DisplayOrder = 30,
                 ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
-            } : null;
+            };
 
             var resultPam = await SaveProductAttributeMappingAsync(existingPam, newPam);
             if (resultPam != null)
             {
-                var isDeliveryInstall = accessoriesProductAttributeId == _deliveryInstallAccessoriesProductAttribute.Id;
-
-                // Install 1
-                var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(installKit1);
-                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
-                var newPav = new ProductAttributeValue()
+                foreach (var accessory in abcDeliveryAccessories)
                 {
-                    ProductAttributeMappingId = resultPam.Id,
-                    Name = item.Description,
-                    Cost = installKit1,
-                    PriceAdjustment = item.Price,
-                    IsPreSelected = isDeliveryInstall,
-                    DisplayOrder = 0,
-                };
-                await SaveProductAttributeValueAsync(existingPav, newPav);
-
-                // stop if delivery/install
-                if (isDeliveryInstall) { return; }
-
-                // Install 2
-                var installKit2 = map.InstallKit_2;
-                item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(installKit2);
-                existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
-                newPav = new ProductAttributeValue()
-                {
-                    ProductAttributeMappingId = resultPam.Id,
-                    Name = item.Description,
-                    Cost = installKit2,
-                    PriceAdjustment = item.Price,
-                    IsPreSelected = false,
-                    DisplayOrder = 0,
-                };
-                await SaveProductAttributeValueAsync(existingPav, newPav);
-
-                // Need to make an install 3 once that data is added to the table
+                    var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(accessory.AccessoryItemNumber);
+                    var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
+                    var newPav = new ProductAttributeValue()
+                    {
+                        ProductAttributeMappingId = resultPam.Id,
+                        Name = item.Description,
+                        Cost = accessory.AccessoryItemNumber,
+                        PriceAdjustment = item.Price,
+                        IsPreSelected = false,
+                        DisplayOrder = 0,
+                    };
+                    await SaveProductAttributeValueAsync(existingPav, newPav);
+                }
 
                 // Decline
-                var decline = "Decline New Hose";
-                existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == decline);
-                newPav = new ProductAttributeValue()
+                if (!isDeliveryInstall)
                 {
-                    ProductAttributeMappingId = resultPam.Id,
-                    Name = decline,
-                    // special value used
-                    Cost = 3,
-                    PriceAdjustment = 0,
-                    IsPreSelected = true,
-                    DisplayOrder = 10,
-                };
-                await SaveProductAttributeValueAsync(existingPav, newPav);
+                    var decline = "Decline New Hose";
+                    var existingDeclinePav =
+                        (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == decline);
+                    var newDeclinePav = new ProductAttributeValue()
+                    {
+                        ProductAttributeMappingId = resultPam.Id,
+                        Name = decline,
+                        // special value used
+                        Cost = 3,
+                        PriceAdjustment = 0,
+                        IsPreSelected = true,
+                        DisplayOrder = 10,
+                    };
+                    await SaveProductAttributeValueAsync(existingDeclinePav, newDeclinePav);
+                }
             }
         }
 

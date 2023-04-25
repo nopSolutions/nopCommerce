@@ -13,6 +13,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         {
             { (typeof(AbcDeliveryItem), "Id"), "Item_Number" },
             { (typeof(AbcDeliveryMap), "Id"), "CategoryId" },
+            { (typeof(AbcDeliveryAccessory), "Id"), "CategoryId" },
         };
     }
 }

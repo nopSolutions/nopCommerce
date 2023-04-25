@@ -11,6 +11,8 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync();
 
+        Task<IList<AbcDeliveryAccessory>> GetAbcDeliveryAccessoriesByCategoryId(int categoryId);
+
         // Changed to synchronous to prevent collision issues
         ProductAttributeValue AddValue(
             int pamId,

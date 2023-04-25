@@ -15,6 +15,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILogger _logger;
+        private readonly IRepository<AbcDeliveryAccessory> _abcDeliveryAccessoryRepository;
         private readonly IRepository<AbcDeliveryItem> _abcDeliveryItemRepository;
         private readonly IRepository<AbcDeliveryMap> _abcDeliveryMapRepository;
 
@@ -22,12 +23,14 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             IPriceFormatter priceFormatter,
             IProductAttributeService productAttributeService,
             ILogger logger,
+            IRepository<AbcDeliveryAccessory> abcDeliveryAccessoryRepository,
             IRepository<AbcDeliveryItem> abcDeliveryItemRepository,
             IRepository<AbcDeliveryMap> abcDeliveryMapRepository)
         {
             _priceFormatter = priceFormatter;
             _productAttributeService = productAttributeService;
             _logger = logger;
+            _abcDeliveryAccessoryRepository = abcDeliveryAccessoryRepository;
             _abcDeliveryItemRepository = abcDeliveryItemRepository;
             _abcDeliveryMapRepository = abcDeliveryMapRepository;
         }
@@ -53,10 +56,15 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public async Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync()
         {
-
             var abcDeliveryMaps = await _abcDeliveryMapRepository.Table.Where(adm => adm != null).ToListAsync();
 
             return await abcDeliveryMaps.Where(adm => adm.HasDeliveryOptions()).ToListAsync();
+        }
+
+        public async Task<IList<AbcDeliveryAccessory>> GetAbcDeliveryAccessoriesByCategoryId(int categoryId)
+        {
+            var accessories = await _abcDeliveryAccessoryRepository.Table.ToListAsync();
+            return accessories.Where(a => a.CategoryId == categoryId).ToList();
         }
 
         // Calling async methods synchronously, if things go wrong check this:

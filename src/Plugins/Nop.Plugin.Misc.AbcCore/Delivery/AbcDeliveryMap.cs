@@ -19,10 +19,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public int DeliveryHaulwayInstall { get; set; }
 
-        public int InstallKit_1 { get; set; }
-
-        public int InstallKit_2 { get; set; }
-
         public bool HasDeliveryOptions()
         {
             return (DeliveryOnly != 0 && DeliveryOnly != _fedex) ||
