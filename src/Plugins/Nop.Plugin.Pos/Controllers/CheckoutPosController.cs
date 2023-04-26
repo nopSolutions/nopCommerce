@@ -83,6 +83,7 @@ namespace Nop.Web.Controllers
         private readonly IRewardPointService _rewardPointService;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPdfService _pdfService;
 
         #endregion
 
@@ -125,7 +126,8 @@ namespace Nop.Web.Controllers
             IPriceFormatter priceFormatter,
             IRewardPointService rewardPointService,
             IShoppingCartModelFactory shoppingCartModelFactory,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IPdfService pdfService)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -165,6 +167,7 @@ namespace Nop.Web.Controllers
             _rewardPointService = rewardPointService;
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _httpContextAccessor = httpContextAccessor;
+            _pdfService = pdfService;
         }
 
         #endregion
@@ -2473,6 +2476,42 @@ namespace Nop.Web.Controllers
                 return address;
             }
             
+        }
+        public virtual async Task<IActionResult> PrintOrderDetails(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+
+
+
+            var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
+            model.PrintMode = true;
+
+
+
+            return View("~/Plugins/Pos/Views/Details.cshtml", model);
+        }
+
+
+
+        //My account / Order details page / PDF invoice
+        [CheckLanguageSeoCode(ignore: true)]
+        public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+
+
+
+            byte[] bytes;
+            await using (var stream = new MemoryStream())
+            {
+                await _pdfService.PrintOrderToPdfAsync(stream, order, await _workContext.GetWorkingLanguageAsync());
+                bytes = stream.ToArray();
+            }
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
         }
     }
 }
