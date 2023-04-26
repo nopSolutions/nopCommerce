@@ -2304,8 +2304,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            commonTokens.Add(new Token("VatValidatio.Name", vatName));
-            commonTokens.Add(new Token("VatValidatio.Address", vatAddress));
+            commonTokens.Add(new Token("VatValidationResult.Name", vatName));
+            commonTokens.Add(new Token("VatValidationResult.Address", vatAddress));
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
