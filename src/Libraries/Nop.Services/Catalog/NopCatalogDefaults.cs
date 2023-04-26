@@ -308,7 +308,14 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}");
+        public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}", ProductAttributeMappingsByProductPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        public static string ProductAttributeMappingsByProductPrefix => new("Nop.productattributemapping.byproduct.");
 
         /// <summary>
         /// Gets a key for caching
