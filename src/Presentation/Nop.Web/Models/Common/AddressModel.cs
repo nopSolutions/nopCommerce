@@ -13,6 +13,7 @@ namespace Nop.Web.Models.Common
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             CustomAddressAttributes = new List<AddressAttributeModel>();
+            AddressFields = new KeyValuePair<AddressField, string>[7];
         }
 
         [NopResourceDisplayName("Address.Fields.FirstName")]
