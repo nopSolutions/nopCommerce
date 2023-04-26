@@ -29,6 +29,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool PricesIncludeTax { get; set; }
         public bool PricesIncludeTax_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry")]
+        public bool AutomaticallyDetectCountry { get; set; }
+        public bool AutomaticallyDetectCountry_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType")]
         public bool AllowCustomersToSelectTaxDisplayType { get; set; }
         public bool AllowCustomersToSelectTaxDisplayType_OverrideForStore { get; set; }

@@ -48,6 +48,11 @@ namespace Nop.Core.Domain.Tax
         public bool PricesIncludeTax { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the country is automatically detected
+        /// </summary>
+        public bool AutomaticallyDetectCountry { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to select tax display type
         /// </summary>
         public bool AllowCustomersToSelectTaxDisplayType { get; set; }

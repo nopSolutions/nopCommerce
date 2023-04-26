@@ -1129,6 +1129,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in overridden values
             if (storeId > 0)
             {
+                model.AutomaticallyDetectCountry_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.AutomaticallyDetectCountry, storeId);
                 model.PricesIncludeTax_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PricesIncludeTax, storeId);
                 model.AllowCustomersToSelectTaxDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, storeId);
                 model.TaxDisplayType_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.TaxDisplayType, storeId);

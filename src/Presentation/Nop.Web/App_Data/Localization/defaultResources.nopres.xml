@@ -9003,6 +9003,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType.Hint">
     <Value>A value indicating whether customers are allowed to select tax display type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AutomaticallyDetectCountry">
+    <Value>Automatically detect a country by IP address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AutomaticallyDetectCountry.Hint">
+    <Value>When this setting is enabled, the client's country will be determined by the GEO service (by IP address).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
@@ -9140,7 +9146,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass.Hint">
     <Value>Select tax category used for shipping tax calculation.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn">
     <Value>Tax based on</Value>
   </LocaleResource>

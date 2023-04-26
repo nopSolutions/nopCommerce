@@ -3299,6 +3299,7 @@ namespace Nop.Services.Installation
                 DisplayTaxSuffix = false,
                 DisplayTaxRates = false,
                 PricesIncludeTax = false,
+                AutomaticallyDetectCountry = true,
                 AllowCustomersToSelectTaxDisplayType = false,
                 ForceTaxExclusionFromOrderSubtotal = false,
                 DefaultTaxCategoryId = 0,

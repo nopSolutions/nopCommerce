@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MaxMind.GeoIP2.Model;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,6 +14,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Tax.Events;
+using Country = Nop.Core.Domain.Directory.Country;
 
 namespace Nop.Services.Tax
 {
@@ -229,25 +231,35 @@ namespace Nop.Services.Tax
                 }
             }
 
-            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
-                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
+            var autodetectedCountry = false;
+            var detectedAddress = new Address
+            {
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
+            if ((basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null 
+                || basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null) &&
+                _taxSettings.AutomaticallyDetectCountry)
+            {
+                var ipAddress = _webHelper.GetCurrentIpAddress();
+                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
+
+                if (country != null)
+                {
+                    detectedAddress.CountryId = country.Id;
+                    autodetectedCountry = true;
+                }
+            }
+            else
                 basedOn = TaxBasedOn.DefaultAddress;
 
-            switch (basedOn)
+            taxRateRequest.Address = basedOn switch
             {
-                case TaxBasedOn.BillingAddress:
-                    var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
-                    taxRateRequest.Address = billingAddress;
-                    break;
-                case TaxBasedOn.ShippingAddress:
-                    var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
-                    taxRateRequest.Address = shippingAddress;
-                    break;
-                case TaxBasedOn.DefaultAddress:
-                default:
-                    taxRateRequest.Address = await LoadDefaultTaxAddressAsync();
-                    break;
-            }
+                TaxBasedOn.BillingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerBillingAddressAsync(customer),
+                TaxBasedOn.ShippingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerShippingAddressAsync(customer),
+                _ => await LoadDefaultTaxAddressAsync(),
+            };
 
             return taxRateRequest;
         }

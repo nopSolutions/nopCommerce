@@ -129,6 +129,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 //6678
                 ["Admin.Configuration.Settings.Catalog.PageShareCode.Hint"] = "A page share button code. By default, we're using ShareThis service.",
+
+                //5768
+                ["Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry"] = "Automatically detect a country by IP address",
+                ["Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry.Hint"] = "When this setting is enabled, the client's country will be determined by the GEO service (by IP address).",
+
             }, languageId);
 
             #endregion

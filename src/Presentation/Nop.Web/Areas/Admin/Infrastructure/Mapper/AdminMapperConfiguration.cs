@@ -1613,6 +1613,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<TaxSettings, TaxSettingsModel>()
                 .ForMember(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AutomaticallyDetectCountry_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxCategoryId_OverrideForStore, options => options.Ignore())
