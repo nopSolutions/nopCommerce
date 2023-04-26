@@ -175,6 +175,11 @@ namespace Nop.Core
             if (StringValues.IsNullOrEmpty(hostHeader))
                 return string.Empty;
 
+            if (hostHeader == "nopcommerce.inside10d.com")
+            {
+                useSsl = true;
+            }
+
             //add scheme to the URL
             var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}{Uri.SchemeDelimiter}{hostHeader.FirstOrDefault()}";
 
