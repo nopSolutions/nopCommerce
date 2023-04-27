@@ -34,6 +34,9 @@
 			display: none;
 		}
 	}
+	.order-overview-content{
+		    margin: 2% 24%;	
+	}
 
 </style>
 
@@ -64,11 +67,14 @@
     {
         <div class="page-title">
             <h1>Order information</h1>
-            <a href="@Url.Action("PrintOrderDetails","CheckoutPos" ,new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">Print</a>
+            @*<a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">Print</a>*@
+
+			<button type="button" class="button-2 print-order-button" onclick="location.href='@Url.Action("PrintOrderDetails","CheckoutPos" ,new { orderId = Model.Id })'">Print</button>
 
             @if (!Model.PdfInvoiceDisabled)
             {
-				<a href="@Url.Action("GetPdfInvoice","CheckoutPos" ,new { orderId = Model.Id })" class="button-2 pdf-invoice-button">PDF Invoice</a>
+                @*<a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-invoice-button">PDF Invoice</a>*@
+				<button type="button" class="button-2 pdf-invoice-button" onclick="location.href='@Url.Action("GetOrderPdfInvoice","CheckoutPos" ,new { orderId = Model.Id })'">PDF Invoice</button>
 
             }
         </div>
@@ -77,7 +83,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageTop, additionalData = Model })
         <div class="order-overview">
             <div class="order-number">
-                <strong>Order #@Model.CustomOrderNumber</strong>
+				<strong style=" margin: 5% 28%;">Order #@Model.CustomOrderNumber</strong>
             </div>
             <ul class="order-overview-content">
                 <li class="order-date">
@@ -617,7 +623,7 @@
                             <col width="1" />
                             <col width="1" />
                         </colgroup>
-                        <thead class="hidden-xs">
+                        <thead>
                             <tr>
                                 @if (Model.ShowSku)
                                 {
@@ -658,7 +664,7 @@
                                     @if (Model.ShowSku)
                                     {
                                         <td class="sku">
-                                            <label class="td-title" style="font-weight:bold">SKU:</label>
+                                            <label class="td-title">SKU:</label>
                                             <span class="sku-number">@item.Sku</span>
                                         </td>
                                     }
@@ -710,15 +716,15 @@
                                         </td>
                                     }
                                     <td class="unit-price">
-                                        <label class="td-title" style="font-weight:bold">Price:</label>
+                                        <label class="td-title">Price:</label>
                                         <span class="product-unit-price">@item.UnitPrice</span>
                                     </td>
                                     <td class="quantity">
-                                        <label class="td-title"  style="font-weight:bold">Qty:</label>
+                                        <label class="td-title">Quantity:</label>
                                         <span class="product-quantity">@item.Quantity</span>
                                     </td>
                                     <td class="total">
-                                        <label class="td-title"  style="font-weight:bold">Total:</label>
+                                        <label class="td-title">Total:</label>
                                         <span class="product-subtotal">@item.SubTotal</span>
                                     </td>
                                 </tr>

@@ -48,13 +48,13 @@
     var posuserrole = "POS_User ";
 }
 
-@if (UserEmail.Email != null)
+@if (UserEmail.Username != null)
 {
     <div class="row col-12">
 
         <div class="col-12">
             <p class="userdetails">
-                Hi @UserEmail.Email you have
+                Hi @UserEmail.Username you have
                 @foreach (var item in role)
                 {
                     if (item == 1)

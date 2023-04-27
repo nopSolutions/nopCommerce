@@ -194,30 +194,37 @@
                             </thead>
                             @foreach (var item in Model.Items)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.Sku)
-                                    </td>
-                                    <td class="product-picture">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
-                                    </td>
-
-
+                                <tr style="border: 1px solid #ddd;">
+                                    @if (Model.ShowSku)
+                                    {
+                                        <td class="sku">
+                                            <label class="td-title" style="font-weight:bold">SKU :</label>
+                                            <span class="sku-number">@item.Sku</span>
+                                        </td>
+                                    }
+                                    @if (Model.ShowProductImages)
+                                    {
+                                        <td class="product-picture">
+                                            <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        </td>
+                                    }
                                     <td class="product">
                                         @{
                                             var pname = item.ProductName;
                                             var testpname = pname.Substring(0, 12);
                                         }
                                         <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@testpname...</a>
+                                        @*<a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>*@
+
                                         @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
-                                            <div class="SpecificationStyle" id="Specification">
+                                            <div class="SpecificationStyle">
                                                 @Html.Raw(item.AttributeInfo)
                                             </div>
                                         }
                                         else
                                         {
-                                            <div style="padding: 17px;">
+                                            <div>
                                             </div>
                                         }
                                         @if (!string.IsNullOrEmpty(item.RecurringInfo))
@@ -236,11 +243,10 @@
                                         {
                                             var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                             editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
-                                            <div class="edit-item edit">
+                                            <div class="edit-item">
                                                 <a href="@editCartItemUrl">Edit</a>
                                             </div>
                                         }
-
                                         @if (item.Warnings.Count > 0)
                                         {
                                             <div class="message-error">
@@ -253,15 +259,24 @@
                                             </div>
                                         }
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.UnitPrice)
+                                    @if (Model.ShowVendorName)
+                                    {
+                                        <td class="vendor">
+                                            <label class="td-title">Vendor name</label>
+                                            <span class="vendor-name">@item.VendorName</span>
+                                        </td>
+                                    }
+                                    <td class="unit-price">
+                                        <label class="td-title" style="font-weight:bold">Price :</label>
+                                        <span class="product-unit-price">@item.UnitPrice</span>
                                     </td>
-                                    <td class="qty nobr">
+                                    <td class="quantity">
+                                        <label class="td-title" for="itemquantity@(item.Id)" style="font-weight:bold">Qty :</label>
                                         @if (Model.IsEditable)
                                         {
                                             if (item.AllowedQuantities.Count > 0)
                                             {
-                                                <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown form-control">
+                                                <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown">
                                                     @foreach (var qty in item.AllowedQuantities)
                                                     {
                                                         <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -270,29 +285,44 @@
                                             }
                                             else
                                             {
-                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input form-control" aria-label="ShoppingCart.Quantity" style="width: auto;margin: auto;" />
+                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="Quantity" />
                                             }
-
                                         }
                                         else
                                         {
-                                            <span>@item.Quantity</span>
+                                            <span class="product-quantity">@item.Quantity</span>
                                         }
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(m=>item.SubTotal)
-                                    </td>
-                                    <td class="remove-from-cart">
-                                        @if (item.DisableRemoval)
+                                    <td class="subtotal">
+                                        <label class="td-title" style="font-weight:bold">Total :</label>
+                                        <span class="product-subtotal">@item.SubTotal</span>
+                                        @if (!string.IsNullOrEmpty(item.Discount))
                                         {
-                                            <text>&nbsp;</text>
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="ShoppingCart.Remove" />
-                                            <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
+                                            <div class="discount">
+                                                (You save: {0}, item.Discount)
+                                            </div>
+                                            if (item.MaximumDiscountedQty.HasValue)
+                                            {
+                                                <div class="discount-additional-info">
+                                                    (Discounted qty: {0}, item.MaximumDiscountedQty.Value)
+                                                </div>
+                                            }
                                         }
                                     </td>
+                                    @if (Model.IsEditable)
+                                    {
+                                        <td class="remove-from-cart">
+                                            @if (item.DisableRemoval)
+                                            {
+                                                <text>&nbsp;</text>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="Remove" />
+                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
+                                            }
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </table>

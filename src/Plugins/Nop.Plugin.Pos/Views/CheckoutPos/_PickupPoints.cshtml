@@ -30,8 +30,10 @@
             function togglePickupInStore(pickupInStore) {
                 if (pickupInStore.checked) {
                     $('#pickup-points-form').show();
+                    $('#shipping-addresses-form').hide();
                 } else {
                     $('#pickup-points-form').hide();
+                    $('#shipping-addresses-form').show();
                 }
 
                 $(document).trigger({ type: "checkout_toggle_pickup_in_store", checked: pickupInStore.checked });
@@ -41,7 +43,7 @@
 }
 
 
-<div class="section pickup-points" id="pickup-points-form">
+<div class="section pickup-points" id="pickup-points-form" style="display:none">
     @if (Model.PickupPoints.Any())
     {
         if (Model.PickupInStoreOnly)

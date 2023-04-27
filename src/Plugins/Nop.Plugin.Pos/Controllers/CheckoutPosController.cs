@@ -37,6 +37,7 @@ using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.ShoppingCart;
 using System.Text;
+using System.Reflection.Metadata;
 
 namespace Nop.Web.Controllers
 {
@@ -492,7 +493,7 @@ namespace Nop.Web.Controllers
             var models = await _orderModelFactory.PrepareOrderDetailsModelAsync(ordersList);
             await _orderService.UpdateOrderAsync(ordersList);
 
-            _httpContextAccessor.HttpContext.Session.Remove("Email");
+            //_httpContextAccessor.HttpContext.Session.Remove("Email");
             return View("~/Plugins/Pos/Views/Details.cshtml", models);
         }
         /// <summary>
@@ -1662,13 +1663,17 @@ namespace Nop.Web.Controllers
                 var sta =  _stateProvinceRepository.GetAll().FirstOrDefault(s => s.Name == statename);
                 if(cou != null)
                 {
-                    model.BillingNewAddress.StateProvinceId = sta.Id;
-                    model.BillingNewAddress.StateProvinceName = sta.Name;
                     model.BillingNewAddress.CountryId = cou.Id;
                     model.BillingNewAddress.CountryName = cou.Name;
                     model.BillingNewAddress.County = cou.Name;
                 }
-                
+
+                if (sta != null)
+                {
+                    model.BillingNewAddress.StateProvinceId = sta.Id;
+                    model.BillingNewAddress.StateProvinceName = sta.Name;
+                }
+
 
                 //validation
                 if (_orderSettings.CheckoutDisabled)
@@ -1697,6 +1702,8 @@ namespace Nop.Web.Controllers
 
                 var getcustomer = newAddress;
 
+
+
                 if (customer1 == null)
                 {
                     customer1 = new Customer();
@@ -1710,12 +1717,47 @@ namespace Nop.Web.Controllers
                     if (cou != null)
                     {
                         customer1.CountryId = cou.Id;
-                        customer1.StateProvinceId = sta.Id;
+                        if (sta != null)
+                        {
+                          customer1.StateProvinceId = sta.Id;
+                        }
+                    }
+                    if (getcustomer.CountryId != null && getcustomer.CountryId != 0)
+                    {
+                        var country = from c in _countryRepository.Table
+                                      where c.Id == getcustomer.CountryId
+                                      select c;
+
+                        var billingcountry = await country.FirstOrDefaultAsync();
+                        customer1.CountryId = billingcountry.Id;
+
+                    }
+
+                    if (getcustomer.StateProvinceId != null && getcustomer.StateProvinceId != 0)
+                    {
+                        var state = await _stateProvinceRepository.GetByIdAsync(getcustomer.StateProvinceId);
+                        customer1.StateProvinceId = state.Id;
                     }
                     customer1.StreetAddress = getcustomer.Address1;
                     customer1.StreetAddress2 = getcustomer.Address2;
                     customer1.ZipPostalCode = getcustomer.ZipPostalCode;
                     customer1.Fax = getcustomer.FaxNumber;
+
+                    if (model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress == null)
+                    {
+                        var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                            selectedCountryId: newAddress.CountryId);
+                        billingAddressModel.NewAddressPreselected = true;
+                        return Json(new
+                        {
+                            update_section = new UpdateSectionJsonModel
+                            {
+                                name = "billing",
+                                html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                            },
+                            wrong_billing_address = true,
+                        });
+                    }
                     await _customerService.InsertCustomerAsync(customer1);
                     var customerID = await _customerService.GetCustomerByEmailAsync(getcustomer.Email);
                     var customerrole = 4;
@@ -1730,6 +1772,22 @@ namespace Nop.Web.Controllers
                     customer1.StreetAddress2 = getcustomer.Address2;
                     customer1.ZipPostalCode = getcustomer.ZipPostalCode;
                     customer1.Fax = getcustomer.FaxNumber;
+                    if (getcustomer.CountryId != null && getcustomer.CountryId != 0)
+                    {
+                        var country = from c in _countryRepository.Table
+                                      where c.Id == getcustomer.CountryId
+                                      select c;
+
+                        var billingcountry = await country.FirstOrDefaultAsync();
+                        customer1.CountryId = billingcountry.Id;
+
+                    }
+
+                    if (getcustomer.StateProvinceId != null && getcustomer.StateProvinceId != 0)
+                    {
+                        var state = await _stateProvinceRepository.GetByIdAsync(getcustomer.StateProvinceId);
+                        customer1.StateProvinceId = state.Id;
+                    }
                     await _customerService.UpdateCustomerAsync(customer1);
                 }
 
@@ -1763,6 +1821,22 @@ namespace Nop.Web.Controllers
                         ModelState.AddModelError("", error);
                     }
 
+                    if(model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress == null)
+                    {
+                        var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                            selectedCountryId: newAddress.CountryId,
+                            overrideAttributesXml: customAttributes);
+                        billingAddressModel.NewAddressPreselected = true;
+                        return Json(new
+                        {
+                            update_section = new UpdateSectionJsonModel
+                            {
+                                name = "billing",
+                                html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                            },
+                            wrong_billing_address = true,
+                        });
+                    }
 
                     //try to find an address with the same values (don't duplicate records)
                     var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer1.Id)).ToList(),
@@ -2425,7 +2499,11 @@ namespace Nop.Web.Controllers
 
                     address.posaddress.County = billingcountry.ThreeLetterIsoCode;
 
-                    address.state = state.Name;
+                    if(state != null)
+                    {
+                        address.state = state.Name;
+                    }
+
                 }
 
                 return Ok(address);
@@ -2463,7 +2541,9 @@ namespace Nop.Web.Controllers
                 var country = from c in _countryRepository.Table
                               where c.Id == address.CountryId
                               select c;
+                
                 var billingcountry = await country.FirstOrDefaultAsync();
+
                 if (billingcountry != null)
                 {
                     address.County = billingcountry.Name;
@@ -2481,16 +2561,9 @@ namespace Nop.Web.Controllers
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
             var customer = await _workContext.GetCurrentCustomerAsync();
-
-
-
-
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
             model.PrintMode = true;
-
-
-
-            return View("~/Plugins/Pos/Views/Details.cshtml", model);
+            return View("~/Plugins/Pos/Views/CheckoutPOS/DetailsPDF.cshtml", model);
         }
 
 

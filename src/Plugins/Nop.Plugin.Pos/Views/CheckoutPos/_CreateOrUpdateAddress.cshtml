@@ -13,14 +13,32 @@
     //var countryflag = ViewBag.Country;
     //var firstname1 = ViewBag.firstname;
 }
+<style>
+    .cophonenumber {
+        width: 400px;
+        height: 36px;
+        border: 1px solid #ddd;
+        padding: 8px;
+        vertical-align: middle;
+    }
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
 <input class="address-id" asp-for="Id" type="hidden" />
 <div class="edit-address">
     @if (Model.PhoneEnabled)
     {
         <div class="inputs">
             <label asp-for="PhoneNumber" asp-postfix=":"></label>
-            <input asp-for="PhoneNumber" id="ScanInput" />
+            <input asp-for="PhoneNumber" id="ScanInput" type="number" class="cophonenumber" />
             <button type="submit" class="search-button" style=" background-color: #f9f9f9; padding: 7px; display: inline-flex; position: absolute; margin-left: 1%; border-radius: 50%; border: 0; " onclick="handleChange()">
                 <svg viewBox="0 0 24 24" style=" color: black; " width="24" height="24">
                     <path fill="currentColor" d="M20.707 19.293l-4.52-4.52A7.939 7.939 0 0 0 16 10c0-4.411-3.589-8-8-8S0 5.589 0 10s3.589 8 8 8a7.938 7.938 0 0 0 5.773-2.427l4.52 4.52a.998.998 0 1 0 1.414-1.414zM2 10c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6z" />
@@ -82,7 +100,7 @@
                 data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
                 data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
                 data-loading="#states-loading-progress"></select>
-        <nop-required />
+        @*<nop-required />*@
         <span asp-validation-for="CountryId"></span>
         <span asp-validation-for="County"></span>
     </div>
@@ -139,7 +157,7 @@
     {
         <div class="inputs">
             <label asp-for="ZipPostalCode" asp-postfix=":"></label>
-            <input asp-for="ZipPostalCode" />
+            <input asp-for="ZipPostalCode" class="cophonenumber" type="number" />
             @if (Model.ZipPostalCodeRequired)
             {
                 <nop-required />
@@ -172,8 +190,6 @@
 
     function handleChange() {
         var Phonenumber = $("#ScanInput").val();
-        console.log(Phonenumber);
-        console.log("rest");
         $.ajax({
             type: "POST",
             url: "@Url.Action("GetCustomerDetailss", "CheckoutPos")",
@@ -198,37 +214,29 @@
                     // Handle the success result here
                     var inputField = document.getElementById("BillingNewAddress_CountryId"); // get a reference to the input field
                     if (parsedData.Country != null) {
-                        console.log("hide");
                         inputField.style.display = "none"; // hide the input field if the flag is true
                     } else {
-                        console.log("show");
                         inputField.style.display = "initial"; // show the input field if the flag is false
                     }
 
                     var inputField = document.getElementById("BillingNewAddress_StateProvinceId"); // get a reference to the input field
                     if (parsedData.Country != null) {
-                        console.log("hide");
                         inputField.style.display = "none"; // hide the input field if the flag is true
                     } else {
-                        console.log("show");
                         inputField.style.display = "initial"; // show the input field if the flag is false
                     }
 
                     var inputField = document.getElementById("BillingNewAddress_County"); // get a reference to the input field
                     if (parsedData.Country == null) {
-                        console.log("hide");
                         inputField.style.display = "none"; // hide the input field if the flag is true
                     } else {
-                        console.log("show");
                         inputField.style.display = "initial"; // show the input field if the flag is false
                     }
 
                     var inputField = document.getElementById("StateProvince"); // get a reference to the input field
                     if (parsedData.Country == null) {
-                        console.log("hide");
                         inputField.style.display = "none"; // hide the input field if the flag is true
                     } else {
-                        console.log("show");
                         inputField.style.display = "initial"; // show the input field if the flag is false
                     }
 
