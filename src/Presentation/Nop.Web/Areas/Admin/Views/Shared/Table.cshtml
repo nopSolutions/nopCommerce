@@ -246,7 +246,7 @@
                     if (columnType == 'select')
                     {
                         var selectedValue = editRowData_@(tableName)[cellName],
-                            html = '<select class="userinput" style="width: 99%;height:30px">';
+                            html = '<select class="userinput" style="width: 99%;height: 30px">';
 
                         items.forEach(function (item){
                              html += `<option value="${item.Value}" ${item.Value == selectedValue ? 'selected' : ''} ${item.Disabled ? 'disabled' : ''}">${item.Text}</option>`;
