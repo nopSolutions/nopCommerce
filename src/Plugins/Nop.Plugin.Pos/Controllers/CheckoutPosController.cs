@@ -2563,7 +2563,7 @@ namespace Nop.Web.Controllers
             var customer = await _workContext.GetCurrentCustomerAsync();
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
             model.PrintMode = true;
-            return View("~/Plugins/Pos/Views/CheckoutPOS/DetailsPDF.cshtml", model);
+            return View("~/Plugins/Pos/Views/DetailsPDF.cshtml", model);
         }
 
 
