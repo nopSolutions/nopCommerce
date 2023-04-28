@@ -42,7 +42,10 @@
 
     @@media screen and (min-device-width: 820px) and (max-device-width: 1180px) {
 
-
+        .searchBtnStyle {
+            margin-right: -2%;
+            text-align: center;
+        }
 
         #Specification {
             display: none;
@@ -79,10 +82,16 @@
             padding-bottom: 1%;
             width: 94px
         }
+
+        .searchBtnStyle {
+            margin-right: -2%;
+            text-align: center;
+        }
     }
 
     .searchBtnStyle {
-        margin-right: -2%;
+        display: grid;
+        margin-right: -42%;
         text-align: center;
     }
 
@@ -127,8 +136,8 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6" style="direction: rtl ">
-                    <div class="search-box searchBtnStyle" id="small-search-box-form">
+                <div class="col-sm-6 searchBtnStyle">
+                    <div class="search-box" id="small-search-box-form">
                         @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
                     </div>
 
