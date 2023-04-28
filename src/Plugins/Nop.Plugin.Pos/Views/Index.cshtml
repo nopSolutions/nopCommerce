@@ -12,52 +12,58 @@
         width: auto;
     }
 
-    a:link {
+    a {
         text-decoration: none;
         color: inherit;
     }
 
-    a:visited {
-        text-decoration: none;
-        color: inherit;
+        a:link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:visited {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:active {
+            text-decoration: none;
+            color: inherit;
+        }
+
+    #PosIndexBtnStyle {
+        display: inline-block;
+        min-width: 180px;
+        margin: 5px 0;
+        border: 0;
+        background-image: none;
+        padding: 10px 20px;
+        font-size: 15px;
+        color: #fff;
+        background-color: #4AB2F1;
     }
 
-    a:hover {
-        text-decoration: none;
-        color: inherit;
+    @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (device-aspect-ratio: 4:3) {
+        /* Add your CSS code here for the input box */
+        .gotocart {
+            float: left;
+            /* min-width: 86px; */
+            height: 36px;
+            border: 0;
+            background-color: #4ab2f1;
+            padding: 0 15px;
+            text-align: center;
+            color: #fff;
+            text-transform: uppercase;
+        }
     }
 
-	a:active {
-		text-decoration: none;
-		color: inherit;
-	}
-
-	#PosIndexBtnStyle {
-		display: inline-block;
-		min-width: 180px;
-		margin: 5px 0;
-		border: 0;
-		background-image: none;
-		padding: 10px 20px;
-		font-size: 15px;
-		color: #fff;
-		background-color: #4AB2F1;
-	}
-
-	@@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (device-aspect-ratio: 4:3) {
-		/* Add your CSS code here for the input box */
-		.gotocart {
-			float: left;
-			/* min-width: 86px; */
-			height: 36px;
-			border: 0;
-			background-color: #4ab2f1;
-			padding: 0 15px;
-			text-align: center;
-			color: #fff;
-			text-transform: uppercase;
-		}
-    }
     .gotocart {
         border: 0;
         background-color: #4ab2f1;
@@ -72,15 +78,15 @@
 </style>
 
 <div class="col-12 row" style="text-align: center">
-	<h2>Point Of Sale</h2>
-	<div class="col-sm-6" style="padding: 10px;">
-		<button type="button" id="PosIndexBtnStyle" class="btn gotocart btn-primary" onclick="location.href='@Url.Action("OrderList","Pos")'">Search Order</button>
+    <h2>Point Of Sale</h2>
+    <div class="col-sm-6" style="padding: 10px;">
+        <button type="button" id="PosIndexBtnStyle" class="btn gotocart btn-primary" onclick="location.href='@Url.Action("OrderList","Pos")'">Search Order</button>
 
-	</div>
+    </div>
 
-	<div class="col-sm-6 " style="padding: 10px;">
-		<button type="button" id="PosIndexBtnStyle" class="gotocart btn btn-primary" onclick="location.href='@Url.Action("Neworder","Pos")'">New Order</button>
-	</div>
+    <div class="col-sm-6 " style="padding: 10px;">
+        <button type="button" id="PosIndexBtnStyle" class="gotocart btn btn-primary" onclick="location.href='@Url.Action("Neworder","Pos")'">New Order</button>
+    </div>
 
 </div>
 
