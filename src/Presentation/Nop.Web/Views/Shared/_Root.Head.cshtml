@@ -53,6 +53,8 @@
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
     <title>@title</title>
+
+    <link rel="manifest" href="~/manifest.json" />
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@description" />
     <meta name="keywords" content="@keywords" />
@@ -79,9 +81,23 @@
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
     
     @Html.Raw(commonSettings.HeaderCustomHtml)
+
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(function (error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
 </head>
 <body>
     <nop-antiforgery-token />
+    <script>navigator.serviceWorker.register('~/service-worker.js');</script>
     @RenderBody()
 
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
