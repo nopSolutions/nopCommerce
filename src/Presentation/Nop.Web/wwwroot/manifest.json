@@ -1,0 +1,17 @@
+{
+  "name": "Nop Commerce PWA",
+  "short_name": "PWA Nop Commerce",
+  "description": "Creating PWA in NopCommerce.",
+  "icons": [
+    {
+      "src": "/images/ProgWebApp/NopCommerce.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/ProgWebApp/NopCommerce1.png",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "Fullscreen",
+  "start_url": "/"
+}

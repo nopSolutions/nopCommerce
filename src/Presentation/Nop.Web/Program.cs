@@ -1,6 +1,7 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -19,6 +20,9 @@ builder.Configuration.AddEnvironmentVariables();
 
 //load application settings
 builder.Services.ConfigureApplicationSettings(builder);
+
+//pwa
+builder.Services.AddProgressiveWebApp();
 
 var appSettings = Singleton<AppSettings>.Instance;
 var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
