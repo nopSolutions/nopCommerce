@@ -7,6 +7,7 @@
     {
         Number = 1,
         Checkbox = 2,
-        String = 3
+        String = 3,
+        Select = 4
     }
 }

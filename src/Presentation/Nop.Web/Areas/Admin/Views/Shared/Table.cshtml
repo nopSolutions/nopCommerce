@@ -172,7 +172,8 @@
                 var obj = {
                     'Data': '@column.Data',
                     'Editable': @column.Editable.ToString().ToLowerInvariant(),
-                    'Type': '@column.EditType.ToString().ToLowerInvariant()'
+                    'Type': '@column.EditType.ToString().ToLowerInvariant()',
+                    'Items': @Json.Serialize(column.DropDownItems)
                 }
                 columnData_@(tableName).push(obj);
                 </text>
@@ -217,11 +218,12 @@
 
             function setEditStateValue_@(tableName)(curRow) {
                 for (var cellName in editRowData_@(tableName)) {
-                    var columnType = 'string';
+                    var columnType = 'string', items = [];
 
                     $.each(columnData_@(tableName), function (index, element) {
                         if (element.Data == cellName) {
                             columnType = element.Type;
+                            items = element.Items;
                         }
                     });
 
@@ -240,6 +242,19 @@
                     if (columnType == 'string') {
                         var strValue = editRowData_@(tableName)[cellName];
                         $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
+                    }
+                    if (columnType == 'select')
+                    {
+                        var selectedValue = editRowData_@(tableName)[cellName],
+                            html = '<select class="userinput" style="width: 99%;height:30px">';
+
+                        items.forEach(function (item){
+                             html += `<option value="${item.Value}" ${item.Value == selectedValue ? 'selected' : ''} ${item.Disabled ? 'disabled' : ''}">${item.Text}</option>`;
+                        });
+
+                        html += '</select>';
+
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html(html);
                     }
                     $('#@Model.Name').DataTable().columns.adjust();
                 }
@@ -274,7 +289,8 @@
                 updateRowData.push({ 'pname': nameData, 'pvalue': data });
                 $.each(columnData_@(tableName), function (index, element) {
                     if (element.Editable == true) {
-                        var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                        var tagType = element.Type == "select" ? "select" : "input";
+                        var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children(tagType)[0]).val();
                         updateRowData.push({
                             'pname': element.Data, 'pvalue': value
                         });

@@ -1,4 +1,6 @@
-﻿namespace Nop.Web.Framework.Models.DataTables
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represent DataTables column property
@@ -17,6 +19,7 @@
             //set default values
             Visible = true;
             Encode = true;
+            DropDownItems = new List<SelectListItem>();
         }
 
         #endregion
@@ -83,6 +86,11 @@
         /// Enable or disable encode on the data in this column.
         /// </summary>
         public bool Encode { get; set; }
+
+        /// <summary>
+        /// Set the dropdown items.
+        /// </summary>
+        public IEnumerable<SelectListItem> DropDownItems { get; set; }
 
         #endregion
     }
