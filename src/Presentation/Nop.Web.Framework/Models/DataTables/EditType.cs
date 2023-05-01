@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents type editing of column
     /// </summary>
-    public enum EditType
+    public enum EditType : byte
     {
         Number = 1,
         Checkbox = 2,
