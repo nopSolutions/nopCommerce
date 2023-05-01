@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents tour step names
     /// </summary>
-    public enum TourStep
+    public enum TourStep : byte
     {
         GeneralSettings,
         Store,
