@@ -51,10 +51,12 @@ namespace Nop.Data.Migrations.UpgradeTo470
 
             if (pac.Column(columnName).Exists())
             {
+                #pragma warning disable CS0618
                 var combinationQuery =
                     from c in _dataProvider.GetTable<ProductAttributeCombination>()
                     join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
                     select c;
+                #pragma warning restore CS0618
 
                 pageIndex = 0;
 
@@ -68,7 +70,9 @@ namespace Nop.Data.Migrations.UpgradeTo470
                     foreach (var combination in combinations)
                         _dataProvider.InsertEntity(new ProductAttributeCombinationPicture
                         {
+                            #pragma warning disable CS0618
                             PictureId = combination.PictureId, ProductAttributeCombinationId = combination.Id
+                            #pragma warning restore CS0618
                         });
 
                     pageIndex++;
@@ -83,10 +87,12 @@ namespace Nop.Data.Migrations.UpgradeTo470
 
             if (pav.Column(columnName).Exists())
             {
+                #pragma warning disable CS0618
                 var valueQuery =
                     from c in _dataProvider.GetTable<ProductAttributeValue>()
                     join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
                     select c;
+                #pragma warning restore CS0618
 
                 pageIndex = 0;
 
@@ -100,7 +106,9 @@ namespace Nop.Data.Migrations.UpgradeTo470
                     foreach (var value in values)
                         _dataProvider.InsertEntity(new ProductAttributeValuePicture
                         {
+                            #pragma warning disable CS0618
                             PictureId = value.PictureId, ProductAttributeValueId = value.Id
+                            #pragma warning restore CS0618
                         });
 
                     pageIndex++;

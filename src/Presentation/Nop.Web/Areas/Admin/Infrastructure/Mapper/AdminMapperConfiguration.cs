@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
-using Microsoft.Extensions.Options;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -575,7 +574,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
                .ForMember(entity => entity.AttributesXml, options => options.Ignore())
+                #pragma warning disable CS0618
                .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
@@ -617,7 +618,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
                .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
                .ForMember(entity => entity.Quantity, options => options.Ignore())
+                #pragma warning disable CS0618
                .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
             CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();

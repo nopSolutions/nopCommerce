@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Localization;
+﻿using System.ComponentModel;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -90,6 +91,9 @@ namespace Nop.Core.Domain.Catalog
         /// The field is not used since 4.70 and is left only for the update process
         /// use the <see cref="ProductAttributeValuePicture"/> instead
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
+        [Obsolete("The field is not used since 4.70 and is left only for the update process use the ProductAttributeValuePicture instead")]
         public int PictureId { get; set; }
     }
 }
