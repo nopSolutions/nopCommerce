@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -49,6 +48,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
         private IRepository<Product> _productRepository;
         private ITaxCategoryService _taxCategoryService;
         private IVendorService _vendorService;
+        private ProductEditorSettings _productEditorSettings;
 
         #endregion
 
@@ -83,6 +83,8 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             await GetService<IGenericAttributeService>()
                 .SaveAttributeAsync(await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail), "product-advanced-mode",
                     true);
+
+            _productEditorSettings = GetService<ProductEditorSettings>();
         }
 
         [OneTimeTearDown]
@@ -385,7 +387,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             if(!_customerSettings.FaxEnabled)
                 ignore.Add("Fax");
-
+            
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
         }
@@ -449,6 +451,9 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                 "DownloadExpirationDays", "HasTierPrices", "HasDiscountsApplied", "AvailableStartDateTimeUtc",
                 "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
                 "DiscountProductMappings", "EntityCacheKey" };
+
+            if (!_productEditorSettings.DisplayAttributeCombinationImagesOnly)
+                ignore.Add("DisplayAttributeCombinationImagesOnly");
 
             ignore.AddRange(replacePairs.Values);
 

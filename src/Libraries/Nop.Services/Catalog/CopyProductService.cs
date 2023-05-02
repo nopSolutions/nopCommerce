@@ -197,10 +197,6 @@ namespace Nop.Services.Catalog
                 var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
                 foreach (var productAttributeValue in productAttributeValues)
                 {
-                    var attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
-                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
-
                     var attributeValueCopy = new ProductAttributeValue
                     {
                         ProductAttributeMappingId = productAttributeMappingCopy.Id,
@@ -215,9 +211,23 @@ namespace Nop.Services.Catalog
                         CustomerEntersQty = productAttributeValue.CustomerEntersQty,
                         Quantity = productAttributeValue.Quantity,
                         IsPreSelected = productAttributeValue.IsPreSelected,
-                        DisplayOrder = productAttributeValue.DisplayOrder,
-                        PictureId = attributeValuePictureId,
+                        DisplayOrder = productAttributeValue.DisplayOrder
                     };
+
+                    //picture
+                    var oldValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id);
+                    foreach (var oldValuePicture in oldValuePictures)
+                    {
+                        if (!originalNewPictureIdentifiers.TryGetValue(oldValuePicture.PictureId, out var valuePictureId))
+                            continue;
+
+                        await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
+                        {
+                            ProductAttributeValueId = attributeValueCopy.Id,
+                            PictureId = valuePictureId
+                        });
+                    }
+
                     //picture associated to "iamge square" attribute type (if exists)
                     if (productAttributeValue.ImageSquaresPictureId > 0)
                     {
@@ -329,9 +339,6 @@ namespace Nop.Services.Catalog
                     }
                 }
 
-                //picture
-                originalNewPictureIdentifiers.TryGetValue(combination.PictureId, out var combinationPictureId);
-
                 var combinationCopy = new ProductAttributeCombination
                 {
                     ProductId = productCopy.Id,
@@ -343,10 +350,23 @@ namespace Nop.Services.Catalog
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
                     Gtin = combination.Gtin,
                     OverriddenPrice = combination.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
-                    PictureId = combinationPictureId
+                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combinationCopy);
+
+                //picture
+                var oldCombinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
+                foreach (var oldCombinationPicture in oldCombinationPictures)
+                {
+                    if (!originalNewPictureIdentifiers.TryGetValue(oldCombinationPicture.PictureId, out var combinationPictureId))
+                        continue;
+
+                    await _productAttributeService.InsertProductAttributeCombinationPictureAsync(new ProductAttributeCombinationPicture
+                    {
+                        ProductAttributeCombinationId = combinationCopy.Id,
+                        PictureId = combinationPictureId
+                    });
+                }
 
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(productCopy, combination.StockQuantity,

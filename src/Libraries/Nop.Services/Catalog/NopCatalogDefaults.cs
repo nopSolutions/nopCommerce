@@ -360,6 +360,22 @@ namespace Nop.Services.Catalog
         /// </remarks>
         public static CacheKey PredefinedProductAttributeValuesByAttributeCacheKey => new("Nop.predefinedproductattributevalue.byattribute.{0}");
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : combination ID
+        /// </remarks>
+        public static CacheKey ProductAttributeCombinationPicturesByCombinationCacheKey => new("Nop.productattributecombinationpicture.bycombination.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : value ID
+        /// </remarks>
+        public static CacheKey ProductAttributeValuePicturesByValueCacheKey => new("Nop.productattributevaluepicture.byvalue.{0}");
+
         #endregion
 
         #region Product tags

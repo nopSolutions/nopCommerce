@@ -681,11 +681,11 @@ namespace Nop.Tests
         {
             public TestPictureService(IDownloadService downloadService,
                 IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
-                IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
-                IRepository<PictureBinary> pictureBinaryRepository,
+                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
+                IRepository<Picture> pictureRepository, IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser, productAttributeService,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {

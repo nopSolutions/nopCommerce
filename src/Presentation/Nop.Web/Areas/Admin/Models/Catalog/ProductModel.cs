@@ -293,6 +293,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
         public bool NotReturnable { get; set; }
 
