@@ -38,6 +38,7 @@ using Nop.Web.Models.Common;
 using Nop.Web.Models.ShoppingCart;
 using System.Text;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 
 namespace Nop.Web.Controllers
 {
@@ -49,7 +50,7 @@ namespace Nop.Web.Controllers
         private readonly AddressSettings _addressSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;        
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly ICheckoutModelFactory _checkoutModelFactory;
@@ -296,7 +297,7 @@ namespace Nop.Web.Controllers
 
                     throw new Exception(errors);
                 }
-                
+
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
@@ -312,7 +313,7 @@ namespace Nop.Web.Controllers
                 var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
                 var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
 
-                if (customAttributeWarnings.Any()) 
+                if (customAttributeWarnings.Any())
                     return Json(new { error = 1, message = customAttributeWarnings });
 
                 address = addressModel.ToEntity(address);
@@ -406,7 +407,7 @@ namespace Nop.Web.Controllers
             var scWarnings = await _shoppingCartService.GetShoppingCartWarningsAsync(cart, checkoutAttributesXml, true);
 
 
-           
+
             //if (scWarnings.Any())
             //    return RedirectToRoute("Plugin.Pos.Neworder");
             //validation (each shopping cart item)
@@ -566,7 +567,7 @@ namespace Nop.Web.Controllers
         {
             return await DeleteAddressAsync(addressId, async (cart) =>
             {
-                if (!opc) 
+                if (!opc)
                     return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddressPos") });
 
                 var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart);
@@ -594,7 +595,7 @@ namespace Nop.Web.Controllers
                     return Json(new { redirect = Url.RouteUrl("CheckoutShippingAddressPos") });
 
                 var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart);
-                
+
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -637,7 +638,7 @@ namespace Nop.Web.Controllers
                 });
             });
         }
-        
+
         #endregion
 
         #region Methods (multistep checkout)
@@ -931,7 +932,7 @@ namespace Nop.Web.Controllers
                     if (address.CountryId == 0)
                         address.CountryId = null;
                     if (address.StateProvinceId == 0)
-                        address.StateProvinceId = null; 
+                        address.StateProvinceId = null;
 
                     await _addressService.InsertAddressAsync(address);
 
@@ -1472,8 +1473,8 @@ namespace Nop.Web.Controllers
                     if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                         continue;
                 }
-                    //payment is required
-                    var paymentMethodModel = await PreparePaymentMethodModelAsync(cart, filterByCountryId);
+                //payment is required
+                var paymentMethodModel = await PreparePaymentMethodModelAsync(cart, filterByCountryId);
 
 
                 //customer have to choose a payment method
@@ -1613,7 +1614,7 @@ namespace Nop.Web.Controllers
         }
 
         public virtual async Task<IActionResult> OnePageCheckout(Address address = null)
-            {
+        {
             //validation
             if (_orderSettings.CheckoutDisabled)
                 return RedirectToRoute("Plugin.Pos.Neworder");
@@ -1621,8 +1622,8 @@ namespace Nop.Web.Controllers
             var customer = await _workContext.GetCurrentCustomerAsync();
             customer.FirstName = null;
             customer.LastName = null;
-            customer.Email  = null;
-            customer.Company  = null;
+            customer.Email = null;
+            customer.Company = null;
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
@@ -1659,9 +1660,9 @@ namespace Nop.Web.Controllers
             {
                 var countryname = form["countryname"];
                 var statename = form["statename"];
-                var cou =  _countryService.GetAllCountriesAsync().Result.FirstOrDefault(c => c.Name == countryname);
-                var sta =  _stateProvinceRepository.GetAll().FirstOrDefault(s => s.Name == statename);
-                if(cou != null)
+                var cou = _countryService.GetAllCountriesAsync().Result.FirstOrDefault(c => c.Name == countryname);
+                var sta = _stateProvinceRepository.GetAll().FirstOrDefault(s => s.Name == statename);
+                if (cou != null)
                 {
                     model.BillingNewAddress.CountryId = cou.Id;
                     model.BillingNewAddress.CountryName = cou.Name;
@@ -1719,7 +1720,7 @@ namespace Nop.Web.Controllers
                         customer1.CountryId = cou.Id;
                         if (sta != null)
                         {
-                          customer1.StateProvinceId = sta.Id;
+                            customer1.StateProvinceId = sta.Id;
                         }
                     }
                     if (getcustomer.CountryId != null && getcustomer.CountryId != 0)
@@ -1743,20 +1744,42 @@ namespace Nop.Web.Controllers
                     customer1.ZipPostalCode = getcustomer.ZipPostalCode;
                     customer1.Fax = getcustomer.FaxNumber;
 
-                    if (model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress == null)
+                    if (model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress.Email == null || model.BillingNewAddress.FirstName == null ||
+                        model.BillingNewAddress.LastName == null || model.BillingNewAddress.Address1 == null || model.BillingNewAddress.City == null || model.BillingNewAddress.ZipPostalCode == null)
                     {
-                        var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
-                            selectedCountryId: newAddress.CountryId);
-                        billingAddressModel.NewAddressPreselected = true;
-                        return Json(new
-                        {
-                            update_section = new UpdateSectionJsonModel
+
+                            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                                selectedCountryId: newAddress.CountryId);
+                            billingAddressModel.NewAddressPreselected = true;
+                            return Json(new
                             {
-                                name = "billing",
-                                html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
-                            },
-                            wrong_billing_address = true,
-                        });
+                                update_section = new UpdateSectionJsonModel
+                                {
+                                    name = "billing",
+                                    html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                                },
+                                wrong_billing_address = true,
+                            });
+                    }
+                    if (model.BillingNewAddress.Email != null)
+                    {
+                        var isvalidemail = RegexEmailCheck(model.BillingNewAddress.Email);
+
+                        if (!isvalidemail)
+                        {
+                            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                                selectedCountryId: newAddress.CountryId);
+                            billingAddressModel.NewAddressPreselected = true;
+                            return Json(new
+                            {
+                                update_section = new UpdateSectionJsonModel
+                                {
+                                    name = "billing",
+                                    html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                                },
+                                wrong_billing_address = true,
+                            });
+                        }
                     }
                     await _customerService.InsertCustomerAsync(customer1);
                     var customerID = await _customerService.GetCustomerByEmailAsync(getcustomer.Email);
@@ -1766,7 +1789,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                customer1.Email = getcustomer.Email;
+                    customer1.Email = getcustomer.Email;
                     customer1.Phone = getcustomer.PhoneNumber;
                     customer1.StreetAddress = getcustomer.Address1;
                     customer1.StreetAddress2 = getcustomer.Address2;
@@ -1821,7 +1844,7 @@ namespace Nop.Web.Controllers
                         ModelState.AddModelError("", error);
                     }
 
-                    if(model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress == null)
+                    if (model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress == null)
                     {
                         var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
                             selectedCountryId: newAddress.CountryId,
@@ -1845,8 +1868,8 @@ namespace Nop.Web.Controllers
                         newAddress.Address1, newAddress.Address2, newAddress.City,
                         newAddress.County, newAddress.StateProvinceId, newAddress.ZipPostalCode,
                         newAddress.CountryId, customAttributes);
-                   
-                    
+
+
 
                     if (address == null)
                     {
@@ -1868,8 +1891,8 @@ namespace Nop.Web.Controllers
                         await _customerService.InsertCustomerAddressAsync(customer1, address);
 
                     }
-                        customer1.BillingAddressId = address.Id;
-                    
+                    customer1.BillingAddressId = address.Id;
+
 
                     await _customerService.UpdateCustomerAsync(customer1);
                 }
@@ -1896,7 +1919,7 @@ namespace Nop.Web.Controllers
                     //do not ship to the same address
                     var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
 
-                    
+
 
                     return Json(new
                     {
@@ -2276,11 +2299,11 @@ namespace Nop.Web.Controllers
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
 
-                var isCaptchaSettingEnabled = await _customerService.IsGuestAsync(customer) && 
+                var isCaptchaSettingEnabled = await _customerService.IsGuestAsync(customer) &&
                     _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests;
 
                 var confirmOrderModel = new CheckoutConfirmModel()
-                { 
+                {
                     DisplayCaptcha = isCaptchaSettingEnabled
                 };
 
@@ -2446,7 +2469,7 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrWhiteSpace(Phonenumber))
                 return null;
 
-                    
+
 
             var query = from c in _customerRepository.Table
                         orderby c.Id
@@ -2480,7 +2503,7 @@ namespace Nop.Web.Controllers
 
                 address.posaddress = await GetCustomerByPhoneNumberAsync(Phonenumber);
 
-                if(address.posaddress == null)
+                if (address.posaddress == null)
                 {
                     return NoContent();
                 }
@@ -2488,7 +2511,7 @@ namespace Nop.Web.Controllers
                 var country = from c in _countryRepository.Table
                               where c.Id == address.posaddress.CountryId
                               select c;
-               
+
                 var billingcountry = await country.FirstOrDefaultAsync();
 
                 if (billingcountry != null)
@@ -2499,7 +2522,7 @@ namespace Nop.Web.Controllers
 
                     address.posaddress.County = billingcountry.ThreeLetterIsoCode;
 
-                    if(state != null)
+                    if (state != null)
                     {
                         address.state = state.Name;
                     }
@@ -2533,7 +2556,7 @@ namespace Nop.Web.Controllers
 
                 address = await query.FirstOrDefaultAsync();
 
-                if(address == null)
+                if (address == null)
                 {
                     return address;
                 }
@@ -2541,7 +2564,7 @@ namespace Nop.Web.Controllers
                 var country = from c in _countryRepository.Table
                               where c.Id == address.CountryId
                               select c;
-                
+
                 var billingcountry = await country.FirstOrDefaultAsync();
 
                 if (billingcountry != null)
@@ -2555,7 +2578,7 @@ namespace Nop.Web.Controllers
             {
                 return address;
             }
-            
+
         }
         public virtual async Task<IActionResult> PrintOrderDetails(int orderId)
         {
@@ -2585,6 +2608,12 @@ namespace Nop.Web.Controllers
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
+        }
+
+        public static bool RegexEmailCheck(string input)
+        {
+            // returns true if the input is a valid email
+            return Regex.IsMatch(input, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
         }
     }
 }
