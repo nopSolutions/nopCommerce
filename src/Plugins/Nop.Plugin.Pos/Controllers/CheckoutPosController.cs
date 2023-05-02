@@ -1789,6 +1789,43 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
+                    if (model.BillingNewAddress.PhoneNumber == null || model.BillingNewAddress.Email == null || model.BillingNewAddress.FirstName == null ||
+                       model.BillingNewAddress.LastName == null || model.BillingNewAddress.Address1 == null || model.BillingNewAddress.City == null || model.BillingNewAddress.ZipPostalCode == null)
+                    {
+
+                        var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                            selectedCountryId: newAddress.CountryId);
+                        billingAddressModel.NewAddressPreselected = true;
+                        return Json(new
+                        {
+                            update_section = new UpdateSectionJsonModel
+                            {
+                                name = "billing",
+                                html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                            },
+                            wrong_billing_address = true,
+                        });
+                    }
+                    if (model.BillingNewAddress.Email != null)
+                    {
+                        var isvalidemail = RegexEmailCheck(model.BillingNewAddress.Email);
+
+                        if (!isvalidemail)
+                        {
+                            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                                selectedCountryId: newAddress.CountryId);
+                            billingAddressModel.NewAddressPreselected = true;
+                            return Json(new
+                            {
+                                update_section = new UpdateSectionJsonModel
+                                {
+                                    name = "billing",
+                                    html = await RenderPartialViewToStringAsync("~/Plugins/Pos/Views/CheckoutPos/OpcBillingAddress.cshtml", billingAddressModel)
+                                },
+                                wrong_billing_address = true,
+                            });
+                        }
+                    }
                     customer1.Email = getcustomer.Email;
                     customer1.Phone = getcustomer.PhoneNumber;
                     customer1.StreetAddress = getcustomer.Address1;
