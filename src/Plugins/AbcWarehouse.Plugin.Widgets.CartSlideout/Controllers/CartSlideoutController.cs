@@ -105,6 +105,32 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 }
             }
 
+            // for delivery/install, select a singular accessory and add it to the makeshift sci if it isn't already selected
+            foreach (var element in form)
+            {
+                var pavId = int.Parse(element.Value.ToString());
+                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(pavId);
+
+                var isDeliveryInstallSelected = pav != null && pav.Name.Contains("Home Delivery and Installation (");
+                if (isDeliveryInstallSelected)
+                {
+                    // check how many options are available for the delivery/install accessory
+                    var deliveryInstallAccessoriesPa = await _productAttributeService.GetProductAttributeByNameAsync(
+                        AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName);
+                    var pam = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).FirstOrDefault(
+                        pam => pam.ProductAttributeId == deliveryInstallAccessoriesPa.Id);
+                    var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+                    if (values.Count() == 1)
+                    {
+                        // only one option, so add it to the sci
+                        sci.AttributesXml = _productAttributeParser.AddProductAttribute(
+                            sci.AttributesXml,
+                            pam,
+                            values.First().Id.ToString());
+                    }
+                }
+            }
+
             return Json(new
             {
                 SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci }),

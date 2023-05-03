@@ -229,6 +229,22 @@ function updateAttributes() {
             "block" :
             "none";
 
+        // select accessory if only one
+        const accessorieLists = document.querySelectorAll('dd.accessories');
+        var visibleList = null;
+        accessorieLists.forEach(al => {
+            if (al.style.display !== "none") {
+              visibleList = al;
+            }
+        });
+        if (visibleList !== null) {
+          var listElements = visibleList.children[0].children;
+          if (listElements.length === 1)
+          {
+            listElements[0].children[0].checked = true;
+          }
+        }
+
         $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
     })
     .catch(err => {

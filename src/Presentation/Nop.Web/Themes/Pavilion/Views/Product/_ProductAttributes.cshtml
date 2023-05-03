@@ -65,7 +65,9 @@
                         </div>
                     }
                 </dt>
-                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" style="@($"{isHidden}")">
+                var optionClass = "";
+                if (attribute.Name.Contains("Accessories")) { optionClass = "accessories"; }
+                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" class="@(optionClass)" style="@($"{isHidden}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -155,7 +157,7 @@
                                                    checked="@attributeValue.IsPreSelected"
                                                    @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
-                                            <!-- ABC: special messaging for decline hose -->
+                                            <!-- ABC: special messaging for decline -->
                                             @if (isDeclineNewHose)
                                             {
                                                 <div id="decline-new-hose" style="color: red; font-size: 8pt">
