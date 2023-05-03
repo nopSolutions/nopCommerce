@@ -478,13 +478,19 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     return;
                 }
 
-                //get all contacts of the list
-                var contacts = await client.GetContactsFromListAsync(listId);
-
-                //whether subscribed contact already in the list
-                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string, string>() } } };
-                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == subscription.Email.ToLowerInvariant());
+                GetExtendedContactDetails contactObject = null;
+                try
+                {
+                    contactObject = await client.GetContactInfoAsync(subscription.Email);
+                }
+                catch (ApiException apiException)
+                {
+                    if (apiException.ErrorCode != 404)
+                    {                        
+                        await _logger.ErrorAsync($"Sendinblue error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                        return;
+                    }
+                }
 
                 //prepare attributes
                 var firstName = string.Empty;
@@ -751,27 +757,22 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //create API client
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
-                //try to get list identifier
-                var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
-                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: order.StoreId);
-                if (listId == 0)
-                    listId = await _settingService.GetSettingByKeyAsync<int>(key);
-                if (listId == 0)
+                try
                 {
-                    await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{order.StoreId}");
-                    return;
+                    var contactInfo = await client.GetContactInfoAsync(customer.Email);
                 }
-
-                //get all contacts of the list
-                var contacts = await client.GetContactsFromListAsync(listId);
-
-                //whether subscribed contact already in the list
-                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string, string>() } } };
-                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == customer.Email.ToLowerInvariant());
-
-                if (contactObject is null)
-                    return;
+                catch (ApiException apiException)
+                {
+                    if (apiException.ErrorCode == 404)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        await _logger.ErrorAsync($"Sendinblue error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                        return;
+                    }
+                }
 
                 //update contact
                 var attributes = new Dictionary<string, string>
