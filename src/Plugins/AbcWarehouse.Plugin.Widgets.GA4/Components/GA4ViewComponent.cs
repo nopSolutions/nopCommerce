@@ -16,6 +16,7 @@ using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Checkout;
+using Nop.Plugin.Misc.AbcCore.Infrastructure;
 
 namespace AbcWarehouse.Plugin.Widgets.GA4.Components
 {
@@ -62,6 +63,38 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
             {
                 await _logger.ErrorAsync("Widgets.GA4: Google tag not defined, add in Settings.");
                 return Content(string.Empty);
+            }
+
+            if (widgetZone == CustomPublicWidgetZones.ProductBoxAfter ||
+                widgetZone == PublicWidgetZones.ProductDetailsAddInfo)
+            {
+                var productId = widgetZone == CustomPublicWidgetZones.ProductBoxAfter ?
+                    (additionalData as ProductOverviewModel).Id :
+                    Convert.ToInt32(Url.ActionContext.RouteData.Values["productId"]);
+                var product = await _productService.GetProductByIdAsync(productId);
+                var productManufacturer = (await _manufacturerService.GetProductManufacturersByProductIdAsync(productId)).FirstOrDefault();
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(productManufacturer?.ManufacturerId ?? 0);
+                var productCategories = (await _categoryService.GetProductCategoriesByProductIdAsync(productId)).FirstOrDefault();
+                var category = await _categoryService.GetCategoryByIdAsync(productCategories?.CategoryId ?? 0);
+                var addToCartModel = new AddToCartModel()
+                {
+                    Id = productId,
+                    ButtonId = widgetZone == CustomPublicWidgetZones.ProductBoxAfter ?
+                        $"product-box-add-to-cart-button-{productId}" :
+                        $"add-to-cart-button-{productId}",
+                    Item = new GA4OrderItem()
+                    {
+                        Sku = product.Sku,
+                        Name = product.Name,
+                        Brand = manufacturer?.Name,
+                        Category = category?.Name,
+                        Price = product.Price,
+                    }
+                };
+
+                return View(
+                    "~/Plugins/Widgets.GA4/Views/AddToCart.cshtml",
+                    addToCartModel);
             }
 
             var model = new GA4Model() {

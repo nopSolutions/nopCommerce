@@ -11,5 +11,6 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Models
         public GA4OrderItem ViewItemModel { get; set; }
         public BeginCheckoutModel BeginCheckoutModel { get; set; }
         public PurchaseModel PurchaseModel { get; set; }
+        public AddToCartModel AddToCartModel { get; set; }
     }
 }

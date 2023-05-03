@@ -5,6 +5,7 @@ using Nop.Services.Cms;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Plugin.Misc.AbcCore.Infrastructure;
 
 namespace AbcWarehouse.Plugin.Widgets.GA4
 {
@@ -32,7 +33,9 @@ namespace AbcWarehouse.Plugin.Widgets.GA4
         {
             return Task.FromResult<IList<string>>(new List<string>
             {
-                PublicWidgetZones.HeadHtmlTag
+                PublicWidgetZones.HeadHtmlTag,
+                PublicWidgetZones.ProductDetailsAddInfo,
+                CustomPublicWidgetZones.ProductBoxAfter,
             });
         }
 

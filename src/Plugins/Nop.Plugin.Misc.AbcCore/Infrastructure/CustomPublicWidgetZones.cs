@@ -78,6 +78,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
         public static string ManufacturerDetailsBottomAbove1000px => ManufacturerDetailsBottom + Above1000px;
 
         public static string ProductBoxAddinfoReviews => "productbox_addinfo_reviews";
+        public static string ProductBoxAfter => "productbox_after";
 
         public static string ProductDetailsAfterPictures => "productdetails_after_pictures";
         public static string ProductDetailsBeforeAddToCart => "productdetails_before_addtocart";
