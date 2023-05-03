@@ -35,6 +35,10 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.DownloadCertificateRouteName,
                 pattern: "download-tax-exemption-certificate/{id:min(0)}",
                 defaults: new { controller = "AvalaraPublic", action = "DownloadCertificate" });
+
+            endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.ItemClassificationWebhookRouteName,
+                pattern: "avalara/item-classification-webhook",
+                defaults: new { controller = "AvalaraWebhook", action = "ItemClassificationWebhook" });
         }
 
         /// <summary>

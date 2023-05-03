@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Tax.Avalara.Infrastructure
 {
@@ -18,8 +19,10 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient<ItemClassificationHttpClient>().WithProxy();
             services.AddScoped<AvalaraTaxManager>();
             services.AddScoped<TaxTransactionLogService>();
+            services.AddScoped<ItemClassificationService>();
         }
 
         /// <summary>
