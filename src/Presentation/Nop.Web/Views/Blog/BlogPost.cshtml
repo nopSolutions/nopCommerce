@@ -76,7 +76,7 @@
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <nop-captcha />
+                            <nop-captcha action-name="BlogCommentAdd" />
                         }
                     </div>
                     @if (!Model.PreventNotRegisteredUsersToLeaveComments)
