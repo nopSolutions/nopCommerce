@@ -105,10 +105,6 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             var model = await base.PrepareProductOverviewPriceModelAsync(product, forceRedirectionAfterAddingToCart);
             model.Price = await AdjustMattressPriceAsync(product.Id) ?? model.Price;
 
-            var pairPricingResult = await AdjustPairPricingAsync(product.Id, model.OldPrice, model.Price);
-            model.OldPrice = pairPricingResult.OldPrice ?? model.OldPrice;
-            model.Price = pairPricingResult.Price ?? model.Price;
-
             return model;
         }
 
@@ -117,10 +113,6 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
         {
             var model = await base.PrepareProductPriceModelAsync(product);
             model.Price = await AdjustMattressPriceAsync(product.Id) ?? model.Price;
-
-            var pairPricingResult = await AdjustPairPricingAsync(product.Id, model.OldPrice, model.Price);
-            model.OldPrice = pairPricingResult.OldPrice ?? model.OldPrice;
-            model.Price = pairPricingResult.Price ?? model.Price;
 
             return model;
         }
@@ -181,23 +173,6 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             }
 
             return null;
-        }
-
-        private async Task<(string OldPrice, string Price)> AdjustPairPricingAsync(
-            int productId,
-            string oldPrice,
-            string price)
-        {
-            var productAbcDescription = await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(productId);
-            if (productAbcDescription != null && productAbcDescription.UsesPairPricing)
-            {
-                return (
-                    oldPrice != null ? "$" + string.Format("{0:0.00}", decimal.Parse(oldPrice.Substring(1)) / 2) : oldPrice,
-                    price != null ? "$" + string.Format("{0:0.00}", decimal.Parse(price.Substring(1)) / 2) : price
-                );
-            }
-
-            return (null, null);
         }
     }
 }

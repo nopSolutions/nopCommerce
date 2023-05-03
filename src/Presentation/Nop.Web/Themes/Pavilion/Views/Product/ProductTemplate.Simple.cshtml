@@ -80,7 +80,6 @@
 
     string displayIdStr = "";
 
-    bool usesPairPricing = false;
     bool productIsAbc = frontEndService.ProductIsAbc(currentProduct.Id);
     ProductAbcDescription abcP = null;
     var productFlag = frontEndService.GetProductFlag(currentProduct.Id);
@@ -89,7 +88,6 @@
     {
         abcP = frontEndService.GetProductAbcDescriptionByProductId(currentProduct.Id);
         string itemNumber = abcP.AbcItemNumber;
-        usesPairPricing = abcP.UsesPairPricing;
         displayIdStr = itemNumber + (productFlag != null && productFlag.IsSpecialOrder() ? "+" : "");
     }
 
@@ -200,10 +198,6 @@
                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
                         <div class="product-price-block">
                             @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
-                            @if (usesPairPricing)
-                            {
-                                <span class="pair-price-disclaimer">*each, sold in pairs</span>
-                            }
                         </div>
                     }
 

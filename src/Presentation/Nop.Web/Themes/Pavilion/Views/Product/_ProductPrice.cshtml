@@ -22,6 +22,7 @@
     Html.AddCssFileParts("https://use.fontawesome.com/releases/v5.3.1/css/all.css", "", true);
 
     var itemNumber = "";
+    var usesPairPricing = false;
 
     bool isClearance = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync());
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
@@ -33,6 +34,7 @@
         if (pad != null)
         {
             itemNumber = pad.AbcItemNumber;
+            usesPairPricing = pad.UsesPairPricing;
         }
     }
 
@@ -169,6 +171,11 @@
                 if (!String.IsNullOrEmpty(Model.CurrencyCode))
                 {
                     <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+                }
+                @* ABC: Pair pricing *@
+                @if (usesPairPricing)
+                {
+                    <span class="pair-price-disclaimer">*pair</span>
                 }
             }
         </div>

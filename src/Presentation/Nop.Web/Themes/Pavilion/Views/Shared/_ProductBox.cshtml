@@ -383,7 +383,7 @@
                     <span class="price actual-price">@priceStr</span>
                     @if (usesPairPricing)
                     {
-                        <span class="pair-price-disclaimer">*each</span>
+                        <span class="pair-price-disclaimer">*pair</span>
                     }
                     @if (Model.ProductPrice.DisplayTaxShippingInfo)
                     {
@@ -483,3 +483,4 @@
         </div>
     </div>
 </div>
+@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductBoxAfter, additionalData = Model })

@@ -1,0 +1,25 @@
+@model AbcWarehouse.Plugin.Widgets.GA4.Models.AddToCartModel
+
+<script>
+  $(function() {
+    var button = document.getElementById("@Model.ButtonId");
+    button.addEventListener("click", function () {
+      console.log('')
+        gtag("event", "add_to_cart", {
+          currency: "USD",
+          value: @Model.Item.Price,
+          items: [
+            {
+              item_id: "@Model.Item.Sku",
+              item_name: "@Model.Item.Name",
+              index: 0,
+              item_brand: "@Model.Item.Brand",
+              item_category: "@Model.Item.Category",
+              price: @Model.Item.Price,
+              quantity: 1
+            }
+          ]
+        });
+    });
+  });
+</script>
