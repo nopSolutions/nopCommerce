@@ -45,6 +45,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
         private readonly IGiftCardService _giftCardService;
         private readonly IHomeDeliveryCostService _homeDeliveryCostService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -78,6 +79,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             IHomeDeliveryCostService homeDeliveryCostService,
             IPriceCalculationService priceCalculationService,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IProductService productService,
             IProductAbcDescriptionService productAbcDescriptionService,
             IStateProvinceService stateProvinceService,
@@ -107,6 +109,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             _giftCardService = giftCardService;
             _homeDeliveryCostService = homeDeliveryCostService;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _productService = productService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _priceCalculationService = priceCalculationService;
@@ -161,6 +164,17 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                     standardItemCodeAndPrice.price -= priceAdjustment;
                 }
 
+                // adjust price based on accessories
+                var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(orderItem.AttributesXml);
+                var accessoryPam = await pams.FirstOrDefaultAwaitAsync(
+                    async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name.Contains("Accessories")
+                );
+                if (accessoryPam != null)
+                {
+                    var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
+                    standardItemCodeAndPrice.price -= accessoryPav.PriceAdjustment;
+                }
+
                 result.Add(new YahooDetailRow(
                     _settings.OrderIdPrefix,
                     orderItem,
@@ -207,6 +221,30 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                         priceAdjustment,
                         "Delivery", // not sure if I need a name
                         "", // no URL
+                        await GetPickupStoreAsync(orderItem)
+                    ));
+                    lineNumber++;
+                }
+
+                // handle accessories here
+                if (accessoryPam != null)
+                {
+                    var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
+                    var code = accessoryPav.Cost.ToString();
+                    if (code == "3.0000")
+                    {
+                        // will need to dynamically pick this based on the category
+                        code = "NOHOSE";
+                    }
+                    result.Add(new YahooDetailRow(
+                        _settings.OrderIdPrefix,
+                        orderItem,
+                        lineNumber,
+                        "", // no item ID associated
+                        code,
+                        accessoryPav.PriceAdjustment,
+                        accessoryPav.Name,
+                        "", // no url for accessories
                         await GetPickupStoreAsync(orderItem)
                     ));
                     lineNumber++;
