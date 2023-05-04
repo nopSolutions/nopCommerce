@@ -1332,7 +1332,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", await _productService.GetTotalStockQuantityAsync(product)));
 
-            var productUrl = await RouteUrlAsync(routeName: "Product", routeValues: new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+            var seName = await _urlRecordService.GetSeNameAsync(product);
+            var productUrl = await RouteUrlAsync(routeName: "ProductDetails", routeValues: new { SeName = seName });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
