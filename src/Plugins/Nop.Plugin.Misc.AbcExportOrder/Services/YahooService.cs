@@ -233,8 +233,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                     var code = accessoryPav.Cost.ToString();
                     if (code == "3.0000")
                     {
-                        // will need to dynamically pick this based on the category
-                        code = "NOHOSE";
+                        var item = await _abcDeliveryService.GetAbcDeliveryItemByDescriptionAsync(accessoryPav.Name);
+                        code = item.Item_Number;
                     }
                     result.Add(new YahooDetailRow(
                         _settings.OrderIdPrefix,

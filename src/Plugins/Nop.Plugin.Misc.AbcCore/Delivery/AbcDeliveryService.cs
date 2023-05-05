@@ -54,6 +54,19 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             }
         }
 
+        public async Task<AbcDeliveryItem> GetAbcDeliveryItemByDescriptionAsync(string description)
+        {
+            try
+            {
+                return await _abcDeliveryItemRepository.Table.SingleAsync(adi => adi.Description == description);
+            }
+            catch (Exception e)
+            {
+                await _logger.ErrorAsync($"Cannot find single AbcDeliveryItem with Description {description}");
+                throw;
+            }
+        }
+
         public async Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync()
         {
             var abcDeliveryMaps = await _abcDeliveryMapRepository.Table.Where(adm => adm != null).ToListAsync();

@@ -117,8 +117,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                     // check how many options are available for the delivery/install accessory
                     var deliveryInstallAccessoriesPa = await _productAttributeService.GetProductAttributeByNameAsync(
                         AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName);
-                    var pam = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id)).FirstOrDefault(
-                        pam => pam.ProductAttributeId == deliveryInstallAccessoriesPa.Id);
+                    var productPams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+                    var pam = productPams.FirstOrDefault(pam => pam.ProductAttributeId == deliveryInstallAccessoriesPa.Id);
+                    // No delivery/install mapping, so skip
+                    if (pam == null) { continue; }
+
                     var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
                     if (values.Count() == 1)
                     {
