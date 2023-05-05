@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
     {
         public int CategoryId { get; set; }
 
-        public int AccessoryItemNumber { get; set; }
+        public string AccessoryItemNumber { get; set; }
 
         public bool IsDeliveryInstall { get; set; }
     }

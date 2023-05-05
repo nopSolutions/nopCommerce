@@ -35,10 +35,10 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             _abcDeliveryMapRepository = abcDeliveryMapRepository;
         }
 
-        public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(int itemNumber)
+        public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(string itemNumber)
         {
             // Mattresses
-            if (itemNumber == 2)
+            if (itemNumber == "2")
             {
                 return new AbcDeliveryItem();
             }
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             {
                 return await _abcDeliveryItemRepository.Table.SingleAsync(adi => adi.Item_Number == itemNumber);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 await _logger.ErrorAsync($"Cannot find single AbcDeliveryItem with ItemNumber {itemNumber}");
                 throw;
@@ -84,7 +84,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             }
 
             // Special case for pickup in store
-            var item = itemNumber == 1 ? new AbcDeliveryItem() : GetAbcDeliveryItemByItemNumberAsync(itemNumber).Result;
+            var item = itemNumber == 1 ? new AbcDeliveryItem() : GetAbcDeliveryItemByItemNumberAsync(itemNumber.ToString()).Result;
             var price = itemNumber == 1 ? 0M : item.Price - priceAdjustment;
             
             var priceDisplay = price == 0 ?

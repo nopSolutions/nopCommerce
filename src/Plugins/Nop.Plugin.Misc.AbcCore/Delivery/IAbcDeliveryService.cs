@@ -7,7 +7,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public interface IAbcDeliveryService
     {
-        Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(int itemNumber);
+        Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(string itemNumber);
 
         Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync();
 

@@ -147,10 +147,10 @@
                                             isAccessoryAlreadySelected = attribute.Name.Contains("Accessories") && attributeValue.IsPreSelected;
                                         }
                                         // ABC: auto-select "Decline new hose" if it exists
-                                        var isDeclineNewHose = attributeValue.Name == "Decline New Hose";
+                                        var isDecline = attributeValue.Name.Contains("Decline");
                                         if (!isAccessoryAlreadySelected && attribute.Name == "Accessories (Delivery)")
                                         {
-                                            attributeValue.IsPreSelected = isDeclineNewHose;
+                                            attributeValue.IsPreSelected = isDecline;
                                         }
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
@@ -158,7 +158,7 @@
                                                    @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                             <!-- ABC: special messaging for decline -->
-                                            @if (isDeclineNewHose)
+                                            @if (isDecline && attributeValue.Name == "Decline New Hose")
                                             {
                                                 <div id="decline-new-hose" style="color: red; font-size: 8pt">
                                                     New hoses are recommended for all washer installations for coverage against property damage.

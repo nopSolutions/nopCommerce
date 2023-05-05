@@ -11,7 +11,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public Dictionary<(Type, string), string> ColumnName => new Dictionary<(Type, string), string>
         {
-            { (typeof(AbcDeliveryItem), "Id"), "Item_Number" },
             { (typeof(AbcDeliveryMap), "Id"), "CategoryId" },
             { (typeof(AbcDeliveryAccessory), "Id"), "CategoryId" },
         };

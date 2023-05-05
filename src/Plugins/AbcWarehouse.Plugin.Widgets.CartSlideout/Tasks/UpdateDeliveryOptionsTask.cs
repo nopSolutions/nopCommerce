@@ -205,31 +205,15 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     {
                         ProductAttributeMappingId = resultPam.Id,
                         Name = item.Description,
-                        Cost = accessory.AccessoryItemNumber,
+                        // use 3 to hardcode NO options
+                        Cost = accessory.AccessoryItemNumber.All(Char.IsDigit) ?
+                            item.Price :
+                            3M,
                         PriceAdjustment = item.Price,
-                        IsPreSelected = false,
-                        DisplayOrder = 0,
+                        IsPreSelected = item.Item_Number.Contains("NO"),
+                        DisplayOrder = item.Item_Number.Contains("NO") ? 10 : 0,
                     };
                     await SaveProductAttributeValueAsync(existingPav, newPav);
-                }
-
-                // Decline
-                if (!isDeliveryInstall)
-                {
-                    var decline = "Decline New Hose";
-                    var existingDeclinePav =
-                        (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == decline);
-                    var newDeclinePav = new ProductAttributeValue()
-                    {
-                        ProductAttributeMappingId = resultPam.Id,
-                        Name = decline,
-                        // special value used
-                        Cost = 3,
-                        PriceAdjustment = 0,
-                        IsPreSelected = true,
-                        DisplayOrder = 10,
-                    };
-                    await SaveProductAttributeValueAsync(existingDeclinePav, newDeclinePav);
                 }
             }
         }
@@ -260,7 +244,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             {
                 var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault();
 
-                var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(mapItemNumber);
+                var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(mapItemNumber.ToString());
                 var price = item.Price - deliveryPav.PriceAdjustment;
                 var priceFormatted = price == 0 ? "FREE" : await _priceFormatter.FormatPriceAsync(price);
                 var newPav = new ProductAttributeValue()
@@ -306,7 +290,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 
             // TODO: This could be refactored to clean up the repeating
             // Delivery only
-            var deliveryOnlyItem = map.DeliveryOnly == 0 ? new AbcDeliveryItem() : await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryOnly);
+            var deliveryOnlyItem = map.DeliveryOnly == 0 ?
+                new AbcDeliveryItem() :
+                await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryOnly.ToString());
             var deliveryOnlyPriceFormatted = map.DeliveryOnly == 2 ?
                 "MATTRESS" : 
                 await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
@@ -331,7 +317,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             if (resultDeliveryOnlyPav != null) { results.Add(resultDeliveryOnlyPav); }
 
             // Delivery/Install
-            var deliveryInstallItem = map.DeliveryInstall == 0 ? new AbcDeliveryItem() : await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryInstall);
+            var deliveryInstallItem = map.DeliveryInstall == 0 ?
+                new AbcDeliveryItem() :
+                await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryInstall.ToString());
             var deliveryInstallPriceFormatted = await _priceFormatter.FormatPriceAsync(deliveryInstallItem.Price);
 
             var existingDeliveryInstallPav = existingValues.Where(pav => pav.Name.Contains("Home Delivery and Installation (")).SingleOrDefault();

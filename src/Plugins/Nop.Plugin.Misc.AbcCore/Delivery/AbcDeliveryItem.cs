@@ -6,7 +6,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public class AbcDeliveryItem : BaseEntity
     {
-        public int Item_Number { get; set; }
+        public string Item_Number { get; set; }
 
         public string Description { get; set; }
 
