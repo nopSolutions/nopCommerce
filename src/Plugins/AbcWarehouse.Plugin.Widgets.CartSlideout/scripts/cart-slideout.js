@@ -225,9 +225,11 @@ function updateAttributes() {
 
         // hide decline messaging based on selection
         const declineNewHoseMessaging = document.querySelector('#decline-new-hose');
-        declineNewHoseMessaging.style.display = responseJson.IsDeclineNewHoseSelected ?
+        if (declineNewHoseMessaging !== null) {
+          declineNewHoseMessaging.style.display = responseJson.IsDeclineNewHoseSelected ?
             "block" :
             "none";
+        }
 
         // select accessory if only one
         const accessorieLists = document.querySelectorAll('dd.accessories');
