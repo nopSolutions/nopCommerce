@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Misc.Sendinblue.Models
+namespace Nop.Plugin.Misc.Brevo.Models
 {
     /// <summary>
     /// Represents a configuration model
