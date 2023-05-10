@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Seo;
+﻿using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.News

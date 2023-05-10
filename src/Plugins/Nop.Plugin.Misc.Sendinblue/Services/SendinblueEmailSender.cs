@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Services.Media;
@@ -15,8 +13,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly IStoreContext _storeContext;
-        private readonly SendinblueSettings _sendinblueSettings;
+        protected readonly IStoreContext _storeContext;
+        protected readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 

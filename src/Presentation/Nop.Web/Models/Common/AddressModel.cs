@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Core.Domain.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Common
 {
@@ -13,6 +13,7 @@ namespace Nop.Web.Models.Common
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             CustomAddressAttributes = new List<AddressAttributeModel>();
+            AddressFields = new KeyValuePair<AddressField, string>[7];
         }
 
         [NopResourceDisplayName("Address.Fields.FirstName")]
@@ -34,6 +35,8 @@ namespace Nop.Web.Models.Common
         public int? CountryId { get; set; }
         [NopResourceDisplayName("Address.Fields.Country")]
         public string CountryName { get; set; }
+
+        public int? DefaultCountryId { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
         [NopResourceDisplayName("Address.Fields.StateProvince")]
@@ -77,10 +80,14 @@ namespace Nop.Web.Models.Common
         [NopResourceDisplayName("Address.Fields.FaxNumber")]
         public string FaxNumber { get; set; }
 
+        public string AddressLine { get; set; }
+        public KeyValuePair<AddressField, string>[] AddressFields { get; set; }
+
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public string FormattedCustomAddressAttributes { get; set; }
         public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }
+
     }
 }

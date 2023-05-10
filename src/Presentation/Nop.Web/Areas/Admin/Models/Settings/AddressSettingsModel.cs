@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -8,6 +9,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// </summary>
     public partial record AddressSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Ctor
+
+        public AddressSettingsModel()
+        {
+            AvailableCountries = new List<SelectListItem>();
+        }
+
+        #endregion
+
         #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
@@ -50,6 +60,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountryEnabled")]
         public bool CountryEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry")]
+        public int? DefaultCountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.StateProvinceEnabled")]
         public bool StateProvinceEnabled { get; set; }

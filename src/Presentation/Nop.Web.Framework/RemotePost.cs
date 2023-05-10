@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 
@@ -12,8 +11,8 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class RemotePost
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IWebHelper _webHelper;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IWebHelper _webHelper;
 
         /// <summary>
         /// Gets or sets a remote URL
@@ -44,7 +43,7 @@ namespace Nop.Web.Framework
         /// Parames
         /// </summary>
         public NameValueCollection Params { get; }
-        
+
         /// <summary>
         /// Creates a new instance of the RemotePost class
         /// </summary>
@@ -70,7 +69,7 @@ namespace Nop.Web.Framework
         {
             Params.Add(name, value);
         }
-        
+
         /// <summary>
         /// Post
         /// </summary>

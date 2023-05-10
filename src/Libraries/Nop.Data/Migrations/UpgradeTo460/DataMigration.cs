@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using FluentMigrator;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -17,10 +14,10 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
-    public class DataMigration : Migration 
+    [NopUpdateMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data)]
+    public class DataMigration : Migration
     {
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         public DataMigration(INopDataProvider dataProvider)
         {

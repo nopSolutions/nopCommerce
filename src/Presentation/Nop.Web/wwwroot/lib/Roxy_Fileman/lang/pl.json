@@ -74,7 +74,7 @@
 "Copy":"Kopiuj",
 "Paste":"Wklej",
 "E_CopyFile":"Błąd podczas kopiowania pliku",
-"E_CopyFileInvalisPath":"Nie można skopiować pliku - ścieżka nie istnieje",
+"E_CopyFileInvalidPath":"Nie można skopiować pliku - ścieżka nie istnieje",
 "E_CopyDirInvalidPath":"Nie można skopiować katalogu - ścieżka nie istnieje",
 "E_CreateArchive":"Błąd podczas tworzenia atchiwum zip.",
 "E_UploadingFile":"błąd"

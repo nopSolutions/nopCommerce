@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation;
@@ -71,7 +69,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
 
-            foreach (var config in configurations) 
+            foreach (var config in configurations)
                 builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
 
             var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
@@ -94,7 +92,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var pluginConfig = new PluginConfig();
             builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
             mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
-            
+
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
@@ -185,6 +183,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     services.AddStackExchangeRedisCache(options =>
                     {
                         options.Configuration = distributedCacheConfig.ConnectionString;
+                        options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
+                    });
+                    break;
+
+                case DistributedCacheType.RedisSynchronizedMemory:
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = distributedCacheConfig.ConnectionString;
+                        options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
                     });
                     break;
             }
@@ -306,7 +313,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
                 options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
-                options.ModelBinderProviders.Insert(1, new CustomPropertiesModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new NopModelBinderProvider());
                 //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 

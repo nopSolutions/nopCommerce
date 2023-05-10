@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
@@ -27,15 +23,15 @@ namespace Nop.Plugin.Tax.Avalara
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -114,14 +110,14 @@ namespace Nop.Plugin.Tax.Avalara
                     .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
                     .ToList();
 
-                foreach(var taxRate in taxRates)
+                foreach (var taxRate in taxRates)
                 {
                     if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
                         taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
                     else
                         taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
                 }
-                
+
                 _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
             }
 

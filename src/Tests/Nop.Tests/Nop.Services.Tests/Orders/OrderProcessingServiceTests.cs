@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -17,7 +15,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
     {
         private IOrderService _orderService;
         private OrderProcessingService _orderProcessingService;
-        
+
         [OneTimeSetUp]
         public void SetUp()
         {
@@ -32,7 +30,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             TestPaymentMethod.TestSupportCapture = false;
             TestPaymentMethod.TestSupportPartiallyRefund = false;
             TestPaymentMethod.TestSupportVoid = false;
-            
+
             await GetService<IRepository<RecurringPayment>>().TruncateAsync();
         }
 
@@ -113,7 +111,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        var canCapture =await _orderProcessingService.CanCaptureAsync(order);
+                        var canCapture = await _orderProcessingService.CanCaptureAsync(order);
                         canCapture.Should().BeFalse();
                     }
         }

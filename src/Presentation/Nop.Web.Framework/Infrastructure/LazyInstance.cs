@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Infrastructure
 {

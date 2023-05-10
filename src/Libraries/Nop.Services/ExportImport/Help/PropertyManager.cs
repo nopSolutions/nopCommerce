@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -21,22 +16,22 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Default properties
         /// </summary>
-        private readonly Dictionary<string, PropertyByName<T, L>> _defaultProperties;
+        protected readonly Dictionary<string, PropertyByName<T, L>> _defaultProperties;
 
         /// <summary>
         /// Localized properties
         /// </summary>
-        private readonly Dictionary<string, PropertyByName<T, L>> _localizedProperties;
+        protected readonly Dictionary<string, PropertyByName<T, L>> _localizedProperties;
 
         /// <summary>
         /// Catalog settings
         /// </summary>
-        private readonly CatalogSettings _catalogSettings;
+        protected readonly CatalogSettings _catalogSettings;
 
         /// <summary>
         /// Languages
         /// </summary>
-        private readonly IList<L> _languages;
+        protected readonly IList<L> _languages;
 
         /// <summary>
         /// Ctor
@@ -212,7 +207,7 @@ namespace Nop.Services.ExportImport.Help
                     {
                         var fCell = fWorksheet.Row(fRow++).Cell(prop.PropertyOrderPosition);
 
-                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                        if (!fCell.IsEmpty() && fCell.Value.ToString() == dropDownElement)
                             break;
 
                         fCell.Value = dropDownElement;
@@ -223,26 +218,7 @@ namespace Nop.Services.ExportImport.Help
                 else
                 {
                     var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                    if (value is string stringValue)
-                    {
-                        cell.SetValue(stringValue);
-                    }
-                    else if (value is char charValue)
-                    {
-                        cell.SetValue(charValue);
-                    }
-                    else if (value is Guid guidValue)
-                    {
-                        cell.SetValue(guidValue);
-                    }
-                    else if (value is Enum enumValue)
-                    {
-                        cell.SetValue(enumValue);
-                    }
-                    else
-                    {
-                        cell.Value = value;
-                    }
+                    cell.SetValue((XLCellValue)value?.ToString());
                 }
                 cell.Style.Alignment.WrapText = false;
             }
@@ -293,7 +269,7 @@ namespace Nop.Services.ExportImport.Help
                     {
                         var fCell = fWorksheet.Row(fRow++).Cell(prop.PropertyOrderPosition);
 
-                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                        if (!fCell.IsEmpty() && fCell.Value.ToString() == dropDownElement)
                             break;
 
                         fCell.Value = dropDownElement;
@@ -304,26 +280,7 @@ namespace Nop.Services.ExportImport.Help
                 else
                 {
                     var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                    if (value is string stringValue)
-                    {
-                        cell.SetValue(stringValue);
-                    }
-                    else if (value is char charValue)
-                    {
-                        cell.SetValue(charValue);
-                    }
-                    else if (value is Guid guidValue)
-                    {
-                        cell.SetValue(guidValue);
-                    }
-                    else if (value is Enum enumValue)
-                    {
-                        cell.SetValue(enumValue);
-                    }
-                    else
-                    {
-                        cell.Value = value;
-                    }
+                    cell.SetValue((XLCellValue)value?.ToString());
                 }
                 cell.Style.Alignment.WrapText = false;
             }
@@ -374,7 +331,7 @@ namespace Nop.Services.ExportImport.Help
             foreach (var caption in _defaultProperties.Values)
             {
                 var cell = worksheet.Row(row).Cell(caption.PropertyOrderPosition + cellOffset);
-                cell.Value = caption;
+                cell.Value = caption.ToString();
 
                 SetCaptionStyle(cell);
             }
@@ -391,7 +348,7 @@ namespace Nop.Services.ExportImport.Help
             foreach (var caption in _localizedProperties.Values)
             {
                 var cell = worksheet.Row(row).Cell(caption.PropertyOrderPosition + cellOffset);
-                cell.Value = caption;
+                cell.Value = caption.ToString();
 
                 SetCaptionStyle(cell);
             }
@@ -420,7 +377,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public PropertyByName<T, L> GetDefaultProperty(string propertyName)
         {
-            return _defaultProperties.ContainsKey(propertyName) ? _defaultProperties[propertyName] : null;
+            return _defaultProperties.TryGetValue(propertyName, out var value) ? value : null;
         }
 
         /// <summary>
@@ -430,7 +387,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public PropertyByName<T, L> GetLocalizedProperty(string propertyName)
         {
-            return _localizedProperties.ContainsKey(propertyName) ? _localizedProperties[propertyName] : null;
+            return _localizedProperties.TryGetValue(propertyName, out var value) ? value : null;
         }
 
         /// <summary>

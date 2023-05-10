@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Extensions;
 
 namespace Nop.Services.Messages
 {
@@ -16,7 +11,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+        protected readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
         #endregion
 
@@ -147,7 +142,7 @@ namespace Nop.Services.Messages
                 query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
 
             var queuedEmails = await query.ToPagedListAsync(pageIndex, pageSize);
-            
+
             return queuedEmails;
         }
 

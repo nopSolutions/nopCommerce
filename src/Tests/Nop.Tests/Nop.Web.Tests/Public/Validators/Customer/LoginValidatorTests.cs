@@ -11,13 +11,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
     public class LoginValidatorTests : BaseNopTest
     {
         private LoginValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<LoginValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Common
 {
@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Common
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("ContactUs.Email")]
         public string Email { get; set; }
-        
+
         [NopResourceDisplayName("ContactUs.Subject")]
         public string Subject { get; set; }
         public bool SubjectEnabled { get; set; }

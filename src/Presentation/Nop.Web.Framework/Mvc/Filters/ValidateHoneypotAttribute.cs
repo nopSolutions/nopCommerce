@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -35,9 +33,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILogger _logger;
-            private readonly IWebHelper _webHelper;
-            private readonly SecuritySettings _securitySettings;
+            protected readonly ILogger _logger;
+            protected readonly IWebHelper _webHelper;
+            protected readonly SecuritySettings _securitySettings;
 
             #endregion
 

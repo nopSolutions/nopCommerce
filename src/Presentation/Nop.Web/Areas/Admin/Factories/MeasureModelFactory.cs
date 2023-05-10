@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
@@ -16,8 +13,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IMeasureService _measureService;
-        private readonly MeasureSettings _measureSettings;
+        protected readonly IMeasureService _measureService;
+        protected readonly MeasureSettings _measureSettings;
 
         #endregion
 

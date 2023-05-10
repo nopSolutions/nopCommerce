@@ -1590,7 +1590,7 @@ function deleteFile(){
 function previewFile(){
   var f = getSelectedFile();
   if(f){
-    window.open(f.fullPath);
+    window.open(RoxyFilemanConf.RETURN_URL_PREFIX + f.fullPath);
   }
 }
 function downloadFile(){

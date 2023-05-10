@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO.Compression;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 using Nop.Core.Domain.Media;
@@ -21,7 +16,7 @@ namespace Nop.Services.Media.RoxyFileman
         #region Fields
 
         protected INopFileProvider _nopFileProvider;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -542,7 +537,7 @@ namespace Nop.Services.Media.RoxyFileman
             var sourceFile = GetFileInfo(sourcePath);
 
             if (!sourceFile.Exists)
-                throw new RoxyFilemanException("E_CopyFileInvalisPath");
+                throw new RoxyFilemanException("E_CopyFileInvalidPath");
 
             var newFilePath = Path.Combine(destinationPath, sourceFile.Name);
             var destinationFile = GetFileInfo(newFilePath);

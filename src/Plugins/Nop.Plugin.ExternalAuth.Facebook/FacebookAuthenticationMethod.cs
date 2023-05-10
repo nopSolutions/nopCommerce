@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Components;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
@@ -17,9 +14,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -14,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
+        [NoTrim]
         public string PageTitleSeparator { get; set; }
         public bool PageTitleSeparator_OverrideForStore { get; set; }
 
@@ -37,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.WwwRequirement")]
         public int WwwRequirement { get; set; }
         public bool WwwRequirement_OverrideForStore { get; set; }
-        public SelectList WwwRequirementValues { get; set; }        
+        public SelectList WwwRequirementValues { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags")]
         public bool TwitterMetaTags { get; set; }

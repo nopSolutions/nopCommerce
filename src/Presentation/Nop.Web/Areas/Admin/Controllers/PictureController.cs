@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Media;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -9,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPictureService _pictureService;
+        protected readonly IPictureService _pictureService;
 
         #endregion
 

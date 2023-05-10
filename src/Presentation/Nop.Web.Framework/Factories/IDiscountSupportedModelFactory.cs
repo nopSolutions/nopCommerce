@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Discounts;
+﻿using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories
@@ -31,6 +29,6 @@ namespace Nop.Web.Framework.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         Task<TModel> PrepareModelDiscountsAsync<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
-            where TModel : IDiscountSupportedModel where TMapping : DiscountMapping; 
+            where TModel : IDiscountSupportedModel where TMapping : DiscountMapping;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -28,8 +27,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly FacebookPixelService _facebookPixelService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 

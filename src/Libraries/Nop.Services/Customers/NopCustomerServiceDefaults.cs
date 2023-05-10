@@ -50,18 +50,6 @@ namespace Nop.Services.Customers
 
         #endregion
 
-        #region Customer attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
-        public static CacheKey CustomerAttributeValuesByAttributeCacheKey => new("Nop.customerattributevalue.byattribute.{0}");
-
-        #endregion
-
         #region Customer roles
 
         /// <summary>
@@ -115,7 +103,7 @@ namespace Nop.Services.Customers
         /// {0} : customer identifier
         /// </remarks>
         public static string CustomerCustomerRolesByCustomerPrefix => "Nop.customer.customerrole.{0}";
-        
+
         #endregion
 
         #region Addresses
@@ -149,7 +137,7 @@ namespace Nop.Services.Customers
         /// {0} : customer identifier
         /// </remarks>
         public static string CustomerAddressesByCustomerPrefix => "Nop.customer.addresses.{0}";
-        
+
         #endregion
 
         #region Customer password

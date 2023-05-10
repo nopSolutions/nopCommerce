@@ -1,6 +1,5 @@
 ﻿//Contributor : MVCContrib
 
-using System;
 using Nop.Core;
 using Nop.Web.Framework.Models;
 
@@ -43,7 +42,7 @@ namespace Nop.Web.Framework.UI.Paging
             {
                 if (PageNumber > 0)
                     return PageNumber - 1;
-                
+
                 return 0;
             }
         }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -39,12 +37,12 @@ namespace Nop.Core.Domain.Shipping
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value is not string) 
+            if (value is not string)
                 return base.ConvertFrom(context, culture, value);
-            
+
             var valueStr = value as string;
 
-            if (string.IsNullOrEmpty(valueStr)) 
+            if (string.IsNullOrEmpty(valueStr))
                 return null;
 
             ShippingOption shippingOption = null;
@@ -73,10 +71,10 @@ namespace Nop.Core.Domain.Shipping
         /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType != typeof(string)) 
+            if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);
 
-            if (value is not ShippingOption) 
+            if (value is not ShippingOption)
                 return string.Empty;
 
             var sb = new StringBuilder();

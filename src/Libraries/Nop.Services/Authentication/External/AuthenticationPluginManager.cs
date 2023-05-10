@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
@@ -13,7 +11,7 @@ namespace Nop.Services.Authentication.External
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         #endregion
 

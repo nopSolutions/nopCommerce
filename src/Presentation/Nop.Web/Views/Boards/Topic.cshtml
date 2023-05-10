@@ -91,7 +91,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "TopicSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
+                RouteValues = new SlugRouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })

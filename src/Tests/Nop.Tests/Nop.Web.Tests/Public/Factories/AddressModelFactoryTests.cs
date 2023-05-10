@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Web.Factories;
@@ -14,10 +10,9 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 {
     [TestFixture]
-    public class AddressModelFactoryTests: BaseNopTest
+    public class AddressModelFactoryTests : BaseNopTest
     {
         private IAddressModelFactory _addressModelFactory;
-        private IGenericAttributeService _genericAttributeService;
         private Address _address;
         private AddressSettings _addressSettings;
         private ICountryService _countryService;
@@ -26,7 +21,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task SetUp()
         {
             _addressModelFactory = GetService<IAddressModelFactory>();
-            _genericAttributeService = GetService<IGenericAttributeService>();
 
             _address = await GetService<IAddressService>().GetAddressByIdAsync(1);
             _addressSettings = GetService<AddressSettings>();
@@ -113,6 +107,16 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task PrepareAddressModelShouldFillAvailableCountriesAndAvailableStates()
         {
             var model = new AddressModel();
+            await _addressModelFactory.PrepareAddressModelAsync(model, null, false, _addressSettings,
+                async () => await _countryService.GetAllCountriesAsync());
+            model.AvailableCountries.Any().Should().BeTrue();
+            model.AvailableCountries.Count.Should().Be(250);
+            model.AvailableStates.Any().Should().BeTrue();
+            model.AvailableStates.Count.Should().Be(63);
+
+            _addressSettings.DefaultCountryId = null;
+
+            model = new AddressModel();
             await _addressModelFactory.PrepareAddressModelAsync(model, null, false, _addressSettings,
                 async () => await _countryService.GetAllCountriesAsync());
             model.AvailableCountries.Any().Should().BeTrue();

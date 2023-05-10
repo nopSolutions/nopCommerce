@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 
@@ -14,8 +11,8 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IWorkContext _workContext;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -168,9 +165,9 @@ namespace Nop.Services.Helpers
                 if (!string.IsNullOrEmpty(timeZoneId))
                     timeZoneInfo = FindTimeZoneById(timeZoneId);
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
 
             return Task.FromResult(timeZoneInfo ?? DefaultStoreTimeZone);
@@ -185,7 +182,7 @@ namespace Nop.Services.Helpers
         /// </returns>
         public virtual async Task<TimeZoneInfo> GetCurrentTimeZoneAsync()
         {
-           return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
+            return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>
@@ -201,9 +198,9 @@ namespace Nop.Services.Helpers
                     if (!string.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
                         timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
-                catch (Exception exc)
+                catch
                 {
-                    Debug.Write(exc.ToString());
+                    //ignore
                 }
 
                 return timeZoneInfo ?? TimeZoneInfo.Local;

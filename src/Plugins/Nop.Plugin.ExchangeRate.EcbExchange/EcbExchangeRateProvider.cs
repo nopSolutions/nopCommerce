@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Http;
@@ -19,11 +14,11 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
     {
         #region Fields
 
-        private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly ISettingService _settingService;
+        protected readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
+        protected readonly IHttpClientFactory _httpClientFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly ISettingService _settingService;
 
         #endregion
 
@@ -162,6 +157,5 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         }
 
         #endregion
-
     }
 }

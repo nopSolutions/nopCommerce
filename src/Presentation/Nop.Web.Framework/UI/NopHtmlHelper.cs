@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -36,29 +32,29 @@ namespace Nop.Web.Framework.UI
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly HtmlEncoder _htmlEncoder;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAssetPipeline _assetPipeline;
-        private readonly Lazy<ILocalizationService> _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly SeoSettings _seoSettings;
+        protected readonly AppSettings _appSettings;
+        protected readonly HtmlEncoder _htmlEncoder;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly Lazy<ILocalizationService> _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly SeoSettings _seoSettings;
 
-        private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
-        private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
-        private readonly List<CssReferenceMeta> _cssParts = new();
+        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
+        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
+        protected readonly List<CssReferenceMeta> _cssParts = new();
 
-        private readonly List<string> _canonicalUrlParts = new();
-        private readonly List<string> _headCustomParts = new();
-        private readonly List<string> _metaDescriptionParts = new();
-        private readonly List<string> _metaKeywordParts = new();
-        private readonly List<string> _pageCssClassParts = new();
-        private readonly List<string> _titleParts = new();
+        protected readonly List<string> _canonicalUrlParts = new();
+        protected readonly List<string> _headCustomParts = new();
+        protected readonly List<string> _metaDescriptionParts = new();
+        protected readonly List<string> _metaKeywordParts = new();
+        protected readonly List<string> _pageCssClassParts = new();
+        protected readonly List<string> _titleParts = new();
 
-        private string _activeAdminMenuSystemName;
-        private string _editPageUrl;
+        protected string _activeAdminMenuSystemName;
+        protected string _editPageUrl;
 
         #endregion
 
@@ -89,7 +85,7 @@ namespace Nop.Web.Framework.UI
 
         #region Utils
 
-        private IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
+        protected IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
         {
             var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
                 .EnforceFileExtensions(".css")
@@ -104,7 +100,7 @@ namespace Nop.Web.Framework.UI
             return asset;
         }
 
-        private IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
+        protected IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
         {
             var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextJavascript}; charset=UTF-8", assetFiles)
                         .EnforceFileExtensions(".js", ".es5", ".es6")
@@ -118,7 +114,7 @@ namespace Nop.Web.Framework.UI
             return asset;
         }
 
-        private static string GetAssetKey(string[] keys, string suffix)
+        protected static string GetAssetKey(string[] keys, string suffix)
         {
             if (keys is null || keys.Length == 0)
                 throw new ArgumentNullException(nameof(keys));
@@ -143,7 +139,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="createAsset">The function which creates a bundle</param>
         /// <param name="sourceFiles">Relative file names of the sources to optimize; if not specified, will use <paramref name="bundlePath"/></param>
         /// <returns>The bundle</returns>
-        private IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
+        protected IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
         {
             if (string.IsNullOrEmpty(bundlePath))
                 throw new ArgumentNullException(nameof(bundlePath));
@@ -199,7 +195,7 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Insert(0, part);
         }
-        
+
         /// <summary>
         /// Generate all title parts
         /// </summary>
@@ -569,9 +565,12 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCssFiles()
-        {
+        {            
             if (_cssParts.Count == 0)
                 return HtmlString.Empty;
+
+            if (_actionContextAccessor.ActionContext == null)
+                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
 
             var result = new StringBuilder();
 
@@ -603,9 +602,6 @@ namespace Nop.Web.Framework.UI
             var styles = _cssParts
                     .Where(item => !woConfig.EnableCssBundling || item.ExcludeFromBundle || !item.IsLocal)
                     .Distinct();
-
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
 
             foreach (var item in styles)
             {
@@ -837,7 +833,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// JS file meta data
         /// </summary>
-        private partial record ScriptReferenceMeta
+        protected partial record ScriptReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling
@@ -858,7 +854,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// CSS file meta data
         /// </summary>
-        private partial record CssReferenceMeta
+        protected partial record CssReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling

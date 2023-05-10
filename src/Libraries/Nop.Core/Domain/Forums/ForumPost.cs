@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Forums
+﻿namespace Nop.Core.Domain.Forums
 {
     /// <summary>
     /// Represents a forum post

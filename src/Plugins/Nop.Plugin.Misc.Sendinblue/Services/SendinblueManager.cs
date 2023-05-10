@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -36,20 +32,20 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILogger _logger;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILogger _logger;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -97,7 +93,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the aPI client
         /// </returns>
-        private async Task<TClient> CreateApiClientAsync<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
+        protected async Task<TClient> CreateApiClientAsync<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
         {
             //check whether plugin is configured to request services (validate API key)
             var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
@@ -126,7 +122,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the list of messages
         /// </returns>
-        private async Task<IList<(NotifyType Type, string Message)>> ImportContactsAsync(IList<int> storeIds)
+        protected async Task<IList<(NotifyType Type, string Message)>> ImportContactsAsync(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
 
@@ -321,7 +317,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the list of messages
         /// </returns>
-        private async Task<IList<(NotifyType Type, string Message)>> ExportContactsAsync(IList<int> storeIds)
+        protected async Task<IList<(NotifyType Type, string Message)>> ExportContactsAsync(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
 
@@ -377,13 +373,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <summary>
         /// Add new service attribute in account
         /// </summary>
-        /// <param name="category">Category of attribute</param>
         /// <param name="attributes">Collection of attributes</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the errors if exist
         /// </returns>
-        private async Task<string> CreateAttibutesAsync(IList<(CategoryEnum Category, string Name, string Value, CreateAttribute.TypeEnum? Type)> attributes)
+        protected async Task<string> CreateAttributesAsync(IList<(CategoryEnum Category, string Name, string Value, CreateAttribute.TypeEnum? Type)> attributes)
         {
             if (!attributes.Any())
                 return string.Empty;
@@ -750,9 +745,33 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     throw new ArgumentNullException(nameof(order));
 
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                if (customer.Email is null)
+                    return;
 
                 //create API client
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
+
+                //try to get list identifier
+                var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: order.StoreId);
+                if (listId == 0)
+                    listId = await _settingService.GetSettingByKeyAsync<int>(key);
+                if (listId == 0)
+                {
+                    await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{order.StoreId}");
+                    return;
+                }
+
+                //get all contacts of the list
+                var contacts = await client.GetContactsFromListAsync(listId);
+
+                //whether subscribed contact already in the list
+                var template = new { contacts = new[] { new { email = string.Empty, attributes = new Dictionary<string, string>() } } };
+                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
+                var contactObject = contactObjects?.contacts?.FirstOrDefault(contact => contact.email == customer.Email.ToLowerInvariant());
+
+                if (contactObject is null)
+                    return;
 
                 //update contact
                 var attributes = new Dictionary<string, string>
@@ -764,6 +783,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 };
                 var updateContact = new UpdateContact { Attributes = attributes };
                 await client.UpdateContactAsync(customer.Email, updateContact);
+
             }
             catch (Exception exception)
             {
@@ -970,7 +990,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         newAttributes.Add(attribute);
                 }
 
-                await CreateAttibutesAsync(newAttributes);
+                await CreateAttributesAsync(newAttributes);
 
                 return SendinblueAccountLanguage.English;
             }
@@ -1019,7 +1039,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     (CategoryEnum.Normal, SendinblueDefaults.LanguageAttribute, null, CreateAttribute.TypeEnum.Text),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
                     (CategoryEnum.Transactional, SendinblueDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Float),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute}]", null),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalMonthSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute},{SendinblueDefaults.OrderDateServiceAttribute},>,NOW(-30)]", null),
                     (CategoryEnum.Calculated, SendinblueDefaults.OrderCountServiceAttribute, $"COUNT[{SendinblueDefaults.OrderIdServiceAttribute}]", null),
@@ -1036,7 +1056,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         newAttributes.Add(attribute);
                 }
 
-                return await CreateAttibutesAsync(newAttributes);
+                return await CreateAttributesAsync(newAttributes);
             }
             catch (Exception exception)
             {
@@ -1081,7 +1101,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     newAttributes.Add((CategoryEnum.Transactional, token, null, CreateAttribute.TypeEnum.Text));
                 }
 
-                return await CreateAttibutesAsync(newAttributes);
+                return await CreateAttributesAsync(newAttributes);
             }
             catch (Exception exception)
             {

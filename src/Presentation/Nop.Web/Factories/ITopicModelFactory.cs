@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Factories
@@ -25,7 +24,7 @@ namespace Nop.Web.Factories
         /// <param name="systemName">Topic system name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
         Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName);
 

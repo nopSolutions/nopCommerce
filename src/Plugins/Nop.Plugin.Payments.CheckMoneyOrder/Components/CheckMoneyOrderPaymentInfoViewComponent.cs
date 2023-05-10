@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Localization;
@@ -9,10 +8,10 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
 {
     public class CheckMoneyOrderViewComponent : NopViewComponent
     {
-        private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         public CheckMoneyOrderViewComponent(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
             ILocalizationService localizationService,

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -95,14 +94,14 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-        
+
         public IList<ManufacturerLocalizedModel> Locales { get; set; }
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
-        
+
         //store mapping
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
@@ -128,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }

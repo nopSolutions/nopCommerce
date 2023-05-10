@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
 
@@ -14,7 +11,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
     {
         #region Fields
 
-        private readonly IRepository<TaxTransactionLog> _taxTransactionLogRepository;
+        protected readonly IRepository<TaxTransactionLog> _taxTransactionLogRepository;
 
         #endregion
 

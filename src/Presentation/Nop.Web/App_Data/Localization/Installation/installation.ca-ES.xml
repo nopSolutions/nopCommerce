@@ -132,6 +132,9 @@
   <LocaleResource Name="StoreInformation">
     <Value>Informació de la botiga</Value>
   </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Instal·lació de nopCommerce</Value>
   </LocaleResource>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Services.ExportImport.Help
 {
@@ -12,7 +9,7 @@ namespace Nop.Services.ExportImport.Help
     /// <typeparam name="L">Language</typeparam>
     public partial class PropertyByName<T, L>
     {
-        private object _propertyValue;
+        protected object _propertyValue;
 
         /// <summary>
         /// Ctor
@@ -38,8 +35,8 @@ namespace Nop.Services.ExportImport.Help
         public PropertyByName(string propertyName, Func<T, L, object> func = null, bool ignore = false)
         {
             PropertyName = propertyName;
-            
-            if(func != null)
+
+            if (func != null)
                 GetProperty = (obj, lang) => Task.FromResult(func(obj, lang));
 
             PropertyOrderPosition = 1;
@@ -221,12 +218,12 @@ namespace Nop.Services.ExportImport.Help
             if (string.IsNullOrEmpty(name?.ToString()))
                 return 0;
 
-            if (!int.TryParse(name.ToString(), out var id)) 
+            if (!int.TryParse(name.ToString(), out var id))
                 id = 0;
 
             return Convert.ToInt32(DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.ToString().Trim())?.Value ?? id.ToString());
         }
-        
+
         /// <summary>
         /// Elements for a drop-down cell
         /// </summary>

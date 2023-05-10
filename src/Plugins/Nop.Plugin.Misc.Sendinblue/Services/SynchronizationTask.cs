@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.ScheduleTasks;
+﻿using Nop.Services.ScheduleTasks;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {
@@ -10,7 +9,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 

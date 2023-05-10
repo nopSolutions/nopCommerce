@@ -37,7 +37,7 @@ namespace Nop.Services.Catalog
             if (productAttributeMapping == null)
                 return false;
 
-            if (productAttributeMapping.AttributeControlType == AttributeControlType.ReadonlyCheckboxes || 
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ||
                 productAttributeMapping.AttributeControlType == AttributeControlType.TextBox ||
                 productAttributeMapping.AttributeControlType == AttributeControlType.MultilineTextbox ||
                 productAttributeMapping.AttributeControlType == AttributeControlType.Datepicker ||

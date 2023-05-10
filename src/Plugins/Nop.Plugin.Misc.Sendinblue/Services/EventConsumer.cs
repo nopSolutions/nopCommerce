@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
@@ -25,8 +24,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly MarketingAutomationManager _marketingAutomationManager;
-        private readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly MarketingAutomationManager _marketingAutomationManager;
+        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 

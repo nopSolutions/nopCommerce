@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
@@ -12,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly ISettingModelFactory _settingModelFactory;
+        protected readonly ISettingModelFactory _settingModelFactory;
 
         #endregion
 
@@ -41,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Components
 
             if (model.Stores.Count < 2)
                 return Content(string.Empty);
-            
+
             return View(model);
         }
 

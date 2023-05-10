@@ -1,6 +1,4 @@
-using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -14,6 +12,7 @@ namespace Nop.Services.Common.Pdf
     /// </summary>
     public class InvoiceDocument : PdfDocument<InvoiceSource>
     {
+
         #region Ctor
 
         public InvoiceDocument(InvoiceSource invoiceSource, ILocalizationService localizationService) : base(invoiceSource, localizationService)
@@ -120,7 +119,7 @@ namespace Nop.Services.Common.Pdf
 
                 var logoContainer = row.ConstantItem(65).Height(65);
 
-                if (Source.LogoData is not null)
+                if (Source.LogoData is not null && Source.LogoData.Length != 0)
                     logoContainer.Image(Source.LogoData, ImageScaling.FitArea);
             });
         }
@@ -203,11 +202,8 @@ namespace Nop.Services.Common.Pdf
             column.Item().Text(t => ComposeField(t, address, x => x.Company, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.Name, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.Phone, delimiter: ": "));
-            column.Item().Text(t => ComposeField(t, address, x => x.Address, delimiter: ": "));
-            column.Item().Text(t => ComposeField(t, address, x => x.Address2, delimiter: ": "));
-            column.Item().Text(address.AddressLine);
+            column.Item().Text(t => ComposeField(t, address, x => x.AddressLine, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.VATNumber));
-            column.Item().Text(address.Country);
 
             foreach (var attribute in address.AddressAttributes)
                 column.Item().Text(attribute);

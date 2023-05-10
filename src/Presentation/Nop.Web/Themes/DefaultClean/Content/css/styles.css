@@ -560,6 +560,22 @@ label, label + * {
   text-align: center;
 }
 
+.cart .product-quantity div.up {
+  background: url('../images/vote-up.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
+.cart .product-quantity div.down {
+  background: url('../images/vote-down.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
 .cart td.subtotal,
 .data-table td.total {
   white-space: nowrap;
@@ -2157,6 +2173,8 @@ label, label + * {
 .product-review-box .rating div {
   height: 14px;
   background: url('../images/rating2.png') repeat-x;
+  font-size: 0px;
+  line-height: 0px;
 }
 
 .product-review-links a {
@@ -8071,7 +8089,8 @@ label, label + * {
   }
 
   .header-menu ul li:hover > .sublist,
-  .header-menu ul li:focus > .sublist {
+  .header-menu ul li:focus > .sublist,
+  .header-menu ul li:focus-within > .sublist {
     display: block;
   }
 
@@ -8815,4 +8834,33 @@ label, label + * {
 .swiper-pagination-bullet-active {
   padding: 5px;
   background-color: #4ab2f1;
+}
+
+a.skip {
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  height: 1px;
+  width: 1px;
+  text-align: left;
+  overflow: hidden;
+}
+
+a.skip:active,
+a.skip:focus,
+a.skip:hover {
+  position: initial;
+  top: 0;
+  left: 0;
+  display: block;
+  height: auto;
+  margin: 3px 0;
+  overflow: visible;
+  padding: 2px;
+  color: #444444;
+  background: #ffffff;
+  text-decoration: underline;
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
 }

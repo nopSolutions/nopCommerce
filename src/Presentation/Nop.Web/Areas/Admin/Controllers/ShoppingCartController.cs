@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -14,10 +12,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPermissionService _permissionService;
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IShoppingCartService _shoppingCartService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        protected readonly IShoppingCartService _shoppingCartService;
         #endregion
 
         #region Ctor
@@ -34,9 +32,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
-        
+
         public virtual async Task<IActionResult> CurrentCarts()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
@@ -75,13 +73,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(model);
         }
-        
+
         [HttpPost]
         public virtual async Task<IActionResult> DeleteItem(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
                 return await AccessDeniedDataTablesJson();
-            
+
             await _shoppingCartService.DeleteShoppingCartItemAsync(id);
 
             return new NullJsonResult();

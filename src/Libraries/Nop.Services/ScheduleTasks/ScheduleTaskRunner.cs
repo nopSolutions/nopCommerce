@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Infrastructure;
@@ -47,7 +44,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Initialize and execute task
         /// </summary>
-        protected async Task PerformTaskAsync(ScheduleTask scheduleTask)
+        protected virtual async Task PerformTaskAsync(ScheduleTask scheduleTask)
         {
             var type = Type.GetType(scheduleTask.Type) ??
                        //ensure that it works fine when only the type name is specified (do not require fully qualified names)

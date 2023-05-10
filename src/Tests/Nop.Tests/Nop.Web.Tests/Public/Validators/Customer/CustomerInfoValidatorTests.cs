@@ -111,7 +111,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.LastName);
             model.LastName = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.LastName);
-            
+
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -157,7 +157,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
             model.Company = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
-            
+
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -174,7 +174,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
         [Test]
         public void ShouldNotHaveErrorWhenCompanyIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     CompanyEnabled = true
@@ -266,7 +266,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
         [Test]
         public void ShouldNotHaveErrorWhenStreetAddress2IsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     StreetAddress2Enabled = true
@@ -295,7 +295,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
             model.ZipPostalCode = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
-            
+
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -312,7 +312,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
         [Test]
         public void ShouldNotHaveErrorWhenZipPostalCodeIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     StreetAddress2Enabled = true
@@ -341,7 +341,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
             model.City = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
-            
+
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -358,7 +358,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
         [Test]
         public void ShouldNotHaveErrorWhenCityIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     CityEnabled = true
@@ -404,7 +404,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
         [Test]
         public void ShouldNotHaveErrorWhenPhoneIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     PhoneEnabled = true
@@ -433,7 +433,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Fax);
             model.Fax = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Fax);
-            
+
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings

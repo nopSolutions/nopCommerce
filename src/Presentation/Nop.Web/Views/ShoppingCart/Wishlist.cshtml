@@ -2,10 +2,12 @@
 
 @using Nop.Core
 @using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
 @using Nop.Core.Domain.Tax
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject MediaSettings mediaSettings
 
 @{
     Layout = "_ColumnsOne";
@@ -130,7 +132,9 @@
                                         @if (Model.ShowProductImages)
                                         {
                                             <td class="product-picture">
-                                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                                    <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                                </a>
                                             </td>
                                         }
                                         <td class="product">

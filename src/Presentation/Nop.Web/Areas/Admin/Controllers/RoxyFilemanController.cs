@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -20,9 +16,9 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IRoxyFilemanService _roxyFilemanService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -312,7 +308,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [IgnoreAntiforgeryToken]
         [HttpPost]
-        public virtual async Task<IActionResult> UploadFiles([FromForm]RoxyFilemanUploadModel uploadModel)
+        public virtual async Task<IActionResult> UploadFiles([FromForm] RoxyFilemanUploadModel uploadModel)
         {
             try
             {

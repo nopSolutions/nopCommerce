@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -17,58 +14,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string NAME_ATTRIBUTE_NAME = "asp-for-name";
-        private const string ITEMS_ATTRIBUTE_NAME = "asp-items";
-        private const string MULTIPLE_ATTRIBUTE_NAME = "asp-multiple";
-        private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string NAME_ATTRIBUTE_NAME = "asp-for-name";
+        protected const string ITEMS_ATTRIBUTE_NAME = "asp-items";
+        protected const string MULTIPLE_ATTRIBUTE_NAME = "asp-multiple";
+        protected const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// Name for a dropdown list
-        /// </summary>
-        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Items for a dropdown list
-        /// </summary>
-        [HtmlAttributeName(ITEMS_ATTRIBUTE_NAME)]
-        public IEnumerable<SelectListItem> Items { set; get; } = new List<SelectListItem>();
-
-        /// <summary>
-        /// Indicates whether the field is required
-        /// </summary>
-        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
-        public string IsRequired { set; get; }
-
-        /// <summary>
-        /// Indicates whether the input is multiple
-        /// </summary>
-        [HtmlAttributeName(MULTIPLE_ATTRIBUTE_NAME)]
-        public string IsMultiple { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -149,6 +105,47 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
             }
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// An expression to be evaluated against the current model
+        /// </summary>
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// Name for a dropdown list
+        /// </summary>
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Items for a dropdown list
+        /// </summary>
+        [HtmlAttributeName(ITEMS_ATTRIBUTE_NAME)]
+        public IEnumerable<SelectListItem> Items { set; get; } = new List<SelectListItem>();
+
+        /// <summary>
+        /// Indicates whether the field is required
+        /// </summary>
+        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
+        public string IsRequired { set; get; }
+
+        /// <summary>
+        /// Indicates whether the input is multiple
+        /// </summary>
+        [HtmlAttributeName(MULTIPLE_ATTRIBUTE_NAME)]
+        public string IsMultiple { set; get; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

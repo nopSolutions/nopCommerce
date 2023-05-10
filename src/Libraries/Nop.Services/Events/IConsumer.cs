@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Services.Events
+﻿namespace Nop.Services.Events
 {
     /// <summary>
     /// Consumer interface

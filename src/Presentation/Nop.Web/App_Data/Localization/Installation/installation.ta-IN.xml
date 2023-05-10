@@ -132,6 +132,9 @@
   <LocaleResource Name="StoreInformation">
     <Value>வியாபார நிலையத் தகவல்கள்</Value>
   </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce நிறுவல்</Value>
   </LocaleResource>

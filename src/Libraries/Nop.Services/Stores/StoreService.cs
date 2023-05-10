@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 using Nop.Data;
 
 namespace Nop.Services.Stores
@@ -14,7 +10,7 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
+        protected readonly IRepository<Store> _storeRepository;
 
         #endregion
 
@@ -44,6 +40,7 @@ namespace Nop.Services.Stores
                 return parsedValues.ToArray();
 
             var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            
             foreach (var host in hosts)
             {
                 var tmp = host.Trim();

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -23,11 +20,11 @@ namespace Nop.Core
     {
         #region Fields  
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IHostApplicationLifetime _hostApplicationLifetime;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly Lazy<IStoreContext> _storeContext;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IHostApplicationLifetime _hostApplicationLifetime;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly Lazy<IStoreContext> _storeContext;
 
         #endregion
 
@@ -61,7 +58,7 @@ namespace Nop.Core
 
             try
             {
-                if (_httpContextAccessor.HttpContext.Request == null)
+                if (_httpContextAccessor.HttpContext?.Request == null)
                     return false;
             }
             catch (Exception)
@@ -79,7 +76,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
-            var rez =  address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+            var rez = address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
 
             return rez;
         }
@@ -110,10 +107,10 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return string.Empty;
 
-            if(_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
+            if (_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
                 return "";
 
-            if(remoteIp.Equals(IPAddress.IPv6Loopback))
+            if (remoteIp.Equals(IPAddress.IPv6Loopback))
                 return IPAddress.Loopback.ToString();
 
             return remoteIp.MapToIPv4().ToString();
@@ -358,7 +355,7 @@ namespace Nop.Core
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
-                
+
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }

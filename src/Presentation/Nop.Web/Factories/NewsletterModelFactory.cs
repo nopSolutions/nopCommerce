@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Models.Newsletter;
 
@@ -12,8 +11,8 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ILocalizationService _localizationService;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ILocalizationService _localizationService;
 
         #endregion
 

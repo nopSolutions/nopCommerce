@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
 {
@@ -22,7 +20,7 @@ namespace Nop.Services.Topics
         /// <param name="topicId">The topic identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic
+        /// The task result contains the topic
         /// </returns>
         Task<Topic> GetTopicByIdAsync(int topicId);
 
@@ -46,7 +44,7 @@ namespace Nop.Services.Topics
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opics
+        /// The task result contains the topics
         /// </returns>
         Task<IList<Topic>> GetAllTopicsAsync(int storeId,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
@@ -61,7 +59,7 @@ namespace Nop.Services.Topics
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opics
+        /// The task result contains the topics
         /// </returns>
         Task<IList<Topic>> GetAllTopicsAsync(int storeId, string keywords,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);

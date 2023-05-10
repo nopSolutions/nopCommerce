@@ -74,7 +74,7 @@
 "Copy":"Masolas",
 "Paste":"Beillesztes",
 "E_CopyFile":"Hiba a fajl masolasa kozben.",
-"E_CopyFileInvalisPath":"A fajl nem masolhato - az utvonal nem letezik",
+"E_CopyFileInvalidPath":"A fajl nem masolhato - az utvonal nem letezik",
 "E_CopyDirInvalidPath":"A mappa nem masolhato - az utvonal nem letezik",
 "E_CreateArchive":"Hiba tortent a zip fajl letrehozas kozben.",
 "E_UploadingFile":"hiba"

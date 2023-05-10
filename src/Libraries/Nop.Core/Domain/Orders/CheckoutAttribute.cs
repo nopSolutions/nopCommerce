@@ -1,5 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Attributes;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Orders
@@ -7,22 +6,12 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Represents a checkout attribute
     /// </summary>
-    public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported
+    public partial class CheckoutAttribute : BaseAttribute, IStoreMappingSupported
     {
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the text prompt
         /// </summary>
         public string TextPrompt { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the entity is required
-        /// </summary>
-        public bool IsRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether shippable products are required in order to display this attribute
@@ -38,16 +27,6 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the tax category identifier
         /// </summary>
         public int TaxCategoryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the attribute control type identifier
-        /// </summary>
-        public int AttributeControlTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the display order
-        /// </summary>
-        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
@@ -85,14 +64,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a condition (depending on other attribute) when this attribute should be enabled (visible).
         /// </summary>
         public string ConditionAttributeXml { get; set; }
-
-        /// <summary>
-        /// Gets the attribute control type
-        /// </summary>
-        public AttributeControlType AttributeControlType
-        {
-            get => (AttributeControlType)AttributeControlTypeId;
-            set => AttributeControlTypeId = (int)value;
-        }
     }
 }

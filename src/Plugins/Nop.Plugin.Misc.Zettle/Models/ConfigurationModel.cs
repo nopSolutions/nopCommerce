@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.Zettle.Models
@@ -29,6 +29,7 @@ namespace Nop.Plugin.Misc.Zettle.Models
         public string ClientId { get; set; }
 
         [NopResourceDisplayName("Plugins.Misc.Zettle.Configuration.Fields.ApiKey")]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string ApiKey { get; set; }
 

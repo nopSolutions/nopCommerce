@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Nop.Web.Areas.Admin.Models.Settings;
+﻿using Nop.Web.Areas.Admin.Models.Settings;
 
 namespace Nop.Web.Areas.Admin.Validators
 {

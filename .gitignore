@@ -170,6 +170,7 @@ glob:*.user
 *.hg
 src/Presentation/Nop.Web/.config/*
 src/Presentation/Nop.Web/App_Data/browscap.xml
+src/Presentation/Nop.Web/App_Data/additional.crawlers.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
 src/Presentation/Nop.Web/App_Data/plugins.json
 src/Presentation/Nop.Web/App_Data/dataSettings.json

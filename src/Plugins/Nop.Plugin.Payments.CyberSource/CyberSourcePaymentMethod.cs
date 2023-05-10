@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -37,22 +33,22 @@ namespace Nop.Plugin.Payments.CyberSource
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWorkContext _workContext;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -264,7 +260,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     var paymentStatus = result.NewPaymentStatus;
                     result.NewPaymentStatus = PaymentStatus.Pending;
                     var key = string.Format(CyberSourceDefaults.OrderStatusesSessionKey, processPaymentRequest.OrderGuid);
-                    _httpContextAccessor.HttpContext.Session.Set(key, (orderStatus, paymentStatus));
+                    await _httpContextAccessor.HttpContext.Session.SetAsync(key, (orderStatus, paymentStatus));
                 }
             }
 

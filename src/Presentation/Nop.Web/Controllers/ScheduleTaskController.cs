@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.ScheduleTasks;
 
 namespace Nop.Web.Controllers
@@ -9,8 +8,8 @@ namespace Nop.Web.Controllers
     [AutoValidateAntiforgeryToken]
     public partial class ScheduleTaskController : Controller
     {
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IScheduleTaskRunner _taskRunner;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly IScheduleTaskRunner _taskRunner;
 
         public ScheduleTaskController(IScheduleTaskService scheduleTaskService,
             IScheduleTaskRunner taskRunner)

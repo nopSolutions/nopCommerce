@@ -570,9 +570,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(model => model.ProductAttributes, options => options.Ignore())
                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
                .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-               .ForMember(model => model.Warnings, options => options.Ignore());
+               .ForMember(model => model.Warnings, options => options.Ignore())
+               .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-               .ForMember(entity => entity.AttributesXml, options => options.Ignore());
+               .ForMember(entity => entity.AttributesXml, options => options.Ignore())
+                #pragma warning disable CS0618
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
@@ -609,10 +613,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.WeightAdjustmentStr, options => options.Ignore())
                 .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
                 .ForMember(model => model.DisplayImageSquaresPicture, options => options.Ignore())
-                .ForMember(model => model.ProductPictureModels, options => options.Ignore());
+                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
+                .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
                .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
-               .ForMember(entity => entity.Quantity, options => options.Ignore());
+               .ForMember(entity => entity.Quantity, options => options.Ignore())
+                #pragma warning disable CS0618
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
             CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
@@ -738,7 +746,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
             CreateMap<AddressAttributeValueModel, AddressAttributeValue>();
 
-            CreateMap<AddressSettings, AddressSettingsModel>();
+            CreateMap<AddressSettings, AddressSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<AddressSettingsModel, AddressSettings>()
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
 
@@ -766,7 +775,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore());
             CreateMap<CustomerRoleModel, CustomerRole>();
 
-            CreateMap<CustomerSettings, CustomerSettingsModel>();
+            CreateMap<CustomerSettings, CustomerSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<CustomerSettingsModel, CustomerSettings>()
                 .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
                 .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())

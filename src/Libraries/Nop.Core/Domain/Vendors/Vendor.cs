@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
@@ -53,7 +53,7 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>

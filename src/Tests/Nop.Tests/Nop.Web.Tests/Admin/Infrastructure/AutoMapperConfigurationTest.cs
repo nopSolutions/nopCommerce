@@ -15,7 +15,7 @@ namespace Nop.Tests.Nop.Web.Tests.Admin.Infrastructure
             {
                 cfg.AddProfile(typeof(AdminMapperConfiguration));
             });
-            
+
             AutoMapperConfiguration.Init(config);
             AutoMapperConfiguration.MapperConfiguration.AssertConfigurationIsValid();
         }

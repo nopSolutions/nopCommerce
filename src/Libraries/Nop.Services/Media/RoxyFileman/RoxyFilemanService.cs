@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -16,7 +10,7 @@ namespace Nop.Services.Media.RoxyFileman
         #region Fields
 
         protected readonly IRoxyFilemanFileProvider _fileProvider;
-        private readonly IWorkContext _workContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

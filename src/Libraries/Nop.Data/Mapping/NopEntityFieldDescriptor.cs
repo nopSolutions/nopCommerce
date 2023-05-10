@@ -1,5 +1,3 @@
-using System;
-
 namespace Nop.Data.Mapping
 {
     public partial class NopEntityFieldDescriptor

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Common;
+﻿using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -37,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the maintenance model
         /// </returns>
         Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model);
-        
+
         /// <summary>
         /// Prepare paged backup file list model
         /// </summary>
@@ -105,5 +103,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the common statistics model
         /// </returns>
         Task<CommonStatisticsModel> PrepareCommonStatisticsModelAsync();
+
+        /// <summary>
+        /// Prepare plugins warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models);
     }
 }

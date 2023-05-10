@@ -17,7 +17,7 @@
     <div class="header-menu">
         @await Component.InvokeAsync(typeof(TopMenuViewComponent))
     </div>
-    <div class="master-wrapper-content">
+    <div class="master-wrapper-content" id="main" role="main">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })
 
         @if (IsSectionDefined("Breadcrumb"))

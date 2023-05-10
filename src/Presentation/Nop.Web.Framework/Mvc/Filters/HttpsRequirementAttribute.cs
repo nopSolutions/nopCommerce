@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -48,10 +45,10 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IStoreContext _storeContext;
-            private readonly IWebHelper _webHelper;
-            private readonly IWebHostEnvironment _webHostEnvironment;
+            protected readonly bool _ignoreFilter;
+            protected readonly IStoreContext _storeContext;
+            protected readonly IWebHelper _webHelper;
+            protected readonly IWebHostEnvironment _webHostEnvironment;
 
             #endregion
 

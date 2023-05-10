@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -37,19 +33,19 @@ namespace Nop.Plugin.Payments.PayPalCommerce
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -354,14 +350,14 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// A task that represents the asynchronous operation
         /// The task result contains the payment info holder
         /// </returns>
-        public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+        public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             //already set
-            return Task.FromResult(_actionContextAccessor.ActionContext.HttpContext.Session
-                .Get<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey));
+            return await _actionContextAccessor.ActionContext.HttpContext.Session
+                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
         }
 
         /// <summary>

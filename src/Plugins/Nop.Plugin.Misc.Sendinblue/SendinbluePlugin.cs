@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Plugin.Misc.Sendinblue.Components;
@@ -24,15 +21,15 @@ namespace Nop.Plugin.Misc.Sendinblue
     {
         #region Fields
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IWebHelper _webHelper;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMessageTemplateService _messageTemplateService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 

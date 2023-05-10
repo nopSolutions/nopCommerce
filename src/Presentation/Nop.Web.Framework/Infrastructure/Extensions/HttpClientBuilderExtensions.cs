@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Security;
 

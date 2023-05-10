@@ -6,7 +6,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models
     /// <summary>
     /// Represents plugin configuration model
     /// </summary>
-    public record ConfigurationModel : BaseNopModel 
+    public record ConfigurationModel : BaseNopModel
     {
         #region Ctor
 

@@ -2,11 +2,13 @@
 
 @using Nop.Core
 @using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject MediaSettings mediaSettings
 @inject OrderSettings orderSettings
 
 <div class="order-summary-content">
@@ -105,7 +107,9 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                        </a>
                                     </td>
                                 }
                                 <td class="product">
@@ -174,7 +178,32 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" />
+                                            <div class="product-quantity">
+                                                <div class="quantity up" id="quantity-up-@(item.Id)"></div>
+                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" onchange="$('#updatecart').click();" />
+                                                <div class="quantity down" id="quantity-down-@(item.Id)"></div>
+                                            </div>
+                                            <script asp-location="Footer">
+                                                $(document).ready(function () {
+                                                    $('#quantity-up-@(item.Id)').on('click',
+                                                        function (e) {
+                                                            var input = $(document).find('#itemquantity@(item.Id)');
+                                                            var oldValue = parseInt(input.val());
+                                                            var newVal = oldValue + 1;
+                                                            input.val(newVal.toString());
+                                                            input.trigger("change");
+                                                        });
+
+                                                    $('#quantity-down-@(item.Id)').on('click',
+                                                        function (e) {
+                                                            var input = $(document).find('#itemquantity@(item.Id)');
+                                                            var oldValue = parseInt(input.val());
+                                                            var newVal = oldValue - 1;
+                                                            input.val(newVal.toString());
+                                                            input.trigger("change");
+                                                        });
+                                                });
+                                            </script>
                                         }
                                     }
                                     else
@@ -230,7 +259,7 @@
                 @if (Model.IsEditable)
                 {
                     <div class="common-buttons">
-                        <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+                        <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button" style="display: none;">@T("ShoppingCart.UpdateCart")</button>
 
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
                         @await Component.InvokeAsync(typeof(ShoppingCartEstimateShippingViewComponent))

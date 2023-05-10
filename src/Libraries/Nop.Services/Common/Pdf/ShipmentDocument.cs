@@ -1,5 +1,4 @@
-using System;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -10,11 +9,11 @@ namespace Nop.Services.Common.Pdf
     /// <summary>
     /// Represents the shipment document
     /// </summary>
-    public class ShipmentDocument: PdfDocument<ShipmentSource>
+    public class ShipmentDocument : PdfDocument<ShipmentSource>
     {
         #region Ctor
 
-        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService): base(shipmentSource, localizationService)
+        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService) : base(shipmentSource, localizationService)
         {
         }
 
@@ -122,11 +121,8 @@ namespace Nop.Services.Common.Pdf
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Company, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Name, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Phone, delimiter: ": "));
-                column.Item().Text(t => ComposeField(t, Source.Address, x => x.Address, delimiter: ": "));
-                column.Item().Text(t => ComposeField(t, Source.Address, x => x.Address2, delimiter: ": "));
-                column.Item().Text(Source.Address.AddressLine);
+                column.Item().Text(t => ComposeField(t, Source.Address, x => x.AddressLine, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.VATNumber, delimiter: ": "));
-                column.Item().Text(Source.Address.Country);
 
                 foreach (var attribute in Source.Address.AddressAttributes)
                     column.Item().Text(attribute);

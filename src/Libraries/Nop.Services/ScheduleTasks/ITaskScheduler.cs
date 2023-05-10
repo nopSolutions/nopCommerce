@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Services.ScheduleTasks
+﻿namespace Nop.Services.ScheduleTasks
 {
     /// <summary>
     /// Task manager interface

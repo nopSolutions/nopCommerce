@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Validators;
 
 namespace Nop.Web.Framework.Validators
@@ -9,7 +8,7 @@ namespace Nop.Web.Framework.Validators
     /// </summary>
     public partial class DecimalPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
-        private readonly decimal _maxValue;
+        protected readonly decimal _maxValue;
 
         public override string Name => "DecimalPropertyValidator";
 

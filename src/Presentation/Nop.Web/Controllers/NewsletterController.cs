@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
@@ -13,12 +11,12 @@ namespace Nop.Web.Controllers
     [AutoValidateAntiforgeryToken]
     public partial class NewsletterController : BasePublicController
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsletterModelFactory _newsletterModelFactory;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsletterModelFactory _newsletterModelFactory;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
 
         public NewsletterController(ILocalizationService localizationService,
             INewsletterModelFactory newsletterModelFactory,

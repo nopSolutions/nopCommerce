@@ -1,6 +1,5 @@
-﻿﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Shipping;
- using Nop.Core.Events;
+﻿using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 
 namespace Nop.Services.Shipping
 {

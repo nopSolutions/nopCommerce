@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Catalog;
@@ -77,11 +74,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var pId = (await _productService.GetProductReviewByIdAsync(1)).ProductId;
             var product = await _productService.GetProductByIdAsync(pId);
-            var model = await _productModelFactory.PrepareProductReviewsModelAsync(new ProductReviewsModel(), product);
+            var model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
 
             model.ProductId.Should().Be(product.Id);
-            model.ProductName.Should().Be(product.Name);
-            model.ProductSeName.Should().Be(await GetService<IUrlRecordService>().GetSeNameAsync(product));
 
             model.Items.Any().Should().BeTrue();
         }

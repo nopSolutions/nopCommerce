@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Order
 {
@@ -23,7 +21,7 @@ namespace Nop.Web.Models.Order
 
         public OrderDetailsModel Order { get; set; }
 
-		#region Nested Classes
+        #region Nested Classes
 
         public partial record ShipmentItemModel : BaseNopEntityModel
         {
@@ -47,6 +45,6 @@ namespace Nop.Web.Models.Order
             public DateTime? Date { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
@@ -17,10 +13,10 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -213,9 +209,9 @@ namespace Nop.Services.Stores
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
-                where sm.EntityId == entityId &&
-                      sm.EntityName == entityName
-                select sm.StoreId;
+                        where sm.EntityId == entityId &&
+                              sm.EntityName == entityName
+                        select sm.StoreId;
 
             return _staticCacheManager.Get(key, () => query.ToArray());
         }

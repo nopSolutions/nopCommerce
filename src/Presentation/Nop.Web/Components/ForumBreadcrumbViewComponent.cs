@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -7,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class ForumBreadcrumbViewComponent : NopViewComponent
     {
-        private readonly IForumModelFactory _forumModelFactory;
+        protected readonly IForumModelFactory _forumModelFactory;
 
         public ForumBreadcrumbViewComponent(IForumModelFactory forumModelFactory)
         {
