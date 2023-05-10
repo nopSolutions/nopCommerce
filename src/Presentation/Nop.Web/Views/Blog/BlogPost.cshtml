@@ -82,7 +82,7 @@
                     @if (!Model.PreventNotRegisteredUsersToLeaveComments)
                     {
                         <div class="buttons">
-                            <button type="submit" name="add-comment" class="button-1 blog-post-add-comment-button">@T("Blog.Comments.SubmitButton")</button>
+                            <button type="submit" data-action="BlogCommentAdd" name="add-comment" class="button-1 blog-post-add-comment-button">@T("Blog.Comments.SubmitButton")</button>
                         </div>
                     }
                     else
