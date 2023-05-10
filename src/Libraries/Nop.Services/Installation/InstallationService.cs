@@ -3465,6 +3465,7 @@ namespace Nop.Services.Installation
                 ShowOnForum = false,
                 ShowOnLoginPage = false,
                 ShowOnNewsCommentPage = false,
+                ShowOnNewsletterPage = false,
                 ShowOnProductReviewPage = false,
                 ShowOnRegistrationPage = false,
                 ShowOnCheckoutPageForGuests = false,

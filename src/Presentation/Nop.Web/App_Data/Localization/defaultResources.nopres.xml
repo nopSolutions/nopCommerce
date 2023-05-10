@@ -7356,6 +7356,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage.Hint">
     <Value>Check to show CAPTCHA on news page when writing a comment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage">
+    <Value>Show in newsletter block</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage.Hint">
+    <Value>Check to show CAPTCHA in newsletter block when subscribing.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage">
     <Value>Show on product reviews page</Value>
   </LocaleResource>
