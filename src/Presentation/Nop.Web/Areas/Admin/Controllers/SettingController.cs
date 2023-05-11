@@ -578,6 +578,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //we do not clear cache after each setting update.
                 //this behavior can increase performance because cached settings will not be cleared 
                 //and loaded from database after each update
+                await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AutomaticallyDetectCountry, model.AutomaticallyDetectCountry_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.PricesIncludeTax, model.PricesIncludeTax_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.TaxDisplayType, model.TaxDisplayType_OverrideForStore, storeScope, false);
@@ -601,7 +602,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             CreatedOnUtc = DateTime.UtcNow
                         };
                     //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
-                    model.DefaultTaxAddress.Id = addressId;
+                    model.DefaultTaxAddress.Id = addressId;                    
                     originAddress = model.DefaultTaxAddress.ToEntity(originAddress);
                     if (originAddress.Id > 0)
                         await _addressService.UpdateAddressAsync(originAddress);
