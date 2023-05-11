@@ -9003,11 +9003,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType.Hint">
     <Value>A value indicating whether customers are allowed to select tax display type.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.AutomaticallyDetectCountry">
-    <Value>Automatically detect a country by IP address</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry">
+    <Value>Automatically detect country by IP address</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.AutomaticallyDetectCountry.Hint">
-    <Value>When this setting is enabled, the client's country will be determined by the GEO service (by IP address).</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry.Hint">
+    <Value>When this setting is enabled, if the customer's billing/shipping address is not already set, the country of address used for tax calculation will be determined automatically by the GEO service (by IP address).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Common">
     <Value>Common</Value>

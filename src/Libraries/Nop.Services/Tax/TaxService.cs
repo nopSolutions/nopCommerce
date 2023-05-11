@@ -1,10 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using MaxMind.GeoIP2.Model;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -237,22 +235,26 @@ namespace Nop.Services.Tax
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            if ((basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null 
-                || basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null) &&
-                _taxSettings.AutomaticallyDetectCountry)
+            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
+                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
             {
-                var ipAddress = _webHelper.GetCurrentIpAddress();
-                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
-                var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
-
-                if (country != null)
+                if (_taxSettings.AutomaticallyDetectCountry)
                 {
-                    detectedAddress.CountryId = country.Id;
-                    autodetectedCountry = true;
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                    var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
+
+                    if (country != null)
+                    {
+                        detectedAddress.CountryId = country.Id;
+                        autodetectedCountry = true;
+                    }
+                    else
+                        basedOn = TaxBasedOn.DefaultAddress;
                 }
+                else
+                    basedOn = TaxBasedOn.DefaultAddress;
             }
-            else
-                basedOn = TaxBasedOn.DefaultAddress;
 
             taxRateRequest.Address = basedOn switch
             {
