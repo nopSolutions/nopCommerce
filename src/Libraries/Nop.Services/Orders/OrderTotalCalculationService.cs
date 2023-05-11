@@ -905,6 +905,7 @@ namespace Nop.Services.Orders
             (discountAmountExclTax, appliedDiscounts) = await GetOrderSubtotalDiscountAsync(customer, subTotalWithoutDiscountExclTax);
             if (subTotalWithoutDiscountExclTax < discountAmountExclTax)
                 discountAmountExclTax = subTotalWithoutDiscountExclTax;
+            discountAmountInclTax = discountAmountExclTax;
 
             //subtotal with discount (excl tax)
             subTotalWithDiscountExclTax = subTotalWithoutDiscountExclTax - discountAmountExclTax;
@@ -924,7 +925,7 @@ namespace Nop.Services.Orders
                 if (subTotalWithoutDiscountExclTax > decimal.Zero)
                 {
                     var discountTax = taxRates[taxRate] * (discountAmountExclTax / subTotalWithoutDiscountExclTax);
-                    discountAmountInclTax = discountAmountExclTax + discountTax;
+                    discountAmountInclTax += discountTax;
                     taxValue = taxRates[taxRate] - discountTax;
                     if (_shoppingCartSettings.RoundPricesDuringCalculation)
                         taxValue = await _priceCalculationService.RoundPriceAsync(taxValue);
