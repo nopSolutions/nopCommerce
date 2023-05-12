@@ -1,0 +1,11 @@
+﻿{
+  "Group": "API",
+  "FriendlyName": "CustomAPI",
+  "SystemName": "CustomAPI",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Mukesh",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.CustomAPI.dll",
+  "Description": "Test Plugin - HelloWorld."
+}
