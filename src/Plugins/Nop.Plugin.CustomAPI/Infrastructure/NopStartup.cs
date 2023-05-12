@@ -5,6 +5,9 @@ using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.OpenApi.Models;
+using MagicVilla_VillaAPI;
+using Nop.Plugin.CustomAPI.Repository.IRepository;
+using Nop.Plugin.CustomAPI.Repository;
 
 namespace Nop.Plugin.CustomAPI.Infrastructure
 {
@@ -25,7 +28,10 @@ namespace Nop.Plugin.CustomAPI.Infrastructure
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
+            services.AddAutoMapper(typeof(MappingConfig));
 
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         /// <summary>
