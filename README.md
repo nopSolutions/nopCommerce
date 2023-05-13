@@ -24,3 +24,14 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
    4. `logo.png`
    5. `plugin.json` (only include the above files)
 3. Add to project with: `dotnet sln src/NopCommerce.sln add src/Plugins/PLUGIN_FOLDER/PLUGIN_CSPROJ
+
+## Tooltip
+
+```
+<div class="tooltip">
+  <!-- area to hover over, usually an icon -->
+  <span class="tooltiptext">
+    <!-- Tooltip text, use a locale -->
+  </span>
+</div> 
+```

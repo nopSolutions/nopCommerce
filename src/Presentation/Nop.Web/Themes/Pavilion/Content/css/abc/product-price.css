@@ -183,37 +183,39 @@ a.tooltip.open-box:hover span {
 }
 
 /*--------------------
-	Open Box Tooltip
+  Tooltip
 	-----------------*/
-.open-box-price-page
-	
-.open-box-tooltip {
+/* Tooltip container */
+.tooltip {
   position: relative;
-  display: inline;
+  display: inline-block;
 }
 
 /* Tooltip text */
-.open-box-tooltip .tooltiptext {
+.tooltip .tooltiptext {
   visibility: hidden;
-  width: 240px;
-  color: #fff;
+  width: 300px;
+  background-color: black;
   text-align: center;
   padding: 5px 0;
+  border-radius: 6px;
+
   color:#111;
-  border:1px solid #336799;
+  border: 1px solid black;
   background:#F6F6F6;
  
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
-  /* Positions to bottom */
-  top: 135%;
-  left: -600%;
-  margin-left: -60px;
-  font-size: 1.1rem;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.open-box-tooltip:hover .tooltiptext {
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.tooltip:checked .tooltiptext {
   visibility: visible;
 }
