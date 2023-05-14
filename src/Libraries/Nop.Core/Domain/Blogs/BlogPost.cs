@@ -77,5 +77,10 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show a blog post on the main page
+        /// </summary>
+        public bool ShowBlogPostOnMainPage { get; set; }
     }
 }
