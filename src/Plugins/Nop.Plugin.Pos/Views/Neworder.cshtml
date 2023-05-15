@@ -144,11 +144,19 @@
                 <div class="col-sm-6">
                     <div id="small-search-box-form" style="display:flex">
 
-                        <input type="text" class="ScantextBox" id="ScanInput" autocomplete="off" name="myTextValue" value="" placeholder="Scan" aria-label="Scan Product" />
+                        <input type="text" class="ScantextBox" id="ScanInput"  name="myTextValue" placeholder="Scan"/>
 
                         <button id="ScanButton" onclick="handleChange()" class="Scanstyle">Scan</button>
 
-
+                        <script>
+                            var input = document.getElementById("ScanInput");
+                            input.addEventListener("keypress", function (event) {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    document.getElementById("ScanButton").click();
+                                }
+                            });
+                        </script>
                     </div>
                 </div>
 
