@@ -124,6 +124,7 @@
         public static string HomepageBeforeBestSellers => "home_page_before_best_sellers";
         public static string HomepageBeforeCategories => "home_page_before_categories";
         public static string HomepageBeforeNews => "home_page_before_news";
+        public static string HomepageBeforeFeaturedBlogPosts => "home_page_before_featured_blog_posts";
         public static string HomepageBeforePoll => "home_page_before_poll";
         public static string HomepageBeforeProducts => "home_page_before_products";
         public static string HomepageBottom => "home_page_bottom";
