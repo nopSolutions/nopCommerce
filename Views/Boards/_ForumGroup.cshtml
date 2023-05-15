@@ -47,7 +47,7 @@
                             <td class="topics">@forum.NumTopics</td>
                             <td class="posts">@forum.NumPosts</td>
                             <td class="latest-post">
-                                @await Component.InvokeAsync("ForumLastPost", new {forumPostId = forum.LastPostId, showTopic = true})
+                                @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new {forumPostId = forum.LastPostId, showTopic = true})
                             </td>
                         </tr>            
                     }

@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-md-12 clearfix">
                     <div class="float-left">
-                        @await Component.InvokeAsync("SettingMode", new { modeName = "manufacturer-advanced-mode" })
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "manufacturer-advanced-mode" })
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <nop-card asp-name="manufacturer-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
                 <nop-card asp-name="manufacturer-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>
     </div>

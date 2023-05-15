@@ -1,4 +1,7 @@
 ﻿@model IList<VendorModel>
+
+@using Nop.Core.Domain.Vendors
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -19,12 +22,12 @@
                     <div class="item-box">
                         <div class="vendor-item">
                             <h2 class="title">
-                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <a href="@(Url.RouteUrl<Vendor>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
                                     @item.Name
                                 </a>
                             </h2>
                             <div class="picture">
-                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <a href="@(Url.RouteUrl<Vendor>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
                                     <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                 </a>
                             </div>

@@ -10,14 +10,13 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <div class="page account-page address-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="page-body">
-        <nop-antiforgery-token />
         @if (Model.Addresses.Count > 0)
         {
                 <div class="address-list">

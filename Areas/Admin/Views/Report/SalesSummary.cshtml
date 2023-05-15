@@ -102,6 +102,14 @@
                                             <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                         </div>
                                     </div>
+                                    <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="VendorId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="ProductId" />
@@ -181,7 +189,8 @@
                                 new FilterParameter(nameof(Model.ManufacturerId)),
                                 new FilterParameter(nameof(Model.BillingCountryId)),
                                 new FilterParameter(nameof(Model.ProductId)),
-                                new FilterParameter(nameof(Model.SearchGroupId))
+                                new FilterParameter(nameof(Model.SearchGroupId)),
+                                new FilterParameter(nameof(Model.VendorId))
                             },
                             ColumnCollection = new List<ColumnProperty>
                             {

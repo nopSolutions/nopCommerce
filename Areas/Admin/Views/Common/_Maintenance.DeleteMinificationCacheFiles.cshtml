@@ -1,0 +1,28 @@
+﻿@model MaintenanceModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div>
+                <p>
+                    @T("Admin.System.Maintenance.DeleteMinificationFiles.Text")
+                </p>
+            </div>
+            <button type="submit" name="delete-minification-files" class="btn btn-default">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </button>
+        </div>
+    </div>
+    @if (Model.DeleteMinificationFiles.NumberOfDeletedFiles.HasValue)
+    {
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="alert alert-success alert-dismissible no-margin">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    @string.Format(T("Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted").Text, Model.DeleteMinificationFiles.NumberOfDeletedFiles.Value)
+                </div>
+            </div>
+        </div>
+    }
+</div>

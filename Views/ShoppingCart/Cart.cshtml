@@ -9,13 +9,13 @@
 }
 @if (!Model.OnePageCheckoutEnabled)
 {
-    @await Component.InvokeAsync("CheckoutProgress", new {step = CheckoutProgressStep.Cart})
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new {step = CheckoutProgressStep.Cart})
 }
 <div class="page shopping-cart-page">
     <div class="page-title">
         <h1>@T("ShoppingCart")</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model})
+        @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), new { overriddenModel = Model})
     </div>
 </div>

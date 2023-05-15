@@ -1,5 +1,7 @@
 @model ManufacturerModel
 
+@using Nop.Core.Domain.Catalog
+
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Manufacturers.EditManufacturerDetails").Text;
@@ -17,7 +19,7 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Manufacturer", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Manufacturer>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
@@ -33,7 +35,7 @@
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

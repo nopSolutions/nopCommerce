@@ -11,10 +11,9 @@
     NopHtml.AppendPageCssClassParts("html-forum-page");
 }
 <div class="page forum-page">
-    @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
-    <nop-antiforgery-token />
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -56,7 +55,7 @@
                 </script>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
         @{
             var pager = await Html.PagerAsync(new PagerModel(localizationService)
             {
@@ -66,7 +65,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "ForumSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
@@ -181,7 +180,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
@@ -196,5 +195,5 @@
             @pager
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
 </div>

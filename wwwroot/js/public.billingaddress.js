@@ -20,7 +20,27 @@
       success: function(data, textStatus, jqXHR) {
         $.each(data,
           function(id, value) {
-            //console.log("id:" + id + "\nvalue:" + value);
+            if (id.indexOf("CustomAddressAttributes") >= 0 && Array.isArray(value)) {
+              $.each(value, function (i, customAttribute) {
+                if (customAttribute.DefaultValue) {
+                  $(`#${customAttribute.ControlId}`).val(
+                    customAttribute.DefaultValue
+                  );
+                } else {
+                  $.each(customAttribute.Values, function (j, attributeValue) {
+                    if (attributeValue.IsPreSelected) {
+                      $(`#${customAttribute.ControlId}`).val(attributeValue.Id);
+                      $(
+                        `#${customAttribute.ControlId}_${attributeValue.Id}`
+                      ).prop("checked", attributeValue.Id);
+                    }
+                  });
+                }
+              });
+  
+              return;
+            }
+
             if (value !== null) {
               var val = $(`#${prefix}${id}`).val(value);
               if (id.indexOf('CountryId') >= 0) {

@@ -1,5 +1,9 @@
-﻿@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
-@model CustomerReturnRequestsModel
+﻿@model CustomerReturnRequestsModel
+
+@using Nop.Core.Domain.Catalog
+
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -11,7 +15,7 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
 }
 <div class="page account-page return-request-list-page">
     <div class="page-title">
@@ -27,7 +31,7 @@
                 <ul class="details">
                     <li class="product">
                         <label>@T("Account.CustomerReturnRequests.Item")</label>
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">

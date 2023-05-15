@@ -29,12 +29,12 @@
                 }
             </ul>
             <div id="tabs-1" class="tab-content">
-                @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
+                @await Component.InvokeAsync(typeof(ProfileInfoViewComponent), new { customerProfileId = Model.CustomerProfileId })
             </div>
             @if (Model.ForumsEnabled)
             {
                 <div id="tabs-2" class="tab-content">
-                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
+                    @await Component.InvokeAsync(typeof(ProfilePostsViewComponent), new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
                 </div>
             }
         </div>

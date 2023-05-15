@@ -8,9 +8,9 @@
     NopHtml.AppendPageCssClassParts("html-forum-group-page");
 }
 <div class="page forum-group-page">
-    @await Component.InvokeAsync("ForumBreadcrumb", new { forumGroupId = Model.Id })
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader, additionalData = Model })
     @await Html.PartialAsync("_ForumGroup", Model)
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom, additionalData = Model })
 </div>

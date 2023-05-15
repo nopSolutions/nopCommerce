@@ -1,2 +1,6 @@
+#######################
+## nopCommerce specific
+###########
+
 package.json
 package-lock.json

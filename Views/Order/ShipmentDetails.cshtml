@@ -1,4 +1,7 @@
 ﻿@model ShipmentDetailsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     Layout = "_ColumnsOne";
 
@@ -193,7 +196,7 @@
                                         </td>
                                     }
                                     <td class="name">
-                                        <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                        <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <div class="attributes">

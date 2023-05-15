@@ -1,4 +1,7 @@
 @model OrderDetailsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     if (!Model.PrintMode)
     {
@@ -34,7 +37,7 @@
         </div>
     }
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageTop, additionalData = Model })
         <div class="order-overview">
             <div class="order-number">
                 <strong>@T("Order.Order#")@Model.CustomOrderNumber</strong>
@@ -50,7 +53,7 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageOverview, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageOverview, additionalData = Model })
         </div>
         <div class="order-details-area">
             <div class="billing-info-wrap">
@@ -157,21 +160,7 @@
                                 @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                             </li>
                         }
-                        @if (Model.CustomValues != null)
-                        {
-                            foreach (var item in Model.CustomValues)
-                            {
-                                <li class="custom-value">
-                                    <span class="label">
-                                        @item.Key:
-                                    </span>
-                                    <span class="value">
-                                        @(item.Value != null ? item.Value.ToString() : "")
-                                    </span>
-                                </li>
-                            }
-                        }
-                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
                 @if (!string.IsNullOrEmpty(Model.PaymentMethod))
@@ -211,6 +200,20 @@
                                         </p>
                                     </form>
                                 </li>
+                            }
+                            @if (Model.CustomValues != null)
+                            {
+                                foreach (var item in Model.CustomValues)
+                                {
+                                    <li class="custom-value">
+                                        <span class="label">
+                                            @item.Key:
+                                        </span>
+                                        <span class="value">
+                                            @(item.Value != null ? item.Value.ToString() : "")
+                                        </span>
+                                    </li>
+                                }
                             }
                         </ul>
                     </div>
@@ -313,7 +316,7 @@
                                         @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                                     </li>
                                 }
-                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
+                                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsShippingAddress, additionalData = Model })
                             }
                             else
                             {
@@ -551,7 +554,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -560,6 +563,10 @@
                     <table class="data-table">
                         <colgroup>
                             @if (Model.ShowSku)
+                            {
+                                <col width="1" />
+                            }
+                            @if (Model.ShowProductThumbnail)
                             {
                                 <col width="1" />
                             }
@@ -578,6 +585,12 @@
                                 {
                                     <th class="sku">
                                         @T("Order.Product(s).SKU")
+                                    </th>
+                                }
+                                @if (Model.ShowProductThumbnail)
+                                {
+                                    <th class="picture">
+                                        @T("Order.Product(s).Image")
                                     </th>
                                 }
                                 <th class="name">
@@ -611,10 +624,16 @@
                                             <span class="sku-number">@item.Sku</span>
                                         </td>
                                     }
+                                    @if (Model.ShowProductThumbnail)
+                                    {
+                                        <td class="picture">
+                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        </td>
+                                    }
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
-                                            <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                            <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         }
                                         else
                                         {
@@ -644,7 +663,7 @@
                                                 <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
+                                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
                                     </td>
                                     @if (Model.ShowVendorName)
                                     {
@@ -676,11 +695,11 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageAfterproducts, additionalData = Model })
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageAfterproducts, additionalData = Model })
             <div class="section options">
                 @if (!string.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -821,6 +840,6 @@
                 }
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsPageBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBottom, additionalData = Model })
     </div>
 </div>

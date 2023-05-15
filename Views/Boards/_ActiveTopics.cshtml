@@ -106,7 +106,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

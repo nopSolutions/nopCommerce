@@ -34,10 +34,10 @@
     <Value>פורמט לא חוקי של מחרוזת חיבור למסד נתונים</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>ארץ</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>בחר ארץ</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>צור בסיס נתונים אם לא קיים</Value>
@@ -46,7 +46,7 @@
     <Value>צור נתונים לדוגמה (מוצרים, קטגוריות, וכו')</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>איסוף מותאם אישית</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>מסד הנתונים</Value>
@@ -103,13 +103,13 @@
     <Value>לחצו כאן כדי להתחיל את תהליך ההתקנה מחדש (מנקה את כל הערכים בזיכרון המטמון)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>מאתחל</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>שם השרת</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>נדרש שם שרת</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>שגיאת התקנה: {0}</Value>

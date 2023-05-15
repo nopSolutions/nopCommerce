@@ -19,7 +19,7 @@
 <script src="~/js/public.billingaddress.js" asp-location="Footer"></script>
 
 <div class="page checkout-page billing-address-page">
-    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new { step = CheckoutProgressStep.Address })
     <div class="page-title">
         <h1>@T("Checkout.BillingAddress")</h1>
     </div>
@@ -27,7 +27,7 @@
         <form id="billing-form" asp-route="CheckoutBillingAddress" method="post">
             <div class="billing-addresses">
                 <div id="toggle-billing-address">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressTop, additionalData = Model })
                     @if (Model.ShipToSameAddressAllowed)
                     {
                         <div class="section ship-to-same-address">
@@ -55,7 +55,7 @@
                                     <div class="address-item">
                                         <div class="address-list-page">
                                             <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id), '@T("Checkout.EditAddress")'); return false;">@T("Common.Edit")</button>
-                                            <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;">@T("Common.Delete")</button>
+                                            <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditBillingAddress/', @(item.Id)); return false;">@T("Common.Delete")</button>
                                         </div>
                                         <ul class="address-box">
                                             <li class="name">
@@ -171,7 +171,7 @@
                         </div>
                     }
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle, additionalData = Model })
                 <div class="section new-billing-address" id="billingaddress-new-form">
                     <div class="title">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -183,6 +183,23 @@
                             <strong>@T("Checkout.EnterBillingAddress")</strong>
                         }
                     </div>
+                    @if (Model.EuVatEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="VatNumber" asp-postfix=":"></label>
+                            @if (Model.EuVatEnabledForGuests)
+                            {
+                                <input asp-for="VatNumber" />
+                                <span asp-validation-for="VatNumber"></span>
+                            }
+                            else
+                            {
+                                <span class="vat-number-warning">
+                                    @T("Checkout.VatNumber.Disabled", Url.RouteUrl("CustomerInfo"))
+                                </span>
+                            }
+                        </div>
+                    }
                     <div class="enter-address">
                         <div asp-validation-summary="ModelOnly" class="message-error"></div>
                         @{
@@ -192,10 +209,10 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom, additionalData = Model })
             </div>
             <div class="buttons">
-                <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
+                <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
                 <button id="billingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')">@T("Common.Cancel")</button>
 
@@ -203,17 +220,15 @@
             </div>
         </form>
         <script asp-location="Footer">
-            CheckoutBilling.init('#billing-form');
-            if (@((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant())) {
-                $('button.edit-address-button').show();
-                $('button.delete-address-button').show();
-            }
+            CheckoutBilling.init('#billing-form');            
+            $('#edit-billing-address-button').show();
+            $('#delete-billing-address-button').show();
         </script>
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>
-            @await Component.InvokeAsync("OrderSummary")
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>
 </div>

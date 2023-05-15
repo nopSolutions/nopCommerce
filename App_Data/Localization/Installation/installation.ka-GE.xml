@@ -34,10 +34,10 @@
     <Value>SQL კავშირის (connection string) არასწორი ფორმატი</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>ქვეყანა</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>აირჩიეთ თქვენი ქვეყანა</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>შექმენი ბაზა მისი არარსებობის შემთხვევაში</Value>
@@ -46,7 +46,7 @@
     <Value>შექმენი სამაგალითო მონაცემები</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>განსაზღვრეთ კონფიგურირებადი შესაბამისობა</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Მონაცემთა ბაზა</Value>
@@ -103,13 +103,13 @@
     <Value>დააჭირეთ ინსტალაციის პროცესის თავიდან დასაწყებად (ყველა შენახული მნიშვნელობის განულდება)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>მიმდინარეობს გადატვირთვა...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>სერვერის სახელი</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>სერვერის სახელი აუცილებელია</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>დაყენება ვერ მოხერხდა: {0}</Value>

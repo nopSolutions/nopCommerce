@@ -78,4 +78,4 @@
 </div>
 <div id="bar-notification" class="bar-notification-container" data-close="@T("Common.Close")">
 </div>
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Notifications })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Notifications })

@@ -3,21 +3,6 @@
 
 @if (Model.Id > 0)
 {
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
-            toggleEnableCondition();
-        });
-
-        function toggleEnableCondition() {
-            if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
-                $('#pnlAttributes').showElement();
-            } else {
-                $('#pnlAttributes').hideElement();
-            }
-        }
-    </script>
-
     <div class="card-body">
         <div class="form-group row">
             <div class="col-md-3">
@@ -28,7 +13,7 @@
                 <span asp-validation-for="ConditionModel.EnableCondition"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes" disable-auto-generation="true">
+        <nop-nested-setting asp-for="ConditionModel.EnableCondition">
             @if (Model.ConditionModel.ConditionAttributes.Count > 0)
             {
                 <div class="form-group row">

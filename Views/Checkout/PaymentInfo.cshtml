@@ -9,29 +9,29 @@
     NopHtml.AppendPageCssClassParts("html-payment-info-page");
 }
 <div class="page checkout-page payment-info-page">
-    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Payment })
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new { step = CheckoutProgressStep.Payment })
     <div class="page-title">
         <h1>@T("Checkout.PaymentInfo")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop, additionalData = Model })
         <div class="section payment-info">
             <form asp-route="CheckoutPaymentInfo" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="info">
-                    @await Component.InvokeAsync(Model.PaymentViewComponentName)
+                    @await Component.InvokeAsync(Model.PaymentViewComponent)
                 </div>
                 <div class="buttons">
                     <button type="submit" name="nextstep" class="button-1 payment-info-next-step-button">@T("Checkout.NextButton")</button>
                 </div>
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom, additionalData = Model })
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>
-            @await Component.InvokeAsync("OrderSummary", "ShoppingCart")
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), "ShoppingCart")
         </div>
     </div>
 </div>
