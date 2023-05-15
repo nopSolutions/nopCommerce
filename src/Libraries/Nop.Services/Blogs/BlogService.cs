@@ -158,8 +158,7 @@ namespace Nop.Services.Blogs
         /// A task that represents the asynchronous operation
         /// The task result contains the blog posts
         /// </returns>
-        public virtual async Task<IPagedList<BlogPost>> GetAllFeaturedBlogPostsAsync(int storeId = 0,
-            int languageId = 0,
+        public virtual async Task<IPagedList<BlogPost>> GetAllFeaturedBlogPostsAsync(int languageId = 0,int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
            
