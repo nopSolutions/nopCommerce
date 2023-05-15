@@ -1011,7 +1011,7 @@ label, label + * {
 .header-logo a img {
   max-width: 100%;
   opacity: 1;
-  width: 50px;
+  max-height: 50px;
 }
 
 .search-box form {
@@ -5701,6 +5701,9 @@ label, label + * {
 .blog-post-list-homepage .home-post .buttons{
   float: none;
   width: 100%;
+  text-align: center;
+}
+.blog-post-list-homepage .view-all{
   text-align: center;
 }
 /*** FORUM & PROFILE ***/
