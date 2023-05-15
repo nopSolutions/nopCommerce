@@ -301,7 +301,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.NotifyAboutNewBlogComments_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NumberOfTags_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowBlogOnMainPage_OverrideForStore, options => options.Ignore());
             CreateMap<BlogSettingsModel, BlogSettings>();
         }
 

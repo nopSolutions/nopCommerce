@@ -44,7 +44,14 @@ namespace Nop.Web.Factories
         /// The task result contains the list of blog post year model
         /// </returns>
         Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync();
-
+        /// <summary>
+        /// Prepare the home page blog items model
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the home page blog items model
+        /// </returns>
+        Task<HomepageBlogPostItemsModel> PrepareHomepageBlogPostItemsModelAsync();
         /// <summary>
         /// Prepare blog comment model
         /// </summary>

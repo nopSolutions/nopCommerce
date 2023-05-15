@@ -64,6 +64,23 @@ namespace Nop.Services.Blogs
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
+        /// Gets all blog posts
+        /// </summary>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog posts
+        /// </returns>
+        Task<IPagedList<BlogPost>> GetAllFeaturedBlogPostsAsync(int storeId = 0,
+            int languageId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+
+
+        /// <summary>
         /// Gets all blog post tags
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>

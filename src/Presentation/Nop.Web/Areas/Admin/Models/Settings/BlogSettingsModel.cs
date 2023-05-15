@@ -43,6 +43,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore")]
         public bool ShowBlogCommentsPerStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowBlogOnMainPage")]
+        public bool ShowBlogOnMainPage { get; set; }
+        public bool ShowBlogOnMainPage_OverrideForStore { get; set; }
         #endregion
     }
 }

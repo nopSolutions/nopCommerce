@@ -1,0 +1,32 @@
+﻿@model HomepageBlogPostItemsModel
+
+@using Nop.Core.Domain.Blogs
+
+@if (Model.BlogPostItems.Count > 0)
+{
+    <div class="blog-post-list-homepage">
+        <div class="title">
+            <strong>@T("Blog")</strong>
+        </div>
+        <div class="blog-posts">
+            @foreach (var item in Model.BlogPostItems)
+            {
+                <div class="home-post">
+                    <div class="post-head">
+                        <a class="post-title" href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
+                    </div>
+                    <div class="post-body">
+                        @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+                    </div>
+                    <div class="buttons">
+                        <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="view-all">
+            <a href="@Url.RouteUrl("Blog")">@T("Blog.ViewAll")</a>
+        </div>
+    </div>
+
+}

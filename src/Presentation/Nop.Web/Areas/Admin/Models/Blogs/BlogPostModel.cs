@@ -78,6 +78,8 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.ShowBlogPostOnMainPage")]
+        public bool ShowBlogPostOnMainPage { get; set; }
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }

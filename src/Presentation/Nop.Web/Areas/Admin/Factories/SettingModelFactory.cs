@@ -914,6 +914,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.NumberOfTags_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.NumberOfTags, storeId);
             model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.ShowHeaderRssUrl, storeId);
             model.BlogCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.BlogCommentsMustBeApproved, storeId);
+            model.ShowBlogOnMainPage_OverrideForStore = await _settingService.SettingExistsAsync(blogSettings, x => x.ShowBlogOnMainPage, storeId);
 
             return model;
         }

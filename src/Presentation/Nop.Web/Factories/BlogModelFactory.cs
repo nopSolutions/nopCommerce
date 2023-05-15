@@ -269,6 +269,44 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
+        /// Prepare the home page blog items model
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the home page blog items model
+        /// </returns>
+        public virtual async Task<HomepageBlogPostItemsModel> PrepareHomepageBlogPostItemsModelAsync()
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBlogModelKey, language, store);
+            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var blogPostItems = await _blogService.GetAllFeaturedBlogPostsAsync(language.Id, store.Id);
+
+                return new HomepageBlogPostItemsModel
+                {
+                    WorkingLanguageId = language.Id,
+                    BlogPostItems = await blogPostItems.SelectAwait(async blogPostItems =>
+                    {
+                        var blogPostModel = new BlogPostModel();
+                        await PrepareBlogPostModelAsync(blogPostModel, blogPostItems, false);
+                        return blogPostModel;
+                    }).ToListAsync()
+                };
+            });
+
+            //"Comments" property of "NewsItemModel" object depends on the current customer.
+            //Furthermore, we just don't need it for home page news. So let's reset it.
+            //But first we need to clone the cached model (the updated one should not be cached)
+            var model = cachedModel with { };
+            foreach (var blogPostModel in model.BlogPostItems)
+                blogPostModel.Comments.Clear();
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare blog comment model
         /// </summary>
         /// <param name="blogComment">Blog comment entity</param>

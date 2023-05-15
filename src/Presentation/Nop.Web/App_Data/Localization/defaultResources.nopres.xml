@@ -5715,6 +5715,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.PostsPageSize.Hint">
     <Value>Set the page size for posts.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnMainPage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnMainPage.Hint">
+    <Value>Set blog to be shown on home page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore">
     <Value>Blog comments per store</Value>
   </LocaleResource>
@@ -10313,6 +10319,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Comments">
     <Value>View comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.ShowBlogPostOnMainPage">
+    <Value>show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.ShowBlogPostOnMainPage.Hint">
+    <Value>Set blog post to be shown on home page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn">
     <Value>Created on</Value>

@@ -50,6 +50,6 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets a value indicating whether to show blogs on the main page
         /// </summary>
-        public bool ShowBlogsOnMainPage { get; set; }
+        public bool ShowBlogOnMainPage { get; set; }
     }
 }

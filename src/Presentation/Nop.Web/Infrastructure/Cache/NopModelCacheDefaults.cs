@@ -257,6 +257,15 @@ namespace Nop.Web.Infrastructure.Cache
         public static string NewsPrefixCacheKey => "Nop.pres.news";
 
         /// <summary>
+        /// Key for home page news
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// {1} : current store ID
+        /// </remarks>
+        public static CacheKey HomepageBlogModelKey => new("Nop.pres.blog.homepage-{0}-{1}", BlogPrefixCacheKey);
+        
+        /// <summary>
         /// Key for logo
         /// </summary>
         /// <remarks>

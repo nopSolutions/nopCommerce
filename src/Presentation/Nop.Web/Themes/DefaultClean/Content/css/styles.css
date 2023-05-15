@@ -1011,6 +1011,7 @@ label, label + * {
 .header-logo a img {
   max-width: 100%;
   opacity: 1;
+  width: 50px;
 }
 
 .search-box form {
@@ -5686,7 +5687,22 @@ label, label + * {
   color: #4ab2f1;
 }
 
-
+.blog-post-list-homepage .title{
+  margin: 0 0 -1px;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 15px;
+  font-size: 30px;
+  font-weight: normal;
+  color: #444;
+}
+.blog-post-list-homepage .title strong{
+  font-weight: normal;
+}
+.blog-post-list-homepage .home-post .buttons{
+  float: none;
+  width: 100%;
+  text-align: center;
+}
 /*** FORUM & PROFILE ***/
 
 
@@ -8577,7 +8593,17 @@ label, label + * {
     text-align: justify;
   }
 
-
+  .blog-post-list-homepage .home-post{
+    float: left;
+    width: 31.33333%;
+    margin: 0 1% 30px;
+  }
+  .blog-post-list-homepage .blog-posts{
+    overflow: hidden;
+  }
+  .blog-post-list-homepage .home-post:nth-child(3n+1) {
+    clear: both;
+  }
   /*** FORUM & PROFILE ***/
 
 

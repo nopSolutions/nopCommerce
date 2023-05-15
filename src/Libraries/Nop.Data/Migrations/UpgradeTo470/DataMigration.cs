@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 
@@ -116,6 +117,48 @@ namespace Nop.Data.Migrations.UpgradeTo470
 
                 // delete picture column after moving data to value piture table
                 Delete.Column(columnName).FromTable(productAttributeValueTableName);
+            }
+            //add all needed local string resources for new blog feature.
+            
+            if (!_dataProvider.GetTable<LocaleStringResource>().Any(lsr => string.Compare(lsr.ResourceName, "Admin.Configuration.Settings.Blog.ShowBlogOnMainPage", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var blogOnMainPageRes = _dataProvider.InsertEntity(
+                    new LocaleStringResource{
+                        ResourceName = "admin.configuration.settings.blog.showblogonmainpage",
+                        ResourceValue = "Show blog posts on home page",
+                        LanguageId = 1
+                    }
+                );
+            }
+            if (!_dataProvider.GetTable<LocaleStringResource>().Any(lsr => string.Compare(lsr.ResourceName, "Admin.Configuration.Settings.Blog.ShowBlogOnMainPage.Hint", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var blogOnMainPageRes = _dataProvider.InsertEntity(
+                    new LocaleStringResource{
+                        ResourceName = "admin.configuration.settings.blog.showblogonmainpage.hint",
+                        ResourceValue = "Check to Show featured blog posts on home page",
+                        LanguageId = 1
+                    }
+                );
+            }
+            if (!_dataProvider.GetTable<LocaleStringResource>().Any(lsr => string.Compare(lsr.ResourceName, "Admin.ContentManagement.Blog.BlogPosts.Fields.ShowBlogPostOnMainPage", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var blogOnMainPageRes = _dataProvider.InsertEntity(
+                    new LocaleStringResource{
+                        ResourceName = "admin.contentManagement.blog.blogPosts.fields.showblogpostonmainpage",
+                        ResourceValue = "Show post on home page",
+                        LanguageId = 1
+                    }
+                );
+            }
+            if (!_dataProvider.GetTable<LocaleStringResource>().Any(lsr => string.Compare(lsr.ResourceName, "Admin.Configuration.Settings.Blog.ShowBlogOnMainPage.Hint", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var blogOnMainPageRes = _dataProvider.InsertEntity(
+                    new LocaleStringResource{
+                        ResourceName = "admin.configuration.settings.blog.showblogonmainpage.hint",
+                        ResourceValue = "Check to show this blog post on home page",
+                        LanguageId = 1
+                    }
+                );
             }
         }
 

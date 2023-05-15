@@ -3339,7 +3339,8 @@ namespace Nop.Services.Installation
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
                 BlogCommentsMustBeApproved = false,
-                ShowBlogCommentsPerStore = false
+                ShowBlogCommentsPerStore = false,
+                ShowBlogOnMainPage = false
             });
             await settingService.SaveSettingAsync(new NewsSettings
             {

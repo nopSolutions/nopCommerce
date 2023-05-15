@@ -146,6 +146,39 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
+        /// Gets all blog posts
+        /// </summary>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
+        /// <param name="tag">Tag</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog posts
+        /// </returns>
+        public virtual async Task<IPagedList<BlogPost>> GetAllFeaturedBlogPostsAsync(int storeId = 0,
+            int languageId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        {
+           
+            //we load all records and only then filter them by tag
+            var blogPostsAll = await GetAllBlogPostsAsync(storeId: storeId, languageId: languageId, showHidden: showHidden);
+            var featuredBlogPosts = new List<BlogPost>();
+            foreach (var blogPost in blogPostsAll)
+            {
+                if(blogPost.ShowBlogPostOnMainPage){
+                    featuredBlogPosts.Add(blogPost);
+                }
+            }
+
+            //server-side paging
+            var result = new PagedList<BlogPost>(featuredBlogPosts, pageIndex, pageSize);
+            return result;
+        }
+
+        /// <summary>
         /// Gets all blog post tags
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
