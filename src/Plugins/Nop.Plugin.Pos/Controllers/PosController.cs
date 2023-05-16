@@ -244,21 +244,21 @@ namespace Nop.Plugin.Pos.Controllers
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var customerrole = await _customerService.GetCustomerRoleIdsAsync(customer);
-            foreach (var item in customerrole)
-            {
-                if (item == 1 || item == 6)
-                {
-                    var model = Cart().Result;
+            //foreach (var item in customerrole)
+            //{
+            //    if (item == 1 || item == 6)
+            //    {
+            var model = Cart().Result;
 
-                    model = updatecart(form).Result;
+            model = updatecart(form).Result;
 
-                    //ViewBag.product = model;
+            //ViewBag.product = model;
 
-                    return View("~/Plugins/Pos/Views/Neworder.cshtml" , model);
-                }
-            }
+            return View("~/Plugins/Pos/Views/Neworder.cshtml", model);
+            //    }
+            //}
 
-            return RedirectToAction("Login", "Customer");
+            //return RedirectToAction("Login", "Customer");
         }
 
         public async Task<IActionResult> Searchorder()
