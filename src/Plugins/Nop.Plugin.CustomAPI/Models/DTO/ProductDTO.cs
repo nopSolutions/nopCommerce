@@ -10,7 +10,7 @@ using Nop.Core.Domain.Stores;
 
 namespace Nop.Plugin.CustomAPI.Models.DTO
 {
-    public partial class ProductDTO : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountProductMapping>, ISoftDeletedEntity
+    public class ProductDTO : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountProductMapping>, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the product type identifier

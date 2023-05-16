@@ -9,17 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\TestInfo.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\TestInfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

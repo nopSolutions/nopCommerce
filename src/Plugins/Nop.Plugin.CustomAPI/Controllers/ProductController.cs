@@ -139,5 +139,50 @@ namespace Nop.Plugin.CustomAPI.Controllers
             return _response;
 
         }
+
+        [HttpPost("AddProductTocart/{id}", Name = "AddProductTocart")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> AddProductTocart([FromRoute] int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = true;
+                    return BadRequest(_response);
+                }
+                var products = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+                if (products == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>
+                      {
+                         "product not found"
+                      };
+                    return NotFound(_response);
+                }
+
+                var shoppingcart = await _unitOfWork.ProductRepository.AddCartItemAsync(products);
+
+                _response.Result = shoppingcart;
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>
+                {
+                    ex.ToString()
+                };
+            }
+
+            return _response;
+
+        }
     }
 }

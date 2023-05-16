@@ -265,14 +265,9 @@ namespace Nop.Plugin.Pos.Controllers
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var customerrole = await _customerService.GetCustomerRoleIdsAsync(customer);
-            foreach (var item in customerrole)
-            {
-                if (item == 1 || item == 6)
-                {
+            
                     return View("~/Plugins/Pos/Views/Searchorder.cshtml");
-                }
-            }
-            return RedirectToAction("Login", "Customer");
+            
 
         }
 

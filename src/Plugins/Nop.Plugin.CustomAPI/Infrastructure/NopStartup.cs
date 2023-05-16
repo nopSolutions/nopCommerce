@@ -41,7 +41,10 @@ namespace Nop.Plugin.CustomAPI.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             application.UseSwagger();
-            application.UseSwaggerUI();
+            application.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
         }
 
