@@ -2,89 +2,45 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Catalog;
-using Nop.Data;
 using Nop.Plugin.CustomAPI.Models;
 using Nop.Plugin.CustomAPI.Models.DTO;
 using Nop.Plugin.CustomAPI.Repository;
 using Nop.Plugin.CustomAPI.Repository.IRepository;
-using Nop.Services.Catalog;
 
 namespace Nop.Plugin.CustomAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController : ControllerBase
+    public class ShoppingCartItemsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         protected APIResponse _response;
         private readonly IMapper _mapper;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ShoppingCartItemsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             this._response = new APIResponse();
         }
 
-
-        [HttpGet(Name = "GetAllProduct")]
+        [HttpGet(Name = "GetAllCartItems")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<APIResponse>> GetAllProduct()
+        public async Task<ActionResult<APIResponse>> GetAllCartItems()
         {
             try
             {
-                var products = _unitOfWork.ProductRepository.GetAll();
-
-                if (products == null)
-                {
-                    _response.StatusCode = HttpStatusCode.NoContent;
-                    _response.IsSuccess = true;
-                    return NoContent();
-                }
-                _response.Result = _mapper.Map<List<ProductDTO>>(products);
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string>
-                {
-                    ex.ToString()
-                };
-            }
-
-            return _response;
-        }
-
-        [HttpGet("GetProductByName/{search}", Name = "GetProductByName")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<APIResponse>> GetProductByString(string? search)
-        {
-            try
-            {
-                if (search == null)
-                {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.IsSuccess = true;
-                    return BadRequest(_response);
-                }
-
-                var products = await _unitOfWork.ProductRepository.GetAllAsync(search);
-
-                if (products.Count == 0)
+                var shoppingCart = await _unitOfWork.ProductRepository.GetCartItemAsync();
+                if (shoppingCart == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = true;
-                    return NotFound(_response);
+                    return NoContent();
                 }
-                _response.Result = _mapper.Map<List<ProductDTO>>(products);
+
+                _response.Result = shoppingCart;
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 return Ok(_response);
@@ -97,14 +53,15 @@ namespace Nop.Plugin.CustomAPI.Controllers
                     ex.ToString()
                 };
             }
+
             return _response;
 
         }
 
-        [HttpGet("{id}", Name = "GetProductById")]
+        [HttpPost("AddProductTocart/{id}", Name = "AddProductTocart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> GetProductById([FromRoute] int id)
+        public async Task<ActionResult<APIResponse>> AddProductTocart([FromRoute] int id)
         {
             try
             {
@@ -118,11 +75,17 @@ namespace Nop.Plugin.CustomAPI.Controllers
                 if (products == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
-                    _response.IsSuccess = true;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>
+                      {
+                         "product not found"
+                      };
                     return NotFound(_response);
                 }
 
-                _response.Result = _mapper.Map<ProductDTO>(products);
+                var shoppingcart = await _unitOfWork.ProductRepository.AddCartItemAsync(products);
+
+                _response.Result = shoppingcart;
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 return Ok(_response);
