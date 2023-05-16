@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Globalization;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
 using Nop.Web.Framework.Mvc.Routing;
@@ -7,6 +8,9 @@ using Nop.Web.Models.JsonLD;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the JSON-LD model factory implementation
+    /// </summary>
     public partial class JsonLdModelFactory : IJsonLdModelFactory
     {
         #region Fields
@@ -21,7 +25,7 @@ namespace Nop.Web.Factories
 
         public JsonLdModelFactory(IEventPublisher eventPublisher,
             INopUrlHelper nopUrlHelper,
-                IWebHelper webHelper)
+            IWebHelper webHelper)
         {
             _eventPublisher = eventPublisher;
             _nopUrlHelper = nopUrlHelper;
@@ -33,25 +37,25 @@ namespace Nop.Web.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare JsonLD breadcrumb list
+        /// Prepare JSON-LD category breadcrumb model
         /// </summary>
-        /// <param name="categoryBreadcrumb">List CategorySimpleModel</param>
+        /// <param name="categoryModels">List of category models</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD Breadbrumb list
+        /// The task result contains JSON-LD category breadcrumb model
         /// </returns>
-        protected async Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbListAsync(IList<CategorySimpleModel> categoryBreadcrumb)
+        protected virtual async Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbListAsync(IList<CategorySimpleModel> categoryModels)
         {
             var breadcrumbList = new JsonLdBreadcrumbListModel();
             var position = 1;
 
-            foreach (var cat in categoryBreadcrumb)
+            foreach (var cat in categoryModels)
             {
-                var breadcrumbListItem = new JsonLdBreadcrumbListItemModel()
+                var breadcrumbListItem = new JsonLdBreadcrumbListItemModel
                 {
                     Position = position,
-                    Item = new JsonLdBreadcrumbItemModel()
+                    Item = new JsonLdBreadcrumbItemModel
                     {
-                        Id = await _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }),
+                        Id = await _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }, _webHelper.GetCurrentRequestProtocol()),
                         Name = cat.Name
                     }
                 };
@@ -65,41 +69,43 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Methods
+
         /// <summary>
-        /// Prepare category breadcrumb JsonLD
+        /// Prepare JSON-LD category breadcrumb model
         /// </summary>
-        /// <param name="categoryBreadcrumb">List CategorySimpleModel</param>
+        /// <param name="categoryModels">List of category models</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD Breadbrumb list
+        /// The task result contains JSON-LD category breadcrumb model
         /// </returns>
-        public async Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbCategoryAsync(IList<CategorySimpleModel> categoryBreadcrumb)
+        public virtual async Task<JsonLdBreadcrumbListModel> PrepareJsonLdCategoryBreadcrumbAsync(IList<CategorySimpleModel> categoryModels)
         {
-            var breadcrumbList = await PrepareJsonLdBreadcrumbListAsync(categoryBreadcrumb);
+            var breadcrumbList = await PrepareJsonLdBreadcrumbListAsync(categoryModels);
+
             await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(breadcrumbList));
 
             return breadcrumbList;
         }
 
         /// <summary>
-        /// Prepare product breadcrumb JsonLD
+        /// Prepare JSON-LD product breadcrumb model
         /// </summary>
         /// <param name="breadcrumbModel">Product breadcrumb model</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD breadcrumb list
+        /// The task result contains JSON-LD product breadcrumb model
         /// </returns>
-        public async Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbProductAsync(ProductDetailsModel.ProductBreadcrumbModel breadcrumbModel)
+        public virtual async Task<JsonLdBreadcrumbListModel> PrepareJsonLdProductBreadcrumbAsync(ProductDetailsModel.ProductBreadcrumbModel breadcrumbModel)
         {
             var breadcrumbList = await PrepareJsonLdBreadcrumbListAsync(breadcrumbModel.CategoryBreadcrumb);
-            breadcrumbList.ItemListElement.Add(
-                new JsonLdBreadcrumbListItemModel()
+
+            breadcrumbList.ItemListElement.Add(new JsonLdBreadcrumbListItemModel
+            {
+                Position = breadcrumbList.ItemListElement.Count + 1,
+                Item = new JsonLdBreadcrumbItemModel
                 {
-                    Position = breadcrumbList.ItemListElement.Count + 1,
-                    Item = new JsonLdBreadcrumbItemModel()
-                    {
-                        Id = await _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = breadcrumbModel.ProductSeName }),
-                        Name = breadcrumbModel.ProductName,
-                    }
-                });
+                    Id = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = breadcrumbModel.ProductSeName }, _webHelper.GetCurrentRequestProtocol()),
+                    Name = breadcrumbModel.ProductName,
+                }
+            });
 
             await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(breadcrumbList));
 
@@ -107,15 +113,17 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Prepare JsonLD product
+        /// Prepare JSON-LD product model
         /// </summary>
         /// <param name="model">Product details model</param>
+        /// <param name="productUrl">Product URL</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD product
+        /// The task result contains JSON-LD product model
         /// </returns>
-        public virtual async Task<JsonLdProductModel> PrepareJsonLdProductAsync(ProductDetailsModel model)
+        public virtual async Task<JsonLdProductModel> PrepareJsonLdProductAsync(ProductDetailsModel model, string productUrl = null)
         {
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = model.SeName });
+            productUrl ??= await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = model.SeName }, _webHelper.GetCurrentRequestProtocol());
+
             var productPrice = model.AssociatedProducts.Any()
                 ? model.AssociatedProducts.Min(associatedProduct => associatedProduct.ProductPrice.PriceValue)
                 : model.ProductPrice.PriceValue;
@@ -127,13 +135,17 @@ namespace Nop.Web.Factories
                 Gtin = model.Gtin,
                 Mpn = model.ManufacturerPartNumber,
                 Description = model.ShortDescription,
-                Image = model.DefaultPictureModel.ImageUrl
+                Image = model.DefaultPictureModel.ImageUrl,
+                Offer = new JsonLdOfferModel
+                {
+                    Url = productUrl.ToLowerInvariant(),
+                    Price = model.ProductPrice.CallForPrice ? null : productPrice.ToString("0.00", CultureInfo.InvariantCulture),
+                    PriceCurrency = model.ProductPrice.CurrencyCode,
+                    PriceValidUntil = model.AvailableEndDate,
+                    Availability = @"https://schema.org/" + (model.InStock ? "InStock" : "OutOfStock")
+                },
+                Brand = model.ProductManufacturers?.Select(manufacturer => new JsonLdBrandModel { Name = manufacturer.Name }).ToList()
             };
-
-            foreach (var manufacturer in model.ProductManufacturers)
-            {
-                product.Brand.Add(new JsonLdBrandModel() { Name = manufacturer.Name });
-            }
 
             if (model.ProductReviewOverview.TotalReviews > 0)
             {
@@ -146,39 +158,27 @@ namespace Nop.Web.Factories
 
                 product.AggregateRating = new JsonLdAggregateRatingModel
                 {
-                    RatingValue = ratingValue.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture),
+                    RatingValue = ratingValue.ToString("0.0", CultureInfo.InvariantCulture),
                     ReviewCount = model.ProductReviewOverview.TotalReviews
                 };
+
+                product.Review = model.ProductReviews.Items?.Select(review => new JsonLdReviewModel
+                {
+                    Name = review.Title,
+                    ReviewBody = review.ReviewText,
+                    ReviewRating = new JsonLdRatingModel
+                    {
+                        RatingValue = review.Rating
+                    },
+                    Author = new JsonLdPersonModel { Name = review.CustomerName },
+                    DatePublished = review.WrittenOnStr
+                }).ToList();
             }
-            product.Offer = new JsonLdOfferModel()
-            {
-                Url = productUrl.ToString(),
-                Price = model.ProductPrice.CallForPrice ? null : productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture),
-                PriceCurrency = model.ProductPrice.CurrencyCode,
-                PriceValidUntil = model.AvailableEndDate,
-                Availability = @"https://schema.org/" + (model.InStock ? "InStock" : "OutOfStock")
-            };
 
             foreach (var associatedProduct in model.AssociatedProducts)
-                product.IsAccessoryOrSparePartFor.Add(await PrepareJsonLdProductAsync(associatedProduct));
-
-
-            if (model.ProductReviewOverview.TotalReviews > 0)
             {
-                foreach (var review in model.ProductReviews.Items)
-                {
-                    product.Review.Add(new JsonLdReviewModel()
-                    {
-                        Name = review.Title,
-                        ReviewBody = review.ReviewText,
-                        ReviewRating = new JsonLdRatingModel()
-                        {
-                            RatingValue = review.Rating
-                        },
-                        Author = new JsonLdPersonModel() { Name = review.CustomerName },
-                        DatePublished = review.WrittenOnStr
-                    });
-                }
+                var parentUrl = !associatedProduct.VisibleIndividually ? productUrl : null;
+                product.HasVariant.Add(await PrepareJsonLdProductAsync(associatedProduct, parentUrl));
             }
 
             await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(product));

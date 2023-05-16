@@ -5,6 +5,8 @@ namespace Nop.Web.Models.JsonLD
 {
     public record JsonLdBreadcrumbListItemModel : BaseNopModel
     {
+        #region Properties
+
         [JsonProperty("@type")]
         public static string Type => "ListItem";
 
@@ -13,5 +15,7 @@ namespace Nop.Web.Models.JsonLD
 
         [JsonProperty("item")]
         public JsonLdBreadcrumbItemModel Item { get; set; }
+
+        #endregion
     }
 }

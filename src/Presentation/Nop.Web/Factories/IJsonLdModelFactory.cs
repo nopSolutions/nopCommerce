@@ -3,33 +3,37 @@ using Nop.Web.Models.JsonLD;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents JSON-LD model factory
+    /// </summary>
     public partial interface IJsonLdModelFactory
     {
         /// <summary>
-        /// Prepare category breadcrumb JsonLD
+        /// Prepare JSON-LD category breadcrumb model
         /// </summary>
-        /// <param name="categoryBreadcrumb">List CategorySimpleModel</param>
+        /// <param name="categoryModels">List of category models</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD breadbrumb list
+        /// The task result contains JSON-LD category breadcrumb model
         /// </returns>
-        Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbCategoryAsync(IList<CategorySimpleModel> categoryBreadcrumb);
+        Task<JsonLdBreadcrumbListModel> PrepareJsonLdCategoryBreadcrumbAsync(IList<CategorySimpleModel> categoryModels);
 
         /// <summary>
-        /// Prepare product breadcrumb JsonLD
+        /// Prepare JSON-LD product breadcrumb model
         /// </summary>
         /// <param name="breadcrumbModel">Product breadcrumb model</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD breadcrumb list
+        /// The task result contains JSON-LD product breadcrumb model
         /// </returns>
-        Task<JsonLdBreadcrumbListModel> PrepareJsonLdBreadcrumbProductAsync(ProductDetailsModel.ProductBreadcrumbModel breadcrumbModel);
+        Task<JsonLdBreadcrumbListModel> PrepareJsonLdProductBreadcrumbAsync(ProductDetailsModel.ProductBreadcrumbModel breadcrumbModel);
 
-        // <summary>
-        /// Prepare JsonLD product
+        /// <summary>
+        /// Prepare JSON-LD product model
         /// </summary>
         /// <param name="model">Product details model</param>
+        /// <param name="productUrl">Product URL</param>
         /// <returns>A task that represents the asynchronous operation
-        /// The task result JsonLD product
+        /// The task result contains JSON-LD product model
         /// </returns>
-        Task<JsonLdProductModel> PrepareJsonLdProductAsync(ProductDetailsModel model);
+        Task<JsonLdProductModel> PrepareJsonLdProductAsync(ProductDetailsModel model, string productUrl = null);
     }
 }

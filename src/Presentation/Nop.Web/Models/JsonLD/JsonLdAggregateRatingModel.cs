@@ -5,6 +5,8 @@ namespace Nop.Web.Models.JsonLD
 {
     public record JsonLdAggregateRatingModel : BaseNopModel
     {
+        #region Properties
+
         [JsonProperty("@type")]
         public static string Type => "AggregateRating";
 
@@ -13,5 +15,7 @@ namespace Nop.Web.Models.JsonLD
 
         [JsonProperty("reviewCount")]
         public int ReviewCount { get; set; }
+
+        #endregion
     }
 }

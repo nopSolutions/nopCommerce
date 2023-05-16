@@ -413,10 +413,13 @@ namespace Nop.Web.Factories
                         SeName = await _urlRecordService.GetSeNameAsync(catBr)
                     }).ToListAsync();
 
-                var categoryBreadcrumb = model.CategoryBreadcrumb.Select(c => new CategorySimpleModel { Id = c.Id, Name = c.Name, SeName = c.SeName }).ToList();
-
                 if (_seoSettings.MicrodataEnabled)
-                    model.JsonLd = JsonConvert.SerializeObject(await _jsonLdModelFactory.PrepareJsonLdBreadcrumbCategoryAsync(categoryBreadcrumb), Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                {
+                    var categoryBreadcrumb = model.CategoryBreadcrumb.Select(c => new CategorySimpleModel { Id = c.Id, Name = c.Name, SeName = c.SeName }).ToList();
+                    var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdCategoryBreadcrumbAsync(categoryBreadcrumb);
+                    model.JsonLd = JsonConvert
+                        .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
             }
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();

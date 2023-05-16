@@ -3,7 +3,7 @@
 namespace Nop.Web.Models.JsonLD
 {
     /// <summary>
-    /// Represents the JsonLd model created event
+    /// Represents JSON-LD model created event
     /// </summary>
     public class JsonLdCreatedEvent
     {

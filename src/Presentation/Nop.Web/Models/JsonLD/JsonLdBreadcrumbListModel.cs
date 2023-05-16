@@ -5,10 +5,17 @@ namespace Nop.Web.Models.JsonLD
 {
     public record JsonLdBreadcrumbListModel : BaseNopModel
     {
+        #region Ctor
+
         public JsonLdBreadcrumbListModel()
         {
             ItemListElement = new List<JsonLdBreadcrumbListItemModel>();
         }
+
+        #endregion
+
+        #region Properties
+
         [JsonProperty("@context")]
         public static string Context => "https://schema.org";
 
@@ -17,5 +24,7 @@ namespace Nop.Web.Models.JsonLD
 
         [JsonProperty("itemListElement")]
         public IList<JsonLdBreadcrumbListItemModel> ItemListElement { get; set; }
+
+        #endregion
     }
 }

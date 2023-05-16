@@ -718,11 +718,14 @@ namespace Nop.Web.Factories
             }
 
             if (_seoSettings.MicrodataEnabled)
-                breadcrumbModel.JsonLd = JsonConvert.SerializeObject(await _jsonLdModelFactory.PrepareJsonLdBreadcrumbProductAsync(breadcrumbModel), Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            {
+                var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdProductBreadcrumbAsync(breadcrumbModel);
+                breadcrumbModel.JsonLd = JsonConvert
+                    .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
             return breadcrumbModel;
         }
-
 
         /// <summary>
         /// Prepare the product tag models
@@ -1728,7 +1731,10 @@ namespace Nop.Web.Factories
                 model.InStock = model.AssociatedProducts.Any(associatedProduct => associatedProduct.InStock);
             }
             if (_seoSettings.MicrodataEnabled)
-                model.JsonLd = JsonConvert.SerializeObject(await _jsonLdModelFactory.PrepareJsonLdProductAsync(model), Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            {
+                var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdProductAsync(model);
+                model.JsonLd = JsonConvert.SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
             return model;
         }

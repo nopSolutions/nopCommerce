@@ -5,6 +5,8 @@ namespace Nop.Web.Models.JsonLD
 {
     public record JsonLdOfferModel : BaseNopModel
     {
+        #region Properties
+
         [JsonProperty("@type")]
         public static string Type => "Offer";
 
@@ -22,5 +24,7 @@ namespace Nop.Web.Models.JsonLD
 
         [JsonProperty("priceValidUntil")]
         public DateTime? PriceValidUntil { get; set; }
+
+        #endregion
     }
 }
