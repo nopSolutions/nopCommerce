@@ -49,7 +49,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : parent category ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}", CategoriesByParentCategoryPrefix);
@@ -132,7 +132,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey ProductCategoriesByProductCacheKey => new("Nop.productcategory.byproduct.{0}-{1}-{2}-{3}", ProductCategoriesByProductPrefix);
@@ -167,7 +167,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// {1} : show hidden records?
-        /// {2} : current customer ID
+        /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
         public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}", ProductManufacturersByProductPrefix);
@@ -185,13 +185,20 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <remarks>
         /// {0} : category ID
+        /// {1} : store ID
+        /// {2} : customer role Ids
         /// </remarks>
-        public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}", ManufacturersByCategoryPrefix);
+        public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}.{1}.{2}", ManufacturersByCategoryWithIdPrefix, ManufacturersByCategoryPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ManufacturersByCategoryPrefix => "Nop.manufacturer.bycategory.";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ManufacturersByCategoryWithIdPrefix => "Nop.manufacturer.bycategory.{0}.";
 
         #endregion
 
@@ -301,7 +308,14 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}");
+        public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}", ProductAttributeMappingsByProductPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        public static string ProductAttributeMappingsByProductPrefix => new("Nop.productattributemapping.byproduct.");
 
         /// <summary>
         /// Gets a key for caching

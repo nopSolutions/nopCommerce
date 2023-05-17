@@ -27,7 +27,7 @@ namespace Nop.Web.Framework.WebOptimizer.Processors
 
             foreach (var key in context.Content.Keys)
             {
-                if (key.EndsWith(".min"))
+                if (key.EndsWith(".min.js", StringComparison.InvariantCultureIgnoreCase))
                 {
                     content[key] = context.Content[key];
                     continue;
