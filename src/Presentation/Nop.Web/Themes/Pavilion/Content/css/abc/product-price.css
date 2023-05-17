@@ -197,7 +197,7 @@ a.tooltip.open-box:hover span {
   width: 300px;
   background-color: black;
   text-align: center;
-  padding: 5px 0;
+  padding: 5px;
   border-radius: 6px;
 
   color:#111;
@@ -208,7 +208,7 @@ a.tooltip.open-box:hover span {
   position: absolute;
   z-index: 1;
   bottom: 100%;
-  left: 50%;
+  left: calc(50% - 94px);
   margin-left: -150px;
 }
 
@@ -216,6 +216,9 @@ a.tooltip.open-box:hover span {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
-.tooltip:checked .tooltiptext {
-  visibility: visible;
+
+@media (min-width: 1001px) {
+	.tooltip .tooltiptext {
+    left: 50%;
+  }
 }
