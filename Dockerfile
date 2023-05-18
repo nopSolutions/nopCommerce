@@ -57,6 +57,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Widgets.What3words
 RUN dotnet build Nop.Plugin.Widgets.What3words.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pos
 RUN dotnet build Nop.Plugin.Pos.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.CustomAPI
+RUN dotnet build Nop.Plugin.CustomAPI.csproj -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   
