@@ -414,7 +414,8 @@
                                 }
 
                                 function renderColumnCustomer(data, type, row, meta) {
-                                    return `${row.CustomerFullName}<br /><a href="/Admin/Customer/Edit/${row.CustomerId}">${data}</a>`;
+                                    var link = '@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId;
+                                    return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
                                 }
 
                                 $(document).ready(function() {
