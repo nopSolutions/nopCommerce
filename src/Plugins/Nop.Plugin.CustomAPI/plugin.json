@@ -4,8 +4,8 @@
   "SystemName": "CustomAPI",
   "Version": "1.00",
   "SupportedVersions": [ "4.60" ],
-  "Author": "Mukesh",
+  "Author": "10decoders",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.CustomAPI.dll",
-  "Description": "Test Plugin - HelloWorld."
+  "Description": "Custom APIs"
 }
