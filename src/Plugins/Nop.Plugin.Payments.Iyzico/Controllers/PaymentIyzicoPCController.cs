@@ -238,7 +238,7 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
                             }
 
-                            if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
+                            if (!order.PaidDateUtc.HasValue)
                             {
                                 //ensure that paid date is set
                                 order.PaidDateUtc = DateTime.UtcNow;
