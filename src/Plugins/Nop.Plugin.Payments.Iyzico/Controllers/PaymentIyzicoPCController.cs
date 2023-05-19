@@ -238,7 +238,11 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
                             }
 
-                            await _orderService.UpdateOrderAsync(order);
+                            if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
+                            {
+                                //ensure that paid date is set
+                                order.PaidDateUtc = DateTime.UtcNow;
+                            }
 
                             List<string> PaymentInformation = new()
                             {
