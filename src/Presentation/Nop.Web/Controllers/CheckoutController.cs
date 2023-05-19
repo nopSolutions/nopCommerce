@@ -1882,6 +1882,10 @@ namespace Nop.Web.Controllers
                         NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, model.UseRewardPoints,
                         store.Id);
                 }
+                
+                //save selected payment method befor calculate total cart
+                await _genericAttributeService.SaveAttributeAsync(customer,
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, store.Id);
 
                 //Check whether payment workflow is required
                 var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
@@ -1909,8 +1913,8 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save
-                await _genericAttributeService.SaveAttributeAsync(customer,
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, store.Id);
+                //await _genericAttributeService.SaveAttributeAsync(customer,
+                //    NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, store.Id);
 
                 return await OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
             }
