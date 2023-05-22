@@ -18,26 +18,42 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <param name="Status">Iyzico payment status</param>
         /// <param name="errorMessage">Iyzico pending reason</param>
         /// <returns>Payment status</returns>
-        public static PaymentStatus GetPaymentStatus(string status, string paymentStatus)
+        public static PaymentStatus GetPaymentStatus(string paymentStatus)
         {
             var result = PaymentStatus.Pending;
 
-            if (status == "success")
-            {
+            
                 switch (paymentStatus.ToLowerInvariant())
                 {
                     case "success":
                         result = PaymentStatus.Paid;
                         break;
                     default:
-                        result = PaymentStatus.Voided;
+                        result = PaymentStatus.Refunded;
                         break;
                 }
-            }
+            
+            
 
             return result;
         }
 
+        public static PaymentStatus GetPaymentStatus(int paymentStatus)
+        {
+            var result = PaymentStatus.Pending;
+
+
+            if (paymentStatus == 0)
+            {
+
+                result = PaymentStatus.Voided;
+            }
+            else if(paymentStatus == 1)
+            {
+                result = PaymentStatus.Paid;
+            }
+            return result;
+        }
         public static Options GetOptions(IyzicoPaymentSettings iyzicoPaymentSettings)
         {
             var options = new Options

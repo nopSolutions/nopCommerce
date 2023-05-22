@@ -1,21 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Payments.Iyzico.Models
+namespace Nop.Plugin.Payments.Param.Models
 {
     public record PaymentInfoModel : BaseNopModel
     {
         public PaymentInfoModel()
         {
+            ExpireMonths = new List<SelectListItem>();
+            ExpireYears = new List<SelectListItem>();
         }
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
-        public string CreditCardType { get; set; }
-
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
-        public IList<SelectListItem> CreditCardTypes { get; set; } = new List<SelectListItem>();
-
+        
         [NopResourceDisplayName("Payment.CardholderName")]
         public string CardholderName { get; set; }
 
@@ -28,14 +25,25 @@ namespace Nop.Plugin.Payments.Iyzico.Models
         [NopResourceDisplayName("Payment.ExpirationDate")]
         public string ExpireYear { get; set; }
 
-        public IList<SelectListItem> ExpireMonths { get; set; } = new List<SelectListItem>();
-
-        public IList<SelectListItem> ExpireYears { get; set; } = new List<SelectListItem>();
+        public IList<SelectListItem> ExpireMonths { get; set; }
+        public IList<SelectListItem> ExpireYears { get; set; }
 
         [NopResourceDisplayName("Payment.CardCode")]
         public string CardCode { get; set; }
-        public string Html { get; set; }
-        public bool PaymentResult = true;
+
+        public string SanalPOSID { get; set; }
+
+        public string Installment { get; set; }
+
+        public string Rate { get; set; }
+
+        public string SiparisNo { get; set; }
+
+        public bool Status { get; set; }
+        
+        [NopResourceDisplayName("Plugins.Payments.Param.ErrorAvailable")]
+        public string Message { get; set; }
+
 
     }
 }

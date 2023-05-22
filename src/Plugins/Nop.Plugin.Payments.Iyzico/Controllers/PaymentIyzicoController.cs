@@ -68,7 +68,6 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
             var model = new ConfigurationModel
             {
-                UseToPaymentPopup = iyzicoPaymentSettings.UseToPaymentPopup,
                 ApiKey = iyzicoPaymentSettings.ApiKey,
                 ApiSecret = iyzicoPaymentSettings.ApiSecret,
                 ApiUrl = iyzicoPaymentSettings.ApiUrl,
@@ -85,7 +84,6 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
 
             if (storeScope > 0)
             {
-                model.UseToPaymentPopup_OverrideForStore = await _settingService.SettingExistsAsync(iyzicoPaymentSettings, x => x.UseToPaymentPopup, storeScope);
                 model.ApiKey_OverrideForStore = await _settingService.SettingExistsAsync(iyzicoPaymentSettings, x => x.ApiKey, storeScope);
                 model.ApiSecret_OverrideForStore = await _settingService.SettingExistsAsync(iyzicoPaymentSettings, x => x.ApiSecret, storeScope);
                 model.ApiUrl_OverrideForStore = await _settingService.SettingExistsAsync(iyzicoPaymentSettings, x => x.ApiUrl, storeScope);
@@ -117,7 +115,6 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
             var iyzicoPaymentSettings = await _settingService.LoadSettingAsync<IyzicoPaymentSettings>(storeScope);
 
             //save settings
-            iyzicoPaymentSettings.UseToPaymentPopup = model.UseToPaymentPopup;
             iyzicoPaymentSettings.ApiKey = model.ApiKey;
             iyzicoPaymentSettings.ApiSecret = model.ApiSecret;
             iyzicoPaymentSettings.ApiUrl = model.ApiUrl;
@@ -134,7 +131,6 @@ namespace Nop.Plugin.Payments.Iyzico.Controllers
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
 
-            await _settingService.SaveSettingOverridablePerStoreAsync(iyzicoPaymentSettings, x => x.UseToPaymentPopup, model.UseToPaymentPopup_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(iyzicoPaymentSettings, x => x.ApiKey, model.ApiKey_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(iyzicoPaymentSettings, x => x.ApiSecret, model.ApiSecret_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(iyzicoPaymentSettings, x => x.ApiUrl, model.ApiUrl_OverrideForStore, storeScope, false);

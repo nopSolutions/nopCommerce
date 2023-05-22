@@ -1,4 +1,4 @@
-using Nop.Core.Configuration;
+ï»¿using Nop.Core.Configuration;
 using System.Collections.Generic;
 
 namespace Nop.Plugin.Payments.Iyzico
@@ -11,7 +11,7 @@ namespace Nop.Plugin.Payments.Iyzico
         /// <summary>
         /// 
         /// </summary>
-        public bool UseToPaymentPopup { get; set; }
+     
 
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace Nop.Plugin.Payments.Iyzico
         }
 
         /// <summary>
-        /// Maskelenmiş kart bilgilerinin yönetici tarafındaki sipariş detayında görüntülenmesini sağlar
+        /// MaskelenmiÅŸ kart bilgilerinin yÃ¶netici tarafÄ±ndaki sipariÅŸ detayÄ±nda gÃ¶rÃ¼ntÃ¼lenmesini saÄŸlar
         /// </summary>
         public bool IsCardStorage { get; set; }
 
@@ -108,5 +108,12 @@ namespace Nop.Plugin.Payments.Iyzico
             }
             set { }
         }
+        public bool AdditionalFeePercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets an additional fee
+        /// </summary>
+        public decimal AdditionalFee { get; set; }
+        
     }
 }

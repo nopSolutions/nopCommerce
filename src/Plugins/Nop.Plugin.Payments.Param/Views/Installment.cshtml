@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Param.Controllers.ParamPosController
+@using Nop.Web.Framework;
+
+@if (Model.TP_Ozel_Oran_Liste())
+{
+    <table id="installment-table" class="table table-hover">
+        <thead>
+            <tr>
+                <th class="col-sm-1"></th>
+                <th>Banka</th>
+                <th>3 Taksit</th>
+                <th>6 Taksit</th>
+                <th>9 Taksit</th>
+                <th>12 Taksit</th>
+            </tr>
+        </thead>
+        @foreach (dynamic oran in Model.TP_Ozel_Oran_Liste())
+        {
+
+            @if (oran.MO_03 < 0 && oran.MO_06 < 0 && oran.MO_09 < 0)
+            {
+                continue;
+            }
+            <tr class="sanalPosID" rel="@oran.SanalPOS_ID">
+                <td class="col-sm-1"><img src="@oran.Kredi_Karti_Banka_Gorsel"></td>
+                <td>
+                    @oran.Kredi_Karti_Banka
+                    <input name="installment[bank][name]" type="radio" value="@oran.Kredi_Karti_Banka" />
+                </td>
+                <td class="oranCol" taksit="3" oran="@oran.MO_03">
+                    <label>%@oran.MO_03</label>
+                    <div>
+                    </div>
+                    <input name="installment[bank][value]" type="radio" value="@oran.MO_03" />
+                    <input name="installment[bank][installment]" type="radio" value="3" />
+                </td>
+                <td class="oranCol" taksit="6" oran="@oran.MO_06">
+                    <label>%@oran.MO_06</label>
+                    <div>
+                    </div>
+                    <input name="installment[bank][value]" type="radio" value="@oran.MO_06" />
+                    <input name="installment[bank][installment]" type="radio" value="6" />
+                </td>
+                <td class="oranCol" taksit="9" oran="@oran.MO_09">
+                    <label>%@oran.MO_09</label>
+                    <div>
+                    </div>
+                    <input name="installment[bank][value]" type="radio" value="@oran.MO_09" />
+                    <input name="installment[bank][installment]" type="radio" value="9" />
+                </td>
+                <td class="oranCol">
+                    <label>%@oran.MO_12</label>
+                    <div>
+                    </div>
+                    <input name="installment[bank][value]" type="radio" value="@oran.MO_12" />
+                    <input name="installment[bank][installment]" type="radio" value="12" />
+                </td>
+            </tr>
+        }
+    </table>
+
+    <script type="text/javascript">
+        require([
+            'jquery'
+        ], function ($) {
+            jQuery.fn.clickToggle = function (a, b) {
+                return this.on("click", function (ev) { [b, a][this.$_io ^= 1].call(this, ev) })
+            };
+            $(document).ready(function () {
+                $('table#installment-table tr td').clickToggle(function (ev) {
+                    $(this).find('input').prop('checked', true);
+                    $(this).parent().find('input[name="installment\\[bank\\]\\[name\\]"]').prop('checked', true);
+                    $('button#installment-update-button').trigger('click');
+                    $("table#installment-table tr").removeClass("success");
+                    $("table#installment-table td").removeClass("success");
+                    $(this).addClass("success");
+                }, function (ev) {
+                    $(this).find('input').prop('checked', false);
+                    $(this).parent().find('input[name="installment\\[bank\\]\\[name\\]"]').prop('checked', false);
+                    $('button#installment-update-button').trigger('click');
+                    $("table#installment-table tr").removeClass("success");
+                    $("table#installment-table td").removeClass("success");
+                });
+            });
+        });
+    </script>
+    <style>
+        .table > tbody > tr.success > td, .table > tbody > tr.success > th, .table > tbody > tr > td.success, .table > tbody > tr > th.success, .table > tfoot > tr.success > td, .table > tfoot > tr.success > th, .table > tfoot > tr > td.success, .table > tfoot > tr > th.success, .table > thead > tr.success > td, .table > thead > tr.success > th, .table > thead > tr > td.success, .table > thead > tr > th.success {
+            background-color: #dff0d8;
+        }
+
+        table#installment-table {
+            margin-bottom: 10px
+        }
+
+        table#installment-table input {
+            display: none !important;
+        }
+
+        table#installment-table tr td label {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        table#installment-table tr td {
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        table#installment-table tr td span.price {
+            display: block;
+            background-color: #777;
+            font-weight: 500;
+            padding: 3px 6px;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+            margin: 3px 0;
+        }
+    </style>
+}

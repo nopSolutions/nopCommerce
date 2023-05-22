@@ -1,0 +1,134 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+
+@model ConfigurationModel
+@using Nop.Plugin.Payments.Param.Models;
+
+<form asp-controller="PaymentParam" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="UseSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientCode" />
+                        <span asp-validation-for="ClientCode"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientUsername" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientUsername" />
+                        <span asp-validation-for="ClientUsername"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientPassword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientPassword" />
+                        <span asp-validation-for="ClientPassword"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Guid" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Guid" />
+                        <span asp-validation-for="Guid"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TestUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TestUrl" />
+                        <span asp-validation-for="TestUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ProductUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ProductUrl" />
+                        <span asp-validation-for="ProductUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Installment" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Installment" />
+                        <span asp-validation-for="Installment"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3" style="text-align:right">
+                        <label>Version:</label>
+                    </div>
+                    <div class="col-md-9" style="text-align:left">
+                        <span>1.9.0</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $("input#ClientCode").attr('minlength', '5');
+        $("input#ClientCode").attr('maxlength', '5');
+    });
+    $("input#ClientCode").on('input', function () {
+        if ($(this).val().length == 5) {
+            if ($(this).val().length != '10738') {
+                $('input#UseSandbox').attr('data-val', true);
+                $('input#UseSandbox').val(true);
+                $('input#UseSandbox').removeAttr('checked');
+            }
+            else {
+                $('input#UseSandbox').attr('data-val', false);
+                $('input#UseSandbox').val(false);
+                $('input#UseSandbox').prop('checked', true);
+            }
+        }
+    });
+</script>
