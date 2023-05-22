@@ -141,6 +141,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
                 ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
                 ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
+
+                //433
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable"] = "The associated product is downloadable, keep in mind that customers won't be able to download it.",
+
             }, languageId);
 
             #endregion
