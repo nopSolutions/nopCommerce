@@ -197,7 +197,7 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
 src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
-!src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/*
+!src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/main.zip
 src/Presentation/Nop.Web/wwwroot/sitemaps/*
 !src/Presentation/Nop.Web/wwwroot/sitemaps/Index.htm

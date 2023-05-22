@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                     captchaHtmlContent = await _htmlHelper.GenerateCheckBoxReCaptchaV2Async(_captchaSettings);
                     break;
                 case CaptchaType.ReCaptchaV3:
-                    captchaHtmlContent = await _htmlHelper.GenerateReCaptchaV3Async(_captchaSettings);
+                    captchaHtmlContent = await _htmlHelper.GenerateReCaptchaV3Async(_captchaSettings, ActionName);
                     break;
                 default:
                     throw new InvalidOperationException("Invalid captcha type.");
@@ -75,12 +75,18 @@ namespace Nop.Web.Framework.TagHelpers.Public
         #region Properties
 
         /// <summary>
+        /// ActionName
+        /// </summary>
+        [HtmlAttributeName("action-name")]
+        public string ActionName { get; set; }
+
+        /// <summary>
         /// ViewContext
         /// </summary>
         [HtmlAttributeNotBound]
         [ViewContext]
         public ViewContext ViewContext { get; set; }
-
+                
         #endregion
     }
 }

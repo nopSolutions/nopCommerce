@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -52,6 +53,21 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
             {
                 addressSettings.DefaultCountryId = null;
                 settingService.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
+            }
+
+            var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
+            //#6682
+            if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
+            {
+                captchaSettings.ShowOnNewsletterPage = false;
+                settingService.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
+            }
+
+            var taxSettings = settingService.LoadSetting<TaxSettings>();
+            if (!settingService.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
+            {
+                taxSettings.AutomaticallyDetectCountry = true;
+                settingService.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
             }
         }
 

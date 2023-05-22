@@ -120,11 +120,12 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         /// <param name="helper">HTML helper</param>
         /// <param name="captchaSettings">Captcha settings</param>
+        /// <param name="actionName">Action name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings, string actionName = null)
         {
             //prepare language
             var language = await GetReCaptchaLanguageAsync(captchaSettings);
@@ -136,18 +137,25 @@ namespace Nop.Web.Framework.Security.Captcha
             var publicKey = captchaSettings.ReCaptchaPublicKey ?? string.Empty;
 
             //prepare reCAPTCHA script
-            var actionName = helper.ViewContext.RouteData.Values["action"].ToString();
+            if (string.IsNullOrEmpty(actionName))
+                actionName = helper.ViewContext.RouteData.Values["action"].ToString();
+
             var scriptCallback = $@"
                 var onloadCallback{id} = function() {{
                     var form = $('input[id=""g-recaptcha-response_{id}""]').closest('form');
                     var btn = $(form.find(':submit')[0]);
+
+                    var actionBtn = btn.data('action');
+                    if (actionBtn == null) {{
+                        actionBtn = '{actionName}';
+                    }}
 
                     var loaded = false;
                     var isBusy = false;
                     btn.on('click', function (e) {{
                         if (!isBusy) {{
                             isBusy = true;
-                            grecaptcha.execute('{publicKey}', {{ 'action': '{actionName}' }}).then(function(token) {{
+                            grecaptcha.execute('{publicKey}', {{ 'action': actionBtn }}).then(function(token) {{
                                 $('#g-recaptcha-response_{id}', form).val(token);
                                 loaded = true;
                                 btn.click();

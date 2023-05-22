@@ -7356,6 +7356,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage.Hint">
     <Value>Check to show CAPTCHA on news page when writing a comment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage">
+    <Value>Show in newsletter block</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage.Hint">
+    <Value>Check to show CAPTCHA in newsletter block when subscribing.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage">
     <Value>Show on product reviews page</Value>
   </LocaleResource>
@@ -9015,6 +9021,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType.Hint">
     <Value>A value indicating whether customers are allowed to select tax display type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry">
+    <Value>Automatically detect country by IP address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry.Hint">
+    <Value>When this setting is enabled, if the customer's billing/shipping address is not already set, the country of address used for tax calculation will be determined automatically by the GEO service (by IP address).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
@@ -9152,7 +9164,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass.Hint">
     <Value>Select tax category used for shipping tax calculation.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn">
     <Value>Tax based on</Value>
   </LocaleResource>

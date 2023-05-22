@@ -58,7 +58,11 @@
             $('#group-required-other-products').hideElement();
             $('#group-visible-individually').hideElement();
             $('#group-associated-products').showElement();
-            updateTableWidth('#associatedproducts-grid');
+
+            @if (Model.Id > 0)
+            {
+                <text>updateTableWidth('#associatedproducts-grid');</text>
+            }
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
             
