@@ -15,10 +15,10 @@ namespace Nop.Plugin.Pos
             _localizationService = localizationService;
         }
 
-        public override string GetConfigurationPageUrl()
-        {
-            return "Plugins/Pos/Configure";
-        }
+        //public override string GetConfigurationPageUrl()
+        //{
+        //    return "Plugins/Pos/Configure";
+        //}
 
         public override async Task InstallAsync()
         {
