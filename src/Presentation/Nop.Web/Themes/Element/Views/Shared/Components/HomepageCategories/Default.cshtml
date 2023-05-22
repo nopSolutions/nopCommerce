@@ -1,11 +1,24 @@
-﻿@model IList<CategoryModel>
+﻿@inject IThemeContext themeContext
+@{
+    var themeName =await themeContext.GetWorkingThemeNameAsync();
+}
+@model IList<CategoryModel>
 
 @inject IViewComponentSelector viewComponentSelector
 
+
+
 @if (Model.Count > 0)
 {
+
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/scripts/owl.carousel.js");
+
+
+
+
     <div class="category-grid home-page-category-grid">
-        <div class="item-grid">
+        <div class="item-grid owl-carousel owl-theme" id="category-product">
             @foreach (var item in Model)
             {
                 <div class="item-box">
@@ -19,15 +32,15 @@
                             <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                 @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
                                 {
-                                    @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
-                                    {
-                                        ("src", item.PictureModel.ImageUrl),
-                                        ("alt", item.PictureModel.AlternateText),
-                                        ("title", item.PictureModel.Title)
-                                    })
+                                    @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[]
+                        {
+                        ("src", item.PictureModel.ImageUrl),
+                        ("alt", item.PictureModel.AlternateText),
+                        ("title", item.PictureModel.Title)
+                        })
                                 }
                                 else
-                                {                                    
+                                {
                                     <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                 }
                             </a>
@@ -37,4 +50,30 @@
             }
         </div>
     </div>
+    <script asp-location="Footer">
+
+
+                var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            items:3,
+            loop:true,
+            margin:10,
+            autoplay:true,
+            autoplayTimeout:3000,
+            autoplayHoverPause:true,
+            responsive: {
+                            0: {
+                                items: 1
+                            },
+                            481: {
+
+                                items: 2
+                            },
+                            769: {
+                                items: 3
+                            }
+                        }
+        });
+
+    </script>
 }
