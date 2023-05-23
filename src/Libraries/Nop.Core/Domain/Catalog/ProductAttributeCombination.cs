@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -64,6 +65,7 @@ namespace Nop.Core.Domain.Catalog
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [Obsolete("The field is not used since 4.70 and is left only for the update process use the ProductAttributeCombinationPicture instead")]
+        [NotMapped]
         public int PictureId { get; set; }
     }
 }
