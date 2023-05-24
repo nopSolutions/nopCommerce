@@ -14,14 +14,23 @@
         </div>
         <script asp-location="Footer">
             $(document).ready(function () {
-                togglePickupInStore($("#@Html.IdFor(model => model.PickupInStore)"));
+                togglePickupInStore($("#@Html.IdFor(model => model.PickupInStore)")[0]);
+
+                $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                    if (e.checked)
+                        $('.method-list').hide();
+                    else
+                        $('.method-list').show();
+                });
             });
 
             function togglePickupInStore(pickupInStore) {
                 if (pickupInStore.checked) {
                     $('#pickup-points-form').show();
+                    $('.method-list').hide();
                 } else {
                     $('#pickup-points-form').hide();
+                    $('.method-list').show();
                 }
 
                 $(document).trigger({ type: "checkout_toggle_pickup_in_store", checked: pickupInStore.checked });
@@ -89,7 +98,7 @@
                             parameters.Add(point.PickupFee);
                         }
                         addressLine.AppendJoin(", ", parameters);
-                        <option value="@($"{point.Id}___{point.ProviderSystemName}")">@(addressLine)</option>
+                        <option selected="@point.IsPreSelected" value="@($"{point.Id}___{point.ProviderSystemName}")">@(addressLine)</option>
                     }
                 </select>
             }
