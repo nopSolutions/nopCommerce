@@ -2,7 +2,7 @@
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Misc.Sendinblue.Models
+namespace Nop.Plugin.Misc.Brevo.Models
 {
     /// <summary>
     /// Represents SMS model
@@ -30,7 +30,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Models
 
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Plugins.Misc.Sendinblue.PhoneType")]
+        [NopResourceDisplayName("Plugins.Misc.Brevo.PhoneType")]
         public int PhoneTypeId { get; set; }
 
         public IList<SelectListItem> AvailablePhoneTypes { get; set; }
@@ -39,7 +39,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Models
 
         public string PhoneType { get; set; }
 
-        [NopResourceDisplayName("Plugins.Misc.Sendinblue.SMSText")]
+        [NopResourceDisplayName("Plugins.Misc.Brevo.SMSText")]
         public string Text { get; set; }
 
         #endregion

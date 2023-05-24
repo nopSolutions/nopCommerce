@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
-using Nop.Plugin.Misc.Sendinblue.Models;
-using Nop.Plugin.Misc.Sendinblue.Services;
+using Nop.Plugin.Misc.Brevo.Models;
+using Nop.Plugin.Misc.Brevo.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -20,13 +20,14 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Misc.Sendinblue.Controllers
+namespace Nop.Plugin.Misc.Brevo.Controllers
 {
     [AutoValidateAntiforgeryToken]
-    public class SendinblueController : BasePluginController
+    public class BrevoController : BasePluginController
     {
         #region Fields
 
+        protected readonly BrevoManager _brevoEmailManager;
         protected readonly IEmailAccountService _emailAccountService;
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly ILocalizationService _localizationService;
@@ -41,13 +42,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         protected readonly IStoreService _storeService;
         protected readonly IWorkContext _workContext;
         protected readonly MessageTemplatesSettings _messageTemplatesSettings;
-        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public SendinblueController(IEmailAccountService emailAccountService,
+        public BrevoController(BrevoManager brevoEmailManager,
+            IEmailAccountService emailAccountService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
@@ -60,9 +61,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService,
             IWorkContext workContext,
-            MessageTemplatesSettings messageTemplatesSettings,
-            SendinblueManager sendinblueEmailManager)
+            MessageTemplatesSettings messageTemplatesSettings)
         {
+            _brevoEmailManager = brevoEmailManager;
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -77,7 +78,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             _storeService = storeService;
             _workContext = workContext;
             _messageTemplatesSettings = messageTemplatesSettings;
-            _sendinblueEmailManager = sendinblueEmailManager;
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         #region Utilities
 
         /// <summary>
-        /// Prepare SendinblueModel
+        /// Prepare ConfigurationModel
         /// </summary>
         /// <param name="model">Model</param>
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -93,39 +93,39 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         {
             //load settings for active store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
             //whether plugin is configured
-            if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
+            if (string.IsNullOrEmpty(brevoSettings.ApiKey))
                 return;
 
             //prepare common properties
             model.ActiveStoreScopeConfiguration = storeId;
-            model.ApiKey = sendinblueSettings.ApiKey;
-            model.ListId = sendinblueSettings.ListId;
-            model.SmtpKey = sendinblueSettings.SmtpKey;
-            model.SenderId = sendinblueSettings.SenderId;
-            model.UseSmsNotifications = sendinblueSettings.UseSmsNotifications;
-            model.SmsSenderName = sendinblueSettings.SmsSenderName;
-            model.StoreOwnerPhoneNumber = sendinblueSettings.StoreOwnerPhoneNumber;
-            model.UseMarketingAutomation = sendinblueSettings.UseMarketingAutomation;
-            model.TrackingScript = sendinblueSettings.TrackingScript;
+            model.ApiKey = brevoSettings.ApiKey;
+            model.ListId = brevoSettings.ListId;
+            model.SmtpKey = brevoSettings.SmtpKey;
+            model.SenderId = brevoSettings.SenderId;
+            model.UseSmsNotifications = brevoSettings.UseSmsNotifications;
+            model.SmsSenderName = brevoSettings.SmsSenderName;
+            model.StoreOwnerPhoneNumber = brevoSettings.StoreOwnerPhoneNumber;
+            model.UseMarketingAutomation = brevoSettings.UseMarketingAutomation;
+            model.TrackingScript = brevoSettings.TrackingScript;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideGeneralBlock);
-            model.HideSynchronizationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideSynchronizationBlock);
-            model.HideTransactionalBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideTransactionalBlock);
-            model.HideSmsBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideSmsBlock);
-            model.HideMarketingAutomationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, SendinblueDefaults.HideMarketingAutomationBlock);
+            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideGeneralBlock);
+            model.HideSynchronizationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideSynchronizationBlock);
+            model.HideTransactionalBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideTransactionalBlock);
+            model.HideSmsBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideSmsBlock);
+            model.HideMarketingAutomationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideMarketingAutomationBlock);
 
             //prepare nested search models
             model.MessageTemplateSearchModel.SetGridPageSize();
             model.SmsSearchModel.SetGridPageSize();
 
             //prepare add SMS model
-            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.MyPhone"), "0"));
-            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.CustomerPhone"), "1"));
-            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.BillingAddressPhone"), "2"));
+            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.MyPhone"), "0"));
+            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.CustomerPhone"), "1"));
+            model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.BillingAddressPhone"), "2"));
             model.AddSms.DefaultSelectedPhoneTypeId = model.AddSms.AvailablePhoneTypes.First().Value;
 
             var stores = await _storeService.GetAllStoresAsync();
@@ -146,54 +146,54 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
-            if (sendinblueSettings.UseSmtp && await _emailAccountService.GetEmailAccountByIdAsync(sendinblueSettings.EmailAccountId) != null)
-                model.UseSmtp = sendinblueSettings.UseSmtp;
+            if (brevoSettings.UseSmtp && await _emailAccountService.GetEmailAccountByIdAsync(brevoSettings.EmailAccountId) != null)
+                model.UseSmtp = brevoSettings.UseSmtp;
 
             //get account info
-            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinblueEmailManager.GetAccountInfoAsync();
+            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _brevoEmailManager.GetAccountInfoAsync();
             model.AccountInfo = accountInfo;
             model.MarketingAutomationKey = maKey;
             model.MarketingAutomationDisabled = !marketingAutomationEnabled;
             if (!string.IsNullOrEmpty(accountErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {accountErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {accountErrors}");
 
             //prepare overridable settings
             if (storeId > 0)
             {
-                model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.ListId, storeId);
-                model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseSmtp, storeId);
-                model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.SenderId, storeId);
-                model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseSmsNotifications, storeId);
-                model.SmsSenderName_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.SmsSenderName, storeId);
-                model.UseMarketingAutomation_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseMarketingAutomation, storeId);
+                model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.ListId, storeId);
+                model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmtp, storeId);
+                model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SenderId, storeId);
+                model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmsNotifications, storeId);
+                model.SmsSenderName_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SmsSenderName, storeId);
+                model.UseMarketingAutomation_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseMarketingAutomation, storeId);
             }
 
             //check SMTP status
-            var (smtpEnabled, smtpErrors) = await _sendinblueEmailManager.SmtpIsEnabledAsync();
+            var (smtpEnabled, smtpErrors) = await _brevoEmailManager.SmtpIsEnabledAsync();
             if (!string.IsNullOrEmpty(smtpErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {smtpErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {smtpErrors}");
 
             //get available contact lists to synchronize
-            var (lists, listsErrors) = await _sendinblueEmailManager.GetListsAsync();
+            var (lists, listsErrors) = await _brevoEmailManager.GetListsAsync();
             model.AvailableLists = lists.Select(list => new SelectListItem(list.Name, list.Id)).ToList();
             model.AvailableLists.Insert(0, new SelectListItem("Select list", "0"));
             if (!string.IsNullOrEmpty(listsErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {listsErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {listsErrors}");
 
             //get available senders of emails from account
-            var (senders, sendersErrors) = await _sendinblueEmailManager.GetSendersAsync();
+            var (senders, sendersErrors) = await _brevoEmailManager.GetSendersAsync();
             model.AvailableSenders = senders.Select(list => new SelectListItem(list.Name, list.Id)).ToList();
             model.AvailableSenders.Insert(0, new SelectListItem("Select sender", "0"));
             if (!string.IsNullOrEmpty(sendersErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {sendersErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {sendersErrors}");
 
             //get allowed tokens
             model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync());
 
             //create attributes in account
-            var attributesErrors = await _sendinblueEmailManager.PrepareAttributesAsync();
+            var attributesErrors = await _brevoEmailManager.PrepareAttributesAsync();
             if (!string.IsNullOrEmpty(attributesErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {attributesErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {attributesErrors}");
         }
 
         #endregion
@@ -220,11 +220,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
             //set API key
-            sendinblueSettings.ApiKey = model.ApiKey;
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.ApiKey, clearCache: false);
+            brevoSettings.ApiKey = model.ApiKey;
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.ApiKey, clearCache: false);
             await _settingService.ClearCacheAsync();
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
@@ -242,15 +242,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
             //create webhook for the unsubscribe event
-            sendinblueSettings.UnsubscribeWebhookId = await _sendinblueEmailManager.GetUnsubscribeWebHookIdAsync();
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
+            brevoSettings.UnsubscribeWebhookId = await _brevoEmailManager.GetUnsubscribeWebHookIdAsync();
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
 
             //set list of contacts to synchronize
-            sendinblueSettings.ListId = model.ListId;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
+            brevoSettings.ListId = model.ListId;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -270,7 +270,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             //synchronize contacts of selected store
-            var messages = await _sendinblueEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
+            var messages = await _brevoEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
             foreach (var message in messages)
             {
                 _notificationService.Notification(message.Type, message.Message, false);
@@ -278,7 +278,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             if (!messages.Any(message => message.Type == NotifyType.Error))
             {
                 ViewData["synchronizationStart"] = true;
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.ImportProcess"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.ImportProcess"));
             }
 
             return await Configure();
@@ -289,8 +289,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetSynchronizationInfo()
         {
-            var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), () => string.Empty);
-            await _staticCacheManager.RemoveAsync(SendinblueDefaults.SyncKeyCache);
+            var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(BrevoDefaults.SyncKeyCache), () => string.Empty);
+            await _staticCacheManager.RemoveAsync(BrevoDefaults.SyncKeyCache);
 
             return res;
         }
@@ -305,46 +305,46 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
             if (model.UseSmtp)
             {
-                //set case invariant for true because tokens are used in uppercase format in Sendinblue's transactional emails
+                //set case invariant for true because tokens are used in uppercase format in Brevo's transactional emails
                 _messageTemplatesSettings.CaseInvariantReplacement = true;
                 await _settingService.SaveSettingAsync(_messageTemplatesSettings, settings => settings.CaseInvariantReplacement, clearCache: false);
 
                 //check whether SMTP enabled on account
-                var (smtpIsEnabled, smtpErrors) = await _sendinblueEmailManager.SmtpIsEnabledAsync();
+                var (smtpIsEnabled, smtpErrors) = await _brevoEmailManager.SmtpIsEnabledAsync();
                 if (smtpIsEnabled)
                 {
                     //get email account or create new one
-                    var (emailAccountId, emailAccountErrors) = await _sendinblueEmailManager.GetEmailAccountIdAsync(model.SenderId, model.SmtpKey);
-                    sendinblueSettings.EmailAccountId = emailAccountId;
-                    await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.EmailAccountId, storeId, false);
+                    var (emailAccountId, emailAccountErrors) = await _brevoEmailManager.GetEmailAccountIdAsync(model.SenderId, model.SmtpKey);
+                    brevoSettings.EmailAccountId = emailAccountId;
+                    await _settingService.SaveSettingAsync(brevoSettings, settings => settings.EmailAccountId, storeId, false);
                     if (!string.IsNullOrEmpty(emailAccountErrors))
-                        _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {emailAccountErrors}");
+                        _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {emailAccountErrors}");
                 }
                 else
                 {
                     //need to activate SMTP account
-                    _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.ActivateSMTP"));
+                    _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.ActivateSMTP"));
                     model.UseSmtp = false;
                 }
                 if (!string.IsNullOrEmpty(smtpErrors))
-                    _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {smtpErrors}");
+                    _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {smtpErrors}");
             }
 
             //set whether to use SMTP 
-            sendinblueSettings.UseSmtp = model.UseSmtp;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseSmtp, model.UseSmtp_OverrideForStore, storeId, false);
+            brevoSettings.UseSmtp = model.UseSmtp;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.UseSmtp, model.UseSmtp_OverrideForStore, storeId, false);
 
             //set sender of transactional emails
-            sendinblueSettings.SenderId = model.SenderId;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.SenderId, model.SenderId_OverrideForStore, storeId, false);
+            brevoSettings.SenderId = model.SenderId;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.SenderId, model.SenderId_OverrideForStore, storeId, false);
 
             //set SMTP key
-            sendinblueSettings.SmtpKey = model.SmtpKey;
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.SmtpKey, clearCache: false);
+            brevoSettings.SmtpKey = model.SmtpKey;
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.SmtpKey, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -357,33 +357,33 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public async Task<IActionResult> MessageList(SendinblueMessageTemplateSearchModel searchModel)
+        public async Task<IActionResult> MessageList(BrevoMessageTemplateSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var messageTemplates = (await _messageTemplateService.GetAllMessageTemplatesAsync(storeId)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = await new SendinblueMessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
+            var model = await new BrevoMessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
                 return messageTemplates.SelectAwait(async messageTemplate =>
                 {
-                    //standard template of message is edited in the admin area, Sendinblue template is edited in the Sendinblue account
-                    var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinblueDefaults.TemplateIdAttribute);
+                    //standard template of message is edited in the admin area, Brevo template is edited in the Brevo account
+                    var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, BrevoDefaults.TemplateIdAttribute);
                     var stores = (await (await _storeService.GetAllStoresAsync())
                         .WhereAwait(async store => !messageTemplate.LimitedToStores
                             || (await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate)).Contains(store.Id))
                         .AggregateAsync(string.Empty, (current, next) => $"{current}, {next.Name}"))
                         .Trim(',');
 
-                    return new SendinblueMessageTemplateModel
+                    return new BrevoMessageTemplateModel
                     {
                         Id = messageTemplate.Id,
                         Name = messageTemplate.Name,
                         IsActive = messageTemplate.IsActive,
                         ListOfStores = stores,
-                        UseSendinblueTemplate = templateId.HasValue,
+                        UseBrevoTemplate = templateId.HasValue,
                         EditLink = templateId.HasValue
-                            ? $"{string.Format(SendinblueDefaults.EditMessageTemplateUrl, templateId.Value)}"
+                            ? $"{string.Format(BrevoDefaults.EditMessageTemplateUrl, templateId.Value)}"
                             : Url.Action("Edit", "MessageTemplate", new { id = messageTemplate.Id, area = AreaNames.Admin })
                     };
                 });
@@ -395,30 +395,30 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public async Task<IActionResult> MessageUpdate(SendinblueMessageTemplateModel model)
+        public async Task<IActionResult> MessageUpdate(BrevoMessageTemplateModel model)
         {
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors().ToString());
 
             var message = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
 
-            //Sendinblue message template
-            if (model.UseSendinblueTemplate)
+            //Brevo message template
+            if (model.UseBrevoTemplate)
             {
                 var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+                var BrevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
                 //get template or create new one
-                var currentTemplateId = await _genericAttributeService.GetAttributeAsync<int?>(message, SendinblueDefaults.TemplateIdAttribute);
-                var templateId = await _sendinblueEmailManager.GetTemplateIdAsync(currentTemplateId, message,
-                    await _emailAccountService.GetEmailAccountByIdAsync(sendinblueSettings.EmailAccountId));
-                await _genericAttributeService.SaveAttributeAsync(message, SendinblueDefaults.TemplateIdAttribute, templateId);
-                model.EditLink = $"{string.Format(SendinblueDefaults.EditMessageTemplateUrl, templateId)}";
+                var currentTemplateId = await _genericAttributeService.GetAttributeAsync<int?>(message, BrevoDefaults.TemplateIdAttribute);
+                var templateId = await _brevoEmailManager.GetTemplateIdAsync(currentTemplateId, message,
+                    await _emailAccountService.GetEmailAccountByIdAsync(BrevoSettings.EmailAccountId));
+                await _genericAttributeService.SaveAttributeAsync(message, BrevoDefaults.TemplateIdAttribute, templateId);
+                model.EditLink = $"{string.Format(BrevoDefaults.EditMessageTemplateUrl, templateId)}";
             }
             else
             {
                 //standard message template
-                await _genericAttributeService.SaveAttributeAsync<int?>(message, SendinblueDefaults.TemplateIdAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<int?>(message, BrevoDefaults.TemplateIdAttribute, null);
                 model.EditLink = Url.Action("Edit", "MessageTemplate", new { id = model.Id, area = AreaNames.Admin });
             }
 
@@ -442,14 +442,14 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
-            sendinblueSettings.UseSmsNotifications = model.UseSmsNotifications;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseSmsNotifications, model.UseSmsNotifications_OverrideForStore, storeId, false);
-            sendinblueSettings.SmsSenderName = model.SmsSenderName;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.SmsSenderName, model.SmsSenderName_OverrideForStore, storeId, false);
-            sendinblueSettings.StoreOwnerPhoneNumber = model.StoreOwnerPhoneNumber;
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.StoreOwnerPhoneNumber, clearCache: false);
+            brevoSettings.UseSmsNotifications = model.UseSmsNotifications;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.UseSmsNotifications, model.UseSmsNotifications_OverrideForStore, storeId, false);
+            brevoSettings.SmsSenderName = model.SmsSenderName;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.SmsSenderName, model.SmsSenderName_OverrideForStore, storeId, false);
+            brevoSettings.StoreOwnerPhoneNumber = model.StoreOwnerPhoneNumber;
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.StoreOwnerPhoneNumber, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -470,7 +470,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
             var messageTemplates = await allMessageTemplates
 
-                .WhereAwait(async messageTemplate => await _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, SendinblueDefaults.UseSmsAttribute))
+                .WhereAwait(async messageTemplate => await _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, BrevoDefaults.UseSmsAttribute))
                 .ToPagedListAsync(searchModel);
 
             //prepare list model
@@ -478,7 +478,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             {
                 return messageTemplates.SelectAwait(async messageTemplate =>
                 {
-                    var phoneTypeID = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinblueDefaults.PhoneTypeAttribute);
+                    var phoneTypeID = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, BrevoDefaults.PhoneTypeAttribute);
 
                     var smsModel = new SmsModel
                     {
@@ -487,7 +487,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                         Name = messageTemplate.Name,
                         PhoneTypeId = phoneTypeID,
 
-                        Text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinblueDefaults.SmsTextAttribute)
+                        Text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, BrevoDefaults.SmsTextAttribute)
                     };
 
                     if (storeId == 0)
@@ -506,13 +506,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                     switch (phoneTypeID)
                     {
                         case 0:
-                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.MyPhone");
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.MyPhone");
                             break;
                         case 1:
-                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.CustomerPhone");
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.CustomerPhone");
                             break;
                         case 2:
-                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.BillingAddressPhone");
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.BillingAddressPhone");
                             break;
                         default:
                             break;
@@ -536,9 +536,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             var message = await _messageTemplateService.GetMessageTemplateByIdAsync(model.MessageId);
             if (message != null)
             {
-                await _genericAttributeService.SaveAttributeAsync(message, SendinblueDefaults.UseSmsAttribute, true);
-                await _genericAttributeService.SaveAttributeAsync(message, SendinblueDefaults.SmsTextAttribute, model.Text);
-                await _genericAttributeService.SaveAttributeAsync(message, SendinblueDefaults.PhoneTypeAttribute, model.PhoneTypeId);
+                await _genericAttributeService.SaveAttributeAsync(message, BrevoDefaults.UseSmsAttribute, true);
+                await _genericAttributeService.SaveAttributeAsync(message, BrevoDefaults.SmsTextAttribute, model.Text);
+                await _genericAttributeService.SaveAttributeAsync(message, BrevoDefaults.PhoneTypeAttribute, model.PhoneTypeId);
             }
 
             return Json(new { Result = true });
@@ -556,9 +556,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             var message = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
             if (message != null)
             {
-                await _genericAttributeService.SaveAttributeAsync<bool?>(message, SendinblueDefaults.UseSmsAttribute, null);
-                await _genericAttributeService.SaveAttributeAsync<string>(message, SendinblueDefaults.SmsTextAttribute, null);
-                await _genericAttributeService.SaveAttributeAsync<int?>(message, SendinblueDefaults.PhoneTypeAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<bool?>(message, BrevoDefaults.UseSmsAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<string>(message, BrevoDefaults.SmsTextAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<int?>(message, BrevoDefaults.PhoneTypeAttribute, null);
             }
 
             return new NullJsonResult();
@@ -573,11 +573,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             if (!ModelState.IsValid)
                 return await Configure();
 
-            var campaignErrors = await _sendinblueEmailManager.SendSMSCampaignAsync(model.CampaignListId, model.CampaignSenderName, model.CampaignText);
+            var campaignErrors = await _brevoEmailManager.SendSMSCampaignAsync(model.CampaignListId, model.CampaignSenderName, model.CampaignText);
             if (!string.IsNullOrEmpty(campaignErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {campaignErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {campaignErrors}");
             else
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Sendinblue.SMS.Campaigns.Sent"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.SMS.Campaigns.Sent"));
 
             return await Configure();
         }
@@ -592,19 +592,19 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
-            sendinblueSettings.UseMarketingAutomation = model.UseMarketingAutomation;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseMarketingAutomation, model.UseMarketingAutomation_OverrideForStore, storeId, false);
+            brevoSettings.UseMarketingAutomation = model.UseMarketingAutomation;
+            await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.UseMarketingAutomation, model.UseMarketingAutomation_OverrideForStore, storeId, false);
 
-            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinblueEmailManager.GetAccountInfoAsync();
-            sendinblueSettings.MarketingAutomationKey = maKey;
+            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _brevoEmailManager.GetAccountInfoAsync();
+            brevoSettings.MarketingAutomationKey = maKey;
             if (!string.IsNullOrEmpty(accountErrors))
-                _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {accountErrors}");
+                _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {accountErrors}");
 
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.MarketingAutomationKey, clearCache: false);
-            sendinblueSettings.TrackingScript = model.TrackingScript;
-            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.TrackingScript, clearCache: false);
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.MarketingAutomationKey, clearCache: false);
+            brevoSettings.TrackingScript = model.TrackingScript;
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.TrackingScript, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -619,17 +619,17 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             try
             {
                 //logging info
-                var logInfo = string.Format("Sendinblue synchronization: New emails {1},{0} Existing emails {2},{0} Invalid emails {3},{0} Duplicates emails {4}{0}",
+                var logInfo = string.Format("Brevo synchronization: New emails {1},{0} Existing emails {2},{0} Invalid emails {3},{0} Duplicates emails {4}{0}",
                     Environment.NewLine, form["new_emails"], form["emails_exists"], form["invalid_email"], form["duplicates_email"]);
                 await _logger.InformationAsync(logInfo);
 
                 //display info on configuration page in case of the manually synchronization
-                await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), logInfo);
+                await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(BrevoDefaults.SyncKeyCache), logInfo);
             }
             catch (Exception ex)
             {
                 await _logger.ErrorAsync(ex.Message, ex);
-                await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), ex.Message);
+                await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(BrevoDefaults.SyncKeyCache), ex.Message);
             }
 
             return Ok();
@@ -641,7 +641,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             try
             {
                 using var streamReader = new StreamReader(Request.Body);
-                await _sendinblueEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
+                await _brevoEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
             }
             catch (Exception ex)
             {

@@ -8,7 +8,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
-using Nop.Plugin.Misc.Sendinblue.Domain;
+using Nop.Plugin.Misc.Brevo.Domain;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -23,12 +23,12 @@ using sib_api_v3_sdk.Client;
 using sib_api_v3_sdk.Model;
 using static sib_api_v3_sdk.Model.GetAttributesAttributes;
 
-namespace Nop.Plugin.Misc.Sendinblue.Services
+namespace Nop.Plugin.Misc.Brevo.Services
 {
     /// <summary>
-    /// Represents Sendinblue manager
+    /// Represents Brevo manager
     /// </summary>
-    public class SendinblueManager
+    public class BrevoManager
     {
         #region Fields
 
@@ -51,7 +51,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
         #region Ctor
 
-        public SendinblueManager(IActionContextAccessor actionContextAccessor,
+        public BrevoManager(IActionContextAccessor actionContextAccessor,
             ICountryService countryService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -96,19 +96,19 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         protected async Task<TClient> CreateApiClientAsync<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
         {
             //check whether plugin is configured to request services (validate API key)
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-            if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            if (string.IsNullOrEmpty(brevoSettings.ApiKey))
                 throw new NopException($"Plugin not configured");
 
             var apiConfiguration = new Configuration()
             {
                 ApiKey = new Dictionary<string, string>
                 {
-                    [SendinblueDefaults.ApiKeyHeader] = sendinblueSettings.ApiKey,
-                    [SendinblueDefaults.PartnerKeyHeader] = sendinblueSettings.ApiKey
+                    [BrevoDefaults.ApiKeyHeader] = brevoSettings.ApiKey,
+                    [BrevoDefaults.PartnerKeyHeader] = brevoSettings.ApiKey
                 },
-                ApiKeyPrefix = new Dictionary<string, string> { [SendinblueDefaults.PartnerKeyHeader] = SendinblueDefaults.PartnerName },
-                UserAgent = SendinblueDefaults.UserAgent
+                ApiKeyPrefix = new Dictionary<string, string> { [BrevoDefaults.PartnerKeyHeader] = BrevoDefaults.PartnerName },
+                UserAgent = BrevoDefaults.UserAgent
             };
 
             return clientCtor(apiConfiguration);
@@ -135,11 +135,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 foreach (var storeId in storeIds)
                 {
                     //get list identifier from the settings
-                    var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                    var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
                     var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId);
                     if (listId == 0)
                     {
-                        await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{storeId}");
+                        await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
                         continue;
                     }
@@ -148,72 +148,72 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId, isActive: true);
                     if (!subscriptions.Any())
                     {
-                        await _logger.WarningAsync($"Sendinblue synchronization warning: There are no subscriptions for store #{storeId}");
+                        await _logger.WarningAsync($"Brevo synchronization warning: There are no subscriptions for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"There are no subscriptions for store #{storeId}"));
                         continue;
                     }
 
                     //get notification URL
                     var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                    var notificationUrl = urlHelper.RouteUrl(SendinblueDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
+                    var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
 
                     var name = string.Empty;
 
                     switch (await GetAccountLanguageAsync())
                     {
-                        case SendinblueAccountLanguage.French:
+                        case BrevoAccountLanguage.French:
                             name =
-                                $"{SendinblueDefaults.FirstNameFrenchServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNameFrenchServiceAttribute};";
+                                $"{BrevoDefaults.FirstNameFrenchServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameFrenchServiceAttribute};";
                             break;
-                        case SendinblueAccountLanguage.German:
+                        case BrevoAccountLanguage.German:
                             name =
-                                $"{SendinblueDefaults.FirstNameGermanServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNameGermanServiceAttribute};";
+                                $"{BrevoDefaults.FirstNameGermanServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameGermanServiceAttribute};";
                             break;
-                        case SendinblueAccountLanguage.Italian:
+                        case BrevoAccountLanguage.Italian:
                             name =
-                                $"{SendinblueDefaults.FirstNameItalianServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNameItalianServiceAttribute};";
+                                $"{BrevoDefaults.FirstNameItalianServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameItalianServiceAttribute};";
                             break;
-                        case SendinblueAccountLanguage.Portuguese:
+                        case BrevoAccountLanguage.Portuguese:
                             name =
-                                $"{SendinblueDefaults.FirstNamePortugueseServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNamePortugueseServiceAttribute};";
+                                $"{BrevoDefaults.FirstNamePortugueseServiceAttribute};" +
+                                $"{BrevoDefaults.LastNamePortugueseServiceAttribute};";
                             break;
-                        case SendinblueAccountLanguage.Spanish:
+                        case BrevoAccountLanguage.Spanish:
                             name =
-                                $"{SendinblueDefaults.FirstNameSpanishServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNameSpanishServiceAttribute};";
+                                $"{BrevoDefaults.FirstNameSpanishServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameSpanishServiceAttribute};";
                             break;
 
-                        case SendinblueAccountLanguage.English:
+                        case BrevoAccountLanguage.English:
                             name =
-                                $"{SendinblueDefaults.FirstNameServiceAttribute};" +
-                                $"{SendinblueDefaults.LastNameServiceAttribute};";
+                                $"{BrevoDefaults.FirstNameServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameServiceAttribute};";
                             break;
                     }
 
                     //prepare CSV 
                     var title =
-                        $"{SendinblueDefaults.EmailServiceAttribute};" +
+                        $"{BrevoDefaults.EmailServiceAttribute};" +
                         name +
-                        $"{SendinblueDefaults.UsernameServiceAttribute};" +
-                        $"{SendinblueDefaults.SMSServiceAttribute};" +
-                        $"{SendinblueDefaults.PhoneServiceAttribute};" +
-                        $"{SendinblueDefaults.CountryServiceAttribute};" +
-                        $"{SendinblueDefaults.StoreIdServiceAttribute};" +
-                        $"{SendinblueDefaults.GenderServiceAttribute};" +
-                        $"{SendinblueDefaults.DateOfBirthServiceAttribute};" +
-                        $"{SendinblueDefaults.CompanyServiceAttribute};" +
-                        $"{SendinblueDefaults.Address1ServiceAttribute};" +
-                        $"{SendinblueDefaults.Address2ServiceAttribute};" +
-                        $"{SendinblueDefaults.ZipCodeServiceAttribute};" +
-                        $"{SendinblueDefaults.CityServiceAttribute};" +
-                        $"{SendinblueDefaults.CountyServiceAttribute};" +
-                        $"{SendinblueDefaults.StateServiceAttribute};" +
-                        $"{SendinblueDefaults.FaxServiceAttribute};" +
-                        $"{SendinblueDefaults.LanguageAttribute};";
+                        $"{BrevoDefaults.UsernameServiceAttribute};" +
+                        $"{BrevoDefaults.SMSServiceAttribute};" +
+                        $"{BrevoDefaults.PhoneServiceAttribute};" +
+                        $"{BrevoDefaults.CountryServiceAttribute};" +
+                        $"{BrevoDefaults.StoreIdServiceAttribute};" +
+                        $"{BrevoDefaults.GenderServiceAttribute};" +
+                        $"{BrevoDefaults.DateOfBirthServiceAttribute};" +
+                        $"{BrevoDefaults.CompanyServiceAttribute};" +
+                        $"{BrevoDefaults.Address1ServiceAttribute};" +
+                        $"{BrevoDefaults.Address2ServiceAttribute};" +
+                        $"{BrevoDefaults.ZipCodeServiceAttribute};" +
+                        $"{BrevoDefaults.CityServiceAttribute};" +
+                        $"{BrevoDefaults.CountyServiceAttribute};" +
+                        $"{BrevoDefaults.StateServiceAttribute};" +
+                        $"{BrevoDefaults.FaxServiceAttribute};" +
+                        $"{BrevoDefaults.LanguageAttribute};";
                     var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
                     {
                         var firstName = string.Empty;
@@ -302,8 +302,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomerAsync());
-                messages.Add((NotifyType.Error, $"Sendinblue synchronization error: {exception.Message}"));
+                await _logger.ErrorAsync($"Brevo synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomerAsync());
+                messages.Add((NotifyType.Error, $"Brevo synchronization error: {exception.Message}"));
             }
 
             return messages;
@@ -329,11 +329,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 foreach (var storeId in storeIds)
                 {
                     //get list identifier from the settings
-                    var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                    var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
                     var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId, loadSharedValueIfNotFound: true);
                     if (listId == 0)
                     {
-                        await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{storeId}");
+                        await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
                         continue;
                     }
@@ -363,8 +363,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomerAsync());
-                messages.Add((NotifyType.Error, $"Sendinblue synchronization error: {exception.Message}"));
+                await _logger.ErrorAsync($"Brevo synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomerAsync());
+                messages.Add((NotifyType.Error, $"Brevo synchronization error: {exception.Message}"));
             }
 
             return messages;
@@ -400,7 +400,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return exception.Message;
             }
 
@@ -428,8 +428,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             try
             {
                 //whether plugin is configured
-                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (!string.IsNullOrEmpty(sendinblueSettings.ApiKey))
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+                if (!string.IsNullOrEmpty(brevoSettings.ApiKey))
                 {
                     //use only passed store identifier for the manual synchronization
                     //use all store ids for the synchronization task
@@ -448,8 +448,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue synchronization error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
-                messages.Add((NotifyType.Error, $"Sendinblue synchronization error: {exception.Message}"));
+                await _logger.ErrorAsync($"Brevo synchronization error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                messages.Add((NotifyType.Error, $"Brevo synchronization error: {exception.Message}"));
             }
 
             return messages;
@@ -468,13 +468,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
                 //try to get list identifier
-                var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
                 var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
                 if (listId == 0)
                     listId = await _settingService.GetSettingByKeyAsync<int>(key);
                 if (listId == 0)
                 {
-                    await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{subscription.StoreId}");
+                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
                     return;
                 }
 
@@ -487,7 +487,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 {
                     if (apiException.ErrorCode != 404)
                     {                        
-                        await _logger.ErrorAsync($"Sendinblue error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                        await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
                         return;
                     }
                 }
@@ -544,49 +544,49 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 var attributes = new Dictionary<string, string>
                 {
-                    [SendinblueDefaults.UsernameServiceAttribute] = customer?.Username,
-                    [SendinblueDefaults.SMSServiceAttribute] = sms,
-                    [SendinblueDefaults.PhoneServiceAttribute] = phone,
-                    [SendinblueDefaults.CountryServiceAttribute] = countryName,
-                    [SendinblueDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
-                    [SendinblueDefaults.GenderServiceAttribute] = gender,
-                    [SendinblueDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
-                    [SendinblueDefaults.CompanyServiceAttribute] = company,
-                    [SendinblueDefaults.Address1ServiceAttribute] = address1,
-                    [SendinblueDefaults.Address2ServiceAttribute] = address2,
-                    [SendinblueDefaults.ZipCodeServiceAttribute] = zipCode,
-                    [SendinblueDefaults.CityServiceAttribute] = city,
-                    [SendinblueDefaults.CountyServiceAttribute] = county,
-                    [SendinblueDefaults.StateServiceAttribute] = state,
-                    [SendinblueDefaults.FaxServiceAttribute] = fax,
-                    [SendinblueDefaults.LanguageAttribute] = language?.LanguageCulture
+                    [BrevoDefaults.UsernameServiceAttribute] = customer?.Username,
+                    [BrevoDefaults.SMSServiceAttribute] = sms,
+                    [BrevoDefaults.PhoneServiceAttribute] = phone,
+                    [BrevoDefaults.CountryServiceAttribute] = countryName,
+                    [BrevoDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
+                    [BrevoDefaults.GenderServiceAttribute] = gender,
+                    [BrevoDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
+                    [BrevoDefaults.CompanyServiceAttribute] = company,
+                    [BrevoDefaults.Address1ServiceAttribute] = address1,
+                    [BrevoDefaults.Address2ServiceAttribute] = address2,
+                    [BrevoDefaults.ZipCodeServiceAttribute] = zipCode,
+                    [BrevoDefaults.CityServiceAttribute] = city,
+                    [BrevoDefaults.CountyServiceAttribute] = county,
+                    [BrevoDefaults.StateServiceAttribute] = state,
+                    [BrevoDefaults.FaxServiceAttribute] = fax,
+                    [BrevoDefaults.LanguageAttribute] = language?.LanguageCulture
                 };
 
                 switch (await GetAccountLanguageAsync())
                 {
-                    case SendinblueAccountLanguage.French:
-                        attributes.Add(SendinblueDefaults.FirstNameFrenchServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNameFrenchServiceAttribute, lastName);
+                    case BrevoAccountLanguage.French:
+                        attributes.Add(BrevoDefaults.FirstNameFrenchServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameFrenchServiceAttribute, lastName);
                         break;
-                    case SendinblueAccountLanguage.German:
-                        attributes.Add(SendinblueDefaults.FirstNameGermanServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNameGermanServiceAttribute, lastName);
+                    case BrevoAccountLanguage.German:
+                        attributes.Add(BrevoDefaults.FirstNameGermanServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameGermanServiceAttribute, lastName);
                         break;
-                    case SendinblueAccountLanguage.Italian:
-                        attributes.Add(SendinblueDefaults.FirstNameItalianServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNameItalianServiceAttribute, lastName);
+                    case BrevoAccountLanguage.Italian:
+                        attributes.Add(BrevoDefaults.FirstNameItalianServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameItalianServiceAttribute, lastName);
                         break;
-                    case SendinblueAccountLanguage.Portuguese:
-                        attributes.Add(SendinblueDefaults.FirstNamePortugueseServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNamePortugueseServiceAttribute, lastName);
+                    case BrevoAccountLanguage.Portuguese:
+                        attributes.Add(BrevoDefaults.FirstNamePortugueseServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNamePortugueseServiceAttribute, lastName);
                         break;
-                    case SendinblueAccountLanguage.Spanish:
-                        attributes.Add(SendinblueDefaults.FirstNameSpanishServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNameSpanishServiceAttribute, lastName);
+                    case BrevoAccountLanguage.Spanish:
+                        attributes.Add(BrevoDefaults.FirstNameSpanishServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameSpanishServiceAttribute, lastName);
                         break;
-                    case SendinblueAccountLanguage.English:
-                        attributes.Add(SendinblueDefaults.FirstNameServiceAttribute, firstName);
-                        attributes.Add(SendinblueDefaults.LastNameServiceAttribute, lastName);
+                    case BrevoAccountLanguage.English:
+                        attributes.Add(BrevoDefaults.FirstNameServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameServiceAttribute, lastName);
                         break;
                 }
 
@@ -617,7 +617,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             }
         }
 
@@ -634,13 +634,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
                 //try to get list identifier
-                var key = $"{nameof(SendinblueSettings)}.{nameof(SendinblueSettings.ListId)}";
+                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
                 var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
                 if (listId == 0)
                     listId = await _settingService.GetSettingByKeyAsync<int>(key);
                 if (listId == 0)
                 {
-                    await _logger.WarningAsync($"Sendinblue synchronization warning: List ID is empty for store #{subscription.StoreId}");
+                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
                     return;
                 }
 
@@ -654,7 +654,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             }
         }
 
@@ -668,8 +668,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             try
             {
                 //whether plugin is configured
-                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+                if (string.IsNullOrEmpty(brevoSettings.ApiKey))
                     throw new NopException("Plugin not configured");
 
                 //parse string to JSON object
@@ -690,12 +690,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //update subscription
                 subscription.Active = false;
                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-                await _logger.InformationAsync($"Sendinblue unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
+                await _logger.InformationAsync($"Brevo unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
             }
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             }
         }
 
@@ -714,16 +714,16 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var client = await CreateApiClientAsync(config => new WebhooksApi(config));
 
                 //check whether webhook already exist
-                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (sendinblueSettings.UnsubscribeWebhookId != 0)
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+                if (brevoSettings.UnsubscribeWebhookId != 0)
                 {
-                    await client.GetWebhookAsync(sendinblueSettings.UnsubscribeWebhookId);
-                    return sendinblueSettings.UnsubscribeWebhookId;
+                    await client.GetWebhookAsync(brevoSettings.UnsubscribeWebhookId);
+                    return brevoSettings.UnsubscribeWebhookId;
                 }
 
                 //or create new one
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                var notificationUrl = urlHelper.RouteUrl(SendinblueDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
+                var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
                 var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
                     new List<CreateWebhook.EventsEnum> { CreateWebhook.EventsEnum.Unsubscribed }, CreateWebhook.TypeEnum.Transactional);
                 var result = await client.CreateWebhookAsync(webhook);
@@ -733,7 +733,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return 0;
             }
         }
@@ -769,7 +769,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                     }
                     else
                     {
-                        await _logger.ErrorAsync($"Sendinblue error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                        await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
                         return;
                     }
                 }
@@ -777,10 +777,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //update contact
                 var attributes = new Dictionary<string, string>
                 {
-                    [SendinblueDefaults.IdServiceAttribute] = order.Id.ToString(),
-                    [SendinblueDefaults.OrderIdServiceAttribute] = order.Id.ToString(),
-                    [SendinblueDefaults.OrderDateServiceAttribute] = order.PaidDateUtc.ToString(),
-                    [SendinblueDefaults.OrderTotalServiceAttribute] = order.OrderTotal.ToString()
+                    [BrevoDefaults.IdServiceAttribute] = order.Id.ToString(),
+                    [BrevoDefaults.OrderIdServiceAttribute] = order.Id.ToString(),
+                    [BrevoDefaults.OrderDateServiceAttribute] = order.PaidDateUtc.ToString(),
+                    [BrevoDefaults.OrderTotalServiceAttribute] = order.OrderTotal.ToString()
                 };
                 var updateContact = new UpdateContact { Attributes = attributes };
                 await client.UpdateContactAsync(customer.Email, updateContact);
@@ -789,7 +789,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             }
         }
 
@@ -831,7 +831,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (null, false, null, exception.Message);
             }
         }
@@ -853,7 +853,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
                 //get available lists
-                var lists = await client.GetListsAsync(SendinblueDefaults.DefaultSynchronizationListsLimit);
+                var lists = await client.GetListsAsync(BrevoDefaults.DefaultSynchronizationListsLimit);
 
                 //prepare id-name pairs
                 var template = new { lists = new[] { new { id = string.Empty, name = string.Empty } } };
@@ -870,7 +870,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (availableLists, exception.Message);
             }
 
@@ -905,7 +905,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (availableSenders, exception.Message);
             }
 
@@ -917,9 +917,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the sendinblueAccountLanguage
+        /// The task result contains the BrevoAccountLanguage
         /// </returns>
-        public async Task<SendinblueAccountLanguage> GetAccountLanguageAsync()
+        public async Task<BrevoAccountLanguage> GetAccountLanguageAsync()
         {
             try
             {
@@ -931,57 +931,57 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 var defaultNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNameServiceAttribute,
-                    SendinblueDefaults.LastNameServiceAttribute
+                    BrevoDefaults.FirstNameServiceAttribute,
+                    BrevoDefaults.LastNameServiceAttribute
                 };
                 if (defaultNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.English;
+                    return BrevoAccountLanguage.English;
 
                 var frenchNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNameFrenchServiceAttribute,
-                    SendinblueDefaults.LastNameFrenchServiceAttribute
+                    BrevoDefaults.FirstNameFrenchServiceAttribute,
+                    BrevoDefaults.LastNameFrenchServiceAttribute
                 };
                 if (frenchNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.French;
+                    return BrevoAccountLanguage.French;
 
                 var italianNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNameItalianServiceAttribute,
-                    SendinblueDefaults.LastNameItalianServiceAttribute
+                    BrevoDefaults.FirstNameItalianServiceAttribute,
+                    BrevoDefaults.LastNameItalianServiceAttribute
                 };
                 if (italianNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.Italian;
+                    return BrevoAccountLanguage.Italian;
 
                 var spanishNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNameSpanishServiceAttribute,
-                    SendinblueDefaults.LastNameSpanishServiceAttribute
+                    BrevoDefaults.FirstNameSpanishServiceAttribute,
+                    BrevoDefaults.LastNameSpanishServiceAttribute
                 };
                 if (spanishNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.Spanish;
+                    return BrevoAccountLanguage.Spanish;
 
                 var germanNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNameGermanServiceAttribute,
-                    SendinblueDefaults.LastNameGermanServiceAttribute
+                    BrevoDefaults.FirstNameGermanServiceAttribute,
+                    BrevoDefaults.LastNameGermanServiceAttribute
                 };
                 if (germanNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.German;
+                    return BrevoAccountLanguage.German;
 
                 var portugueseNameAttributes = new List<string>
                 {
-                    SendinblueDefaults.FirstNamePortugueseServiceAttribute,
-                    SendinblueDefaults.LastNamePortugueseServiceAttribute
+                    BrevoDefaults.FirstNamePortugueseServiceAttribute,
+                    BrevoDefaults.LastNamePortugueseServiceAttribute
                 };
                 if (portugueseNameAttributes.All(attr => allAttribytes.Contains(attr)))
-                    return SendinblueAccountLanguage.Portuguese;
+                    return BrevoAccountLanguage.Portuguese;
 
                 //Create default customer names attribytes
                 var initialAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>
                 {
-                    (CategoryEnum.Normal, SendinblueDefaults.FirstNameServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.LastNameServiceAttribute, null, CreateAttribute.TypeEnum.Text)
+                    (CategoryEnum.Normal, BrevoDefaults.FirstNameServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.LastNameServiceAttribute, null, CreateAttribute.TypeEnum.Text)
                 };
                 //create attributes that are not already on account
                 var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
@@ -993,13 +993,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 await CreateAttributesAsync(newAttributes);
 
-                return SendinblueAccountLanguage.English;
+                return BrevoAccountLanguage.English;
             }
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
-                return SendinblueAccountLanguage.English;
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                return BrevoAccountLanguage.English;
             }
         }
 
@@ -1023,30 +1023,30 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 //prepare attributes to create
                 var initialAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>
                 {
-                    (CategoryEnum.Normal, SendinblueDefaults.UsernameServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.PhoneServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.CountryServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.StoreIdServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.GenderServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.DateOfBirthServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.CompanyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.Address1ServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.Address2ServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.ZipCodeServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.CityServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.CountyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.StateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.FaxServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Normal, SendinblueDefaults.LanguageAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Transactional, SendinblueDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
-                    (CategoryEnum.Transactional, SendinblueDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
-                    (CategoryEnum.Transactional, SendinblueDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Float),
-                    (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute}]", null),
-                    (CategoryEnum.Calculated, SendinblueDefaults.OrderTotalMonthSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalServiceAttribute},{SendinblueDefaults.OrderDateServiceAttribute},>,NOW(-30)]", null),
-                    (CategoryEnum.Calculated, SendinblueDefaults.OrderCountServiceAttribute, $"COUNT[{SendinblueDefaults.OrderIdServiceAttribute}]", null),
-                    (CategoryEnum.Global, SendinblueDefaults.AllOrderTotalSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalSumServiceAttribute}]", null),
-                    (CategoryEnum.Global, SendinblueDefaults.AllOrderTotalMonthSumServiceAttribute, $"SUM[{SendinblueDefaults.OrderTotalMonthSumServiceAttribute}]", null),
-                    (CategoryEnum.Global, SendinblueDefaults.AllOrderCountServiceAttribute, $"SUM[{SendinblueDefaults.OrderCountServiceAttribute}]", null)
+                    (CategoryEnum.Normal, BrevoDefaults.UsernameServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.PhoneServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.CountryServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.StoreIdServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.GenderServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.DateOfBirthServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.CompanyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.Address1ServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.Address2ServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.ZipCodeServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.CityServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.CountyServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.StateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.FaxServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Normal, BrevoDefaults.LanguageAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Transactional, BrevoDefaults.OrderIdServiceAttribute, null, CreateAttribute.TypeEnum.Id),
+                    (CategoryEnum.Transactional, BrevoDefaults.OrderDateServiceAttribute, null, CreateAttribute.TypeEnum.Text),
+                    (CategoryEnum.Transactional, BrevoDefaults.OrderTotalServiceAttribute, null, CreateAttribute.TypeEnum.Float),
+                    (CategoryEnum.Calculated, BrevoDefaults.OrderTotalSumServiceAttribute, $"SUM[{BrevoDefaults.OrderTotalServiceAttribute}]", null),
+                    (CategoryEnum.Calculated, BrevoDefaults.OrderTotalMonthSumServiceAttribute, $"SUM[{BrevoDefaults.OrderTotalServiceAttribute},{BrevoDefaults.OrderDateServiceAttribute},>,NOW(-30)]", null),
+                    (CategoryEnum.Calculated, BrevoDefaults.OrderCountServiceAttribute, $"COUNT[{BrevoDefaults.OrderIdServiceAttribute}]", null),
+                    (CategoryEnum.Global, BrevoDefaults.AllOrderTotalSumServiceAttribute, $"SUM[{BrevoDefaults.OrderTotalSumServiceAttribute}]", null),
+                    (CategoryEnum.Global, BrevoDefaults.AllOrderTotalMonthSumServiceAttribute, $"SUM[{BrevoDefaults.OrderTotalMonthSumServiceAttribute}]", null),
+                    (CategoryEnum.Global, BrevoDefaults.AllOrderCountServiceAttribute, $"SUM[{BrevoDefaults.OrderCountServiceAttribute}]", null)
                 };
 
                 //create attributes that are not already on account
@@ -1062,7 +1062,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return exception.Message;
             }
         }
@@ -1107,7 +1107,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return exception.Message;
             }
         }
@@ -1137,7 +1137,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (false, exception.Message);
             }
         }
@@ -1194,7 +1194,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return (0, exception.Message);
             }
         }
@@ -1243,13 +1243,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return null;
             }
         }
 
         /// <summary>
-        /// Convert Sendinblue email template to queued email
+        /// Convert Brevo email template to queued email
         /// </summary>
         /// <param name="templateId">Email template identifier</param>
         /// <returns>
@@ -1287,7 +1287,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue email sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo email sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return null;
             }
         }
@@ -1306,8 +1306,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async System.Threading.Tasks.Task SendSMSAsync(string to, string from, string text)
         {
             //whether SMS notifications enabled
-            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-            if (!sendinblueSettings.UseSmsNotifications)
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            if (!brevoSettings.UseSmsNotifications)
                 return;
 
             try
@@ -1324,12 +1324,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 //send SMS
                 var sms = await client.SendTransacSmsAsync(transactionalSms);
-                await _logger.InformationAsync($"Sendinblue SMS sent: {sms?.Reference ?? $"credits remaining {sms?.RemainingCredits?.ToString()}"}");
+                await _logger.InformationAsync($"Brevo SMS sent: {sms?.Reference ?? $"credits remaining {sms?.RemainingCredits?.ToString()}"}");
             }
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             }
         }
 
@@ -1361,7 +1361,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync($"Brevo SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 return exception.Message;
             }
 

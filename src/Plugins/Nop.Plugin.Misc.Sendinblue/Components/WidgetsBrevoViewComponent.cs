@@ -3,30 +3,30 @@ using Nop.Core;
 using Nop.Services.Customers;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Plugin.Misc.Sendinblue.Components
+namespace Nop.Plugin.Misc.Brevo.Components
 {
     /// <summary>
     /// Represents view component to embed tracking script on pages
     /// </summary>
-    public class WidgetsSendinblueViewComponent : NopViewComponent
+    public class WidgetsBrevoViewComponent : NopViewComponent
     {
         #region Fields
 
+        protected readonly BrevoSettings _brevoSettings;
         protected readonly ICustomerService _customerService;
         protected readonly IWorkContext _workContext;
-        protected readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
         #region Ctor
 
-        public WidgetsSendinblueViewComponent(ICustomerService customerService,
-            IWorkContext workContext,
-            SendinblueSettings sendinblueSettings)
+        public WidgetsBrevoViewComponent(BrevoSettings brevoSettings,
+            ICustomerService customerService,
+            IWorkContext workContext)
         {
+            _brevoSettings = brevoSettings;
             _customerService = customerService;
             _workContext = workContext;
-            _sendinblueSettings = sendinblueSettings;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
             var trackingScript = string.Empty;
 
             //ensure Marketing Automation is enabled
-            if (!_sendinblueSettings.UseMarketingAutomation)
+            if (!_brevoSettings.UseMarketingAutomation)
                 return Content(trackingScript);
 
             //get customer email
@@ -57,9 +57,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
                 : string.Empty;
 
             //prepare tracking script
-            trackingScript = $"{_sendinblueSettings.TrackingScript}{Environment.NewLine}"
-                .Replace(SendinblueDefaults.TrackingScriptId, _sendinblueSettings.MarketingAutomationKey)
-                .Replace(SendinblueDefaults.TrackingScriptCustomerEmail, customerEmail);
+            trackingScript = $"{_brevoSettings.TrackingScript}{Environment.NewLine}"
+                .Replace(BrevoDefaults.TrackingScriptId, _brevoSettings.MarketingAutomationKey)
+                .Replace(BrevoDefaults.TrackingScriptCustomerEmail, customerEmail);
 
             return View("~/Plugins/Misc.Sendinblue/Views/PublicInfo.cshtml", trackingScript);
         }

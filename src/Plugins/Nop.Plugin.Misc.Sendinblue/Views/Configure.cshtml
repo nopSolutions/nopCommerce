@@ -1,7 +1,7 @@
 ﻿@model ConfigurationModel
 
-@using Nop.Plugin.Misc.Sendinblue
-@using Nop.Plugin.Misc.Sendinblue.Models
+@using Nop.Plugin.Misc.Brevo
+@using Nop.Plugin.Misc.Brevo.Models
 
 @{
     Layout = "_ConfigurePlugin";
@@ -11,9 +11,9 @@
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
-<form asp-controller="Sendinblue" asp-action="Configure" method="post">
-    <nop-cards id="sendinblue-cards">
-        <nop-card asp-name="sendinblue-general" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.Sendinblue.General")" asp-hide-block-attribute-name="@SendinblueDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">
+<form asp-controller="Brevo" asp-action="Configure" method="post">
+    <nop-cards id="brevo-cards">
+        <nop-card asp-name="brevo-general" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.Brevo.General")" asp-hide-block-attribute-name="@BrevoDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">
             <div class="card-body">
                 <div class="card card-default">
                     <div class="card-body">
@@ -50,13 +50,15 @@
                                         <img src="@Url.Content("~/Plugins/Misc.Sendinblue/logo.png")" alt="" />
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <h2>Step 1. Create a Sendinblue account</h2>
+                                <div class="form-group row mt-2">
+                                    <h2>Step 1. Create a Brevo account</h2>
+                                </div>
+                                <div class="form-group">
                                     <p>
                                         Drive more sales with all-in-one marketing software platform.
                                     </p>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group">
                                     <ul class="list-unstyled">
                                         <li>
                                             <i class="fas fa-check"></i><b>Design</b> clean and professional newsletters
@@ -68,41 +70,40 @@
                                             <i class="fas fa-check"></i><b>Automate</b> your marketing (e.g. abandoned cart recovery)
                                         </li>
                                     </ul>
-                                </div>
-                                <div class="form-group row">
                                     <div>
-                                        <a href="https://www.sendinblue.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create Free Account</a>
+                                        <a href="https://www.brevo.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary mt-1" target="_blank">Create Free Account</a>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <h2>Step 2. Connect your store to Sendinblue </h2>
-                                    <p>Copy your API v3 key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
+                                <div class="form-group row mt-3">
+                                    <h2>Step 2. Connect your store to Brevo </h2>
+                                </div>
+                                <div class="form-group">
+                                    <p>Copy your API v3 key from your Brevo account on <a href="https://account.brevo.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
                                     <div class="apikey">
                                         <input class="form-control text-box single-line" id="ApiKey" name="ApiKey" type="text" value="" placeholder="xkeysib-xxxxxxxxxxx">
                                         <span asp-validation-for="ApiKey"></span>
                                     </div>
-
+                                    <button type="submit" name="save" class="btn btn-primary mt-1">@T("Admin.Common.Save")</button>
                                 </div>
-                                <div class="form-group row">
-                                    <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
-                                </div>
-                                <div class="form-group row">
+                                <div class="form-group row mt-3">
                                     <h2>Need help?</h2>
+                                </div>
+                                <div class="form-group">
                                     <p>Take a look at our tutorials:</p>
                                     <ul class="list">
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172879/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 1. Set up the plugin</a>
+                                            <a href="https://help.brevo.com/hc/en-us/articles/115000433809/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 1. Set up the plugin</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172899/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
+                                            <a href="https://help.brevo.com/hc/en-us/articles/360004172899/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.sendinblue.com/hc/en-us/articles/360004172939/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
+                                            <a href="https://help.brevo.com/hc/en-us/articles/360004172939/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <br />
-                                <div class="form-group row">
+                                <div class="form-group">
                                     <p><b><i>Don’t see your question answered?</i></b></p>
                                     <ul class="list">
                                         <li>
@@ -124,7 +125,7 @@
         </nop-card>
         @if (!string.IsNullOrEmpty(Model.ApiKey))
         {
-            <nop-card asp-name="sendinblue-synchronization" asp-icon="fas fa-exchange" asp-title="@T("Plugins.Misc.Sendinblue.Synchronization")" asp-hide-block-attribute-name="@SendinblueDefaults.HideSynchronizationBlock" asp-hide="@Model.HideSynchronizationBlock" asp-advanced="false">
+            <nop-card asp-name="brevo-synchronization" asp-icon="fas fa-exchange" asp-title="@T("Plugins.Misc.Brevo.Synchronization")" asp-hide-block-attribute-name="@BrevoDefaults.HideSynchronizationBlock" asp-hide="@Model.HideSynchronizationBlock" asp-advanced="false">
                 <script>
                     $(document).ready(function () {
                         $("#progressBar").kendoProgressBar({
@@ -141,7 +142,7 @@
 
                     function refresh(){
                         setTimeout(function(){
-                            $.get('@(Url.Action("GetSynchronizationInfo", "Sendinblue"))', function(data) {
+                            $.get('@(Url.Action("GetSynchronizationInfo", "Brevo"))', function(data) {
                                 if (!data) {
                                     refresh();
                                 }
@@ -159,13 +160,13 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                From the dropdown list below, select the Sendinblue list where your nopCommerce newsletter subscribers and their data will be added.<br />
-                                After the initial sync, a task is scheduled to run every 6000 seconds to automatically add your new subscribers to your Sendinblue list.<br />
+                                From the dropdown list below, select the Brevo list where your nopCommerce newsletter subscribers and their data will be added.<br />
+                                After the initial sync, a task is scheduled to run every 6000 seconds to automatically add your new subscribers to your Brevo list.<br />
                                 To change the sync frequency, go to <a href="@Url.Content("~/Admin/ScheduleTask/List/")">System > Schedule tasks.</a>
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-9 offset-md-3">
-                                    <a href="https://my.sendinblue.com/lists/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create a list</a>
+                                    <a href="https://my.brevo.com/lists/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create a list</a>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -187,7 +188,7 @@
                     </div>
                     <div class="card card-default">
                         <div class="card-header">
-                            @T("Plugins.Misc.Sendinblue.ManualSync")
+                            @T("Plugins.Misc.Brevo.ManualSync")
                         </div>
                         <div class="card-body">
                             <p>
@@ -198,19 +199,19 @@
                         </div>
                         <div class="card-footer">
                             <button type="submit" name="sync" class="btn btn-primary">
-                                @T("Plugins.Misc.Sendinblue.SyncNow")
+                                @T("Plugins.Misc.Brevo.SyncNow")
                             </button>
                         </div>
                     </div>
                 </div>
             </nop-card>
-            <nop-card asp-name="sendinblue-transactional" asp-icon="fas fa-envelope" asp-title="@T("Plugins.Misc.Sendinblue.Transactional")" asp-hide-block-attribute-name="@SendinblueDefaults.HideTransactionalBlock" asp-hide="@Model.HideTransactionalBlock" asp-advanced="false">
+            <nop-card asp-name="brevo-transactional" asp-icon="fas fa-envelope" asp-title="@T("Plugins.Misc.Brevo.Transactional")" asp-hide-block-attribute-name="@BrevoDefaults.HideTransactionalBlock" asp-hide="@Model.HideTransactionalBlock" asp-advanced="false">
                 <div class="card-body">
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                Sendinblue SMTP is the transactional email service of Sendinblue. When it is enabled, all transactional emails (e.g. account creation emails, order confirmation emails, recovery password emails, etc) of your store will be sent from your Sendinblue account.<br />
-                                Copy your SMTP key from your Sendinblue account on <a href="https://account.sendinblue.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
+                                Brevo SMTP is the transactional email service of Brevo. When it is enabled, all transactional emails (e.g. account creation emails, order confirmation emails, recovery password emails, etc) of your store will be sent from your Brevo account.<br />
+                                Copy your SMTP key from your Brevo account on <a href="https://account.brevo.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -256,17 +257,17 @@
                                 @await Html.PartialAsync("Table", new DataTablesModel
                                 {
                                     Name = "messages-grid",
-                                    UrlRead = new DataUrl("MessageList", "Sendinblue", null),
-                                    UrlUpdate = new DataUrl("MessageUpdate", "Sendinblue", null),
+                                    UrlRead = new DataUrl("MessageList", "Brevo", null),
+                                    UrlUpdate = new DataUrl("MessageUpdate", "Brevo", null),
                                     Length = Model.MessageTemplateSearchModel.PageSize,
                                     LengthMenu = Model.MessageTemplateSearchModel.AvailablePageSizes,
                                     ColumnCollection = new List<ColumnProperty>
                                     {
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Name))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.Name))
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
                                         },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.IsActive))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.IsActive))
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
                                             Width = "100",
@@ -275,29 +276,29 @@
                                             Editable = true,
                                             EditType = EditType.Checkbox
                                         },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.ListOfStores))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.ListOfStores))
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text
                                         },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.UseSendinblueTemplate))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.UseBrevoTemplate))
                                         {
-                                            Title = T("Plugins.Misc.Sendinblue.UseSendinblueTemplate").Text,
+                                            Title = T("Plugins.Misc.Brevo.UseBrevoTemplate").Text,
                                             Width = "100",
                                             ClassName = NopColumnClassDefaults.CenterAll,
                                             Render = new RenderBoolean(),
                                             Editable = true,
                                             EditType = EditType.Checkbox
                                         },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
                                         {
-                                            Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text,
+                                            Title = T("Plugins.Misc.Brevo.EditTemplate").Text,
                                             Width = "150",
-                                            Render = new RenderLink(new DataUrl(string.Empty, nameof(SendinblueMessageTemplateModel.EditLink)))
+                                            Render = new RenderLink(new DataUrl(string.Empty, nameof(BrevoMessageTemplateModel.EditLink)))
                                             {
-                                                Title = T("Plugins.Misc.Sendinblue.EditTemplate").Text
+                                                Title = T("Plugins.Misc.Brevo.EditTemplate").Text
                                             }
                                         },
-                                        new ColumnProperty(nameof(SendinblueMessageTemplateModel.Id))
+                                        new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
                                         {
                                             Title = T("Admin.Common.Edit").Text,
                                             Width = "200",
@@ -311,12 +312,12 @@
                     }
                 </div>
             </nop-card>
-            <nop-card asp-name="sendinblue-sms" asp-icon="fas fa-envelope" asp-title="@T("Plugins.Misc.Sendinblue.SMS")" asp-hide-block-attribute-name="@SendinblueDefaults.HideSmsBlock" asp-hide="@Model.HideSmsBlock" asp-advanced="false">
+            <nop-card asp-name="brevo-sms" asp-icon="fas fa-envelope" asp-title="@T("Plugins.Misc.Brevo.SMS")" asp-hide-block-attribute-name="@BrevoDefaults.HideSmsBlock" asp-hide="@Model.HideSmsBlock" asp-advanced="false">
                 <div class="card-body">
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://www.sendinblue.com/pricing?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Sendinblue account.
+                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://www.brevo.com/pricing?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Brevo account.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -384,8 +385,8 @@
                                 @await Html.PartialAsync("Table", new DataTablesModel
                                 {
                                     Name = "sms-grid",
-                                    UrlRead = new DataUrl("SMSList", "Sendinblue", null),
-                                    UrlDelete = new DataUrl("SMSDelete", "Sendinblue", null),
+                                    UrlRead = new DataUrl("SMSList", "Brevo", null),
+                                    UrlDelete = new DataUrl("SMSDelete", "Brevo", null),
                                     Length = Model.SmsSearchModel.PageSize,
                                     LengthMenu = Model.SmsSearchModel.AvailablePageSizes,
                                     ColumnCollection = new List<ColumnProperty>
@@ -397,12 +398,12 @@
                                         },
                                         new ColumnProperty(nameof(SmsModel.PhoneType))
                                         {
-                                            Title = T("Plugins.Misc.Sendinblue.PhoneType").Text,
+                                            Title = T("Plugins.Misc.Brevo.PhoneType").Text,
                                             Width = "200",
                                         },
                                         new ColumnProperty(nameof(SmsModel.Text))
                                         {
-                                            Title = T("Plugins.Misc.Sendinblue.SMSText").Text,
+                                            Title = T("Plugins.Misc.Brevo.SMSText").Text,
                                             Width = "500"
                                         },
                                         new ColumnProperty(nameof(SmsModel.Id))
@@ -465,7 +466,7 @@
                                                 $.ajax({
                                                     cache: false,
                                                     type: "POST",
-                                                    url: "@Html.Raw(Url.Action("SMSAdd", "Sendinblue"))",
+                                                    url: "@Html.Raw(Url.Action("SMSAdd", "Brevo"))",
                                                     data: postData,
                                                     success: function (data, textStatus, jqXHR) {
                                                         if (data.Result) {
@@ -494,11 +495,11 @@
 
                     <div class="card card-default">
                         <div class="card-header">
-                            @T("Plugins.Misc.Sendinblue.SMS.Campaigns")
+                            @T("Plugins.Misc.Brevo.SMS.Campaigns")
                         </div>
                         <div class="card-body">
                             <p>
-                                Send a SMS campaign to a Sendinblue list.
+                                Send a SMS campaign to a Brevo list.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -529,21 +530,21 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-9 offset-md-3">
-                                    <button type="submit" name="submitCampaign" class="btn btn-primary">@T("Plugins.Misc.Sendinblue.SMS.Campaigns.Submit")</button>
+                                    <button type="submit" name="submitCampaign" class="btn btn-primary">@T("Plugins.Misc.Brevo.SMS.Campaigns.Submit")</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </nop-card>
-            <nop-card asp-name="sendinblue-ma" asp-icon="fas fa-star" asp-title="@T("Plugins.Misc.Sendinblue.MarketingAutomation")" asp-hide-block-attribute-name="@SendinblueDefaults.HideMarketingAutomationBlock" asp-hide="@Model.HideMarketingAutomationBlock" asp-advanced="false">
+            <nop-card asp-name="brevo-ma" asp-icon="fas fa-star" asp-title="@T("Plugins.Misc.Brevo.MarketingAutomation")" asp-hide-block-attribute-name="@BrevoDefaults.HideMarketingAutomationBlock" asp-hide="@Model.HideMarketingAutomationBlock" asp-advanced="false">
                 <div class="card-body">
                     <div class="card card-default">
                         <div class="card-body">
                             @if (Model.MarketingAutomationDisabled)
                             {
                                 <p>
-                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://automation.sendinblue.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
+                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://automation.brevo.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
                                 </p>
                             }
                             else

@@ -2,12 +2,12 @@
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
-using Nop.Plugin.Misc.Sendinblue.MarketingAutomation;
+using Nop.Plugin.Misc.Brevo.MarketingAutomation;
 
-namespace Nop.Plugin.Misc.Sendinblue.Services
+namespace Nop.Plugin.Misc.Brevo.Services
 {
     /// <summary>
-    /// Represents HTTP client to request Sendinblue marketing automation services
+    /// Represents HTTP client to request Brevo marketing automation services
     /// </summary>
     public class MarketingAutomationHttpClient
     {
@@ -20,16 +20,16 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         #region Ctor
 
         public MarketingAutomationHttpClient(HttpClient httpClient,
-            SendinblueSettings sendinblueSettings)
+            BrevoSettings brevoSettings)
         {
             //configure client
-            httpClient.BaseAddress = new Uri(SendinblueDefaults.MarketingAutomationUrl);
+            httpClient.BaseAddress = new Uri(BrevoDefaults.MarketingAutomationUrl);
             httpClient.Timeout = TimeSpan.FromSeconds(10);
-            httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, SendinblueDefaults.UserAgent);
+            httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, BrevoDefaults.UserAgent);
             httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, MimeTypes.ApplicationJson);
 
             //authentication
-            httpClient.DefaultRequestHeaders.Add(SendinblueDefaults.MarketingAutomationKeyHeader, sendinblueSettings.MarketingAutomationKey);
+            httpClient.DefaultRequestHeaders.Add(BrevoDefaults.MarketingAutomationKeyHeader, brevoSettings.MarketingAutomationKey);
 
             _httpClient = httpClient;
         }

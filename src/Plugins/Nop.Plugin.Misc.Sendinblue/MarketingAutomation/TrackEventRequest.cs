@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Nop.Plugin.Misc.Sendinblue.MarketingAutomation
+namespace Nop.Plugin.Misc.Brevo.MarketingAutomation
 {
     /// <summary>
     /// Represents request to track an event

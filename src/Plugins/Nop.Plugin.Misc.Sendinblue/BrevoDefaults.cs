@@ -1,17 +1,17 @@
 ﻿using Nop.Core;
 using Nop.Core.Caching;
 
-namespace Nop.Plugin.Misc.Sendinblue
+namespace Nop.Plugin.Misc.Brevo
 {
     /// <summary>
     /// Represents plugin constants
     /// </summary>
-    public static class SendinblueDefaults
+    public static class BrevoDefaults
     {
         /// <summary>
         /// Gets a plugin system name
         /// </summary>
-        public static string SystemName => "Misc.Sendinblue";
+        public static string SystemName => "Misc.Brevo";
 
         /// <summary>
         /// Gets a plugin partner name
@@ -19,34 +19,34 @@ namespace Nop.Plugin.Misc.Sendinblue
         public static string PartnerName => "NOPCOMMERCE";
 
         /// <summary>
-        /// Gets a user agent used to request Sendinblue services
+        /// Gets a user agent used to request Brevo services
         /// </summary>
         public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
-        /// Gets a URL to edit message template on Sendinblue account
+        /// Gets a URL to edit message template on Brevo account
         /// </summary>
-        public static string EditMessageTemplateUrl = "https://my.sendinblue.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
+        public static string EditMessageTemplateUrl = "https://my.brevo.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
 
         /// <summary>
         /// Gets a name of the route to the import contacts callback
         /// </summary>
-        public static string ImportContactsRoute => "Plugin.Misc.Sendinblue.ImportContacts";
+        public static string ImportContactsRoute => "Plugin.Misc.Brevo.ImportContacts";
 
         /// <summary>
         /// Gets a name of the route to the unsubscribe contact callback
         /// </summary>
-        public static string UnsubscribeContactRoute => "Plugin.Misc.Sendinblue.Unsubscribe";
+        public static string UnsubscribeContactRoute => "Plugin.Misc.Brevo.Unsubscribe";
 
         /// <summary>
         /// Gets a name of the synchronization schedule task
         /// </summary>
-        public static string SynchronizationTaskName => "Synchronization (Sendinblue plugin)";
+        public static string SynchronizationTaskName => "Synchronization (Brevo plugin)";
 
         /// <summary>
         /// Gets a type of the synchronization schedule task
         /// </summary>
-        public static string SynchronizationTask => "Nop.Plugin.Misc.Sendinblue.Services.SynchronizationTask";
+        public static string SynchronizationTask => "Nop.Plugin.Misc.Brevo.Services.SynchronizationTask";
 
         /// <summary>
         /// Gets a default synchronization period in hours
@@ -321,7 +321,7 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Gets a key of cache synchronization
         /// </summary>
-        public static CacheKey SyncKeyCache => new("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
+        public static CacheKey SyncKeyCache => new("PLUGINS_MISC_BREVO_SYNCINFO");
 
         /// <summary>
         /// Gets a key of notification message
@@ -341,26 +341,26 @@ namespace Nop.Plugin.Misc.Sendinblue
         /// <summary>
         /// Generic attribute name to hide general settings block on the plugin configuration page
         /// </summary>
-        public static string HideGeneralBlock = "SendinbluePage.HideGeneralBlock";
+        public static string HideGeneralBlock = "BrevoPage.HideGeneralBlock";
 
         /// <summary>
         /// Generic attribute name to hide synchronization block on the plugin configuration page
         /// </summary>
-        public static string HideSynchronizationBlock = "SendinbluePage.HideSynchronizationBlock";
+        public static string HideSynchronizationBlock = "BrevoPage.HideSynchronizationBlock";
 
         /// <summary>
         /// Generic attribute name to hide transactional block on the plugin configuration page
         /// </summary>
-        public static string HideTransactionalBlock = "SendinbluePage.HideTransactionalBlock";
+        public static string HideTransactionalBlock = "BrevoPage.HideTransactionalBlock";
 
         /// <summary>
         /// Generic attribute name to hide SMS block on the plugin configuration page
         /// </summary>
-        public static string HideSmsBlock = "SendinbluePage.HideSmsBlock";
+        public static string HideSmsBlock = "BrevoPage.HideSmsBlock";
 
         /// <summary>
         /// Generic attribute name to hide marketing automation block on the plugin configuration page
         /// </summary>
-        public static string HideMarketingAutomationBlock = "SendinbluePage.HideMarketingAutomationBlock";
+        public static string HideMarketingAutomationBlock = "BrevoPage.HideMarketingAutomationBlock";
     }
 }

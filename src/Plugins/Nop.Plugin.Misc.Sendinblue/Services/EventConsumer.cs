@@ -6,7 +6,7 @@ using Nop.Core.Events;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 
-namespace Nop.Plugin.Misc.Sendinblue.Services
+namespace Nop.Plugin.Misc.Brevo.Services
 {
     /// <summary>
     /// Represents event consumer
@@ -24,18 +24,18 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
+        protected readonly BrevoManager _brevoEmailManager;
         protected readonly MarketingAutomationManager _marketingAutomationManager;
-        protected readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public EventConsumer(MarketingAutomationManager marketingAutomationManager,
-            SendinblueManager sendinblueEmailManager)
+        public EventConsumer(BrevoManager brevoEmailManager,
+            MarketingAutomationManager marketingAutomationManager)
         {
+            _brevoEmailManager = brevoEmailManager;
             _marketingAutomationManager = marketingAutomationManager;
-            _sendinblueEmailManager = sendinblueEmailManager;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EmailUnsubscribedEvent eventMessage)
         {
             //unsubscribe contact
-            await _sendinblueEmailManager.UnsubscribeAsync(eventMessage.Subscription);
+            await _brevoEmailManager.UnsubscribeAsync(eventMessage.Subscription);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EmailSubscribedEvent eventMessage)
         {
             //subscribe contact
-            await _sendinblueEmailManager.SubscribeAsync(eventMessage.Subscription);
+            await _brevoEmailManager.SubscribeAsync(eventMessage.Subscription);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         {
             //handle event
             await _marketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
-            await _sendinblueEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
+            await _brevoEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
         }
 
         /// <summary>

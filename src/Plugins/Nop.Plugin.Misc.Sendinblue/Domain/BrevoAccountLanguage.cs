@@ -1,9 +1,9 @@
-﻿namespace Nop.Plugin.Misc.Sendinblue.Domain
+﻿namespace Nop.Plugin.Misc.Brevo.Domain
 {
     /// <summary>
-    /// Represents Sendinblue account language enumeration
+    /// Represents Brevo account language enumeration
     /// </summary>
-    public enum SendinblueAccountLanguage
+    public enum BrevoAccountLanguage
     {
         /// <summary>
         /// English (default)

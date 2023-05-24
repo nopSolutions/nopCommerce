@@ -7,7 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
-using Nop.Plugin.Misc.Sendinblue.MarketingAutomation;
+using Nop.Plugin.Misc.Brevo.MarketingAutomation;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -18,15 +18,16 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Mvc.Routing;
 
-namespace Nop.Plugin.Misc.Sendinblue.Services
+namespace Nop.Plugin.Misc.Brevo.Services
 {
     /// <summary>
-    /// Represents Sendinblue marketing automation manager
+    /// Represents Brevo marketing automation manager
     /// </summary>
     public class MarketingAutomationManager
     {
         #region Fields
 
+        protected readonly BrevoSettings _brevoSettings;
         protected readonly CurrencySettings _currencySettings;
         protected readonly IActionContextAccessor _actionContextAccessor;
         protected readonly IAddressService _addressService;
@@ -50,13 +51,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         protected readonly IWebHelper _webHelper;
         protected readonly IWorkContext _workContext;
         protected readonly MarketingAutomationHttpClient _marketingAutomationHttpClient;
-        protected readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
         #region Ctor
 
-        public MarketingAutomationManager(CurrencySettings currencySettings,
+        public MarketingAutomationManager(BrevoSettings brevoSettings,
+            CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressService addressService,
             ICategoryService categoryService,
@@ -78,9 +79,9 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MarketingAutomationHttpClient marketingAutomationHttpClient,
-            SendinblueSettings sendinblueSettings)
+            MarketingAutomationHttpClient marketingAutomationHttpClient)
         {
+            _brevoSettings = brevoSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
             _addressService = addressService;
@@ -104,7 +105,6 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _webHelper = webHelper;
             _workContext = workContext;
             _marketingAutomationHttpClient = marketingAutomationHttpClient;
-            _sendinblueSettings = sendinblueSettings;
         }
 
         #endregion
@@ -119,7 +119,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleShoppingCartChangedEventAsync(ShoppingCartItem cartItem)
         {
             //whether marketing automation is enabled
-            if (!_sendinblueSettings.UseMarketingAutomation)
+            if (!_brevoSettings.UseMarketingAutomation)
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(cartItem.CustomerId);
@@ -131,7 +131,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 //get shopping cart GUID
                 var shoppingCartGuid = await _genericAttributeService
-                    .GetAttributeAsync<Guid?>(customer, SendinblueDefaults.ShoppingCartGuidAttribute);
+                    .GetAttributeAsync<Guid?>(customer, BrevoDefaults.ShoppingCartGuidAttribute);
 
                 //create track event object
                 var trackEvent = new TrackEventRequest { Email = customer.Email };
@@ -214,14 +214,14 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                         //otherwise cart is updated
                         shoppingCartGuid ??= Guid.NewGuid();
                     }
-                    trackEvent.EventName = SendinblueDefaults.CartUpdatedEventName;
+                    trackEvent.EventName = BrevoDefaults.CartUpdatedEventName;
                     trackEvent.EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData };
                 }
                 else
                 {
                     //there are no items in the cart, so the cart is deleted
                     shoppingCartGuid ??= Guid.NewGuid();
-                    trackEvent.EventName = SendinblueDefaults.CartDeletedEventName;
+                    trackEvent.EventName = BrevoDefaults.CartDeletedEventName;
                     trackEvent.EventData = new { id = $"cart:{shoppingCartGuid}" };
                 }
 
@@ -229,12 +229,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 await _marketingAutomationHttpClient.RequestAsync(trackEvent);
 
                 //update GUID for the current customer's shopping cart
-                await _genericAttributeService.SaveAttributeAsync(customer, SendinblueDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
+                await _genericAttributeService.SaveAttributeAsync(customer, BrevoDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
             }
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue Marketing Automation error: {exception.Message}.", exception, customer);
+                await _logger.ErrorAsync($"Brevo Marketing Automation error: {exception.Message}.", exception, customer);
             }
         }
 
@@ -246,7 +246,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleOrderCompletedEventAsync(Order order)
         {
             //whether marketing automation is enabled
-            if (!_sendinblueSettings.UseMarketingAutomation)
+            if (!_brevoSettings.UseMarketingAutomation)
                 return;
 
             if (order is null)
@@ -352,13 +352,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
 
                 //get shopping cart GUID
                 var shoppingCartGuid = await _genericAttributeService.GetAttributeAsync<Guid?>(order,
-                    SendinblueDefaults.ShoppingCartGuidAttribute) ?? Guid.NewGuid();
+                    BrevoDefaults.ShoppingCartGuidAttribute) ?? Guid.NewGuid();
 
                 //create track event object
                 var trackEvent = new TrackEventRequest
                 {
                     Email = customer.Email,
-                    EventName = SendinblueDefaults.OrderCompletedEventName,
+                    EventName = BrevoDefaults.OrderCompletedEventName,
                     EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData }
                 };
 
@@ -366,12 +366,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 await _marketingAutomationHttpClient.RequestAsync(trackEvent);
 
                 //update GUID for the current customer's shopping cart
-                await _genericAttributeService.SaveAttributeAsync<Guid?>(order, SendinblueDefaults.ShoppingCartGuidAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<Guid?>(order, BrevoDefaults.ShoppingCartGuidAttribute, null);
             }
             catch (Exception exception)
             {
                 //log full error
-                await _logger.ErrorAsync($"Sendinblue Marketing Automation error: {exception.Message}.", exception, customer);
+                await _logger.ErrorAsync($"Brevo Marketing Automation error: {exception.Message}.", exception, customer);
             }
         }
 
@@ -383,12 +383,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleOrderPlacedEventAsync(Order order)
         {
             //whether marketing automation is enabled
-            if (!_sendinblueSettings.UseMarketingAutomation)
+            if (!_brevoSettings.UseMarketingAutomation)
                 return;
 
             //copy shopping cart GUID to order
-            var shoppingCartGuid = await _genericAttributeService.GetAttributeAsync<Customer, Guid?>(order.CustomerId, SendinblueDefaults.ShoppingCartGuidAttribute);
-            await _genericAttributeService.SaveAttributeAsync(order, SendinblueDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
+            var shoppingCartGuid = await _genericAttributeService.GetAttributeAsync<Customer, Guid?>(order.CustomerId, BrevoDefaults.ShoppingCartGuidAttribute);
+            await _genericAttributeService.SaveAttributeAsync(order, BrevoDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
         }
 
         #endregion

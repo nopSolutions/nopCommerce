@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Nop.Plugin.Misc.Sendinblue.MarketingAutomation
+namespace Nop.Plugin.Misc.Brevo.MarketingAutomation
 {
     /// <summary>
     /// Represents base request to service

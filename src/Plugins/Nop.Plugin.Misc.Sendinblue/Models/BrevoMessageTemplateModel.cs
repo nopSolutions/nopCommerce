@@ -1,11 +1,11 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Plugin.Misc.Sendinblue.Models
+namespace Nop.Plugin.Misc.Brevo.Models
 {
     /// <summary>
     /// Represents message template model
     /// </summary>
-    public record SendinblueMessageTemplateModel : BaseNopEntityModel
+    public record BrevoMessageTemplateModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 
@@ -13,7 +13,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Models
 
         public string ListOfStores { get; set; }
 
-        public bool UseSendinblueTemplate { get; set; }
+        public bool UseBrevoTemplate { get; set; }
 
         public string EditLink { get; set; }
     }

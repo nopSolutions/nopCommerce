@@ -1,6 +1,6 @@
 ﻿using Nop.Services.ScheduleTasks;
 
-namespace Nop.Plugin.Misc.Sendinblue.Services
+namespace Nop.Plugin.Misc.Brevo.Services
 {
     /// <summary>
     /// Represents a schedule task to synchronize contacts
@@ -9,15 +9,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        protected readonly SendinblueManager _sendinblueEmailManager;
+        protected readonly BrevoManager _brevoEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public SynchronizationTask(SendinblueManager sendinblueEmailManager)
+        public SynchronizationTask(BrevoManager brevoEmailManager)
         {
-            _sendinblueEmailManager = sendinblueEmailManager;
+            _brevoEmailManager = brevoEmailManager;
         }
 
         #endregion
@@ -30,7 +30,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ExecuteAsync()
         {
-            await _sendinblueEmailManager.SynchronizeAsync();
+            await _brevoEmailManager.SynchronizeAsync();
         }
 
         #endregion

@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using Nop.Plugin.Misc.Sendinblue.Services;
+using Nop.Plugin.Misc.Brevo.Services;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
-namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
+namespace Nop.Plugin.Misc.Brevo.Infrastructure
 {
     /// <summary>
     /// Represents object for the configuring services on application startup
@@ -23,12 +23,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
             services.AddHttpClient<MarketingAutomationHttpClient>().WithProxy();
 
             //register custom services
-            services.AddScoped<SendinblueManager>();
+            services.AddScoped<BrevoManager>();
             services.AddScoped<MarketingAutomationManager>();
 
             //override services
-            services.AddScoped<IWorkflowMessageService, SendinblueMessageService>();
-            services.AddScoped<IEmailSender, SendinblueEmailSender>();
+            services.AddScoped<IWorkflowMessageService, BrevoMessageService>();
+            services.AddScoped<IEmailSender, BrevoEmailSender>();
         }
 
         /// <summary>
