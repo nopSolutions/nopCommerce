@@ -579,16 +579,23 @@ FR,Wallis et futuna,986,True,106
 FR,Polynésie Française,987,True,107
 FR,Nouvelle-Calédonie,988,True,108
 GB,Aberdeenshire,,True,1
-GB,Anglesey/Sir Fon,,True,1
 GB,Angus,,True,1
+GB,Antrim,,True,1
 GB,Argyll and Bute,,True,1
+GB,Armagh,,True,1
 GB,Ayrshire,,True,1
+GB,Banffshire,,True,1
+GB,Bath and North East Somerset,,True,1
+GB,Bedfordshire,,True,1
 GB,Berkshire,,True,1
+GB,Berwickshire,,True,1
 GB,Blaenau Gwent,,True,1
+GB,Borders,,True,1
 GB,Bridgend,,True,1
 GB,Bristol,,True,1
 GB,Buckinghamshire,,True,1
 GB,Caerphilly,,True,1
+GB,Caithness,,True,1
 GB,Cambridgeshire,,True,1
 GB,Cardiff,,True,1
 GB,Carmarthenshire,,True,1
@@ -597,56 +604,54 @@ GB,Cheshire,,True,1
 GB,Clackmannanshire,,True,1
 GB,Conwy,,True,1
 GB,Cornwall,,True,1
-GB,County Antrim,,True,1
-GB,County Armagh,,True,1
-GB,County Down,,True,1
-GB,County Fermanagh,,True,1
-GB,County Londonderry,,True,1
-GB,County Tyrone,,True,1
+GB,County Durham,,True,1
 GB,Cumbria,,True,1
 GB,Denbighshire,,True,1
 GB,Derbyshire,,True,1
 GB,Devon,,True,1
 GB,Dorset,,True,1
+GB,Down,,True,1
 GB,Dumfries and Galloway,,True,1
 GB,Dunbartonshire,,True,1
-GB,Dundee,,True,1
-GB,Durham,,True,1
+GB,East Ayrshire,,True,1
+GB,East Dunbartonshire,,True,1
 GB,East Lothian,,True,1
+GB,East Renfrewshire,,True,1
 GB,East Riding of Yorkshire,,True,1
 GB,East Sussex,,True,1
-GB,Edinburgh,,True,1
 GB,Essex,,True,1
-GB,Falkirk,,True,1
+GB,Fermanagh,,True,1
 GB,Fife,,True,1
 GB,Flintshire,,True,1
-GB,Glamorgan,,True,1
-GB,Glasgow,,True,1
 GB,Gloucestershire,,True,1
+GB,Greater London,,True,1
 GB,Greater Manchester,,True,1
 GB,Gwynedd,,True,1
 GB,Hampshire,,True,1
-GB,Hereford and Worcester,,True,1
+GB,Herefordshire,,True,1
 GB,Hertfordshire,,True,1
 GB,Highland,,True,1
 GB,Inverclyde,,True,1
-GB,Isle of Man,,True,1
+GB,Isle of Anglesey,,True,1
 GB,Isle of Wight,,True,1
+GB,Isles of Scilly,,True,1
 GB,Kent,,True,1
-GB,Lanarkshire,,True,1
+GB,Kincardineshire,,True,1
 GB,Lancashire,,True,1
 GB,Leicestershire,,True,1
 GB,Lincolnshire,,True,1
-GB,London,,True,1
+GB,Londonderry,,True,1
 GB,Merseyside,,True,1
 GB,Merthyr Tydfil,,True,1
-GB,Middlesex,,True,1
 GB,Midlothian,,True,1
 GB,Monmouthshire,,True,1
 GB,Moray,,True,1
 GB,Neath Port Talbot,,True,1
 GB,Newport,,True,1
 GB,Norfolk,,True,1
+GB,North Ayrshire,,True,1
+GB,North Lanarkshire,,True,1
+GB,North Somerset,,True,1
 GB,North Yorkshire,,True,1
 GB,Northamptonshire,,True,1
 GB,Northumberland,,True,1
@@ -659,10 +664,12 @@ GB,Powys,,True,1
 GB,Renfrewshire,,True,1
 GB,Rhondda Cynon Taff,,True,1
 GB,Rutland,,True,1
-GB,Scottish Borders,,True,1
-GB,Shetland Isles,,True,1
+GB,Shetland,,True,1
 GB,Shropshire,,True,1
 GB,Somerset,,True,1
+GB,South Ayrshire,,True,1
+GB,South Gloucestershire,,True,1
+GB,South Lanarkshire,,True,1
 GB,South Yorkshire,,True,1
 GB,Staffordshire,,True,1
 GB,Stirlingshire,,True,1
@@ -671,13 +678,17 @@ GB,Surrey,,True,1
 GB,Swansea,,True,1
 GB,Torfaen,,True,1
 GB,Tyne and Wear,,True,1
+GB,Tyrone,,True,1
+GB,Vale of Glamorgan,,True,1
 GB,Warwickshire,,True,1
+GB,West Dunbartonshire,,True,1
 GB,West Lothian,,True,1
 GB,West Midlands,,True,1
 GB,West Sussex,,True,1
 GB,West Yorkshire,,True,1
 GB,Western Isles,,True,1
 GB,Wiltshire,,True,1
+GB,Worcestershire,,True,1
 GB,Wrexham,,True,1 
 GR,ΑΙΤΩΛΟΑΚΑΡΝΑΝΙΑΣ,ΑΙΤ,TRUE,1
 GR,ΑΡΓΟΛΙΔΑΣ,ΑΡΓ,TRUE,2
