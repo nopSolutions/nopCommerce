@@ -50,6 +50,7 @@
     </Content>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="StereoKit" Version="0.3.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.65" />
 

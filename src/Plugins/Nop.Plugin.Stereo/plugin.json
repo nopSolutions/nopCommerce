@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Custom Module",
+  "FriendlyName": "Stereo Project",
+  "SystemName": "Stereo",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "10Decoders",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Stereo.dll",
+  "Description": "Stereo"
+}
