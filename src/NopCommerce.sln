@@ -67,9 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.Zettle", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Pos", "Plugins\Nop.Plugin.Pos\Nop.Plugin.Pos.csproj", "{03EEE222-7E3F-428E-B829-19B4EBAEF45D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.CustomAPI", "Plugins\Nop.Plugin.CustomAPI\Nop.Plugin.CustomAPI.csproj", "{0415EAAB-ACCD-4723-B5B2-F19B3F52C399}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Stereo", "Plugins\Nop.Plugin.Stereo\Nop.Plugin.Stereo.csproj", "{2CE00652-E915-4ACA-875E-83F50584E111}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.CustomAPI", "Plugins\Nop.Plugin.CustomAPI\Nop.Plugin.CustomAPI.csproj", "{0415EAAB-ACCD-4723-B5B2-F19B3F52C399}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -407,18 +405,6 @@ Global
 		{0415EAAB-ACCD-4723-B5B2-F19B3F52C399}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0415EAAB-ACCD-4723-B5B2-F19B3F52C399}.Release|x86.ActiveCfg = Release|Any CPU
 		{0415EAAB-ACCD-4723-B5B2-F19B3F52C399}.Release|x86.Build.0 = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Debug|x86.Build.0 = Debug|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|x86.ActiveCfg = Release|Any CPU
-		{2CE00652-E915-4ACA-875E-83F50584E111}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -453,7 +439,6 @@ Global
 		{80D363F0-C1C1-41CF-B7E0-11C6F6302D33} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{03EEE222-7E3F-428E-B829-19B4EBAEF45D} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{0415EAAB-ACCD-4723-B5B2-F19B3F52C399} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
-		{2CE00652-E915-4ACA-875E-83F50584E111} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}

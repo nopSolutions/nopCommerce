@@ -94,10 +94,6 @@
     {
       "SystemName": "CustomAPI",
       "Version": "1.00"
-    },
-    {
-      "SystemName": "Stereo",
-      "Version": "1.0"
     }
   ],
   "PluginNamesToUninstall": [],
