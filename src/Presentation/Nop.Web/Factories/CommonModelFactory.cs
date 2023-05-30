@@ -633,7 +633,7 @@ namespace Nop.Web.Factories
                 }
 
                 foreach (var additionsRule in _robotsTxtSettings.AdditionsRules)
-                    sb.Append(additionsRule);
+                    sb.AppendLine(additionsRule);
 
                 //load and add robots.txt additions to the end of file.
                 var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/wwwroot"), RobotsTxtDefaults.RobotsAdditionsFileName);
