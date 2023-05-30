@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
 using Nop.Plugin.Misc.AbcCore.Services;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcCore.Factories
 {
@@ -131,7 +132,10 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
                 "Pickup",
                 "Haul Away (Delivery)",
                 "Haul Away (Delivery/Install)",
-                "FedEx"
+                "FedEx",
+                AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName,
+                AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName,
+                AbcDeliveryConsts.PickupAccessoriesProductAttributeName
             }.Contains(m.Name)).ToList();
         }
 

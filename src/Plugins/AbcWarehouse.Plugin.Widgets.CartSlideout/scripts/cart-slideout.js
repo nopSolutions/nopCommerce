@@ -353,6 +353,9 @@ function AddToCart()
         },
         error: function() {
             alert('Error when adding item to cart.');
+            cartSlideoutBackButton.style.display = "block";
+            deliveryOptions.style.display = "block";
+            addToCartButton.disabled = false;
         }
     });
     return false;
