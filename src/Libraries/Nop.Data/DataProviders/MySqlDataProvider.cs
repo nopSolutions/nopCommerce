@@ -273,6 +273,7 @@ namespace Nop.Data.DataProviders
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
+                UseXaTransactions = false
             };
 
             return builder.ConnectionString;
