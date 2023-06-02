@@ -69,6 +69,32 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 taxSettings.AutomaticallyDetectCountry = true;
                 settingService.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
             }
+
+            //#6716
+            var newDisallowPaths = new[]
+            {
+                "/cart/estimateshipping", "/cart/selectshippingoption", "/customer/addressdelete",
+                "/customer/removeexternalassociation", "/customer/checkusernameavailability",
+                "/catalog/searchtermautocomplete", "/catalog/getcatalogroot", "/addproducttocart/catalog/*",
+                "/addproducttocart/details/*", "/compareproducts/add/*", "/backinstocksubscribe/*",
+                "/subscribenewsletter", "/t-popup/*", "/setproductreviewhelpfulness", "/poll/vote",
+                "/country/getstatesbycountryid/", "/eucookielawaccept", "/topic/authenticate",
+                "/category/products/", "/product/combinations", "/uploadfileproductattribute/*",
+                "/shoppingcart/productdetails_attributechange/*", "/uploadfilereturnrequest",
+                "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication"
+            };
+
+            var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
+
+            foreach (var path in newDisallowPaths)
+            {
+                if (robotsTxtSettings.DisallowPaths.Contains(path))
+                    continue;
+
+                robotsTxtSettings.DisallowPaths.Add(path);
+            }
+
+            settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
         }
 
         public override void Down()
