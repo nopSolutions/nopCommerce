@@ -25,6 +25,25 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
    5. `plugin.json` (only include the above files)
 3. Add to project with: `dotnet sln src/NopCommerce.sln add src/Plugins/PLUGIN_FOLDER/PLUGIN_CSPROJ
 
+## Creating a BACPAC
+
+1. RDP into database server.
+2. Create a backup of the desired database using:
+   1. `.\Copy-Sql-Db.ps1 NOPCommerce`
+3. Restore DB as `NOP_BACPAC`
+4. Delete the following Stored Procedures:
+   1. ImportProductAbcPromoMappings
+   2. ImportProductCategoryMappings
+   3. ImportRelatedProducts
+   4. ImportSiteOnTimeFilters
+   5. ImportWarranties
+   6. ProductLoadAllPagedNopAjaxFilters
+   7. UnmapNonstockClearanceItems
+5. Delete users eengle and SQLSERVERAGENT.
+6. NOP_BACPAC -> Tasks -> Export Data-tier Application *(takes ~1 hour)*
+7. Delete DB `NOP_BACPAC`
+8. Upload to Dropbox. *(takes ~20 minutes)*
+
 ## Tooltip
 
 ```
