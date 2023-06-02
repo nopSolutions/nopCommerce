@@ -252,7 +252,7 @@ namespace Nop.Web.Controllers
             {
                 success = true,
                 message = await _localizationService.GetResourceAsync("ShoppingCart.FileUploaded"),
-                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
+                downloadUrl = Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             });
         }

@@ -35,7 +35,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.Action("TopicDelete", "Boards")",
+                                url: "@Url.RouteUrl("TopicDelete")",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -160,7 +160,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.Action("PostDelete", "Boards")",
+                url: "@Url.RouteUrl("PostDelete")",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

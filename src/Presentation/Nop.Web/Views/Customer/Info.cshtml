@@ -472,7 +472,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
+                url: "@Url.RouteUrl("CustomerRemoveExternalAssociation")",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

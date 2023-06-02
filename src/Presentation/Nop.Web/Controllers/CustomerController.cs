@@ -1354,7 +1354,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.Action("Info"),
+                    redirect = Url.RouteUrl("CustomerInfo"),
                 });
             }
 
@@ -1362,7 +1362,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                redirect = Url.Action("Info"),
+                redirect = Url.RouteUrl("CustomerInfo"),
             });
         }
 
