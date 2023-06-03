@@ -3528,7 +3528,10 @@ namespace Nop.Services.Installation
                     "/uploadfilereturnrequest",
                     "/boards/topicwatch/*",
                     "/boards/forumwatch/*",
-                    "/install/restartapplication"
+                    "/install/restartapplication",
+                    "/boards/postvote",
+                    "/product/estimateshipping/*",
+                    "/shoppingcart/checkoutattributechange/*"
                 },
                 LocalizableDisallowPaths = new List<string>
                 {

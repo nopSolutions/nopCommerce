@@ -81,7 +81,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 "/country/getstatesbycountryid/", "/eucookielawaccept", "/topic/authenticate",
                 "/category/products/", "/product/combinations", "/uploadfileproductattribute/*",
                 "/shoppingcart/productdetails_attributechange/*", "/uploadfilereturnrequest",
-                "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication"
+                "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication",
+                "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
             };
 
             var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
