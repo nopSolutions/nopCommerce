@@ -531,8 +531,8 @@ namespace Nop.Web.Infrastructure
                 pattern: $"tag/products",
                 defaults: new { controller = "Catalog", action = "GetTagProducts" });
 
-            endpointRouteBuilder.MapControllerRoute(name: "SearchProductsSearchProducts",
-                pattern: $"product/search",
+            endpointRouteBuilder.MapControllerRoute(name: "SearchProducts",
+                pattern: "product/search",
                 defaults: new { controller = "Catalog", action = "SearchProducts" });
 
             endpointRouteBuilder.MapControllerRoute(name: "GetVendorProducts",
