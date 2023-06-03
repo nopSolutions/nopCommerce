@@ -70,6 +70,11 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{lang}/wishlist/{{customerGuid?}}",
                 defaults: new { controller = "ShoppingCart", action = "Wishlist" });
 
+            //checkout attribute change (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutAttributeChange",
+                pattern: "shoppingcart/checkoutattributechange/{{isEditable}}",
+                defaults: new { controller = "ShoppingCart", action = "CheckoutAttributeChange" });
+
             //customer account links
             endpointRouteBuilder.MapControllerRoute(name: "CustomerInfo",
                 pattern: $"{lang}/customer/info",
@@ -192,6 +197,11 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "ProductEmailAFriend",
                 pattern: $"{lang}/productemailafriend/{{productId:min(0)}}",
                 defaults: new { controller = "Product", action = "ProductEmailAFriend" });
+
+            //product estimate shipping (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "ProductEstimateShipping",
+                pattern: "product/estimateshipping/{{ProductId:min(0)}}",
+                defaults: new { controller = "Product", action = "EstimateShipping" });
 
             //reviews
             endpointRouteBuilder.MapControllerRoute(name: "CustomerProductReviews",
@@ -642,6 +652,11 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "Search",
                 pattern: $"{lang}/boards/search",
                 defaults: new { controller = "Boards", action = "Search" });
+
+            //post vote (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "PostVote",
+                pattern: "boards/postvote",
+                defaults: new { controller = "Boards", action = "PostVote" });
 
             //private messages
             endpointRouteBuilder.MapControllerRoute(name: "PrivateMessages",
