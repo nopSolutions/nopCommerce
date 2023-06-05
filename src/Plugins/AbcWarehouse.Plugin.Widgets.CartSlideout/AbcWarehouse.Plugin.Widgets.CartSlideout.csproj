@@ -22,7 +22,6 @@
     <None Remove="styles/cart-slideout.css" />
     <None Remove="Views/_PickupInStore.cshtml" />
     <None Remove="Views/_ProductInfo.cshtml" />
-    <None Remove="Views/_Subtotal.cshtml" />
     <None Remove="Views/_ViewImports.cshtml" />
     <None Remove="Views/Slideout.cshtml" />
   </ItemGroup>
@@ -44,9 +43,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views/_ProductInfo.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views/_Subtotal.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views/_ViewImports.cshtml">

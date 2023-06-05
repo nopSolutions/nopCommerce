@@ -136,7 +136,6 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 
             return Json(new
             {
-                SubtotalHtml = await RenderViewComponentToStringAsync("CartSlideoutSubtotal", new { sci = sci }),
                 EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
                 DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
                 IsPickup = isPickup,

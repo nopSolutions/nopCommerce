@@ -141,9 +141,6 @@ function updateCartSlideoutHtml(response) {
     if (response.slideoutInfo.ProductInfoHtml) {
         $('.cart-slideout__product-info').html(response.slideoutInfo.ProductInfoHtml);
     }
-    if (response.slideoutInfo.SubtotalHtml) {
-        $('.cart-slideout__subtotal').html(response.slideoutInfo.SubtotalHtml);
-    }
 
     // Should only check zip code if product has delivery options
     if (response.slideoutInfo.DeliveryOptionsHtml !== "") {
@@ -246,8 +243,6 @@ function updateAttributes() {
             listElements[0].children[0].checked = true;
           }
         }
-
-        $('.cart-slideout__subtotal').html(responseJson.SubtotalHtml);
     })
     .catch(err => {
         console.log(err)
