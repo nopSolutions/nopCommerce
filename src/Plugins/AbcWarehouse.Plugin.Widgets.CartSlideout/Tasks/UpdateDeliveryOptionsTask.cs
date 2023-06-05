@@ -438,7 +438,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 }
             }
 
-            return string.Format("Home Delivery ({0}, FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
+            return string.Format("Home Delivery (FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
         }
 
         private async System.Threading.Tasks.Task<string> GetHaulawayMessageAsync(string price, int productId)
