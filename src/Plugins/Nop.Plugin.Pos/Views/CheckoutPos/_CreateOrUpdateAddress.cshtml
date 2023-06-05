@@ -75,10 +75,31 @@
     </div>
     <div class="inputs">
         <label asp-for="Email" asp-postfix=":"></label>
-        <input asp-for="Email" />
+        <input asp-for="Email" onblur="validateEmail()" />
         <nop-required />
-        <span asp-validation-for="Email"></span>
     </div>
+    <span id="emailError" style="color: #e4434b;margin-bottom:2px"></span>
+    <script>
+        function validateEmail() {
+            // const emailInput = document.getElementById("BillingNewAddress_Email");
+            var email = document.getElementById("BillingNewAddress_Email").value;
+            var lblError = document.getElementById("emailError");
+            lblError.innerHTML = "";
+            var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (!expr.test(email)) {
+                console.log("Invalid")
+                lblError.innerHTML = "Invalid email address.";
+            }
+        }
+
+        function checkTabKey(event) {
+            console.log("test");
+            if (event.keyCode === 9) {
+                // Tab key pressed, trigger email validation
+                validateEmail();
+            }
+        }
+    </script>
     @if (Model.CompanyEnabled)
     {
         <div class="inputs">

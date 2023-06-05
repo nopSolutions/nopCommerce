@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Plugin.Pos.Components
+namespace Nop.Plugin.UserDeatils.Components
 {
     [ViewComponent(Name = "Userdetails")]
     public class UserdetailsViewComponent : NopViewComponent
     {
         public IViewComponentResult Invoke()
         {
-            return View("~/Plugins/Pos/Views/UserDetails.cshtml");
+            return View("~/Plugins/UserDeatils/Views/UserDetails.cshtml");
         }
     }
 }

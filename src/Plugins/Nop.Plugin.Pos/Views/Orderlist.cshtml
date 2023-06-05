@@ -57,6 +57,11 @@
     input[type=number] {
         -moz-appearance: textfield;
     }
+
+    .record {
+        text-align: center;
+        padding: 3%;
+    }
 </style>
 <h2> Search By </h2>
 <br />
@@ -73,8 +78,29 @@
 
         <br /><br />
 
-        <input type="text" class="inputbutton" id="SearchValue" name="SearchValue">
+        <input type="text" class="inputbutton" id="SearchValue" onblur="validateEmail(event)" name="SearchValue">
         <button asp-action="OrderList" asp-controller="Pos" type="submit" class="gotocart" id="searchvalue">Search Order</button>
+        <br /><span id="emailError" style="color: #e4434b;margin-bottom:2px"></span>
+
+        <script>
+            function validateEmail(event) {
+                var CustomerEmailField = document.getElementById("CustomerEmail");
+                if (CustomerEmailField.checked == true) {
+                    var email = document.getElementById("SearchValue").value;
+                    var lblError = document.getElementById("emailError");
+                    lblError.innerHTML = "";
+                    var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                    if (!expr.test(email)) {
+                        console.log("Invalid")
+                        lblError.innerHTML = "Invalid email address";
+                        document.getElementById("searchvalue").disabled = true;
+                    }
+                    else {
+                        document.getElementById("searchvalue").disabled = false;
+                    }
+                }
+            }
+        </script>
     </form>
     <br />
 
@@ -148,7 +174,7 @@
                                 @item.CreatedOnUtc.Date.ToShortDateString()
                             </td>
                             <td>
-                                @item.OrderTotal
+                                @item.OrderTotal.ToString("0.00")
                             </td>
                             <td>
                                 <div style="text-align: center">
@@ -164,7 +190,7 @@
 
     else
     {
-        <p>No Records Found</p>
+        <p class="record">No Records Found</p>
     }
 
 </form>
@@ -203,13 +229,14 @@
         CustomerNameField.checked = false;
         CustomerEmailField.checked = false;
         SearchBoxField.type = "number";
+        emailError.style.display = "none";
     }
 
     CustomerNameField.onclick = function () {
         OrderNumberField.checked = false;
         CustomerEmailField.checked = false;
         SearchBoxField.type = "text";
-
+        emailError.style.display = "none";
     }
 
 
@@ -217,7 +244,19 @@
         CustomerNameField.checked = false;
         OrderNumberField.checked = false;
         SearchBoxField.type = "email";
-
     }
+
+    $(document).ready(function () {
+        $('#searchvalue').click(function () {
+            // Check the condition
+            var inputValue = $('#SearchValue').val();
+
+            if (inputValue == "") {
+
+                alert("Please enter value in textbox");
+
+            }
+        });
+    });
 </script>
 

@@ -885,27 +885,34 @@ namespace Nop.Plugin.Pos.Controllers
         }
 
 
-        //Displays the list of all orders
         public virtual async Task<List<Order>> GetAllOrders()
         {
             var query = await _orderRepository.Table.ToListAsync();
+            var OnlyPOSOrders = from q in query
+                                where q.IsPOSorder == true
+                                select q;
+
+            query = OnlyPOSOrders.ToList();
             return query;
         }
+
+
 
 
         //Displays the list of Orders based on OrderNumber , Customer Name , Customer Email.
         public virtual async Task<List<Order>> GetAllOrderByID(string SearchValue, string? selectedSize)
         {
             bool isIntString = SearchValue.All(char.IsDigit);
-
             if (isIntString == true && selectedSize == "OrderNumber")
             {
                 int search = Convert.ToInt32(SearchValue);
                 var query = await _orderRepository.Table.Where(c => c.Id == search).ToListAsync();
+                var OnlyPOSOrders = from q in query
+                                    where q.IsPOSorder == true
+                                    select q;
+                query = OnlyPOSOrders.ToList();
                 return query;
-
             }
-
             var custid = await _customerRepository.Table.Where(c => c.FirstName.ToLower() == SearchValue.ToLower() || c.Email.ToLower() == SearchValue.ToLower()).Select(c => c.Id).ToListAsync();
             var queryy = new List<Order>();
             var que = new List<Order>();
@@ -915,20 +922,22 @@ namespace Nop.Plugin.Pos.Controllers
                 return null;
             }
 
-
             if (selectedSize == "CustomerName" || selectedSize == "CustomerEmail")
             {
                 List<Order> resultados = new List<Order>();
                 custid.ForEach(x =>
                 {
                     var listaResultados = _orderRepository.Table.Where(y => y.CustomerId == x).ToList();
+                    var OnlyPOSOrders = from q in listaResultados
+                                        where q.IsPOSorder == true
+                                        select q;
+                    listaResultados = OnlyPOSOrders.ToList();
                     resultados.AddRange(listaResultados);
                 });
                 return resultados;
             }
             return null;
         }
-
         #endregion
     }
 }

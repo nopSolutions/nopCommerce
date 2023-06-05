@@ -11,7 +11,6 @@
   <ItemGroup>
     <None Remove="Views\GoToPos.cshtml" />
     <None Remove="Views\Neworder.cshtml" />
-    <None Remove="Views\UserDetails.cshtml" />
     <None Remove="Views\_OrderReviewData.cshtml" />
   </ItemGroup>
 
@@ -38,9 +37,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Details.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\UserDetails.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
      <Content Include="Views\Orderlist.cshtml">

@@ -221,7 +221,7 @@
                                     @Model.PaymentMethod
                                 </span>
                             </li>
-                            @if (!Model.PrintMode)
+                            @if (Model.PrintMode)
                             {
                                 <li class="payment-method-status">
                                     <span class="label">
@@ -430,7 +430,7 @@
                                     @Model.ShippingMethod
                                 </span>
                             </li>
-                            @if (!Model.PrintMode)
+                            @if (Model.PrintMode)
                             {
                                 <li class="shipping-status">
                                     <span class="label">

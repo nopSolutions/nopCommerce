@@ -48,10 +48,6 @@
       "Version": "1.47"
     },
     {
-      "SystemName": "POS",
-      "Version": "1.0"
-    },
-    {
       "SystemName": "Shipping.FixedByWeightByTotal",
       "Version": "2.36"
     },
@@ -94,6 +90,14 @@
     {
       "SystemName": "CustomAPI",
       "Version": "1.00"
+    },
+    {
+      "SystemName": "POS",
+      "Version": "1.0"
+    },
+    {
+      "SystemName": "UserDeatils",
+      "Version": "1.0"
     }
   ],
   "PluginNamesToUninstall": [],
