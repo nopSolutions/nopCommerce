@@ -2,10 +2,9 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Copyright>SOME_COPYRIGHT</Copyright>
-    <Company>YOUR_COMPANY</Company>
-    <Authors>SOME_AUTHORS</Authors>
+    <Company>Infigo</Company>
+    <Authors>Gabriel</Authors>
     <PackageLicenseUrl>PACKAGE_LICENSE_URL</PackageLicenseUrl>
-    <PackageProjectUrl>PACKAGE_PROJECT_URL</PackageProjectUrl>
     <RepositoryUrl>REPOSITORY_URL</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.InfigoProductProvider</OutputPath>
