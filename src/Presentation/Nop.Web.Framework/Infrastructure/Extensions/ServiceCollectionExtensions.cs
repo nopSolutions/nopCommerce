@@ -6,6 +6,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -92,6 +93,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var pluginConfig = new PluginConfig();
             builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
             mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
+
+            //allow large form submissions
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+            });
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
