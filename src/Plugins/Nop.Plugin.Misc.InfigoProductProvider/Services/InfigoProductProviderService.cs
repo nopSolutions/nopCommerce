@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Nop.Data;
 using Nop.Plugin.Misc.InfigoProductProvider.Domain;
 
@@ -13,12 +14,12 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         _infigoProductProviderRepository = infigoProductProviderRepository;
     }
 
-    public virtual void Set(InfigoProductProviderConfiguration configuration)
+    public virtual async Task Set(InfigoProductProviderConfiguration configuration)
     {
         if (configuration == null)
         {
             throw new ArgumentNullException(nameof(configuration));
         }
-        _infigoProductProviderRepository.Insert(configuration);
+        await _infigoProductProviderRepository.InsertAsync(configuration);
     }
 }
