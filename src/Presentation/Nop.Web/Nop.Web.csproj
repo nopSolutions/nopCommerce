@@ -39,6 +39,7 @@
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
     <None Remove="Plugins\**;Themes\**" />
     <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\runtimes\**;Plugins\**\ref\**;Plugins\**\*.pdb" />
+    <Content Include="Plugins\Misc.InfigoProductProvider\plugin.json" />
 
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Never" />
 
