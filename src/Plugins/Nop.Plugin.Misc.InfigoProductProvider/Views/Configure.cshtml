@@ -1,0 +1,32 @@
+﻿@model ConfigurationModel
+
+@using Nop.Plugin.Misc.InfigoProductProvider.Models
+@using Nop.Web.Areas.Admin.Components
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<link rel="stylesheet" href="~/Plugins/Misc.Sendinblue/Content/styles.css"/>
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="InfigoProductProvider" asp-action="Configure" method="post">
+    <div class="card-body">
+        <div class="card card-default">
+            <div class="form-group row">
+                <label asp-for="ApiBase">Api base</label>
+                <input type="text" asp-for="ApiBase" placeholder="Api base">
+            </div>
+            <div class="form-group row">
+                <label asp-for="ProductListUrl">Product list url</label>
+                <input type="text" asp-for="ProductListUrl" placeholder="Product list url">
+            </div>
+            <div class="form-group row">
+                <label asp-for="ProductDetailsUrl">Product details url</label>
+                <input type="text" asp-for="ProductDetailsUrl" placeholder="Product details url">
+            </div>
+            <button class="btn" type="submit">Save</button>
+        </div>
+    </div>
+</form>
