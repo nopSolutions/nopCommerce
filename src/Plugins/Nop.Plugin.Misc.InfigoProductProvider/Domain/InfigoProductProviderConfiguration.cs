@@ -1,6 +1,8 @@
-﻿namespace Nop.Plugin.Misc.InfigoProductProvider.Models;
+﻿using Nop.Core;
 
-public class ConfigurationModel
+namespace Nop.Plugin.Misc.InfigoProductProvider.Domain;
+
+public class InfigoProductProviderConfiguration : BaseEntity
 {
     public string UserName { get; set; }
     public string ApiBase { get; set; }

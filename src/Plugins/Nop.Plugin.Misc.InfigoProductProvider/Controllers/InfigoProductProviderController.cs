@@ -12,10 +12,18 @@ public class InfigoProductProviderController : BasePluginController
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
-    public async Task<IActionResult> Configure()
+    public IActionResult Configure()
     {
         var model = new ConfigurationModel();
 
         return View("~/Plugins/Misc.InfigoProductProvider/Views/Configure.cshtml", model);
+    }
+
+    [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
+    [HttpPost, ActionName("Configure")]
+    public async Task<IActionResult> Configure(ConfigurationModel model)
+    {
+        return Configure();
     }
 }
