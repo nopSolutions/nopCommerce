@@ -236,7 +236,9 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             RouteData.Values["action"] = "BlogPost";
             await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
+            // ReSharper disable Mvc.ViewNotResolved
             return View(model);
+            // ReSharper restore Mvc.ViewNotResolved
         }
 
         #endregion

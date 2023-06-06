@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Products",
+  "FriendlyName": "Product Provider",
+  "SystemName": "Products.ProductProvider",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "Virgiliu Plesca",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Products.ProductProvider.dll",
+  "Description": "Syncs products from an endpoint using background job"
+}
