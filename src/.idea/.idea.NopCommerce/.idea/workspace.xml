@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Domain/InfigoProductProviderConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/NopStartup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/Builders/InfigoProductProviderConfigurationBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Migrations/SchemaMigration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/IInfigoProductProviderService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,23 +24,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RiderRazorCSFileTemplatesSettingsId",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderRazorCSFileTemplatesSettingsId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\40747\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\40747\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\40747\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\40747\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\40747\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\40747\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Nop.Web" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -78,7 +70,8 @@
       <option name="presentableId" value="Default" />
       <updated>1686036505293</updated>
       <workItem from="1686036506749" duration="2635000" />
-      <workItem from="1686047278578" duration="6348000" />
+      <workItem from="1686047278578" duration="6393000" />
+      <workItem from="1686061156649" duration="1774000" />
     </task>
     <servers />
   </component>
