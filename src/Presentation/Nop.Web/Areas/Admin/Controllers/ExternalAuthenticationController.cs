@@ -54,7 +54,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _externalAuthenticationMethodModelFactory
                 .PrepareExternalAuthenticationMethodSearchModel(new ExternalAuthenticationMethodSearchModel());
 
-            // ReSharper disable once Mvc.ViewNotResolved
             return View(model);
         }
 

@@ -4,7 +4,7 @@ using Nop.Services.Plugins;
 
 namespace Nop.Plugin.ProductProvider;
 
-public class ProductProvider : IPlugin
+public class ProductProvider : BasePlugin, IPlugin
 {
     public string GetConfigurationPageUrl()
     {
@@ -14,21 +14,21 @@ public class ProductProvider : IPlugin
     public PluginDescriptor PluginDescriptor { get; set; }
     public Task InstallAsync()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Task UninstallAsync()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Task UpdateAsync(string currentVersion, string targetVersion)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Task PreparePluginToUninstallAsync()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

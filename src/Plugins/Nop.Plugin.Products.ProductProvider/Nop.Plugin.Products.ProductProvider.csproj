@@ -2,12 +2,9 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Copyright>SOME_COPYRIGHT</Copyright>
-        <Company>YOUR_COMPANY</Company>
+        <Company>Virgiliu Corporation</Company>
         <Authors>Virgiliu Plesca</Authors>
         <PackageLicenseUrl>PACKAGE_LICENSE_URL</PackageLicenseUrl>
-        <PackageProjectUrl>PACKAGE_PROJECT_URL</PackageProjectUrl>
-        <RepositoryUrl>REPOSITORY_URL</RepositoryUrl>
-        <RepositoryType>Git</RepositoryType>
         <OutputPath>..\..\Presentation\Nop.Web\Plugins\Products.ProductProvider</OutputPath>
         <OutDir>$(OutputPath)</OutDir>
         <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your    project. You need to set this parameter to true if your plugin has a nuget package to ensure that   the dlls copied from the NuGet cache to the output of your project-->
