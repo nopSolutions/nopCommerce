@@ -4,17 +4,7 @@
     <projectFile>Presentation/Nop.Web/Nop.Web.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Domain/InfigoProductProviderConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Domain/InfigoProductProviderConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/Builders/InfigoProductProviderConfigurationBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/Builders/InfigoProductProviderConfigurationBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Migrations/SchemaMigration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Migrations/SchemaMigration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/IInfigoProductProviderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/IInfigoProductProviderService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" afterDir="false" />
-    </list>
+    <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,7 +69,7 @@
       <workItem from="1686036506749" duration="2635000" />
       <workItem from="1686047278578" duration="6393000" />
       <workItem from="1686061156649" duration="2826000" />
-      <workItem from="1686107797039" duration="5151000" />
+      <workItem from="1686107797039" duration="5411000" />
     </task>
     <servers />
   </component>
@@ -105,19 +95,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>42</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="42" containingFunctionPresentation="method 'Configure'">
-            <startOffsets>
-              <option value="1527" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1815" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

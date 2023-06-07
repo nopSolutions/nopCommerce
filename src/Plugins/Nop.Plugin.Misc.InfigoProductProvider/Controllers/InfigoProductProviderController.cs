@@ -23,7 +23,7 @@ public class InfigoProductProviderController : BasePluginController
     [Area(AreaNames.Admin)]
     public async Task<IActionResult> Configure()
     {
-        var configurationEntity = await _infigoProductProviderService.GetByIdAsync(1);
+        var configurationEntity = await _infigoProductProviderService.GetApiConfigurationAsync();
         var model = new ConfigurationModel
         {
             ApiUserName = configurationEntity.ApiUserName,

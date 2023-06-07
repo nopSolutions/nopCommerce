@@ -31,9 +31,9 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         await _infigoProductProviderRepository.UpdateAsync(configurationEntity);
     }
 
-    public async Task<InfigoProductProviderConfiguration> GetByIdAsync(int id)
+    public async Task<InfigoProductProviderConfiguration> GetApiConfigurationAsync()
     {
-        var configuration = await _infigoProductProviderRepository.GetByIdAsync(id);
+        var configuration = await _infigoProductProviderRepository.GetByIdAsync(1);
 
         return configuration;
     }

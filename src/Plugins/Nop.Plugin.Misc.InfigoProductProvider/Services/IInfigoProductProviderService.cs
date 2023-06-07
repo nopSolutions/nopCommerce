@@ -6,5 +6,5 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Services;
 public interface IInfigoProductProviderService
 {
     Task Set(InfigoProductProviderConfiguration configuration);
-    public Task<InfigoProductProviderConfiguration> GetByIdAsync(int id);
+    public Task<InfigoProductProviderConfiguration> GetApiConfigurationAsync();
 }
