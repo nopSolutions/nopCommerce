@@ -36,7 +36,6 @@
     }
 </style>
 
-
 @{
     var UserEmail = await workContext.GetCurrentCustomerAsync();
     var role = await customerService.GetCustomerRoleIdsAsync(UserEmail);
