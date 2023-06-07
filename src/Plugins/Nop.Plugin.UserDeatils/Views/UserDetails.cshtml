@@ -1,7 +1,10 @@
 ﻿@using Nop.Core;
+@using Nop.Core.Domain.Customers;
+@using Nop.Data;
 @using Nop.Services.Customers;
 @inject IWorkContext workContext
 @inject ICustomerService customerService;
+@inject IRepository<CustomerRole> _customerRoleRepository
 
 <style>
     .search-box input.search-box-text {
@@ -28,7 +31,7 @@
         color: inherit;
     }
 
-    .userdetails{
+    .userdetails {
         padding: 2%;
         font-size: 16px;
         color: #777;
@@ -39,12 +42,10 @@
 @{
     var UserEmail = await workContext.GetCurrentCustomerAsync();
     var role = await customerService.GetCustomerRoleIdsAsync(UserEmail);
-    var adminrole = "Administrators ";
-    var forummoderatorsrole = "Forum_Moderators ";
-    var registeredrole = "Registered ";
-    var guestsrole = "Guests ";
-    var vendorsrole = "Vendors ";
-    var posuserrole = "POS_User ";
+
+    var query = (from cr in _customerRoleRepository.Table
+                 where role.Contains(cr.Id)
+                 select cr).ToList();
 }
 
 @if (UserEmail.Username != null)
@@ -54,37 +55,11 @@
         <div class="col-12">
             <p class="userdetails">
                 Hi @UserEmail.Username you have
-                @foreach (var item in role)
+                @foreach (var item in query)
                 {
-                    if (item == 1)
-                    {
-                        @adminrole
-                    }
-                    if (item == 2)
-                    {
-                        @forummoderatorsrole
+                    @item.Name
 
-                    }
-                    if (item == 3)
-                    {
-                        @registeredrole
-
-                    }
-                    if (item == 4)
-                    {
-                        @guestsrole
-
-                    }
-                    if (item == 5)
-                    {
-                        @vendorsrole
-
-                    }
-                    if (item == 6)
-                    {
-                        @posuserrole
-
-                    }
+                    <text>&nbsp;</text>
                 }
                 access only
             </p>

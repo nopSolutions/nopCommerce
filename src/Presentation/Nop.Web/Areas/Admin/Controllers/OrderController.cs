@@ -895,6 +895,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            bool currentuser = await _customerService.IsAdminAsync(customer);
+
+            model.IsLoggedInAsOtherUser = currentuser;
+
             return View(model);
         }
 
@@ -2126,6 +2132,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _orderModelFactory.PrepareShipmentModelAsync(null, shipment, null);
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            bool currentuser = await _customerService.IsAdminAsync(customer);
+
+            model.IsLoggedInAsOtherUser = currentuser;
 
             return View(model);
         }
