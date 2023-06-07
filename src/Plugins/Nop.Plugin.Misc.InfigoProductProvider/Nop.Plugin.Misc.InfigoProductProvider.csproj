@@ -34,6 +34,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Factories" />
     <Folder Include="Services" />
   </ItemGroup>
   <!-- This target execute after "Build" target -->

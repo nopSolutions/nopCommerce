@@ -5,24 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/AutoMapperProfiles/ConfigurationProfile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Factories/ConfigurationModelFactory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Factories/IConfigurationModelFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/AutoMapperProfiles/ConfigurationProfile.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Domain/InfigoProductProviderConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Factories/ConfigurationModelFactory.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Factories/IConfigurationModelFactory.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/NopStartup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/NopStartup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/RouteProvider.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/Builders/InfigoProductProviderConfigurationBuilder.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Migrations/SchemaMigration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Models/ConfigurationModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Nop.Plugin.Misc.InfigoProductProvider.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Nop.Plugin.Misc.InfigoProductProvider.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/IInfigoProductProviderService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +19,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4dc731a2825b3b282c3a7fc5adbea47e8720eadf5445558010f8488ec05eb64f/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/cea8f116d46ddf4be845bdf1d46ab3bb5bc4f06bc533db822f2d7999187e56f/Controller.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -105,13 +95,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>37</line>
+          <line>39</line>
           <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="40" containingFunctionPresentation="method 'Configure'">
             <startOffsets>
-              <option value="1406" />
+              <option value="1309" />
             </startOffsets>
             <endOffsets>
-              <option value="1672" />
+              <option value="1575" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
@@ -128,45 +118,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>29</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="29" containingFunctionPresentation="method 'Configure'">
-            <startOffsets>
-              <option value="1154" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1222" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Factories/ConfigurationModelFactory.cs</url>
-          <line>22</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Factories\ConfigurationModelFactory.cs" initialLine="22" containingFunctionPresentation="method 'PrepareConfigurationModel'">
-            <startOffsets>
-              <option value="614" />
-            </startOffsets>
-            <endOffsets>
-              <option value="705" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>27</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="27" containingFunctionPresentation="method 'Configure'">
-            <startOffsets>
-              <option value="1060" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1144" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

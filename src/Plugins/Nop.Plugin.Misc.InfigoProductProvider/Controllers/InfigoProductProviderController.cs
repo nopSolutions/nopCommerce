@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.Misc.InfigoProductProvider.Factories;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Framework;
@@ -9,29 +8,32 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.InfigoProductProvider.Controllers;
 
+[Area(AreaNames.Admin)]
 [AutoValidateAntiforgeryToken]
 public class InfigoProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
-    private readonly IConfigurationModelFactory _configurationModelFactory;
-    public InfigoProductProviderController(ISettingService settingService, IConfigurationModelFactory configurationModelFactory)
+    public InfigoProductProviderController(ISettingService settingService)
     {
         _settingService = settingService;
-        _configurationModelFactory = configurationModelFactory;
     }
 
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
     public async Task<IActionResult> Configure()
     {
         var apiSettings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
-        var model = _configurationModelFactory.PrepareConfigurationModel(null, apiSettings);
+        var model = new ConfigurationModel
+        {
+            ApiUserName = apiSettings.ApiUserName,
+            ApiBase = apiSettings.ApiBase,
+            ProductListUrl = apiSettings.ProductListUrl,
+            ProductDetailsUrl = apiSettings.ProductDetailsUrl
+        };
 
         return View(InfigoProductProviderDefaults.ConfigurationPath, model);
     }
 
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
     [HttpPost, ActionName("Configure")]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
