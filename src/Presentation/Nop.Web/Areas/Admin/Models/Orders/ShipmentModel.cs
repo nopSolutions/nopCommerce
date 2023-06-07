@@ -22,6 +22,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Properties
 
+        public bool IsLoggedInAsOtherUser { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
         public override int Id { get; set; }
 
