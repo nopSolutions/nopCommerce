@@ -151,6 +151,10 @@ function updateCartSlideoutHtml(response) {
         setAttributeListeners(response.slideoutInfo.ShoppingCartItemId);
         productId = response.slideoutInfo.ProductId;
         cartSlideoutShoppingCartItemId = response.slideoutInfo.ShoppingCartItemId;
+    } else {
+        addToCartButton.style.display = "none";
+        title.style.display = "block";
+        goToCartButton.style.display = "block";
     }
 }
 

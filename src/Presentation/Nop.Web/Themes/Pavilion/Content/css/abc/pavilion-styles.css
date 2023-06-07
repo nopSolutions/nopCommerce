@@ -202,6 +202,15 @@ body {
     }
 }
 
+@media (min-width: 520px) {
+    /* floats item price, quantity, total in cart to top */
+    .cart .unit-price,
+    .cart .quantity,
+    .cart .subtotal {
+        vertical-align: top;
+    }
+}
+
 @media (min-width: 1001px) {
     /* moves admin header links when logged in */
     .admin-header-links {

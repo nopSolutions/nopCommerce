@@ -61,6 +61,14 @@ function createEstimateShippingPopUp(settings) {
       });
       $(this.settings.stateProvinceEl, $content).on('change', addressChangedHandler);
       $(this.settings.zipPostalCodeEl, $content).on('input propertychange paste', addressChangedHandler);
+
+      // ABC: change zip code if cookie exists:
+      document.getElementById('CountryId').value = 1;
+      var cookieZipValue = getCookie('customerZipCode');
+      if (cookieZipValue !== "")
+      {
+        document.getElementById('ZipPostalCode').value = cookieZipValue;
+      }
     },
 
     closePopup: function () {
@@ -310,4 +318,14 @@ function createEstimateShippingPopUp(settings) {
             address.zipPostalCode;
     }
   }
-} 
+}
+
+// ABC: Used to save ZIP information
+function getCookie(cookieName) {
+  let cookie = {};
+  document.cookie.split(';').forEach(function(el) {
+    let [key,value] = el.split('=');
+    cookie[key.trim()] = value;
+  })
+  return cookie[cookieName] ?? '';
+}
