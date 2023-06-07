@@ -1,13 +1,10 @@
 ﻿@model ConfigurationModel
 
 @using Nop.Plugin.Misc.InfigoProductProvider.Models
-@using Nop.Web.Areas.Admin.Components
 
 @{
     Layout = "_ConfigurePlugin";
 }
-
-<link rel="stylesheet" href="~/Plugins/Misc.Sendinblue/Content/styles.css"/>
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
@@ -16,32 +13,32 @@
     <div class="card-body">
         <h5 class="card-title">Current configuration</h5>
         <div class="card-text">
-            <h6>User name:</h6>
+            <h6>@T("Plugins.Misc.InfigoProductProvider.ApiUserName"): </h6>
             <p>@Model.ApiUserName</p>
-            <h6>Api base:</h6>
+            <h6>@T("Plugins.Misc.InfigoProductProvider.ApiBase"): </h6>
             <p>@Model.ApiBase</p>
-            <h6>Product list url:</h6>
+            <h6>@T("Plugins.Misc.InfigoProductProvider.ProductListUrl"): </h6>
             <p>@Model.ProductListUrl</p>
-            <h6>Product details url:</h6>
+            <h6>@T("Plugins.Misc.InfigoProductProvider.ProductDetailsUrl"): </h6>
             <p>@Model.ProductDetailsUrl</p>
         </div>
     </div>
 </div>
 <form asp-controller="InfigoProductProvider" asp-action="Configure" method="post">
     <div class="form-group">
-        <label asp-for="ApiUserName">Username</label>
+        <nop-label asp-for="ApiUserName"/>
         <input type="text" asp-for="ApiUserName" placeholder="Username" class="form-control">
     </div>
     <div class="form-group">
-        <label asp-for="ApiBase">Api base</label>
+        <nop-label asp-for="ApiBase"/>
         <input type="text" asp-for="ApiBase" placeholder="Api base" class="form-control">
     </div>
     <div class="form-group">
-        <label asp-for="ProductListUrl">Product list url</label>
+        <nop-label asp-for="ProductListUrl"/>
         <input type="text" asp-for="ProductListUrl" placeholder="Product list url" class="form-control">
     </div>
     <div class="form-group">
-        <label asp-for="ProductDetailsUrl">Product details url</label>
+        <nop-label asp-for="ProductDetailsUrl"/>
         <input type="text" asp-for="ProductDetailsUrl" placeholder="Product details url" class="form-control">
     </div>
     <button class="btn btn-primary" type="submit">Save</button>

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.Misc.InfigoProductProvider.Domain;
+using Nop.Plugin.Misc.InfigoProductProvider.Factories;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
-using Nop.Plugin.Misc.InfigoProductProvider.Services;
+using Nop.Services.Configuration;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -12,27 +12,22 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Controllers;
 [AutoValidateAntiforgeryToken]
 public class InfigoProductProviderController : BasePluginController
 {
-    private readonly IInfigoProductProviderService _infigoProductProviderService;
-
-    public InfigoProductProviderController(IInfigoProductProviderService infigoProductProviderService)
+    private readonly ISettingService _settingService;
+    private readonly IConfigurationModelFactory _configurationModelFactory;
+    public InfigoProductProviderController(ISettingService settingService, IConfigurationModelFactory configurationModelFactory)
     {
-        _infigoProductProviderService = infigoProductProviderService;
+        _settingService = settingService;
+        _configurationModelFactory = configurationModelFactory;
     }
 
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
     public async Task<IActionResult> Configure()
     {
-        var configurationEntity = await _infigoProductProviderService.GetApiConfigurationAsync();
-        var model = new ConfigurationModel
-        {
-            ApiUserName = configurationEntity.ApiUserName,
-            ApiBase = configurationEntity.ApiBase,
-            ProductListUrl = configurationEntity.ProductListUrl,
-            ProductDetailsUrl = configurationEntity.ProductDetailsUrl
-        };
+        var apiSettings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
+        var model = _configurationModelFactory.PrepareConfigurationModel(null, apiSettings);
 
-        return View("~/Plugins/Misc.InfigoProductProvider/Views/Configure.cshtml", model);
+        return View(InfigoProductProviderDefaults.ConfigurationPath, model);
     }
 
     [AuthorizeAdmin]
@@ -40,7 +35,7 @@ public class InfigoProductProviderController : BasePluginController
     [HttpPost, ActionName("Configure")]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        var configuration = new InfigoProductProviderConfiguration
+        var apiSettings = new InfigoProductProviderConfiguration
         {
             ApiUserName = model.ApiUserName,
             ApiBase = model.ApiBase,
@@ -48,7 +43,7 @@ public class InfigoProductProviderController : BasePluginController
             ProductDetailsUrl = model.ProductDetailsUrl
         };
 
-        await _infigoProductProviderService.Set(configuration);
+        await _settingService.SaveSettingAsync(apiSettings);
         
         return await Configure();
     }

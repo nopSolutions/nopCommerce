@@ -1,8 +1,8 @@
-﻿using Nop.Core;
+﻿using Nop.Core.Configuration;
 
-namespace Nop.Plugin.Misc.InfigoProductProvider.Domain;
+namespace Nop.Plugin.Misc.InfigoProductProvider;
 
-public class InfigoProductProviderConfiguration : BaseEntity
+public class InfigoProductProviderConfiguration : ISettings
 {
     public string ApiUserName { get; set; }
     public string ApiBase { get; set; }
