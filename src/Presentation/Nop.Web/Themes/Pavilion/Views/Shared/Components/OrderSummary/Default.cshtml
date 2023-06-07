@@ -352,7 +352,7 @@
                                         }
                                         else
                                         {
-                                            <!-- ABC: checkbox not used -->
+                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
 											<button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
                                         }
                                     </td>
