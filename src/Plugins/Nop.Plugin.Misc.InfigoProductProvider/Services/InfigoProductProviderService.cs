@@ -20,6 +20,21 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         {
             throw new ArgumentNullException(nameof(configuration));
         }
-        await _infigoProductProviderRepository.InsertAsync(configuration);
+
+        var configurationEntity = await _infigoProductProviderRepository.GetByIdAsync(1);
+
+        configurationEntity.ApiUserName = configuration.ApiUserName;
+        configurationEntity.ApiBase = configuration.ApiBase;
+        configurationEntity.ProductListUrl = configuration.ProductListUrl;
+        configurationEntity.ProductDetailsUrl = configuration.ProductDetailsUrl;
+
+        await _infigoProductProviderRepository.UpdateAsync(configurationEntity);
+    }
+
+    public async Task<InfigoProductProviderConfiguration> GetByIdAsync(int id)
+    {
+        var configuration = await _infigoProductProviderRepository.GetByIdAsync(id);
+
+        return configuration;
     }
 }

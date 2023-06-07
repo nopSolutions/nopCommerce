@@ -21,9 +21,16 @@ public class InfigoProductProviderController : BasePluginController
 
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
-    public IActionResult Configure()
+    public async Task<IActionResult> Configure()
     {
-        var model = new ConfigurationModel();
+        var configurationEntity = await _infigoProductProviderService.GetByIdAsync(1);
+        var model = new ConfigurationModel
+        {
+            ApiUserName = configurationEntity.ApiUserName,
+            ApiBase = configurationEntity.ApiBase,
+            ProductListUrl = configurationEntity.ProductListUrl,
+            ProductDetailsUrl = configurationEntity.ProductDetailsUrl
+        };
 
         return View("~/Plugins/Misc.InfigoProductProvider/Views/Configure.cshtml", model);
     }
@@ -35,7 +42,7 @@ public class InfigoProductProviderController : BasePluginController
     {
         var configuration = new InfigoProductProviderConfiguration
         {
-            UserName = model.UserName,
+            ApiUserName = model.ApiUserName,
             ApiBase = model.ApiBase,
             ProductListUrl = model.ProductListUrl,
             ProductDetailsUrl = model.ProductDetailsUrl
@@ -43,6 +50,6 @@ public class InfigoProductProviderController : BasePluginController
 
         await _infigoProductProviderService.Set(configuration);
         
-        return Configure();
+        return await Configure();
     }
 }

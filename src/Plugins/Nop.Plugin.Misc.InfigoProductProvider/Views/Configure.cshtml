@@ -11,10 +11,26 @@
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Current configuration</h5>
+        <div class="card-text">
+            <h6>User name:</h6>
+            <p>@Model.ApiUserName</p>
+            <h6>Api base:</h6>
+            <p>@Model.ApiBase</p>
+            <h6>Product list url:</h6>
+            <p>@Model.ProductListUrl</p>
+            <h6>Product details url:</h6>
+            <p>@Model.ProductDetailsUrl</p>
+        </div>
+    </div>
+</div>
 <form asp-controller="InfigoProductProvider" asp-action="Configure" method="post">
     <div class="form-group">
-        <label asp-for="UserName">Username</label>
-        <input type="text" asp-for="UserName" placeholder="Username" class="form-control">
+        <label asp-for="ApiUserName">Username</label>
+        <input type="text" asp-for="ApiUserName" placeholder="Username" class="form-control">
     </div>
     <div class="form-group">
         <label asp-for="ApiBase">Api base</label>

@@ -9,9 +9,9 @@ public class InfigoProductProviderConfigurationBuilder : NopEntityBuilder<Infigo
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table.WithColumn(nameof(InfigoProductProviderConfiguration.Id)).AsInt32().PrimaryKey()
-            .WithColumn(nameof(InfigoProductProviderConfiguration.UserName)).AsString()
-            .WithColumn(nameof(InfigoProductProviderConfiguration.ApiBase)).AsString()
-            .WithColumn(nameof(InfigoProductProviderConfiguration.ProductListUrl)).AsString()
-            .WithColumn(nameof(InfigoProductProviderConfiguration.ProductDetailsUrl)).AsString();
+            .WithColumn(nameof(InfigoProductProviderConfiguration.ApiUserName)).AsString().Nullable()
+            .WithColumn(nameof(InfigoProductProviderConfiguration.ApiBase)).AsString().Nullable()
+            .WithColumn(nameof(InfigoProductProviderConfiguration.ProductListUrl)).AsString().Nullable()
+            .WithColumn(nameof(InfigoProductProviderConfiguration.ProductDetailsUrl)).AsString().Nullable();
     }
 }
