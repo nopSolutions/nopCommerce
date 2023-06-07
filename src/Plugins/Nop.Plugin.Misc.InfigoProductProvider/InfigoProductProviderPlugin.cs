@@ -35,7 +35,7 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
             ["Plugins.Misc.InfigoProductProvider.ApiUserName"] = "Api user name",
             ["Plugins.Misc.InfigoProductProvider.ApiBase"] = "Api base",
             ["Plugins.Misc.InfigoProductProvider.ProductListUrl"] = "Product list url",
-            ["Plugins.Misc.InfigoProductProvider.ProductDetailsUrl"] = "Product details url",
+            ["Plugins.Misc.InfigoProductProvider.ProductDetailsUrl"] = "Product details url"
         });
         
         await base.InstallAsync();
