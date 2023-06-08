@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Plugin.Test.ProductProvider.Api;
+using Nop.Plugin.Test.ProductProvider.Models;
 using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Test.ProductProvider.Services;
@@ -29,12 +30,14 @@ public class ProductService : IProductService
         return JsonConvert.DeserializeObject<IEnumerable<int>>(response);
     }
 
-    public async Task GetProductDetails(int id)
+    public async Task<ExternalProductModel> GetProductDetails(int id)
     {
         var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
 
         var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}?id={id}";
 
-        await _httpClient.RequestAsync(url, settings);
+        var result = await _httpClient.RequestAsync(url, settings);
+
+        return JsonConvert.DeserializeObject<ExternalProductModel>(result);
     }
 }

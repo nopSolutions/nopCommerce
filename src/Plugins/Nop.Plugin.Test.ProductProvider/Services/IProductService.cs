@@ -7,5 +7,5 @@ namespace Nop.Plugin.Test.ProductProvider.Services;
 public interface IProductService
 {
     Task<IEnumerable<int>> GetAllProducts();
-    Task GetProductDetails(int id);
+    Task<ExternalProductModel> GetProductDetails(int id);
 }
