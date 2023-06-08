@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model Nop.Plugin.Test.ProductProvider.Models.ConfigurationModel;
+
+<form asp-controller="ProductProvider" asp-action="Save" method="post">
+    <div class="form-group">
+        <label for="baseurl">Base URL</label>
+        <input value="@Model.BaseUrl" type="text" name="BaseUrl" class="form-control" id="baseurl" placeholder="Insert endpoint URL">
+    </div>
+    <div class="form-group">
+        <label for="ids">Get product Ids endpoint</label>
+        <input value="@Model.GetProductsIdsEndpoint" type="text" name="GetProductsIdsEndpoint" class="form-control" id="ids" placeholder="Insert get ids endpoint">
+    </div>
+    <div class="form-group">
+        <label for="getById">Get product by id endpoint</label>
+        <input value="@Model.GetProductByIdEndpoint" type="text" name="GetProductByIdEndpoint" class="form-control" id="getById" placeholder="Insert get by id endpoint">
+    </div>
+    <div class="form-group">
+        <label for="apikey">Api key</label>
+        <input value="@Model.AccessToken" type="text" name="AccessToken" class="form-control" id="apikey" placeholder="Insert the api key">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
