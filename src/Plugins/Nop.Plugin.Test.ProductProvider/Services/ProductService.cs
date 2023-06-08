@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Nop.Plugin.Test.ProductProvider.Api;
 using Nop.Services.Configuration;
 
@@ -17,17 +18,23 @@ public class ProductService : IProductService
         _settingService = settingService;
     }
 
-    // public async Task<IEnumerable<int>> GetAllProducts()
-    // {
-    //     var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
-    //     
-    //     return await _httpClient.GetProducts(settings);
-    // }
+    public async Task<IEnumerable<int>> GetAllProducts()
+    {
+        var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
+
+        var url = $"{settings.BaseUrl}/{settings.ProductListEndpoint}";
+        
+        var response = await _httpClient.RequestAsync(url, settings);
+        
+        return JsonConvert.DeserializeObject<IEnumerable<int>>(response);
+    }
 
     public async Task GetProductDetails(int id)
     {
         var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
 
-        await _httpClient.GetProductDetails(settings, id);
+        var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}?id={id}";
+
+        await _httpClient.RequestAsync(url, settings);
     }
 }

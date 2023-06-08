@@ -41,7 +41,9 @@ public class ProductProviderController : BasePluginController
             };
         }
 
-        // var products = await _productService.GetAllProducts();
+        var products = await _productService.GetAllProducts();
+        var product = await _productService.GetProductDetails(1552);
+
         await _productService.GetProductDetails(1552);
 
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);

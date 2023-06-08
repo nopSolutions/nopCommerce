@@ -20,30 +20,8 @@ namespace Nop.Plugin.Test.ProductProvider.Api
             _httpClient = httpClient;
         }
 
-        // public async Task<IEnumerable<int>> GetProducts(ProductProviderSettings settings)
-        // {
-        //     var uri = $"{settings.BaseUrl}/{settings.ProductListEndpoint}";
-        //     
-        //     _httpClient.Timeout = TimeSpan.FromSeconds(10);
-        //     _httpClient.DefaultRequestHeaders.Authorization =
-        //         new AuthenticationHeaderValue(settings.ApiKeyType, settings.ApiKey);
-        //     
-        //     var httpResponse = await _httpClient.GetAsync(uri);
-        //     var responseString = await httpResponse.Content.ReadAsStringAsync();
-        //     
-        //     return JsonConvert.DeserializeObject<IEnumerable<int>>(responseString);
-        // }
-
-        public async Task GetProductDetails(ProductProviderSettings settings, int id)
+        public async Task<string> RequestAsync(string uri, ProductProviderSettings settings)
         {
-            var uri = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}";
-
-            var query = new Dictionary<string, string>()
-            {
-                ["id"] = id.ToString()
-            };
-
-            uri = QueryHelpers.AddQueryString(uri, query);
 
             _httpClient.Timeout = TimeSpan.FromSeconds(10);
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -51,8 +29,8 @@ namespace Nop.Plugin.Test.ProductProvider.Api
 
             var httpResponse = await _httpClient.GetAsync(uri);
             var responseString = await httpResponse.Content.ReadAsStringAsync();
-            
-            var af = 4;
+
+            return responseString;
         }
     }
 }
