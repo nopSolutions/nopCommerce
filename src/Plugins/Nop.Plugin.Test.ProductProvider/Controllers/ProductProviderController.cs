@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Test.ProductProvider.Models;
+using Nop.Plugin.Test.ProductProvider.Services;
 using Nop.Services.Configuration;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -15,10 +16,12 @@ namespace Nop.Plugin.Test.ProductProvider.Controllers;
 public class ProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
+    private readonly IProductService _productService;
 
-    public ProductProviderController(ISettingService settingService)
+    public ProductProviderController(ISettingService settingService, IProductService productService)
     {
         _settingService = settingService;
+        _productService = productService;
     }
 
     public async Task<IActionResult> Configure()
