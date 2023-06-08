@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Misc.InfigoProductProvider.Api;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
@@ -52,5 +53,11 @@ public class InfigoProductProviderController : BasePluginController
         await _settingService.SaveSettingAsync(apiSettings);
         
         return await Configure();
+    }
+
+    //For testing
+    public void Re()
+    {
+        _infigoProductProviderService.GetApiProducts();
     }
 }
