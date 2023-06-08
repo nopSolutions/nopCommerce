@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Test",
+  "FriendlyName": "Product Provider",
+  "SystemName": "Test.ProductProvider",
+  "Version": "4.70.1",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "Virgiliu Plesca",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Test.ProductProvider.dll",
+  "Description": "Syncs data from external api5"
+}
