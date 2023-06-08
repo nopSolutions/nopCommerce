@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Plugin.Test.ProductProvider.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Framework;
@@ -23,9 +24,18 @@ public class ProductProviderController : BasePluginController
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel();
-        model.BaseUrl = await _settingService.GetSettingByKeyAsync<string>(model.BaseUrlKey);
-        model.GetProductsIdsEndpoint = await _settingService.GetSettingByKeyAsync<string>(model.GetProductsIdsEndpointKey);
-        model.GetProductByIdEndpoint = await _settingService.GetSettingByKeyAsync<string>(model.GetProductByIdEndpointKey);
+        var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
+
+        if (settings != null)
+        {
+            model = new ConfigurationModel()
+            {
+                BaseUrl = settings.BaseUrl,
+                AccessToken = settings.AccessToken,
+                GetProductsIdsEndpoint = settings.GetProductsIdsEndpoint,
+                GetProductByIdEndpoint = settings.GetProductByIdEndpoint
+            };
+        }
 
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);
     }
@@ -33,9 +43,15 @@ public class ProductProviderController : BasePluginController
     [HttpPost]
     public async Task<IActionResult> Save(ConfigurationModel model)
     {
-        await _settingService.SetSettingAsync(model.BaseUrlKey, model.BaseUrl);
-        await _settingService.SetSettingAsync(model.GetProductsIdsEndpointKey, model.GetProductsIdsEndpoint);
-        await _settingService.SetSettingAsync(model.GetProductByIdEndpointKey, model.GetProductByIdEndpoint);
+        var settings = new ProductProviderSettings()
+        {
+            BaseUrl = model.BaseUrl,
+            AccessToken = model.AccessToken,
+            GetProductsIdsEndpoint = model.GetProductsIdsEndpoint,
+            GetProductByIdEndpoint = model.GetProductByIdEndpoint
+        };
+
+        await _settingService.SaveSettingAsync(settings);
 
         return await Configure();
     }

@@ -1,6 +1,8 @@
-﻿namespace Nop.Plugin.Test.ProductProvider.Models;
+﻿using Nop.Core.Configuration;
 
-public class ConfigurationModel
+namespace Nop.Plugin.Test.ProductProvider;
+
+public class ProductProviderSettings : ISettings
 {
     public string BaseUrl { get; set; }
     public string GetProductsIdsEndpoint { get; set; }
