@@ -9,16 +9,20 @@
         <input value="@Model.BaseUrl" type="text" name="BaseUrl" class="form-control" id="baseurl" placeholder="Insert endpoint URL">
     </div>
     <div class="form-group">
-        <label for="ids">Get product Ids endpoint</label>
-        <input value="@Model.GetProductsIdsEndpoint" type="text" name="GetProductsIdsEndpoint" class="form-control" id="ids" placeholder="Insert get ids endpoint">
+        <label for="ids">Get product list endpoint</label>
+        <input value="@Model.ProductListEndpoint" type="text" name="ProductListEndpoint" class="form-control" id="ids" placeholder="Insert product list endpoint">
     </div>
     <div class="form-group">
-        <label for="getById">Get product by id endpoint</label>
-        <input value="@Model.GetProductByIdEndpoint" type="text" name="GetProductByIdEndpoint" class="form-control" id="getById" placeholder="Insert get by id endpoint">
+        <label for="getById">Get product details endpoint</label>
+        <input value="@Model.ProductDetailsEndpoint" type="text" name="ProductDetailsEndpoint" class="form-control" id="getById" placeholder="Insert product details endpoint">
     </div>
     <div class="form-group">
         <label for="apikey">Api key</label>
-        <input value="@Model.AccessToken" type="text" name="AccessToken" class="form-control" id="apikey" placeholder="Insert the api key">
+        <input value="@Model.ApiKey" type="text" name="ApiKey" class="form-control" id="apikey" placeholder="Insert the api key">
+    </div>
+    <div class="form-group">
+        <label for="apikeytype">Api key type</label>
+        <input value="@Model.ApiKeyType" type="text" name="ApiKeyType" class="form-control" id="apikeytype" placeholder="Insert the api key type">
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>

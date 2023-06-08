@@ -1,25 +1,33 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Nop.Plugin.Test.ProductProvider.Api;
 using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Test.ProductProvider.Services;
 
 public class ProductService : IProductService
 {
-    private readonly HttpClient _httpClient;
     private readonly ISettingService _settingService;
+    private readonly ProductProviderHttpClient _httpClient;
 
-    public ProductService(HttpClient httpClient, ISettingService settingService)
+    public ProductService(ProductProviderHttpClient httpClient, ISettingService settingService)
     {
         _httpClient = httpClient;
         _settingService = settingService;
     }
 
-    public async Task GetAllProducts()
+    // public async Task<IEnumerable<int>> GetAllProducts()
+    // {
+    //     var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
+    //     
+    //     return await _httpClient.GetProducts(settings);
+    // }
+
+    public async Task GetProductDetails(int id)
     {
         var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
 
-        var productIds = _httpClient.GetAsync($"{settings.BaseUrl}/{settings.GetProductsIdsEndpoint}");
-        var a = 5;
+        await _httpClient.GetProductDetails(settings, id);
     }
 }

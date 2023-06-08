@@ -28,8 +28,9 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
         {
             BaseUrl = "https://c2318.qa.infigosoftware.rocks",
             ApiKey = "NDViOTIyNzUtZGUxYi00MTk4LWI4YmUtMTkzNmRmNWQ0ZTc1",
-            GetProductsIdsEndpoint = "services/api/catalog/productlist",
-            GetProductByIdEndpoint = "services/api/catalog/ProductDetails"
+            ProductListEndpoint = "services/api/catalog/productlist",
+            ProductDetailEndpoint = "services/api/catalog/ProductDetails",
+            ApiKeyType = "Basic"
         };
 
         await _settingService.SaveSettingAsync(settings);

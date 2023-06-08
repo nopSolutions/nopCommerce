@@ -34,11 +34,15 @@ public class ProductProviderController : BasePluginController
             model = new ConfigurationModel()
             {
                 BaseUrl = settings.BaseUrl,
-                AccessToken = settings.ApiKey,
-                GetProductsIdsEndpoint = settings.GetProductsIdsEndpoint,
-                GetProductByIdEndpoint = settings.GetProductByIdEndpoint
+                ApiKey = settings.ApiKey,
+                ProductListEndpoint = settings.ProductListEndpoint,
+                ProductDetailsEndpoint = settings.ProductDetailEndpoint,
+                ApiKeyType = settings.ApiKeyType
             };
         }
+
+        // var products = await _productService.GetAllProducts();
+        await _productService.GetProductDetails(1552);
 
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);
     }
@@ -49,9 +53,10 @@ public class ProductProviderController : BasePluginController
         var settings = new ProductProviderSettings()
         {
             BaseUrl = model.BaseUrl,
-            ApiKey = model.AccessToken,
-            GetProductsIdsEndpoint = model.GetProductsIdsEndpoint,
-            GetProductByIdEndpoint = model.GetProductByIdEndpoint
+            ApiKey = model.ApiKey,
+            ProductListEndpoint = model.ProductListEndpoint,
+            ProductDetailEndpoint = model.ProductDetailsEndpoint,
+            ApiKeyType = model.ApiKeyType
         };
 
         await _settingService.SaveSettingAsync(settings);
