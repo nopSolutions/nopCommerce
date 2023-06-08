@@ -15,6 +15,6 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
 
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/ProductProvider/Get";
+        return $"{_webHelper.GetStoreLocation()}Admin/ProductProvider/Configure";
     }
 }

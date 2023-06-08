@@ -20,23 +20,23 @@ public class ProductProviderController : BasePluginController
         _settingService = settingService;
     }
 
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel();
-        var endpoint = await _settingService.GetSettingByKeyAsync<string>(model.EndPointUrlKey);
-        model.EndPointUrl = endpoint;
-        
+        model.BaseUrl = await _settingService.GetSettingByKeyAsync<string>(model.BaseUrlKey);
+        model.GetProductsIdsEndpoint = await _settingService.GetSettingByKeyAsync<string>(model.GetProductsIdsEndpointKey);
+        model.GetProductByIdEndpoint = await _settingService.GetSettingByKeyAsync<string>(model.GetProductByIdEndpointKey);
+
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Configure(ConfigurationModel model)
+    public async Task<IActionResult> Save(ConfigurationModel model)
     {
-        await _settingService.SetSettingAsync(model.EndPointUrlKey, model.EndPointUrl);
+        await _settingService.SetSettingAsync(model.BaseUrlKey, model.BaseUrl);
+        await _settingService.SetSettingAsync(model.GetProductsIdsEndpointKey, model.GetProductsIdsEndpoint);
+        await _settingService.SetSettingAsync(model.GetProductByIdEndpointKey, model.GetProductByIdEndpoint);
 
-        var endpoint = await _settingService.GetSettingByKeyAsync<string>(model.EndPointUrlKey);
-        var a = 1; 
-        
-        return await Get();
+        return await Configure();
     }
 }

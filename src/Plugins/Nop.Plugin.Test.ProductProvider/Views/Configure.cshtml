@@ -3,10 +3,18 @@
 }
 @model Nop.Plugin.Test.ProductProvider.Models.ConfigurationModel;
 
-<form asp-controller="ProductProvider" asp-action="Configure" method="post">
+<form asp-controller="ProductProvider" asp-action="Save" method="post">
     <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input value="@Model.EndPointUrl" type="text" name="EndPointUrl" class="form-control" id="exampleInputEmail1" placeholder="Enter endpoint URL">
+        <label for="baseurl">Base URL</label>
+        <input value="@Model.BaseUrl" type="text" name="BaseUrl" class="form-control" id="baseurl" placeholder="Insert endpoint URL">
+    </div>
+    <div class="form-group">
+        <label for="ids">Get product Ids endpoint</label>
+        <input value="@Model.GetProductsIdsEndpoint" type="text" name="GetProductsIdsEndpoint" class="form-control" id="ids" placeholder="Insert get ids endpoint">
+    </div>
+    <div class="form-group">
+        <label for="getById">Get product by id endpoint</label>
+        <input value="@Model.GetProductByIdEndpoint" type="text" name="GetProductByIdEndpoint" class="form-control" id="getById" placeholder="Insert get by id endpoint">
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
