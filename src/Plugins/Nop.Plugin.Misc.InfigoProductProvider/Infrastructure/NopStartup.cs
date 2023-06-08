@@ -13,7 +13,7 @@ public class NopStartup : INopStartup
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IInfigoProductProviderService, InfigoProductProviderService>();
-        services.AddHttpClient<InfigoProductProviderHttpClient>().WithProxy();
+        services.AddHttpClient<InfigoProductProviderHttpClient>();
     }
 
     public void Configure(IApplicationBuilder application)
