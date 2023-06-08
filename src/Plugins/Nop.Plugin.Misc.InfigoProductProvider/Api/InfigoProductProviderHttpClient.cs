@@ -30,4 +30,20 @@ public class InfigoProductProviderHttpClient
             throw e.InnerException;
         }
     }
+
+    public async Task<byte[]> GetPictureBinaryAsync(string url)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+
+            var imageBinary = await response.Content.ReadAsByteArrayAsync();
+
+            return imageBinary;
+        }
+        catch (Exception e)
+        {
+            throw e.InnerException;
+        }
+    }
 }

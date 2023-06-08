@@ -52,4 +52,26 @@ public class ProductMappingService : IProductMappingService
             AttributeControlTypeId = productAttribute.AttributeControlType
         };
     }
+
+    public SpecificationAttributeOption GetNopSpecificationAttributeOption(ApiProductModel model, int specificationAttributeId)
+    {
+        return new SpecificationAttributeOption
+        {
+            Name = model.Id.ToString(), 
+            SpecificationAttributeId = specificationAttributeId,
+            DisplayOrder = 0
+        };
+    }
+
+    public ProductSpecificationAttribute GetNopProductSpecificationAttribute(Product nopProduct, SpecificationAttributeOption nopSpecificationAttributeOption)
+    {
+        return new ProductSpecificationAttribute
+        {
+            ProductId = nopProduct.Id, 
+            SpecificationAttributeOptionId = nopSpecificationAttributeOption.Id,
+            AttributeTypeId = 0,
+            AllowFiltering = false,
+            ShowOnProductPage = true
+        };
+    }
 }

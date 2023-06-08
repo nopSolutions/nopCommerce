@@ -13,4 +13,10 @@ public interface IProductMappingService
 
     public ProductAttributeMapping GetNopProductAttributeMappingEntity(ProductAttribute nopProductAttribute,
         Product nopProduct, ApiProductAttributeModel productAttribute);
+
+    public SpecificationAttributeOption GetNopSpecificationAttributeOption(ApiProductModel model,
+        int specificationAttributeId);
+
+    public ProductSpecificationAttribute GetNopProductSpecificationAttribute(Product nopProduct,
+        SpecificationAttributeOption nopSpecificationAttributeOption);
 }
