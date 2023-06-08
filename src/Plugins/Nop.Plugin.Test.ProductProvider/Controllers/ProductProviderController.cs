@@ -31,7 +31,7 @@ public class ProductProviderController : BasePluginController
             model = new ConfigurationModel()
             {
                 BaseUrl = settings.BaseUrl,
-                AccessToken = settings.AccessToken,
+                AccessToken = settings.ApiKey,
                 GetProductsIdsEndpoint = settings.GetProductsIdsEndpoint,
                 GetProductByIdEndpoint = settings.GetProductByIdEndpoint
             };
@@ -46,7 +46,7 @@ public class ProductProviderController : BasePluginController
         var settings = new ProductProviderSettings()
         {
             BaseUrl = model.BaseUrl,
-            AccessToken = model.AccessToken,
+            ApiKey = model.AccessToken,
             GetProductsIdsEndpoint = model.GetProductsIdsEndpoint,
             GetProductByIdEndpoint = model.GetProductByIdEndpoint
         };

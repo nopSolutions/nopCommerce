@@ -20,18 +20,15 @@
         <Content Update="plugin.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="plugin.json" />
         <Content Include="plugin.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Update="Views\_ViewImports.cshtml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="Views\_ViewImports.cshtml" />
         <Content Include="Views\_ViewImports.cshtml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Views\Configure.cshtml" />
         <Content Include="Views\Configure.cshtml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
