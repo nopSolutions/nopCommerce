@@ -11,17 +11,8 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Infrastructure;
 
 public class NopStartup : INopStartup
 {
-    private readonly ILogger<NopStartup> _logger;
-
-    public NopStartup(ILogger<NopStartup> logger)
-    {
-        _logger = logger;
-    }
-
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        _logger.LogInformation("Configuring services");
-        
         services.AddScoped<IInfigoProductProviderService, InfigoProductProviderService>();
         services.AddScoped<IProductMapper, ProductMapper>();
         services.AddHttpClient<InfigoProductProviderHttpClient>();
@@ -29,7 +20,6 @@ public class NopStartup : INopStartup
 
     public void Configure(IApplicationBuilder application)
     {
-        
     }
 
     public int Order => 3000;

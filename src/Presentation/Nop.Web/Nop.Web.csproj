@@ -39,7 +39,6 @@
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
     <None Remove="Plugins\**;Themes\**" />
     <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\runtimes\**;Plugins\**\ref\**;Plugins\**\*.pdb" />
-    <Content Include="Plugins\Misc.InfigoProductProvider\plugin.json" />
 
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Never" />
 
@@ -63,6 +62,16 @@
     in order to avoid the "Duplicate dll" error during publication. 
     We can also use “ExcludeConfigFilesFromBuildOutput” according to https://github.com/aspnet/AspNetCore/issues/14017 -->
     <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Views\Configure.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Nop.Plugin.Misc.InfigoProductProvider.deps.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Nop.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Nop.Web.runtimeconfig.dev.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Nop.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Misc.InfigoProductProvider\Nop.Web.staticwebassets.runtime.json" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
