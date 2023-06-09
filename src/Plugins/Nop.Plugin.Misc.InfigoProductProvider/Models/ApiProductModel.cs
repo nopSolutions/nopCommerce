@@ -14,5 +14,5 @@ public class ApiProductModel
     public string Sku { get; set; }
     public List<string> PreviewUrls { get; set; }
     public List<string> ThumbnailUrls { get; set; }
-    public List<ApiProductAttributeModel> ProductAttributes { get; set; }
+    public List<ApiProductAttributeModel> ProductAttributes { get; set; } = new();
 }

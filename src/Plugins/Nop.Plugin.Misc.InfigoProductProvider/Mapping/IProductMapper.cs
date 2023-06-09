@@ -3,7 +3,7 @@ using Nop.Plugin.Misc.InfigoProductProvider.Models;
 
 namespace Nop.Plugin.Misc.InfigoProductProvider.Mapping;
 
-public interface IProductMappingService
+public interface IProductMapper
 {
     public Product GetNopProductEntity(ApiProductModel model);
     public ProductAttribute GetNopProductAttributeEntity(ApiProductAttributeModel productAttribute);

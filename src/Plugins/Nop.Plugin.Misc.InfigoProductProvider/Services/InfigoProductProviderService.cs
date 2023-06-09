@@ -18,17 +18,17 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     private readonly ISettingService _settingService;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductService _productService;
-    private readonly IProductMappingService _productMappingService;
+    private readonly IProductMapper _productMapper;
     private readonly ISpecificationAttributeService _specificationAttributeService;
     private readonly IPictureService _pictureService;
 
-    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, ISettingService settingService, IProductAttributeService productAttributeService, IProductService productService, IProductMappingService productMappingService, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService)
+    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, ISettingService settingService, IProductAttributeService productAttributeService, IProductService productService, IProductMapper productMapper, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService)
     {
         _infigoProductProviderHttpClient = infigoProductProviderHttpClient;
         _settingService = settingService;
         _productAttributeService = productAttributeService;
         _productService = productService;
-        _productMappingService = productMappingService;
+        _productMapper = productMapper;
         _specificationAttributeService = specificationAttributeService;
         _pictureService = pictureService;
     }
@@ -87,7 +87,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     
     private async Task SaveApiProductsInDb(ApiProductModel model)
     {
-        var nopProduct = _productMappingService.GetNopProductEntity(model);
+        var nopProduct = _productMapper.GetNopProductEntity(model);
         await _productService.InsertProductAsync(nopProduct);
         
         await SetPicture(model, nopProduct);
@@ -113,11 +113,11 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
 
         var nopSpecificationAttributeOption =
-            _productMappingService.GetNopSpecificationAttributeOption(model, specificationAttributeId);
+            _productMapper.GetNopSpecificationAttributeOption(model, specificationAttributeId);
         await _specificationAttributeService.InsertSpecificationAttributeOptionAsync(nopSpecificationAttributeOption);
 
         var nopProductSpecificationAttribute =
-            _productMappingService.GetNopProductSpecificationAttribute(nopProduct, nopSpecificationAttributeOption);
+            _productMapper.GetNopProductSpecificationAttribute(nopProduct, nopSpecificationAttributeOption);
         await _specificationAttributeService.InsertProductSpecificationAttributeAsync(nopProductSpecificationAttribute);
     }
 
@@ -125,12 +125,12 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     {
         foreach (var productAttribute in model.ProductAttributes)
         {
-            var nopProductAttribute = _productMappingService.GetNopProductAttributeEntity(productAttribute);
+            var nopProductAttribute = _productMapper.GetNopProductAttributeEntity(productAttribute);
             
             await _productAttributeService.InsertProductAttributeAsync(nopProductAttribute);
             
             var nopProductAttributeMapping =
-                _productMappingService.GetNopProductAttributeMappingEntity(nopProductAttribute, nopProduct,
+                _productMapper.GetNopProductAttributeMappingEntity(nopProductAttribute, nopProduct,
                     productAttribute);
 
             await _productAttributeService.InsertProductAttributeMappingAsync(nopProductAttributeMapping);
@@ -138,7 +138,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
             foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
             {
                 var nopProductAttributeValue =
-                    _productMappingService.GetNopProductAttributeValueEntity(productAttributeValue, nopProductAttributeMapping,
+                    _productMapper.GetNopProductAttributeValueEntity(productAttributeValue, nopProductAttributeMapping,
                         nopProduct);
 
                 await _productAttributeService.InsertProductAttributeValueAsync(nopProductAttributeValue);

@@ -2,16 +2,19 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Nop.Plugin.Misc.InfigoProductProvider.Api;
 
 public class InfigoProductProviderHttpClient
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<InfigoProductProviderHttpClient> _logger;
 
-    public InfigoProductProviderHttpClient(HttpClient httpClient)
+    public InfigoProductProviderHttpClient(HttpClient httpClient, ILogger<InfigoProductProviderHttpClient> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<string> RequestAsync(string url, string userName)
@@ -27,7 +30,8 @@ public class InfigoProductProviderHttpClient
         }
         catch (Exception e)
         {
-            throw e.InnerException;
+            _logger.LogError(e, "Failed to load picture");
+            throw;
         }
     }
 
@@ -43,7 +47,8 @@ public class InfigoProductProviderHttpClient
         }
         catch (Exception e)
         {
-            throw e.InnerException;
+            _logger.LogError(e, "Failed to load picture");
+            throw;
         }
     }
 }

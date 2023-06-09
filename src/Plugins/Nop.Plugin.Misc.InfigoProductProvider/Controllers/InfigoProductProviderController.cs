@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.Misc.InfigoProductProvider.Api;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Plugin.Misc.InfigoProductProvider.Services;
 using Nop.Services.Configuration;
@@ -17,7 +15,9 @@ public class InfigoProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
     private readonly IInfigoProductProviderService _infigoProductProviderService;
-    public InfigoProductProviderController(ISettingService settingService, IInfigoProductProviderService infigoProductProviderService)
+
+    public InfigoProductProviderController(ISettingService settingService,
+        IInfigoProductProviderService infigoProductProviderService)
     {
         _settingService = settingService;
         _infigoProductProviderService = infigoProductProviderService;
@@ -51,7 +51,7 @@ public class InfigoProductProviderController : BasePluginController
         };
 
         await _settingService.SaveSettingAsync(apiSettings);
-        
+
         return await Configure();
     }
 }
