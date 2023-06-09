@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Misc.InfigoProductProvider.Api;
 
@@ -10,18 +11,24 @@ public class InfigoProductProviderHttpClient
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<InfigoProductProviderHttpClient> _logger;
+    private readonly ISettingService _settingService;
 
-    public InfigoProductProviderHttpClient(HttpClient httpClient, ILogger<InfigoProductProviderHttpClient> logger)
+    public InfigoProductProviderHttpClient(HttpClient httpClient, ILogger<InfigoProductProviderHttpClient> logger, ISettingService settingService)
     {
         _httpClient = httpClient;
         _logger = logger;
+        _settingService = settingService;
     }
 
-    public async Task<string> RequestAsync(string url, string userName)
+    public async Task<string> RequestAllProductIds()
     {
         try
         {
             _logger.LogInformation("Performing the request");
+            
+            var settings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
+            var url = settings.ApiBase + settings.ProductListUrl;
+            var userName = settings.ApiUserName;
             
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", userName);
 
@@ -32,11 +39,33 @@ public class InfigoProductProviderHttpClient
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load data");
+            _logger.LogError(e, "Failed to load product id list");
             throw;
         }
     }
 
+    public async Task<string> RequestProductById(int id)
+    {
+        try
+        {
+            var settings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
+            var url = settings.ApiBase + settings.ProductDetailsUrl + $"?id={id}";
+            var userName = settings.ApiUserName;
+        
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", userName);
+            
+            var response = await _httpClient.GetAsync(url);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return responseBody;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to load product");
+            throw;
+        }
+    } 
+    
     public async Task<byte[]> GetPictureBinaryAsync(string url)
     {
         try

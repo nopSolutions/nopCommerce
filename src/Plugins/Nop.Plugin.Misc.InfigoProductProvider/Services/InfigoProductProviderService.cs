@@ -68,11 +68,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     
     private async Task<List<int>> GetAllProductsIds()
     {
-        var settings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
-        var url = settings.ApiBase + settings.ProductListUrl;
-        var userName = settings.ApiUserName;
-        
-        var data = await _infigoProductProviderHttpClient.RequestAsync(url, userName);
+        var data = await _infigoProductProviderHttpClient.RequestAllProductIds();
         
         var productIdList = JsonConvert.DeserializeObject<List<int>>(data);
         
@@ -81,11 +77,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task<ApiProductModel> GetProductById(int id)
     {
-        var settings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
-        var url = settings.ApiBase + settings.ProductDetailsUrl + $"?id={id}";
-        var userName = settings.ApiUserName;
-
-        var data = await _infigoProductProviderHttpClient.RequestAsync(url, userName);
+        var data = await _infigoProductProviderHttpClient.RequestProductById(id);
 
         var product = JsonConvert.DeserializeObject<ApiProductModel>(data);
 
