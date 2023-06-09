@@ -4,16 +4,7 @@
     <projectFile>Presentation/Nop.Web/Nop.Web.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/IProductMappingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/IProductMappingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/ProductMappingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/ProductMappingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" afterDir="false" />
-    </list>
+    <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +24,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b2c3e28468b2a9ae5485968818c48fd40338a6b8ae1295f29a355225a8d238/First.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/cea8f116d46ddf4be845bdf1d46ab3bb5bc4f06bc533db822f2d7999187e56f/Controller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/nopCommerce/nopCommerce/src/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/NopStartup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/nopCommerce/nopCommerce/src/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Infrastructure/NopStartup.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
