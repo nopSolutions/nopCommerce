@@ -4,8 +4,9 @@ using Nop.Plugin.Test.ProductProvider.Models;
 
 namespace Nop.Plugin.Test.ProductProvider.Services;
 
-public interface IProductService
+public interface IExternalProductService
 {
     Task<IEnumerable<int>> GetAllProducts();
-    Task<ExternalProductModel> GetProductDetails(int id);
+    Task<ExternalProductModel> GetProductDetails(int id); 
+    Task SyncProducts();
 }

@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Plugin.Test.ProductProvider.Models;
 
 public class ExternalProductModel
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public string ShortDescrption { get; set; }
     public string LongDescription { get; set; }
     public int Type { get; set; }
-    public float Price { get; set; }
+    public decimal Price { get; set; }
     public int StockValue { get; set; }
     public string Sku { get; set; }
     public IEnumerable<object> PreviewUrls { get; set; }

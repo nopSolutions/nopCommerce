@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Test.ProductProvider.Api;
+using Nop.Plugin.Test.ProductProvider.Mappers;
 using Nop.Plugin.Test.ProductProvider.Services;
 
 namespace Nop.Plugin.Test.ProductProvider.Infrastructure
@@ -19,8 +20,9 @@ namespace Nop.Plugin.Test.ProductProvider.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IExternalProductService, ExternalProductService>();
             services.AddHttpClient<ProductProviderHttpClient>();
+            services.AddScoped<IProductMapper, ProductMapper>();
         }
 
         /// <summary>
