@@ -10,7 +10,6 @@ using Nop.Services.ScheduleTasks;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using WebMarkupMin.Core.Loggers;
 
 namespace Nop.Plugin.Test.ProductProvider.Controllers;
 
@@ -19,14 +18,10 @@ namespace Nop.Plugin.Test.ProductProvider.Controllers;
 public class ProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
-    private readonly IProductService _productService;
-    private readonly IScheduleTaskService _scheduleTaskService;
 
-    public ProductProviderController(ISettingService settingService, IProductService productService, IScheduleTaskService scheduleTaskService)
+    public ProductProviderController(ISettingService settingService)
     {
         _settingService = settingService;
-        _productService = productService;
-        _scheduleTaskService = scheduleTaskService;
     }
 
     public async Task<IActionResult> Configure()

@@ -27,6 +27,14 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
         return $"{_webHelper.GetStoreLocation()}Admin/ProductProvider/Configure";
     }
 
+    public override async Task UninstallAsync()
+    {
+        //schedule task
+        var task = await _scheduleTaskService.GetTaskByTypeAsync(ProductProviderDefaults.SynchronizationTask);
+        if (task != null)
+            await _scheduleTaskService.DeleteTaskAsync(task);
+    }
+
     public override async Task InstallAsync()
     {
         var settings = new ProductProviderSettings()

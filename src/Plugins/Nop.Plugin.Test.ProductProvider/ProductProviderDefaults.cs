@@ -13,11 +13,6 @@ namespace Nop.Plugin.Test.ProductProvider
         public static string SystemName => "Test.ProductProvider";
 
         /// <summary>
-        /// Gets a user agent used to request Sendinblue services
-        /// </summary>
-        public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
-
-        /// <summary>
         /// Gets a name of the synchronization schedule task
         /// </summary>
         public static string SynchronizationTaskName => "Product Synchronization (ProductProvider plugin)";
