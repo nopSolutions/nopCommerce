@@ -38,10 +38,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     public async Task GetApiProducts()
     {
-        var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
-        var existingExternalSpecifications =
-            (await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(
-                specificationAttributeId));
+        var existingExternalSpecifications = await GetExistingExternalSpecifications();
 
         var productIds = await GetAllProductsIds();
 
@@ -53,7 +50,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
                 
                 var productModel = await GetProductById(productId);
 
-                await SetNewProductValues(productModel, existingExternalSpecifications);
+                await SetNewProductValues(productModel);
             }
             else
             {
@@ -64,6 +61,20 @@ public class InfigoProductProviderService : IInfigoProductProviderService
                 await SaveApiProductsInDb(productModel);
             }
         }
+    }
+    
+    public async Task<Product> GetProductByExternalId(int externalId)
+    {
+        var existingExternalSpecifications = await GetExistingExternalSpecifications();
+        
+        var nopSpecificationAttributeOptionId = existingExternalSpecifications.FirstOrDefault(x => x.Name == externalId.ToString()).Id;
+
+        var nopProductId = (await _specificationAttributeService.GetProductSpecificationAttributesAsync())
+            .FirstOrDefault(x => x.SpecificationAttributeOptionId == nopSpecificationAttributeOptionId).ProductId;
+
+        var nopProduct = await _productService.GetProductByIdAsync(nopProductId);
+
+        return nopProduct;
     }
     
     private async Task<List<int>> GetAllProductsIds()
@@ -165,16 +176,11 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         }
     }
 
-    private async Task SetNewProductValues(ApiProductModel model, IList<SpecificationAttributeOption> existingExternalSpecifications)
+    private async Task SetNewProductValues(ApiProductModel model)
     {
         _logger.LogInformation("Checking Product {id} values for update", model.Id);
-        
-        var nopSpecificationAttributeOptionId = existingExternalSpecifications.FirstOrDefault(x => x.Name == model.Id.ToString()).Id;
 
-        var nopProductId = (await _specificationAttributeService.GetProductSpecificationAttributesAsync())
-            .FirstOrDefault(x => x.SpecificationAttributeOptionId == nopSpecificationAttributeOptionId).ProductId;
-
-        var nopProduct = await _productService.GetProductByIdAsync(nopProductId);
+        var nopProduct = await _productService.GetProductByIdAsync(model.Id);
 
         if (nopProduct.Price != model.Price)
         {
@@ -193,5 +199,15 @@ public class InfigoProductProviderService : IInfigoProductProviderService
                 sa.Name == InfigoProductProviderDefaults.SpecificationAttributeForExternalId).Id;
 
         return specificationAttributeId;
+    }
+
+    private async Task<IList<SpecificationAttributeOption>> GetExistingExternalSpecifications()
+    {
+        var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
+        var existingExternalSpecifications =
+            (await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(
+                specificationAttributeId));
+
+        return existingExternalSpecifications;
     }
 }

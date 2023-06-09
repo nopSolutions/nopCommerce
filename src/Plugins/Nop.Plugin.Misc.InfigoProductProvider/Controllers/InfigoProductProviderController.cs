@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Plugin.Misc.InfigoProductProvider.Services;
 using Nop.Services.Configuration;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -16,11 +17,13 @@ public class InfigoProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
     private readonly ILogger<InfigoProductProviderController> _logger;
+    private readonly IInfigoProductProviderService _infigoProductProviderService;
 
-    public InfigoProductProviderController(ISettingService settingService, ILogger<InfigoProductProviderController> logger)
+    public InfigoProductProviderController(ISettingService settingService, ILogger<InfigoProductProviderController> logger, IInfigoProductProviderService infigoProductProviderService)
     {
         _settingService = settingService;
         _logger = logger;
+        _infigoProductProviderService = infigoProductProviderService;
     }
 
     [AuthorizeAdmin]
@@ -57,5 +60,20 @@ public class InfigoProductProviderController : BasePluginController
         await _settingService.SaveSettingAsync(apiSettings);
 
         return await Configure();
+    }
+
+    [AuthorizeAdmin]
+    public IActionResult SearchByExternalId()
+    {
+        return View(InfigoProductProviderDefaults.SearchByExternalIdPath, new ExternalIdSearchModel());
+    }
+
+    [AuthorizeAdmin]
+    [HttpPost, ActionName("SearchByExternalId")]
+    public async Task<IActionResult> SearchByExternalId(ExternalIdSearchModel model)
+    {
+        var product = await _infigoProductProviderService.GetProductByExternalId(model.ExternalId);
+        var searchModel = new ProductSearchModel { SearchProductName = product.Name };
+        return RedirectToAction("ProductList", "Product", searchModel);
     }
 }

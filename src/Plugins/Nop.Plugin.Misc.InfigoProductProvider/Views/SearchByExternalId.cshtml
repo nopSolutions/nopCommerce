@@ -1,0 +1,13 @@
+@model Nop.Plugin.Misc.InfigoProductProvider.Models.ExternalIdSearchModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<form asp-controller="InfigoProductProvider" asp-action="SearchByExternalId" method="post">
+    <div class="form-group m-3">
+        <nop-label asp-for="ExternalId"/>
+        <input type="text" asp-for="ExternalId" placeholder="External id" class="form-control">
+    </div>
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
