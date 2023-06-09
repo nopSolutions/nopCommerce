@@ -20,7 +20,7 @@ namespace Nop.Plugin.Test.ProductProvider.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IProductService, ProductService>();
-            services.AddSingleton<ProductProviderHttpClient>();
+            services.AddHttpClient<ProductProviderHttpClient>();
         }
 
         /// <summary>
