@@ -3,7 +3,8 @@
 public class ConfigurationModel
 {
     public string BaseUrl { get; set; }
-    public string GetProductsIdsEndpoint { get; set; }
-    public string GetProductByIdEndpoint { get; set; }
-    public string AccessToken { get; set; }
+    public string ProductListEndpoint { get; set; }
+    public string ProductDetailsEndpoint { get; set; }
+    public string ApiKey { get; set; }
+    public string ApiKeyType { get; set; }
 }
