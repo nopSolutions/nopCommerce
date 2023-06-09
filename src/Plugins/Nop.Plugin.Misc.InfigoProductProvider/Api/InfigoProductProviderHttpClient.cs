@@ -21,6 +21,8 @@ public class InfigoProductProviderHttpClient
     {
         try
         {
+            _logger.LogInformation("Performing the request");
+            
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", userName);
 
             var response = await _httpClient.GetAsync(url);
@@ -30,7 +32,7 @@ public class InfigoProductProviderHttpClient
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load picture");
+            _logger.LogError(e, "Failed to load data");
             throw;
         }
     }
@@ -39,6 +41,8 @@ public class InfigoProductProviderHttpClient
     {
         try
         {
+            _logger.LogInformation("Performing the request");
+            
             var response = await _httpClient.GetAsync(url);
 
             var imageBinary = await response.Content.ReadAsByteArrayAsync();

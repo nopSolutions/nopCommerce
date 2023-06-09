@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.ScheduleTasks;
@@ -21,18 +22,22 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
     private readonly ILocalizationService _localizationService;
     private readonly IScheduleTaskService _scheduleTaskService;
     private readonly ISpecificationAttributeService _specificationAttributeService;
+    private readonly ILogger<InfigoProductProviderPlugin> _logger;
 
-    public InfigoProductProviderPlugin(IWebHelper webHelper, ISettingService settingService, ILocalizationService localizationService, IScheduleTaskService scheduleTaskService, ISpecificationAttributeService specificationAttributeService)
+    public InfigoProductProviderPlugin(IWebHelper webHelper, ISettingService settingService, ILocalizationService localizationService, IScheduleTaskService scheduleTaskService, ISpecificationAttributeService specificationAttributeService, ILogger<InfigoProductProviderPlugin> logger)
     {
         _webHelper = webHelper;
         _settingService = settingService;
         _localizationService = localizationService;
         _scheduleTaskService = scheduleTaskService;
         _specificationAttributeService = specificationAttributeService;
+        _logger = logger;
     }
 
     public override async Task InstallAsync()
     {
+        _logger.LogInformation("Inserting Api settings");
+        
         var apiSettings = new InfigoProductProviderConfiguration
         {
             ApiUserName = "", ApiBase = "", ProductListUrl = "", ProductDetailsUrl = ""
@@ -40,6 +45,8 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
 
         await _settingService.SaveSettingAsync(apiSettings);
 
+        _logger.LogInformation("Inserting localization resources");
+        
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Plugins.Misc.InfigoProductProvider.ApiUserName"] = "Api user name",
@@ -48,7 +55,8 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
             ["Plugins.Misc.InfigoProductProvider.ProductDetailsUrl"] = "Product details url"
         });
         
-     
+        _logger.LogInformation("Inserting scheduled task.");
+        
         await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
         {
             Name = "Get products from Api",
@@ -59,6 +67,8 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
             StopOnError = false
         });
 
+        _logger.LogInformation("Inserting specification attribute for external Id");
+        
         await _specificationAttributeService.InsertSpecificationAttributeAsync(new SpecificationAttribute
         {
             Name = InfigoProductProviderDefaults.SpecificationAttributeForExternalId
@@ -73,6 +83,8 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
             "Nop.Plugin.Misc.InfigoProductProvider.Background.GetProductsFromApiTask, Nop.Plugin.Misc.InfigoProductProvider");
         if (scheduleTask != null)
         {
+            _logger.LogInformation("Deleting scheduled task");
+            
             await _scheduleTaskService.DeleteTaskAsync(scheduleTask);
         }
 
@@ -81,6 +93,8 @@ public class InfigoProductProviderPlugin : BasePlugin, IMiscPlugin
                 sa.Name == InfigoProductProviderDefaults.SpecificationAttributeForExternalId);
         if (specificationAttribute != null)
         {
+            _logger.LogInformation("Deleting specification attribute for external Id");
+            
             await _specificationAttributeService.DeleteSpecificationAttributeAsync(specificationAttribute);
         }
     }

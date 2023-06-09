@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.InfigoProductProvider.Api;
@@ -21,8 +22,9 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     private readonly IProductMapper _productMapper;
     private readonly ISpecificationAttributeService _specificationAttributeService;
     private readonly IPictureService _pictureService;
+    private readonly ILogger<InfigoProductProviderService> _logger;
 
-    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, ISettingService settingService, IProductAttributeService productAttributeService, IProductService productService, IProductMapper productMapper, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService)
+    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, ISettingService settingService, IProductAttributeService productAttributeService, IProductService productService, IProductMapper productMapper, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService, ILogger<InfigoProductProviderService> logger)
     {
         _infigoProductProviderHttpClient = infigoProductProviderHttpClient;
         _settingService = settingService;
@@ -31,6 +33,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         _productMapper = productMapper;
         _specificationAttributeService = specificationAttributeService;
         _pictureService = pictureService;
+        _logger = logger;
     }
 
     public async Task GetApiProducts()
@@ -46,12 +49,16 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         {
             if (existingExternalSpecifications.Select(x => x.Name).Contains(productId.ToString()))
             {
+                _logger.LogInformation("Product {id} already exists. Updating", productId);
+                
                 var productModel = await GetProductById(productId);
 
                 await SetNewProductValues(productModel, existingExternalSpecifications);
             }
             else
             {
+                _logger.LogInformation("New product {id} detected. Adding new product", productId);
+                
                 var productModel = await GetProductById(productId);
 
                 await SaveApiProductsInDb(productModel);
@@ -99,8 +106,24 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task SetPicture(ApiProductModel model, Product nopProduct)
     {
-        var pictureData = await _infigoProductProviderHttpClient.GetPictureBinaryAsync(
-            "https://c2318.qa.infigosoftware.rocks/-4856815/Handler/Picture/PI/T/0000659_nop_200.jpeg");
+        _logger.LogInformation("Setting picture for product {id}", model.Id);
+        
+        var pictureUrl = model.ThumbnailUrls.FirstOrDefault();
+        if (pictureUrl == null)
+        {
+            _logger.LogInformation("Product {id} doesn't have it's own picture", model.Id);
+            
+            if (InfigoProductProviderDefaults.DefaultPictureUrl == null)
+            {
+                return;
+            }
+            
+            _logger.LogInformation($"Setting default picture for product {model.Id}");
+            
+            pictureUrl = InfigoProductProviderDefaults.DefaultPictureUrl;
+        }
+        
+        var pictureData = await _infigoProductProviderHttpClient.GetPictureBinaryAsync(pictureUrl);
         
         var picture = await _pictureService.InsertPictureAsync(pictureData, "image/webp", model.Name, model.Name, model.Name);
 
@@ -110,6 +133,8 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task SetExternalId(ApiProductModel model, Product nopProduct)
     {
+        _logger.LogInformation("Setting external Id for product {id}", model.Id);
+        
         var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
 
         var nopSpecificationAttributeOption =
@@ -123,6 +148,8 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task SetProductAttributes(ApiProductModel model, Product nopProduct)
     {
+        _logger.LogInformation("Setting product attributes for product {id}", model.Id);
+        
         foreach (var productAttribute in model.ProductAttributes)
         {
             var nopProductAttribute = _productMapper.GetNopProductAttributeEntity(productAttribute);
@@ -148,6 +175,8 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task SetNewProductValues(ApiProductModel model, IList<SpecificationAttributeOption> existingExternalSpecifications)
     {
+        _logger.LogInformation("Checking Product {id} values for update", model.Id);
+        
         var nopSpecificationAttributeOptionId = existingExternalSpecifications.FirstOrDefault(x => x.Name == model.Id.ToString()).Id;
 
         var nopProductId = (await _specificationAttributeService.GetProductSpecificationAttributesAsync())
@@ -157,6 +186,8 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
         if (nopProduct.Price != model.Price)
         {
+            _logger.LogInformation("Price change detected. Updating price");
+            
             nopProduct.Price = model.Price;
             
             await _productService.UpdateProductAsync(nopProduct);

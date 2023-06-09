@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Plugin.Misc.InfigoProductProvider.Services;
 using Nop.Services.Configuration;
@@ -14,18 +15,19 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Controllers;
 public class InfigoProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
-    private readonly IInfigoProductProviderService _infigoProductProviderService;
+    private readonly ILogger<InfigoProductProviderController> _logger;
 
-    public InfigoProductProviderController(ISettingService settingService,
-        IInfigoProductProviderService infigoProductProviderService)
+    public InfigoProductProviderController(ISettingService settingService, ILogger<InfigoProductProviderController> logger)
     {
         _settingService = settingService;
-        _infigoProductProviderService = infigoProductProviderService;
+        _logger = logger;
     }
 
     [AuthorizeAdmin]
     public async Task<IActionResult> Configure()
     {
+        _logger.LogInformation("Entering configure page Get Action");
+        
         var apiSettings = await _settingService.LoadSettingAsync<InfigoProductProviderConfiguration>();
         var model = new ConfigurationModel
         {
@@ -42,6 +44,8 @@ public class InfigoProductProviderController : BasePluginController
     [HttpPost, ActionName("Configure")]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
+        _logger.LogInformation("Entering configure page Post Action");
+        
         var apiSettings = new InfigoProductProviderConfiguration
         {
             ApiUserName = model.ApiUserName,
