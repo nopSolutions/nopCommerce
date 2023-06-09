@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
     /// Represents the shipping status enumeration
@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Delivered
         /// </summary>
-        Delivered = 40
+        Delivered = 40,
+
+        /// <summary>
+        /// Pickup At Store 
+        /// </summary>
+        SelfService = 50
     }
 }

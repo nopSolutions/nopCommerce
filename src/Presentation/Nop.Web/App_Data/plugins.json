@@ -84,10 +84,6 @@
       "Version": "1.03"
     },
     {
-      "SystemName": "ExternalAuth.Facebook",
-      "Version": "1.80"
-    },
-    {
       "SystemName": "CustomAPI",
       "Version": "1.00"
     },
@@ -98,6 +94,10 @@
     {
       "SystemName": "UserDeatils",
       "Version": "1.0"
+    },
+    {
+      "SystemName": "ExternalAuth.Facebook",
+      "Version": "1.80"
     }
   ],
   "PluginNamesToUninstall": [],
