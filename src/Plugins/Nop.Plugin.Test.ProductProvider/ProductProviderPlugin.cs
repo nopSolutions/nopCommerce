@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
+using Nop.Services.ScheduleTasks;
 
 namespace Nop.Plugin.Test.ProductProvider;
 
@@ -10,16 +13,26 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
 {
     protected readonly IWebHelper _webHelper;
     private readonly ISettingService _settingService;
+    private readonly IScheduleTaskService _scheduleTaskService;
 
-    public ProductProviderPlugin(IWebHelper webHelper, ISettingService settingService)
+    public ProductProviderPlugin(IWebHelper webHelper, ISettingService settingService, IScheduleTaskService scheduleTaskService)
     {
         _webHelper = webHelper;
         _settingService = settingService;
+        _scheduleTaskService = scheduleTaskService;
     }
 
     public override string GetConfigurationPageUrl()
     {
         return $"{_webHelper.GetStoreLocation()}Admin/ProductProvider/Configure";
+    }
+
+    public override async Task UninstallAsync()
+    {
+        //schedule task
+        var task = await _scheduleTaskService.GetTaskByTypeAsync(ProductProviderDefaults.SynchronizationTask);
+        if (task != null)
+            await _scheduleTaskService.DeleteTaskAsync(task);
     }
 
     public override async Task InstallAsync()
@@ -34,6 +47,20 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
         };
 
         await _settingService.SaveSettingAsync(settings);
+
+        //install synchronization task
+        if (await _scheduleTaskService.GetTaskByTypeAsync(ProductProviderDefaults.SynchronizationTask) == null)
+        {
+            await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
+            {
+                Enabled = true,
+                LastEnabledUtc = DateTime.UtcNow,
+                Seconds = ProductProviderDefaults.DefaultSynchronizationPeriod,
+                Name = ProductProviderDefaults.SynchronizationTaskName,
+                Type = ProductProviderDefaults.SynchronizationTask,
+            });
+        }
+        
         await base.InstallAsync();
     }
 }
