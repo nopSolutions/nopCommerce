@@ -16,7 +16,6 @@ namespace Nop.Plugin.Test.ProductProvider.Api
 
         public async Task<string> RequestAsync(string uri, ProductProviderSettings settings)
         {
-
             _httpClient.Timeout = TimeSpan.FromSeconds(10);
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue(settings.ApiKeyType, settings.ApiKey);

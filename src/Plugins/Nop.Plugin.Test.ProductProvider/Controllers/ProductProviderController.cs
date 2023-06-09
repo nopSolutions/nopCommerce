@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
+using Microsoft.Extensions.Logging;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Plugin.Test.ProductProvider.Models;
 using Nop.Plugin.Test.ProductProvider.Services;
 using Nop.Services.Configuration;
+using Nop.Services.ScheduleTasks;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using WebMarkupMin.Core.Loggers;
 
 namespace Nop.Plugin.Test.ProductProvider.Controllers;
 
@@ -17,11 +20,13 @@ public class ProductProviderController : BasePluginController
 {
     private readonly ISettingService _settingService;
     private readonly IProductService _productService;
+    private readonly IScheduleTaskService _scheduleTaskService;
 
-    public ProductProviderController(ISettingService settingService, IProductService productService)
+    public ProductProviderController(ISettingService settingService, IProductService productService, IScheduleTaskService scheduleTaskService)
     {
         _settingService = settingService;
         _productService = productService;
+        _scheduleTaskService = scheduleTaskService;
     }
 
     public async Task<IActionResult> Configure()
@@ -40,11 +45,7 @@ public class ProductProviderController : BasePluginController
                 ApiKeyType = settings.ApiKeyType
             };
         }
-
-
-        var prod = await _productService.GetProductDetails(1);
-        var products = await _productService.GetAllProducts();
-
+        
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);
     }
     
