@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #region Properties
 
         public bool IsLoggedInAsVendor { get; set; }
+        public bool IsPosOrder { get; set; }
 
         public bool IsLoggedInAsOtherUser { get; set; }
 

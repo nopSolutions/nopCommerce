@@ -39,6 +39,7 @@ using Nop.Web.Models.ShoppingCart;
 using System.Text;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using Autofac.Core;
 
 namespace Nop.Web.Controllers
 {
@@ -482,9 +483,18 @@ namespace Nop.Web.Controllers
             //getting order ID
             int Get_OrderId = model.OrderId;
             var ordersList = await _orderService.GetOrderByIdAsync(Get_OrderId);
-            ordersList.OrderStatus = OrderStatus.Complete;
-            ordersList.PaymentStatus = PaymentStatus.Paid;
-            ordersList.ShippingStatus = ShippingStatus.Shipped;
+            if (!ordersList.PickupInStore)
+            {
+                ordersList.OrderStatus = OrderStatus.Processing;
+                ordersList.PaymentStatus = PaymentStatus.Paid;
+                ordersList.ShippingStatus = ShippingStatus.Shipped;
+            }
+            else
+            {
+                ordersList.OrderStatus = OrderStatus.Complete;
+                ordersList.PaymentStatus = PaymentStatus.Paid;
+                ordersList.ShippingStatus = ShippingStatus.SelfService;
+            }
             ordersList.IsPOSorder = true;
             ordersList.POSUserId = _workContext.GetCurrentCustomerAsync().Result.Email;
             //var models = await _orderModelFactory.PrepareOrderDetailsModelAsync(ordersList);
