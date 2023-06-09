@@ -213,9 +213,11 @@ function updateAttributes() {
         });
 
         const pickupInStoreOptions = document.querySelector('.cart-slideout__pickup-in-store');
-        pickupInStoreOptions.style.display = responseJson.IsPickup ?
-            "block" :
-            "none";
+        if (pickupInStoreOptions !== null) {
+            pickupInStoreOptions.style.display = responseJson.IsPickup ?
+                "block" :
+                "none";
+        }
 
         if (!responseJson.IsPickup) {
             resetSelectStoreButtons();
