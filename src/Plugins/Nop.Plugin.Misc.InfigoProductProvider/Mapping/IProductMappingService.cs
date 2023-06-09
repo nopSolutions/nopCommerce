@@ -9,7 +9,7 @@ public interface IProductMappingService
     public ProductAttribute GetNopProductAttributeEntity(ApiProductAttributeModel productAttribute);
 
     public ProductAttributeValue GetNopProductAttributeValueEntity(ApiProductAttributeValueModel productAttributeValue,
-        ProductAttribute nopProductAttribute, Product nopProduct);
+        ProductAttributeMapping nopProductAttributeMapping, Product nopProduct);
 
     public ProductAttributeMapping GetNopProductAttributeMappingEntity(ProductAttribute nopProductAttribute,
         Product nopProduct, ApiProductAttributeModel productAttribute);

@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282b0b3b-d5f2-4e17-a503-e7d6acc3086d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Background/GetProductsFromApiTask.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Api/InfigoProductProviderHttpClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Api/InfigoProductProviderHttpClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderDefaults.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/IProductMappingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/IProductMappingService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/ProductMappingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/ProductMappingService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Views/Configure.cshtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +20,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4dc731a2825b3b282c3a7fc5adbea47e8720eadf5445558010f8488ec05eb64f/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/82b7507b229cf2565fd18e9e5272d70c13bac2148452d034d6b3d88d662/ObjectMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b2c3e28468b2a9ae5485968818c48fd40338a6b8ae1295f29a355225a8d238/First.cs" root0="SKIP_HIGHLIGHTING" />
@@ -84,6 +92,7 @@
       <workItem from="1686061156649" duration="2826000" />
       <workItem from="1686107797039" duration="5411000" />
       <workItem from="1686118241273" duration="8775000" />
+      <workItem from="1686291024574" duration="5410000" />
     </task>
     <servers />
   </component>
@@ -97,58 +106,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>44</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="40" containingFunctionPresentation="method 'Configure'">
-            <startOffsets>
-              <option value="1642" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1908" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Api/InfigoProductProviderHttpClient.cs</url>
-          <line>20</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Api\InfigoProductProviderHttpClient.cs" initialLine="20" containingFunctionPresentation="method 'RequestAsync'">
-            <startOffsets>
-              <option value="471" />
-            </startOffsets>
-            <endOffsets>
-              <option value="570" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Controllers/InfigoProductProviderController.cs</url>
-          <line>60</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Controllers\InfigoProductProviderController.cs" initialLine="59" containingFunctionPresentation="method 'Re'">
-            <startOffsets>
-              <option value="2074" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2121" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs</url>
-          <line>89</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Services\InfigoProductProviderService.cs" initialLine="68" containingFunctionPresentation="method 'SaveApiProductsInDb'">
-            <startOffsets>
-              <option value="3774" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3841" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Presentation/Nop.Web/Areas/Admin/Controllers/SpecificationAttributeController.cs</url>
           <line>186</line>
@@ -254,32 +211,6 @@
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs</url>
-          <line>48</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Services\InfigoProductProviderService.cs" initialLine="48" containingFunctionPresentation="method 'GetApiProducts'">
-            <startOffsets>
-              <option value="2356" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2407" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/InfigoProductProviderPlugin.cs</url>
-          <line>30</line>
-          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\InfigoProductProviderPlugin.cs" initialLine="29" containingFunctionPresentation="method 'InstallAsync'">
-            <startOffsets>
-              <option value="1062" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1227" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Background/GetProductsFromApiTask.cs</url>
           <line>17</line>
           <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Background\GetProductsFromApiTask.cs" initialLine="17" containingFunctionPresentation="method 'ExecuteAsync'">
@@ -290,9 +221,45 @@
               <option value="598" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="58" />
+          <option name="timeStamp" value="63" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Services/InfigoProductProviderService.cs</url>
+          <line>139</line>
+          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Services\InfigoProductProviderService.cs" initialLine="133" containingFunctionPresentation="method 'SetProductAttributes'">
+            <startOffsets>
+              <option value="6227" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6422" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.Misc.InfigoProductProvider/Mapping/ProductMappingService.cs</url>
+          <line>33</line>
+          <properties documentPath="C:\nopCommerce\nopCommerce\src\Plugins\Nop.Plugin.Misc.InfigoProductProvider\Mapping\ProductMappingService.cs" initialLine="33" containingFunctionPresentation="method 'GetNopProductAttributeValueEntity'">
+            <startOffsets>
+              <option value="1096" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1455" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.NullReferenceException" isInternal="false" displayValue="NullReferenceException" namespaceName="System">
+            <option name="internal" value="false" />
+          </properties>
+          <option name="timeStamp" value="62" />
+        </breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="DotNet Exception Breakpoints" />
+        <breakpoint enabled="true" type="CidrExceptionBreakpoint" />
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

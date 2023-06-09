@@ -35,7 +35,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     public async Task GetApiProducts()
     {
-        var specificationAttributeId = int.Parse(InfigoProductProviderDefaults.SpecificationAttributeIdForExternalId);
+        var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
         var existingExternalSpecifications =
             (await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(
                 specificationAttributeId));
@@ -110,7 +110,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
 
     private async Task SetExternalId(ApiProductModel model, Product nopProduct)
     {
-        var specificationAttributeId = int.Parse(InfigoProductProviderDefaults.SpecificationAttributeIdForExternalId);
+        var specificationAttributeId = await GetSpecificationAttributeIdForExternalId();
 
         var nopSpecificationAttributeOption =
             _productMappingService.GetNopSpecificationAttributeOption(model, specificationAttributeId);
@@ -129,20 +129,20 @@ public class InfigoProductProviderService : IInfigoProductProviderService
             
             await _productAttributeService.InsertProductAttributeAsync(nopProductAttribute);
             
-            foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
-            {
-                var nopProductAttributeValue =
-                    _productMappingService.GetNopProductAttributeValueEntity(productAttributeValue, nopProductAttribute,
-                        nopProduct);
-
-                await _productAttributeService.InsertProductAttributeValueAsync(nopProductAttributeValue);
-            }
-
             var nopProductAttributeMapping =
                 _productMappingService.GetNopProductAttributeMappingEntity(nopProductAttribute, nopProduct,
                     productAttribute);
 
             await _productAttributeService.InsertProductAttributeMappingAsync(nopProductAttributeMapping);
+            
+            foreach (var productAttributeValue in productAttribute.ProductAttributeValues)
+            {
+                var nopProductAttributeValue =
+                    _productMappingService.GetNopProductAttributeValueEntity(productAttributeValue, nopProductAttributeMapping,
+                        nopProduct);
+
+                await _productAttributeService.InsertProductAttributeValueAsync(nopProductAttributeValue);
+            }
         }
     }
 
@@ -161,5 +161,14 @@ public class InfigoProductProviderService : IInfigoProductProviderService
             
             await _productService.UpdateProductAsync(nopProduct);
         }
+    }
+
+    private async Task<int> GetSpecificationAttributeIdForExternalId()
+    {
+        var specificationAttributeId =
+            (await _specificationAttributeService.GetSpecificationAttributesAsync()).FirstOrDefault(sa =>
+                sa.Name == InfigoProductProviderDefaults.SpecificationAttributeForExternalId).Id;
+
+        return specificationAttributeId;
     }
 }

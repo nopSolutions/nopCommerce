@@ -29,12 +29,12 @@ public class ProductMappingService : IProductMappingService
     }
 
     public ProductAttributeValue GetNopProductAttributeValueEntity(ApiProductAttributeValueModel productAttributeValue,
-        ProductAttribute nopProductAttribute, Product nopProduct)
+        ProductAttributeMapping nopProductAttributeMapping, Product nopProduct)
     {
         return new ProductAttributeValue
         {
             Name = productAttributeValue.Name,
-            ProductAttributeMappingId = nopProductAttribute.Id,
+            ProductAttributeMappingId = nopProductAttributeMapping.Id,
             AssociatedProductId = nopProduct.Id,
             PriceAdjustment = productAttributeValue.PriceAdjustment,
             WeightAdjustment = productAttributeValue.WeightAdjustment

@@ -5,5 +5,5 @@ public class InfigoProductProviderDefaults
     public static string SystemName => "Misc.InfigoProductProvider";
     public static string ConfigurationRouteName => "Plugin.Misc.InfigoProductProvider.Configure";
     public static string ConfigurationPath => "~/Plugins/Misc.InfigoProductProvider/Views/Configure.cshtml";
-    public static string SpecificationAttributeIdForExternalId => "666666";
+    public static string SpecificationAttributeForExternalId => "InfigoExternalId";
 }

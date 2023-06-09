@@ -54,10 +54,4 @@ public class InfigoProductProviderController : BasePluginController
         
         return await Configure();
     }
-
-    //For testing
-    public void Re()
-    {
-        _infigoProductProviderService.GetApiProducts();
-    }
 }
