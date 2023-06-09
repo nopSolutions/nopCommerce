@@ -210,7 +210,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                             item.Price :
                             3M,
                         PriceAdjustment = item.Price,
-                        IsPreSelected = item.Item_Number.Contains("NO"),
+                        IsPreSelected = false,
                         DisplayOrder = item.Item_Number.Contains("NO") ? 10 : 0,
                     };
                     await SaveProductAttributeValueAsync(existingPav, newPav);
@@ -234,7 +234,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 ProductId = productId,
                 ProductAttributeId = haulAwayProductAttributeId,
                 AttributeControlType = AttributeControlType.Checkboxes,
-                TextPrompt = "Haul Away",
+                TextPrompt = "Haul Away or Move",
                 ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
             } : null;
 
@@ -242,7 +242,10 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 
             if (resultPam != null)
             {
-                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault();
+                // Haulaway
+                var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault(
+                    pav => pav.Name.Contains("Remove")
+                );
 
                 var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(mapItemNumber.ToString());
                 var price = item.Price - deliveryPav.PriceAdjustment;
@@ -250,7 +253,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 var newPav = new ProductAttributeValue()
                 {
                     ProductAttributeMappingId = resultPam.Id,
-                    Name = await GetHaulawayMessageAsync(priceFormatted, productId),
+                    Name = await GetHaulawayMessageAsync(priceFormatted, productId, "Remove"),
                     Cost = mapItemNumber,
                     PriceAdjustment = price,
                     IsPreSelected = false,
@@ -258,6 +261,26 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 };
 
                 await SaveProductAttributeValueAsync(existingPav, newPav);
+
+                // Move
+                var existingPav2 = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault(
+                    pav => pav.Name.Contains("Move")
+                );
+
+                var item2 = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(mapItemNumber.ToString());
+                var price2 = item.Price - deliveryPav.PriceAdjustment;
+                var priceFormatted2 = price == 0 ? "FREE" : await _priceFormatter.FormatPriceAsync(price);
+                var newPav2 = new ProductAttributeValue()
+                {
+                    ProductAttributeMappingId = resultPam.Id,
+                    Name = await GetHaulawayMessageAsync(priceFormatted, productId, "Move"),
+                    Cost = mapItemNumber,
+                    PriceAdjustment = price,
+                    IsPreSelected = false,
+                    DisplayOrder = 0,
+                };
+
+                await SaveProductAttributeValueAsync(existingPav2, newPav2);
             }
         }
 
@@ -405,6 +428,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 existingPav.Name = newPav.Name;
                 existingPav.PriceAdjustment = newPav.PriceAdjustment;
                 existingPav.Cost = newPav.Cost;
+                existingPav.IsPreSelected = newPav.IsPreSelected;
                 await _abcProductAttributeService.UpdateProductAttributeValueAsync(existingPav);
                 return existingPav;
             }
@@ -416,7 +440,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
         {
             return existingPav.Name == newPav.Name
                 && existingPav.PriceAdjustment == newPav.PriceAdjustment
-                && existingPav.Cost == newPav.Cost;
+                && existingPav.Cost == newPav.Cost
+                && existingPav.IsPreSelected == newPav.IsPreSelected;
         }
 
         private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(string deliveryOnlyPriceFormatted, int productId)
@@ -441,7 +466,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return string.Format("Home Delivery (FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
         }
 
-        private async System.Threading.Tasks.Task<string> GetHaulawayMessageAsync(string price, int productId)
+        private async System.Threading.Tasks.Task<string> GetHaulawayMessageAsync(string price, int productId, string action)
         {
             // If TV, change messaging
             var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
@@ -451,11 +476,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 var fullCategoryListNames = (await _categoryService.GetCategoryBreadCrumbAsync(category)).Select(c => c.Name);
                 if (fullCategoryListNames.Contains("TV - Video"))
                 {
-                    return string.Format("Remove Old Television ({0})", price);
+                    return string.Format("{0} Old Television ({1})", action, price);
                 }
             }
 
-            return string.Format("Remove Old Appliance ({0})", price);
+            return string.Format("{0} Old Appliance ({1})", action, price);
         }
     }
 }

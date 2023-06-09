@@ -148,9 +148,11 @@
                                         }
                                         // ABC: auto-select "Decline new hose" if it exists
                                         var isDecline = attributeValue.Name.Contains("Decline");
+                                        // ABC: Keep a list of the "default" options
+                                        var is4ft = attributeValue.Name.Contains("4ft Rubber Hoses");
                                         if (!isAccessoryAlreadySelected && attribute.Name == "Accessories (Delivery)")
                                         {
-                                            attributeValue.IsPreSelected = isDecline;
+                                            attributeValue.IsPreSelected = is4ft;
                                         }
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
