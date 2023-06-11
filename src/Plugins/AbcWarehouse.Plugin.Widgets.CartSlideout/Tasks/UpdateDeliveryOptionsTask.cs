@@ -207,7 +207,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         Name = item.Description,
                         // use 3 to hardcode NO options
                         Cost = accessory.AccessoryItemNumber.All(Char.IsDigit) ?
-                            item.Price :
+                            Convert.ToDecimal(accessory.AccessoryItemNumber) :
                             3M,
                         PriceAdjustment = item.Price,
                         IsPreSelected = false,

@@ -232,7 +232,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 if (accessoryPam != null)
                 {
                     var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
-                    var code = accessoryPav.Cost.ToString();
+                    // F0 - remove decimal, no currency
+                    var code = accessoryPav.Cost.ToString("F0");
                     if (code == "3.0000")
                     {
                         var item = await _abcDeliveryService.GetAbcDeliveryItemByDescriptionAsync(accessoryPav.Name);
