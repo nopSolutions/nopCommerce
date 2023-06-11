@@ -40,30 +40,28 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     {
         var existingExternalSpecifications = await GetExistingExternalSpecifications();
 
-        var productIds = await GetAllProductsIds();
+        var productIds = await _infigoProductProviderHttpClient.RequestAllProductIds();
 
         foreach (var productId in productIds)
         {
+            var productModel = await _infigoProductProviderHttpClient.RequestProductById(productId);
+            
             if (existingExternalSpecifications.Select(x => x.Name).Contains(productId.ToString()))
             {
                 _logger.LogInformation("Product {id} already exists. Updating", productId);
-                
-                var productModel = await GetProductById(productId);
 
                 await SetNewProductValues(productModel);
             }
             else
             {
                 _logger.LogInformation("New product {id} detected. Adding new product", productId);
-                
-                var productModel = await GetProductById(productId);
 
                 await SaveApiProductsInDb(productModel);
             }
         }
     }
     
-    public async Task<Product> GetProductByExternalId(int externalId)
+    public async Task<int> GetProductIdByExternalId(int externalId)
     {
         var existingExternalSpecifications = await GetExistingExternalSpecifications();
         
@@ -72,27 +70,7 @@ public class InfigoProductProviderService : IInfigoProductProviderService
         var nopProductId = (await _specificationAttributeService.GetProductSpecificationAttributesAsync())
             .FirstOrDefault(x => x.SpecificationAttributeOptionId == nopSpecificationAttributeOptionId).ProductId;
 
-        var nopProduct = await _productService.GetProductByIdAsync(nopProductId);
-
-        return nopProduct;
-    }
-    
-    private async Task<List<int>> GetAllProductsIds()
-    {
-        var data = await _infigoProductProviderHttpClient.RequestAllProductIds();
-        
-        var productIdList = JsonConvert.DeserializeObject<List<int>>(data);
-        
-        return productIdList;
-    }
-
-    private async Task<ApiProductModel> GetProductById(int id)
-    {
-        var data = await _infigoProductProviderHttpClient.RequestProductById(id);
-
-        var product = JsonConvert.DeserializeObject<ApiProductModel>(data);
-
-        return product;
+        return nopProductId;
     }
     
     private async Task SaveApiProductsInDb(ApiProductModel model)

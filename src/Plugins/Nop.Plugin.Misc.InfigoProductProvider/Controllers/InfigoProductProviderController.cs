@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Plugin.Misc.InfigoProductProvider.Services;
 using Nop.Services.Configuration;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -72,8 +71,8 @@ public class InfigoProductProviderController : BasePluginController
     [HttpPost, ActionName("SearchByExternalId")]
     public async Task<IActionResult> SearchByExternalId(ExternalIdSearchModel model)
     {
-        var product = await _infigoProductProviderService.GetProductByExternalId(model.ExternalId);
-        var searchModel = new ProductSearchModel { SearchProductName = product.Name };
-        return RedirectToAction("ProductList", "Product", searchModel);
+        var productId = await _infigoProductProviderService.GetProductIdByExternalId(model.ExternalId);
+        var productUrl = $"/Admin/Product/Edit/{productId}";
+        return Redirect(productUrl);
     }
 }

@@ -8,5 +8,5 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Services;
 public interface IInfigoProductProviderService
 {
     public Task GetApiProducts();
-    public Task<Product> GetProductByExternalId(int externalId);
+    public Task<int> GetProductIdByExternalId(int externalId);
 }
