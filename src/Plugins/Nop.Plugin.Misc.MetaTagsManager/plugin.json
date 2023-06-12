@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Meta tags manager",
+  "SystemName": "Misc.MetaTagsManager",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "Gabriel",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.MetaTagsManager.dll",
+  "Description": "Meta tags manager for products/categories/manufacturers"
+}
