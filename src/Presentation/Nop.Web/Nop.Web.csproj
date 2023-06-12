@@ -39,30 +39,6 @@
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
     <None Remove="Plugins\**;Themes\**" />
     <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\runtimes\**;Plugins\**\ref\**;Plugins\**\*.pdb" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\FoxNetSoft.Plugin.Misc.MetaTagManager.deps.json" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\FoxNetSoft.Plugin.Misc.MetaTagManager.dll" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\logo.jpg" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\plugin.json" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Resources\Resources.en-us.xml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\AdminNopPanel.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\AdminTabStripContent.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\ConditionEditPopup.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\Create.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\Edit.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\List.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\MetaTagAddPopup.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\ProductAddPopup.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_ConditionEditPopup.Values.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.Categories.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.Conditions.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.Main.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.Manufacturers.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_CreateOrUpdate.Products.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerAdmin\_ViewImports.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerSettings\Configure.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\Views\MetaTagManagerSettings\_ViewImports.cshtml" />
-    <Content Include="Plugins\FoxNetSoft.MetaTagManager\WebOptimizer.Core.dll" />
 
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Never" />
 
