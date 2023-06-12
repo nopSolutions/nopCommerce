@@ -53,7 +53,7 @@ public class ExternalProductService : IExternalProductService
         var productIds = await GetAllProducts();
         foreach (int id in productIds)
         {
-            
+             
             var mappedModel = _productMapper.Map(await GetProductDetails(id));
             await _productService.InsertProductAsync(mappedModel);
         }

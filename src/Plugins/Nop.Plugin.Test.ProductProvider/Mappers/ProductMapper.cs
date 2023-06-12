@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Test.ProductProvider.Models;
-using Nop.Plugin.Test.ProductProvider.Services;
 
 namespace Nop.Plugin.Test.ProductProvider.Mappers;
 
