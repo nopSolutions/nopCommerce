@@ -8,5 +8,4 @@ public class ProductProviderSettings : ISettings
     public string ProductListEndpoint { get; set; }
     public string ProductDetailEndpoint { get; set; }
     public string ApiKey { get; set; }
-    public string ApiKeyType { get; set; }
 }

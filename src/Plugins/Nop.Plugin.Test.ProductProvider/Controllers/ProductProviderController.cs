@@ -37,8 +37,8 @@ public class ProductProviderController : BasePluginController
                 ApiKey = settings.ApiKey,
                 ProductListEndpoint = settings.ProductListEndpoint,
                 ProductDetailsEndpoint = settings.ProductDetailEndpoint,
-                ApiKeyType = settings.ApiKeyType
-            };
+                ApiKeyType = ProductProviderDefaults.ApiKeyType
+            };  
         }
         
         return View("~/Plugins/Test.ProductProvider/Views/Configure.cshtml", model);
@@ -53,7 +53,6 @@ public class ProductProviderController : BasePluginController
             ApiKey = model.ApiKey,
             ProductListEndpoint = model.ProductListEndpoint,
             ProductDetailEndpoint = model.ProductDetailsEndpoint,
-            ApiKeyType = model.ApiKeyType
         };
 
         await _settingService.SaveSettingAsync(settings);

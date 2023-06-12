@@ -33,6 +33,9 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
         var task = await _scheduleTaskService.GetTaskByTypeAsync(ProductProviderDefaults.SynchronizationTask);
         if (task != null)
             await _scheduleTaskService.DeleteTaskAsync(task);
+
+        //settings
+        await _settingService.DeleteSettingAsync<ProductProviderSettings>();
     }
 
     public override async Task InstallAsync()
@@ -43,7 +46,6 @@ public class ProductProviderPlugin : BasePlugin, IMiscPlugin
             ApiKey = "NDViOTIyNzUtZGUxYi00MTk4LWI4YmUtMTkzNmRmNWQ0ZTc1",
             ProductListEndpoint = "services/api/catalog/productlist",
             ProductDetailEndpoint = "services/api/catalog/ProductDetails",
-            ApiKeyType = "Basic"
         };
 
         await _settingService.SaveSettingAsync(settings);

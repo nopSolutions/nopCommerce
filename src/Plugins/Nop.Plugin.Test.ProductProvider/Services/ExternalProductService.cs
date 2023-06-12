@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinqToDB.Linq.Internal;
 using Newtonsoft.Json;
 using Nop.Plugin.Test.ProductProvider.Api;
+using Nop.Plugin.Test.ProductProvider.Exceptions;
 using Nop.Plugin.Test.ProductProvider.Mappers;
 using Nop.Plugin.Test.ProductProvider.Models;
 using Nop.Services.Catalog;

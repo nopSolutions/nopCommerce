@@ -17,7 +17,8 @@ namespace Nop.Plugin.Test.ProductProvider.Api
         protected readonly HttpClient _httpClient;
         private readonly ISettingService _settingService;
         private readonly ILogger<ProductProviderHttpClient> _logger;
-
+        private bool _isCredentialsSet = false;
+            
         public ProductProviderHttpClient(HttpClient httpClient, ISettingService settingService, ILogger<ProductProviderHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -29,14 +30,11 @@ namespace Nop.Plugin.Test.ProductProvider.Api
         {
             try
             {
+                if (!_isCredentialsSet)
+                    await SetCredentials();
+
                 var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
-
-                _httpClient.Timeout = TimeSpan.FromSeconds(10);
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(settings.ApiKeyType, settings.ApiKey);
-
                 var url = $"{settings.BaseUrl}/{settings.ProductListEndpoint}";
-
                 var httpResponse = await _httpClient.GetAsync(url);
                 var responseString = await httpResponse.Content.ReadAsStringAsync();
 
@@ -53,14 +51,11 @@ namespace Nop.Plugin.Test.ProductProvider.Api
         {
             try
             {
+                if (!_isCredentialsSet)
+                    await SetCredentials();
+                
                 var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
-
-                _httpClient.Timeout = TimeSpan.FromSeconds(10);
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(settings.ApiKeyType, settings.ApiKey);
-
                 var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}/{id}";
-
                 var httpResponse = await _httpClient.GetAsync(url);
 
                 if (httpResponse == null)
@@ -70,11 +65,21 @@ namespace Nop.Plugin.Test.ProductProvider.Api
 
                 return JsonConvert.DeserializeObject<ExternalProductModel>(responseString);
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 _logger.LogWarning("Couldn't get external product by id");
                 throw;
             }
+        }
+
+        private async Task SetCredentials()
+        {
+            var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
+            _httpClient.Timeout = TimeSpan.FromSeconds(10);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(ProductProviderDefaults.ApiKeyType, settings.ApiKey);
+            
+            _isCredentialsSet = true;
         }
     }
 }
