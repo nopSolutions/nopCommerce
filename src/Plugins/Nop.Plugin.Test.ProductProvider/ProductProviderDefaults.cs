@@ -28,6 +28,6 @@
         /// <summary>
         /// Gets a default synchronization period in seconds
         /// </summary>
-        public static int DefaultSynchronizationPeriod => 5;
+        public static int DefaultSynchronizationPeriod => 60 * 60 * 24; // 24h
     }
 }

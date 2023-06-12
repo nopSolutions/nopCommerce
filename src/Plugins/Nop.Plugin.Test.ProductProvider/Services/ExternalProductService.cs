@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using LinqToDB.Linq.Internal;
 using Newtonsoft.Json;
+using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Test.ProductProvider.Api;
 using Nop.Plugin.Test.ProductProvider.Exceptions;
 using Nop.Plugin.Test.ProductProvider.Mappers;
 using Nop.Plugin.Test.ProductProvider.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.ExportImport;
+using Nop.Services.Media;
 
 namespace Nop.Plugin.Test.ProductProvider.Services;
 
@@ -17,12 +21,14 @@ public class ExternalProductService : IExternalProductService
     private readonly ProductProviderHttpClient _httpClient;
     private readonly IProductService _productService;
     private readonly IProductMapper _productMapper;
+    private readonly IPictureService _pictureService;
     
-    public ExternalProductService(ProductProviderHttpClient httpClient, IProductMapper productMapper, IProductService productService)
+    public ExternalProductService(ProductProviderHttpClient httpClient, IProductMapper productMapper, IProductService productService, IPictureService pictureService)
     {
         _httpClient = httpClient;
         _productMapper = productMapper;
         _productService = productService;
+        _pictureService = pictureService;
     }
 
     public async Task<IEnumerable<int>> GetAllProducts()
@@ -45,7 +51,26 @@ public class ExternalProductService : IExternalProductService
             if (productFromDb == null)
             {
                 var mappedModel = _productMapper.Map(await GetProductDetails(id));
-                await _productService.InsertProductAsync(mappedModel);
+
+                var product = await GetProductDetails(1548);
+                var imageUrl = product.ThumbnailUrls.FirstOrDefault();
+                byte[] imageFromApi; 
+                
+                if (imageUrl != null)
+                {
+                    imageFromApi = await _httpClient.GetProductImageAsync(imageUrl);
+                    var savedImage = await _pictureService.InsertPictureAsync(imageFromApi, "image/jpeg", product.Name);
+                    await _productService.InsertProductAsync(mappedModel);
+
+                    await _productService.InsertProductPictureAsync(new ProductPicture()
+                    {
+                        PictureId = savedImage.Id, ProductId = mappedModel.Id
+                    });
+                }
+                else
+                {
+                    await _productService.InsertProductAsync(mappedModel);
+                }
             }
         }
     }

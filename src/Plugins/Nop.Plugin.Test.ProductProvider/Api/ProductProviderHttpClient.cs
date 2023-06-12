@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -71,6 +72,28 @@ namespace Nop.Plugin.Test.ProductProvider.Api
                 throw;
             }
         }
+
+        public async Task<byte[]> GetProductImageAsync(string imageUrl)
+        {
+            try
+            {
+                if (!_isCredentialsSet)
+                    await SetCredentials();
+
+                var httpResponse = await _httpClient.GetAsync(imageUrl);
+
+                if (httpResponse == null)
+                    throw new ExternalProductImageNotFoundException();
+
+                return await httpResponse.Content.ReadAsByteArrayAsync();
+            }
+            catch (Exception)
+            {
+                _logger.LogWarning("Couldn't get image for external product");
+                throw;
+            }
+        }
+
 
         private async Task SetCredentials()
         {

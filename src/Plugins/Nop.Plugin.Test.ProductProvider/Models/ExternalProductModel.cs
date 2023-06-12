@@ -15,7 +15,7 @@ public class ExternalProductModel
     public int StockValue { get; set; }
     public string Sku { get; set; }
     public IEnumerable<object> PreviewUrls { get; set; }
-    public IEnumerable<object> ThumbnailUrls { get; set; }
+    public List<string> ThumbnailUrls { get; set; }
     public IEnumerable<object> Tags { get; set; }
     public IEnumerable<ProductAttributesModel> ProductAttributeValues { get; set; }
     public IEnumerable<object> AttributeCombinations { get; set; }
