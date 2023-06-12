@@ -37,7 +37,7 @@ namespace Nop.Plugin.Test.ProductProvider.Api
             return JsonConvert.DeserializeObject<IEnumerable<int>>(responseString);
         }
 
-        public async Task<ExternalProductModel> GetProductDetailsAsync()
+        public async Task<ExternalProductModel> GetProductDetailsAsync(int id)
         {
             var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
 
@@ -45,7 +45,7 @@ namespace Nop.Plugin.Test.ProductProvider.Api
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue(settings.ApiKeyType, settings.ApiKey);
 
-            var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}";
+            var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}/{id}";
 
             var httpResponse = await _httpClient.GetAsync(url);
             var responseString = await httpResponse.Content.ReadAsStringAsync();

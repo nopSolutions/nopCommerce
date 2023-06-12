@@ -28,24 +28,12 @@ public class ExternalProductService : IExternalProductService
 
     public async Task<IEnumerable<int>> GetAllProducts()
     {
-        var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
-
-        var url = $"{settings.BaseUrl}/{settings.ProductListEndpoint}";
-        
-        var response = await _httpClient.RequestAsync(url, settings);
-        
-        return JsonConvert.DeserializeObject<IEnumerable<int>>(response);
+        return await _httpClient.GetProductsAsync();
     }
 
     public async Task<ExternalProductModel> GetProductDetails(int id)
     {
-        var settings = await _settingService.LoadSettingAsync<ProductProviderSettings>();
-
-        var url = $"{settings.BaseUrl}/{settings.ProductDetailEndpoint}?id={id}";
-
-        var result = await _httpClient.RequestAsync(url, settings);
-
-        return JsonConvert.DeserializeObject<ExternalProductModel>(result);
+        return await _httpClient.GetProductDetailsAsync();
     }
 
     public async Task SyncProducts()
