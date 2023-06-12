@@ -1,6 +1,4 @@
-﻿using Nop.Core;
-
-namespace Nop.Plugin.Test.ProductProvider
+﻿namespace Nop.Plugin.Test.ProductProvider
 {
     /// <summary>
     /// Represents plugin constants
@@ -23,8 +21,13 @@ namespace Nop.Plugin.Test.ProductProvider
         public static string SynchronizationTask => "Nop.Plugin.Test.ProductProvider.Services.SyncDataTask";
 
         /// <summary>
+        /// Gets the type of authorization for external products
+        /// </summary>
+        public static string ApiKeyType => "Basic";
+
+        /// <summary>
         /// Gets a default synchronization period in seconds
         /// </summary>
-        public static int DefaultSynchronizationPeriod => 5;
+        public static int DefaultSynchronizationPeriod => 60 * 60 * 24; // 24h
     }
 }
