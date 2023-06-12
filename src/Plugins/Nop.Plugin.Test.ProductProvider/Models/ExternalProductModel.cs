@@ -6,6 +6,7 @@ namespace Nop.Plugin.Test.ProductProvider.Models;
 
 public class ExternalProductModel
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string ShortDescrption { get; set; }
     public string LongDescription { get; set; }
@@ -19,5 +20,5 @@ public class ExternalProductModel
     public IEnumerable<ProductAttributesModel> ProductAttributeValues { get; set; }
     public IEnumerable<object> AttributeCombinations { get; set; }
     public IEnumerable<object> MisConfigurations { get; set; }
-    public IEnumerable<object> SpecificationAttributes { get; set; }
+    public IEnumerable<SpecificationAttribute> SpecificationAttributes { get; set; }
 }

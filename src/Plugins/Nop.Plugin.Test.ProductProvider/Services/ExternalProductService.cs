@@ -13,15 +13,13 @@ namespace Nop.Plugin.Test.ProductProvider.Services;
 
 public class ExternalProductService : IExternalProductService
 {
-    private readonly ISettingService _settingService;
     private readonly ProductProviderHttpClient _httpClient;
     private readonly IProductService _productService;
     private readonly IProductMapper _productMapper;
-
-    public ExternalProductService(ProductProviderHttpClient httpClient, ISettingService settingService, IProductMapper productMapper, IProductService productService)
+    
+    public ExternalProductService(ProductProviderHttpClient httpClient, IProductMapper productMapper, IProductService productService)
     {
         _httpClient = httpClient;
-        _settingService = settingService;
         _productMapper = productMapper;
         _productService = productService;
     }
@@ -33,7 +31,7 @@ public class ExternalProductService : IExternalProductService
 
     public async Task<ExternalProductModel> GetProductDetails(int id)
     {
-        return await _httpClient.GetProductDetailsAsync();
+        return await _httpClient.GetProductDetailsAsync(id);
     }
 
     public async Task SyncProducts()
@@ -41,9 +39,13 @@ public class ExternalProductService : IExternalProductService
         var productIds = await GetAllProducts();
         foreach (int id in productIds)
         {
-             
-            var mappedModel = _productMapper.Map(await GetProductDetails(id));
-            await _productService.InsertProductAsync(mappedModel);
+            var productFromDb = await _productService.GetProductBySkuAsync(id.ToString());
+
+            if (productFromDb == null)
+            {
+                var mappedModel = _productMapper.Map(await GetProductDetails(id));
+                await _productService.InsertProductAsync(mappedModel);
+            }
         }
     }
 }

@@ -15,7 +15,8 @@ public class ProductMapper : IProductMapper
             ProductTypeId = model.Type,
             StockQuantity = model.StockValue,
             Price = model.Price,
-            Sku = model.Sku
+            Sku = model.Id.ToString(),
+            // ManufacturerPartNumber = model.Id.ToString()
         };
     }
 }
