@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.InfigoProductProvider.Api;
 using Nop.Plugin.Misc.InfigoProductProvider.Mapping;
 using Nop.Plugin.Misc.InfigoProductProvider.Models;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Media;
 
 namespace Nop.Plugin.Misc.InfigoProductProvider.Services;
@@ -16,7 +14,6 @@ namespace Nop.Plugin.Misc.InfigoProductProvider.Services;
 public class InfigoProductProviderService : IInfigoProductProviderService
 {
     private readonly InfigoProductProviderHttpClient _infigoProductProviderHttpClient;
-    private readonly ISettingService _settingService;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductService _productService;
     private readonly IProductMapper _productMapper;
@@ -24,10 +21,9 @@ public class InfigoProductProviderService : IInfigoProductProviderService
     private readonly IPictureService _pictureService;
     private readonly ILogger<InfigoProductProviderService> _logger;
 
-    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, ISettingService settingService, IProductAttributeService productAttributeService, IProductService productService, IProductMapper productMapper, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService, ILogger<InfigoProductProviderService> logger)
+    public InfigoProductProviderService(InfigoProductProviderHttpClient infigoProductProviderHttpClient, IProductAttributeService productAttributeService, IProductService productService, IProductMapper productMapper, ISpecificationAttributeService specificationAttributeService, IPictureService pictureService, ILogger<InfigoProductProviderService> logger)
     {
         _infigoProductProviderHttpClient = infigoProductProviderHttpClient;
-        _settingService = settingService;
         _productAttributeService = productAttributeService;
         _productService = productService;
         _productMapper = productMapper;
