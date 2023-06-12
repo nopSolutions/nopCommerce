@@ -50,9 +50,9 @@ public class ExternalProductService : IExternalProductService
 
             if (productFromDb == null)
             {
-                var mappedModel = _productMapper.Map(await GetProductDetails(id));
+                var product = await GetProductDetails(id);
+                var mappedModel = _productMapper.Map(product);
 
-                var product = await GetProductDetails(1548);
                 var imageUrl = product.ThumbnailUrls.FirstOrDefault();
                 byte[] imageFromApi; 
                 
