@@ -50,6 +50,8 @@
     </Content>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.65" />
 
@@ -114,6 +116,7 @@
       
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <UserSecretsId>ec861157-b1c7-4585-921c-baf8f806df17</UserSecretsId>
   </PropertyGroup>
 
 </Project>

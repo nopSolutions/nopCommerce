@@ -1,0 +1,9 @@
+﻿@{
+    Layout = ""; 
+}
+<link rel="stylesheet" href="~/Plugins/GoogleAuth/Content/googlestyles.css" />
+<div>
+    <div class="buttons">
+        <a asp-controller="GoogleAuthentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" class="google-btn"></a>
+    </div>
+</div>
