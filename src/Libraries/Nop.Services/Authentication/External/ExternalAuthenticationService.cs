@@ -278,8 +278,8 @@ namespace Nop.Services.Authentication.External
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, store.Id))
-                return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
+            //if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName, customer, store.Id))
+            //    return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
             var currentLoggedInUser = await _customerService.IsRegisteredAsync(customer) ? customer : null;
