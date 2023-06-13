@@ -1,0 +1,13 @@
+﻿{
+  "Group": "Widget",
+  "FriendlyName": "Deals",
+  "SystemName": "Widget.Deals",
+  "Version": "4.70.1",
+  "SupportedVersions": [
+    "4.70"
+  ],
+  "Author": "Virgiliu Plesca",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widget.Deals.dll",
+  "Description": "Creates the ability to add deals component (sales) on the client side app"
+}

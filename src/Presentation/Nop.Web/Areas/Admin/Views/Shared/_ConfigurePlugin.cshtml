@@ -9,6 +9,8 @@
 @using Nop.Services.Tax
 @inject IPluginService pluginService
 @inject IWebHelper webHelper
+@inject IGenericAttributeService GenericAttributeService
+@inject IWorkContext workContext
 @{
     var plugin = pluginService.FindPluginByTypeInAssembly((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo);
 
