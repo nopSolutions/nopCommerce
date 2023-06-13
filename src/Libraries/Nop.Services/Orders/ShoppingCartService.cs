@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
@@ -41,6 +42,7 @@ namespace Nop.Services.Orders
         protected readonly ICustomerService _customerService;
         protected readonly IDateRangeService _dateRangeService;
         protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEventPublisher _eventPublisher;
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IPermissionService _permissionService;
@@ -74,6 +76,7 @@ namespace Nop.Services.Orders
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -103,6 +106,7 @@ namespace Nop.Services.Orders
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -641,6 +645,28 @@ namespace Nop.Services.Orders
                     quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
                     resetCheckoutData: false);
             }
+        }
+
+        /// <summary>
+        /// Clear shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ClearShoppingCartAsync(Customer customer, int storeId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var cart = await GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId);
+
+            //delete items
+            await _sciRepository.DeleteAsync(cart, publishEvent: false);
+            await _eventPublisher.PublishAsync(new ClearShoppingCartEvent(cart));
+
+            //reset "HasShoppingCartItems" property used for performance optimization
+            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            await _customerService.UpdateCustomerAsync(customer);
         }
 
         /// <summary>

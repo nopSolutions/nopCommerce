@@ -1307,8 +1307,7 @@ namespace Nop.Services.Orders
                     string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
             }
 
-            //clear shopping cart
-            await Task.WhenAll(details.Cart.ToList().Select(sci => _shoppingCartService.DeleteShoppingCartItemAsync(sci, false)));
+            await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
         }
 
         /// <summary>

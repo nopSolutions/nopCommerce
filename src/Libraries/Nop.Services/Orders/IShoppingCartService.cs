@@ -22,6 +22,14 @@ namespace Nop.Services.Orders
             bool ensureOnlyActiveCheckoutAttributes = false);
 
         /// <summary>
+        /// Clear shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearShoppingCartAsync(Customer customer, int storeId);
+
+        /// <summary>
         /// Delete shopping cart item
         /// </summary>
         /// <param name="shoppingCartItemId">Shopping cart item ID</param>
