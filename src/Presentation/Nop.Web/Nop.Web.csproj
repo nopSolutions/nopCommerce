@@ -68,6 +68,9 @@
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\Views\Configure.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\plugin.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\PublicInfo.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Nop.Plugin.Widgets.Deals.deps.json" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
