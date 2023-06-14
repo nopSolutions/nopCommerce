@@ -164,6 +164,10 @@ namespace Nop.Services.Authentication.External
             //create registration request
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
+
+            customer.IsNopUser = false;
+            customer.IsSSOUser = true;
+
             var registrationRequest = new CustomerRegistrationRequest(customer,
                 parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
