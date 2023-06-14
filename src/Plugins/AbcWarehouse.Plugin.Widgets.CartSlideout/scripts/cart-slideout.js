@@ -183,6 +183,8 @@ function setAttributeListeners() {
 }
 
 function updateAttributes() {
+    setHaulawayCheckboxes();
+
     fetch(`/slideout_attributechange?productId=${productId}`, {
         method: 'POST',
         headers: {
@@ -253,6 +255,23 @@ function updateAttributes() {
     .catch(err => {
         console.log(err)
     })
+}
+
+function setHaulawayCheckboxes() {
+    var checkboxes = document.getElementsByClassName('is-haulaway');
+    var nonCheckedCheckboxes = Array.from(checkboxes).filter(function(checkbox) {
+        return !checkbox.checked;
+    });
+
+    Array.from(checkboxes).forEach(function(cb) {
+        cb.disabled = false;
+    });
+
+    if (checkboxes.length === nonCheckedCheckboxes.length) { return; }
+
+    nonCheckedCheckboxes.forEach(function(cb) {
+        cb.disabled = true;
+    });
 }
 
 function setInformationalIconListeners() {
