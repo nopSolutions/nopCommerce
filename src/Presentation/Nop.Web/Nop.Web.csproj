@@ -53,6 +53,10 @@
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
+    <Content Update="Plugins\Widgets.TireDeals\Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +72,12 @@
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\Views\Configure.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Test.ProductProvider\plugin.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\PublicInfo.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Nop.Plugin.Widgets.Deals.deps.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\Configure.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\CreateTireDeal.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\plugin.json" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
