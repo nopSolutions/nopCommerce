@@ -1,9 +1,8 @@
-﻿using Nop.Core;
+﻿namespace Nop.Plugin.Widgets.Deals.Models;
 
-namespace Nop.Plugin.Widgets.Deals.Domain;
-
-public class DealEntity : BaseEntity
+public class TireDealModel
 {
+    public int Id { get; set; }
     public string Title { get; set; }
     public string LongDescription { get; set; }
     public string ShortDescription { get; set; }

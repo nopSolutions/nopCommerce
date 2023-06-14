@@ -1,0 +1,76 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@model Nop.Plugin.Widgets.Deals.Models.TireDealCreateModel
+
+@{
+    const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
+    var hideSearchBlock = false;
+}
+
+
+<form asp-controller="TireDeals" asp-action="Create" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Configure" asp-controller="TireDeals">@T("Common.Back")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    
+    <div class="content-header form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text"> @("Create") </div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+    
+    
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+    
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="Title" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="Title" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ShortDescription" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="ShortDescription" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="LongDescription" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="LongDescription" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>

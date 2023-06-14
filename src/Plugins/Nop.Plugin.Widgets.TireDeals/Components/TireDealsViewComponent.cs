@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.Deals.Components;
 
-public class DealsViewComponent : NopViewComponent
+public class TireDealsViewComponent : NopViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {

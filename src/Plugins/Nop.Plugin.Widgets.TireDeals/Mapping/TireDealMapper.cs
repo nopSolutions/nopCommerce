@@ -5,11 +5,11 @@ using Nop.Plugin.Widgets.Deals.Models;
 
 namespace Nop.Plugin.Widgets.Deals.Mapping;
 
-public class DealMapper : IDealMapper
+public class TireDealMapper : ITireDealMapper
 {
-    public DealModel ToModel(DealEntity entity)
+    public TireDealModel ToModel(TireDealEntity entity)
     {
-        return new DealModel()
+        return new TireDealModel()
         {
             Id = entity.Id,
             Title = entity.Title,
@@ -18,14 +18,14 @@ public class DealMapper : IDealMapper
         };
     }
 
-    public IEnumerable<DealModel> ToModel(IEnumerable<DealEntity> entities)
+    public IEnumerable<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities)
     {
         return entities.Select(ToModel).ToList();
     }
 
-    public DealEntity ToEntity(DealModel model)
+    public TireDealEntity ToEntity(TireDealCreateModel model)
     {
-        return new DealEntity()
+        return new TireDealEntity()
         {
             Title = model.Title,
             LongDescription = model.LongDescription,

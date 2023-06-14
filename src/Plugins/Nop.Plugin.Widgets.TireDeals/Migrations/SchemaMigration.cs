@@ -11,7 +11,7 @@ namespace Nop.Plugin.Widgets.Deals.Migrations
     {
         public override void Up()
         {
-            Create.TableFor<DealEntity>();
+            Create.TableFor<TireDealEntity>();
         }
     }
 }

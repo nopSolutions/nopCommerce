@@ -67,7 +67,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.NopMobileAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Test.ProductProvider", "Plugins\Nop.Plugin.Test.ProductProvider\Nop.Plugin.Test.ProductProvider.csproj", "{EE414FB4-8424-4F03-9A10-B00A1D89868E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.Deals", "Plugins\Nop.Plugin.Widgets.Deals\Nop.Plugin.Widgets.Deals.csproj", "{3A80AA97-8D95-4A7C-80C3-6C5410E65945}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.TireDeals", "Plugins\Nop.Plugin.Widgets.TireDeals\Nop.Plugin.Widgets.TireDeals.csproj", "{3A80AA97-8D95-4A7C-80C3-6C5410E65945}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
