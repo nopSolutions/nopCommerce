@@ -73,7 +73,6 @@ function openDeliveryOptions(response) {
     deliveryOptions.style.display = "none";
 
     if (response.isDeliveryAvailable) {
-        addToCartButton.disabled = false;
         deliveryOptions.style.display = "block";
     } else {
         addToCartButton.disabled = true;
@@ -167,9 +166,7 @@ async function selectStoreAsync(shopId, message)
 
     selectedShop = `${shopId};${message}`
 
-    addToCartButton.disabled = false;
-
-    return;
+    updateAttributes();
 }
 
 function setAttributeListeners() {
@@ -182,8 +179,24 @@ function setAttributeListeners() {
     }
 }
 
+function preSelectNoWarrantyIfNoneSelected() {
+    var warrantyOptions = document.getElementsByClassName('is-warranty');
+    var selectedWarrantyOption = Array.from(warrantyOptions).filter(function(option) {
+        return option.checked;
+    });
+
+    // no warranty selected, select "No additional warranty"
+    if (selectedWarrantyOption.length !== 1) {
+        var noWarrantyOption = document.getElementById('warranty-none');
+        noWarrantyOption.checked = true;
+    }
+}
+
 function updateAttributes() {
     setHaulawayCheckboxes();
+    if (editMode) {
+        preSelectNoWarrantyIfNoneSelected();
+    }
 
     fetch(`/slideout_attributechange?productId=${productId}`, {
         method: 'POST',
@@ -226,7 +239,9 @@ function updateAttributes() {
             selectedShop = "";
         }
 
-        addToCartButton.disabled = responseJson.IsPickup && selectedShop === "";
+        addToCartButton.disabled =
+            (responseJson.IsPickup && selectedShop === "") ||
+            !responseJson.IsWarrantySelected;
 
         // hide decline messaging based on selection
         const declineNewHoseMessaging = document.querySelector('#decline-new-hose');

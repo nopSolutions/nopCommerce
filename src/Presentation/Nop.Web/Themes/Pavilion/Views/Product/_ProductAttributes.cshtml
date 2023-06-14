@@ -22,7 +22,6 @@
         }
     }
 
-    var isWarrantyAlreadySelected = false;
     var isAccessoryAlreadySelected = false;
 }
 
@@ -53,7 +52,8 @@
                     {
                         <i class="fas fa-info-circle warranty-info"></i>
                     }
-                    @if (attribute.IsRequired)
+                    @* ABC: also require if warranty *@
+                    @if (attribute.IsRequired || attribute.Name == "Warranty")
                     {
                         <span class="required">*</span>
                     }
@@ -137,19 +137,15 @@
                                             string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                 attributeValue.Name :
                                                 $"{attributeValue.Name} ({attributeValue.PriceAdjustment.Trim('+')})";
-                                        // ABC: if a warranty/accessory is selected, don't select the "none" option
-                                        if (!isWarrantyAlreadySelected)
-                                        {
-                                            isWarrantyAlreadySelected = attribute.Name == "Warranty" && attributeValue.IsPreSelected;
-                                        }
+                                        // ABC: if an accessory is selected, don't select the "none" option
                                         if (!isAccessoryAlreadySelected)
                                         {
                                             isAccessoryAlreadySelected = attribute.Name.Contains("Accessories") && attributeValue.IsPreSelected;
                                         }
-                                        // ABC: auto-select "Decline new hose" if it exists
-                                        var isDecline = attributeValue.Name.Contains("Decline");
                                         // ABC: Keep a list of the "default" options
+                                        var isDecline = attributeValue.Name.Contains("Decline");
                                         var is4ft = attributeValue.Name.Contains("4ft Rubber Hoses");
+                                        var isWarranty = attribute.Name.Contains("Warranty");
                                         if (!isAccessoryAlreadySelected && attribute.Name == "Accessories (Delivery)")
                                         {
                                             attributeValue.IsPreSelected = is4ft;
@@ -157,7 +153,8 @@
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
                                                    checked="@attributeValue.IsPreSelected"
-                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
+                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)
+                                                   @(isWarranty ? Html.Raw($"class=\"is-warranty\"") : null) />
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                             <!-- ABC: special messaging for decline -->
                                             @if (isDecline && attributeValue.Name == "Decline New Hose")
@@ -183,7 +180,7 @@
                                     }
                                     @if (attribute.Name == "Warranty")
                                     {
-                                        <input id="warranty-none" type="radio" name="@(controlId)" value="0" checked="@(!isWarrantyAlreadySelected)" />
+                                        <input id="warranty-none" class="is-warranty" type="radio" name="@(controlId)" value="0" />
                                         <label for="warranty-none">No Additional Warranty ($0)</label>
                                     }
                                 </ul>

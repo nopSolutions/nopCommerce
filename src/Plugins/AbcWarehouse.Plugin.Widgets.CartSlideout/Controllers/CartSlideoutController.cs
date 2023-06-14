@@ -134,12 +134,29 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 }
             }
 
+            // check if a warranty has been selected yet
+            var isWarrantySelected = false;
+            foreach (var element in form)
+            {
+                var pamId = int.Parse(element.Key.Split("_")[2]);
+                var pam = await _productAttributeService.GetProductAttributeMappingByIdAsync(pamId);
+                if (pam is null) { continue; }
+                
+                var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (pa?.Name == AbcDeliveryConsts.WarrantyProductAttributeName)
+                {
+                    isWarrantySelected = true;
+                    break;
+                }
+            }
+
             return Json(new
             {
                 EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
                 DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
                 IsPickup = isPickup,
-                IsDeclineNewHoseSelected = isDeclineNewHoseSelected
+                IsDeclineNewHoseSelected = isDeclineNewHoseSelected,
+                IsWarrantySelected = isWarrantySelected
             });
         }
 
