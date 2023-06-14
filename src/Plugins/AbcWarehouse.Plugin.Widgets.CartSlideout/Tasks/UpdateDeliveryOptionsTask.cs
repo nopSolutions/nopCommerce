@@ -162,6 +162,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
         }
 
+        // Should I try making this synchronous?
         private async System.Threading.Tasks.Task UpdateAccessoriesAsync(
             int productId,
             AbcDeliveryMap map,
@@ -170,7 +171,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             ProductAttributeValue deliveryPav,
             string textPrompt)
         {
-            var abcDeliveryAccessories = await _abcDeliveryService.GetAbcDeliveryAccessoriesByCategoryId(map.CategoryId);
+            var abcDeliveryAccessories = 
+                await _abcDeliveryService.GetAbcDeliveryAccessoriesByCategoryId(map.CategoryId);
             if (!abcDeliveryAccessories.Any()) { return; }
 
             var isDeliveryInstall = accessoriesProductAttributeId == _deliveryInstallAccessoriesProductAttribute.Id;
@@ -200,7 +202,10 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 foreach (var accessory in abcDeliveryAccessories)
                 {
                     var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(accessory.AccessoryItemNumber);
-                    var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(pav => pav.Name == item.Description);
+
+                    var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(
+                        pav => pav.Cost.ToString("F0") == item.Item_Number || (pav.Cost == 3M && pav.Name == item.Description)
+                    );
                     var newPav = new ProductAttributeValue()
                     {
                         ProductAttributeMappingId = resultPam.Id,
