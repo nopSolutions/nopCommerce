@@ -255,5 +255,6 @@ namespace Nop.Data
         IQueryable<TEntity> Table { get; }
 
         #endregion
+
     }
 }
