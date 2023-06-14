@@ -96,11 +96,11 @@
       "Version": "1.0"
     },
     {
-      "SystemName": "GoogleAuth",
+      "SystemName": "ExternalAuth.Facebook",
       "Version": "1.80"
     },
     {
-      "SystemName": "ExternalAuth.Facebook",
+      "SystemName": "GoogleAuth",
       "Version": "1.80"
     }
   ],

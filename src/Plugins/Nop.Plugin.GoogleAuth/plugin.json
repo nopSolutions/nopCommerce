@@ -7,5 +7,5 @@
   "Author": "nopCommerce team",
   "DisplayOrder": 5,
   "FileName": "Nop.Plugin.GoogleAuth.dll",
-  "Description": "This plugin enables Google authentication (login using Facebook account)"
+  "Description": "This plugin enables Google authentication (login using Google account)"
 }
