@@ -33,6 +33,11 @@
 @inject IRepository<ProductAbcDescription> productAbcDescriptionRepository
 @inject IStoreContext storeContext
 @inject ISettingService settingService
+@* ABC: adjusting item price *@
+@inject IRepository<ShoppingCartItem> shoppingCartItemRepository
+@inject IProductAttributeParser productAttributeParser
+@inject IProductAttributeService productAttributeService
+@inject IPriceFormatter priceFormatter
 
 
 @* ABC: custom *@
@@ -305,6 +310,30 @@
                         @{var counter = 0;}
                         @foreach (var item in Model.Items)
                         {
+                            // ABC: Adjust item price to remove delivery options
+                            var sci = shoppingCartItemRepository.Table.Where(sci => sci.Id == item.Id).FirstOrDefault();
+                            var pams = await productAttributeParser.ParseProductAttributeMappingsAsync(sci.AttributesXml);
+                            var strippedUnitPrice = item.UnitPrice.Replace("$", "").Replace(",", "");
+                            var adjustedUnitPrice = Convert.ToDecimal(strippedUnitPrice);
+
+                            foreach (var pam in pams)
+                            {
+                                var pa = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                                if (pa.Name.Contains("Delivery/Pickup Options") ||
+                                    pa.Name.Contains("Haul Away") ||
+                                    pa.Name.Contains("Warranty") ||
+                                    pa.Name.Contains("Accessories"))
+                                {
+                                    var pavs = await productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml, pam.Id);
+                                    foreach (var pav in pavs)
+                                    {
+                                        adjustedUnitPrice -= pav.PriceAdjustment;
+                                    }
+                                }
+                            }
+
+                            var adjustedUnitPriceString = await priceFormatter.FormatPriceAsync(adjustedUnitPrice);
+
                             // ABC: custom
                             var miniDesc = "";
                             var pad = productAbcDescriptionRepository.Table.Where(p => p.Product_Id == item.ProductId).FirstOrDefault();
@@ -445,7 +474,7 @@
                                     </td>
                                 }
                                 <td class="unit-price">
-                                    <span class="product-unit-price">@item.UnitPrice</span>
+                                    <span class="product-unit-price">@adjustedUnitPriceString</span>
                                 </td>
                                 <td class="quantity">
                                     @if (Model.IsEditable)
