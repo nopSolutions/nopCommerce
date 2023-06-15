@@ -11,6 +11,6 @@ public class TireDealsViewComponent : NopViewComponent
     {
         var model = new PublicInfoModel();
 
-        return View("~/Plugins/Widgets.Deals/Views/PublicInfo.cshtml", model);
+        return View("~/Plugins/Widgets.TireDeals/Views/PublicInfo.cshtml", model);
     }
 }

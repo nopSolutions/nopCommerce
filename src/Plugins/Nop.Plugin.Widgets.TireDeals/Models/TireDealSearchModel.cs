@@ -1,9 +1,16 @@
-﻿namespace Nop.Plugin.Widgets.Deals.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
-public class TireDealSearchModel
+namespace Nop.Plugin.Widgets.Deals.Models;
+
+public record TireDealSearchModel : BaseSearchModel
 {
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string LongDescription { get; set; }
-    public string ShortDescription { get; set; }
+    [NopResourceDisplayName("Admin.Plugins.TireDeal.List.Title")]
+    public string SearchTireDealTitle { get; set; }
+
+    [NopResourceDisplayName("Admin.Plugins.TireDeal.List.ShortDescription")]
+    public string SearchTireDealShortDescription { get; set; }
+
+    [NopResourceDisplayName("Admin.Plugins.TireDeal.List.LongDescription")]
+    public string SearchTireDealLongDescription { get; set; }
 }

@@ -1,0 +1,154 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Plugin.Widgets.Deals.Models
+@using Nop.Web.Framework.Models.DataTables
+@model Nop.Plugin.Widgets.Deals.Models.TireDealSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = "Tire Deals";
+}
+
+@{
+    const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
+    var hideSearchBlock = false;
+}
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Tire Deals
+    </h1>
+    <h1 class="float-left">
+        <small>
+            <i class="fas fa-arrow-circle-left"></i>
+            <a asp-action="List" asp-controller="Plugin">@T("Common.Back")</a>
+        </small>
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                        <div class="row">
+                           <div class="col-md-6">
+                               <div class="form-group row">
+                                   <div class="col-md-4">
+                                       <nop-label asp-for="SearchTireDealTitle" />
+                                   </div>
+                                   <div class="col-md-8">
+                                       <nop-editor asp-for="SearchTireDealTitle" />
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <div class="col-md-4">
+                                       <nop-label asp-for="SearchTireDealShortDescription" />
+                                   </div>
+                                   <div class="col-md-8">
+                                       <nop-editor asp-for="SearchTireDealShortDescription" />
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <div class="col-md-4">
+                                       <nop-label asp-for="SearchTireDealLongDescription" />
+                                   </div>
+                                   <div class="col-md-8">
+                                       <nop-editor asp-for="SearchTireDealLongDescription" />
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-deals" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+             <div class="card card-default">
+                 <div class="card-body">
+                     @await Html.PartialAsync("Table", new DataTablesModel
+                     {
+                         Name = "getTireDeals-grid",
+                         UrlRead = new DataUrl("GetTireDeals", "TireDeals", null),
+                         SearchButtonId = "search-deals",
+                         Length = Model.PageSize,
+                         LengthMenu = Model.AvailablePageSizes,
+                         Filters = new List<FilterParameter>
+                         {
+                             new FilterParameter(nameof(Model.SearchTireDealTitle)),
+                             new FilterParameter(nameof(Model.SearchTireDealLongDescription)),
+                             new FilterParameter(nameof(Model.SearchTireDealShortDescription))
+                         },
+                         ColumnCollection = new List<ColumnProperty>
+                         {
+                             new ColumnProperty(nameof(TireDealModel.Id))
+                             {
+                                 Title = "Id",
+                                 Width = "50"
+                             },
+                             new ColumnProperty(nameof(TireDealModel.Title))
+                             {
+                                 Title = "Title",
+                                 Width = "350"
+                             },
+                             new ColumnProperty(nameof(TireDealModel.ShortDescription))
+                             {
+                                 Title = "Short description",
+                                 Width = "250"
+                             },
+                             new ColumnProperty(nameof(TireDealModel.LongDescription))
+                             {
+                                 Title = "Long description",
+                                 Width = "200",
+                             },
+                             new ColumnProperty(nameof(TireDealModel.IsActive))
+                             {
+                                 Title = "Is Active",
+                                 Width = "80",
+                                 ClassName = NopColumnClassDefaults.CenterAll,
+                                 Render = new RenderBoolean()
+                             },
+                             new ColumnProperty(nameof(TireDealModel.Id))
+                             {
+                                 Title = T("Admin.Common.Edit").Text,
+                                 Width = "100",
+                                 ClassName = NopColumnClassDefaults.Button,
+                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
+                             }
+                         }
+                     })
+                 </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+        

@@ -14,7 +14,8 @@ public class TireDealMapper : ITireDealMapper
             Id = entity.Id,
             Title = entity.Title,
             LongDescription = entity.LongDescription,
-            ShortDescription = entity.ShortDescription
+            ShortDescription = entity.ShortDescription,
+            IsActive = entity.IsActive
         };
     }
 
@@ -29,7 +30,8 @@ public class TireDealMapper : ITireDealMapper
         {
             Title = model.Title,
             LongDescription = model.LongDescription,
-            ShortDescription = model.ShortDescription
+            ShortDescription = model.ShortDescription,
+            IsActive = model.IsActive
         };
     }
 }

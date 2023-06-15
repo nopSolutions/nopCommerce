@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 using Nop.Data;
 using Nop.Plugin.Widgets.Deals.Domain;
 using Nop.Plugin.Widgets.Deals.Mapping;
@@ -20,7 +22,7 @@ public class TireDealService : ITireDealService
  
     public async Task<IEnumerable<TireDealModel>> GetAllAsync()
     {
-        return _tireDealMapper.ToModel(_dealRepository.GetAll());
+        return _tireDealMapper.ToModel(await _dealRepository.GetAllAsync(e => e));
     }
     
     public async Task<TireDealModel> GetByIdAsync(int id)

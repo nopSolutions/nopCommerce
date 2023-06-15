@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Data;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.Widgets.Deals.Domain;
 using Nop.Plugin.Widgets.Deals.Models;
 using Nop.Plugin.Widgets.Deals.Services;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Widgets.Deals.Controllers;
@@ -20,11 +22,24 @@ public class TireDealsController : BasePluginController
         _tireDealService = tireDealService;
     }
 
-    public async Task<IActionResult> Configure()
+    public async Task<IActionResult> List()
     {
-        var model = new TireDealSearchModel();
+        var model = new TireDealSearchModel() { AvailablePageSizes = "10, 20, 30" };
 
-        return View("~/Plugins/Widgets.TireDeals/Views/Configure.cshtml", model);
+        return View("~/Plugins/Widgets.TireDeals/Views/List.cshtml", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> GetTireDeals()
+    {
+        try
+        {
+            return Ok(new DataTablesModel { Data = await _tireDealService.GetAllAsync() });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpPost]
@@ -32,7 +47,7 @@ public class TireDealsController : BasePluginController
     {
         await _tireDealService.InsertAsync(model);
 
-        return await Configure();
+        return await List();
     }
 
     public async Task<IActionResult> Create()

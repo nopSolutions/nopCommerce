@@ -32,14 +32,22 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
         
-        <None Remove="Views\Configure.cshtml" />
-        <Content Include="Views\Configure.cshtml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-        
         <None Remove="Views\Create.cshtml" />
         <Content Include="Views\Create.cshtml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+
+        <None Remove="Views\List.cshtml" />
+        <Content Include="Views\List.cshtml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="Views\Edit.cshtml">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="Views\_CreateOrUpdate.cshtml">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         
     </ItemGroup>
