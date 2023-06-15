@@ -35,8 +35,8 @@ public class TireDealService : ITireDealService
         await _dealRepository.InsertAsync(_tireDealMapper.ToEntity(model), false);
     }
 
-    public Task UpdateAsync(TireDealUpdateModel model)
+    public async Task UpdateAsync(TireDealUpdateModel model)
     {
-        throw new System.NotImplementedException();
+        await _dealRepository.UpdateAsync(_tireDealMapper.ToEntity(model), false);
     }
 }

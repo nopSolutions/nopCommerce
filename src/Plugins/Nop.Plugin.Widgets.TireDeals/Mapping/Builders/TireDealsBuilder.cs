@@ -13,6 +13,6 @@ public class TireDealsBuilder : NopEntityBuilder<TireDealEntity>
             .WithColumn(nameof(TireDealEntity.Title)).AsString()
             .WithColumn(nameof(TireDealEntity.LongDescription)).AsString()
             .WithColumn(nameof(TireDealEntity.ShortDescription)).AsString()
-            .WithColumn(nameof(TireDealEntity.IsActive)).AsInt32();
+            .WithColumn(nameof(TireDealEntity.IsActive)).AsBoolean();
     }
 }

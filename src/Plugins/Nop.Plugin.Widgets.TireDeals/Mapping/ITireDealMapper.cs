@@ -10,4 +10,5 @@ public interface ITireDealMapper
     TireDealModel ToModel(TireDealEntity entity);
     IEnumerable<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities);
     TireDealEntity ToEntity(TireDealCreateModel model);
+    TireDealEntity ToEntity(TireDealUpdateModel model);
 }

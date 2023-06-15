@@ -50,6 +50,21 @@ public class TireDealsController : BasePluginController
         return await List();
     }
 
+    public async Task<IActionResult> Update()
+    {
+        var model = new TireDealUpdateModel();
+
+        return View("~/Plugins/Widgets.TireDeals/Views/Edit.cshtml", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(TireDealUpdateModel model)
+    {
+        await _tireDealService.UpdateAsync(model);
+
+        return await List();
+    }
+
     public async Task<IActionResult> Create()
     {
         var model = new TireDealCreateModel();

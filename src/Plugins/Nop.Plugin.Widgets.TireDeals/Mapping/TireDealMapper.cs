@@ -34,4 +34,15 @@ public class TireDealMapper : ITireDealMapper
             IsActive = model.IsActive
         };
     }
+
+    public TireDealEntity ToEntity(TireDealUpdateModel model)
+    {
+        return new TireDealEntity()
+        {
+            Title = model.Title,
+            LongDescription = model.LongDescription,
+            ShortDescription = model.ShortDescription,
+            IsActive = model.IsActive
+        };
+    }
 }

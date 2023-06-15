@@ -40,9 +40,12 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
 
     public override async Task InstallAsync()
     {
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.IsActive", "Is active");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.Title", "Title");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.LongDescription", "Long Description");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.ShortDescription", "Short Description");
+        
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.IsActive.Hint", "Search by active");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.Title.Hint", "Search by Title");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.LongDescription.Hint",  "Search by Long Description");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.ShortDescription.Hint", "Search by Short Description");
@@ -54,9 +57,11 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
     {
         await _localizationService.DeleteLocaleResourcesAsync(new string[]
         {
+            "Admin.Plugins.TireDeal.List.IsActive",
             "Admin.Plugins.TireDeal.List.Title", 
             "Admin.Plugins.TireDeal.List.LongDescription", 
             "Admin.Plugins.TireDeal.List.ShortDescription", 
+            "Admin.Plugins.TireDeal.List.IsActive.Hint",
             "Admin.Plugins.TireDeal.List.Title.Hint",
             "Admin.Plugins.TireDeal.List.LongDescription.Hint", 
             "Admin.Plugins.TireDeal.List.ShortDescription.Hint",

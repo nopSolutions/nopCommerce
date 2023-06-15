@@ -13,4 +13,6 @@ public record TireDealSearchModel : BaseSearchModel
 
     [NopResourceDisplayName("Admin.Plugins.TireDeal.List.LongDescription")]
     public string SearchTireDealLongDescription { get; set; }
+    [NopResourceDisplayName("Admin.Plugins.TireDeal.List.IsActive")]
+    public string SearchTireDealIsActive { get; set; }
 }
