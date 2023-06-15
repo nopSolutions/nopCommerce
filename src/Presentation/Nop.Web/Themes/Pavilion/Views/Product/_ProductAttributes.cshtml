@@ -212,7 +212,7 @@
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
@@ -221,6 +221,12 @@
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
                                                     </script>
+                                                </div>
+                                            }
+                                            @if (attributeName.Contains("Move Old"))
+                                            {
+                                                <div id="haulaway-move" style="color: red; font-size: 8pt">
+                                                    Old appliances must be disconnected from water and power.
                                                 </div>
                                             }
                                         </li>
