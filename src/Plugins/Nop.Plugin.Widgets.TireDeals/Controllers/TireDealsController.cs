@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Widgets.Deals.Mapping.Factories;
 using Nop.Plugin.Widgets.Deals.Models;
 using Nop.Plugin.Widgets.Deals.Services;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -15,11 +17,15 @@ public class TireDealsController : BasePluginController
 {
     private readonly ITireDealService _tireDealService;
     private readonly ITireDealModelFactory _tireDealModelFactory;
+    private readonly ILocalizationService _localizationService;
+    private readonly INotificationService _notificationService;
 
-    public TireDealsController(ITireDealService tireDealService, ITireDealModelFactory tireDealModelFactory)
+    public TireDealsController(ITireDealService tireDealService, ITireDealModelFactory tireDealModelFactory, ILocalizationService localizationService, INotificationService notificationService)
     {
         _tireDealService = tireDealService;
         _tireDealModelFactory = tireDealModelFactory;
+        _localizationService = localizationService;
+        _notificationService = notificationService;
     }
 
     public async Task<IActionResult> List()
@@ -42,6 +48,8 @@ public class TireDealsController : BasePluginController
     public async Task<IActionResult> Create(TireDealCreateModel model)
     {
         await _tireDealService.InsertAsync(model);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
         return await List();
     }
