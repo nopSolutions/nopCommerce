@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -22,6 +24,10 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         #endregion
 
         #region Properties
+
+        [NopResourceDisplayName("Admin.Reports.SalesSummary.StartDate")]
+        [UIHint("DateNullable")]
+        public DateTime? Date { get; set; }
 
         [NopResourceDisplayName("Admin.Reports.SalesSummary.Vendor")]
         public int VendorId { get; set; }

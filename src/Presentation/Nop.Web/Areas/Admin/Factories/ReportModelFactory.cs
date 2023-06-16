@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -43,6 +45,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<Order> _orderRepository;
+
 
         #endregion
 
@@ -60,7 +65,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
             IStoreContext storeContext,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<Order> orderRepository
+            )
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
@@ -75,6 +83,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _productService = productService;
             _storeContext = storeContext;
             _workContext = workContext;
+            _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
+
         }
 
         #endregion
@@ -356,8 +367,6 @@ namespace Nop.Web.Areas.Admin.Factories
              
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-
-            
             //prepare available vendors
             await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
             searchModel.SetGridPageSize();
@@ -376,37 +385,67 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<DailySalesProductListModel> PrepareDailySalesProductListModelAsync(DailySalesProductSearchModel searchModel)
         {
 
-            var products = (from p in _productRepository.Table
-                            select p).ToList();
+                var OrderitemValue = (from oi in _orderItemRepository.Table
+                                     select oi).ToList();
+                var products = (from p in _productRepository.Table
+                                select p).ToList();
+                var ordersdetails = (from o in _orderRepository.Table
+                             select o).ToList();
 
+           
+
+            var result = from orderItem in OrderitemValue
+                             join order in ordersdetails on orderItem.OrderId equals order.Id
+                             join product in products on orderItem.ProductId equals product.Id
+                             select new
+                             {
+                                 orderItem.Id,
+                                 orderItem.OrderId,
+                                 orderItem.ProductId,
+                                 orderItem.OriginalProductCost,
+                                 product.VendorId,
+                                 product.Name,
+                                 product.Price,
+                                 order.CreatedOnUtc,
+                                 PriceDifference = product.Price - orderItem.OriginalProductCost
+                             };
+
+            if (searchModel.Date != null)
+            {
+                result = result.Where(c => c.CreatedOnUtc.Date == searchModel.Date).ToList();
+            }
 
             if (searchModel.VendorId != 0)
             {
-                products = products.Where(c => c.VendorId == searchModel.VendorId).ToList();
+                result = result.Where(c => c.VendorId == searchModel.VendorId).ToList();
             }
 
             if (searchModel.ProductId != 0)
-            {   
-                products = products.Where(c => c.Id == searchModel.ProductId).ToList();
-            }
-
-
-
-            //prepare low stock product models
-
-            var DailySalesProductModels = new List<DailySalesProductModel>();
-
-
-            DailySalesProductModels.AddRange(await products.SelectAwait(async product => new DailySalesProductModel
             {
-                Id = product.Id,
-                Name = product.Name,
-                VendorID = product.VendorId,
-                CostPrice = product.ProductCost,
-                SellingPrice = product.Price,
-                PriceDifference = product.Price - product.ProductCost
-            }).ToListAsync());
+                result = result.Where(c => c.ProductId == searchModel.ProductId).ToList();
+            }                                                                                      
+
+           
+
+
+            // prepare low stock product models
+            var DailySalesProductModels = new List<DailySalesProductModel>();
             
+
+            DailySalesProductModels.AddRange(await result.SelectAwait(async result => new DailySalesProductModel
+                {
+                    Id = result.Id,
+                    Date = result.CreatedOnUtc.Date,
+                    OrderId =  result.OrderId,
+                    Name = result.Name,
+                    Price = result.Price,
+                    ProductId = result.ProductId,
+                    OriginalProductCost = result.OriginalProductCost,
+                    VendorId = result.VendorId,
+                    PriceDifference = result.PriceDifference
+                }).ToListAsync());
+
+
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -416,6 +455,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DailySalesProductListModel().PrepareToGrid(searchModel, pagesList, () => pagesList);
 
             return model;
+
+
         }
 
         #endregion

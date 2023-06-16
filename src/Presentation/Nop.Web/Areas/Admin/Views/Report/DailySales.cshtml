@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.PageTitle = "DailySales";
+    ViewBag.PageTitle = T("DailySales").Text;
     //active menu item (system name)
     //NopHtml.SetActiveMenuItemSystemName("Low stock");
 }
@@ -21,7 +21,7 @@
 <form asp-controller="Report" asp-action="DailySales" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            DailySales
+            @T("DailySales")
         </h1>
         <div class="float-right">
             &nbsp;
@@ -43,7 +43,14 @@
                             <div class="search-body @(hideSearchBlock ? "closed" : "")">
                                 <div class="row">
                                     <div class="col-md-6">
-
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="Date" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="Date" />
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <div class="col-md-4">
                                                 <nop-label asp-for="VendorId" />
@@ -52,9 +59,6 @@
                                                 <nop-select asp-for="VendorId"  asp-items="Model.AvailableVendors" />
                                             </div>
                                         </div>
-
-
-                                        
                                         <div class="form-group row">
                                             <div class="col-md-4">
                                                 <nop-label asp-for="ProductId" />
@@ -84,53 +88,66 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                                {
+                                Name = "products-grid",
+                               
+                                UrlRead = new DataUrl("DailySalesList", "Report", null),
+                                SearchButtonId = "search-products",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
 
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                            Name = "products-grid",
-                            UrlRead = new DataUrl("DailySalesList", "Report", null),
-                            SearchButtonId = "search-products",
-                            Length = Model.PageSize,
-                            LengthMenu = Model.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
-                            {
-                            new FilterParameter(nameof(Model.VendorId)),
+                               
+                                Filters = new List<FilterParameter>
+                                {
+                                new FilterParameter(nameof(Model.VendorId)),
                                 new FilterParameter(nameof(Model.ProductId)),
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                            new ColumnProperty(nameof(DailySalesProductModel.Name))
-                            {
-                            Title = "ProductName",
-                            Width = "300",
-                            Render = new RenderCustom("renderColumnName")
-                            },
-                            new ColumnProperty(nameof(DailySalesProductModel.VendorID))
-                            {
-                            Title = "VendorID",
-                            Width = "150"
-                            },
-                            new ColumnProperty(nameof(DailySalesProductModel.CostPrice))
-                            {
-                            Title = "CostPrice",
-                            Width = "100"
-                            },
-                            new ColumnProperty(nameof(DailySalesProductModel.SellingPrice))
-                            {
-                            Title = "SellingPrice",
-                            Width = "100",
-                            //ClassName =  NopColumnClassDefaults.CenterAll,
-                            //Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(DailySalesProductModel.PriceDifference))
-                            {
-                            Title = "Price Difference",
-                            Width = "100",
-                            //ClassName =  NopColumnClassDefaults.Button,
-                            //Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                            }
-                            }
-                            })
+                                new FilterParameter(nameof(Model.Date))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                //new ColumnProperty(nameof(DailySalesProductModel.Date))
+                                //{
+                                // Title = "Date",
+                                // Width = "150"
+                                //},
+                                new ColumnProperty(nameof(DailySalesProductModel.OrderId))
+                                {
+                                Title = "OrderID",
+                                Width = "150"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.Name))
+                                {
+                                Title = "ProductName",
+                                Width = "300"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.ProductId))
+                                {
+                                Title = "ProductID",
+                                Width = "150"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.VendorId))
+                                {
+                                Title = "VendorID",
+                                Width = "150"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.OriginalProductCost))
+                                {
+                                Title = "CostPrice",
+                                Width = "100"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.Price))
+                                {
+                                Title = "SellingPrice",
+                                Width = "100"
+                                },
+                                new ColumnProperty(nameof(DailySalesProductModel.PriceDifference))
+                                {
+                                Title = "Price Difference",
+                                Width = "100"
+                                }
+                                }
+                                })
 
                             <script asp-location="Footer">
                                 function renderColumnName(data, type, row, meta) {
