@@ -2,7 +2,7 @@
     Layout = "_AdminLayout";
 }
 
-@model Nop.Plugin.Widgets.Deals.Models.TireDealCreateModel
+@model Nop.Plugin.Widgets.Deals.Models.TireDealModel
 
 @{
     const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
@@ -42,6 +42,14 @@
     
                             <div class="row">
                                 <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="IsActive" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="checkbox" value="true" checked name="IsActive"/>
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="Title" />

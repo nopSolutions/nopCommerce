@@ -78,6 +78,12 @@
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\Configure.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\CreateTireDeal.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\plugin.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\List.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\PublicInfo.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\plugin.json" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

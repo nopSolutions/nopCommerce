@@ -19,12 +19,42 @@ public class TireDealService : ITireDealService
         _dealRepository = dealRepository;
         _tireDealMapper = tireDealMapper;
     }
- 
-    public async Task<IEnumerable<TireDealModel>> GetAllAsync()
+
+    public async Task<IList<TireDealModel>> GetAllAsync()
     {
-        return _tireDealMapper.ToModel(await _dealRepository.GetAllAsync(e => e));
+        var models = _tireDealMapper.ToModel(await _dealRepository.GetAllAsync(deals => deals));
+
+        return models;
     }
-    
+
+    public virtual async Task<IEnumerable<TireDealModel>> GetAllAsync(
+        string title = null,
+        string shortDescription = null,
+        string longDescription = null,
+        bool? isActive = true)
+    {
+        IEnumerable<TireDealEntity> deals;
+
+        deals = await _dealRepository.GetAllAsync(query =>
+        {
+            if (isActive != null)
+                query = query.Where(deal => deal.IsActive == true);
+
+            if (title != null)
+                query = query.Where(deal => deal.Title == title);
+
+            if (shortDescription != null)
+                query = query.Where(deal => deal.ShortDescription == shortDescription);
+
+            if (longDescription != null)
+                query = query.Where(deal => deal.LongDescription == longDescription);
+
+            return query.AsQueryable();
+        });
+        
+        return _tireDealMapper.ToModel(deals);
+    }
+
     public async Task<TireDealModel> GetByIdAsync(int id)
     {
         return _tireDealMapper.ToModel(await _dealRepository.GetByIdAsync(id));
@@ -37,6 +67,12 @@ public class TireDealService : ITireDealService
 
     public async Task UpdateAsync(TireDealUpdateModel model)
     {
-        await _dealRepository.UpdateAsync(_tireDealMapper.ToEntity(model), false);
+        var entity = await _dealRepository.GetByIdAsync(model.Id);
+        entity.Title = model.Title;
+        entity.IsActive = model.IsActive;
+        entity.LongDescription = model.LongDescription;
+        entity.ShortDescription = model.ShortDescription;
+        
+        await _dealRepository.UpdateAsync(entity);
     }
 }

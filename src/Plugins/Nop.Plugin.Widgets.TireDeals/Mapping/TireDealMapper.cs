@@ -19,7 +19,7 @@ public class TireDealMapper : ITireDealMapper
         };
     }
 
-    public IEnumerable<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities)
+    public IList<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities)
     {
         return entities.Select(ToModel).ToList();
     }

@@ -45,6 +45,10 @@
           <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
           <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
+        <None Remove="Views\Edit.cshtml" />
+        <Content Include="Views\Edit.cshtml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         
     </ItemGroup>
     <ItemGroup>

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.Deals.Mapping;
+using Nop.Plugin.Widgets.Deals.Mapping.Factories;
 using Nop.Plugin.Widgets.Deals.Services;
 
 namespace Nop.Plugin.Widgets.Deals.Infrastructure
@@ -21,6 +22,7 @@ namespace Nop.Plugin.Widgets.Deals.Infrastructure
         {
             services.AddScoped<ITireDealMapper, TireDealMapper>();
             services.AddScoped<ITireDealService, TireDealService>();
+            services.AddScoped<ITireDealModelFactory, TireDealModelFactory>();
         }
 
         /// <summary>

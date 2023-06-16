@@ -8,7 +8,7 @@ namespace Nop.Plugin.Widgets.Deals.Mapping;
 public interface ITireDealMapper
 {
     TireDealModel ToModel(TireDealEntity entity);
-    IEnumerable<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities);
+    IList<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities);
     TireDealEntity ToEntity(TireDealCreateModel model);
     TireDealEntity ToEntity(TireDealUpdateModel model);
 }

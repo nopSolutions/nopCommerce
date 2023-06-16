@@ -98,15 +98,9 @@
                      {
                          Name = "getTireDeals-grid",
                          UrlRead = new DataUrl("GetTireDeals", "TireDeals", null),
-                         SearchButtonId = "search-deals",
+                         Filters = null,
                          Length = Model.PageSize,
                          LengthMenu = Model.AvailablePageSizes,
-                         Filters = new List<FilterParameter>
-                         {
-                             new FilterParameter(nameof(Model.SearchTireDealTitle)),
-                             new FilterParameter(nameof(Model.SearchTireDealLongDescription)),
-                             new FilterParameter(nameof(Model.SearchTireDealShortDescription))
-                         },
                          ColumnCollection = new List<ColumnProperty>
                          {
                              new ColumnProperty(nameof(TireDealModel.Id))

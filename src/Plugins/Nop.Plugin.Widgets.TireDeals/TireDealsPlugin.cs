@@ -40,6 +40,7 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
 
     public override async Task InstallAsync()
     {
+        //List
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.IsActive", "Is active");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.Title", "Title");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.LongDescription", "Long Description");
@@ -50,6 +51,17 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.LongDescription.Hint",  "Search by Long Description");
         await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.List.ShortDescription.Hint", "Search by Short Description");
 
+        //Edit
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.IsActive", "Is active");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.Title", "Title");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.LongDescription", "Long Description");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.ShortDescription", "Short Description");
+
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.IsActive.Hint", "Edit is active");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.Title.Hint", "Edit Title");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.LongDescription.Hint", "Edit Long Description");
+        await _localizationService.AddOrUpdateLocaleResourceAsync("Admin.Plugins.TireDeal.Edit.ShortDescription.Hint", "Edit Short Description");
+
         await base.InstallAsync();
     }
 
@@ -57,6 +69,7 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
     {
         await _localizationService.DeleteLocaleResourcesAsync(new string[]
         {
+            //List
             "Admin.Plugins.TireDeal.List.IsActive",
             "Admin.Plugins.TireDeal.List.Title", 
             "Admin.Plugins.TireDeal.List.LongDescription", 
@@ -65,6 +78,16 @@ public class TireDealsPlugin : BasePlugin, IWidgetPlugin
             "Admin.Plugins.TireDeal.List.Title.Hint",
             "Admin.Plugins.TireDeal.List.LongDescription.Hint", 
             "Admin.Plugins.TireDeal.List.ShortDescription.Hint",
+            
+            //Edit
+            "Admin.Plugins.TireDeal.Edit.IsActive",
+            "Admin.Plugins.TireDeal.Edit.Title", 
+            "Admin.Plugins.TireDeal.Edit.LongDescription", 
+            "Admin.Plugins.TireDeal.Edit.ShortDescription", 
+            "Admin.Plugins.TireDeal.Edit.IsActive.Hint",
+            "Admin.Plugins.TireDeal.Edit.Title.Hint",
+            "Admin.Plugins.TireDeal.Edit.LongDescription.Hint", 
+            "Admin.Plugins.TireDeal.Edit.ShortDescription.Hint",
         });
 
         await base.UninstallAsync();

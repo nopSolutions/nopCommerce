@@ -1,12 +1,10 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Plugin.Widgets.Deals.Mapping.Factories;
 using Nop.Plugin.Widgets.Deals.Models;
 using Nop.Plugin.Widgets.Deals.Services;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Widgets.Deals.Controllers;
@@ -16,10 +14,12 @@ namespace Nop.Plugin.Widgets.Deals.Controllers;
 public class TireDealsController : BasePluginController
 {
     private readonly ITireDealService _tireDealService;
+    private readonly ITireDealModelFactory _tireDealModelFactory;
 
-    public TireDealsController(ITireDealService tireDealService)
+    public TireDealsController(ITireDealService tireDealService, ITireDealModelFactory tireDealModelFactory)
     {
         _tireDealService = tireDealService;
+        _tireDealModelFactory = tireDealModelFactory;
     }
 
     public async Task<IActionResult> List()
@@ -30,16 +30,12 @@ public class TireDealsController : BasePluginController
     }
     
     [HttpPost]
-    public async Task<IActionResult> GetTireDeals()
+    public virtual async Task<IActionResult> GetTireDeals(TireDealSearchModel searchModel)
     {
-        try
-        {
-            return Ok(new DataTablesModel { Data = await _tireDealService.GetAllAsync() });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex);
-        }
+        //prepare model
+        var model = await _tireDealModelFactory.PrepareTireDealListModelAsync(searchModel);
+
+        return Json(model);
     }
 
     [HttpPost]
@@ -50,24 +46,24 @@ public class TireDealsController : BasePluginController
         return await List();
     }
 
-    public async Task<IActionResult> Update()
+    public async Task<IActionResult> Edit(int id)
     {
-        var model = new TireDealUpdateModel();
-
+        var model = await _tireDealService.GetByIdAsync(id);
+        
         return View("~/Plugins/Widgets.TireDeals/Views/Edit.cshtml", model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(TireDealUpdateModel model)
+    public async Task<IActionResult> Edit(TireDealUpdateModel model)
     {
         await _tireDealService.UpdateAsync(model);
 
-        return await List();
+        return RedirectToAction("List");
     }
 
     public async Task<IActionResult> Create()
     {
-        var model = new TireDealCreateModel();
+        var model = new TireDealModel();
         
         return View("~/Plugins/Widgets.TireDeals/Views/Create.cshtml", model);
     }
