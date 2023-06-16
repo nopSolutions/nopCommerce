@@ -66,6 +66,16 @@
         }
     </script>
 
+@if (!Model.IsLoggedInAsOtherUser)
+{
+    <script>
+        $(document).ready(function () {
+                $('#btnEditShippedDate').hideElement();
+                $('#btnEditDeliveryDate').hideElement();
+        });
+    </script>
+}
+
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id

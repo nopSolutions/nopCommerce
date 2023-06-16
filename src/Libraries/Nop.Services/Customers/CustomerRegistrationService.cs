@@ -163,24 +163,29 @@ namespace Nop.Services.Customers
             //check whether a customer is locked out
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
                 return CustomerLoginResults.LockedOut;
+            var pwd = await _customerService.GetCurrentPasswordAsync(customer.Id);
 
-            if (!PasswordsMatch(await _customerService.GetCurrentPasswordAsync(customer.Id), password))
-            {
-                //wrong password
-                customer.FailedLoginAttempts++;
-                if (_customerSettings.FailedPasswordAllowedAttempts > 0 &&
-                    customer.FailedLoginAttempts >= _customerSettings.FailedPasswordAllowedAttempts)
+            //if (!customer.IsSSOUser)
+            //{
+                if (!PasswordsMatch(await _customerService.GetCurrentPasswordAsync(customer.Id), password))
                 {
-                    //lock out
-                    customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_customerSettings.FailedPasswordLockoutMinutes);
-                    //reset the counter
-                    customer.FailedLoginAttempts = 0;
+                    //wrong password
+                    customer.FailedLoginAttempts++;
+                    if (_customerSettings.FailedPasswordAllowedAttempts > 0 &&
+                        customer.FailedLoginAttempts >= _customerSettings.FailedPasswordAllowedAttempts)
+                    {
+                        //lock out
+                        customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_customerSettings.FailedPasswordLockoutMinutes);
+                        //reset the counter
+                        customer.FailedLoginAttempts = 0;
+                    }
+
+                    await _customerService.UpdateCustomerAsync(customer);
+
+                    return CustomerLoginResults.WrongPassword;
                 }
-
-                await _customerService.UpdateCustomerAsync(customer);
-
-                return CustomerLoginResults.WrongPassword;
-            }
+            //}
+            
 
             var selectedProvider = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication, customer)
                 ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute)
@@ -262,17 +267,46 @@ namespace Nop.Services.Customers
                 return result;
             }
 
-            //validate unique user
-            if (await _customerService.GetCustomerByEmailAsync(request.Email) != null)
+            var ssoscustomer = await _customerService.GetCustomerByEmailAsync(request.Email);
+            if(ssoscustomer != null)
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
-                return result;
-            }
+                if (ssoscustomer.IsSSOUser && !ssoscustomer.IsNopUser)
+                {
+                    request.Customer.IsSSOUser = ssoscustomer.IsSSOUser;
+                    request.Customer.IsNopUser = true;
+                    request.Customer.Id = ssoscustomer.Id;
 
-            if (_customerSettings.UsernamesEnabled && await _customerService.GetCustomerByUsernameAsync(request.Username) != null)
+                }
+                else
+                {
+                    //validate unique user
+                    if (await _customerService.GetCustomerByEmailAsync(request.Email) != null)
+                    {
+                        result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
+                        return result;
+                    }
+
+                    if (_customerSettings.UsernamesEnabled && await _customerService.GetCustomerByUsernameAsync(request.Username) != null)
+                    {
+                        result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.UsernameAlreadyExists"));
+                        return result;
+                    }
+                }
+            }
+            else
             {
-                result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.UsernameAlreadyExists"));
-                return result;
+                //validate unique user
+                if (await _customerService.GetCustomerByEmailAsync(request.Email) != null)
+                {
+                    result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
+                    return result;
+                }
+
+                if (_customerSettings.UsernamesEnabled && await _customerService.GetCustomerByUsernameAsync(request.Username) != null)
+                {
+                    result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.UsernameAlreadyExists"));
+                    return result;
+                }
             }
 
             //at this point request is valid
@@ -299,8 +333,23 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     break;
             }
-
-            await _customerService.InsertCustomerPasswordAsync(customerPassword);
+            if(ssoscustomer != null)
+            {
+                if (ssoscustomer.IsSSOUser)
+                {
+                    var pwdid = await _customerService.GetCurrentPasswordAsync(request.Customer.Id);
+                    customerPassword.Id = pwdid.Id;
+                    await _customerService.UpdateCustomerPasswordAsync(customerPassword);
+                }
+                else
+                {
+                    await _customerService.InsertCustomerPasswordAsync(customerPassword);
+                }
+            }
+            else
+            {
+                await _customerService.InsertCustomerPasswordAsync(customerPassword);
+            }
 
             request.Customer.Active = request.IsApproved;
 
@@ -308,8 +357,10 @@ namespace Nop.Services.Customers
             var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
-
-            await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+            if (ssoscustomer == null)
+            {
+              await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+            }
 
             //remove from 'Guests' role            
             if (await _customerService.IsGuestAsync(request.Customer))

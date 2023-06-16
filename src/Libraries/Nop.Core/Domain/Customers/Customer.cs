@@ -14,6 +14,10 @@ namespace Nop.Core.Domain.Customers
             CustomerGuid = Guid.NewGuid();
         }
 
+        public bool IsSSOUser { get; set; }
+        
+        public bool IsNopUser { get; set; }
+
         public string CreatedBy { get; set; }
 
         /// <summary>
