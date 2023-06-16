@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -182,7 +183,7 @@ namespace Nop.Services.Messages
         /// <returns>Email address and name to send email fore store owner</returns>
         protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
         {
-            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ?  await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
+            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
             storeOwnerEmailAccount ??= messageTemplateEmailAccount;
 
             return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
@@ -230,7 +231,7 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var (toEmail,toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
@@ -2383,10 +2384,22 @@ namespace Nop.Services.Messages
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
             await _messageTokenProvider.AddBackInStockTokensAsync(commonTokens, subscription);
 
+            //  var messageTemplateList = await messageTemplates.ToListAsync();
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+                var sendermail = new MailAddress("pavarna.t@outlook.com", "Pavarna");
+                var password = "pavarna5";
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.office365.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(sendermail.Address, password)
+                };
 
                 var tokens = new List<Token>(commonTokens);
                 await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
@@ -2395,10 +2408,30 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
+                MailAddress receivermail = new MailAddress(toEmail);
+
+                //Replace subject and body tokens 
+                var subjectReplaced = _tokenizer.Replace(messageTemplate.Subject, tokens, false);
+                var bodyReplaced = _tokenizer.Replace(messageTemplate.Body, tokens, true);
+
                 var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+                SendCustomerMailAsync(smtp, sendermail, receivermail, subjectReplaced, bodyReplaced);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
+        }
+        public virtual async Task SendCustomerMailAsync(SmtpClient smtp = null, MailAddress sendermail = null, MailAddress receivermail = null, string subjectReplaced = null, string bodyReplaced = null)
+        {
+            //Message to the customer when the Product are in Stock
+
+            var notififyme_message = new MailMessage(sendermail, receivermail)
+            {
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                IsBodyHtml = true
+            };
+            smtp.SendAsync(notififyme_message, "Send Mail To Customer");
         }
 
         /// <summary>
