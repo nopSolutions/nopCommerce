@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -78,6 +79,33 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _reportModelFactory.PrepareLowStockProductListModelAsync(searchModel);
+
+            return Json(model);
+        }
+
+        #endregion
+
+        #region Daily Sales
+
+        public virtual async Task<IActionResult> DailySales()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+            
+            //prepare model
+            var model = await _reportModelFactory.PrepareDailySalesProductSearchModelAsync(new DailySalesProductSearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> DailySalesList(DailySalesProductSearchModel searchModel)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return await AccessDeniedDataTablesJson();
+
+            //prepare model
+            var model = await _reportModelFactory.PrepareDailySalesProductListModelAsync(searchModel);
 
             return Json(model);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Nop.Web.Areas.Admin.Models.Reports;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -53,6 +54,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the low stock product list model
         /// </returns>
         Task<LowStockProductListModel> PrepareLowStockProductListModelAsync(LowStockProductSearchModel searchModel);
+
+        #endregion
+
+        #region DailySalesProduct
+
+        /// <summary>
+        /// Prepare low stock product search model
+        /// </summary>
+        /// <param name="searchModel">Low stock product search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product search model
+        /// </returns>
+        Task<DailySalesProductSearchModel> PrepareDailySalesProductSearchModelAsync(DailySalesProductSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare paged low stock product list model
+        /// </summary>
+        /// <param name="searchModel">Low stock product search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product list model
+        /// </returns>
+        Task<DailySalesProductListModel> PrepareDailySalesProductListModelAsync(DailySalesProductSearchModel searchModel);
 
         #endregion
 

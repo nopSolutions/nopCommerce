@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Data;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -38,6 +44,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<Order> _orderRepository;
+
 
         #endregion
 
@@ -51,10 +61,14 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IOrderReportService orderReportService,
             IPriceFormatter priceFormatter,
+            IRepository<Product> productRepository,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
             IStoreContext storeContext,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<Order> orderRepository
+            )
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
@@ -62,12 +76,16 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
+            _productRepository = productRepository;
             _orderReportService = orderReportService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
             _storeContext = storeContext;
             _workContext = workContext;
+            _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
+
         }
 
         #endregion
@@ -135,7 +153,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             return bestsellers;
-        }        
+        }
+
 
         #endregion
 
@@ -329,6 +348,115 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new LowStockProductListModel().PrepareToGrid(searchModel, pagesList, () => pagesList);
 
             return model;
+        }
+
+        #endregion
+
+        #region DailySales
+
+        /// <summary>
+        /// Prepare low stock product search model
+        /// </summary>
+        /// <param name="searchModel">Low stock product search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product search model
+        /// </returns>
+        public virtual async Task<DailySalesProductSearchModel> PrepareDailySalesProductSearchModelAsync(DailySalesProductSearchModel searchModel)
+        {
+             
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare paged low stock product list model
+        /// </summary>
+        /// <param name="searchModel">Low stock product search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product list model
+        /// </returns>
+        public virtual async Task<DailySalesProductListModel> PrepareDailySalesProductListModelAsync(DailySalesProductSearchModel searchModel)
+        {
+
+                var OrderitemValue = (from oi in _orderItemRepository.Table
+                                     select oi).ToList();
+                var products = (from p in _productRepository.Table
+                                select p).ToList();
+                var ordersdetails = (from o in _orderRepository.Table
+                             select o).ToList();
+
+           
+
+            var result = from orderItem in OrderitemValue
+                             join order in ordersdetails on orderItem.OrderId equals order.Id
+                             join product in products on orderItem.ProductId equals product.Id
+                             select new
+                             {
+                                 orderItem.Id,
+                                 orderItem.OrderId,
+                                 orderItem.ProductId,
+                                 orderItem.OriginalProductCost,
+                                 product.VendorId,
+                                 product.Name,
+                                 product.Price,
+                                 order.CreatedOnUtc,
+                                 PriceDifference = product.Price - orderItem.OriginalProductCost
+                             };
+
+            if (searchModel.Date != null)
+            {
+                result = result.Where(c => c.CreatedOnUtc.Date == searchModel.Date).ToList();
+            }
+
+            if (searchModel.VendorId != 0)
+            {
+                result = result.Where(c => c.VendorId == searchModel.VendorId).ToList();
+            }
+
+            if (searchModel.ProductId != 0)
+            {
+                result = result.Where(c => c.ProductId == searchModel.ProductId).ToList();
+            }                                                                                      
+
+           
+
+
+            // prepare low stock product models
+            var DailySalesProductModels = new List<DailySalesProductModel>();
+            
+
+            DailySalesProductModels.AddRange(await result.SelectAwait(async result => new DailySalesProductModel
+                {
+                    Id = result.Id,
+                    Date = result.CreatedOnUtc.Date,
+                    OrderId =  result.OrderId,
+                    Name = result.Name,
+                    Price = result.Price,
+                    ProductId = result.ProductId,
+                    OriginalProductCost = result.OriginalProductCost,
+                    VendorId = result.VendorId,
+                    PriceDifference = result.PriceDifference
+                }).ToListAsync());
+
+
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            var pagesList = DailySalesProductModels.ToPagedList(searchModel);
+
+            //prepare list model
+            var model = new DailySalesProductListModel().PrepareToGrid(searchModel, pagesList, () => pagesList);
+
+            return model;
+
+
         }
 
         #endregion
