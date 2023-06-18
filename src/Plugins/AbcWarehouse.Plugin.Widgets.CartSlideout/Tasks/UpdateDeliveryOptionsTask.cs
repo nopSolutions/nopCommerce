@@ -16,6 +16,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
     public partial class UpdateDeliveryOptionsTask : IScheduleTask
     {
+        private readonly int MATTRESS = -2;
+
         private readonly CoreSettings _coreSettings;
         private readonly IAbcDeliveryService _abcDeliveryService;
         private readonly IAbcMattressModelService _abcMattressModelService;
@@ -141,8 +143,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             {
                 try
                 {
-                    // Hardcoding 2 as the "Mattress Delivery Only" option
-                    var mattressAbcDeliveryMap = new AbcDeliveryMap() { DeliveryOnly = 2 };
+                    // Hardcoding -2 as the "Mattress Delivery Only" option
+                    var mattressAbcDeliveryMap = new AbcDeliveryMap() { DeliveryOnly = MATTRESS };
                     var deliveryOptionsPam = await UpdateDeliveryOptionsPamAsync(mattressProductId, mattressAbcDeliveryMap);
                     await UpdateDeliveryOptionsPavAsync(deliveryOptionsPam, mattressAbcDeliveryMap);
                 }
@@ -202,18 +204,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 foreach (var accessory in abcDeliveryAccessories)
                 {
                     var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(accessory.AccessoryItemNumber);
-
                     var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).SingleOrDefault(
-                        pav => pav.Cost.ToString("F0") == item.Item_Number || (pav.Cost == 3M && pav.Name == item.Description)
+                        pav => int.Parse(pav.Cost.ToString("F0")) == item.Id
                     );
                     var newPav = new ProductAttributeValue()
                     {
                         ProductAttributeMappingId = resultPam.Id,
                         Name = item.Description,
-                        // use 3 to hardcode NO options
-                        Cost = accessory.AccessoryItemNumber.All(Char.IsDigit) ?
-                            Convert.ToDecimal(accessory.AccessoryItemNumber) :
-                            3M,
+                        Cost = item.Id,
                         PriceAdjustment = item.Price,
                         IsPreSelected = false,
                         DisplayOrder = item.Item_Number.Contains("NO") ? 10 : 0,
@@ -321,7 +319,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             var deliveryOnlyItem = map.DeliveryOnly == 0 ?
                 new AbcDeliveryItem() :
                 await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(map.DeliveryOnly.ToString());
-            var deliveryOnlyPriceFormatted = map.DeliveryOnly == 2 ?
+            var deliveryOnlyPriceFormatted = map.DeliveryOnly == MATTRESS ?
                 "MATTRESS" : 
                 await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
 
@@ -378,7 +376,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                     ProductAttributeMappingId = deliveryOptionsPam.Id,
                     Name = AbcDeliveryConsts.PickupProductAttributeValueName,
                     // Used as the current placeholder for pickup in store
-                    Cost = 1,
+                    Cost = -1,
                     PriceAdjustment = 0,
                     IsPreSelected = false,
                     DisplayOrder = 0,

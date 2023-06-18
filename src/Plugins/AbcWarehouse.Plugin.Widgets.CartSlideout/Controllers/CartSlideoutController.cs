@@ -13,6 +13,7 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using Microsoft.AspNetCore.Http;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.Misc.AbcCore.Mattresses;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 {
@@ -20,6 +21,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
     {
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly IAbcMattressModelService _abcMattressModelService;
         private readonly IAbcProductAttributeService _productAttributeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkContext _workContext;
@@ -27,12 +29,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
         public CartSlideoutController(
             IProductAttributeParser productAttributeParser,
             IProductService productService,
+            IAbcMattressModelService abcMattressModelService,
             IAbcProductAttributeService productAttributeService,
             IShoppingCartService shoppingCartService,
             IWorkContext workContext)
         {
             _productAttributeParser = productAttributeParser;
             _productService = productService;
+            _abcMattressModelService = abcMattressModelService;
             _productAttributeService = productAttributeService;
             _shoppingCartService = shoppingCartService;
             _workContext = workContext;
@@ -150,13 +154,18 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 }
             }
 
+            // special rules for mattresses
+            var abcMattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId);
+            var isMattress = abcMattressModel is not null;
+
             return Json(new
             {
                 EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
                 DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
                 IsPickup = isPickup,
                 IsDeclineNewHoseSelected = isDeclineNewHoseSelected,
-                IsWarrantySelected = isWarrantySelected
+                IsWarrantySelected = isWarrantySelected,
+                IsMattress = isMattress
             });
         }
 

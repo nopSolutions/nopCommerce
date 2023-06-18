@@ -24,6 +24,7 @@ const continueShoppingButton = document.querySelector('#cart-slideout__continue-
 var cartSlideoutShoppingCartItemId = 0;
 var productId = 0;
 var editMode = false;
+var isMattress = false;
 var selectedShop = "";
 
 // Event listeners for updating the check delivery options button:
@@ -103,7 +104,7 @@ function showCartSlideout(response) {
 }
 
 function hideCartSlideout() {
-    if (editMode) {
+    if (editMode || isMattress) {
         location.reload();
     } else {
         CartSlideoutOverlay.style.display = "none";
@@ -207,6 +208,8 @@ function updateAttributes() {
     })
     .then(response => response.json())
     .then(responseJson => {
+        isMattress = responseJson.IsMattress;
+
         // update possible conditional options
         responseJson.DisabledAttributeMappingIds.forEach(id => {
             var options = document.querySelectorAll(`[id$='_${id}']`);
@@ -239,9 +242,10 @@ function updateAttributes() {
             selectedShop = "";
         }
 
-        addToCartButton.disabled =
+        var isAddToCartBlocked =
             (responseJson.IsPickup && selectedShop === "") ||
-            !responseJson.IsWarrantySelected;
+            (!responseJson.IsWarrantySelected && !isMattress);
+        addToCartButton.disabled = isAddToCartBlocked;
 
         // hide decline messaging based on selection
         const declineNewHoseMessaging = document.querySelector('#decline-new-hose');
@@ -249,22 +253,6 @@ function updateAttributes() {
           declineNewHoseMessaging.style.display = responseJson.IsDeclineNewHoseSelected ?
             "block" :
             "none";
-        }
-
-        // select accessory if only one
-        const accessorieLists = document.querySelectorAll('dd.accessories');
-        var visibleList = null;
-        accessorieLists.forEach(al => {
-            if (al.style.display !== "none") {
-              visibleList = al;
-            }
-        });
-        if (visibleList !== null) {
-          var listElements = visibleList.children[0].children;
-          if (listElements.length === 1)
-          {
-            listElements[0].children[0].checked = true;
-          }
         }
     })
     .catch(err => {

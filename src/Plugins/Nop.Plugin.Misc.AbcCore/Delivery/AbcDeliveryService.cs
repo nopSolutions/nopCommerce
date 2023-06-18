@@ -38,7 +38,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(string itemNumber)
         {
             // Mattresses
-            if (itemNumber == "2")
+            if (itemNumber == "-2")
             {
                 return new AbcDeliveryItem();
             }
@@ -67,6 +67,12 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             }
         }
 
+        public async Task<AbcDeliveryItem> GetAbcDeliveryItemByIdAsync(int id)
+        {
+            return await _abcDeliveryItemRepository.Table
+                        .SingleAsync(adi => adi.Id == id);
+        }
+
         public async Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync()
         {
             var abcDeliveryMaps = await _abcDeliveryMapRepository.Table.Where(adm => adm != null).ToListAsync();
@@ -78,44 +84,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
         {
             var accessories = await _abcDeliveryAccessoryRepository.Table.ToListAsync();
             return accessories.Where(a => a.CategoryId == categoryId).ToList();
-        }
-
-        // Calling async methods synchronously, if things go wrong check this:
-        // https://stackoverflow.com/questions/22628087/calling-async-method-synchronously
-        public ProductAttributeValue AddValue(
-            int pamId,
-            ProductAttributeValue pav,
-            int itemNumber,
-            string displayName,
-            int displayOrder,
-            bool isPreSelected,
-            decimal priceAdjustment = 0)
-        {
-            if (pav != null || itemNumber == 0)
-            {
-                return pav;
-            }
-
-            // Special case for pickup in store
-            var item = itemNumber == 1 ? new AbcDeliveryItem() : GetAbcDeliveryItemByItemNumberAsync(itemNumber.ToString()).Result;
-            var price = itemNumber == 1 ? 0M : item.Price - priceAdjustment;
-            
-            var priceDisplay = price == 0 ?
-                "FREE" :
-                _priceFormatter.FormatPriceAsync(price).Result;
-            pav = new ProductAttributeValue()
-            {
-                ProductAttributeMappingId = pamId,
-                Name = string.Format(displayName, priceDisplay),
-                Cost = itemNumber,
-                PriceAdjustment = price,
-                IsPreSelected = isPreSelected,
-                DisplayOrder = displayOrder,
-            };
-
-            _productAttributeService.InsertProductAttributeValueAsync(pav);
-
-            return pav;
         }
     }
 }

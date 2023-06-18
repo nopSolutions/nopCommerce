@@ -11,18 +11,10 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         Task<AbcDeliveryItem> GetAbcDeliveryItemByDescriptionAsync(string description);
 
+        Task<AbcDeliveryItem> GetAbcDeliveryItemByIdAsync(int id);
+
         Task<IList<AbcDeliveryMap>> GetAbcDeliveryMapsAsync();
 
         Task<IList<AbcDeliveryAccessory>> GetAbcDeliveryAccessoriesByCategoryId(int categoryId);
-
-        // Changed to synchronous to prevent collision issues
-        ProductAttributeValue AddValue(
-            int pamId,
-            ProductAttributeValue pav,
-            int itemNumber,
-            string displayName,
-            int displayOrder,
-            bool isPreSelected,
-            decimal priceAdjustment = 0);
     }
 }

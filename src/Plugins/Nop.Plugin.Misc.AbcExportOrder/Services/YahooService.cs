@@ -233,12 +233,9 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 {
                     var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
                     // F0 - remove decimal, no currency
-                    var code = accessoryPav.Cost.ToString("F0");
-                    if (code == "3.0000")
-                    {
-                        var item = await _abcDeliveryService.GetAbcDeliveryItemByDescriptionAsync(accessoryPav.Name);
-                        code = item.Item_Number;
-                    }
+                    var itemId = int.Parse(accessoryPav.Cost.ToString("F0"));
+                    var item = await _abcDeliveryService.GetAbcDeliveryItemByIdAsync(itemId);
+                    var code = item.Item_Number;
                     result.Add(new YahooDetailRow(
                         _settings.OrderIdPrefix,
                         orderItem,
