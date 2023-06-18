@@ -207,25 +207,29 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 if (hasDeliveryOptions)
                 {
                     var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
-                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old ") ||
+                    // Mattress - don't put this line in
+                    if (hdPav.Cost.ToString("F0") != "-2")
+                    {
+                        var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old ") ||
                                                                  pav.Name.Contains("Move Old "));
-                    var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
-                    var priceAdjustment = haulawayPav != null ?
-                        haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
-                        hdPav.PriceAdjustment;
-                    result.Add(new YahooDetailRow(
-                        _settings.OrderIdPrefix,
-                        orderItem,
-                        lineNumber,
-                        "", // no item ID associated
-                        code,
-                        priceAdjustment,
-                        haulawayPav != null ? haulawayPav.Name.Split(" ")[0] :
-                                              "Delivery", // not sure if I need a name
-                        "", // no URL
-                        await GetPickupStoreAsync(orderItem)
-                    ));
-                    lineNumber++;
+                        var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
+                        var priceAdjustment = haulawayPav != null ?
+                            haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
+                            hdPav.PriceAdjustment;
+                        result.Add(new YahooDetailRow(
+                            _settings.OrderIdPrefix,
+                            orderItem,
+                            lineNumber,
+                            "", // no item ID associated
+                            code,
+                            priceAdjustment,
+                            haulawayPav != null ? haulawayPav.Name.Split(" ")[0] :
+                                                "Delivery", // not sure if I need a name
+                            "", // no URL
+                            await GetPickupStoreAsync(orderItem)
+                        ));
+                        lineNumber++;
+                    }
                 }
 
                 // handle accessories here
