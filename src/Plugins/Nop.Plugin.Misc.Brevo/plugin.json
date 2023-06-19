@@ -1,7 +1,7 @@
 ﻿{
   "Group": "Misc",
   "FriendlyName": "Brevo",
-  "SystemName": "Misc.Sendinblue",
+  "SystemName": "Misc.Brevo",
   "Version": "4.70.4",
   "SupportedVersions": [ "4.70" ],
   "Author": "nopCommerce team",

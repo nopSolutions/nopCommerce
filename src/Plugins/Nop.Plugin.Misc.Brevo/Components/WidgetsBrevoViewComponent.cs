@@ -61,7 +61,7 @@ namespace Nop.Plugin.Misc.Brevo.Components
                 .Replace(BrevoDefaults.TrackingScriptId, _brevoSettings.MarketingAutomationKey)
                 .Replace(BrevoDefaults.TrackingScriptCustomerEmail, customerEmail);
 
-            return View("~/Plugins/Misc.Sendinblue/Views/PublicInfo.cshtml", trackingScript);
+            return View("~/Plugins/Misc.Brevo/Views/PublicInfo.cshtml", trackingScript);
         }
 
         #endregion

@@ -207,7 +207,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
             var model = new ConfigurationModel();
             await PrepareModelAsync(model);
 
-            return View("~/Plugins/Misc.Sendinblue/Views/Configure.cshtml", model);
+            return View("~/Plugins/Misc.Brevo/Views/Configure.cshtml", model);
         }
 
         [AuthorizeAdmin]

@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Tax.FixedOrByCou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.DiscountRules.CustomerRoles", "Plugins\Nop.Plugin.DiscountRules.CustomerRoles\Nop.Plugin.DiscountRules.CustomerRoles.csproj", "{4C0C889A-A3B2-43FA-824A-F529402C1BBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.Brevo", "Plugins\Nop.Plugin.Misc.Sendinblue\Nop.Plugin.Misc.Brevo.csproj", "{7B08DACB-8E11-416D-9DDF-B0EEF847A8ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.Brevo", "Plugins\Nop.Plugin.Misc.Brevo\Nop.Plugin.Misc.Brevo.csproj", "{7B08DACB-8E11-416D-9DDF-B0EEF847A8ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Tax.Avalara", "Plugins\Nop.Plugin.Tax.Avalara\Nop.Plugin.Tax.Avalara.csproj", "{2426B75D-23D4-41EF-8924-47650C8A18C7}"
 EndProject
