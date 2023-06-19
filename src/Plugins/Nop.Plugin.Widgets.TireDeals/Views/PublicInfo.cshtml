@@ -68,6 +68,8 @@
     
     .slide-image > img {
         width: 100%;
+        height: 170px;
+        object-fit: cover;
         border-radius: 13px 13px 5px 5px;
         z-index: 0;
         position: absolute;
@@ -101,7 +103,7 @@
     
     .slide-buttons {
         padding: 20px;
-        margin-top: 25px;
+        margin-top: 20px;
     }
     
     .slide-buttons > a {
@@ -117,12 +119,58 @@
     }
     
     .brand > img {
-        width: 40px;
+        max-width: 40px;
+        max-height: 30px;
     }
     
     .slick-track {
         padding-top: 20px; 
         padding-bottom: 40px;
+    }
+    
+    .deals-bottom {
+        position: relative;
+    }
+    
+    .deals-bottom li{
+        position: absolute;
+        float: left;
+        margin-right: 20px;
+        background-color: #fff;
+        width: 60px;
+        height: 60px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px 8px;
+        cursor: pointer;
+    }
+    
+    .deals-bottom li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9;
+        color: black;
+    }
+    
+    .deals-bottom li:hover > i {
+        color: #fff;
+    }
+
+    li.prev{
+        top: 200px;
+        left: -150px;
+        border-bottom-right-radius: 25px;
+        border-top-right-radius: 25px;
+    }
+  
+    li.next{
+        top: 200px;
+        right: -165px;
+        border-bottom-left-radius: 25px;
+        border-top-left-radius: 25px;
+    }
+    
+    li.prev:hover, li.next:hover{
+        background-color: #FE5F10;
     }
     
 </style>
@@ -159,6 +207,14 @@
                 </div>   
             }
         </div>
+        <ul>
+            <li class="prev">
+                <i class="fa-solid fa-arrow-left"></i>
+            </li>
+            <li class="next">
+                <i class="fa-solid fa-arrow-right"></i>
+            </li>
+        </ul>
     </div>
 </div>
 
@@ -167,11 +223,14 @@
       slidesToShow: 4,
       slidesToScroll: 1,
       dots: false,
-      centerMode: true,
+      infinite: false,
       focusOnSelect: true,
+       prevArrow: $('.prev'),
+       nextArrow: $('.next')
     });
 </script>
 
+<script src="https://kit.fontawesome.com/9cfa6b9bb6.js" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
