@@ -87,6 +87,40 @@ namespace Nop.Plugin.Misc.Brevo.Services
         #region Utilities
 
         /// <summary>
+        /// Handle function and get result
+        /// </summary>
+        /// <typeparam name="TResult">Result type</typeparam>
+        /// <param name="function">Function</param>
+        /// <param name="logErrors">Whether to log errors</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result; error if exists
+        /// </returns>
+        private async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
+        {
+            try
+            {
+                //whether plugin is configured
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+                if (string.IsNullOrEmpty(brevoSettings.ApiKey))
+                    throw new NopException("Plugin not configured");
+
+                return (await function(), default);
+            }
+            catch (Exception exception)
+            {
+                var errorMessage = exception.Message;
+                if (logErrors)
+                {
+                    var logMessage = $"{BrevoDefaults.SystemName} error: {Environment.NewLine}{errorMessage}";
+                    await _logger.ErrorAsync(logMessage, exception, await _workContext.GetCurrentCustomerAsync());
+                }
+
+                return (default, errorMessage);
+            }
+        }
+
+        /// <summary>
         /// Prepare API client
         /// </summary>
         /// <returns>
@@ -661,42 +695,37 @@ namespace Nop.Plugin.Misc.Brevo.Services
         /// <summary>
         /// Unsubscribe contact
         /// </summary>
-        /// <param name="unsubscribeContact">Contact information</param>
+        /// <param name="request">HTTP request</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async System.Threading.Tasks.Task UnsubscribeWebhookAsync(string unsubscribeContact)
+        public async System.Threading.Tasks.Task HandleWebhookAsync(Microsoft.AspNetCore.Http.HttpRequest request)
         {
-            try
+            await HandleFunctionAsync(async () =>
             {
-                //whether plugin is configured
-                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
-                if (string.IsNullOrEmpty(brevoSettings.ApiKey))
-                    throw new NopException("Plugin not configured");
+                using var streamReader = new StreamReader(request.Body);
+                var requestContent = await streamReader.ReadToEndAsync();
 
                 //parse string to JSON object
-                var unsubscriber = JsonConvert.DeserializeAnonymousType(unsubscribeContact,
+                var unsubscriber = JsonConvert.DeserializeAnonymousType(requestContent,
                     new { tag = (int?)0, email = string.Empty, date_event = string.Empty });
 
                 //we pass the store identifier in the X-Mailin-Tag at sending emails, now get it here
                 var storeId = unsubscriber?.tag;
                 if (!storeId.HasValue)
-                    return;
+                    return true;
 
                 //get subscription by email and store identifier
                 var email = unsubscriber?.email;
                 var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId.Value);
                 if (subscription == null)
-                    return;
+                    return true;
 
                 //update subscription
                 subscription.Active = false;
                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-                await _logger.InformationAsync($"Brevo unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
-            }
-            catch (Exception exception)
-            {
-                //log full error
-                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
-            }
+                await _logger.InformationAsync($"{BrevoDefaults.SystemName} unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
+
+                return true;
+            });
         }
 
         /// <summary>

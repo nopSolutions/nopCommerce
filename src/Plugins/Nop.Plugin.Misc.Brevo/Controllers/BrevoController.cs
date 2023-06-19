@@ -406,12 +406,12 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
             if (model.UseBrevoTemplate)
             {
                 var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-                var BrevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
 
                 //get template or create new one
                 var currentTemplateId = await _genericAttributeService.GetAttributeAsync<int?>(message, BrevoDefaults.TemplateIdAttribute);
                 var templateId = await _brevoEmailManager.GetTemplateIdAsync(currentTemplateId, message,
-                    await _emailAccountService.GetEmailAccountByIdAsync(BrevoSettings.EmailAccountId));
+                    await _emailAccountService.GetEmailAccountByIdAsync(brevoSettings.EmailAccountId));
                 await _genericAttributeService.SaveAttributeAsync(message, BrevoDefaults.TemplateIdAttribute, templateId);
                 model.EditLink = $"{string.Format(BrevoDefaults.EditMessageTemplateUrl, templateId)}";
             }
@@ -630,22 +630,6 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
             {
                 await _logger.ErrorAsync(ex.Message, ex);
                 await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(BrevoDefaults.SyncKeyCache), ex.Message);
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UnsubscribeWebHook()
-        {
-            try
-            {
-                using var streamReader = new StreamReader(Request.Body);
-                await _brevoEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
-            }
-            catch (Exception ex)
-            {
-                await _logger.ErrorAsync(ex.Message, ex);
             }
 
             return Ok();

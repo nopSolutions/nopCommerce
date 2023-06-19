@@ -19,7 +19,10 @@ namespace Nop.Plugin.Misc.Brevo.Infrastructure
                 new { controller = "Brevo", action = "ImportContacts" });
 
             endpointRouteBuilder.MapControllerRoute(BrevoDefaults.UnsubscribeContactRoute, "Plugins/Sendinblue/UnsubscribeWebHook",
-                new { controller = "Brevo", action = "UnsubscribeWebHook" });
+                new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
+
+            endpointRouteBuilder.MapControllerRoute(BrevoDefaults.UnsubscribeContactRoute, "Plugins/Brevo/UnsubscribeWebHook",
+               new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
         }
 
         /// <summary>
