@@ -20,7 +20,7 @@ public class TireDealsViewComponent : NopViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        var models = await _tireDealService.GetAllAsync();
+        var models = await _tireDealService.GetAllActiveAsync();
 
         var publicModels = await _tireDealMapper.ToModel(models);
         

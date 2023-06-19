@@ -27,6 +27,13 @@ public class TireDealService : ITireDealService
         return models;
     }
 
+    public async Task<IList<TireDealModel>> GetAllActiveAsync()
+    {
+        var models = _tireDealMapper.ToModel(await _dealRepository.GetAllAsync(deals => deals.Where(deal => deal.IsActive == true)));
+
+        return models;
+    }
+
     public virtual async Task<IEnumerable<TireDealModel>> GetAllAsync(
         string title = null,
         string shortDescription = null,

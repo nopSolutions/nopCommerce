@@ -8,6 +8,7 @@ namespace Nop.Plugin.Widgets.Deals.Services;
 public interface ITireDealService
 {
     Task<IList<TireDealModel>> GetAllAsync();
+    Task<IList<TireDealModel>> GetAllActiveAsync();
     Task<IEnumerable<TireDealModel>> GetAllAsync(
         string title = null,
         string shortDescription = null,
