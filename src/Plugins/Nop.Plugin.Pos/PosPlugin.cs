@@ -38,10 +38,7 @@ namespace Nop.Plugin.Pos
         {
             return Task.FromResult<IList<string>>(new List<string> { 
                 PublicWidgetZones.ProductPriceBottom ,
-                
                 PublicWidgetZones.ProductBoxAddinfoAfter
-               
-              
             });
         }
     }

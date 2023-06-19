@@ -8,6 +8,8 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Services.Cms;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.GoogleAuth
 {
@@ -34,6 +36,8 @@ namespace Nop.Plugin.GoogleAuth
             _settingService = settingService;
             _webHelper = webHelper;
         }
+
+        //bool IWidgetPlugin.HideInWidgetList => false;
 
         #endregion
 
@@ -94,6 +98,18 @@ namespace Nop.Plugin.GoogleAuth
 
             await base.UninstallAsync();
         }
+
+        //Type IWidgetPlugin.GetWidgetViewComponent(string widgetZone)
+        //{
+        //    return typeof(GoogleAuthenticationViewComponent);
+        //}
+
+        //Task<IList<string>> IWidgetPlugin.GetWidgetZonesAsync()
+        //{
+        //    return Task.FromResult<IList<string>>(new List<string> {
+        //        PublicWidgetZones.LoginBottom
+        //    });
+        //}
 
         #endregion
     }
