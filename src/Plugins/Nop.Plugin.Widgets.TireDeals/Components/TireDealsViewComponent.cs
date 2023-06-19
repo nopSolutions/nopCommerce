@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Widgets.Deals.Mapping;
 using Nop.Plugin.Widgets.Deals.Services;
-using Nop.Services.Media;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.Deals.Components;
