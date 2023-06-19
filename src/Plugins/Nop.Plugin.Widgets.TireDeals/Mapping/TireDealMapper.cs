@@ -70,6 +70,7 @@ public class TireDealMapper : ITireDealMapper
         {
             publicModels.Add(new PublicInfoModel()
             {
+                Id = model.Id,
                 Title = model.Title,
                 LongDescription = model.LongDescription,
                 ShortDescription = model.ShortDescription,

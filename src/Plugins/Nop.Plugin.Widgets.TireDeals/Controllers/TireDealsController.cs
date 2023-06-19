@@ -44,6 +44,14 @@ public class TireDealsController : BasePluginController
         return Json(model);
     }
 
+    [HttpPost("{id:int}")]
+    public virtual async Task<IActionResult> GetTireDealById(int id)
+    {
+        var model = await _tireDealService.GetByIdAsync(id);
+
+        return Json(model);
+    }
+
     public async Task<IActionResult> Edit(int id)
     {
         var model = await _tireDealService.GetByIdAsync(id);

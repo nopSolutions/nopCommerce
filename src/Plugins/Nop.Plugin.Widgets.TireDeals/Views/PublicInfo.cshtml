@@ -90,7 +90,7 @@
         font-size: 1.7rem;
         font-weight: bold;
         color: #000;
-        margin-top: 58%;
+        margin-top: 165px;
         padding: 20px;
     }
     
@@ -105,10 +105,11 @@
         margin-top: 20px;
     }
     
-    .slide-buttons > a {
+    .tire-view-details {
         border-bottom: dotted #7A6D7D 2px;
         padding-bottom: 5px;
         font-size: smaller;
+        cursor: pointer;
     }
     
     .brand {
@@ -172,7 +173,103 @@
         background-color: #FE5F10;
     }
     
+    .tire-deal-modal-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #0005;
+        width: 100vw;
+        height: 100vh;
+        z-index: 99999 !important;
+        overflow: hidden;
+    }
+    
+    .tire-deal-modal {
+        width: 480px;
+        position: absolute;
+        right: 0;
+        height: 100vh;
+        background-color: #fff;
+        padding-top: 70px;
+    }
+    
+    .tire-modal-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #000;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .tire-modal-description {
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 13px;
+    }
+    
+    .tire-modal-image {
+        margin-top: 35px;
+    }
+    
+    .tire-modal-brand {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .tire-modal-image > img {
+        height: 230px;
+    }
+    
+    .tire-modal-long-description {
+        margin-top: 300px;
+        padding-left: 20px;
+        padding-right: 20px;
+        line-height: 20px;
+    }
+    
+    .close-icon {
+        position: absolute;
+        color: #0007;
+        font-size: 25px;
+        top: 20px;
+        right: 40px;
+    }
+    
+    .close-icon:hover {
+        color: #000;
+    }
+    
 </style>
+
+
+<div class="tire-deal-modal-container"> 
+    <div class="tire-deal-modal">
+        <i class="fa-solid fa-xmark close-icon"></i>
+        <div class="tire-modal-title">
+            Title Up to $100 Rebate
+        </div>
+        <div class="tire-modal-description">
+            Short description
+        </div>
+        <div class="slide-image tire-modal-image">
+            <img src="item.BackgroundPictureUrl" alt=""/>
+            <div class="brand tire-modal-brand">
+                <img src="item.BrandPictureUrl" alt=""/>
+            </div>
+        </div>
+        
+        <div class="tire-modal-long-description">
+           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+           
+           It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+           
+           It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+        </div>
+    </div>
+</div>
+
 
 
 <div class="tire-deals-container">
@@ -201,7 +298,7 @@
                         @item.ShortDescription
                     </div>
                     <div class="slide-buttons">
-                        <a href="#"> View details </a>
+                        <span class="tire-view-details" onclick="openModal(@item.Id)"> View details </span>
                     </div>
                 </div>   
             }
@@ -219,7 +316,7 @@
 
 <script>
     $('.slider-nav').slick({
-      slidesToShow: 4,
+      slidesToShow: 3.5,
       slidesToScroll: 1,
       dots: false,
       infinite: false,
@@ -227,6 +324,23 @@
        prevArrow: $('.prev'),
        nextArrow: $('.next')
     });
+    
+    $('.close-icon').on("click", () => {
+        $('.tire-deal-modal-container').fadeOut();
+    })
+    
+    function openModal(id) {
+        $('.tire-deal-modal-container').fadeIn();
+        
+        $.ajax({
+            url: ""
+        })
+    } 
+    
+    let models = {
+        
+    };
+  
 </script>
 
 <script src="https://kit.fontawesome.com/9cfa6b9bb6.js" crossorigin="anonymous"></script>
