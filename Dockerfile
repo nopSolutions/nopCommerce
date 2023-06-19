@@ -59,6 +59,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Pos
 RUN dotnet build Nop.Plugin.Pos.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.UserDeatils
 RUN dotnet build Nop.Plugin.UserDeatils.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.GoogleAuth
+RUN dotnet build Nop.Plugin.GoogleAuth.csproj -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   
