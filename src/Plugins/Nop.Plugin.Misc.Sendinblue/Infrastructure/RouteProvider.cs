@@ -19,7 +19,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
                 new { controller = "Sendinblue", action = "ImportContacts" });
 
             endpointRouteBuilder.MapControllerRoute(SendinblueDefaults.UnsubscribeContactRoute, "Plugins/Sendinblue/UnsubscribeWebHook",
-                new { controller = "Sendinblue", action = "UnsubscribeWebHook" });
+                new { controller = "SendinblueWebhook", action = "UnsubscribeWebHook" });
         }
 
         /// <summary>

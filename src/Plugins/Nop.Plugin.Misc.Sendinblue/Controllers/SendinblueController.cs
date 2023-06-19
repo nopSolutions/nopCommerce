@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -637,23 +636,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UnsubscribeWebHook()
-        {
-            try
-            {
-                using var streamReader = new StreamReader(Request.Body);
-                await _sendinblueEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
-            }
-            catch (Exception ex)
-            {
-                await _logger.ErrorAsync(ex.Message, ex);
-            }
-
-            return Ok();
-        }
+        }        
 
         #endregion
     }
