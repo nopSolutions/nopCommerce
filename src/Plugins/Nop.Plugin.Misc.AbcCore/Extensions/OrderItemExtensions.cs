@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcCore.Extensions
 {
@@ -9,7 +10,7 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
         public static bool HasDeliveryOptions(this OrderItem oi)
         {
             return !string.IsNullOrWhiteSpace(oi.AttributeDescription) &&
-                   oi.AttributeDescription.Contains("Delivery/Pickup Options:");
+                   oi.AttributeDescription.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}:");
         }
 
         public static bool IsPickup(this OrderItem oi)

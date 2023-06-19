@@ -6,6 +6,7 @@
 @using Nop.Services.Media
 @using Nop.Web.Models.Catalog
 @using Nop.Plugin.Misc.AbcFrontend.Extensions;
+@using Nop.Plugin.Misc.AbcCore.Delivery;
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
 
@@ -44,7 +45,7 @@
                     <label class="text-prompt">
                         @textPrompt
                     </label>
-                    @if (attribute.Name == "Delivery/Pickup Options")
+                    @if (attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
                     {
                         <i class="fas fa-info-circle delivery-options-info"></i>
                     }
@@ -132,7 +133,7 @@
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         // ABC: do not provide price adjustment if delivery option, this is included in the title of the pav
-                                        var attributeName = attribute.Name == "Delivery/Pickup Options" ?
+                                        var attributeName = attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ?
                                             attributeValue.Name :
                                             string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                 attributeValue.Name :
@@ -174,7 +175,7 @@
                                             }
                                         </li>
                                     }
-                                    @if (attribute.Name == "Delivery/Pickup Options")
+                                    @if (attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
                                     {
                                         <div class="cart-slideout__pickup-in-store"></div>
                                     }
@@ -203,7 +204,7 @@
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text; *@
                                         var attributeName = attributeValue.Name;
-                                        var isHaulaway = attributeName.Contains("Remove Old") || attributeName.Contains("Move Old");
+                                        var isHaulaway = attributeName.Contains("Haul Away Old") || attributeName.Contains("Move Old");
                                         <li>
                                             @* ABC: add isHaulaway for dynamic switching *@
                                             <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)

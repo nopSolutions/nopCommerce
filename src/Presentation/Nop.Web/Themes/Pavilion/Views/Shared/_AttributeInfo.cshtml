@@ -1,4 +1,5 @@
 @using System.Web;
+@using Nop.Plugin.Misc.AbcCore.Delivery
 
 @model (int shoppingCartItemId, string attributeInfo);
 
@@ -12,7 +13,7 @@
                    (controllerName.Equals("CustomCheckout") && actionName.Equals("ShippingMethod"));
 
     var attributes = @Model.attributeInfo.Split("<br />");
-    var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains("Delivery/Pickup Options: "));
+    var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}: "));
     if (deliveryPickupOptions != null)
     {
         // remove attribute name
@@ -55,7 +56,7 @@
         {
             warranty.Remove(plusIndex, 1);
         }
-        warranty = warranty.Trim();
+        warranty = warranty.Trim().Replace("+", "");
     }
 
     var accessories = attributes.FirstOrDefault(a => a.Contains("Accessories "));
@@ -70,7 +71,7 @@
         {
             accessories.Remove(plusIndex, 1);
         }
-        accessories = accessories.Trim();
+        accessories = accessories.Trim().Replace("+", "");
     }
 
     var mattressSize = attributes.FirstOrDefault(a => a.Contains("Mattress Size: "));
@@ -81,7 +82,7 @@
         // remove second price difference
         var braceIndex = mattressSize.IndexOf('[') == -1 ? mattressSize.Length : mattressSize.IndexOf('[');
         mattressSize = mattressSize.Substring(0, braceIndex);
-        mattressSize = mattressSize.Trim();
+        mattressSize = mattressSize.Trim().Replace("+", "");
     }
 
     var mattressBase = attributes.FirstOrDefault(a => a.Contains("Base "));
@@ -92,7 +93,7 @@
         // remove second price difference
         var braceIndex = mattressBase.IndexOf('[') == -1 ? mattressBase.Length : mattressBase.IndexOf('[');
         mattressBase = mattressBase.Substring(0, braceIndex);
-        mattressBase = mattressBase.Trim();
+        mattressBase = mattressBase.Trim().Replace("+", "");
     }
 
     var mattressFrame = attributes.FirstOrDefault(a => a.Contains("Frame "));
@@ -103,7 +104,7 @@
         // remove second price difference
         var braceIndex = mattressFrame.IndexOf('[') == -1 ? mattressFrame.Length : mattressFrame.IndexOf('[');
         mattressFrame = mattressFrame.Substring(0, braceIndex);
-        mattressFrame = mattressFrame.Trim();
+        mattressFrame = mattressFrame.Trim().Replace("+", "");
     }
 
     var mattressProtector = attributes.FirstOrDefault(a => a.Contains("Mattress Protector "));
@@ -114,7 +115,7 @@
         // remove second price difference
         var braceIndex = mattressProtector.IndexOf('[') == -1 ? mattressProtector.Length : mattressProtector.IndexOf('[');
         mattressProtector = mattressProtector.Substring(0, braceIndex);
-        mattressProtector = mattressProtector.Trim();
+        mattressProtector = mattressProtector.Trim().Replace("+", "");
     }
 
     var showMattress = mattressSize != null ||

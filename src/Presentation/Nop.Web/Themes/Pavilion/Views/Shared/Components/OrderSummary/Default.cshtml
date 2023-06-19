@@ -13,6 +13,7 @@
 @using Nop.Plugin.Misc.AbcCore.Domain
 @using Nop.Plugin.Misc.AbcCore.Extensions
 @using Nop.Plugin.Misc.AbcCore.Services
+@using Nop.Plugin.Misc.AbcCore.Delivery
 @using Nop.Services.Catalog
 @using Nop.Services.Common
 @using Nop.Web.Extensions
@@ -319,7 +320,7 @@
                             foreach (var pam in pams)
                             {
                                 var pa = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
-                                if (pa.Name.Contains("Delivery/Pickup Options") ||
+                                if (pa.Name.Contains(AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName) ||
                                     pa.Name.Contains("Haul Away") ||
                                     pa.Name.Contains("Warranty") ||
                                     pa.Name.Contains("Accessories"))

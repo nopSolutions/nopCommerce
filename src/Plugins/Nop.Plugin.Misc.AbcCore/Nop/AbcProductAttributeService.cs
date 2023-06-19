@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Plugin.Misc.AbcCore.Extensions;
 using Nop.Services.Catalog;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcCore.Nop
 {
@@ -88,7 +89,10 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
 
         public async Task<bool> ProductHasDeliveryOptionsAsync(int productId)
         {
-            var deliveryOptionsPa = await GetProductAttributeByNameAsync("Delivery/Pickup Options");
+            var deliveryOptionsPa = await GetProductAttributeByNameAsync(
+                AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName);
+            if (deliveryOptionsPa is null) { return false; }
+
             var query = from pam in _productAttributeMappingRepository.Table
                 where pam.ProductAttributeId == deliveryOptionsPa.Id && pam.ProductId == productId
                 select pam;

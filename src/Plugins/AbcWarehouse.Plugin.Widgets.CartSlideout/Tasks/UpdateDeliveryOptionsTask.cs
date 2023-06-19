@@ -247,7 +247,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             {
                 // Haulaway
                 var existingPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(resultPam.Id)).FirstOrDefault(
-                    pav => pav.Name.Contains("Remove")
+                    pav => pav.Name.Contains("Haul Away")
                 );
 
                 var item = await _abcDeliveryService.GetAbcDeliveryItemByItemNumberAsync(mapItemNumber.ToString());
@@ -256,7 +256,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 var newPav = new ProductAttributeValue()
                 {
                     ProductAttributeMappingId = resultPam.Id,
-                    Name = await GetHaulawayMessageAsync(priceFormatted, productId, "Remove"),
+                    Name = await GetHaulawayMessageAsync(priceFormatted, productId, "Haul Away"),
                     Cost = mapItemNumber,
                     PriceAdjustment = price,
                     IsPreSelected = false,
