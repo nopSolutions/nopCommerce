@@ -44,16 +44,6 @@ public class TireDealsController : BasePluginController
         return Json(model);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(TireDealCreateModel model)
-    {
-        await _tireDealService.InsertAsync(model);
-
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
-
-        return await List();
-    }
-
     public async Task<IActionResult> Edit(int id)
     {
         var model = await _tireDealService.GetByIdAsync(id);
@@ -74,5 +64,15 @@ public class TireDealsController : BasePluginController
         var model = new TireDealModel();
         
         return View("~/Plugins/Widgets.TireDeals/Views/Create.cshtml", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create(TireDealCreateModel model)
+    {
+        await _tireDealService.InsertAsync(model);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+        return RedirectToAction("List");
     }
 }

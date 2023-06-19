@@ -57,6 +57,14 @@
     <Content Update="Plugins\Widgets.TireDeals\Views\Configure.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+
+    <Content Update="Plugins\Widgets.TireDeals\Views\_Slide.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Plugins\Widgets.TireDeals\Views\Styles\style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

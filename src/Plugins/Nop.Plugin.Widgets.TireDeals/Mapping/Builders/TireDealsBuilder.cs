@@ -14,6 +14,7 @@ public class TireDealsBuilder : NopEntityBuilder<TireDealEntity>
             .WithColumn(nameof(TireDealEntity.LongDescription)).AsString()
             .WithColumn(nameof(TireDealEntity.ShortDescription)).AsString()
             .WithColumn(nameof(TireDealEntity.IsActive)).AsBoolean()
-            .WithColumn(nameof(TireDealEntity.PictureId)).AsInt32();
+            .WithColumn(nameof(TireDealEntity.BrandPictureId)).AsInt32()
+            .WithColumn(nameof(TireDealEntity.BackgroundPictureId)).AsInt32();
     }
 }

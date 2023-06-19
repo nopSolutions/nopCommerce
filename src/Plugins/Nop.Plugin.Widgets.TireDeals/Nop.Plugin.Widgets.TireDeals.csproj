@@ -49,6 +49,14 @@
         <Content Include="Views\Edit.cshtml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <None Remove="Views\_Slide.cshtml" />
+        <Content Include="Views\_Slide.cshtml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Views\Styles\style.css" />
+        <Content Include="Views\Styles\style.css">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         
     </ItemGroup>
     <ItemGroup>

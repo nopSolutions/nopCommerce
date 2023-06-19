@@ -11,10 +11,14 @@ public record TireDealModel : BaseNopModel
     public string LongDescription { get; set; }
     public string ShortDescription { get; set; }
     public bool IsActive { get; set; }
-    
     public int ActiveStoreScopeConfiguration { get; set; }
     [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
     [UIHint("Picture")]
-    public int PictureId { get; set; }
-    public bool PictureId_OverrideForStore { get; set; }
+    public int BackgroundPictureId { get; set; }
+    public bool BackgroundPictureId_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
+    [UIHint("Picture")]
+    public int BrandPictureId { get; set; }
+    public bool BrandPictureId_OverrideForStore { get; set; }
 }

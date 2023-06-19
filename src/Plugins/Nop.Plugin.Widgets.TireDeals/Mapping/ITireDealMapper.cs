@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Plugin.Widgets.Deals.Domain;
 using Nop.Plugin.Widgets.Deals.Models;
 
@@ -11,4 +12,5 @@ public interface ITireDealMapper
     IList<TireDealModel> ToModel(IEnumerable<TireDealEntity> entities);
     TireDealEntity ToEntity(TireDealCreateModel model);
     TireDealEntity ToEntity(TireDealUpdateModel model);
+    Task<IList<PublicInfoModel>> ToModel(IList<TireDealModel> models);
 }
