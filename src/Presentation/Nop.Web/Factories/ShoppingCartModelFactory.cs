@@ -748,7 +748,7 @@ namespace Nop.Web.Factories
             //custom values
             var processPaymentRequestTask = _httpContextAccessor.HttpContext?.Session?.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
             if (processPaymentRequestTask != null)
-                model.CustomValues = (await processPaymentRequestTask).CustomValues;
+                model.CustomValues = (await processPaymentRequestTask)?.CustomValues;
 
             return model;
         }
