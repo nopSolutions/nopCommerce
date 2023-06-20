@@ -49,6 +49,7 @@ using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
+using Nop.Services.TireDeals;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Menu;
@@ -225,7 +226,8 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IHtmlFormatter, HtmlFormatter>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<INopUrlHelper, NopUrlHelper>();
-
+            services.AddScoped<ITireDealService, TireDealService>();
+            
             //attribute services
             services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
 

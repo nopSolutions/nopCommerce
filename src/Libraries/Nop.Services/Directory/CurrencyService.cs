@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory

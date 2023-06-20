@@ -10,6 +10,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;

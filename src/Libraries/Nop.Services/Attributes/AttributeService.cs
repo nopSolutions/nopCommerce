@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Attributes;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Attributes
 {

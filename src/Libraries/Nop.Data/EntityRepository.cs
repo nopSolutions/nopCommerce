@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
+using Nop.Data.Extensions;
 
 namespace Nop.Data
 {

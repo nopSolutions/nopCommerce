@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Extensions;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;

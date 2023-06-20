@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Attributes;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

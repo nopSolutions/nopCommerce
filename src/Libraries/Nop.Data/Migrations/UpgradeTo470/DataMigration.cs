@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {

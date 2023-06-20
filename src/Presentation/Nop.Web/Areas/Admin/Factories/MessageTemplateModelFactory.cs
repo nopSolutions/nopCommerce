@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Stores;

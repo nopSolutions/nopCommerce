@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 using Nop.Services.Attributes;
 using Nop.Services.Orders;
 using NUnit.Framework;

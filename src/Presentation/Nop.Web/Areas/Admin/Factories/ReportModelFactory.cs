@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Sendinblue.MarketingAutomation;
 using Nop.Services.Catalog;
 using Nop.Services.Common;

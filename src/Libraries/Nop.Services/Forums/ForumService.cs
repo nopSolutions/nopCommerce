@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Html;

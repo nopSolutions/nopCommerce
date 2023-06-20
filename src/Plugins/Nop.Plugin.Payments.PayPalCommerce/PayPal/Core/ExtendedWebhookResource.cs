@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace PayPal.v1.Webhooks
+namespace Nop.Plugin.Payments.PayPalCommerce.PayPal.Core
 {
     /// <summary>
     /// Represents an extended webhook resource object. Some important properties were missed in the original object.

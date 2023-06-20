@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Zettle.Domain;
 using Nop.Plugin.Misc.Zettle.Models;
 using Nop.Plugin.Misc.Zettle.Services;

@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 
 namespace Nop.Services.ScheduleTasks

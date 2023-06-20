@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Logging;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Html;

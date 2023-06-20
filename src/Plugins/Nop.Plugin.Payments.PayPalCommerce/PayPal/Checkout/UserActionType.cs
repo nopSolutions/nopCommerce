@@ -1,4 +1,4 @@
-﻿namespace PayPalCheckoutSdk.Orders
+﻿namespace Nop.Plugin.Payments.PayPalCommerce.PayPal.Checkout
 {
     /// <summary>
     /// Represents the type of user action for customer checkout flow

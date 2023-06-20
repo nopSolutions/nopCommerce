@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog

@@ -28,6 +28,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord OrderCountryReport = new() { Name = "Admin area. Access order country report", SystemName = "OrderCountryReport", Category = "Orders" };
         public static readonly PermissionRecord ManageAffiliates = new() { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new() { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
+        public static readonly PermissionRecord ManageTireDeals = new() { Name = "Admin area. Manage Tire Deals", SystemName = "ManageTireDeals", Category = "Promo" };
         public static readonly PermissionRecord ManageDiscounts = new() { Name = "Admin area. Manage Discounts", SystemName = "ManageDiscounts", Category = "Promo" };
         public static readonly PermissionRecord ManageNewsletterSubscribers = new() { Name = "Admin area. Manage Newsletter Subscribers", SystemName = "ManageNewsletterSubscribers", Category = "Promo" };
         public static readonly PermissionRecord ManagePolls = new() { Name = "Admin area. Manage Polls", SystemName = "ManagePolls", Category = "Content Management" };

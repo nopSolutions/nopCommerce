@@ -1,4 +1,5 @@
-﻿using Nop.Plugin.Pickup.PickupInStore.Models;
+﻿using Nop.Data.Extensions;
+using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Localization;
 using Nop.Services.Stores;

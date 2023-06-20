@@ -6,7 +6,7 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
 using Nop.Core;
-using Nop.Data.DataProviders.LinqToDB;
+using Nop.Data.DataProviders.LinqToDb;
 using Npgsql;
 
 namespace Nop.Data.DataProviders

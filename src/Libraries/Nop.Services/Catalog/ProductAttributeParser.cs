@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;

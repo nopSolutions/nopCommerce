@@ -23,46 +23,26 @@
       </Content>
         
       <None Remove="Views\_ViewImports.cshtml" />
-      <Content Include="Views\_ViewImports.cshtml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
         
       <None Remove="Views\PublicInfo.cshtml" />
-      <Content Include="Views\PublicInfo.cshtml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
         
         <None Remove="Views\Create.cshtml" />
-        <Content Include="Views\Create.cshtml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
 
         <None Remove="Views\List.cshtml" />
-        <Content Include="Views\List.cshtml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Update="Views\Edit.cshtml">
           <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
           <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <None Remove="Views\Edit.cshtml" />
-        <Content Include="Views\Edit.cshtml">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <None Remove="Views\_Slide.cshtml" />
-        <Content Include="Views\_Slide.cshtml">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <None Remove="Views\Styles\style.css" />
-        <Content Include="Views\Styles\style.css">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         
     </ItemGroup>
     <ItemGroup>
       <Folder Include="..\..\Build\">
         <Link>Build</Link>
       </Folder>
+      <Folder Include="Mapping\" />
     </ItemGroup>
     <!-- This target execute after "Build" target -->
     <Target Name="NopTarget" AfterTargets="Build">

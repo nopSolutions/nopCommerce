@@ -1,4 +1,4 @@
-﻿namespace System.Linq
+﻿namespace Nop.Data.Extensions
 {
     public static class AsyncIEnumerableExtensions
     {

@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Orders
 {

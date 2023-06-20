@@ -1,4 +1,5 @@
-﻿using Nop.Services.Customers;
+﻿using Nop.Data.Extensions;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;

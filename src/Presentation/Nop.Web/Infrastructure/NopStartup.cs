@@ -1,8 +1,39 @@
 ﻿using Nop.Core.Infrastructure;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Helpers;
+using Nop.Web.Factories;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Infrastructure.Installation;
+using AddressModelFactory = Nop.Web.Areas.Admin.Factories.AddressModelFactory;
+using BlogModelFactory = Nop.Web.Areas.Admin.Factories.BlogModelFactory;
+using CommonModelFactory = Nop.Web.Areas.Admin.Factories.CommonModelFactory;
+using CountryModelFactory = Nop.Web.Areas.Admin.Factories.CountryModelFactory;
+using CustomerModelFactory = Nop.Web.Areas.Admin.Factories.CustomerModelFactory;
+using ForumModelFactory = Nop.Web.Areas.Admin.Factories.ForumModelFactory;
+using IAddressModelFactory = Nop.Web.Areas.Admin.Factories.IAddressModelFactory;
+using IBlogModelFactory = Nop.Web.Areas.Admin.Factories.IBlogModelFactory;
+using ICommonModelFactory = Nop.Web.Areas.Admin.Factories.ICommonModelFactory;
+using ICountryModelFactory = Nop.Web.Areas.Admin.Factories.ICountryModelFactory;
+using ICustomerModelFactory = Nop.Web.Areas.Admin.Factories.ICustomerModelFactory;
+using IForumModelFactory = Nop.Web.Areas.Admin.Factories.IForumModelFactory;
+using INewsModelFactory = Nop.Web.Areas.Admin.Factories.INewsModelFactory;
+using IOrderModelFactory = Nop.Web.Areas.Admin.Factories.IOrderModelFactory;
+using IPollModelFactory = Nop.Web.Areas.Admin.Factories.IPollModelFactory;
+using IProductModelFactory = Nop.Web.Areas.Admin.Factories.IProductModelFactory;
+using IReturnRequestModelFactory = Nop.Web.Areas.Admin.Factories.IReturnRequestModelFactory;
+using IShoppingCartModelFactory = Nop.Web.Areas.Admin.Factories.IShoppingCartModelFactory;
+using ITopicModelFactory = Nop.Web.Areas.Admin.Factories.ITopicModelFactory;
+using IVendorModelFactory = Nop.Web.Areas.Admin.Factories.IVendorModelFactory;
+using IWidgetModelFactory = Nop.Web.Areas.Admin.Factories.IWidgetModelFactory;
+using NewsModelFactory = Nop.Web.Areas.Admin.Factories.NewsModelFactory;
+using OrderModelFactory = Nop.Web.Areas.Admin.Factories.OrderModelFactory;
+using PollModelFactory = Nop.Web.Areas.Admin.Factories.PollModelFactory;
+using ProductModelFactory = Nop.Web.Areas.Admin.Factories.ProductModelFactory;
+using ReturnRequestModelFactory = Nop.Web.Areas.Admin.Factories.ReturnRequestModelFactory;
+using ShoppingCartModelFactory = Nop.Web.Areas.Admin.Factories.ShoppingCartModelFactory;
+using TopicModelFactory = Nop.Web.Areas.Admin.Factories.TopicModelFactory;
+using VendorModelFactory = Nop.Web.Areas.Admin.Factories.VendorModelFactory;
+using WidgetModelFactory = Nop.Web.Areas.Admin.Factories.WidgetModelFactory;
 
 namespace Nop.Web.Infrastructure
 {
@@ -82,6 +113,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<IVendorAttributeModelFactory, VendorAttributeModelFactory>();
             services.AddScoped<IVendorModelFactory, VendorModelFactory>();
             services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
+            services.AddScoped<ITireDealModelFactory, TireDealModelFactory>();
 
             //factories
             services.AddScoped<Factories.IAddressModelFactory, Factories.AddressModelFactory>();

@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Affiliates;
+using Nop.Data.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;

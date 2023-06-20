@@ -13920,6 +13920,9 @@
   <LocaleResource Name="Admin.Promotions.Campaigns">
     <Value>Campaigns</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.TireDeals">
+    <Value>Tire Deals</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Added">
     <Value>The new campaign has been added successfully.</Value>
   </LocaleResource>

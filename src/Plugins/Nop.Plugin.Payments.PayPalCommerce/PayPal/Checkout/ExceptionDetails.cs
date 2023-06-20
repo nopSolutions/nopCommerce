@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace PayPalCheckoutSdk.Core
+namespace Nop.Plugin.Payments.PayPalCommerce.PayPal.Checkout
 {
     /// <summary>
     /// Represents an exception details

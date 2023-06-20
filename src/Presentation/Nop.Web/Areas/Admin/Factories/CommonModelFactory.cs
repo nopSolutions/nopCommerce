@@ -16,6 +16,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;

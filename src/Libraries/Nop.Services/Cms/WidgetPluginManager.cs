@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
 

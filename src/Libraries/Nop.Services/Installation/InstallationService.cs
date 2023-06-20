@@ -33,6 +33,7 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
