@@ -11,12 +11,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
-
-
-
 
 builder.Configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true);
 if (!string.IsNullOrEmpty(builder.Environment?.EnvironmentName))
@@ -26,12 +21,9 @@ if (!string.IsNullOrEmpty(builder.Environment?.EnvironmentName))
 }
 builder.Configuration.AddEnvironmentVariables();
 
-
-
+builder.Services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; options.Secure = CookieSecurePolicy.Always; });
 //load application settings
 builder.Services.ConfigureApplicationSettings(builder);
-
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -44,17 +36,11 @@ builder.Services.AddAuthentication(options =>
                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                });
 
-
-
 //pwa
 builder.Services.AddProgressiveWebApp();
 
-
-
 var appSettings = Singleton<AppSettings>.Instance;
 var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
-
-
 
 if (useAutofac)
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -67,16 +53,12 @@ else
         options.ValidateOnBuild = true;
     });
 
-
-
 //add services to the application and configure service provider
 builder.Services.ConfigureApplicationServices(builder);
 
 
 
 var app = builder.Build();
-
-
 
 //configure the application HTTP request pipeline
 app.ConfigureRequestPipeline();
