@@ -4,7 +4,6 @@
 
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Nop.Web.Areas.Admin.Models.TireDeals
-@using Nop.Web.Framework.Models.DataTables
 @model Nop.Web.Areas.Admin.Models.TireDeals.TireDealSearchModel
 
 @{
@@ -32,12 +31,7 @@
     <h1 class="float-left">
         Tire Deals
     </h1>
-    <h1 class="float-left">
-        <small>
-            <i class="fas fa-arrow-circle-left"></i>
-            <a asp-action="List" asp-controller="Plugin">@T("Common.Back")</a>
-        </small>
-    </h1>
+   
     <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-plus-square"></i>
@@ -92,10 +86,13 @@
                      {
                          Name = "getTireDeals-grid",
                          UrlRead = new DataUrl("GetTireDeals", "TireDeals", null),
-                         Filters = null,
                          SearchButtonId = "search-deals",
                          Length = Model.PageSize,
                          LengthMenu = Model.AvailablePageSizes,
+                         Filters = new List<FilterParameter>
+                         {
+                             new FilterParameter(nameof(Model.SearchTireDealTitle)),
+                         },
                          ColumnCollection = new List<ColumnProperty>
                          {
                              new ColumnProperty(nameof(TireDealModel.Id))
