@@ -116,6 +116,15 @@
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\PublicInfo.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\plugin.json" />
+    <_ContentIncludedByDefault Remove="Views\Home\Components\TireDeal\Default.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Home\Components\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Components\TireDeal\Default.cshtml" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.
