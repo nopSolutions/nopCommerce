@@ -22,17 +22,8 @@ namespace Nop.Plugin.GoogleAuth.Infrastructure
         /// <param name="builder">Authentication builder</param>
         public void Configure(AuthenticationBuilder builder)
         {
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-                .AddCookie(options =>
-                {
-                    options.CookieManager = new ChunkingCookieManager();
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                });
-            builder.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+            builder.Services.AddAuthentication()
+            .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
                 //set credentials
                 var settings = EngineContext.Current.Resolve<GoogleExternalAuthSettings>();
@@ -42,6 +33,8 @@ namespace Nop.Plugin.GoogleAuth.Infrastructure
                 
                 //store access and refresh tokens for the further usage
                 options.SaveTokens = true;
+
+                
 
                 //set custom events handlers
                 options.Events = new OAuthEvents
