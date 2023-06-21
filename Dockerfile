@@ -19,8 +19,8 @@ WORKDIR /src/Plugins/Nop.Plugin.ExchangeRate.EcbExchange
 RUN dotnet build Nop.Plugin.ExchangeRate.EcbExchange.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.ExternalAuth.Facebook
 RUN dotnet build Nop.Plugin.ExternalAuth.Facebook.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
-RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Misc.Brevo
+RUN dotnet build Nop.Plugin.Misc.Brevo.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
 RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.Zettle
