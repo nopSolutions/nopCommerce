@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Areas.Admin.Models.TireDeals;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -140,5 +141,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.SeName")]
         public string SeName { get; set; }
+
+        [NopResourceDisplayName("admin.promotions.tiredeals")]
+        public IList<int> TireDealIds { get; set; }
     }
 }

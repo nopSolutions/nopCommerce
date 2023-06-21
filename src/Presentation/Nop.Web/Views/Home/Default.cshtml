@@ -2,7 +2,6 @@
     Layout = "";
 }
 
-@using System.Text.Json
 @model IList<Nop.Web.Areas.Admin.Models.TireDeals.PublicInfoModel>
 
 <style>
@@ -245,24 +244,24 @@
 </style>
 
 
-<div class="tire-deal-modal-container"> 
+<div class="tire-deal-modal-container" hidden="hidden"> 
     <div class="tire-deal-modal">
         <i class="fa-solid fa-xmark close-icon"></i>
         <div class="tire-modal-title">
-            @Model[0].Title
+            @Model[4].Title
         </div>
         <div class="tire-modal-description">
-            @Model[0].ShortDescription
+            @Model[4].ShortDescription
         </div>
         <div class="slide-image tire-modal-image">
-            <img src="@Model[0].BackgroundPictureUrl" alt=""/>
+            <img src="@Model[4].BackgroundPictureUrl" alt=""/>
             <div class="brand tire-modal-brand">
-                <img src="@Model[0].BrandPictureUrl" alt=""/>
+                <img src="@Model[4].BrandPictureUrl" alt=""/>
             </div>
         </div>
         
         <div class="tire-modal-long-description">
-            @Model[0].LongDescription
+            @Model[4].LongDescription
         </div>
     </div>
 </div>
