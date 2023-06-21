@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Media
 {

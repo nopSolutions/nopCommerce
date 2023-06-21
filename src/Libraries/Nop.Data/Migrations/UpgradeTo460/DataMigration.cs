@@ -11,6 +11,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {

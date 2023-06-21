@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services;
 using Nop.Services.Directory;

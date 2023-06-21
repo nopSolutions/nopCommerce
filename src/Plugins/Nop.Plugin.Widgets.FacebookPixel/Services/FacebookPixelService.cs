@@ -12,6 +12,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;

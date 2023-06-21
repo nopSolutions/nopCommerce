@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;

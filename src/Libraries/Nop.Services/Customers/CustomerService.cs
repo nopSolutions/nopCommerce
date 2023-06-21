@@ -13,6 +13,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 

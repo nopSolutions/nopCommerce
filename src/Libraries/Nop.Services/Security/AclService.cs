@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Security

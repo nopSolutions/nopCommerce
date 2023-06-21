@@ -24,6 +24,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.TireDeals;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure.Mapper;
@@ -62,6 +63,7 @@ using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
+using Nop.Web.Areas.Admin.Models.TireDeals;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Models;
@@ -110,6 +112,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateTopicsMaps();
             CreateVendorsMaps();
             CreateWarehouseMaps();
+            CreateTireDealMaps();
 
             //add some generic mapping rules
             this.Internal().ForAllMaps((mapConfiguration, map) =>
@@ -705,6 +708,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<IWidgetPlugin, WidgetModel>()
                 .ForMember(model => model.WidgetViewComponentArguments, options => options.Ignore())
                 .ForMember(model => model.WidgetViewComponentName, options => options.Ignore());
+        }
+        
+        protected virtual void CreateTireDealMaps()
+        {
+            CreateMap<TireDeal, TireDealModel>();
+            CreateMap<TireDealModel, TireDeal>();
+            CreateMap<TireDealCreateModel, TireDeal>();
+            CreateMap<TireDealUpdateModel, TireDeal>();
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Polls;
+using Nop.Data.Extensions;
 using Nop.Services.Polls;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Polls;

@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Zettle.Domain;
 using Nop.Plugin.Misc.Zettle.Domain.Api;
 using Nop.Plugin.Misc.Zettle.Domain.Api.Image;

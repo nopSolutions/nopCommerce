@@ -1,4 +1,5 @@
-﻿using Nop.Services.Localization;
+﻿using Nop.Data.Extensions;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories

@@ -4,7 +4,7 @@ using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.PostgreSQL;
 
-namespace Nop.Data.DataProviders.LinqToDB
+namespace Nop.Data.DataProviders.LinqToDb
 {
     /// <summary>
     /// Represents a data provider for PostgreSQL

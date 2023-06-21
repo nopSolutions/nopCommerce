@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
+ using Nop.Data.Extensions;
+ using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Common;

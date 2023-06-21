@@ -1,5 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
 using Nop.Services.Configuration;

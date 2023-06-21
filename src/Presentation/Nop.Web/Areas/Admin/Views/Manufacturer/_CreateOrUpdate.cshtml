@@ -4,6 +4,11 @@
 @inject IWorkContext workContext
 
 @{
+    const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
+    var hideSearchBlock = false;
+}
+
+@{
 	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
 	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
@@ -41,6 +46,20 @@
                 <nop-card asp-name="manufacturer-mappings" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Catalog.Manufacturers.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-card>
                 <nop-card asp-name="manufacturer-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
                 <nop-card asp-name="manufacturer-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
+                
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")">
+                            <div class="search-text">@T("admin.promotions.tiredeals")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            Tire Deals Multichoise
+                        </div>
+                    </div>
+                    </div>
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
             </nop-cards>

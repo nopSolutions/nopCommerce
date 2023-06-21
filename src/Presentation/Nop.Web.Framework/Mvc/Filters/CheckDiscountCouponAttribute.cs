@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;

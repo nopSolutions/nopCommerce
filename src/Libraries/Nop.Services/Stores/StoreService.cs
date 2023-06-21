@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Stores
 {

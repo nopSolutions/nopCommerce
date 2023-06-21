@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Zettle.Domain;
 
 namespace Nop.Plugin.Misc.Zettle.Services

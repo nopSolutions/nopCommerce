@@ -57,6 +57,38 @@
     <Content Update="Plugins\Widgets.TireDeals\Views\Configure.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+
+    <Content Update="Plugins\Widgets.TireDeals\Views\_Slide.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Plugins\Widgets.TireDeals\Views\Styles\style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\PublicInfo.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\List.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\Create.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\Edit.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Update="Areas\Admin\Views\Views\Styles\style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +110,21 @@
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\Configure.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\CreateTireDeal.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\plugin.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\List.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\PublicInfo.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\plugin.json" />
+    <_ContentIncludedByDefault Remove="Views\Home\Components\TireDeal\Default.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Home\Components\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Components\TireDeal\Default.cshtml" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Directory

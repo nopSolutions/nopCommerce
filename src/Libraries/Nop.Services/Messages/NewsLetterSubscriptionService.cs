@@ -3,6 +3,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Messages

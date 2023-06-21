@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Sendinblue.Models;
 using Nop.Plugin.Misc.Sendinblue.Services;
 using Nop.Services.Common;

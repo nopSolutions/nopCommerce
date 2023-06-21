@@ -2,7 +2,7 @@
 using LinqToDB;
 using Nop.Core;
 
-namespace System.Linq
+namespace Nop.Data.Extensions
 {
     public static class AsyncIQueryableExtensions
     {
