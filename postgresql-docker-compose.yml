@@ -5,9 +5,10 @@ services:
         container_name: nopcommerce
         ports:
             - "8011:80"
-        restart: "always"
         depends_on:
             - nopcommerce_database
+        networks: 
+          - nopnet
     nopcommerce_database:
         image: "postgres:latest"
         container_name: nopcommerce_postgres_server
@@ -16,6 +17,14 @@ services:
         restart: "always"
         environment:
           POSTGRES_PASSWORD: "nop_db@10d"
+        volumes:
+          - nopcommerce_data:/var/lib/postgresql/data
+        networks:
+          - nopnet
 
 volumes:
   nopcommerce_data:
+    driver: local
+networks:
+  nopnet:
+    driver: bridge
