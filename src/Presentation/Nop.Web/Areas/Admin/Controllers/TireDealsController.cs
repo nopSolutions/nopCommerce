@@ -25,7 +25,7 @@ public class TireDealsController : BaseController
 
     public async Task<IActionResult> List()
     {
-        var model = new TireDealSearchModel() { AvailablePageSizes = "10, 20, 30" };
+        var model = _tireDealModelFactory.PrepareTireDealSearchModelAsync();
 
         return View(model);
     }
@@ -51,7 +51,6 @@ public class TireDealsController : BaseController
             ShortDescription = entity.ShortDescription,
             LongDescription = entity.LongDescription,
             BackgroundPictureId = entity.BackgroundPictureId,
-            BrandPictureId = entity.BrandPictureId,
             IsActive = entity.IsActive
         };
         
@@ -62,14 +61,13 @@ public class TireDealsController : BaseController
     {
         var entity = await _tireDealService.GetByIdAsync(id);
 
-        var model = new TireDealUpdateModel()
+        var model = new TireDealModel()
         {
             Id = entity.Id,
             Title = entity.Title,
             ShortDescription = entity.ShortDescription,
             LongDescription = entity.LongDescription,
             BackgroundPictureId = entity.BackgroundPictureId,
-            BrandPictureId = entity.BrandPictureId,
             IsActive = entity.IsActive
         };
 

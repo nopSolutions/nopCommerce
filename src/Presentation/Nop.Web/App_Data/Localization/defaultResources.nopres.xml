@@ -2547,6 +2547,21 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products">
     <Value>Products</Value>
   </LocaleResource>
+  
+  <LocaleResource Name="Admin.Promotions.TireDeals.AddNew">
+    <Value>Add New Tire Deal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.TireDeals.BackToList">
+    <Value>Back to tire deals review list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.TireDeals.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.TireDeals.Edit">
+    <Value>Edit Tire Deal</Value>
+  </LocaleResource>
+ 
+  
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>

@@ -29,7 +29,7 @@ public class TireDealService : ITireDealService
         return models;
     }
 
-    public async Task<IList<TireDeal>> GetAllAsync(string? title = null)
+    public async Task<IList<TireDeal>> GetAllAsync(string title, string isActive, string id)
     {
         IList<TireDeal> deals;
 
@@ -38,6 +38,22 @@ public class TireDealService : ITireDealService
             if (title != null)
                 query = query.Where(deal => deal.Title.Contains(title));
 
+            if (isActive != null)
+            {
+                bool active = isActive == "true";
+
+                query = query.Where(deal => deal.IsActive == active);
+            }
+
+            if (id != null)
+            {
+                int intId;
+                var isNumeric = int.TryParse(id, out intId);
+                
+                if(isNumeric)
+                    query = query.Where(deal => deal.Id == intId);
+            }
+            
             return query.AsQueryable();
         });
         

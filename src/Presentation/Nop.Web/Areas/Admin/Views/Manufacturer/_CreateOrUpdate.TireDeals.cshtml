@@ -1,0 +1,35 @@
+﻿@model ManufacturerModel
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="SelectedCustomerRoleIds"/>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-4">
+                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                <script>
+                    $(document).ready(function() {
+                        let rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        rolesIdsInput.setOptions({
+                            autoClose: false,
+                            filter: "contains"
+                        });
+                    
+                        @if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>
+                             rolesIdsInput.setOptions({
+                                 enable: false,
+                                 placeholder: 'No customer roles available'
+                             });
+                             rolesIdsInput._placeholder();
+                             rolesIdsInput._enable();
+                         </text>
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

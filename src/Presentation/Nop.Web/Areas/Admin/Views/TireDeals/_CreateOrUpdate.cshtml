@@ -1,0 +1,22 @@
+﻿@model Nop.Web.Areas.Admin.Models.TireDeals.TireDealModel
+
+@{
+    const string hideInfoBlockAttributeName = "DiscountPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="tire-deal-cards">
+                <nop-card asp-name="tire-deal-info" asp-icon="fas fa-info" asp-title="Tire Deals Info" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DiscountDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>
