@@ -83,6 +83,9 @@
         var braceIndex = mattressSize.IndexOf('[') == -1 ? mattressSize.Length : mattressSize.IndexOf('[');
         mattressSize = mattressSize.Substring(0, braceIndex);
         mattressSize = mattressSize.Trim().Replace("+", "");
+
+        // don't show edit for mattresses
+        showEdit = false;
     }
 
     var mattressBase = attributes.FirstOrDefault(a => a.Contains("Base "));
