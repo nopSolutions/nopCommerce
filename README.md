@@ -21,8 +21,8 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 
 ## Handling Fatal Error
 
-To solve the fatal error that occurs on Codespaces from time to time, stop and start
-the codespace.
+To solve the fatal error that occurs on Codespaces from time to time, stop and
+start the codespace.
 
 ## Installing Let's Encrypt Certificate
 

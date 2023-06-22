@@ -134,27 +134,10 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             var customer = await _workContext.GetCurrentCustomerAsync();
             var product = await _productService.GetProductByIdAsync(productId);
 
-            var attributes = await _productAttributeParser.ParseProductAttributesAsync(product, form, new List<string>());
-            // we need to get the default home delivery option
-            var deliveryPa = await _abcProductAttributeService.GetProductAttributeByNameAsync(
-                AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName
-            );
-            var deliveryPam = (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(
-                productId
-            )).First(pam => pam.ProductAttributeId == deliveryPa.Id);
-            var deliveryPav = (await _abcProductAttributeService.GetProductAttributeValuesAsync(
-                deliveryPam.Id
-            )).First(pav => pav.IsPreSelected);
-
             ShoppingCartItem sci = new ShoppingCartItem()
             {
-                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
-                ProductId = product.Id,
-                AttributesXml = _productAttributeParser.AddProductAttribute(
-                    attributes,
-                    deliveryPam,
-                    deliveryPav.Id.ToString()
-                )
+                CustomerId = customer.Id,
+                ProductId = product.Id
             };
 
             var slideoutInfo = await GetSlideoutInfoAsync(product, sci);

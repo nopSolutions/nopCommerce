@@ -335,7 +335,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 Name = message,
                 Cost = map.DeliveryOnly,
                 PriceAdjustment = deliveryOnlyItem.Price,
-                IsPreSelected = true,
+                IsPreSelected = false,
                 DisplayOrder = 10,
             } : null;
 
