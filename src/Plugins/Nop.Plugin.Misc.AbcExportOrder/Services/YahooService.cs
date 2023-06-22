@@ -210,7 +210,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                     // Mattress - don't put this line in
                     if (hdPav.Cost.ToString("F0") != "-2")
                     {
-                        var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Remove Old ") ||
+                        var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Haul Away Old ") ||
                                                                  pav.Name.Contains("Move Old "));
                         var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
                         var priceAdjustment = haulawayPav != null ?
