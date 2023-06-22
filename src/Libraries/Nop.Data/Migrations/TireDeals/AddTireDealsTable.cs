@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.TireDeals
 {
-    [NopSchemaMigration("2023/06/20 17:06:08:9037680", "Create tiredeal table",
+    [NopSchemaMigration("2023/06/22 11:29:08:9037680", "Create tiredeal table",
         MigrationProcessType.Installation)]
     public class AddTireDealsTable : MigrationBase
     {
@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.TireDeals
 
         public override void Up()
         {
-            Create.TableFor<TireDeal>();              
+            Create.TableFor<TireDeal>();
         }
 
         public override void Down()

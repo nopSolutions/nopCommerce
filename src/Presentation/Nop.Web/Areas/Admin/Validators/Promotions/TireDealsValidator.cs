@@ -2,9 +2,8 @@
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.TireDeals;
 using Nop.Web.Framework.Validators;
-using Nop.Web.Models.PrivateMessages;
 
-namespace Nop.Web.Validators.Promotions
+namespace Nop.Web.Areas.Admin.Validators.Promotions
 {
     public partial class TireDealsValidator : BaseNopValidator<TireDealModel>
     {

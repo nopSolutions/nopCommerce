@@ -9,7 +9,7 @@ public class TireDealsBuilder : NopEntityBuilder<TireDeal>
     {
         table.WithColumn(nameof(TireDeal.Id)).AsInt32().PrimaryKey().Identity()
             .WithColumn(nameof(TireDeal.Title)).AsString()
-            .WithColumn(nameof(TireDeal.LongDescription)).AsString()
+            .WithColumn(nameof(TireDeal.LongDescription)).AsString().Nullable()
             .WithColumn(nameof(TireDeal.ShortDescription)).AsString()
             .WithColumn(nameof(TireDeal.IsActive)).AsBoolean()
             .WithColumn(nameof(TireDeal.BrandPictureId)).AsInt32()

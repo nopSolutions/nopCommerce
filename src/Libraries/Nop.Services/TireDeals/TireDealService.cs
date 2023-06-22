@@ -38,7 +38,7 @@ public class TireDealService : ITireDealService
             if (title != null)
                 query = query.Where(deal => deal.Title.Contains(title));
 
-            if (isActive != null)
+            if (isActive != "null")
             {
                 bool active = isActive == "true";
 
@@ -53,8 +53,8 @@ public class TireDealService : ITireDealService
                 if(isNumeric)
                     query = query.Where(deal => deal.Id == intId);
             }
-            
-            return query.AsQueryable();
+
+            return query.OrderBy(deal => deal.Id);
         });
         
         return deals;

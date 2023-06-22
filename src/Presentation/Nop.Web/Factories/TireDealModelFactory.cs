@@ -26,7 +26,7 @@ public class TireDealModelFactory : ITireDealModelFactory
         if (searchModel == null)
             throw new ArgumentNullException(nameof(searchModel));
 
-        //get topics
+        //get deals
         var deals = await _tireDealService.GetAllAsync(
             title: searchModel.SearchTireDealTitle, 
             isActive: searchModel.SearchTireDealIsActive,
@@ -55,7 +55,7 @@ public class TireDealModelFactory : ITireDealModelFactory
     {
         var searchModel = new TireDealSearchModel() { AvailablePageSizes = "5, 10, 50, 100"};
         
-        searchModel.AvailableActiveOptions.Add(new SelectListItem { Value = null, Text = "All" });
+        searchModel.AvailableActiveOptions.Add(new SelectListItem { Value = "null", Text = "All" });
         searchModel.AvailableActiveOptions.Add(new SelectListItem { Value = "true", Text = "Active" });
         searchModel.AvailableActiveOptions.Add(new SelectListItem { Value = "false", Text = "Inactive" });
 
