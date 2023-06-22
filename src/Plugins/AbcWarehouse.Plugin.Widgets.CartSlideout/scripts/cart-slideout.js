@@ -242,18 +242,9 @@ function updateAttributes() {
             selectedShop = "";
         }
 
-        var isAddToCartBlocked =
-            (responseJson.IsPickup && selectedShop === "") ||
-            (!responseJson.IsWarrantySelected && !isMattress);
-        addToCartButton.disabled = isAddToCartBlocked;
-
-        // hide decline messaging based on selection
-        const declineNewHoseMessaging = document.querySelector('#decline-new-hose');
-        if (declineNewHoseMessaging !== null) {
-          declineNewHoseMessaging.style.display = responseJson.IsDeclineNewHoseSelected ?
-            "block" :
-            "none";
-        }
+        addToCartButton.disabled =
+            !responseJson.IsAddEditCartAllowed ||
+            (responseJson.IsPickup && selectedShop === "");
     })
     .catch(err => {
         console.log(err)

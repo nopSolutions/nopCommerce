@@ -18,7 +18,8 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
                    pam.ProductAttributeId == pam2.ProductAttributeId &&
                    pam.DisplayOrder == pam2.DisplayOrder &&
                    pam.TextPrompt == pam2.TextPrompt &&
-                   pam.ConditionAttributeXml == pam2.ConditionAttributeXml;
+                   pam.ConditionAttributeXml == pam2.ConditionAttributeXml &&
+                   pam.IsRequired == pam2.IsRequired;
         }
     }
 }

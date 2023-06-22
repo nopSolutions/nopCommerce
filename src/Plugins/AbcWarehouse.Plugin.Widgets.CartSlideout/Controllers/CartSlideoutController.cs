@@ -46,6 +46,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
         [HttpPost]
         public async Task<IActionResult> Slideout_AttributeChange(int productId, IFormCollection form)
         {
+            var customer = await _workContext.GetCurrentCustomerAsync();
             var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
             {
@@ -82,64 +83,37 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
 
             var sci = new ShoppingCartItem()
             {
-                CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                CustomerId = customer.Id,
                 ProductId = product.Id,
                 AttributesXml = attributeXml
             };
 
-            var isPickup = false;
-            foreach (var element in form)
+            // Check whether item satisfies all requirements
+            // I think ;et's go through all the "enabled" options and see if
+            // there is a matching option for each
+            var nopWarnings = await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(
+                customer, ShoppingCartType.ShoppingCart, product, 1, attributeXml
+            );
+
+            var isPickup = await IsPickupAsync(form);
+            var isMattress = IsMattress(productId);
+            var isWarrantySelected = await IsWarrantySelectedAsync(form);
+
+            var isAddEditCartAllowed = isMattress ||
+                (!nopWarnings.Any() && isWarrantySelected);
+
+            return Json(new
             {
-                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(int.Parse(element.Value.ToString()));
-                if (pav?.Name == AbcDeliveryConsts.PickupProductAttributeValueName)
-                {
-                    isPickup = true;
-                    break;
-                }
-            }
+                EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
+                DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
+                IsPickup = isPickup,
+                IsMattress = isMattress,
+                IsAddEditCartAllowed = isAddEditCartAllowed
+            });
+        }
 
-            var isDeclineNewHoseSelected = false;
-            foreach (var element in form)
-            {
-                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(int.Parse(element.Value.ToString()));
-                if (pav?.Name == "Decline New Hose")
-                {
-                    isDeclineNewHoseSelected = true;
-                    break;
-                }
-            }
-
-            // for delivery/install, select a singular accessory and add it to the makeshift sci if it isn't already selected
-            foreach (var element in form)
-            {
-                var pavId = int.Parse(element.Value.ToString());
-                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(pavId);
-
-                var isDeliveryInstallSelected = pav != null && pav.Name.Contains("Home Delivery and Installation (");
-                if (isDeliveryInstallSelected)
-                {
-                    // check how many options are available for the delivery/install accessory
-                    var deliveryInstallAccessoriesPa = await _productAttributeService.GetProductAttributeByNameAsync(
-                        AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName);
-                    var productPams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-                    var pam = productPams.FirstOrDefault(pam => pam.ProductAttributeId == deliveryInstallAccessoriesPa.Id);
-                    // No delivery/install mapping, so skip
-                    if (pam == null) { continue; }
-
-                    var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
-                    if (values.Count() == 1)
-                    {
-                        // only one option, so add it to the sci
-                        sci.AttributesXml = _productAttributeParser.AddProductAttribute(
-                            sci.AttributesXml,
-                            pam,
-                            values.First().Id.ToString());
-                    }
-                }
-            }
-
-            // check if a warranty has been selected yet
-            var isWarrantySelected = false;
+        private async Task<bool> IsWarrantySelectedAsync(IFormCollection form)
+        {
             foreach (var element in form)
             {
                 var pamId = int.Parse(element.Key.Split("_")[2]);
@@ -149,24 +123,33 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
                 if (pa?.Name == AbcDeliveryConsts.WarrantyProductAttributeName)
                 {
-                    isWarrantySelected = true;
-                    break;
+                    return true;
                 }
             }
 
-            // special rules for mattresses
-            var abcMattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId);
-            var isMattress = abcMattressModel is not null;
+            return false;
+        }
 
-            return Json(new
+        private bool IsMattress(int productId)
+        {
+            var abcMattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId);
+            return abcMattressModel is not null;
+        }
+
+        private async Task<bool> IsPickupAsync(IFormCollection form)
+        {
+            foreach (var element in form)
             {
-                EnabledAttributeMappingIds = enabledAttributeMappingIds.ToArray(),
-                DisabledAttributeMappingIds = disabledAttributeMappingIds.ToArray(),
-                IsPickup = isPickup,
-                IsDeclineNewHoseSelected = isDeclineNewHoseSelected,
-                IsWarrantySelected = isWarrantySelected,
-                IsMattress = isMattress
-            });
+                var pav = await _productAttributeService.GetProductAttributeValueByIdAsync(
+                    int.Parse(element.Value.ToString())
+                );
+                if (pav?.Name == AbcDeliveryConsts.PickupProductAttributeValueName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private async Task<string> ChangeProductAttributeAsync(

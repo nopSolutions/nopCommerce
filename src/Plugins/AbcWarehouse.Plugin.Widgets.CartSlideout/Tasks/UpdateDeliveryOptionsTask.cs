@@ -11,6 +11,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
+using Nop.Plugin.Misc.AbcCore.Extensions;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
@@ -195,6 +196,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 AttributeControlType = AttributeControlType.RadioList,
                 TextPrompt = textPrompt,
                 DisplayOrder = 30,
+                IsRequired = true,
                 ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{deliveryOptionsPamId}\"><ProductAttributeValue><Value>{deliveryPav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>",
             };
 
@@ -301,6 +303,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 ProductId = productId,
                 ProductAttributeId = _deliveryPickupOptionsProductAttribute.Id,
                 AttributeControlType = AttributeControlType.RadioList,
+                IsRequired = true
             } : null;
 
             return await SaveProductAttributeMappingAsync(existingPam, newPam);
@@ -393,9 +396,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return existingPav.Name == newPav.Name;
         }
 
-        private async System.Threading.Tasks.Task<ProductAttributeMapping> SaveProductAttributeMappingAsync(ProductAttributeMapping existingPam, ProductAttributeMapping newPam)
+        private async System.Threading.Tasks.Task<ProductAttributeMapping> SaveProductAttributeMappingAsync(
+            ProductAttributeMapping existingPam, ProductAttributeMapping newPam)
         {
-            if (existingPam == null && newPam != null)
+            if (existingPam == null && newPam == null)
+            {
+                return null;
+            }
+            else if (existingPam == null && newPam != null)
             {
                 await _abcProductAttributeService.InsertProductAttributeMappingAsync(newPam);
                 return newPam;
@@ -405,7 +413,13 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 await _abcProductAttributeService.DeleteProductAttributeMappingAsync(existingPam);
                 return null;
             }
-            
+            else if (!existingPam.EqualTo(newPam))
+            {
+                existingPam.IsRequired = newPam.IsRequired;
+                await _abcProductAttributeService.UpdateProductAttributeMappingAsync(existingPam);
+                return existingPam;
+            }
+
             return existingPam;
         }
 
@@ -426,7 +440,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 await _abcProductAttributeService.DeleteProductAttributeValueAsync(existingPav);
                 return null;
             }
-            else if (!ArePavsEqual(existingPav, newPav))
+            else if (!existingPav.EqualTo(newPav))
             {
                 existingPav.Name = newPav.Name;
                 existingPav.PriceAdjustment = newPav.PriceAdjustment;
@@ -437,14 +451,6 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             }
 
             return existingPav;
-        }
-
-        private bool ArePavsEqual(ProductAttributeValue existingPav, ProductAttributeValue newPav)
-        {
-            return existingPav.Name == newPav.Name
-                && existingPav.PriceAdjustment == newPav.PriceAdjustment
-                && existingPav.Cost == newPav.Cost
-                && existingPav.IsPreSelected == newPav.IsPreSelected;
         }
 
         private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(string deliveryOnlyPriceFormatted, int productId)
