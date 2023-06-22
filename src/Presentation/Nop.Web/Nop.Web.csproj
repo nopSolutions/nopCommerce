@@ -110,6 +110,11 @@
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\Configure.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\Views\CreateTireDeal.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.Deals\plugin.json" />
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Create.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\List.cshtml" />
@@ -117,6 +122,7 @@
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Plugins\Widgets.TireDeals\plugin.json" />
     <_ContentIncludedByDefault Remove="Views\Home\Components\TireDeal\Default.cshtml" />
+<<<<<<< Updated upstream
   </ItemGroup>
 
   <ItemGroup>
@@ -125,6 +131,12 @@
 
   <ItemGroup>
     <AdditionalFiles Include="Components\TireDeal\Default.cshtml" />
+=======
+    <_ContentIncludedByDefault Remove="Components\TireDeal\Default.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\TireDeals\Components\TireDeal\Default.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\Components\TireDeal\Default.cshtml" />
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

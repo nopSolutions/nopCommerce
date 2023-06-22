@@ -25,6 +25,7 @@ x64/
 
 # Visual Studio Code files
 .vscode/
+.idea/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

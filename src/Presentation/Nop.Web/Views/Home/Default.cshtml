@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ﻿@{
     Layout = "";
 }
@@ -257,17 +258,42 @@
             <img src="@Model[4].BackgroundPictureUrl" alt=""/>
             <div class="brand tire-modal-brand">
                 <img src="@Model[4].BrandPictureUrl" alt=""/>
+=======
+﻿@model IList<Nop.Web.Areas.Admin.Models.TireDeals.PublicInfoModel>
+
+
+<div class="tire-deal-modal-container"> 
+    <div class="tire-deal-modal">
+        <i class="fa-solid fa-xmark close-icon"></i>
+        <div class="tire-modal-title">
+            @Model[1].Title
+        </div>
+        <div class="tire-modal-description">
+            @Model[1].ShortDescription
+        </div>
+        <div class="slide-image tire-modal-image">
+            <img src="@Model[1].BackgroundPictureUrl" alt=""/>
+            <div class="brand tire-modal-brand">
+                <img src="@Model[1].BrandPictureUrl" alt=""/>
+>>>>>>> Stashed changes
             </div>
         </div>
         
         <div class="tire-modal-long-description">
+<<<<<<< Updated upstream
             @Model[4].LongDescription
+=======
+            @Model[1].LongDescription
+>>>>>>> Stashed changes
         </div>
     </div>
 </div>
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 <div class="tire-deals-container">
     <div class="deals-top">
         <div class="deals-big-savings"> BIG SAVINGS! </div>

@@ -1,0 +1,92 @@
+﻿@model IList<Nop.Web.Areas.Admin.Models.TireDeals.PublicInfoModel>
+
+
+<div class="tire-deal-modal-container"> 
+    <div class="tire-deal-modal">
+        <i class="fa-solid fa-xmark close-icon"></i>
+        <div class="tire-modal-title">
+            @Model[1].Title
+        </div>
+        <div class="tire-modal-description">
+            @Model[1].ShortDescription
+        </div>
+        <div class="slide-image tire-modal-image">
+            <img src="@Model[1].BackgroundPictureUrl" alt=""/>
+            <div class="brand tire-modal-brand">
+                <img src="@Model[1].BrandPictureUrl" alt=""/>
+            </div>
+        </div>
+        
+        <div class="tire-modal-long-description">
+            @Model[1].LongDescription
+        </div>
+    </div>
+</div>
+
+<div class="tire-deals-container">
+    <div class="deals-top">
+        <div class="deals-big-savings"> BIG SAVINGS! </div>
+        <div class="deals-header"> <span>Tire Deals</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="30" fill="none" viewBox="0 0 23 30"><path fill="currentColor" d="M18.92 8.328a.585.585 0 0 0-.732-.21.598.598 0 0 0-.333.69c.297 1.237.231 2.653.047 3.89-.523-1.37-1.433-2.598-2.422-3.931l-.441-.588c-1.672-2.28-.31-7.368-.297-7.417a.594.594 0 0 0-.202-.63.582.582 0 0 0-.649-.06c-.32.174-7.42 4.097-8.046 11.526-.37-.559-.69-1.411-.6-2.623a.608.608 0 0 0-.376-.606.596.596 0 0 0-.678.174c-.207.252-5.027 6.192-4.064 12.678.512 3.433 2.547 6.353 6.064 8.682.232.15.541.12.743-.072a.61.61 0 0 0 .09-.75c-2.214-3.58-.541-6.869.572-8.436.214.643.619 1.387 1.38 1.993a.58.58 0 0 0 .654.054.595.595 0 0 0 .304-.583c0-.047-.375-4.428 2.964-6.54.077 1.5.417 4.32 1.869 5.982 2.588 2.976 1.643 5.724.399 7.5a.604.604 0 0 0 .047.756.59.59 0 0 0 .75.103c.249-.156 6.205-3.9 6.974-9.726.643-4.92-3.826-11.574-4.017-11.857Z"></path></svg>
+         </div>
+        <div class="deals-subtitle"> Tire sales, rebates and installation deals.</div>
+    </div>
+    <div class="deals-bottom"> 
+        <div class="slider-nav">
+            @foreach (var item in Model)
+            {
+                <div class="slide">
+                    <div class="slide-image">
+                        <img src="@item.BackgroundPictureUrl" alt=""/>
+                        <div class="brand">
+                            <img src="@item.BrandPictureUrl" alt=""/>
+                        </div>
+                    </div>
+                    <div class="slide-title">
+                        @item.Title
+                    </div>
+                    <div class="slide-description">
+                        @item.ShortDescription
+                    </div>
+                    <div class="slide-buttons">
+                        <span class="tire-view-details" onclick="openModal(@item.Id)"> View details </span>
+                    </div>
+                </div>   
+            }
+        </div>
+        <ul>
+            <li class="prev">
+                <i class="fa-solid fa-arrow-left"></i>
+            </li>
+            <li class="next">
+                <i class="fa-solid fa-arrow-right"></i>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    $('.slider-nav').slick({
+      slidesToShow: 3.5,
+      slidesToScroll: 1,
+      dots: false,
+      infinite: false,
+      focusOnSelect: true,
+       prevArrow: $('.prev'),
+       nextArrow: $('.next')
+    });
+    
+    $('.close-icon').on("click", () => {
+        $('.tire-deal-modal-container').fadeOut();
+    })
+    
+    $('.tire-view-details').on("click", () => {
+        $('.tire-deal-modal-container').fadeIn();
+    })
+    
+</script>
+
+<script src="https://kit.fontawesome.com/9cfa6b9bb6.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

@@ -8864,3 +8864,245 @@ a.skip:hover {
   width: 100%;
   font-size: 16px;
 }
+
+
+/*----------------------Tire Deals Component Start------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+.deals-big-savings {
+  font-size: .7rem;
+  line-height: 1.25;
+  font-weight: bold;
+  -webkit-box-align: center;
+  align-items: center;
+  border: 1px solid rgb(254, 95, 16);
+  border-radius: 5px;
+  display: inline-flex;
+  margin-bottom: 8px;
+  min-width: fit-content;
+  background-color: rgb(254, 95, 16);
+  color: rgb(255, 255, 255);
+  padding: 5px 7px;
+  text-transform: uppercase;
+}
+
+.deals-header > svg {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  color: rgb(254, 95, 16);
+  width: 38px;
+  margin-top: 10px;
+}
+
+.deals-header {
+  font-family: 'Roboto', sans-serif;
+  color: black;
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.deals-header > span {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.slider-nav {
+  width: 100%;
+}
+
+.slide {
+  border: 5px solid rgb(255, 255, 255);
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.15) 10px 10px 30px;
+  margin-top: 5px;
+  background-color: #fff;
+  margin-left: 25px;
+  width: 340px;
+  height: 340px;
+  position: relative;
+}
+
+.slide-image {
+  position: relative;
+}
+
+.slide-image > img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 13px 13px 5px 5px;
+  z-index: 0;
+  position: absolute;
+}
+
+.brand {
+  height: 55px;
+  width: 55px;
+  border-radius: 100%;
+  background-color: #fff;
+  z-index: 99;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 5px;
+}
+
+.slide-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #000;
+  margin-top: 165px;
+  padding: 20px;
+}
+
+.slide-description {
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: bold;
+}
+
+.slide-buttons {
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.tire-view-details {
+  border-bottom: dotted #7A6D7D 2px;
+  padding-bottom: 5px;
+  font-size: smaller;
+  cursor: pointer;
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand > img {
+  max-width: 40px;
+  max-height: 30px;
+}
+
+.slick-track {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.deals-bottom {
+  position: relative;
+}
+
+.deals-bottom li {
+  position: absolute;
+  float: left;
+  margin-right: 20px;
+  background-color: #fff;
+  width: 60px;
+  height: 60px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px 8px;
+  cursor: pointer;
+}
+
+.deals-bottom li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+  color: black;
+}
+
+.deals-bottom li:hover > i {
+  color: #fff;
+}
+
+li.prev {
+  top: 200px;
+  left: 0;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+li.next {
+  top: 200px;
+  right: -1.5%;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+}
+
+li.prev:hover, li.next:hover {
+  background-color: #FE5F10;
+}
+
+.tire-deal-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #0005;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999 !important;
+  overflow: hidden;
+}
+
+.tire-deal-modal {
+  width: 480px;
+  position: absolute;
+  right: 0;
+  height: 100vh;
+  background-color: #fff;
+  padding-top: 70px;
+}
+
+.tire-modal-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #000;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.tire-modal-description {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 13px;
+}
+
+.tire-modal-image {
+  margin-top: 35px;
+}
+
+.tire-modal-brand {
+  width: 80px;
+  height: 80px;
+}
+
+.tire-modal-image > img {
+  height: 230px;
+}
+
+.tire-modal-long-description {
+  margin-top: 300px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 20px;
+}
+
+.close-icon {
+  position: absolute;
+  color: #0007;
+  font-size: 25px;
+  top: 20px;
+  right: 40px;
+}
+
+.close-icon:hover {
+  color: #000;
+}
+
+
+/*----------------------Tire Deals Component End------------------------------------*/
