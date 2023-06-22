@@ -37,7 +37,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public async Task<AbcDeliveryItem> GetAbcDeliveryItemByItemNumberAsync(string itemNumber)
         {
-            // Mattresses
+            // Mattresses or FedEx
             if (itemNumber == "-2")
             {
                 return new AbcDeliveryItem();

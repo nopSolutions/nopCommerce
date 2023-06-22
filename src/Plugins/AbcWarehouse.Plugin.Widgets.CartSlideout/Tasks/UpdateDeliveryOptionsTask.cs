@@ -297,8 +297,10 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 (await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId)).FirstOrDefault(
                     pam => pam.ProductAttributeId == _deliveryPickupOptionsProductAttribute.Id
                 );
-            // Only create if either delivery or delivery/install enabled for product
-            var newPam = map.DeliveryOnly != 0 || map.DeliveryInstall != 0 ? new ProductAttributeMapping()
+            // Only create if delivery options exist
+            // If we were to ever provide pick up in store only, this logic
+            // needs to change
+            var newPam = map.HasDeliveryOptions() ? new ProductAttributeMapping()
             {
                 ProductId = productId,
                 ProductAttributeId = _deliveryPickupOptionsProductAttribute.Id,
@@ -388,12 +390,19 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             var resultPickupPav = await SaveProductAttributeValueAsync(existingPickupPav, newPickupPav);
             if (resultPickupPav != null) { results.Add(resultPickupPav); }
 
-            return results;
-        }
+            // FedEx
+            var existingFedExPav = existingValues.Where(pav => pav.Name.Contains("FedEx")).SingleOrDefault();
+            var newFedExPav = map.FedEx != 0 ? new ProductAttributeValue()
+            {
+                ProductAttributeMappingId = deliveryOptionsPam.Id,
+                Name = "FedEx",
+                DisplayOrder = 30,
+            } : null;
 
-        private bool DoProductAttributeValuesMatch(ProductAttributeValue existingPav, ProductAttributeValue newPav)
-        {
-            return existingPav.Name == newPav.Name;
+            await SaveProductAttributeValueAsync(existingFedExPav, newFedExPav);
+            // We don't need to add FedEx to results
+
+            return results;
         }
 
         private async System.Threading.Tasks.Task<ProductAttributeMapping> SaveProductAttributeMappingAsync(

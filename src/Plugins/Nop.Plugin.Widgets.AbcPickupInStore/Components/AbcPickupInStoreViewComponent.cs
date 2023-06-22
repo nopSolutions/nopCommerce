@@ -151,10 +151,6 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                     {
                         url = "~/Plugins/Widgets.AbcPickupInStore/Views/PickupInStoreContainer.cshtml";
                     }
-                    else if (widgetZone == DELIVERY_SELECTION_WIDGET_ZONE)
-                    {
-                        url = "~/Plugins/Widgets.AbcPickupInStore/Views/SelectDeliveryMethod.cshtml";
-                    }
                     return View(url, model);
                 }
                 else

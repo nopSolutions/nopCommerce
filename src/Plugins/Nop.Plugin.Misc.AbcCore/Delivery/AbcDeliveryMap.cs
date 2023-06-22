@@ -6,10 +6,9 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public class AbcDeliveryMap : BaseEntity
     {
-        // We exclude FedEx, since Delivery Options doesn't handle
-        private readonly int _fedex = 90085;
-
         public int CategoryId { get; set; }
+
+        public int FedEx { get; set; }
 
         public int DeliveryOnly { get; set; }
 
@@ -21,7 +20,8 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 
         public bool HasDeliveryOptions()
         {
-            return (DeliveryOnly != 0 && DeliveryOnly != _fedex) ||
+            return FedEx != 0 ||
+                   DeliveryOnly != 0 ||
                    DeliveryInstall != 0 ||
                    DeliveryHaulway != 0 ||
                    DeliveryHaulwayInstall != 0;
