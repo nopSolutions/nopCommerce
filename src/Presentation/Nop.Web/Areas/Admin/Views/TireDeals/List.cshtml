@@ -9,6 +9,8 @@
 @{
     //page title
     ViewBag.PageTitle = "Tire Deals";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("TireDeals");
 }
 
 @{
@@ -52,17 +54,32 @@
                         <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
-
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
 
                         <div class="row">
                            <div class="col-md-6">
                                <div class="form-group row">
                                    <div class="col-md-4">
-                                       <nop-label asp-for="SearchTireDealTitle" />
+                                       <nop-label asp-for="SearchTireDealId" />
                                    </div>
                                    <div class="col-md-8">
-                                       <nop-editor asp-for="SearchTireDealTitle" />
+                                       <nop-editor asp-for="SearchTireDealId" />
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <div class="col-md-4">
+                                       <nop-label asp-for="SearchTireDealTitle"/>
+                                   </div>
+                                   <div class="col-md-8">
+                                       <nop-editor asp-for="SearchTireDealTitle"/>
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <div class="col-md-4">
+                                       <nop-label asp-for="SearchTireDealIsActive" />
+                                   </div>
+                                   <div class="col-md-8">
+                                       <nop-select asp-for="SearchTireDealIsActive" asp-items="Model.AvailableActiveOptions" />
                                    </div>
                                </div>
                            </div>
@@ -92,6 +109,8 @@
                          Filters = new List<FilterParameter>
                          {
                              new FilterParameter(nameof(Model.SearchTireDealTitle)),
+                             new FilterParameter(nameof(Model.SearchTireDealId)),
+                             new FilterParameter(nameof(Model.SearchTireDealIsActive)),
                          },
                          ColumnCollection = new List<ColumnProperty>
                          {
@@ -99,6 +118,12 @@
                              {
                                  Title = "Id",
                                  Width = "50"
+                             },
+                             new ColumnProperty(nameof(TireDealModel.BackgroundPictureUrl))
+                             {
+                                 Title = "Picture",
+                                 Width = "100",
+                                 Render = new RenderPicture(width: 150)
                              },
                              new ColumnProperty(nameof(TireDealModel.Title))
                              {

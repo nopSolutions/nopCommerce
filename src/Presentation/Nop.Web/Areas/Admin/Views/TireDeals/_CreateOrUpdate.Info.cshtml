@@ -1,0 +1,51 @@
+﻿@model Nop.Web.Areas.Admin.Models.TireDeals.TireDealModel
+
+@{
+    const string hideSearchBlockAttributeName = "DiscountsPage.HideSearchBlock";
+    var hideSearchBlock = false;
+}
+    <div class="form-group row">
+        <div class="col-md-2">
+            <nop-label asp-for="IsActive" />
+        </div>
+        <div class="col-md-10">
+             <nop-editor asp-for="IsActive" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <nop-label asp-for="Title" />
+        </div>
+        <div class="col-md-10">
+            <nop-editor asp-for="Title" />
+             <span asp-validation-for="Title"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <nop-label asp-for="ShortDescription" />
+        </div>
+        <div class="col-md-10">
+            <nop-textarea asp-for="ShortDescription" />
+            <span asp-validation-for="ShortDescription"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <nop-label asp-for="LongDescription" />
+        </div>
+        <div class="col-md-10">
+            <nop-editor asp-for="LongDescription" asp-template="RichEditor" />
+            <span asp-validation-for="LongDescription"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <nop-override-store-checkbox asp-for="BackgroundPictureId_OverrideForStore" asp-input="BackgroundPictureId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BackgroundPictureId" />
+        </div>
+        <div class="col-md-10">
+            <nop-editor asp-for="BackgroundPictureId" />
+            <span asp-validation-for="BackgroundPictureId"></span>
+        </div>
+    </div>

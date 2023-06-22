@@ -5,4 +5,5 @@ namespace Nop.Web.Factories;
 public interface ITireDealModelFactory
 {
     Task<TireDealListModel> PrepareTireDealListModelAsync(TireDealSearchModel searchModel);
+    TireDealSearchModel PrepareTireDealSearchModelAsync();
 }
