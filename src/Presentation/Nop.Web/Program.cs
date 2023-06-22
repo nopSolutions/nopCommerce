@@ -24,18 +24,6 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; options.Secure = CookieSecurePolicy.Always; });
 //load application settings
 builder.Services.ConfigureApplicationSettings(builder);
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-})
-               .AddCookie(options =>
-               {
-                   options.CookieManager = new ChunkingCookieManager();
-                   options.Cookie.SameSite = SameSiteMode.None;
-                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-               });
-
 //pwa
 builder.Services.AddProgressiveWebApp();
 
