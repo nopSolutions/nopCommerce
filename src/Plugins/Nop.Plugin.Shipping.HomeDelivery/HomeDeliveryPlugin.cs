@@ -85,7 +85,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
 
             // find all items that don't qualify as Delivery/Pickup
             // There are 3 possibilities
-            //  1. Delivery/Pickup (gets excluded)
+            //  1. Delivery/Pickup (gets excluded unless FedEx)
             //  2. Legacy Delivery (mattresses, just uses the old system)
             //  3. Fedex - used by default if neither above are fulfilled
             var legacyHomeDeliveryItems = new List<GetShippingOptionRequest.PackageItem>();
@@ -95,39 +95,32 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             {
                 var itemAttributeXml = item.ShoppingCartItem.AttributesXml;
                 var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(itemAttributeXml);
-                var pas = new List<ProductAttribute>();
                 foreach (var pam in pams)
                 {
-                    pas.Add(await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId));
-                }
+                    var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                    if (pa.Name != AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
+                    {
+                        continue;
+                    }
 
-                var paNames = pas.Select(pa => pa.Name);
+                    // Should only have one pav in all cases
+                    var pav = (await _productAttributeParser.ParseProductAttributeValuesAsync(itemAttributeXml, pam.Id)).Single();
 
-                if (paNames.Contains(AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName))
-                {
-                    // check if price in cart
-                    var deliveryPa = pas.First(pa => pa.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName);
-                    var deliveryPam = pams.First(p => p.ProductAttributeId == deliveryPa.Id);
-                    var pavs = await _productAttributeService.GetProductAttributeValuesAsync(deliveryPam.Id);
-                    var pavsNames = pavs.Select(pav => pav.Name);
-                    if (pavsNames.Contains("Home Delivery (Price in Cart)"))
+                    // Mattresses are added to legacy
+                    if (pav.Name.Contains("Home Delivery (Price in Cart)"))
                     {
                         legacyHomeDeliveryItems.Add(item);
+                    }
+                    else if (pav.Name.Contains("Home Delivery") || pav.Name.Contains("Pickup"))
+                    {
+                        // not included in home delivery calculations
                         continue;
                     }
                     else
                     {
-                        continue;
+                        fedexDeliveryItems.Add(item);
                     }
                 }
-                // legacy
-                else if (paNames.Contains("Home Delivery"))
-                {
-                    legacyHomeDeliveryItems.Add(item);
-                    continue;
-                }
-
-                fedexDeliveryItems.Add(item);
             }
 
             var legacyHomeDeliveryCharge = await _homeDeliveryCostService.GetHomeDeliveryCostAsync(legacyHomeDeliveryItems);
@@ -139,6 +132,8 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                 try
                 {
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls;
+                    // only check fedex items
+                    getShippingOptionRequest.Items = fedexDeliveryItems;
                     response = await _baseShippingComputation.GetShippingOptionsAsync(getShippingOptionRequest);
                 }
                 catch
@@ -155,7 +150,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                     await CheckZipcodeAsync(zip, response);
                     foreach (var shippingOption in response.ShippingOptions)
                     {
-                        shippingOption.Name += " and Home Delivery";
+                        shippingOption.Name += " and Mattress Delivery";
                         shippingOption.Rate += legacyHomeDeliveryCharge;
                     }
                 }
@@ -164,12 +159,12 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             {
                 var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
                 await CheckZipcodeAsync(zip, response);
-                response.ShippingOptions.Add(new ShippingOption { Name = "Home Delivery", Rate = legacyHomeDeliveryCharge });
+                response.ShippingOptions.Add(new ShippingOption { Name = "Mattress Delivery", Rate = legacyHomeDeliveryCharge });
             }
             // use the default option of no charge, since cost is built into the items
             else 
             {
-                response.ShippingOptions.Add(new ShippingOption { Name = "Home Delivery/Pickup", Rate = 0M });
+                response.ShippingOptions.Add(new ShippingOption { Name = "No Additional Shipping Charge", Rate = 0M });
             }
             return response;
         }

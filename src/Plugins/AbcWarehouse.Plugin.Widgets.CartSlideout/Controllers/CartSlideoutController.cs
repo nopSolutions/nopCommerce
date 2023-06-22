@@ -60,10 +60,14 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
             var enabledAttributeMappingIds = new List<int>();
             var disabledAttributeMappingIds = new List<int>();
             var pams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+            bool isWarrantyRequired = false;
             foreach (var pam in pams)
             {
-                // get the "pickup" delivery options pav (not the actual store)
-                var pavs = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+                var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (pa?.Name == AbcDeliveryConsts.WarrantyProductAttributeName)
+                {
+                    isWarrantyRequired = true;
+                }
 
                 var conditionMet = await _productAttributeParser.IsConditionMetAsync(pam, attributeXml);
                 if (!conditionMet.HasValue)
@@ -88,19 +92,17 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
                 AttributesXml = attributeXml
             };
 
-            // Check whether item satisfies all requirements
-            // I think ;et's go through all the "enabled" options and see if
-            // there is a matching option for each
             var nopWarnings = await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(
                 customer, ShoppingCartType.ShoppingCart, product, 1, attributeXml
             );
 
             var isPickup = await IsPickupAsync(form);
             var isMattress = IsMattress(productId);
-            var isWarrantySelected = await IsWarrantySelectedAsync(form);
+            var isWarrantySelected = isWarrantyRequired ? await IsWarrantySelectedAsync(form) : false;
 
             var isAddEditCartAllowed = isMattress ||
-                (!nopWarnings.Any() && isWarrantySelected);
+                (!nopWarnings.Any() && 
+                (!isWarrantyRequired || isWarrantySelected));
 
             return Json(new
             {

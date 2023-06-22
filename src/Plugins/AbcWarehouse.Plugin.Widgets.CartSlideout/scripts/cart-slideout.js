@@ -103,6 +103,14 @@ function showCartSlideout(response) {
     document.body.classList.add("scrollYRemove");
 }
 
+function clickGoToCart() {
+    if (editMode) {
+        location.reload();
+    } else {
+        window.location.href = '/cart'
+    }
+}
+
 function hideCartSlideout() {
     if (editMode || isMattress) {
         location.reload();
@@ -182,12 +190,13 @@ function setAttributeListeners() {
 
 function preSelectNoWarrantyIfNoneSelected() {
     var warrantyOptions = document.getElementsByClassName('is-warranty');
+    if (warrantyOptions.length == 0) { return; }
+
     var selectedWarrantyOption = Array.from(warrantyOptions).filter(function(option) {
         return option.checked;
     });
-
     // no warranty selected, select "No additional warranty"
-    if (selectedWarrantyOption.length !== 1) {
+    if (selectedWarrantyOption.length === 0) {
         var noWarrantyOption = document.getElementById('warranty-none');
         noWarrantyOption.checked = true;
     }
