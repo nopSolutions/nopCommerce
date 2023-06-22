@@ -5,6 +5,7 @@ services:
         container_name: nopcommerce
         ports:
             - "8011:80"
+        restart: "always"
         depends_on:
             - nopcommerce_database
     nopcommerce_database:
