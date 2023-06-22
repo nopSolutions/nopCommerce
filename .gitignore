@@ -171,6 +171,7 @@ glob:*.user
 src/Presentation/Nop.Web/.config/*
 src/Presentation/Nop.Web/App_Data/browscap.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
+!src/Presentation/Nop.Web/App_Data/appsettings.json
 src/Presentation/Nop.Web/App_Data/plugins.json
 src/Presentation/Nop.Web/App_Data/TempUploads/*
 !src/Presentation/Nop.Web/App_Data/TempUploads/Index.htm
