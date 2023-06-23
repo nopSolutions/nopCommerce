@@ -10,38 +10,6 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     public partial record DailySalesProductModel : BaseNopEntityModel
     {
        
-        
-        //    #region Properties
-
-        //    [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
-        //    public string Name { get; set; }
-
-        //    public string Attributes { get; set; }
-        
-        //[NopResourceDisplayName("VendorID")]
-
-        //public int VendorID { get; set; }
-
-        //[NopResourceDisplayName("CostPrice")]
-
-        //public decimal CostPrice { get; set; }
-
-
-        //[NopResourceDisplayName("SellingPrice")]
-
-        //public decimal SellingPrice { get; set; }
-
-
-        //[NopResourceDisplayName("Price Difference")]
-
-        //public decimal PriceDifference { get; set; }
-
-        //[NopResourceDisplayName("Date")]
-
-        //public DateTime Date { get; set; }
-
-
-
         public int Id { get; set; } 
         public int OrderId { get; set; } 
         public int ProductId { get; set; } 
@@ -51,8 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         public decimal Price { get; set; } 
         public decimal PriceDifference { get; set; }
         public  DateTime Date { get; set; }
-
-
+        public string FormattedDate => Date.ToString("MM/dd/yyyy");
 
     }
 }

@@ -3,8 +3,7 @@
 @{
     //page title
     ViewBag.PageTitle = T("DailySales").Text;
-    //active menu item (system name)
-    //NopHtml.SetActiveMenuItemSystemName("Low stock");
+    NopHtml.SetActiveMenuItemSystemName("Daily Sales");
 }
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -21,7 +20,7 @@
 <form asp-controller="Report" asp-action="DailySales" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("DailySales")
+            Daily Sales
         </h1>
         <div class="float-right">
             &nbsp;
@@ -106,11 +105,11 @@
                                 },
                                 ColumnCollection = new List<ColumnProperty>
                                 {
-                                //new ColumnProperty(nameof(DailySalesProductModel.Date))
-                                //{
-                                // Title = "Date",
-                                // Width = "150"
-                                //},
+                                new ColumnProperty(nameof(DailySalesProductModel.FormattedDate))
+                                {
+                                 Title = "Date",
+                                 Width = "150"
+                                },
                                 new ColumnProperty(nameof(DailySalesProductModel.OrderId))
                                 {
                                 Title = "OrderID",

@@ -2362,7 +2362,7 @@ namespace Nop.Services.Messages
         {
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
-
+            
             var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
 
             if (customer == null)
@@ -2388,16 +2388,19 @@ namespace Nop.Services.Messages
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
+                var emailAccount_markasDefault = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId);
+
                 var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-                var sendermail = new MailAddress("pavarna.t@outlook.com", "Pavarna");
-                var password = "pavarna5";
+
+                var sendermail = new MailAddress(emailAccount_markasDefault.Email, emailAccount_markasDefault.DisplayName);
+                var password = emailAccount_markasDefault.Password;
                 var smtp = new SmtpClient
                 {
-                    Host = "smtp.office365.com",
-                    Port = 587,
-                    EnableSsl = true,
+                    Host = emailAccount_markasDefault.Host,
+                    Port = emailAccount_markasDefault.Port,
+                    EnableSsl = emailAccount_markasDefault.EnableSsl,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
+                    UseDefaultCredentials = emailAccount_markasDefault.UseDefaultCredentials,
                     Credentials = new NetworkCredential(sendermail.Address, password)
                 };
 
@@ -2413,14 +2416,13 @@ namespace Nop.Services.Messages
                 //Replace subject and body tokens 
                 var subjectReplaced = _tokenizer.Replace(messageTemplate.Subject, tokens, false);
                 var bodyReplaced = _tokenizer.Replace(messageTemplate.Body, tokens, true);
-
                 var toName = await _customerService.GetCustomerFullNameAsync(customer);
-
                 SendCustomerMailAsync(smtp, sendermail, receivermail, subjectReplaced, bodyReplaced);
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
         }
+
         public virtual async Task SendCustomerMailAsync(SmtpClient smtp = null, MailAddress sendermail = null, MailAddress receivermail = null, string subjectReplaced = null, string bodyReplaced = null)
         {
             //Message to the customer when the Product are in Stock
