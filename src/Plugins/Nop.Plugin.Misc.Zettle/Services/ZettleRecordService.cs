@@ -249,14 +249,13 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 if (!_zettleSettings.AutoAddRecordsEnabled)
                     return;
 
-                if (attributeCombinationId == 0)
+                if (attributeCombinationId == 0 || _repository.Table.FirstOrDefault(record => record.ProductId == productId) is not ZettleRecord productRecord)
                 {
                     var (records, _) = await PrepareRecordsToAddAsync(new List<int> { productId });
                     await InsertRecordsAsync(records);
                 }
                 else
                 {
-                    var productRecord = _repository.Table.FirstOrDefault(record => record.ProductId == productId);
                     await InsertRecordAsync(new()
                     {
                         Active = _zettleSettings.SyncEnabled,
@@ -359,6 +358,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     Sku = item.Product.Sku,
                     Description = item.Product.ShortDescription,
                     Price = item.Product.Price,
+                    ProductCost = item.Product.ProductCost,
                     CategoryName = item.Category.Name,
                     ImageUrl = item.Record.ImageUrl,
                     ImageSyncEnabled = item.Record.ImageSyncEnabled,
@@ -376,6 +376,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     Sku = group.FirstOrDefault().Sku,
                     Description = group.FirstOrDefault().Description,
                     Price = group.FirstOrDefault().Price,
+                    ProductCost = group.FirstOrDefault().ProductCost,
                     CategoryName = group
                         .OrderBy(item => item.ProductCategoryDisplayOrder)
                         .ThenBy(item => item.ProductCategoryId)

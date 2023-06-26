@@ -41,6 +41,11 @@
         public decimal Price { get; set; }
 
         /// <summary>
+        /// Gets or sets the original product cost
+        /// </summary>
+        public decimal ProductCost { get; set; }
+
+        /// <summary>
         /// Gets or sets the category name
         /// </summary>
         public string CategoryName { get; set; }

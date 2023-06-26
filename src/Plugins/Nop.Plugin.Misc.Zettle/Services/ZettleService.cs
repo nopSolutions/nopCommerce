@@ -408,24 +408,29 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     if (!combinationRecords.Any())
                     {
                         //a single variant
-                        request.Variants = new List<Product.ProductVariant>
+                        var variant = new Product.ProductVariant
                         {
-                            new Product.ProductVariant
-                            {
-                                Uuid = product.VariantUuid,
-                                Name = product.Name,
-                                Sku = product.Sku,
-                                Description = product.Description,
-
-                                //set the price if available
-                                Price = product.PriceSyncEnabled && priceSyncAvailable
-                                    ? new Product.ProductVariant.ProductPrice
-                                    {
-                                        Amount = preparePrice(product.Price),
-                                        CurrencyId =  accountInfo.Currency
-                                    } : null
-                            }
+                            Uuid = product.VariantUuid,
+                            Name = product.Name,
+                            Sku = product.Sku,
+                            Description = product.Description
                         };
+
+                        //set the price if available
+                        if (product.PriceSyncEnabled && priceSyncAvailable)
+                        {
+                            variant.Price = new Product.ProductVariant.ProductPrice
+                            {
+                                Amount = preparePrice(product.Price),
+                                CurrencyId = accountInfo.Currency
+                            };
+                            variant.CostPrice = new Product.ProductVariant.ProductPrice
+                            {
+                                Amount = preparePrice(product.ProductCost),
+                                CurrencyId = accountInfo.Currency
+                            };
+                        }
+                        request.Variants = new() { variant };
                     }
                     else
                     {
@@ -477,6 +482,16 @@ namespace Nop.Plugin.Misc.Zettle.Services
                                 variant.Price = new Product.ProductVariant.ProductPrice
                                 {
                                     Amount = preparePrice(combination.Combination.OverriddenPrice ?? product.Price),
+                                    CurrencyId = accountInfo.Currency
+                                };
+
+                                var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.Combination.AttributesXml);
+                                var attributesCost = attributeValues
+                                    .Where(value => value.AttributeValueType == Core.Domain.Catalog.AttributeValueType.Simple)
+                                    .Sum(value => value.Cost);
+                                variant.CostPrice = new Product.ProductVariant.ProductPrice
+                                {
+                                    Amount = preparePrice(product.ProductCost + attributesCost),
                                     CurrencyId = accountInfo.Currency
                                 };
                             }
