@@ -515,6 +515,7 @@ namespace Nop.Tests
             services
                 .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
                     Web.Factories.ExternalAuthenticationModelFactory>();
+            services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
             services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
             services.AddTransient<Web.Factories.INewsletterModelFactory, Web.Factories.NewsletterModelFactory>();
             services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
