@@ -23,7 +23,6 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
@@ -89,7 +88,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
-            IStoreService storeService,
             ITaxService taxService,
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
@@ -127,11 +125,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="function">Function</param>
+        /// <param name="logErrors">Whether to log errors</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the result
+        /// The task result contains the function result
         /// </returns>
-        private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
+        private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
         {
             try
             {
@@ -144,17 +143,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             }
             catch (Exception exception)
             {
-                //get a short error message
-                var detailedException = exception;
-                do
-                {
-                    detailedException = detailedException.InnerException;
-                } while (detailedException?.InnerException != null);
+                if (!logErrors)
+                    return default;
 
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer.IsSearchEngineAccount() || customer.IsBackgroundTaskAccount())
+                    return default;
 
                 //log errors
                 var error = $"{FacebookPixelDefaults.SystemName} error: {Environment.NewLine}{exception.Message}";
-                await _logger.ErrorAsync(error, exception, await _workContext.GetCurrentCustomerAsync());
+                await _logger.ErrorAsync(error, exception, customer);
 
                 return default;
             }
@@ -577,11 +575,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             var model = await prepareModel();
 
             if (pixelConfigurations.Any())
-                await PreparePixelScriptAsync(model);
+                await PrepareEventScriptAsync(model);
 
+            var logErrors = true; //set it to false to ignore Conversions API errors 
             foreach (var configuration in conversionsApiConfigurations)
             {
-                await _facebookConversionsHttpClient.SendEventAsync(configuration, model);
+                await HandleFunctionAsync(async () =>
+                {
+                    var response = await _facebookConversionsHttpClient.SendEventAsync(configuration, model);
+                    var error = JsonConvert.DeserializeAnonymousType(response, new { Error = new ApiError() })?.Error;
+                    if (!string.IsNullOrEmpty(error?.Message))
+                        throw new NopException($"{error.Code} - {error.Message}{Environment.NewLine}Debug ID: {error.DebugId}");
+
+                    return true;
+                }, logErrors);
             }
 
             return true;
@@ -972,21 +979,28 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         #region Scripts
 
         /// <summary>
-        /// Prepare pixel script to track events
+        /// Prepare script to track events and store it into the session value
         /// </summary>
         /// <param name="conversionsEvent">Conversions event</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task PreparePixelScriptAsync(ConversionsEvent conversionsEvent)
+        public async Task PrepareEventScriptAsync(ConversionsEvent conversionsEvent)
         {
-            await HandleFunctionAsync(async() =>
+            await HandleFunctionAsync(async () =>
             {
-                var events = _httpContextAccessor.HttpContext.Session.Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
+                //get current stored events 
+                var events = _httpContextAccessor.HttpContext.Session
+                    .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue)
+                    ?? new List<TrackedEvent>();
+
+                var store = await _storeContext.GetCurrentStoreAsync();
                 foreach (var conversionsEventData in conversionsEvent.Data)
                 {
-                    conversionsEventData.StoreId ??= (await _storeContext.GetCurrentStoreAsync()).Id;
+                    conversionsEventData.StoreId ??= store.Id;
                     var activeEvent = events.FirstOrDefault(trackedEvent =>
-                        trackedEvent.EventName == conversionsEventData.EventName && trackedEvent.CustomerId == conversionsEventData.UserData?.Id && trackedEvent.StoreId == conversionsEventData.StoreId);
-                    if (activeEvent == null)
+                        trackedEvent.EventName == conversionsEventData.EventName &&
+                        trackedEvent.CustomerId == conversionsEventData.UserData?.Id &&
+                        trackedEvent.StoreId == conversionsEventData.StoreId);
+                    if (activeEvent is null)
                     {
                         activeEvent = new TrackedEvent
                         {
@@ -999,10 +1013,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                     }
 
                     activeEvent.EventObjects.Add(FormatCustomData(conversionsEventData.CustomData));
-                    _httpContextAccessor.HttpContext.Session.Set(FacebookPixelDefaults.TrackedEventsSessionValue, events);
                 }
 
-                return Task.FromResult(true);
+                //update events in the session value
+                _httpContextAccessor.HttpContext.Session.Set(FacebookPixelDefaults.TrackedEventsSessionValue, events);
+
+                return true;
             });
         }
 
