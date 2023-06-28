@@ -17,30 +17,45 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     1. HTML Widgets
     1. Product Ribbons
     1. CRON Tasks
-    1. PowerReviewsd
+    1. PowerReviews
 
 ## Handling Fatal Error
 
-To solve the fatal error that occurs on Codespaces from time to time, stop and
-start the codespace.
+1. Copy a plugin from the `/src/Plugins` folder.
+2. Update the following:
+   1. Folder name
+   2. `.csproj`
+   3. `Plugin.cs`
+   4. `logo.png`
+   5. `plugin.json` (only include the above files)
+3. Add to project with: `dotnet sln src/NopCommerce.sln add src/Plugins/PLUGIN_FOLDER/PLUGIN_CSPROJ
 
-## Installing Let's Encrypt Certificate
+## Creating a BACPAC
 
-Before doing this, you'll need to:
-* Install `certbot` and `openssl` on server.
-* Open port 80.
-* nopCommerce Let's Encrypt Plugin is enabled.
+1. RDP into database server.
+2. Create a backup of the desired database using:
+   1. `.\Copy-Sql-Db.ps1 NOPCommerce`
+3. Restore DB as `NOP_BACPAC`
+4. Delete the following Stored Procedures:
+   1. ImportProductAbcPromoMappings
+   2. ImportProductCategoryMappings
+   3. ImportRelatedProducts
+   4. ImportSiteOnTimeFilters
+   5. ImportWarranties
+   6. ProductLoadAllPagedNopAjaxFilters
+   7. UnmapNonstockClearanceItems
+5. Delete users eengle and SQLSERVERAGENT.
+6. NOP_BACPAC -> Tasks -> Export Data-tier Application *(takes ~1 hour)*
+7. Delete DB `NOP_BACPAC`
+8. Upload to Dropbox. *(takes ~40 minutes)*
 
-1. RDP into server, run:
+## Tooltip
+
 ```
-# create cert
-certbot certonly --webroot -w C:/NopAbc/wwwroot -d <DOMAIN>
-
-# convert cert to pfx
-2. `& 'C:/Program Files/OpenSSL-Win64/bin/openssl.exe' pkcs12 -macalg SHA1 -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -export -out cert.pfx -inkey C:/Certbot/live/DOMAIN/privkey.pem -in C:/Certbot/live/DOMAIN/cert.pem`
+<div class="tooltip">
+  <!-- area to hover over, usually an icon -->
+  <span class="tooltiptext">
+    <!-- Tooltip text, use a locale -->
+  </span>
+</div> 
 ```
-3. Import cert into IIS.
-4. Update HTTPS binding.
-5. Restart App Pool.
-6. Run SSL Test.
-7. Close firewall if needed.

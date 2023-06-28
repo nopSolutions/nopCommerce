@@ -5,43 +5,30 @@ using System.Threading.Tasks;
 using System.Linq;
 using LinqToDB.Data;
 
-// Since the table doesn't have an ID value, I need to directly get data from
-// a query and cannot use IRepository
 namespace Nop.Plugin.Misc.AbcCore.Services
 {
     public class ProductAbcFinanceService : IProductAbcFinanceService
     {
-        private readonly INopDataProvider _nopDataProvider;
+        private readonly IRepository<ProductAbcFinance> _productAbcFinanceRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         public ProductAbcFinanceService(
-            INopDataProvider nopDataProvider
+            IRepository<ProductAbcFinance> productAbcFinanceRepository,
+            IStaticCacheManager staticCacheManager
         )
         {
-            _nopDataProvider = nopDataProvider;
+            _productAbcFinanceRepository = productAbcFinanceRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         public async Task<ProductAbcFinance> GetProductAbcFinanceByAbcItemNumberAsync(string abcItemNumber)
         {
-            var sql = @"SELECT
-                           AbcItemNumber,
-                           Sku,
-                           Description,
-                           Months,
-                           TransPromo,
-                           Fix_Pay as IsMonthlyPricing,
-                           Min_Pay as IsDeferredPricing,
-                           BegDate as StartDate,
-                           EndDate
-                        FROM ProductAbcFinance
-                        WHERE AbcItemNumber = @abcItemNumber";
-            var pafs = await _nopDataProvider.QueryAsync<ProductAbcFinance>(
-                sql,
-                new DataParameter[]
-                {
-                    new DataParameter("abcItemNumber", abcItemNumber)
-                }
-            );
-            return pafs.FirstOrDefault();
+            var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(new CacheKey("AbcWarehouse.productabcfinance.byabcitemnumber.{0}"), abcItemNumber);
+            var productAbcFinance = await _staticCacheManager.GetAsync(allCacheKey, async () =>
+            {
+                return await _productAbcFinanceRepository.Table.FirstOrDefaultAsync(paf => paf.AbcItemNumber == abcItemNumber);
+            });
+            return productAbcFinance;
         }
     }
 }

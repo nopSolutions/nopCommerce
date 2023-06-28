@@ -139,6 +139,17 @@ function effectBack() {
 
 function menuSetting() {
     var menu_array = header.find('li');
+    
+    // remove any undesired mobile items
+    for (var i = 0; i < menu_array.length; i++) {
+        if (menu_array[i].innerText === "BLOG") {
+            var element = menu_array[i];
+            menu_array.splice(i, 1);
+            element.remove();
+            break;
+        }
+    }
+
     var len = menu_array.length;
     var width = 100 / len + '%';
     var path = '';
@@ -149,10 +160,12 @@ function menuSetting() {
             break;
         }
     }
+
     for (var i = 0; i < len; i++) {
         const isAbc = storeFlag == "abc";
         var str = $(menu_array[i]).find('span').text().trim();
         var img = "";
+
         if (str == "Home") {
             if (storeFlag == "abc") {
                 path = 'url(/Plugins/Misc.AbcFrontend/Images/' + imageArray[1] + ')';

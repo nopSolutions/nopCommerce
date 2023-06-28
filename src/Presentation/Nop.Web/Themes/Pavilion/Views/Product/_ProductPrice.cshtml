@@ -211,13 +211,14 @@
         openBoxPrice = productFlag.CalculateOpenBoxPrice(Model.PriceValue);
         <div class="open-box open-box-price-page">
             <span class="open-box-price-page-text">
-                Open box from <span class="open-box-price">@openBoxPrice.ToString("C").Replace(".00", "") </span><br />Available at select locations.<div class="open-box-tooltip">
-                    <i class="fas fa-question-circle" id="open-box-image"></i>
+                Open box from <span class="open-box-price">@openBoxPrice.ToString("C").Replace(".00", "") </span><br />Available at select locations.
+                <div class="tooltip">
+                    <i class="fas fa-question-circle"></i>
                     <span class="tooltiptext">
-                        Open box items vary by store location. Items are typically in like new condition and all carry a full manufacturer’s warranty. Simply inquire at your local ABC store for availability.
+                        @T("AbcWarehouse.OpenBoxTooltip")
                         <em style="color: blue; text-decoration: underline; cursor: pointer;" onclick="window.location.href='/store-locator'">Store Locator</em>
                     </span>
-                </div>
+                </div> 
             </span>
 
         </div>

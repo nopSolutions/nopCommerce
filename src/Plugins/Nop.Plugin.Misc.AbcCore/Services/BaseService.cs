@@ -169,7 +169,10 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                                 // allow for "duplicate"
                                 if (e.Message.Contains("add a duplicate value"))
                                 {
-                                    _logger.WarningAsync("Attempt made to insert duplicate value, skipping.");
+                                    _logger.InsertLogAsync(
+                                        LogLevel.Warning,
+                                        "Attempt made to insert duplicate value into ODBC, skipping.",
+                                        e.Message ?? string.Empty);
                                 }
                                 else
                                 {
