@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
-    [NopSchemaMigration("2023-03-07 00:00:01", "SchemaMigration for 4.70.0")]
+    [NopSchemaMigration("2023-03-07 00:00:02", "SchemaMigration for 4.70.0")]
     public class SchemaMigration : ForwardOnlyMigration
     {
         /// <summary>
@@ -35,6 +35,29 @@ namespace Nop.Data.Migrations.UpgradeTo470
             if (!Schema.Table(productTableName).Column(displayAttributeCombinationImagesOnlyColumnName).Exists())
                 Alter.Table(productTableName)
                     .AddColumn(displayAttributeCombinationImagesOnlyColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+
+            //#6710
+            var productAttributeCombinationTableName = nameof(ProductAttributeCombination);
+            var pac = Schema.Table(productAttributeCombinationTableName);
+            var columnName = "PictureId";
+            var description = "The field is not used since 4.70 and is left only for the update process use the ProductAttributeCombinationPicture instead";
+
+            if (pac.Column(columnName).Exists())
+                Alter.Table(productAttributeCombinationTableName)
+                    .AlterColumn(columnName).AsInt32().Nullable().WithColumnDescription(description);
+            else
+                Alter.Table(productAttributeCombinationTableName)
+                    .AddColumn(columnName).AsInt32().Nullable().SetExistingRowsTo(null).WithColumnDescription(description);
+
+            var productAttributeValueTableName = nameof(ProductAttributeValue);
+            var pav = Schema.Table(productAttributeValueTableName);
+
+            if (pav.Column(columnName).Exists())
+                Alter.Table(productAttributeValueTableName)
+                    .AlterColumn(columnName).AsInt32().Nullable().WithColumnDescription(description);
+            else
+                Alter.Table(productAttributeValueTableName)
+                    .AddColumn(columnName).AsInt32().Nullable().SetExistingRowsTo(null).WithColumnDescription(description);
         }
     }
 }
