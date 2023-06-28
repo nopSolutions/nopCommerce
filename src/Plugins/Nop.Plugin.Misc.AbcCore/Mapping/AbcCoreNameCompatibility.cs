@@ -20,7 +20,8 @@ namespace Nop.Plugin.Misc.AbcCore.Mapping
         {
             { (typeof(ProductAbcFinance), nameof(ProductAbcFinance.IsMonthlyPricing)), "Fix_Pay" },
             { (typeof(ProductAbcFinance), nameof(ProductAbcFinance.IsDeferredPricing)), "Min_Pay" },
-            { (typeof(ProductAbcFinance), nameof(ProductAbcFinance.StartDate)), "BegDate" }
+            { (typeof(ProductAbcFinance), nameof(ProductAbcFinance.StartDate)), "BegDate" },
+            { (typeof(ProductAbcFinance), "Id"), "AbcItemNumber" },
         };
     }
 }
