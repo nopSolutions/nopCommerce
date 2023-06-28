@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -27,7 +26,7 @@ namespace Nop.Plugin.Payments.Manual.Validators
                 //not specified yet
                 if (string.IsNullOrEmpty(x.ExpireYear) || string.IsNullOrEmpty(x.ExpireMonth))
                     return true;
-                
+
                 //the cards remain valid until the last calendar day of that month
                 //If, for example, an expiration date reads 06/15, this means it can be used until midnight on June 30, 2015
                 var enteredDate = new DateTime(int.Parse(x.ExpireYear), int.Parse(x.ExpireMonth), 1).AddMonths(1);

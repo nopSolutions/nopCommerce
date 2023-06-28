@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services;
 
@@ -10,9 +8,9 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
     {
         #region Fields
 
-        private readonly GoogleAuthenticatorService _googleAuthenticatorService;
-        private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
-        private readonly IWorkContext _workContext;
+        protected readonly GoogleAuthenticatorService _googleAuthenticatorService;
+        protected readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

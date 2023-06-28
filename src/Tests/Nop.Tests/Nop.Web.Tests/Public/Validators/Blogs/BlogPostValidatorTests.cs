@@ -9,7 +9,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Blogs
     public class BlogPostValidatorTests : BaseNopTest
     {
         private BlogPostValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {

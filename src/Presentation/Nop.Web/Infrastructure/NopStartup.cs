@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Helpers;
 using Nop.Web.Framework.Factories;
@@ -96,6 +93,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<Factories.ICustomerModelFactory, Factories.CustomerModelFactory>();
             services.AddScoped<Factories.IForumModelFactory, Factories.ForumModelFactory>();
             services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
+            services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
             services.AddScoped<Factories.INewsModelFactory, Factories.NewsModelFactory>();
             services.AddScoped<Factories.INewsletterModelFactory, Factories.NewsletterModelFactory>();
             services.AddScoped<Factories.IOrderModelFactory, Factories.OrderModelFactory>();
@@ -114,7 +112,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<ITinyMceHelper, TinyMceHelper>();
         }
 
-        // <summary>
+        /// <summary>
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>

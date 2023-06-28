@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Components;
@@ -14,8 +13,8 @@ namespace Nop.Plugin.Tax.Avalara.Components
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 

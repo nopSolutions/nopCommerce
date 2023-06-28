@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Plugins
 {
@@ -144,7 +141,7 @@ namespace Nop.Services.Plugins
         /// Get names of incompatible plugins
         /// </summary>
         /// <returns>List of plugin names</returns>
-        IList<string> GetIncompatiblePlugins();
+        IDictionary<string, PluginIncompatibleType> GetIncompatiblePlugins();
 
         /// <summary>
         /// Get all assembly loaded collisions

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Plugin.Pickup.PickupInStore.Models;
+﻿using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -16,9 +13,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
     {
         #region Fields
 
-        private readonly IStorePickupPointService _storePickupPointService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreService _storeService;
+        protected readonly IStorePickupPointService _storePickupPointService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 

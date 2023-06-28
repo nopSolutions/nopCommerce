@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents an order note

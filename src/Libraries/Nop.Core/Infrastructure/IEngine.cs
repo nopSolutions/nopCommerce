@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -54,6 +52,5 @@ namespace Nop.Core.Infrastructure
         /// <param name="type">Type of service</param>
         /// <returns>Resolved service</returns>
         object ResolveUnregistered(Type type);
-
     }
 }

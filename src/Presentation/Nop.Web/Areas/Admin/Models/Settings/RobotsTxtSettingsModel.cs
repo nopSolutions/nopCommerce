@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -23,9 +22,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool LocalizableDisallowPaths_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.RobotsDisallowLanguages")]
-        public List<int> DisallowLanguages { get; set; } = new();
+        public IList<int> DisallowLanguages { get; set; }
         public bool DisallowLanguages_OverrideForStore { get; set; }
-        public List<SelectListItem> AvailableLanguages { get; set; } = new();
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.RobotsAdditionsRules")]
         public string AdditionsRules { get; set; }
@@ -39,6 +38,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public string AdditionsInstruction { get; set; }
 
-    #endregion
+        #endregion
     }
 }

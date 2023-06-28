@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using FluentMigrator;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -14,13 +10,14 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-02-03 00:00:00", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+    [NopUpdateMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data)]
     public class DataMigration : Migration
     {
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         public DataMigration(INopDataProvider dataProvider)
         {
@@ -33,7 +30,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
         public override void Up()
         {
             //#4601 customer attribute values to customer table column values
-            var attributeKeys = new [] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
+            var attributeKeys = new[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
                 nameof(Customer.TimeZoneId), nameof(Customer.CustomCustomerAttributesXML), nameof(Customer.CountryId),
@@ -45,7 +42,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             var customerRole = _dataProvider.GetTable<CustomerRole>().FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
             var customerRoleId = customerRole?.Id ?? 0;
 
-            var query = 
+            var query =
                 from c in _dataProvider.GetTable<Customer>()
                 join crm in _dataProvider.GetTable<CustomerCustomerRoleMapping>() on c.Id equals crm.CustomerId
                 where !c.Deleted && (customerRoleId == 0 || crm.CustomerRoleId == customerRoleId)
@@ -112,7 +109,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.Fax = getAttributeValue(customerAttributes, nameof(Customer.Fax), castToString);
                     customer.VatNumber = getAttributeValue(customerAttributes, nameof(Customer.VatNumber), castToString);
                     customer.TimeZoneId = getAttributeValue(customerAttributes, nameof(Customer.TimeZoneId), castToString);
-                    customer.CustomCustomerAttributesXML = getAttributeValue<string>(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
+                    customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
                     customer.CountryId = getAttributeValue(customerAttributes, nameof(Customer.CountryId), castToInt);
                     customer.StateProvinceId = getAttributeValue(customerAttributes, nameof(Customer.StateProvinceId), castToInt);
                     customer.VatNumberStatusId = getAttributeValue(customerAttributes, nameof(Customer.VatNumberStatusId), castToInt);
@@ -122,8 +119,8 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.DateOfBirth = getAttributeValue(customerAttributes, nameof(Customer.DateOfBirth), castToDateTime);
                 }
 
-                _dataProvider.UpdateEntitiesAsync(customers);
-                _dataProvider.BulkDeleteEntitiesAsync(genericAttributes);
+                _dataProvider.UpdateEntities(customers);
+                _dataProvider.BulkDeleteEntities(genericAttributes);
             }
 
             //#3777 new activity log types
@@ -212,7 +209,7 @@ namespace Nop.Data.Migrations.UpgradeTo460
             //#5809
             if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
             {
-                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                var _ = _dataProvider.InsertEntity(
                     new ScheduleTask
                     {
                         Name = "Delete inactive customers (GDPR)",
@@ -259,10 +256,24 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 }
             }
 
+            var lastEnabledUtc = DateTime.UtcNow;
+            if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                _dataProvider.InsertEntity(new ScheduleTask
+                {
+                    Name = "ResetLicenseCheckTask",
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                });
+            }
+
             //#3651
             if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.OrderProcessingCustomerNotification, StringComparison.InvariantCultureIgnoreCase) == 0))
             {
-                var manageConnectionStringPermission = _dataProvider.InsertEntity(
+                var _ = _dataProvider.InsertEntity(
                     new MessageTemplate
                     {
                         Name = MessageTemplateSystemNames.OrderProcessingCustomerNotification,
@@ -272,6 +283,14 @@ namespace Nop.Data.Migrations.UpgradeTo460
                         EmailAccountId = _dataProvider.GetTable<EmailAccount>().FirstOrDefault()?.Id ?? 0
                     }
                 );
+            }
+
+            //#6395
+            var paRange = _dataProvider.GetTable<ProductAvailabilityRange>().FirstOrDefault(par => string.Compare(par.Name, "2 week", StringComparison.InvariantCultureIgnoreCase) == 0);
+            if (paRange is not null)
+            {
+                paRange.Name = "2 weeks";
+                _dataProvider.UpdateEntity(paRange);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;

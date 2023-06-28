@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
@@ -34,7 +31,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using WebMarkupMin.AspNetCore6;
+using QuestPDF.Drawing;
+using WebMarkupMin.AspNetCore7;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -53,7 +51,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             EngineContext.Current.ConfigureRequestPipeline(application);
         }
 
-        public static void StartEngine(this IApplicationBuilder application)
+        public static async Task StartEngineAsync(this IApplicationBuilder _)
         {
             var engine = EngineContext.Current;
 
@@ -61,12 +59,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //log application start
-                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
+                await engine.Resolve<ILogger>().InformationAsync("Application started");
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
-                pluginService.InstallPluginsAsync().Wait();
-                pluginService.UpdatePluginsAsync().Wait();
+                await pluginService.InstallPluginsAsync();
+                await pluginService.UpdatePluginsAsync();
 
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -76,7 +74,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
 
                 var taskScheduler = engine.Resolve<ITaskScheduler>();
-                taskScheduler.InitializeAsync().Wait();
+                await taskScheduler.InitializeAsync();
                 taskScheduler.StartScheduler();
             }
         }
@@ -344,7 +342,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
                     RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                     OnPrepareResponse = staticFileResponse
                 });
@@ -393,23 +391,43 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Configure PDF
+        /// </summary>
+        public static void UseNopPdf(this IApplicationBuilder _)
+        {
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
+
+            //write placeholder characters instead of unavailable glyphs for both debug/release configurations
+            QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
+
+            foreach (var fp in fontPaths)
+            {
+                FontManager.RegisterFont(File.OpenRead(fp));
+            }
+        }
+
+        /// <summary>
         /// Configure the request localization feature
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopRequestLocalization(this IApplicationBuilder application)
         {
-            application.UseRequestLocalization(async options =>
+            application.UseRequestLocalization(options =>
             {
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //prepare supported cultures
-                var cultures = (await EngineContext.Current.Resolve<ILanguageService>().GetAllLanguagesAsync())
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
-                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault() ?? new CultureInfo(NopCommonDefaults.DefaultLanguageCulture));
                 options.ApplyCurrentCultureToResponseHeaders = true;
 
                 //configure culture providers
@@ -465,10 +483,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (IPAddress.TryParse(strIp, out var ip))
                             options.KnownProxies.Add(ip);
                     }
-
-                    if (options.KnownProxies.Count > 1)
-                        options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
                 }
+
+                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownNetworks))
+                {
+                    foreach (var strIpNet in appSettings.Get<HostingConfig>().KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    {
+                        string[] ipNetParts = strIpNet.Split("/");
+                        if (ipNetParts.Length == 2)
+                        {
+                            if (IPAddress.TryParse(ipNetParts[0], out var ip) && int.TryParse(ipNetParts[1], out var length))
+                                options.KnownNetworks.Add(new IPNetwork(ip, length));
+                        }
+                    }
+                }
+
+                if (options.KnownProxies.Count > 1 || options.KnownNetworks.Count > 1)
+                    options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
 
                 //configure forwarding
                 application.UseForwardedHeaders(options);

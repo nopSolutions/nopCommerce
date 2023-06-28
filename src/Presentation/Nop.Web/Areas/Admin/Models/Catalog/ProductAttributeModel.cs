@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
@@ -26,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
 
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
@@ -45,6 +44,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
     }
 }

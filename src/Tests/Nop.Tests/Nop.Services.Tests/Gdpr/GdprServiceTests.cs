@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Gdpr;
+﻿using Nop.Core.Domain.Gdpr;
 using Nop.Services.Gdpr;
 using NUnit.Framework;
 

@@ -34,10 +34,10 @@
     <Value>Погрешен формат на низа SQL врска</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Земја</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>одберете ја вашата држава</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Создадете база на податоци ако не постои</Value>
@@ -131,6 +131,9 @@
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Информации за продавницата</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce инсталација</Value>

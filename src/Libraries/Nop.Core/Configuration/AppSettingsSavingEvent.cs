@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace Nop.Core.Configuration
+﻿namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents the event that is raised when App Settings are saving
@@ -14,15 +11,6 @@ namespace Nop.Core.Configuration
         {
             Configurations = configurations;
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets configurations to save
-        /// </summary>
-        public IList<IConfig> Configurations { get; private set; }
 
         #endregion
 
@@ -39,6 +27,15 @@ namespace Nop.Core.Configuration
             else
                 Configurations.Add(config);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets configurations to save
+        /// </summary>
+        public IList<IConfig> Configurations { get; protected set; }
 
         #endregion
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Nop.Web.Framework.Validators
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Payments;
@@ -281,8 +278,11 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        Task ReOrderAsync(Order order);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
+        Task<IList<string>> ReOrderAsync(Order order);
 
         /// <summary>
         /// Check whether return request is allowed
@@ -321,7 +321,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// The task result contains the value indicating whether payment workflow is required
         /// </returns>
         Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
 

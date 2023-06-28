@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represents base DataTables model
@@ -133,6 +131,12 @@ namespace Nop.Web.Framework.Models.DataTables
         public string HeaderCallback { get; set; }
 
         /// <summary>
+        /// Gets or sets custom render function name(js) that is called every time DataTables performs a draw
+        /// See also https://datatables.net/reference/option/drawCallback
+        /// </summary>
+        public string DrawCallback { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of columns to generate in a footer. Set 0 to disable footer
         /// </summary>
         public int FooterColumns { get; set; }
@@ -167,7 +171,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or set column collection 
         /// </summary>
         public IList<ColumnProperty> ColumnCollection { get; set; }
-        
+
         #endregion
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -30,28 +25,29 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IRepository<Address> _customerAddressRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
-        private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IRepository<Address> _customerAddressRepository;
+        protected readonly IRepository<BlogComment> _blogCommentRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
+        protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
+        protected readonly IRepository<CustomerRole> _customerRoleRepository;
+        protected readonly IRepository<ForumPost> _forumPostRepository;
+        protected readonly IRepository<ForumTopic> _forumTopicRepository;
+        protected readonly IRepository<GenericAttribute> _gaRepository;
+        protected readonly IRepository<NewsComment> _newsCommentRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<ProductReview> _productReviewRepository;
+        protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
+        protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -78,7 +74,8 @@ namespace Nop.Services.Customers
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings)
         {
             _customerSettings = customerSettings;
             _genericAttributeService = genericAttributeService;
@@ -102,6 +99,7 @@ namespace Nop.Services.Customers
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -402,9 +400,9 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-           
+
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
-            
+
             return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
@@ -714,6 +712,36 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets a tax display type for the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        public virtual async Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //default tax display type
+            var taxDisplayType = _taxSettings.TaxDisplayType;
+
+            //whether customers are allowed to select tax display type and the customer has previously saved one
+            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer.TaxDisplayTypeId.HasValue)
+                taxDisplayType = (TaxDisplayType)customer.TaxDisplayTypeId.Value;
+            else
+            {
+                //default tax type by customer roles
+                var defaultRoleTaxDisplayType = await GetCustomerDefaultTaxDisplayTypeAsync(customer);
+                if (defaultRoleTaxDisplayType.HasValue)
+                    taxDisplayType = defaultRoleTaxDisplayType.Value;
+            }
+
+            return taxDisplayType;
+        }
+
+        /// <summary>
         /// Gets a default tax display type (if configured)
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -741,7 +769,7 @@ namespace Nop.Services.Customers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer full name
         /// </returns>
-        public virtual Task<string> GetCustomerFullNameAsync(Customer customer)
+        public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -751,7 +779,12 @@ namespace Nop.Services.Customers
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
-                fullName = $"{firstName} {lastName}";
+            {
+                //do not inject ILocalizationService via constructor because it'll cause circular references
+                var format = await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.FullNameFormat");
+
+                fullName = string.Format(format, firstName, lastName);
+            }
             else
             {
                 if (!string.IsNullOrWhiteSpace(firstName))
@@ -761,7 +794,7 @@ namespace Nop.Services.Customers
                     fullName = lastName;
             }
 
-            return Task.FromResult(fullName);
+            return fullName;
         }
 
         /// <summary>

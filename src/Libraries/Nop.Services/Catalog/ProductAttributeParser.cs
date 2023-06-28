@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -20,17 +14,16 @@ namespace Nop.Services.Catalog
     /// <summary>
     /// Product attribute parser
     /// </summary>
-    public partial class ProductAttributeParser : BaseAttributeParser, IProductAttributeParser
+    public partial class ProductAttributeParser : IProductAttributeParser
     {
-
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IWorkContext _workContext;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -89,7 +82,7 @@ namespace Nop.Services.Catalog
 
             return rez;
         }
-        
+
         /// <summary>
         /// Gets selected product attribute values with the quantity entered by the customer
         /// </summary>
@@ -323,6 +316,107 @@ namespace Nop.Services.Catalog
             return attributesXml;
         }
 
+        /// <summary>
+        /// Remove an attribute
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributeValueId">Attribute value id</param>
+        /// <returns>Updated result (XML format)</returns>
+        protected virtual string RemoveAttribute(string attributesXml, int attributeValueId)
+        {
+            var result = string.Empty;
+
+            if (string.IsNullOrEmpty(attributesXml))
+                return string.Empty;
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+
+                xmlDoc.LoadXml(attributesXml);
+
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+
+                if (rootElement == null)
+                    return string.Empty;
+
+                XmlElement attributeElement = null;
+                //find existing
+                var childNodes = xmlDoc.SelectNodes($@"//Attributes/{ChildElementName}");
+
+                if (childNodes == null)
+                    return string.Empty;
+
+                var count = childNodes.Count;
+
+                foreach (XmlElement childNode in childNodes)
+                {
+                    if (!int.TryParse(childNode.Attributes["ID"]?.InnerText.Trim(), out var id))
+                        continue;
+
+                    if (id != attributeValueId)
+                        continue;
+
+                    attributeElement = childNode;
+                    break;
+                }
+
+                //found
+                if (attributeElement != null)
+                {
+                    rootElement.RemoveChild(attributeElement);
+                    count -= 1;
+                }
+
+                result = count == 0 ? string.Empty : xmlDoc.OuterXml;
+            }
+            catch
+            {
+                //ignore
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets selected attribute identifiers
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Selected attribute identifiers</returns>
+        protected virtual IList<int> ParseAttributeIds(string attributesXml)
+        {
+            var ids = new List<int>();
+            if (string.IsNullOrEmpty(attributesXml))
+                return ids;
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(attributesXml);
+
+                var elements = xmlDoc.SelectNodes(@$"//Attributes/{ChildElementName}");
+
+                if (elements == null)
+                    return Array.Empty<int>();
+
+                foreach (XmlNode node in elements)
+                {
+                    if (node.Attributes?["ID"] == null)
+                        continue;
+
+                    var attributeValue = node.Attributes["ID"].InnerText.Trim();
+                    if (int.TryParse(attributeValue, out var id))
+                        ids.Add(id);
+                }
+            }
+            catch
+            {
+                //ignore
+            }
+
+            return ids;
+        }
+
         #endregion
 
         #region Product attributes
@@ -345,7 +439,7 @@ namespace Nop.Services.Catalog
             foreach (var id in ids)
             {
                 var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(id);
-                if (attribute != null) 
+                if (attribute != null)
                     result.Add(attribute);
             }
 
@@ -443,9 +537,9 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
 
             return selectedValues;
@@ -521,9 +615,9 @@ namespace Nop.Services.Catalog
 
                 result = xmlDoc.OuterXml;
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
 
             return result;
@@ -554,11 +648,11 @@ namespace Nop.Services.Catalog
         public virtual async Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
         {
             var attributes1 = await ParseProductAttributeMappingsAsync(attributesXml1);
-            if (ignoreNonCombinableAttributes) 
+            if (ignoreNonCombinableAttributes)
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
 
             var attributes2 = await ParseProductAttributeMappingsAsync(attributesXml2);
-            if (ignoreNonCombinableAttributes) 
+            if (ignoreNonCombinableAttributes)
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
 
             if (attributes1.Count != attributes2.Count)
@@ -707,8 +801,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             var allProductAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            
-            if (ignoreNonCombinableAttributes) 
+
+            if (ignoreNonCombinableAttributes)
                 allProductAttributeMappings = allProductAttributeMappings.Where(x => !x.IsNonCombinable()).ToList();
 
             //get all possible attribute combinations
@@ -728,7 +822,7 @@ namespace Nop.Services.Catalog
                     var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
 
                     //filter product attribute values
-                    if (allowedAttributeIds?.Any() ?? false) 
+                    if (allowedAttributeIds?.Any() ?? false)
                         attributeValues = attributeValues.Where(attributeValue => allowedAttributeIds.Contains(attributeValue.Id)).ToList();
 
                     if (!attributeValues.Any())
@@ -750,10 +844,10 @@ namespace Nop.Services.Catalog
                             foreach (var checkboxCombination in CreateCombination(attributeValues))
                             {
                                 var newXml = oldXml;
-                                foreach (var checkboxValue in checkboxCombination) 
+                                foreach (var checkboxValue in checkboxCombination)
                                     newXml = AddProductAttribute(newXml, productAttributeMapping, checkboxValue.Id.ToString());
 
-                                if (!string.IsNullOrEmpty(newXml)) 
+                                if (!string.IsNullOrEmpty(newXml))
                                     currentAttributesXml.Add(newXml);
                             }
                         }
@@ -786,7 +880,7 @@ namespace Nop.Services.Catalog
                 foreach (var attribute in allProductAttributeMappings)
                 {
                     var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
-                    if (conditionMet.HasValue && !conditionMet.Value) 
+                    if (conditionMet.HasValue && !conditionMet.Value)
                         allAttributesXml[i] = RemoveProductAttribute(attributesXml, attribute);
                 }
             }
@@ -872,11 +966,11 @@ namespace Nop.Services.Catalog
                 var ctrlEndDate = form[$"rental_end_date_{product.Id}"];
                 try
                 {
-                    startDate = DateTime.ParseExact(ctrlStartDate, 
-                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                    startDate = DateTime.ParseExact(ctrlStartDate,
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                         CultureInfo.InvariantCulture);
-                    endDate = DateTime.ParseExact(ctrlEndDate, 
-                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, 
+                    endDate = DateTime.ParseExact(ctrlEndDate,
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                         CultureInfo.InvariantCulture);
                 }
                 catch
@@ -977,9 +1071,9 @@ namespace Nop.Services.Catalog
 
                 result = xmlDoc.OuterXml;
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
 
             return result;
@@ -1026,9 +1120,9 @@ namespace Nop.Services.Catalog
                 if (messageElement != null)
                     giftCardMessage = messageElement.InnerText;
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
         }
 
@@ -1036,9 +1130,7 @@ namespace Nop.Services.Catalog
 
         #region Properties
 
-        protected override string RootElementName { get; set; } = "Attributes";
-
-        protected override string ChildElementName { get; set; } = "ProductAttribute";
+        protected string ChildElementName { get; set; } = "ProductAttribute";
 
         #endregion
     }

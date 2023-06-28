@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -29,6 +27,7 @@ namespace Nop.Web.Models.Catalog
             ProductSpecificationModel = new ProductSpecificationModel();
             ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
+            ProductReviews = new ProductReviewsModel();
             TierPrices = new List<TierPriceModel>();
             ProductEstimateShipping = new ProductEstimateShippingModel();
         }
@@ -44,6 +43,7 @@ namespace Nop.Web.Models.Catalog
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
+        public string JsonLd { get; set; }
         public string MetaKeywords { get; set; }
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
@@ -85,6 +85,8 @@ namespace Nop.Web.Models.Catalog
 
         public bool DisplayBackInStockSubscription { get; set; }
 
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
         public bool EmailAFriendEnabled { get; set; }
         public bool CompareProductsEnabled { get; set; }
 
@@ -106,6 +108,8 @@ namespace Nop.Web.Models.Catalog
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
 
+        public ProductReviewsModel ProductReviews { get; set; }
+
         public ProductEstimateShippingModel ProductEstimateShipping { get; set; }
 
         public IList<TierPriceModel> TierPrices { get; set; }
@@ -121,7 +125,7 @@ namespace Nop.Web.Models.Catalog
 
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
-        #region Nested Classes
+        #region Nested Classes
 
         public partial record ProductBreadcrumbModel : BaseNopModel
         {
@@ -131,6 +135,7 @@ namespace Nop.Web.Models.Catalog
             }
 
             public bool Enabled { get; set; }
+            public string JsonLd { get; set; }
             public int ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }

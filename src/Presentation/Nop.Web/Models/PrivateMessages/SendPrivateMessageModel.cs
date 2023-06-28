@@ -9,9 +9,9 @@ namespace Nop.Web.Models.PrivateMessages
         public bool AllowViewingToProfile { get; set; }
 
         public int ReplyToMessageId { get; set; }
-        
+
         public string Subject { get; set; }
-        
+
         public string Message { get; set; }
     }
 }

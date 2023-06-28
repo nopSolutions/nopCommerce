@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Plugin.Widgets.FacebookPixel.Services;
@@ -15,7 +14,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Components
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
+        protected readonly FacebookPixelService _facebookPixelService;
 
         #endregion
 

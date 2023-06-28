@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -16,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
@@ -39,35 +35,37 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly IPictureService _pictureService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IJsonLdModelFactory _jsonLdModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISearchTermService _searchTermService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly SeoSettings _seoSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -83,6 +81,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
+            IJsonLdModelFactory jsonLdModelFactory,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
@@ -101,6 +100,7 @@ namespace Nop.Web.Factories
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
+            SeoSettings seoSettings,
             VendorSettings vendorSettings)
         {
             _blogSettings = blogSettings;
@@ -113,6 +113,7 @@ namespace Nop.Web.Factories
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
+            _jsonLdModelFactory = jsonLdModelFactory;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _manufacturerTemplateService = manufacturerTemplateService;
@@ -131,6 +132,7 @@ namespace Nop.Web.Factories
             _webHelper = webHelper;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
+            _seoSettings = seoSettings;
             _vendorSettings = vendorSettings;
         }
 
@@ -138,6 +140,11 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Gets the category simple model
+        /// </summary>
+        /// <param name="elem">Category (simple) xml</param>
+        /// <returns>Category simple model</returns>
         protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
         {
             var model = new CategorySimpleModel
@@ -306,7 +313,7 @@ namespace Nop.Web.Factories
             if (selectedPriceRange.From < availablePriceRange.From)
                 selectedPriceRange.From = availablePriceRange.From;
 
-            if (selectedPriceRange.To > availablePriceRange.To || selectedPriceRange.To < availablePriceRange.From)
+            if (selectedPriceRange.To > availablePriceRange.To)
                 selectedPriceRange.To = availablePriceRange.To;
 
             var workingCurrency = await _workContext.GetWorkingCurrencyAsync();
@@ -405,6 +412,14 @@ namespace Nop.Web.Factories
                         Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
                         SeName = await _urlRecordService.GetSeNameAsync(catBr)
                     }).ToListAsync();
+
+                if (_seoSettings.MicrodataEnabled)
+                {
+                    var categoryBreadcrumb = model.CategoryBreadcrumb.Select(c => new CategorySimpleModel { Id = c.Id, Name = c.Name, SeName = c.SeName }).ToList();
+                    var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdCategoryBreadcrumbAsync(categoryBreadcrumb);
+                    model.JsonLd = JsonConvert
+                        .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
             }
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -1763,39 +1778,39 @@ namespace Nop.Web.Factories
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                         PriceRangeModel availablePriceRange;
-                        if (!_catalogSettings.SearchPageManuallyPriceRange)
+                        async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                         {
-                            async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
+                            var products = await _productService.SearchProductsAsync(0, 1,
+                                categoryIds: categoryIds,
+                                manufacturerIds: new List<int> { manufacturerId },
+                                storeId: currentStore.Id,
+                                visibleIndividuallyOnly: true,
+                                keywords: searchTerms,
+                                searchDescriptions: searchInDescriptions,
+                                searchProductTags: searchInProductTags,
+                                languageId: workingLanguage.Id,
+                                vendorId: vendorId,
+                                orderBy: orderBy);
+
+                            return products?.FirstOrDefault()?.Price ?? 0;
+                        }
+
+                        if (_catalogSettings.SearchPageManuallyPriceRange)
+                        {
+                            var to = await getProductPriceAsync(ProductSortingEnum.PriceDesc);
+
+                            availablePriceRange = new PriceRangeModel
                             {
-                                var products = await _productService.SearchProductsAsync(0, 1,
-                                    categoryIds: categoryIds,
-                                    manufacturerIds: new List<int> { manufacturerId },
-                                    storeId: currentStore.Id,
-                                    visibleIndividuallyOnly: true,
-                                    keywords: searchTerms,
-                                    searchDescriptions: searchInDescriptions,
-                                    searchProductTags: searchInProductTags,
-                                    languageId: workingLanguage.Id,
-                                    vendorId: vendorId,
-                                    orderBy: orderBy);
-
-                                return products?.FirstOrDefault()?.Price ?? 0;
-                            }
-
+                                From = _catalogSettings.SearchPagePriceFrom,
+                                To = to == 0 ? 0 : _catalogSettings.SearchPagePriceTo
+                            };
+                        }
+                        else
                             availablePriceRange = new PriceRangeModel
                             {
                                 From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
                                 To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
                             };
-                        }
-                        else
-                        {
-                            availablePriceRange = new PriceRangeModel
-                            {
-                                From = _catalogSettings.SearchPagePriceFrom,
-                                To = _catalogSettings.SearchPagePriceTo
-                            };
-                        }
 
                         model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                     }

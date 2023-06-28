@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
@@ -72,6 +71,6 @@ namespace Nop.Core
         /// Sets current tax display type
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);        
+        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);
     }
 }

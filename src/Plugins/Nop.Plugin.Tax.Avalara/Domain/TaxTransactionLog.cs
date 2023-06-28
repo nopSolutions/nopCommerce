@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core;
+﻿using Nop.Core;
 
 namespace Nop.Plugin.Tax.Avalara.Domain
 {

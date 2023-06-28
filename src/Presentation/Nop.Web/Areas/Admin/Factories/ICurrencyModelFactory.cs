@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Web.Areas.Admin.Models.Directory;
 
 namespace Nop.Web.Areas.Admin.Factories

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace System.Linq
+﻿namespace System.Linq
 {
     public static class AsyncIEnumerableExtensions
     {
@@ -45,7 +42,7 @@ namespace System.Linq
         {
             return source.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(predicate).AsTask();
         }
-        
+
         /// <summary>
         /// Determines whether all elements in an async-enumerable sequence satisfy a condition
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Framework.Events
@@ -24,11 +23,11 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// HTML Helper
         /// </summary>
-        public IHtmlHelper Helper { get; private set; }
+        public IHtmlHelper Helper { get; protected set; }
         /// <summary>
         /// TabStripName
         /// </summary>
-        public string TabStripName { get; private set; }
+        public string TabStripName { get; protected set; }
         /// <summary>
         /// Blocks to render
         /// </summary>

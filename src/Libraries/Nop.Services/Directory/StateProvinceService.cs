@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
@@ -16,9 +13,9 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IRepository<StateProvince> _stateProvinceRepository;
 
         #endregion
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
@@ -60,7 +57,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 
             var shoppingCartRepo = GetService<IRepository<ShoppingCartItem>>();
 
-            await shoppingCartRepo.InsertAsync(new List<ShoppingCartItem> {_shoppingCartItem, _wishlistItem});
+            await shoppingCartRepo.InsertAsync(new List<ShoppingCartItem> { _shoppingCartItem, _wishlistItem });
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             currentCustomer.HasShoppingCartItems = true;
@@ -82,7 +79,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPrepareEstimateShippingModel()
         {
             var model = await _shoppingCartModelFactory.PrepareEstimateShippingModelAsync(await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync()));
-            
+
             model.AvailableCountries.Any().Should().BeTrue();
             model.AvailableStates.Any().Should().BeTrue();
             model.Enabled.Should().BeTrue();
@@ -95,7 +92,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPrepareShoppingCartModel()
         {
             var model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(new ShoppingCartModel(),
-                new List<ShoppingCartItem> {_shoppingCartItem});
+                new List<ShoppingCartItem> { _shoppingCartItem });
 
             model.IsEditable.Should().BeTrue();
             model.Items.Any().Should().BeTrue();
@@ -107,7 +104,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPrepareWishlistModel()
         {
             var model = await _shoppingCartModelFactory.PrepareWishlistModelAsync(new WishlistModel(),
-                new List<ShoppingCartItem> {_wishlistItem});
+                new List<ShoppingCartItem> { _wishlistItem });
 
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -135,7 +132,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareOrderTotalsModel()
         {
-            var model = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(new List<ShoppingCartItem>{_shoppingCartItem}, true);
+            var model = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(new List<ShoppingCartItem> { _shoppingCartItem }, true);
 
             model.SubTotal.Should().Be("$1,200.00");
             model.OrderTotal.Should().Be("$1,200.00");
@@ -174,7 +171,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
                 .Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/0000020_build-your-own-computer_100.jpeg");
             model.Title.Should().Be("Show details for Build your own computer");
 
-            model.FullSizeImageUrl.Should().BeNull();
+            model.FullSizeImageUrl.Should().Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/0000020_build-your-own-computer.jpeg");
             model.ThumbImageUrl.Should().BeNull();
         }
     }

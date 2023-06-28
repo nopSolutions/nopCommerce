@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Core.Infrastructure
+﻿namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Provides a singleton list for a certain type.

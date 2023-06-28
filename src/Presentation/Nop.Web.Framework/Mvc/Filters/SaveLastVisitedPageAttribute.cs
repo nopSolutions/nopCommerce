@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -37,11 +34,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly CustomerSettings _customerSettings;
-            private readonly IGenericAttributeService _genericAttributeService;
-            private readonly IRepository<GenericAttribute> _genericAttributeRepository;
-            private readonly IWebHelper _webHelper;
-            private readonly IWorkContext _workContext;
+            protected readonly CustomerSettings _customerSettings;
+            protected readonly IGenericAttributeService _genericAttributeService;
+            protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+            protected readonly IWebHelper _webHelper;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 

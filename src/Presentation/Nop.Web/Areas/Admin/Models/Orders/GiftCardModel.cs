@@ -1,14 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     /// <summary>
     /// Represents a gift card model
     /// </summary>
-    public partial record GiftCardModel: BaseNopEntityModel
+    public partial record GiftCardModel : BaseNopEntityModel
     {
         #region Ctor
 

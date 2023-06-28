@@ -132,6 +132,9 @@
   <LocaleResource Name="StoreInformation">
     <Value>স্টোরের তথ্য</Value>
   </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce ইনস্টলেশন</Value>
   </LocaleResource>

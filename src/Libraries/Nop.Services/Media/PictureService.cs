@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -16,7 +10,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SkiaSharp;
-using Svg;
 using Svg.Skia;
 
 namespace Nop.Services.Media
@@ -28,18 +21,19 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IDownloadService _downloadService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRepository<PictureBinary> _pictureBinaryRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
-        private readonly ISettingService _settingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILogger _logger;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IRepository<Picture> _pictureRepository;
+        protected readonly IRepository<PictureBinary> _pictureBinaryRepository;
+        protected readonly IRepository<ProductPicture> _productPictureRepository;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -50,6 +44,7 @@ namespace Nop.Services.Media
             ILogger logger,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IRepository<Picture> pictureRepository,
             IRepository<PictureBinary> pictureBinaryRepository,
             IRepository<ProductPicture> productPictureRepository,
@@ -63,6 +58,7 @@ namespace Nop.Services.Media
             _logger = logger;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _pictureRepository = pictureRepository;
             _pictureBinaryRepository = pictureBinaryRepository;
             _productPictureRepository = productPictureRepository;
@@ -317,7 +313,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Get image format by mime type
         /// </summary>
-        /// <param name="mimetype">Mime type</param>
+        /// <param name="mimeType">Mime type</param>
         /// <returns>SKEncodedImageFormat</returns>
         protected virtual SKEncodedImageFormat GetImageFormatByMimeType(string mimeType)
         {
@@ -405,6 +401,19 @@ namespace Nop.Services.Media
                 return image.Bytes;
             }
 
+        }
+
+        /// <summary>
+        /// Gets pictures
+        /// </summary>
+        /// <param name="pictureIds">Picture identifiers</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of pictures
+        /// </returns>
+        protected virtual async Task<IList<Picture>> GetPicturesByIdsAsync(int[] pictureIds)
+        {
+            return await _pictureRepository.GetByIdsAsync(pictureIds, cache => default);
         }
 
         #endregion
@@ -595,13 +604,13 @@ namespace Nop.Services.Media
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
 
             var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
-            string thumbFileName;
-            if (targetSize == 0)
-            {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+
+            var thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                     : $"{picture.Id:0000000}.{lastPart}";
 
+            if (targetSize == 0 || picture.MimeType == MimeTypes.ImageSvg)
+            {
                 var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
                 if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
                     return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
@@ -625,55 +634,45 @@ namespace Nop.Services.Media
             }
             else
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                //There is no need to resize the svg image as the browser will take care of it
+                if (picture.MimeType != MimeTypes.ImageSvg)
+                {
+                    thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
 
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+                    var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+                    if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                        return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
-                pictureBinary ??= await LoadPictureBinaryAsync(picture);
+                    pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                //the named mutex helps to avoid creating the same files in different threads,
-                //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
-                {
-                    if (pictureBinary != null)
+                    //the named mutex helps to avoid creating the same files in different threads,
+                    //and does not decrease performance significantly, because the code is blocked only for the specific file.
+                    //you should be very careful, mutexes cannot be used in with the await operation
+                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+                    using var mutex = new Mutex(false, thumbFileName);
+                    mutex.WaitOne();
+                    try
                     {
-                        try
+                        if (pictureBinary != null)
                         {
-                            if (picture.MimeType == MimeTypes.ImageSvg)
-                            {
-                                using var memStream = new MemoryStream(pictureBinary);
-                                var svgDocument = SvgDocument.Open<SvgDocument>(memStream);
-                                svgDocument.Height = targetSize;
-                                svgDocument.Width = targetSize;
-                                using var stream = new MemoryStream();
-                                svgDocument.Write(stream);
-                                pictureBinary = stream.ToArray();
-                            }
-                            else
+                            try
                             {
                                 using var image = SKBitmap.Decode(pictureBinary);
                                 var format = GetImageFormatByMimeType(picture.MimeType);
                                 pictureBinary = ImageResize(image, format, targetSize);
+                                SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
+                            }
+                            catch
+                            {
                             }
                         }
-                        catch
-                        {
-                        }
                     }
-
-                    SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
             }
 
@@ -918,13 +917,16 @@ namespace Nop.Services.Media
             //contentType is not always available 
             //that's why we manually update it here
             //https://mimetype.io/all-types/
-            if (string.IsNullOrEmpty(contentType)) 
+            if (string.IsNullOrEmpty(contentType))
                 contentType = GetPictureContentTypeByFileExtension(fileExtension);
 
             if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSVGUploads)
                 return null;
 
-            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile),
+                contentType,
+                _fileProvider.GetFileNameWithoutExtension(fileName),
+                validateBinary: contentType != MimeTypes.ImageSvg);
 
             if (string.IsNullOrEmpty(virtualPath))
                 return picture;
@@ -1107,16 +1109,23 @@ namespace Nop.Services.Media
 
             //first, try to get product attribute combination picture
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
-            var combinationPicture = await GetPictureByIdAsync(combination?.PictureId ?? 0);
-            if (combinationPicture != null)
-                return combinationPicture;
+            if (combination != null)
+            { 
+                var combinationPicture = (await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id)).FirstOrDefault();
+                if (await GetPictureByIdAsync(combinationPicture?.PictureId ?? 0) is Picture picture)
+                    return picture;
+            }
 
             //then, let's see whether we have attribute values with pictures
-            var attributePicture = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
-                .SelectAwait(async attributeValue => await GetPictureByIdAsync(attributeValue?.PictureId ?? 0))
-                .FirstOrDefaultAsync(picture => picture != null);
-            if (attributePicture != null)
-                return attributePicture;
+            var values = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
+            foreach (var attributeValue in values)
+            {
+                var valuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(attributeValue.Id);
+                var attributePicture = (await GetPicturesByIdsAsync(valuePictures.Select(vp => vp.PictureId).ToArray())).FirstOrDefault();
+
+                if (attributePicture != null)
+                    return attributePicture;
+            }
 
             //now let's load the default product picture
             var productPicture = (await GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();

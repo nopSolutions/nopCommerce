@@ -21,7 +21,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Domain
         /// Gets or sets a value indicating whether the Pixel is enabled
         /// </summary>
         public bool PixelScriptEnabled { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the Conversions API is enabled
         /// </summary>

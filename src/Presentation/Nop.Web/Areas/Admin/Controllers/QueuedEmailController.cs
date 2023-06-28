@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -20,12 +16,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailModelFactory _queuedEmailModelFactory;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IQueuedEmailModelFactory _queuedEmailModelFactory;
+        protected readonly IQueuedEmailService _queuedEmailService;
 
         #endregion
 

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
@@ -10,10 +9,10 @@ namespace Nop.Web.Controllers
 {
     public partial class ProfileController : BasePublicController
     {
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProfileModelFactory _profileModelFactory;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProfileModelFactory _profileModelFactory;
 
         public ProfileController(CustomerSettings customerSettings,
             ICustomerService customerService,

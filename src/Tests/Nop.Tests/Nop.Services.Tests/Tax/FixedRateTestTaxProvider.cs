@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Orders;
@@ -19,8 +16,8 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
         private readonly ITaxService _taxService;
         private readonly TaxSettings _taxSettings;
 
-        public FixedRateTestTaxProvider(IGenericAttributeService genericAttributeService, 
-            IOrderTotalCalculationService orderTotalCalculationService, 
+        public FixedRateTestTaxProvider(IGenericAttributeService genericAttributeService,
+            IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
             ITaxService taxService,
             TaxSettings taxSettings
@@ -55,7 +52,7 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
             var customer = taxTotalRequest.Customer;
             var storeId = taxTotalRequest.StoreId;
             var usePaymentMethodAdditionalFee = taxTotalRequest.UsePaymentMethodAdditionalFee;
-            
+
             var paymentMethodSystemName = string.Empty;
             if (customer != null)
                 paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,

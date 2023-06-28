@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Stores
@@ -12,6 +12,31 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets the store name
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta keywords
+        /// </summary>
+        public string DefaultMetaKeywords { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta description
+        /// </summary>
+        public string DefaultMetaDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta title
+        /// </summary>
+        public string DefaultTitle { get; set; }
+
+        /// <summary>
+        /// Home page title
+        /// </summary>
+        public string HomepageTitle { get; set; }
+
+        /// <summary>
+        /// Home page description
+        /// </summary>
+        public string HomepageDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the store URL

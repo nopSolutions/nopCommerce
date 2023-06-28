@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Messages;
@@ -50,7 +48,9 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
             rez.Count.Should().Be(0);
             await _campaignService.InsertCampaignAsync(new Campaign
             {
-                Name = "Test name", Subject = "Test subject", Body = "Test body"
+                Name = "Test name",
+                Subject = "Test subject",
+                Body = "Test body"
             });
             await _campaignService.InsertCampaignAsync(new Campaign
             {
@@ -79,7 +79,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         public async Task CanSendCampaign()
         {
             await _campaignRepository.TruncateAsync();
-            var campaign = new Campaign {Name = "Test name", Subject = "Test subject", Body = "Test body"};
+            var campaign = new Campaign { Name = "Test name", Subject = "Test subject", Body = "Test body" };
             await _campaignService.InsertCampaignAsync(campaign);
             TestSmtpBuilder.TestSmtpClient.MessageIsSent = false;
             await _cueuedEmailRepository.TruncateAsync();
@@ -99,7 +99,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
 
-            await _campaignService.SendCampaignAsync(campaign, emailAccount, new[] {subscription});
+            await _campaignService.SendCampaignAsync(campaign, emailAccount, new[] { subscription });
             _cueuedEmailRepository.Table.Count().Should().Be(1);
 
             await _campaignService.SendCampaignAsync(campaign, emailAccount, NopTestsDefaults.AdminEmail);

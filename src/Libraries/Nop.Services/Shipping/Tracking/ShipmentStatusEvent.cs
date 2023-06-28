@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Services.Shipping.Tracking
+﻿namespace Nop.Services.Shipping.Tracking
 {
     /// <summary>
     /// Represents a shipment status event

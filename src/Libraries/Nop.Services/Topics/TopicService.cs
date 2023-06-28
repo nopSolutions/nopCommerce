@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
@@ -19,12 +15,12 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<Topic> _topicRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclService _aclService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<Topic> _topicRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -66,7 +62,7 @@ namespace Nop.Services.Topics
         /// <param name="topicId">The topic identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic
+        /// The task result contains the topic
         /// </returns>
         public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
         {
@@ -162,7 +158,7 @@ namespace Nop.Services.Topics
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opics
+        /// The task result contains the topics
         /// </returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, string keywords,
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)

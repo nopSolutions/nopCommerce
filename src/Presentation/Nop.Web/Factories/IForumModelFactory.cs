@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Forums;
+﻿using Nop.Core.Domain.Forums;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Factories
@@ -76,7 +75,7 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic move model
+        /// The task result contains the topic move model
         /// </returns>
         Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic);
 

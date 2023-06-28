@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {

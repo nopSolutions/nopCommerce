@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -273,7 +270,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
             model.Should().NotBeNullOrEmpty();
-            model.Trim().Split(Environment.NewLine).Length.Should().Be(74);
+            model.Trim().Split(Environment.NewLine).Length.Should().Be(101);
         }
     }
 }

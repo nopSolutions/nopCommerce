@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -28,7 +26,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendCustomerRegisteredNotificationMessageAsync(Customer customer, int languageId);
+        Task<IList<int>> SendCustomerRegisteredStoreOwnerNotificationMessageAsync(Customer customer, int languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
@@ -485,7 +483,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendVendorInformationChangeNotificationAsync(Vendor vendor, int languageId);
+        Task<IList<int>> SendVendorInformationChangeStoreOwnerNotificationAsync(Vendor vendor, int languageId);
 
         /// <summary>
         /// Sends a product review notification message to a store owner
@@ -496,7 +494,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendProductReviewNotificationMessageAsync(ProductReview productReview, int languageId);
+        Task<IList<int>> SendProductReviewStoreOwnerNotificationMessageAsync(ProductReview productReview, int languageId);
 
         /// <summary>
         /// Sends a product review reply notification message to a customer
@@ -564,7 +562,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendBlogCommentNotificationMessageAsync(BlogComment blogComment, int languageId);
+        Task<IList<int>> SendBlogCommentStoreOwnerNotificationMessageAsync(BlogComment blogComment, int languageId);
 
         /// <summary>
         /// Sends a news comment notification message to a store owner
@@ -575,7 +573,7 @@ namespace Nop.Services.Messages
         /// A task that represents the asynchronous operation
         /// The task result contains the queued email identifier
         /// </returns>
-        Task<IList<int>> SendNewsCommentNotificationMessageAsync(NewsComment newsComment, int languageId);
+        Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId);
 
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer

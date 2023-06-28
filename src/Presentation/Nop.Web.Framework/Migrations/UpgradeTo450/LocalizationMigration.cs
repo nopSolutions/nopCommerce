@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
-    [NopMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
+    [NopUpdateMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Localization)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -23,7 +20,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            localizationService.DeleteLocaleResources(new List<string>
             {
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps",
                 "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint",
@@ -33,21 +30,17 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint",
                 //#5042
                 "Admin.Help.Topics"
-            }).Wait();
+            });
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
-            var languageId = languages
-                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
-                .Select(lang => lang.Id).FirstOrDefault();
+            var (languageId, languages) = this.GetLanguageData();
 
-            localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
             {
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Keywords to search by name, body, or subject.",
 
-				//New configurations to forward proxied headers
+                //New configurations to forward proxied headers
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName"] = "The header used to retrieve the originating client IP",
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName.Hint"] = "Specify a custom HTTP header name to determine the originating IP address (e.g., CF-Connecting-IP, X-ProxyUser-Ip).",
                 ["Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName"] = "The header used to retrieve the value for the originating scheme",
@@ -87,7 +80,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Enums.Nop.Data.DataProviderType.SqlServer"] = "Microsoft SQL Server",
                 ["Enums.Nop.Data.DataProviderType.MySql"] = "MySQL",
                 ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
-                
+
                 //#5838
                 ["Admin.Configuration.Languages.NeedRestart"] = "Since language cultures are loaded only when the application is starting, you have to restart the application for it to work correctly once the language is changed.",
 
@@ -117,7 +110,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Order.Shipments.ReadyForPickupDate.NotYet"] = "Not yet",
                 ["Admin.Orders.Shipments.Products.QtyReadyForPickup"] = "Qty ready for pickup",
                 ["Admin.Orders.Shipments.Products.QtyToPickup"] = "Qty to pickup",
-                
+
                 //#5042
                 ["Admin.Help.Documentation"] = "Documentation",
                 ["Admin.Help.SolutionPartners"] = "Solution partners",
@@ -131,7 +124,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField"] = "The quantity to be returned to stock must be less or equal the quantity field: {0}.",
                 ["Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField"] = "The quantity must be equal or greater than the quantity to be returned to stock: {0}.",
                 ["Admin.ReturnRequests.Fields.Quantity.Required"] = "The quantity is required.",
-                
+
                 //#5551
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering"] = "Enable specification attribute filtering",
                 ["Admin.Configuration.Settings.Catalog.EnableSpecificationAttributeFiltering.Hint"] = "Check to enable the specification attribute filtering on catalog pages.",
@@ -180,30 +173,17 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
                 ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
                 ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
-            }, languageId).Wait();
+            }, languageId);
 
             // rename locales
-            var localesToRename = new[]
+            this.RenameLocales(new Dictionary<string, string>
             {
                 //#5834
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling" },
-                new { Name = "Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint", NewName = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint" }
-            };
-
-            foreach (var lang in languages)
-            {
-                foreach (var locale in localesToRename)
-                {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
-                    if (lsr != null)
-                    {
-                        lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
-                    }
-                }
-            }
+                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint"
+            }, languages, localizationService);
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

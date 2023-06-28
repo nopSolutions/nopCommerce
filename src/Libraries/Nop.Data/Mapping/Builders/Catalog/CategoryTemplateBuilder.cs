@@ -14,7 +14,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         /// Apply entity configuration
         /// </summary>
         /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table) 
+        public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
                 .WithColumn(nameof(CategoryTemplate.Name)).AsString(400).NotNullable()

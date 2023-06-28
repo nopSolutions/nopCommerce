@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
-using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Security;
@@ -21,22 +16,22 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly IDownloadService _downloadService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVideoService _videoService;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVideoService _videoService;
 
         #endregion
 
@@ -202,10 +197,6 @@ namespace Nop.Services.Catalog
                 var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
                 foreach (var productAttributeValue in productAttributeValues)
                 {
-                    var attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId)) 
-                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
-
                     var attributeValueCopy = new ProductAttributeValue
                     {
                         ProductAttributeMappingId = productAttributeMappingCopy.Id,
@@ -220,9 +211,23 @@ namespace Nop.Services.Catalog
                         CustomerEntersQty = productAttributeValue.CustomerEntersQty,
                         Quantity = productAttributeValue.Quantity,
                         IsPreSelected = productAttributeValue.IsPreSelected,
-                        DisplayOrder = productAttributeValue.DisplayOrder,
-                        PictureId = attributeValuePictureId,
+                        DisplayOrder = productAttributeValue.DisplayOrder
                     };
+
+                    //picture
+                    var oldValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id);
+                    foreach (var oldValuePicture in oldValuePictures)
+                    {
+                        if (!originalNewPictureIdentifiers.TryGetValue(oldValuePicture.PictureId, out var valuePictureId))
+                            continue;
+
+                        await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
+                        {
+                            ProductAttributeValueId = attributeValueCopy.Id,
+                            PictureId = valuePictureId
+                        });
+                    }
+
                     //picture associated to "iamge square" attribute type (if exists)
                     if (productAttributeValue.ImageSquaresPictureId > 0)
                     {
@@ -334,9 +339,6 @@ namespace Nop.Services.Catalog
                     }
                 }
 
-                //picture
-                originalNewPictureIdentifiers.TryGetValue(combination.PictureId, out var combinationPictureId);
-
                 var combinationCopy = new ProductAttributeCombination
                 {
                     ProductId = productCopy.Id,
@@ -348,10 +350,23 @@ namespace Nop.Services.Catalog
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
                     Gtin = combination.Gtin,
                     OverriddenPrice = combination.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
-                    PictureId = combinationPictureId
+                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combinationCopy);
+
+                //picture
+                var oldCombinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
+                foreach (var oldCombinationPicture in oldCombinationPictures)
+                {
+                    if (!originalNewPictureIdentifiers.TryGetValue(oldCombinationPicture.PictureId, out var combinationPictureId))
+                        continue;
+
+                    await _productAttributeService.InsertProductAttributeCombinationPictureAsync(new ProductAttributeCombinationPicture
+                    {
+                        ProductAttributeCombinationId = combinationCopy.Id,
+                        PictureId = combinationPictureId
+                    });
+                }
 
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(productCopy, combination.StockQuantity,
@@ -384,7 +399,7 @@ namespace Nop.Services.Catalog
                 };
 
                 await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psaCopy);
-                
+
                 foreach (var language in allLanguages)
                 {
                     var customValue = await _localizationService.GetLocalizedAsync(productSpecificationAttribute, x => x.CustomValue, language.Id, false, false);
@@ -808,7 +823,7 @@ namespace Nop.Services.Catalog
             await CopyLocalizationDataAsync(product, productCopy);
 
             //copy product tags
-            foreach (var productTag in await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)) 
+            foreach (var productTag in await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
                 await _productTagService.InsertProductProductTagMappingAsync(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
 
             await _productService.UpdateProductAsync(productCopy);
@@ -843,7 +858,7 @@ namespace Nop.Services.Catalog
 
             //store mapping
             var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(product);
-            foreach (var id in selectedStoreIds) 
+            foreach (var id in selectedStoreIds)
                 await _storeMappingService.InsertStoreMappingAsync(productCopy, id);
 
             //customer role mapping

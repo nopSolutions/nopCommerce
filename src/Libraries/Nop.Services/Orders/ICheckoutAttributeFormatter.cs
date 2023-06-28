@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Orders
 {
@@ -22,8 +21,8 @@ namespace Nop.Services.Orders
         /// The task result contains the attributes
         /// </returns>
         Task<string> FormatAttributesAsync(string attributesXml,
-            Customer customer, 
-            string separator = "<br />", 
+            Customer customer,
+            string separator = "<br />",
             bool htmlEncode = true,
             bool renderPrices = true,
             bool allowHyperlinks = true);

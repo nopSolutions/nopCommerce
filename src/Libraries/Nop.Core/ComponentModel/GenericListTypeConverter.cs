@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 
 namespace Nop.Core.ComponentModel
 {
@@ -65,14 +62,14 @@ namespace Nop.Core.ComponentModel
 
             var items = GetStringArray((string)value);
             var result = new List<T>();
-            Array.ForEach(items, s =>
+            foreach (var itemStr in items)
             {
-                var item = typeConverter.ConvertFromInvariantString(s);
+                var item = typeConverter.ConvertFromInvariantString(itemStr);
                 if (item != null)
                 {
                     result.Add((T)item);
                 }
-            });
+            }
 
             return result;
         }

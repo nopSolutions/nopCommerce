@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="Slovensky" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Admin user email</Value>
+    <Value>Email administrátora</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
     <Value>Zadajte email administrátora</Value>
@@ -34,10 +34,10 @@
     <Value>Zlý formát databázového spojenia s SQL Serverom.</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Krajina</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Vyberte si svoju krajinu...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Vytvoriť databázu, ak neexistuje.</Value>
@@ -131,6 +131,9 @@
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informácie o obchode</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Inštalácia nopCommerce</Value>

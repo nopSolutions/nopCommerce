@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Services.Customers;
 using Nop.Services.Logging;
 using NUnit.Framework;

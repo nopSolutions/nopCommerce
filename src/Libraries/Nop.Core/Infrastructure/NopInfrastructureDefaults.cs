@@ -5,6 +5,7 @@
     /// </summary>
     public static partial class NopInfrastructureDefaults
     {
+        //TODO: delete unused property
         /// <summary>
         /// Gets a path to the web config file
         /// </summary>

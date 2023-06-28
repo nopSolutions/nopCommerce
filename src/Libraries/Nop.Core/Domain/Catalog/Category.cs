@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -77,7 +76,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to include this category in the top menu
         /// </summary>
         public bool IncludeInTopMenu { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>

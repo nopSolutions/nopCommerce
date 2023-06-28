@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -90,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the specification attribute option model
         /// </returns>
         Task<SpecificationAttributeOptionModel> PrepareSpecificationAttributeOptionModelAsync(SpecificationAttributeOptionModel model,
-            SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption, 
+            SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption,
             bool excludeProperties = false);
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Cms;
+﻿using Nop.Web.Areas.Admin.Models.Cms;
 
 namespace Nop.Web.Areas.Admin.Factories
 {

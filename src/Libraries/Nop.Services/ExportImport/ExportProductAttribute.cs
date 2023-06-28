@@ -33,14 +33,19 @@
         public int AttributeDisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture identifier
+        /// Gets or sets the comma separated picture identifiers
         /// </summary>
-        public int PictureId { get; set; }
+        public string PictureIds { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute control type identifier
         /// </summary>
         public int AttributeControlTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product attribute mapping identifier
+        /// </summary>
+        public int AttributeMappingId { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute value type identifier

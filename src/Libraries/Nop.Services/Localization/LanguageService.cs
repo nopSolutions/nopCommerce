@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
@@ -18,11 +14,11 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<Language> _languageRepository;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly IRepository<Language> _languageRepository;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -54,12 +50,12 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            
+
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
                 foreach (var activeLanguage in await GetAllLanguagesAsync())
                 {
-                    if (activeLanguage.Id == language.Id) 
+                    if (activeLanguage.Id == language.Id)
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
@@ -83,7 +79,7 @@ namespace Nop.Services.Localization
         {
             //cacheable copy
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
-            
+
             var languages = await _staticCacheManager.GetAsync(key, async () =>
             {
                 var allLanguages = await _languageRepository.GetAllAsync(query =>
@@ -100,6 +96,42 @@ namespace Nop.Services.Localization
                     allLanguages = await allLanguages
                         .WhereAwait(async l => await _storeMappingService.AuthorizeAsync(l, storeId))
                         .ToListAsync();
+
+                return allLanguages;
+            });
+
+            return languages;
+        }
+
+        /// <summary>
+        /// Gets all languages
+        /// </summary>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// The languages
+        /// </returns>
+        public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
+        {
+            //cacheable copy
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
+
+            var languages = _staticCacheManager.Get(key, () =>
+            {
+                var allLanguages = _languageRepository.GetAll(query =>
+                {
+                    if (!showHidden)
+                        query = query.Where(l => l.Published);
+                    query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
+
+                    return query;
+                });
+
+                //store mapping
+                if (storeId > 0)
+                    allLanguages = allLanguages
+                        .Where(l => _storeMappingService.Authorize(l, storeId))
+                        .ToList();
 
                 return allLanguages;
             });

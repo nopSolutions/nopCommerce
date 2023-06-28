@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Plugins uploaded event

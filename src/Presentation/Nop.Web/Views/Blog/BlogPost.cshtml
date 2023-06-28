@@ -71,11 +71,12 @@
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
                             <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"></textarea>
+                            <nop-required />
                             <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <nop-captcha />
+                            <nop-captcha action-name="BlogCommentAdd" />
                         }
                     </div>
                     @if (!Model.PreventNotRegisteredUsersToLeaveComments)

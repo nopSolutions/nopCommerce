@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 using Nop.Data;
 
 namespace Nop.Services.Topics
@@ -13,7 +10,7 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
+        protected readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
 
@@ -43,15 +40,15 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic templates
+        /// The task result contains the topic templates
         /// </returns>
         public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync()
         {
-            var templates = await _topicTemplateRepository.GetAllAsync(query=>
+            var templates = await _topicTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
-                    orderby pt.DisplayOrder, pt.Id
-                    select pt;
+                       orderby pt.DisplayOrder, pt.Id
+                       select pt;
             }, cache => default);
 
             return templates;
@@ -63,7 +60,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic template
+        /// The task result contains the topic template
         /// </returns>
         public virtual async Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId)
         {

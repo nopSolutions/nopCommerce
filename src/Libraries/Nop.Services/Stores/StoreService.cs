@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 using Nop.Data;
 
 namespace Nop.Services.Stores
@@ -14,7 +10,7 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
+        protected readonly IRepository<Store> _storeRepository;
 
         #endregion
 
@@ -44,6 +40,7 @@ namespace Nop.Services.Stores
                 return parsedValues.ToArray();
 
             var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            
             foreach (var host in hosts)
             {
                 var tmp = host.Trim();
@@ -91,6 +88,20 @@ namespace Nop.Services.Stores
         }
 
         /// <summary>
+        /// Gets all stores
+        /// </summary>
+        /// <returns>
+        /// The stores
+        /// </returns>
+        public virtual IList<Store> GetAllStores()
+        {
+            return _storeRepository.GetAll(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, _ => default, includeDeleted: false);
+        }
+
+        /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
@@ -121,6 +132,15 @@ namespace Nop.Services.Stores
         public virtual async Task UpdateStoreAsync(Store store)
         {
             await _storeRepository.UpdateAsync(store);
+        }
+
+        /// <summary>
+        /// Updates the store
+        /// </summary>
+        /// <param name="store">Store</param>
+        public virtual void UpdateStore(Store store)
+        {
+            _storeRepository.Update(store);
         }
 
         /// <summary>

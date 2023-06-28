@@ -1,10 +1,9 @@
 ﻿using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Caching
 {
@@ -15,14 +14,17 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
-        private readonly DistributedCacheConfig _distributedCacheConfig;
+        protected readonly DistributedCacheConfig _distributedCacheConfig;
 
         #endregion
 
         #region Ctor
 
-        public MsSqlServerCacheManager(AppSettings appSettings, IDistributedCache distributedCache) : base(appSettings,
-            distributedCache)
+        public MsSqlServerCacheManager(AppSettings appSettings,
+            IDistributedCache distributedCache,
+            ICacheKeyManager cacheKeyManager,
+            IConcurrentCollection<object> concurrentCollection)
+            : base(appSettings, distributedCache, cacheKeyManager, concurrentCollection)
         {
             _distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
         }
@@ -31,12 +33,19 @@ namespace Nop.Services.Caching
 
         #region Utilities
 
-        protected async Task PerformActionAsync(SqlCommand command, params SqlParameter[] parameters)
+        /// <summary>
+        /// Performs SQL command
+        /// </summary>
+        /// <param name="command">SQL command</param>
+        /// <param name="parameters">Parameters for SQL command</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PerformActionAsync(SqlCommand command, params SqlParameter[] parameters)
         {
             var conn = new SqlConnection(_distributedCacheConfig.ConnectionString);
+
             try
             {
-                conn.Open();
+                await conn.OpenAsync();
                 command.Connection = conn;
                 if (parameters.Any())
                     command.Parameters.AddRange(parameters);
@@ -45,7 +54,7 @@ namespace Nop.Services.Caching
             }
             finally
             {
-                conn.Close();
+                await conn.CloseAsync();
             }
         }
 
@@ -69,7 +78,7 @@ namespace Nop.Services.Caching
 
             await PerformActionAsync(command, new SqlParameter("Prefix", SqlDbType.NVarChar) { Value = prefix });
 
-            await RemoveByPrefixInstanceDataAsync(prefix);
+            RemoveByPrefixInstanceData(prefix);
         }
 
         /// <summary>

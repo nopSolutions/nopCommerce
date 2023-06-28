@@ -1,14 +1,12 @@
-﻿using System.Linq;
-using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Services.ScheduleTasks;
-
+using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
 {
-    public class TestTaskScheduler: TaskScheduler
+    public class TestTaskScheduler : TaskScheduler
     {
         public TestTaskScheduler(AppSettings appSettings, IHttpClientFactory httpClientFactory, IScheduleTaskService scheduleTaskService, IServiceScopeFactory serviceScopeFactory, IStoreContext storeContext) : base(appSettings, httpClientFactory, scheduleTaskService, serviceScopeFactory, storeContext)
         {

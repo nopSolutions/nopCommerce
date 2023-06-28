@@ -9,17 +9,17 @@
     /// <remarks>Access to the instance is not synchronized.</remarks>
     public partial class Singleton<T> : BaseSingleton
     {
-        private static T instance;
+        private static T _instance;
 
         /// <summary>
         /// The singleton instance for the specified type T. Only one instance (at the time) of this object for each type of T.
         /// </summary>
         public static T Instance
         {
-            get => instance;
+            get => _instance;
             set
             {
-                instance = value;
+                _instance = value;
                 AllSingletons[typeof(T)] = value;
             }
         }

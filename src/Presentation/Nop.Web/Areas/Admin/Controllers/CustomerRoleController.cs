@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
@@ -21,14 +19,14 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerRoleModelFactory _customerRoleModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerRoleModelFactory _customerRoleModelFactory;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

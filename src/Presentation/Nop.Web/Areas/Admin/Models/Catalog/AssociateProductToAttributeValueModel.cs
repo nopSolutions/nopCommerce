@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     public partial record AssociateProductToAttributeValueModel : BaseNopModel
     {
         #region Properties
-        
+
         public int AssociatedToProductId { get; set; }
 
         #endregion

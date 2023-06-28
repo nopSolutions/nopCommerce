@@ -53,6 +53,11 @@ namespace Nop.Core.Domain.Security
         public bool ShowOnNewsCommentPage { get; set; }
 
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the "News letter" page
+        /// </summary>
+        public bool ShowOnNewsletterPage { get; set; }        
+
+        /// <summary>
         /// A value indicating whether CAPTCHA should be displayed on the product reviews page
         /// </summary>
         public bool ShowOnProductReviewPage { get; set; }

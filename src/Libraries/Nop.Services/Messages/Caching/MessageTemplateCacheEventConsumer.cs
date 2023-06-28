@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Messages.Caching
 {

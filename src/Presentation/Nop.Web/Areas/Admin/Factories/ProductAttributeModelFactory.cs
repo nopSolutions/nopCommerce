@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -18,10 +15,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
 
         #endregion
 
@@ -41,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
@@ -133,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 return productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>());
-                
+
             });
 
             return model;
@@ -241,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeValue != null)
             {
                 //fill in model values from the entity
-                if (model == null) 
+                if (model == null)
                 {
                     model = productAttributeValue.ToModel<PredefinedProductAttributeValueModel>();
                 }

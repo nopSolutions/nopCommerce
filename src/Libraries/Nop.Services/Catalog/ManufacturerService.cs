@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -22,19 +18,19 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
+        protected readonly IRepository<Manufacturer> _manufacturerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -231,7 +227,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets the manufacturers by category identifier
         /// </summary>
-        /// <param name="categoryId">Cateogry identifier</param>
+        /// <param name="categoryId">Category identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturers
@@ -251,13 +247,14 @@ namespace Nop.Services.Catalog
                 select p;
 
             var store = await _storeContext.GetCurrentStoreAsync();
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             //apply store mapping constraints
             productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, store.Id);
 
             //apply ACL constraints
-            productsQuery = await _aclService.ApplyAcl(productsQuery, currentCustomer);
+            productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
 
             var subCategoryIds = _catalogSettings.ShowProductsFromSubcategories
                 ? await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)
@@ -281,7 +278,7 @@ namespace Nop.Services.Catalog
                 select m;
 
             var key = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId.ToString());
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId, store, customerRoleIds);
 
             return await _staticCacheManager.GetAsync(key, async () => await manufacturersQuery.Distinct().ToListAsync());
         }
@@ -387,9 +384,10 @@ namespace Nop.Services.Catalog
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             var key = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customer, store);
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customerRoleIds, store);
 
             var query = from pm in _productManufacturerRepository.Table
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
@@ -405,7 +403,7 @@ namespace Nop.Services.Catalog
                 manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
 
                 //apply ACL constraints
-                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customer);
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customerRoleIds);
 
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
@@ -478,7 +476,7 @@ namespace Nop.Services.Catalog
             if (manufacturerIdsNames == null)
                 throw new ArgumentNullException(nameof(manufacturerIdsNames));
 
-            var query = _manufacturerRepository.Table;
+            var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
             var queryFilter = manufacturerIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();

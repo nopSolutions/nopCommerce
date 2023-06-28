@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -31,28 +28,28 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
-        private readonly CookieSettings _cookieSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUserAgentHelper _userAgentHelper;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CookieSettings _cookieSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAuthenticationService _authenticationService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUserAgentHelper _userAgentHelper;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly TaxSettings _taxSettings;
 
-        private Customer _cachedCustomer;
-        private Customer _originalCustomerIfImpersonated;
-        private Vendor _cachedVendor;
-        private Language _cachedLanguage;
-        private Currency _cachedCurrency;
-        private TaxDisplayType? _cachedTaxDisplayType;
+        protected Customer _cachedCustomer;
+        protected Customer _originalCustomerIfImpersonated;
+        protected Vendor _cachedVendor;
+        protected Language _cachedLanguage;
+        protected Currency _cachedCurrency;
+        protected TaxDisplayType? _cachedTaxDisplayType;
 
         #endregion
 
@@ -478,36 +475,8 @@ namespace Nop.Web.Framework
             if (_cachedTaxDisplayType.HasValue)
                 return _cachedTaxDisplayType.Value;
 
-            var taxDisplayType = TaxDisplayType.IncludingTax;
             var customer = await GetCurrentCustomerAsync();
-
-            //whether customers are allowed to select tax display type
-            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer != null)
-            {
-                //try to get previously saved tax display type
-                var taxDisplayTypeId = customer.TaxDisplayTypeId;
-                if (taxDisplayTypeId.HasValue)
-                    taxDisplayType = (TaxDisplayType)taxDisplayTypeId.Value;
-                else
-                {
-                    //default tax type by customer roles
-                    var defaultRoleTaxDisplayType = await _customerService.GetCustomerDefaultTaxDisplayTypeAsync(customer);
-                    if (defaultRoleTaxDisplayType != null)
-                        taxDisplayType = defaultRoleTaxDisplayType.Value;
-                }
-            }
-            else
-            {
-                //default tax type by customer roles
-                var defaultRoleTaxDisplayType = await _customerService.GetCustomerDefaultTaxDisplayTypeAsync(customer);
-                if (defaultRoleTaxDisplayType != null)
-                    taxDisplayType = defaultRoleTaxDisplayType.Value;
-                else
-                {
-                    //or get the default tax display type
-                    taxDisplayType = _taxSettings.TaxDisplayType;
-                }
-            }
+            var taxDisplayType = await _customerService.GetCustomerTaxDisplayTypeAsync(customer);
 
             //cache the value
             _cachedTaxDisplayType = taxDisplayType;

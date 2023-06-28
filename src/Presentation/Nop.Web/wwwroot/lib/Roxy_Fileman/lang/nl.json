@@ -74,7 +74,7 @@
 "Copy":"Kopiëren",
 "Paste":"Plakken",
 "E_CopyFile":"Fout tijdens kopiëren",
-"E_CopyFileInvalisPath":"Kan bestand niet kopiëren - het pad bestaat niet",
+"E_CopyFileInvalidPath":"Kan bestand niet kopiëren - het pad bestaat niet",
 "E_CopyDirInvalidPath":"Kan map niet kopiëren - het pad bestaat niet",
 "E_CreateArchive":"Fout tijdens aanmaken zip-archief",
 "E_UploadingFile":"fout"

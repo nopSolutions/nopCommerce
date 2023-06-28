@@ -9,13 +9,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
     public class PasswordRecoveryValidatorTests : BaseNopTest
     {
         private PasswordRecoveryValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<PasswordRecoveryValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {

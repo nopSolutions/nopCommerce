@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -21,16 +17,16 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -60,7 +56,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -78,7 +74,7 @@ namespace Nop.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            if (!product.HasDiscountsApplied) 
+            if (!product.HasDiscountsApplied)
                 return allowedDiscounts;
 
             //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
@@ -123,7 +119,7 @@ namespace Nop.Services.Catalog
 
                 foreach (var categoryId in productCategoryIds)
                 {
-                    if (!discountCategoryIds.Contains(categoryId)) 
+                    if (!discountCategoryIds.Contains(categoryId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
@@ -159,7 +155,7 @@ namespace Nop.Services.Catalog
                 var productManufacturerIds = new List<int>();
                 if (discountManufacturerIds.Any())
                 {
-                    productManufacturerIds = 
+                    productManufacturerIds =
                         (await _manufacturerService
                         .GetProductManufacturersByProductIdAsync(product.Id))
                         .Select(x => x.ManufacturerId)
@@ -168,7 +164,7 @@ namespace Nop.Services.Catalog
 
                 foreach (var manufacturerId in productManufacturerIds)
                 {
-                    if (!discountManufacturerIds.Contains(manufacturerId)) 
+                    if (!discountManufacturerIds.Contains(manufacturerId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
@@ -248,7 +244,7 @@ namespace Nop.Services.Catalog
                 return (appliedDiscountAmount, appliedDiscounts);
 
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, productPriceWithoutDiscount, out appliedDiscountAmount);
-            
+
             return (appliedDiscountAmount, appliedDiscounts);
         }
 
@@ -274,7 +270,7 @@ namespace Nop.Services.Catalog
             Store store,
             decimal additionalCharge = 0,
             bool includeDiscounts = true,
-            int quantity=1)
+            int quantity = 1)
         {
             return await GetFinalPriceAsync(product, customer, store,
                 additionalCharge, includeDiscounts, quantity,
@@ -338,7 +334,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey,
                 product,
                 overriddenProductPrice,
                 additionalCharge,
@@ -357,7 +353,7 @@ namespace Nop.Services.Catalog
             decimal discountAmount;
             List<Discount> appliedDiscounts;
 
-            (rezPriceWithoutDiscount, rezPrice, discountAmount,  appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            (rezPriceWithoutDiscount, rezPrice, discountAmount, appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var discounts = new List<Discount>();
                 var appliedDiscountAmount = decimal.Zero;
@@ -452,11 +448,17 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="store">Store</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the price adjustment
         /// </returns>
-        public virtual async Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product, ProductAttributeValue value, Customer customer, Store store, decimal? productPrice = null)
+        public virtual async Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product,
+            ProductAttributeValue value,
+            Customer customer,
+            Store store,
+            decimal? productPrice = null,
+            int quantity = 1)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -469,7 +471,7 @@ namespace Nop.Services.Catalog
                     if (value.PriceAdjustmentUsePercentage)
                     {
                         if (!productPrice.HasValue)
-                            productPrice = (await GetFinalPriceAsync(product, customer, store)).finalPrice;
+                            productPrice = (await GetFinalPriceAsync(product, customer, store, quantity: quantity)).finalPrice;
 
                         adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                     }
@@ -482,7 +484,7 @@ namespace Nop.Services.Catalog
                 case AttributeValueType.AssociatedToProduct:
                     //bundled product
                     var associatedProduct = await _productService.GetProductByIdAsync(value.AssociatedProductId);
-                    if (associatedProduct != null) 
+                    if (associatedProduct != null)
                         adjustment = (await GetFinalPriceAsync(associatedProduct, customer, store)).finalPrice * value.Quantity;
 
                     break;

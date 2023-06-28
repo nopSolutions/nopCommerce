@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.Plugins;
+﻿using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
 {

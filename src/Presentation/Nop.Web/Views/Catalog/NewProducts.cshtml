@@ -16,7 +16,7 @@
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
         @{ 
             var newProductsViewData = new ViewDataDictionary(ViewData);
-            newProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetNewProducts", "Catalog"));
+            newProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("GetNewProducts"));
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, newProductsViewData)
     </div>

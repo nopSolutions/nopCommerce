@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -86,8 +84,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="giftCard">Gift card</param>
+        /// <param name="languageId">Language identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard);
+        Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard, int languageId);
 
         /// <summary>
         /// Add customer tokens
@@ -144,7 +143,7 @@ namespace Nop.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
-        
+
         /// <summary>
         /// Add product tokens
         /// </summary>

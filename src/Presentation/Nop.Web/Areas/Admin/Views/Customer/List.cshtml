@@ -1,9 +1,5 @@
 ﻿@model CustomerSearchModel
 
-@using Nop.Core.Domain.Media
-
-@inject MediaSettings _mediaSettings
-
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Customers.Customers").Text;
@@ -64,6 +60,10 @@
                 </ul>
 
             </div>
+            <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+                <i class="fas fa-upload"></i>
+                @T("Admin.Common.Import")
+            </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerListButtons, additionalData = Model })
         </div>
     </div>
@@ -406,6 +406,49 @@
     });
 </script>
 <nop-alert asp-alert-id="exportXmlSelected" />
+
+@*import products form*@
+<div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form asp-controller="Customer" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Customers.Customers.ImportFromExcelTip")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>
+                            </li>
+                        </ul>
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="col-form-label">
+                                        @T("Admin.Common.ExcelFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="importexcelfile" name="importexcelfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromExcel")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">

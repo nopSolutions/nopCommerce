@@ -58,7 +58,11 @@
             $('#group-required-other-products').hideElement();
             $('#group-visible-individually').hideElement();
             $('#group-associated-products').showElement();
-            updateTableWidth('#associatedproducts-grid');
+
+            @if (Model.Id > 0)
+            {
+                <text>updateTableWidth('#associatedproducts-grid');</text>
+            }
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
             
@@ -629,6 +633,15 @@
         <div class="col-md-9">
             <nop-editor asp-for="AllowCustomerReviews" />
             <span asp-validation-for="AllowCustomerReviews"></span>
+        </div>
+    </div>
+    <div class="form-group row @(Model.ProductEditorSettingsModel.DisplayAttributeCombinationImagesOnly ? null : "advanced-setting")">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayAttributeCombinationImagesOnly" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayAttributeCombinationImagesOnly" />
+            <span asp-validation-for="DisplayAttributeCombinationImagesOnly"></span>
         </div>
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableStartDate ? null : "advanced-setting")">

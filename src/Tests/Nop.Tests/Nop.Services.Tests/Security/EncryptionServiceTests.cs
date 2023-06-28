@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Security;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
@@ -24,7 +23,7 @@ namespace Nop.Tests.Nop.Services.Tests.Security
             _defaultEncryptionKey = _securitySettings.EncryptionKey;
             _securitySettings.EncryptionKey = "273ece6f97dd844d";
             await _settingService.SaveSettingAsync(_securitySettings);
-            
+
             _encryptionService = GetService<IEncryptionService>();
         }
 
@@ -45,7 +44,7 @@ namespace Nop.Tests.Nop.Services.Tests.Security
         }
 
         [Test]
-        public void CanHashSha512() 
+        public void CanHashSha512()
         {
             var password = "MyLittleSecret";
             var saltKey = "salt1";
@@ -54,7 +53,7 @@ namespace Nop.Tests.Nop.Services.Tests.Security
         }
 
         [Test]
-        public void CanEncryptAndDecrypt() 
+        public void CanEncryptAndDecrypt()
         {
             var password = "MyLittleSecret";
             var encryptedPassword = _encryptionService.EncryptText(password);

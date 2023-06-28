@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping

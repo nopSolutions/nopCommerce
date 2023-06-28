@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -42,51 +38,51 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomNumberFormatter _customNumberFormatter;
-        private readonly IDiscountService _discountService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ICustomNumberFormatter _customNumberFormatter;
+        protected readonly IDiscountService _discountService;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderService _orderService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductService _productService;
+        protected readonly IReturnRequestService _returnRequestService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -187,198 +183,6 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Nested classes
-
-        /// <summary>
-        /// PlaceOrder container
-        /// </summary>
-        protected partial class PlaceOrderContainer
-        {
-            public PlaceOrderContainer()
-            {
-                Cart = new List<ShoppingCartItem>();
-                AppliedDiscounts = new List<Discount>();
-                AppliedGiftCards = new List<AppliedGiftCard>();
-            }
-
-            /// <summary>
-            /// Customer
-            /// </summary>
-            public Customer Customer { get; set; }
-
-            /// <summary>
-            /// Customer language
-            /// </summary>
-            public Language CustomerLanguage { get; set; }
-
-            /// <summary>
-            /// Affiliate identifier
-            /// </summary>
-            public int AffiliateId { get; set; }
-
-            /// <summary>
-            /// TAx display type
-            /// </summary>
-            public TaxDisplayType CustomerTaxDisplayType { get; set; }
-
-            /// <summary>
-            /// Selected currency
-            /// </summary>
-            public string CustomerCurrencyCode { get; set; }
-
-            /// <summary>
-            /// Customer currency rate
-            /// </summary>
-            public decimal CustomerCurrencyRate { get; set; }
-
-            /// <summary>
-            /// Billing address
-            /// </summary>
-            public Address BillingAddress { get; set; }
-
-            /// <summary>
-            /// Shipping address
-            /// </summary>
-            public Address ShippingAddress { get; set; }
-
-            /// <summary>
-            /// Shipping status
-            /// </summary>
-            public ShippingStatus ShippingStatus { get; set; }
-
-            /// <summary>
-            /// Selected shipping method
-            /// </summary>
-            public string ShippingMethodName { get; set; }
-
-            /// <summary>
-            /// Shipping rate computation method system name
-            /// </summary>
-            public string ShippingRateComputationMethodSystemName { get; set; }
-
-            /// <summary>
-            /// Is pickup in store selected?
-            /// </summary>
-            public bool PickupInStore { get; set; }
-
-            /// <summary>
-            /// Selected pickup address
-            /// </summary>
-            public Address PickupAddress { get; set; }
-
-            /// <summary>
-            /// Is recurring shopping cart
-            /// </summary>
-            public bool IsRecurringShoppingCart { get; set; }
-
-            /// <summary>
-            /// Initial order (used with recurring payments)
-            /// </summary>
-            public Order InitialOrder { get; set; }
-
-            /// <summary>
-            /// Checkout attributes
-            /// </summary>
-            public string CheckoutAttributeDescription { get; set; }
-
-            /// <summary>
-            /// Shopping cart
-            /// </summary>
-            public string CheckoutAttributesXml { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public IList<ShoppingCartItem> Cart { get; set; }
-
-            /// <summary>
-            /// Applied discounts
-            /// </summary>
-            public List<Discount> AppliedDiscounts { get; set; }
-
-            /// <summary>
-            /// Applied gift cards
-            /// </summary>
-            public List<AppliedGiftCard> AppliedGiftCards { get; set; }
-
-            /// <summary>
-            /// Order subtotal (incl tax)
-            /// </summary>
-            public decimal OrderSubTotalInclTax { get; set; }
-
-            /// <summary>
-            /// Order subtotal (excl tax)
-            /// </summary>
-            public decimal OrderSubTotalExclTax { get; set; }
-
-            /// <summary>
-            /// Subtotal discount (incl tax)
-            /// </summary>
-            public decimal OrderSubTotalDiscountInclTax { get; set; }
-
-            /// <summary>
-            /// Subtotal discount (excl tax)
-            /// </summary>
-            public decimal OrderSubTotalDiscountExclTax { get; set; }
-
-            /// <summary>
-            /// Shipping (incl tax)
-            /// </summary>
-            public decimal OrderShippingTotalInclTax { get; set; }
-
-            /// <summary>
-            /// Shipping (excl tax)
-            /// </summary>
-            public decimal OrderShippingTotalExclTax { get; set; }
-
-            /// <summary>
-            /// Payment additional fee (incl tax)
-            /// </summary>
-            public decimal PaymentAdditionalFeeInclTax { get; set; }
-
-            /// <summary>
-            /// Payment additional fee (excl tax)
-            /// </summary>
-            public decimal PaymentAdditionalFeeExclTax { get; set; }
-
-            /// <summary>
-            /// Tax
-            /// </summary>
-            public decimal OrderTaxTotal { get; set; }
-
-            /// <summary>
-            /// VAT number
-            /// </summary>
-            public string VatNumber { get; set; }
-
-            /// <summary>
-            /// Tax rates
-            /// </summary>
-            public string TaxRates { get; set; }
-
-            /// <summary>
-            /// Order total discount amount
-            /// </summary>
-            public decimal OrderDiscountAmount { get; set; }
-
-            /// <summary>
-            /// Redeemed reward points
-            /// </summary>
-            public int RedeemedRewardPoints { get; set; }
-
-            /// <summary>
-            /// Redeemed reward points amount
-            /// </summary>
-            public decimal RedeemedRewardPointsAmount { get; set; }
-
-            /// <summary>
-            /// Order total
-            /// </summary>
-            public decimal OrderTotal { get; set; }
-        }
-
-        #endregion
-
         #region Utilities
 
         /// <summary>
@@ -465,113 +269,138 @@ namespace Nop.Services.Orders
         /// </returns>
         protected virtual async Task<PlaceOrderContainer> PreparePlaceOrderDetailsAsync(ProcessPaymentRequest processPaymentRequest)
         {
-            var details = new PlaceOrderContainer
-            {
-                //customer
-                Customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId)
-            };
-            if (details.Customer == null)
-                throw new ArgumentException("Customer is not set");
+            var details = new PlaceOrderContainer();
+
+            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+            await PrepareAndValidateCustomerAsync(details, processPaymentRequest, currentCurrency);
+            await PrepareAndValidateShoppingCartAndCheckoutAttributesAsync(details, processPaymentRequest, currentCurrency);
+            await PrepareAndValidateBillingAddressAsync(details);
+            await PrepareAndValidateShippingInfoAsync(details, processPaymentRequest);
+            await PrepareAndValidateTotalsAsync(details, processPaymentRequest);
 
             //affiliate
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(details.Customer.AffiliateId);
             if (affiliate != null && affiliate.Active && !affiliate.Deleted)
                 details.AffiliateId = affiliate.Id;
 
-            //check whether customer is guest
-            if (await _customerService.IsGuestAsync(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new NopException("Anonymous checkout is not allowed");
-
-            //customer currency
-            var currencyTmp = await _currencyService.GetCurrencyByIdAsync(details.Customer.CurrencyId ?? 0);
-            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
-            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
-            details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
-            details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
-
-            //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.Customer.LanguageId ?? 0);
-            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
-                details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
-
-            //billing address
-            if (details.Customer.BillingAddressId is null)
-                throw new NopException("Billing address is not provided");
-
-            var billingAddress = await _customerService.GetCustomerBillingAddressAsync(details.Customer);
-
-            if (!CommonHelper.IsValidEmail(billingAddress?.Email))
-                throw new NopException("Email is not valid");
-
-            details.BillingAddress = _addressService.CloneAddress(billingAddress);
-
-            if (await _countryService.GetCountryByAddressAsync(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
-                throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
-
-            //checkout attributes
-            details.CheckoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
-            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributesAsync(details.CheckoutAttributesXml, details.Customer);
-
-            //load shopping cart
-            details.Cart = await _shoppingCartService.GetShoppingCartAsync(details.Customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
-
-            if (!details.Cart.Any())
-                throw new NopException("Cart is empty");
-
-            //validate the entire shopping cart
-            var warnings = await _shoppingCartService.GetShoppingCartWarningsAsync(details.Cart, details.CheckoutAttributesXml, true);
-            if (warnings.Any())
-                throw new NopException(warnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
-
-            //validate individual cart items
-            foreach (var sci in details.Cart)
-            {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
-
-                var sciWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(details.Customer,
-                    sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
-                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
-                if (sciWarnings.Any())
-                    throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
-            }
-
-            //min totals validation
-            if (!await ValidateMinOrderSubtotalAmountAsync(details.Cart))
-            {
-                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, currentCurrency);
-                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
-                    await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
-            }
-
-            if (!await ValidateMinOrderTotalAmountAsync(details.Cart))
-            {
-                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currentCurrency);
-                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
-                    await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
-            }
-
             //tax display type
-            if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)details.Customer.TaxDisplayTypeId;
-            else
-                details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
+            details.CustomerTaxDisplayType = await _customerService.GetCustomerTaxDisplayTypeAsync(details.Customer);
+
+            //recurring or standard shopping cart?
+            details.IsRecurringShoppingCart = await _shoppingCartService.ShoppingCartIsRecurringAsync(details.Cart);
+            if (!details.IsRecurringShoppingCart)
+                return details;
+
+            await PrepareAndValidateRecurringShoppingAsync(details, processPaymentRequest);
+
+            return details;
+        }
+
+        /// <summary>
+        /// Prepare and validate recurring shopping cart
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <param name="processPaymentRequest">payment info holder</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateRecurringShoppingAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        {
+            var (recurringCyclesError, recurringCycleLength, recurringCyclePeriod, recurringTotalCycles) = await _shoppingCartService.GetRecurringCycleInfoAsync(details.Cart);
+
+            if (!string.IsNullOrEmpty(recurringCyclesError))
+                throw new NopException(recurringCyclesError);
+
+            processPaymentRequest.RecurringCycleLength = recurringCycleLength;
+            processPaymentRequest.RecurringCyclePeriod = recurringCyclePeriod;
+            processPaymentRequest.RecurringTotalCycles = recurringTotalCycles;
+        }
+
+        /// <summary>
+        /// Prepare and validate all totals
+        ///
+        /// sub total, shipping total, payment total, tax amount etc.
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <param name="processPaymentRequest">payment info holder</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateTotalsAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        {
+            var (discountAmountInclTax, discountAmountExclTax, appliedDiscounts, subTotalWithoutDiscountInclTax,
+                    subTotalWithoutDiscountExclTax, _, _, _) =
+                await _orderTotalCalculationService.GetShoppingCartSubTotalsAsync(details.Cart);
 
             //sub total (incl tax)
-            var (orderSubTotalDiscountAmount, orderSubTotalAppliedDiscounts, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, true);
-            details.OrderSubTotalInclTax = subTotalWithoutDiscountBase;
-            details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
+            details.OrderSubTotalInclTax = subTotalWithoutDiscountInclTax;
+            details.OrderSubTotalDiscountInclTax = discountAmountInclTax;
 
             //discount history
-            foreach (var disc in orderSubTotalAppliedDiscounts)
+            foreach (var disc in appliedDiscounts)
                 if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                     details.AppliedDiscounts.Add(disc);
 
             //sub total (excl tax)
-            (orderSubTotalDiscountAmount, _, subTotalWithoutDiscountBase, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, false);
-            details.OrderSubTotalExclTax = subTotalWithoutDiscountBase;
-            details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
+            details.OrderSubTotalExclTax = subTotalWithoutDiscountExclTax;
+            details.OrderSubTotalDiscountExclTax = discountAmountExclTax;
 
+            //shipping total
+            var (orderShippingTotalInclTax, orderShippingTotalExclTax, _, shippingTotalDiscounts) = await _orderTotalCalculationService.GetShoppingCartShippingTotalsAsync(details.Cart);
+
+            if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
+                throw new NopException("Shipping total couldn't be calculated");
+
+            details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
+            details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
+
+            foreach (var disc in shippingTotalDiscounts)
+                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                    details.AppliedDiscounts.Add(disc);
+
+            //payment total
+            var paymentAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(details.Cart, processPaymentRequest.PaymentMethodSystemName);
+            details.PaymentAdditionalFeeInclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, true, details.Customer)).price;
+            details.PaymentAdditionalFeeExclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, false, details.Customer)).price;
+
+            //tax amount
+            SortedDictionary<decimal, decimal> taxRatesDictionary;
+            (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
+
+            //VAT number
+            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatus == VatNumberStatus.Valid)
+                details.VatNumber = details.Customer.VatNumber;
+
+            //tax rates
+            details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>
+                $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
+
+            //order total (and applied discounts, gift cards, reward points)
+            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
+            if (!orderTotal.HasValue)
+                throw new NopException("Order total couldn't be calculated");
+
+            details.OrderDiscountAmount = orderDiscountAmount;
+            details.RedeemedRewardPoints = redeemedRewardPoints;
+            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
+            details.AppliedGiftCards = appliedGiftCards;
+            details.OrderTotal = orderTotal.Value;
+
+            //discount history
+            foreach (var disc in orderAppliedDiscounts)
+                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                    details.AppliedDiscounts.Add(disc);
+
+            processPaymentRequest.OrderTotal = details.OrderTotal;
+        }
+
+        /// <summary>
+        /// Prepare and validate shipping info
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <param name="processPaymentRequest">payment info holder</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateShippingInfoAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest)
+        {
             //shipping info
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(details.Cart))
             {
@@ -623,70 +452,113 @@ namespace Nop.Services.Orders
             }
             else
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
+        }
 
-            //shipping total
-            var (orderShippingTotalInclTax, _, shippingTotalDiscounts) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, true);
-            var (orderShippingTotalExclTax, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, false);
-            if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
-                throw new NopException("Shipping total couldn't be calculated");
+        /// <summary>
+        /// Prepare and validate shopping cart and checkout attributes
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <param name="processPaymentRequest">payment info holder</param>
+        /// <param name="currentCurrency">The working currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateShoppingCartAndCheckoutAttributesAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
+        {
+            //checkout attributes
+            details.CheckoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributesAsync(details.CheckoutAttributesXml, details.Customer);
 
-            details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
-            details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
+            //load shopping cart
+            details.Cart = await _shoppingCartService.GetShoppingCartAsync(details.Customer, ShoppingCartType.ShoppingCart, processPaymentRequest.StoreId);
 
-            foreach (var disc in shippingTotalDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
-                    details.AppliedDiscounts.Add(disc);
+            if (!details.Cart.Any())
+                throw new NopException("Cart is empty");
 
-            //payment total
-            var paymentAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(details.Cart, processPaymentRequest.PaymentMethodSystemName);
-            details.PaymentAdditionalFeeInclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, true, details.Customer)).price;
-            details.PaymentAdditionalFeeExclTax = (await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentAdditionalFee, false, details.Customer)).price;
+            //validate the entire shopping cart
+            var warnings = await _shoppingCartService.GetShoppingCartWarningsAsync(details.Cart, details.CheckoutAttributesXml, true);
+            if (warnings.Any())
+                throw new NopException(warnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
 
-            //tax amount
-            SortedDictionary<decimal, decimal> taxRatesDictionary;
-            (details.OrderTaxTotal, taxRatesDictionary) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart);
+            //validate individual cart items
+            foreach (var sci in details.Cart)
+            {
+                var product = await _productService.GetProductByIdAsync(sci.ProductId);
 
-            //VAT number
-            if (_taxSettings.EuVatEnabled && details.Customer.VatNumberStatus == VatNumberStatus.Valid)
-                details.VatNumber = details.Customer.VatNumber;
+                var sciWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(details.Customer,
+                    sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
+                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
+                if (sciWarnings.Any())
+                    throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
+            }
 
-            //tax rates
-            details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>
-                $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
+            //min totals validation
+            if (!await ValidateMinOrderSubtotalAmountAsync(details.Cart))
+            {
+                var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderSubtotalAmount, currentCurrency);
+                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"),
+                    await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false)));
+            }
 
-            //order total (and applied discounts, gift cards, reward points)
-            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
-            if (!orderTotal.HasValue)
-                throw new NopException("Order total couldn't be calculated");
+            if (!await ValidateMinOrderTotalAmountAsync(details.Cart))
+            {
+                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currentCurrency);
+                throw new NopException(string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
+                    await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false)));
+            }
+        }
 
-            details.OrderDiscountAmount = orderDiscountAmount;
-            details.RedeemedRewardPoints = redeemedRewardPoints;
-            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
-            details.AppliedGiftCards = appliedGiftCards;
-            details.OrderTotal = orderTotal.Value;
+        /// <summary>
+        /// Prepare and validate billing address
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateBillingAddressAsync(PlaceOrderContainer details)
+        {
+            if (details.Customer.BillingAddressId is null)
+                throw new NopException("Billing address is not provided");
 
-            //discount history
-            foreach (var disc in orderAppliedDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
-                    details.AppliedDiscounts.Add(disc);
+            var billingAddress = await _customerService.GetCustomerBillingAddressAsync(details.Customer);
 
-            processPaymentRequest.OrderTotal = details.OrderTotal;
+            if (!CommonHelper.IsValidEmail(billingAddress?.Email))
+                throw new NopException("Email is not valid");
 
-            //recurring or standard shopping cart?
-            details.IsRecurringShoppingCart = await _shoppingCartService.ShoppingCartIsRecurringAsync(details.Cart);
-            if (!details.IsRecurringShoppingCart)
-                return details;
+            details.BillingAddress = _addressService.CloneAddress(billingAddress);
 
-            var (recurringCyclesError, recurringCycleLength, recurringCyclePeriod, recurringTotalCycles) = await _shoppingCartService.GetRecurringCycleInfoAsync(details.Cart);
+            if (await _countryService.GetCountryByAddressAsync(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
+                throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
+        }
 
-            if (!string.IsNullOrEmpty(recurringCyclesError))
-                throw new NopException(recurringCyclesError);
+        /// <summary>
+        /// Prepare and validate customer
+        /// </summary>
+        /// <param name="details">PlaceOrder container</param>
+        /// <param name="processPaymentRequest">payment info holder</param>
+        /// <param name="currentCurrency">The working currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        /// <exception cref="NopException">Validation problems</exception>
+        protected virtual async Task PrepareAndValidateCustomerAsync(PlaceOrderContainer details, ProcessPaymentRequest processPaymentRequest, Currency currentCurrency)
+        {
+            details.Customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
 
-            processPaymentRequest.RecurringCycleLength = recurringCycleLength;
-            processPaymentRequest.RecurringCyclePeriod = recurringCyclePeriod;
-            processPaymentRequest.RecurringTotalCycles = recurringTotalCycles;
+            if (details.Customer == null)
+                throw new ArgumentException("Customer is not set");
 
-            return details;
+            //check whether customer is guest
+            if (await _customerService.IsGuestAsync(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
+                throw new NopException("Anonymous checkout is not allowed");
+
+            //customer currency
+            var currencyTmp = await _currencyService.GetCurrencyByIdAsync(details.Customer.CurrencyId ?? 0);
+            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
+            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
+            details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
+
+            //customer language
+            details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.Customer.LanguageId ?? 0);
+            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
+                details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
         }
 
         /// <summary>
@@ -936,7 +808,7 @@ namespace Nop.Services.Orders
                 await AddOrderNoteAsync(order, $"\"Order placed\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedStoreOwnerNotificationQueuedEmailIds)}.");
 
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                (await _pdfService.PrintOrderToPdfAsync(order)) : null;
+                (await _pdfService.SaveOrderPdfToDiskAsync(order)) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
             var orderPlacedCustomerNotificationQueuedEmailIds = await _workflowMessageService
@@ -1142,7 +1014,7 @@ namespace Nop.Services.Orders
             {
                 //notification
                 var orderProcessingAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderProcessingEmail ?
-                    await _pdfService.PrintOrderToPdfAsync(order) : null;
+                    await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
                 var orderProcessingAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderProcessingEmail ?
                     (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderProcessingCustomerNotificationQueuedEmailIds = await _workflowMessageService
@@ -1158,7 +1030,7 @@ namespace Nop.Services.Orders
             {
                 //notification
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    await _pdfService.PrintOrderToPdfAsync(order) : null;
+                    await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderCompletedCustomerNotificationQueuedEmailIds = await _workflowMessageService
@@ -1214,7 +1086,7 @@ namespace Nop.Services.Orders
                 //remove this "if" statement if you want to send it in this case
 
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    await _pdfService.PrintOrderToPdfAsync(order) : null;
+                    await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     (string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf") : null;
                 var orderPaidCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
@@ -1435,8 +1307,7 @@ namespace Nop.Services.Orders
                     string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
             }
 
-            //clear shopping cart
-            details.Cart.ToList().ForEach(async sci => await _shoppingCartService.DeleteShoppingCartItemAsync(sci, false));
+            await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
         }
 
         /// <summary>
@@ -1742,7 +1613,7 @@ namespace Nop.Services.Orders
             {
                 var product = await _productService.GetProductByIdAsync(updatedShoppingCartItem.ProductId);
                 var store = await _storeService.GetStoreByIdAsync(updatedShoppingCartItem.StoreId);
-                
+
                 updateOrderParameters.Warnings.AddRange(await _shoppingCartService.GetShoppingCartItemWarningsAsync(customer, updatedShoppingCartItem.ShoppingCartType,
                     product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
                     updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
@@ -2056,7 +1927,11 @@ namespace Nop.Services.Orders
                 if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
                 {
                     //cancel recurring payment
-                    (await CancelRecurringPaymentAsync(recurringPayment)).ToList().ForEach(error => _logger.ErrorAsync(error));
+                    var errors = (await CancelRecurringPaymentAsync(recurringPayment)).ToList();
+                    foreach (var error in errors)
+                    {
+                        await _logger.ErrorAsync(error);
+                    }
 
                     //notify a customer about cancelled payment
                     await _workflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
@@ -3135,29 +3010,36 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task ReOrderAsync(Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
+        public virtual async Task<IList<string>> ReOrderAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
+            var warnings = new List<string>();
+
             //move shopping cart items (if possible)
             foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
-                await _shoppingCartService.AddToCartAsync(customer, product,
+                warnings.AddRange(await _shoppingCartService.AddToCartAsync(customer, product,
                     ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                    orderItem.Quantity, false);
+                    orderItem.Quantity, false));
             }
 
             //set checkout attributes
             //comment the code below if you want to disable this functionality
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
+
+            return warnings;
         }
 
         /// <summary>
@@ -3252,7 +3134,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// The task result contains the value indicating whether payment workflow is required
         /// </returns>
         public virtual async Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
@@ -3262,9 +3144,11 @@ namespace Nop.Services.Orders
             var result = true;
 
             //check whether order total equals zero
-            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints)).shoppingCartTotal;
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints, usePaymentMethodAdditionalFee: false)).shoppingCartTotal;
+
+            if (shoppingCartTotalBase is decimal.Zero)
                 result = false;
+
             return result;
         }
 
@@ -3326,6 +3210,198 @@ namespace Nop.Services.Orders
                 result = 0;
 
             return result;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// PlaceOrder container
+        /// </summary>
+        protected partial class PlaceOrderContainer
+        {
+            public PlaceOrderContainer()
+            {
+                Cart = new List<ShoppingCartItem>();
+                AppliedDiscounts = new List<Discount>();
+                AppliedGiftCards = new List<AppliedGiftCard>();
+            }
+
+            /// <summary>
+            /// Customer
+            /// </summary>
+            public Customer Customer { get; set; }
+
+            /// <summary>
+            /// Customer language
+            /// </summary>
+            public Language CustomerLanguage { get; set; }
+
+            /// <summary>
+            /// Affiliate identifier
+            /// </summary>
+            public int AffiliateId { get; set; }
+
+            /// <summary>
+            /// TAx display type
+            /// </summary>
+            public TaxDisplayType CustomerTaxDisplayType { get; set; }
+
+            /// <summary>
+            /// Selected currency
+            /// </summary>
+            public string CustomerCurrencyCode { get; set; }
+
+            /// <summary>
+            /// Customer currency rate
+            /// </summary>
+            public decimal CustomerCurrencyRate { get; set; }
+
+            /// <summary>
+            /// Billing address
+            /// </summary>
+            public Address BillingAddress { get; set; }
+
+            /// <summary>
+            /// Shipping address
+            /// </summary>
+            public Address ShippingAddress { get; set; }
+
+            /// <summary>
+            /// Shipping status
+            /// </summary>
+            public ShippingStatus ShippingStatus { get; set; }
+
+            /// <summary>
+            /// Selected shipping method
+            /// </summary>
+            public string ShippingMethodName { get; set; }
+
+            /// <summary>
+            /// Shipping rate computation method system name
+            /// </summary>
+            public string ShippingRateComputationMethodSystemName { get; set; }
+
+            /// <summary>
+            /// Is pickup in store selected?
+            /// </summary>
+            public bool PickupInStore { get; set; }
+
+            /// <summary>
+            /// Selected pickup address
+            /// </summary>
+            public Address PickupAddress { get; set; }
+
+            /// <summary>
+            /// Is recurring shopping cart
+            /// </summary>
+            public bool IsRecurringShoppingCart { get; set; }
+
+            /// <summary>
+            /// Initial order (used with recurring payments)
+            /// </summary>
+            public Order InitialOrder { get; set; }
+
+            /// <summary>
+            /// Checkout attributes
+            /// </summary>
+            public string CheckoutAttributeDescription { get; set; }
+
+            /// <summary>
+            /// Shopping cart
+            /// </summary>
+            public string CheckoutAttributesXml { get; set; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public IList<ShoppingCartItem> Cart { get; set; }
+
+            /// <summary>
+            /// Applied discounts
+            /// </summary>
+            public List<Discount> AppliedDiscounts { get; set; }
+
+            /// <summary>
+            /// Applied gift cards
+            /// </summary>
+            public List<AppliedGiftCard> AppliedGiftCards { get; set; }
+
+            /// <summary>
+            /// Order subtotal (incl tax)
+            /// </summary>
+            public decimal OrderSubTotalInclTax { get; set; }
+
+            /// <summary>
+            /// Order subtotal (excl tax)
+            /// </summary>
+            public decimal OrderSubTotalExclTax { get; set; }
+
+            /// <summary>
+            /// Subtotal discount (incl tax)
+            /// </summary>
+            public decimal OrderSubTotalDiscountInclTax { get; set; }
+
+            /// <summary>
+            /// Subtotal discount (excl tax)
+            /// </summary>
+            public decimal OrderSubTotalDiscountExclTax { get; set; }
+
+            /// <summary>
+            /// Shipping (incl tax)
+            /// </summary>
+            public decimal OrderShippingTotalInclTax { get; set; }
+
+            /// <summary>
+            /// Shipping (excl tax)
+            /// </summary>
+            public decimal OrderShippingTotalExclTax { get; set; }
+
+            /// <summary>
+            /// Payment additional fee (incl tax)
+            /// </summary>
+            public decimal PaymentAdditionalFeeInclTax { get; set; }
+
+            /// <summary>
+            /// Payment additional fee (excl tax)
+            /// </summary>
+            public decimal PaymentAdditionalFeeExclTax { get; set; }
+
+            /// <summary>
+            /// Tax
+            /// </summary>
+            public decimal OrderTaxTotal { get; set; }
+
+            /// <summary>
+            /// VAT number
+            /// </summary>
+            public string VatNumber { get; set; }
+
+            /// <summary>
+            /// Tax rates
+            /// </summary>
+            public string TaxRates { get; set; }
+
+            /// <summary>
+            /// Order total discount amount
+            /// </summary>
+            public decimal OrderDiscountAmount { get; set; }
+
+            /// <summary>
+            /// Redeemed reward points
+            /// </summary>
+            public int RedeemedRewardPoints { get; set; }
+
+            /// <summary>
+            /// Redeemed reward points amount
+            /// </summary>
+            public decimal RedeemedRewardPointsAmount { get; set; }
+
+            /// <summary>
+            /// Order total
+            /// </summary>
+            public decimal OrderTotal { get; set; }
         }
 
         #endregion

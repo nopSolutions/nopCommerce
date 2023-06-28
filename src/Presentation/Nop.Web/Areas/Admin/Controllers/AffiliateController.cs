@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
@@ -21,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateModelFactory _affiliateModelFactory;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateModelFactory _affiliateModelFactory;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -65,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model =await _affiliateModelFactory.PrepareAffiliateSearchModelAsync(new AffiliateSearchModel());
+            var model = await _affiliateModelFactory.PrepareAffiliateSearchModelAsync(new AffiliateSearchModel());
 
             return View(model);
         }

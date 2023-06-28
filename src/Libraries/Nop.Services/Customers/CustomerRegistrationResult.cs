@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nop.Services.Customers
+﻿namespace Nop.Services.Customers
 {
     /// <summary>
     /// Customer registration result

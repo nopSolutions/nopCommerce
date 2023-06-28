@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Customers;
@@ -16,11 +13,11 @@ namespace Nop.Services.Authentication
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
 
-        private Customer _cachedCustomer;
+        protected Customer _cachedCustomer;
 
         #endregion
 
@@ -128,6 +125,14 @@ namespace Nop.Services.Authentication
 
             //whether the found customer is available
             if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegisteredAsync(customer))
+                return null;
+            
+            static DateTime trimMilliseconds(DateTime dt) => new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);
+
+            //get the latest password
+            var customerPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
+            //required a customer to re-login after password changing
+            if (trimMilliseconds(customerPassword.CreatedOnUtc).CompareTo(trimMilliseconds(authenticateResult.Properties.IssuedUtc?.DateTime ?? DateTime.UtcNow)) > 0)
                 return null;
 
             //cache authenticated customer

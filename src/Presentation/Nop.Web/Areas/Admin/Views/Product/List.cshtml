@@ -14,6 +14,8 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
+@if (Model.LicenseCheckModel.BlockPages != true)
+{
     <form asp-controller="Product" asp-action="List" method="post">
         <div class="content-header clearfix">
             <h1 class="float-left">
@@ -238,7 +240,7 @@
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
                                           Width = "100",
-                                          Render = new RenderPicture()
+                                          Render = new RenderPicture(width: 100)
                                       },
                                       new ColumnProperty(nameof(ProductModel.Name))
                                       {
@@ -328,6 +330,47 @@
         });
     </script>
 </form>
+}
+
+<script>
+    $(document).ready(function () {
+        var displayModal = @((Model.LicenseCheckModel?.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
+        if (displayModal) {
+            $('#license-window').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $('#license-window').on('shown.bs.modal', function (event) {
+                var modalCloseEl = $(this).find('button.close');
+                var closeTextEl = $('span', modalCloseEl);
+
+                var startFrom = 5;
+                closeTextEl.text(startFrom);
+
+                const timer = setInterval(function() {
+                    if (startFrom-- > 0)
+                        closeTextEl.text(startFrom);
+                }, 1000);
+
+                setTimeout(function() {
+                    closeTextEl.html('&times;');
+                    modalCloseEl.on('click', function() {
+                        $('#license-window').modal('hide')
+                    });
+                    clearInterval(timer);
+                }, startFrom*1000);
+            });
+        }
+    });
+</script>
+<div id="license-window" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @Html.Raw(Model.LicenseCheckModel?.WarningText)
+        </div>
+    </div>
+</div>
 
     @*import products form*@
     <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
@@ -407,7 +450,7 @@
             $('#exportexcel-selected').click(function (e) {
                 e.preventDefault();
                 var ids = selectedIds.join(",");
-                 if (!ids) {
+                if (!ids) {
                     $('#exportExcelSelected-info').text("@T("Admin.Products.NoProducts")");
                     $("#exportExcelSelected").click();
                 }
@@ -420,4 +463,4 @@
             });
         });
     </script>
-	<nop-alert asp-alert-id="exportExcelSelected" />
+<nop-alert asp-alert-id="exportExcelSelected" />

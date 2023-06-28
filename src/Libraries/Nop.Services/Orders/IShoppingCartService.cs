@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
@@ -23,6 +20,14 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteShoppingCartItemAsync(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
+
+        /// <summary>
+        /// Clear shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearShoppingCartAsync(Customer customer, int storeId);
 
         /// <summary>
         /// Delete shopping cart item

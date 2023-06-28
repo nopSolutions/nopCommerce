@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -25,14 +22,14 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICategoryService _categoryService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -90,7 +87,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             var catalogSeName = string.Empty;
             if (_catalogSettings.ProductUrlStructureTypeId == (int)ProductUrlStructureType.CategoryProduct)
             {
-                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).LastOrDefault();
+                var productCategory = (await _categoryService.GetProductCategoriesByProductIdAsync(urlRecord.EntityId)).FirstOrDefault();
                 var category = await _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0);
                 catalogSeName = category is not null ? await _urlRecordService.GetSeNameAsync(category) : string.Empty;
             }

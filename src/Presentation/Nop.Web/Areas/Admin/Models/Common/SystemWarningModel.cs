@@ -9,5 +9,10 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public string Text { get; set; }
 
         public bool DontEncode { get; set; }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }

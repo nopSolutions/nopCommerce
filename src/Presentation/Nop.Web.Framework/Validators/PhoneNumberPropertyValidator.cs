@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Validators;
 using Nop.Core.Domain.Customers;
@@ -11,7 +10,7 @@ namespace Nop.Web.Framework.Validators
     /// </summary>
     public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
-        private readonly CustomerSettings _customerSettings;
+        protected readonly CustomerSettings _customerSettings;
 
         public override string Name => "PhoneNumberPropertyValidator";
 
@@ -45,7 +44,9 @@ namespace Nop.Web.Framework.Validators
                 return true;
 
             if (string.IsNullOrEmpty(phoneNumber))
-                return false;
+            {
+                return !customerSettings.PhoneRequired;
+            }
 
             return customerSettings.PhoneNumberValidationUseRegex
                 ? Regex.IsMatch(phoneNumber, customerSettings.PhoneNumberValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)

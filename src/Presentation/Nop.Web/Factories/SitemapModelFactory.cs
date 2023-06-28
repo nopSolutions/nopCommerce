@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -41,33 +36,33 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IBlogService _blogService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocker _locker;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly INewsService _newsService;
-        private readonly INopFileProvider _nopFileProvider;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly NewsSettings _newsSettings;
-        private readonly SitemapSettings _sitemapSettings;
-        private readonly SitemapXmlSettings _sitemapXmlSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IBlogService _blogService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocker _locker;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly INewsService _newsService;
+        protected readonly INopFileProvider _nopFileProvider;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly NewsSettings _newsSettings;
+        protected readonly SitemapSettings _sitemapSettings;
+        protected readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
 
@@ -495,9 +490,11 @@ namespace Nop.Web.Factories
             var sitemapUrls = await GenerateUrlsAsync();
 
             //split URLs into separate lists based on the max size 
+            var numberOfParts = (int)Math.Ceiling((decimal)sitemapUrls.Sum(x => (x.AlternateLocations?.Count ?? 0) + 1) / NopSeoDefaults.SitemapMaxUrlNumber);
+
             var sitemaps = sitemapUrls
                 .Select((url, index) => new { Index = index, Value = url })
-                .GroupBy(group => group.Index / NopSeoDefaults.SitemapMaxUrlNumber)
+                .GroupBy(group => group.Index % numberOfParts)
                 .Select(group => group
                     .Select(url => url.Value)
                     .ToList()).ToList();
@@ -530,6 +527,10 @@ namespace Nop.Web.Factories
                     await WriteSitemapAsync(stream, sitemaps.First());
                 }
             }
+
+            if (_nopFileProvider.FileExists(fullPath))
+                _nopFileProvider.DeleteFile(fullPath);
+
 
             using var fileStream = _nopFileProvider.GetOrCreateFile(fullPath);
             stream.Position = 0;
@@ -824,7 +825,7 @@ namespace Nop.Web.Factories
                 ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
                 : null;
 
-            if (languages == null)
+            if (languages == null || languages.Count == 1)
                 return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;

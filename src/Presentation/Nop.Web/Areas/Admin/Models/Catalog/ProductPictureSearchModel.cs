@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #region Properties
 
         public int ProductId { get; set; }
-        
+
         #endregion
     }
 }

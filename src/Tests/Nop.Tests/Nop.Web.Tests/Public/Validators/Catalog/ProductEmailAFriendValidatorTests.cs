@@ -9,13 +9,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Catalog
     public class ProductEmailAFriendValidatorTests : BaseNopTest
     {
         private ProductEmailAFriendValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<ProductEmailAFriendValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenFriendEmailIsNullOrEmpty()
         {

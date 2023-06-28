@@ -1,8 +1,5 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
-using Nop.Services.Localization;
 
 namespace Nop.Services.ExportImport
 {
@@ -25,10 +22,11 @@ namespace Nop.Services.ExportImport
         public static async Task<ExportSpecificationAttribute> CreateAsync(ProductSpecificationAttribute specificationAttribute, ISpecificationAttributeService specificationAttributeService)
         {
             var specificationAttributeOption = await specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(specificationAttribute.SpecificationAttributeOptionId);
-           
+
             var attribute = new ExportSpecificationAttribute
             {
-                AttributeTypeId = specificationAttribute.AttributeTypeId,                
+                Id = specificationAttribute.Id,
+                AttributeTypeId = specificationAttribute.AttributeTypeId,
                 AllowFiltering = specificationAttribute.AllowFiltering,
                 ShowOnProductPage = specificationAttribute.ShowOnProductPage,
                 DisplayOrder = specificationAttribute.DisplayOrder,
@@ -39,7 +37,7 @@ namespace Nop.Services.ExportImport
             switch (attribute.AttributeType)
             {
                 case SpecificationAttributeType.Option:
-                    attribute.CustomValue = specificationAttributeOption.Name;                    
+                    attribute.CustomValue = specificationAttributeOption.Name;
                     break;
                 case SpecificationAttributeType.CustomText:
                 case SpecificationAttributeType.CustomHtmlText:

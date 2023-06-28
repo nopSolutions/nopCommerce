@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -17,21 +11,29 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
+        #region Ctor
+
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="webHostEnvironment">Hosting environment</param>
         public NopFileProvider(IWebHostEnvironment webHostEnvironment)
-            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath)! : webHostEnvironment.ContentRootPath)
         {
             WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
                 ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
                 : webHostEnvironment.WebRootPath;
         }
 
+        #endregion
+
         #region Utilities
 
-        private static void DeleteDirectoryRecursive(string path)
+        /// <summary>
+        /// Depth-first recursive delete
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void DeleteDirectoryRecursive(string path)
         {
             Directory.Delete(path, true);
             const int maxIterationToWait = 10;
@@ -44,8 +46,10 @@ namespace Nop.Core.Infrastructure
             while (Directory.Exists(path))
             {
                 curIteration += 1;
+
                 if (curIteration > maxIterationToWait)
                     return;
+
                 Thread.Sleep(100);
             }
         }
@@ -603,6 +607,13 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        protected string WebRootPath { get; }
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
+        /// </summary>
+        public string WebRootPath { get; }
+
+        #endregion
     }
 }

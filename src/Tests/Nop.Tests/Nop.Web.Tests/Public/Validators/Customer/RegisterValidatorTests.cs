@@ -197,6 +197,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
                 ConfirmPassword = "some password"
             };
             _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Password);
-        }        
+        }
     }
 }

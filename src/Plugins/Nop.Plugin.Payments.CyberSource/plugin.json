@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "CyberSource",
+  "SystemName": "Payments.CyberSource",
+  "Version": "4.70.1",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.CyberSource.dll",
+  "Description": "This plugin allows paying with CyberSource"
+}

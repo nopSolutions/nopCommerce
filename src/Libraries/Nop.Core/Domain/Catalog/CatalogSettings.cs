@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -101,7 +100,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowShareButton { get; set; }
 
         /// <summary>
-        /// Gets or sets a share code (e.g. AddThis button code)
+        /// Gets or sets a share code (e.g. ShareThis button code)
         /// </summary>
         public string PageShareCode { get; set; }
 
@@ -580,5 +579,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         /// <remarks>We have ProductUrlStructureType enum, but we use int value here so that it can be overridden in third-party plugins</remarks>
         public int ProductUrlStructureTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets an system name of active search provider
+        /// </summary>
+        public string ActiveSearchProviderSystemName { get; set; }
     }
 }

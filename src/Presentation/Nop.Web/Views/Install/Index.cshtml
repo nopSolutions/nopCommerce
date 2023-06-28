@@ -126,7 +126,7 @@
                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
                                 $.ajax({
                                     type: "GET",
-                                    url: "@Url.Action("RestartApplication", "Install")",
+                                    url: "@Url.RouteUrl("InstallationRestartApplication")",
                                     complete: function() {
                                         window.setTimeout(function () {
                                             window.location.replace('@Model.RestartUrl');
@@ -192,6 +192,16 @@
                                     </div>
                                 </div>
                             }
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="SubscribeNewsletters" />
+                                        <label class="form-check-label" for="@Html.IdFor(m => m.SubscribeNewsletters)">
+                                            @ILS.GetResource("SubscribeNewsletters")
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

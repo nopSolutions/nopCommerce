@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentMigrator;
+﻿using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Initialization;
@@ -63,7 +61,7 @@ namespace Nop.Data
             using var scope = services.BuildServiceProvider().CreateScope();
             var runner = scope.ServiceProvider.GetRequiredService<IMigrationManager>();
             foreach (var assembly in mAssemblies)
-                runner.ApplyUpMigrations(assembly, MigrationProcessType.NoDependencies);
+                runner.ApplyUpSchemaMigrations(assembly);
         }
 
         /// <summary>

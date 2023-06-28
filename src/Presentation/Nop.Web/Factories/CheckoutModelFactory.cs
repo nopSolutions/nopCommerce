@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -31,36 +27,36 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITaxService _taxService;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly ITaxService _taxService;
+        protected readonly IWorkContext _workContext;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -165,6 +161,15 @@ namespace Nop.Web.Factories
                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
                     customer, storeId: store.Id);
                 if (pickupPointsResponse.Success)
+                {
+                    var selectedPickupPoint = await _genericAttributeService
+                        .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
+
+                    var selectedShippingOption = await _genericAttributeService
+                        .GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+
+                    model.PickupInStore = selectedShippingOption is not null && selectedShippingOption.IsPickupInStore;
+
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
                     {
                         var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(point.CountryCode);
@@ -184,10 +189,10 @@ namespace Nop.Web.Factories
                             ZipPostalCode = point.ZipPostalCode,
                             Latitude = point.Latitude,
                             Longitude = point.Longitude,
-                            OpeningHours = point.OpeningHours
+                            OpeningHours = point.OpeningHours,
+                            IsPreSelected = selectedPickupPoint is not null && selectedPickupPoint.Id == point.Id,
                         };
 
-                        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                         var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
                         var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
 
@@ -206,6 +211,7 @@ namespace Nop.Web.Factories
 
                         return pickupPointModel;
                     }).ToListAsync();
+                }                    
                 else
                     foreach (var error in pickupPointsResponse.Errors)
                         model.Warnings.Add(error);
@@ -366,6 +372,8 @@ namespace Nop.Web.Factories
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: customer,
                 overrideAttributesXml: overrideAttributesXml);
+
+            model.SelectedBillingAddress = customer.BillingAddressId ?? 0;
 
             return model;
         }

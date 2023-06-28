@@ -104,14 +104,15 @@ namespace Nop.Services.Common
         #region nopCommerce official site
 
         /// <summary>
-        /// Gets a path to request the nopCommerce official site for copyright warning
+        /// Gets a path to request the nopCommerce official site for license compliance check
         /// </summary>
         /// <remarks>
         /// {0} : store URL
-        /// {1} : whether the store based is on the localhost
-        /// {2} : language code
+        /// {1} : nopCommerce version
+        /// {2} : admin email
+        /// {3} : language code
         /// </remarks>
-        public static string NopCopyrightWarningPath => "site-warnings?url={0}&local={1}&language={2}";
+        public static string NopLicenseCheckPath => "license-check?url={0}&version={1}&email={2}&language={3}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for news RSS
@@ -137,6 +138,14 @@ namespace Nop.Services.Common
         /// {5} : culture name
         /// </remarks>
         public static string NopInstallationCompletedPath => "installation-completed?version={0}&local={1}&email={2}&url={3}&language={4}&culture={5}";
+
+        /// <summary>
+        /// Gets a path to request the nopCommerce official site to subscribe to the nopCommerce newsletters
+        /// </summary>
+        /// <remarks>
+        /// {0} : subscriber email
+        /// </remarks>
+        public static string NopSubscribeNewslettersPath => "subscribe-newsletters?&email={0}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions
@@ -171,18 +180,6 @@ namespace Nop.Services.Common
         #endregion
 
         #region Caching defaults
-
-        #region Address attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute ID
-        /// </remarks>
-        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new("Nop.addressattributevalue.byattribute.{0}");
-
-        #endregion
 
         #region Generic attributes
 

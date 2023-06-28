@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services

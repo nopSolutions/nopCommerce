@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -31,27 +27,27 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICatalogModelFactory _catalogModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICatalogModelFactory _catalogModelFactory;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -455,7 +451,7 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
+        protected virtual async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
             if (category is null)
                 return false;
@@ -481,7 +477,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
+        protected virtual async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
         {
             var isAvailable = true;
 
@@ -504,7 +500,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
-        private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
+        protected virtual Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
         {
             var isAvailable = true;
 

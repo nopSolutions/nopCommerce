@@ -100,7 +100,7 @@
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
     var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
-    <div class="menu-toggle">@responsiveMenuTitle</div>
+    <div class="menu-toggle" tabindex="0" role="button" aria-controls="aria-categories-mobile-ul">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore, additionalData = Model })
         @if (Model.DisplayHomepageMenuItem)
@@ -157,6 +157,11 @@
         $(document).ready(function () {
             $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
+            $('.menu-toggle').on('keydown', function (event) {
+                if (event.keyCode === 13 || event.keyCode === 32) {
+                    event.preventDefault();                 
+                    $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                }
             });
             var localized_data = {
                 AjaxFailure: "@T("MainMenu.AjaxFailure")"
@@ -174,6 +179,12 @@
             $(document).ready(function () {
                 $('.menu-toggle').on('click', function () {
                     $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                });
+                $('.menu-toggle').on('keydown', function (event) {
+                    if (event.keyCode === 13 || event.keyCode === 32) {
+                        event.preventDefault();
+                        $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                    }
                 });
                 $('.top-menu.mobile .sublist-toggle').on('click', function () {
                     $(this).siblings('.sublist').slideToggle('slow');

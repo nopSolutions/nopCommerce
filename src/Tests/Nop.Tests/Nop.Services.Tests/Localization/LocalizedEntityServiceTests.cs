@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using FluentAssertions;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using NUnit.Framework;
@@ -38,13 +34,12 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
             var basePriceAmount = await _localizedEntityService.GetLocalizedValueAsync(1, 1, nameof(Product),
                 nameof(Product.BasepriceAmount));
 
-            decimal.Parse(basePriceAmount).Should().Be(1M);
+            decimal.Parse(basePriceAmount, CultureInfo.InvariantCulture).Should().Be(1M);
 
             basePriceAmount = await _localizedEntityService.GetLocalizedValueAsync(2, 1, nameof(Product),
                 nameof(Product.BasepriceAmount));
 
             basePriceAmount.Should().BeNullOrEmpty();
         }
-        
     }
 }

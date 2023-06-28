@@ -17,6 +17,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.Gdpr")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerGdprToolsTop, additionalData = Model })
         @if (!string.IsNullOrEmpty(Model.Result))
         {
             <div class="result">
@@ -55,5 +56,6 @@
                 </div>
             </div>
         </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerGdprToolsBottom, additionalData = Model })
     </div>
 </div>

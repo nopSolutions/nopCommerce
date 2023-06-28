@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -24,33 +19,39 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderModelFactory _orderModelFactory;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public OrderController(ICustomerService customerService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
             IOrderModelFactory orderModelFactory,
-            IOrderProcessingService orderProcessingService, 
-            IOrderService orderService, 
-            IPaymentService paymentService, 
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IPaymentService paymentService,
             IPdfService pdfService,
-            IShipmentService shipmentService, 
+            IShipmentService shipmentService,
             IWebHelper webHelper,
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
         {
             _customerService = customerService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
             _orderModelFactory = orderModelFactory;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
@@ -190,17 +191,13 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            var orders = new List<Order>
-            {
-                order
-            };
             byte[] bytes;
             await using (var stream = new MemoryStream())
             {
-                await _pdfService.PrintOrdersToPdfAsync(stream, orders, (await _workContext.GetWorkingLanguageAsync()).Id);
+                await _pdfService.PrintOrderToPdfAsync(stream, order, await _workContext.GetWorkingLanguageAsync());
                 bytes = stream.ToArray();
             }
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
         }
 
         //My account / Order details page / re-order
@@ -211,13 +208,17 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || customer.Id != order.CustomerId)
                 return Challenge();
 
-            await _orderProcessingService.ReOrderAsync(order);
+            var warnings = await _orderProcessingService.ReOrderAsync(order);
+
+            if (warnings.Any())
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("ShoppingCart.ReorderWarning"));
+
             return RedirectToRoute("ShoppingCart");
         }
 
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
-        
+
         [FormValueRequired("repost-payment")]
         public virtual async Task<IActionResult> RePostPayment(int orderId)
         {
@@ -262,7 +263,7 @@ namespace Nop.Web.Controllers
             var model = await _orderModelFactory.PrepareShipmentDetailsModelAsync(shipment);
             return View(model);
         }
-        
+
         #endregion
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Orders;
 
@@ -20,10 +16,10 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Order> _orderRepository;
 
         #endregion
 

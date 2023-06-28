@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -39,7 +32,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
@@ -61,31 +53,29 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGdprService _gdprService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly ISettingModelFactory _settingModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly IUploadService _uploadService;
+        protected readonly AppSettings _appSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGdprService _gdprService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly ISettingModelFactory _settingModelFactory;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IUploadService _uploadService;
 
         #endregion
 
@@ -108,8 +98,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IOrderService orderService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IRoxyFilemanService roxyFilemanService,
-            IServiceScopeFactory serviceScopeFactory,
             ISettingModelFactory settingModelFactory,
             ISettingService settingService,
             IStoreContext storeContext,
@@ -134,8 +122,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _orderService = orderService;
             _permissionService = permissionService;
             _pictureService = pictureService;
-            _roxyFilemanService = roxyFilemanService;
-            _serviceScopeFactory = serviceScopeFactory;
             _settingModelFactory = settingModelFactory;
             _settingService = settingService;
             _storeContext = storeContext;
@@ -592,6 +578,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //we do not clear cache after each setting update.
                 //this behavior can increase performance because cached settings will not be cleared 
                 //and loaded from database after each update
+                await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AutomaticallyDetectCountry, model.AutomaticallyDetectCountry_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.PricesIncludeTax, model.PricesIncludeTax_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.TaxDisplayType, model.TaxDisplayType_OverrideForStore, storeScope, false);
@@ -615,7 +602,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             CreatedOnUtc = DateTime.UtcNow
                         };
                     //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
-                    model.DefaultTaxAddress.Id = addressId;
+                    model.DefaultTaxAddress.Id = addressId;                    
                     originAddress = model.DefaultTaxAddress.ToEntity(originAddress);
                     if (originAddress.Id > 0)
                         await _addressService.UpdateAddressAsync(originAddress);
@@ -1131,18 +1118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            await _roxyFilemanService.FlushAllImagesOnDiskAsync();
-
             await _pictureService.SetIsStoreInDbAsync(!await _pictureService.IsStoreInDbAsync());
-
-            //use "Resolve" to load the correct service
-            //we do it because the IRoxyFilemanService service is registered for
-            //a scope and in the usual way to get a new instance there is no possibility
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var newRoxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>(scope);
-                await newRoxyFilemanService.ConfigureAsync();
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -1535,11 +1511,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var seoSettings = await _settingService.LoadSettingAsync<SeoSettings>(storeScope);
                 seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
                 seoSettings.PageTitleSeoAdjustment = (PageTitleSeoAdjustment)model.SeoSettings.PageTitleSeoAdjustment;
-                seoSettings.HomepageTitle = model.SeoSettings.HomepageTitle;
-                seoSettings.HomepageDescription = model.SeoSettings.HomepageDescription;
-                seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
-                seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
-                seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
                 seoSettings.GenerateProductMetaDescription = model.SeoSettings.GenerateProductMetaDescription;
                 seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
                 seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
@@ -1554,11 +1525,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //and loaded from database after each update
                 await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeparator, model.SeoSettings.PageTitleSeparator_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeoAdjustment, model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageTitle, model.SeoSettings.HomepageTitle_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageDescription, model.SeoSettings.HomepageDescription_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultTitle, model.SeoSettings.DefaultTitle_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaKeywords, model.SeoSettings.DefaultMetaKeywords_OverrideForStore, storeScope, false);
-                await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaDescription, model.SeoSettings.DefaultMetaDescription_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.GenerateProductMetaDescription, model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.ConvertNonWesternChars, model.SeoSettings.ConvertNonWesternChars_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.CanonicalUrlsEnabled, model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, storeScope, false);
@@ -1587,7 +1553,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeScope);
                 robotsTxtSettings.AllowSitemapXml = model.RobotsTxtSettings.AllowSitemapXml;
                 robotsTxtSettings.AdditionsRules = model.RobotsTxtSettings.AdditionsRules?.Split(Environment.NewLine).ToList();
-                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages.ToList();
+                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? new List<int>();
                 robotsTxtSettings.DisallowPaths = model.RobotsTxtSettings.DisallowPaths?.Split(Environment.NewLine).ToList();
                 robotsTxtSettings.LocalizableDisallowPaths = model.RobotsTxtSettings.LocalizableDisallowPaths?.Split(Environment.NewLine).ToList();
 
@@ -1613,6 +1579,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 captchaSettings.ShowOnEmailProductToFriendPage = model.CaptchaSettings.ShowOnEmailProductToFriendPage;
                 captchaSettings.ShowOnBlogCommentPage = model.CaptchaSettings.ShowOnBlogCommentPage;
                 captchaSettings.ShowOnNewsCommentPage = model.CaptchaSettings.ShowOnNewsCommentPage;
+                captchaSettings.ShowOnNewsletterPage = model.CaptchaSettings.ShowOnNewsletterPage;
                 captchaSettings.ShowOnProductReviewPage = model.CaptchaSettings.ShowOnProductReviewPage;
                 captchaSettings.ShowOnForgotPasswordPage = model.CaptchaSettings.ShowOnForgotPasswordPage;
                 captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
@@ -1634,6 +1601,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, model.CaptchaSettings.ShowOnEmailProductToFriendPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnBlogCommentPage, model.CaptchaSettings.ShowOnBlogCommentPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnNewsCommentPage, model.CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnNewsletterPage, model.CaptchaSettings.ShowOnNewsletterPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnProductReviewPage, model.CaptchaSettings.ShowOnProductReviewPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnApplyVendorPage, model.CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
@@ -1796,8 +1764,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (model.SecuritySettings.EncryptionKey == null)
                     model.SecuritySettings.EncryptionKey = string.Empty;
-
-                model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
 
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
                 if (string.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
@@ -1974,10 +1940,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
@@ -2007,10 +1973,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());

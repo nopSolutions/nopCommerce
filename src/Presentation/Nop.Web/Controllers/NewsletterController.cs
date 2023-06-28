@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
@@ -13,20 +12,23 @@ namespace Nop.Web.Controllers
     [AutoValidateAntiforgeryToken]
     public partial class NewsletterController : BasePublicController
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsletterModelFactory _newsletterModelFactory;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsletterModelFactory _newsletterModelFactory;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
 
-        public NewsletterController(ILocalizationService localizationService,
+        public NewsletterController(CaptchaSettings captchaSettings,
+            ILocalizationService localizationService,
             INewsletterModelFactory newsletterModelFactory,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService)
         {
+            _captchaSettings = captchaSettings;
             _localizationService = localizationService;
             _newsletterModelFactory = newsletterModelFactory;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -38,10 +40,18 @@ namespace Nop.Web.Controllers
         //available even when a store is closed
         [CheckAccessClosedStore(ignore: true)]
         [HttpPost]
-        public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
+        [ValidateCaptcha]
+        public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe, bool captchaValid)
         {
             string result;
             var success = false;
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsletterPage && !captchaValid)
+            {
+                result = await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage");
+                return Json(new { Success = success, Result = result, });
+            }
 
             if (!CommonHelper.IsValidEmail(email))
             {

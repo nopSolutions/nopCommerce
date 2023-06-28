@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 
@@ -11,6 +9,18 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial interface ILocalizedEntityService
     {
+        /// <summary>
+        /// Find localized properties
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="localeKey">Locale key</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found localized properties
+        /// </returns>
+        Task<IList<LocalizedProperty>> GetEntityLocalizedPropertiesAsync(int entityId, string localeKeyGroup, string localeKey);
+
         /// <summary>
         /// Find localized value
         /// </summary>

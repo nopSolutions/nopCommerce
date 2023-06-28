@@ -34,10 +34,10 @@
     <Value>Hibás az  SQL kapcsolat string formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Ország</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Válaszd ki az országod...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Hozzon létre adatbázist, ha nem létezik</Value>
@@ -131,6 +131,9 @@
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Áruház információk</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce telepítés</Value>

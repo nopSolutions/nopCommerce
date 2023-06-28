@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Data.Common;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -20,16 +15,16 @@ namespace Nop.Data.DataProviders
     {
         #region Utils
 
-        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
+        /// <summary>
+        /// Gets the connection string builder
+        /// </summary>
+        /// <returns>The connection string builder</returns>
+        protected static SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
         }
-
-        #endregion
-
-        #region Utils
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -230,7 +225,7 @@ namespace Nop.Data.DataProviders
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR
                     SELECT table_name
-                    FROM [{currentConnection.Connection.Database}].information_schema.tables
+                    FROM [{currentConnection.Connection.Database}].INFORMATION_SCHEMA.TABLES
                     WHERE table_type = 'base table'
                     OPEN cur_reindex
                     FETCH NEXT FROM cur_reindex INTO @TableName
@@ -313,6 +308,23 @@ namespace Nop.Data.DataProviders
                 .OnTargetKey()
                 .UpdateWhenMatched()
                 .MergeAsync();
+        }
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override void UpdateEntities<TEntity>(IEnumerable<TEntity> entities)
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.GetTable<TEntity>()
+                .Merge()
+                .Using(entities)
+                .OnTargetKey()
+                .UpdateWhenMatched()
+                .Merge();
         }
 
         #endregion

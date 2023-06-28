@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -16,8 +14,8 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
-        private bool _ignoreReflectionErrors = true;
-        protected INopFileProvider _fileProvider;
+        protected readonly bool _ignoreReflectionErrors = true;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -37,7 +35,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
-        private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
+        protected virtual void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -234,7 +232,6 @@ namespace Nop.Core.Infrastructure
                     msg += e.Message + Environment.NewLine;
 
                 var fail = new Exception(msg, ex);
-                Debug.WriteLine(fail.Message, fail);
 
                 throw fail;
             }
