@@ -95,7 +95,6 @@ namespace Nop.Core.Domain.Catalog
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [Obsolete("The field is not used since 4.70 and is left only for the update process use the ProductAttributeValuePicture instead")]
-        [NotMapped]
-        public int PictureId { get; set; }
+        public int? PictureId { get; set; }
     }
 }
