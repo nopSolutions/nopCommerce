@@ -88,15 +88,18 @@ namespace Nop.Services.News
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(n => n.Title.Contains(title));
 
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     var utcNow = DateTime.UtcNow;
                     query = query.Where(n => n.Published);
                     query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
-
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
                 }
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);

@@ -70,6 +70,12 @@ namespace Nop.Services.Polls
         {
             var query = _pollRepository.Table;
 
+            if (!showHidden || storeId > 0)
+            {
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            }
+
             //whether to load not published, not started and expired polls
             if (!showHidden)
             {
@@ -77,9 +83,6 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => poll.Published);
                 query = query.Where(poll => !poll.StartDateUtc.HasValue || poll.StartDateUtc <= utcNow);
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
-
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
             }
 
             //load homepage polls only

@@ -124,12 +124,16 @@ namespace Nop.Services.Topics
 
             return await _topicRepository.GetAllAsync(async query =>
             {
+
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     query = query.Where(t => t.Published);
-
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                     //apply ACL constraints
                     if (!ignoreAcl)
