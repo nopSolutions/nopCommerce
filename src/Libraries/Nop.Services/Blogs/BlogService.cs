@@ -100,13 +100,16 @@ namespace Nop.Services.Blogs
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(b => b.Title.Contains(title));
 
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
                     query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
-
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
                 }
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
