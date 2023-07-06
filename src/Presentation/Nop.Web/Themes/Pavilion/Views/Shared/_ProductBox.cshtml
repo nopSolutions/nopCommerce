@@ -439,7 +439,7 @@
             @if (productFlag != null && productFlag.IsInStoreOnly())
             {
                 <form action="@productUrl">
-                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">In Store Only</span></button>
+                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">@T("ShoppingCart.InStoreOnly").Text</span></button>
                 </form>
             }
             else if (isMattress)
