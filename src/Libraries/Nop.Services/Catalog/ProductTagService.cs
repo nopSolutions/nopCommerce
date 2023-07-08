@@ -354,8 +354,8 @@ namespace Nop.Services.Catalog
                     productTag = new ProductTag
                     {
                         Name = productTagName,
-                        MetaDescription = productTag2.MetaDescription,
-                        MetaKeywords = productTag2.MetaKeywords
+                        MetaDescription = "",
+                        MetaKeywords = ""
                     };
                     await InsertProductTagAsync(productTag);
                 }
