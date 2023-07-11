@@ -1,11 +1,11 @@
 ﻿{
   "Group": "Custom Module",
-  "FriendlyName": "User Deatils",
-  "SystemName": "UserDeatils",
+  "FriendlyName": "User Details",
+  "SystemName": "User Details",
   "Version": "1.0",
   "SupportedVersions": [ "4.60" ],
   "Author": "10Decoders",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.UserDeatils.dll",
-  "Description": "UserDeatilsPlugin Custom Module"
+  "Description": "User Details Plugin Custom Module"
 }
