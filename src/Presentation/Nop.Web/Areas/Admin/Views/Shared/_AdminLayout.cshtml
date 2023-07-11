@@ -20,7 +20,7 @@
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
-    adminPageTitle += T("Admin.PageTitle").Text;
+    adminPageTitle += T("LumaWorld").Text;
 
     //has "Manage Maintenance" permission?
     var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
@@ -158,8 +158,8 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
             <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
-                    <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image-xl logo-xl">
-                    <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image-xs logo-xs">
+                    <img src="~/css/admin/images/samplelogo.png" alt="logo.png" class="brand-image-xl logo-xl">
+                    <img src="~/css/admin/images/samplelogo.png" alt="logo.png" style="width:143%" class="brand-image-xs logo-xs">
                 </a>
                 <div class="sidebar">
                     <div class="sidebar-form">

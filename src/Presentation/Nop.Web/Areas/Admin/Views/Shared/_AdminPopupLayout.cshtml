@@ -6,7 +6,7 @@
 @{
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
-    adminPageTitle += T("Admin.PageTitle").Text;
+    adminPageTitle += T("LumaWorld").Text;
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));

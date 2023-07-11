@@ -13743,8 +13743,8 @@
   <LocaleResource Name="Admin.Orders.ShippingInfo.NotRequired">
     <Value>Shipping not required</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.PageTitle">
-    <Value>nopCommerce administration</Value>
+  <LocaleResource Name="LumaWorld">
+    <Value>LumaWorld</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Picture.RemovePicture">
     <Value>Remove picture</Value>
@@ -14651,6 +14651,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.SalesSummary">
     <Value>Sales summary</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Reports.DailySales">
+    <Value>Daily Sales</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.SalesSummary.BillingCountry">
     <Value>Billing country</Value>

@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.PageTitle = T("DailySales").Text;
+    ViewBag.PageTitle = T("Admin.Reports.DailySales").Text;
     NopHtml.SetActiveMenuItemSystemName("Daily Sales");
 }
 
@@ -41,7 +41,7 @@
 
                             <div class="search-body @(hideSearchBlock ? "closed" : "")">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="form-group row">
                                             <div class="col-md-4">
                                                 <nop-label asp-for="Date" />
@@ -55,7 +55,7 @@
                                                 <nop-label asp-for="VendorId" />
                                             </div>
                                             <div class="col-md-8">
-                                                <nop-select asp-for="VendorId"  asp-items="Model.AvailableVendors" />
+                                                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -67,36 +67,36 @@
                                                 <span id="search-product-friendly-name"></span>
                                                 <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                                 <input asp-for="ProductId" autocomplete="off" style="display: none;" />
-                                               
+
                                             </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8 offset-md-4">
-                                        <button type="button" id="search-products" class="btn btn-primary btn-search">
-                                            <i class="fas fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="row">
+                                        <div class="col-md-8 offset-md-4">
+                                            <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                                <i class="fas fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
 
-                    <div class="card card-default">
-                        <div class="card-body">
-                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
                                 @await Html.PartialAsync("Table", new DataTablesModel
                                 {
                                 Name = "products-grid",
-                               
+
                                 UrlRead = new DataUrl("DailySalesList", "Report", null),
                                 SearchButtonId = "search-products",
                                 Length = Model.PageSize,
                                 LengthMenu = Model.AvailablePageSizes,
 
-                               
+
                                 Filters = new List<FilterParameter>
                                 {
                                 new FilterParameter(nameof(Model.VendorId)),
@@ -107,8 +107,8 @@
                                 {
                                 new ColumnProperty(nameof(DailySalesProductModel.FormattedDate))
                                 {
-                                 Title = "Date",
-                                 Width = "150"
+                                Title = "Date",
+                                Width = "150"
                                 },
                                 new ColumnProperty(nameof(DailySalesProductModel.OrderId))
                                 {
@@ -148,18 +148,18 @@
                                 }
                                 })
 
-                            <script asp-location="Footer">
-                                function renderColumnName(data, type, row, meta) {
-                                    var textRenderer = $.fn.dataTable.render.text().display;
-                                    var res = data;
-                                    if (row.Attributes !== null) {
-                                        return textRenderer(res) + '<div><i>' + textRenderer(row.Attributes) + '</i></div>';
+                                <script asp-location="Footer">
+                                    function renderColumnName(data, type, row, meta) {
+                                        var textRenderer = $.fn.dataTable.render.text().display;
+                                        var res = data;
+                                        if (row.Attributes !== null) {
+                                            return textRenderer(res) + '<div><i>' + textRenderer(row.Attributes) + '</i></div>';
+                                        }
+                                        else {
+                                            return textRenderer(res);
+                                        }
                                     }
-                                    else {
-                                        return textRenderer(res);
-                                    }
-                                }
-                            </script>
+                                </script>
 
 
 
@@ -187,11 +187,11 @@
                                         });
                                     });
                                 </script>
-                       
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 </form>

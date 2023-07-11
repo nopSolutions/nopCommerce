@@ -1318,6 +1318,7 @@ input[type="text"].k-input {
 
 .brand-link .brand-image-xl {
   max-height: 45px;
+  width : 88%;
 }
 
 .layout-fixed .brand-link {
