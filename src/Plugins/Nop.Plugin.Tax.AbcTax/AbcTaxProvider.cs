@@ -255,27 +255,46 @@ namespace Nop.Plugin.Tax.AbcTax
             TaxTotalRequest taxTotalRequest
         ) {
             var shippingTax = decimal.Zero;
-            if (_taxSettings.ShippingIsTaxable)
+            if (!_taxSettings.ShippingIsTaxable)
             {
-                var (shippingExclTax, _, _) = await _orderTotalCalculationService
-                    .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, false);
-                var (shippingInclTax, taxRate, _) = await _orderTotalCalculationService
-                    .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, true);
-                if (shippingExclTax.HasValue && shippingInclTax.HasValue)
-                {
-                    shippingTax = shippingInclTax.Value - shippingExclTax.Value;
-                    if (shippingTax < decimal.Zero)
-                        shippingTax = decimal.Zero;
+                return shippingTax;
+            }
+            
+            var (shippingExclTax, _, _) = await _orderTotalCalculationService
+                .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, false);
+            var (shippingInclTax, taxRate, _) = await _orderTotalCalculationService
+                .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, true);
 
-                    if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
-                    {
-                        if (!taxRates.ContainsKey(taxRate))
-                            taxRates.Add(taxRate, shippingTax);
-                        else
-                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
-                    }
+            // how can we determine if we're using Home Delivery mattress?
+            // we could use the tax rate provided alongside checking if we're
+            // at 6%, so looking for both mattress under 697, and Michigan tax
+            // rate. Could also use the customer's address
+            if (shippingExclTax >= 99M && taxRate == 6.0M)
+            {
+                shippingExclTax -= 99M;
+                shippingInclTax -= 99M - (99M * 0.06M);
+
+                if (shippingExclTax == 0M)
+                {
+                    shippingExclTax = null;
                 }
             }
+
+            if (shippingExclTax.HasValue && shippingInclTax.HasValue)
+            {
+                shippingTax = shippingInclTax.Value - shippingExclTax.Value;
+                if (shippingTax < decimal.Zero)
+                    shippingTax = decimal.Zero;
+
+                if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
+                {
+                    if (!taxRates.ContainsKey(taxRate))
+                        taxRates.Add(taxRate, shippingTax);
+                    else
+                        taxRates[taxRate] = taxRates[taxRate] + shippingTax;
+                }
+            }
+            
 
             return shippingTax;
         }
