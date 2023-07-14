@@ -484,6 +484,14 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 decimal backendOrderTax, backendOrderTotal;
                 CalculateValues(shippingItems, out backendOrderTax, out backendOrderTotal);
 
+                // modify order shipping total including tax, remove tax if
+                // mattress delivery
+                var taxRate = order.TaxRates.Split(":")[0];
+                if (order.OrderShippingExclTax >= 99M && taxRate == "6.0000")
+                {
+                    order.OrderShippingInclTax -= (99M * 0.06M);
+                }
+
                 decimal shippingTax = order.OrderShippingInclTax - order.OrderShippingExclTax;
                 backendOrderTax += shippingTax;
                 backendOrderTotal += order.OrderShippingInclTax;
