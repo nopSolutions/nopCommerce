@@ -270,6 +270,15 @@ namespace Nop.Services.Shipping
         /// </returns>
         Task<decimal> GetAdditionalShippingChargeAsync(ShoppingCartItem shoppingCartItem);
 
+        /// <summary>
+        /// Gets dimensions of product with optional <paramref name="attributesXml"/>
+        /// </summary>
+        /// <param name="product">The product</param>
+        /// <param name="attributesXml">The product attributes contains values with type <see cref="AttributeValueType.AssociatedToProduct"/> in XML format (optional)</param>
+        /// <param name="ignoreFreeShippedItems">The value indicating whether to ignore the dimensions of the products marked as "Free shipping"</param>
+        /// <returns>The <see cref="Task"/> containing the product dimensions.</returns>
+        Task<(decimal width, decimal length, decimal height)> GetProductDimensionsAsync(Product product, string attributesXml, bool ignoreFreeShippedItems = false);
+
         #endregion
     }
 }

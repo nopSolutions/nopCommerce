@@ -571,42 +571,23 @@ namespace Nop.Services.Shipping
             //calculate cube root of volume, in case if the number of items more than 1
             if (_shippingSettings.UseCubeRootMethod && await AreMultipleItemsAsync(packageItems))
             {
-                //find max dimensions of the shipped items
-                var maxWidth = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.Product.Width : decimal.Zero);
-                var maxLength = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.Product.Length : decimal.Zero);
-                var maxHeight = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.Product.Height : decimal.Zero);
+                var maxWidth = decimal.Zero;
+                var maxLength = decimal.Zero;
+                var maxHeight = decimal.Zero;
 
                 //get total volume of the shipped items
                 var totalVolume = await packageItems.SumAwaitAsync(async packageItem =>
                 {
-                    //product volume
-                    var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
-                        packageItem.Product.Width * packageItem.Product.Length * packageItem.Product.Height : decimal.Zero;
+                    var (productWidth, productLength, productHeight)
+                        = await GetProductDimensionsAsync(packageItem.Product, packageItem.ShoppingCartItem.AttributesXml);
 
-                    //associated products volume
-                    if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
-                    {
-                        productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
-                            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).SumAwaitAsync(async attributeValue =>
-                            {
-                                var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
-                                if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
-                                    return 0;
-
-                                //adjust max dimensions
-                                maxWidth = Math.Max(maxWidth, associatedProduct.Width);
-                                maxLength = Math.Max(maxLength, associatedProduct.Length);
-                                maxHeight = Math.Max(maxHeight, associatedProduct.Height);
-
-                                return attributeValue.Quantity * associatedProduct.Width * associatedProduct.Length * associatedProduct.Height;
-                            });
-                    }
+                    //adjust max dimensions
+                    maxWidth = Math.Max(maxWidth, productWidth);
+                    maxLength = Math.Max(maxLength, productLength);
+                    maxHeight = Math.Max(maxHeight, productHeight);
 
                     //total volume of item
-                    return productVolume * packageItem.GetQuantity();
+                    return productWidth * productLength * productHeight * packageItem.GetQuantity();
                 });
 
                 //set dimensions as cube root of volume
@@ -625,23 +606,13 @@ namespace Nop.Services.Shipping
                 width = length = height = decimal.Zero;
                 foreach (var packageItem in packageItems)
                 {
-                    var productWidth = decimal.Zero;
-                    var productLength = decimal.Zero;
-                    var productHeight = decimal.Zero;
-                    if (!packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems)
-                    {
-                        productWidth = packageItem.Product.Width;
-                        productLength = packageItem.Product.Length;
-                        productHeight = packageItem.Product.Height;
-                    }
-
-                    //associated products
-                    var (associatedProductsWidth, associatedProductsLength, associatedProductsHeight) = await GetAssociatedProductDimensionsAsync(packageItem.ShoppingCartItem);
+                    var (productWidth, productLength, productHeight)
+                        = await GetProductDimensionsAsync(packageItem.Product, packageItem.ShoppingCartItem.AttributesXml);
 
                     var quantity = packageItem.GetQuantity();
-                    width += (productWidth + associatedProductsWidth) * quantity;
-                    length += (productLength + associatedProductsLength) * quantity;
-                    height += (productHeight + associatedProductsHeight) * quantity;
+                    width += productWidth * quantity;
+                    length += productLength * quantity;
+                    height += productHeight * quantity;
                 }
             }
 
@@ -1032,6 +1003,46 @@ namespace Nop.Services.Shipping
                 .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
 
             return additionalShippingCharge;
+        }
+
+        /// <summary>
+        /// Gets dimensions of product with optional <paramref name="attributesXml"/>
+        /// </summary>
+        /// <param name="product">The product</param>
+        /// <param name="attributesXml">The product attributes contains values with type <see cref="AttributeValueType.AssociatedToProduct"/> in XML format (optional)</param>
+        /// <param name="ignoreFreeShippedItems">The value indicating whether to ignore the dimensions of the products marked as "Free shipping"</param>
+        /// <returns>The <see cref="Task"/> containing the product dimensions.</returns>
+        public virtual async Task<(decimal width, decimal length, decimal height)> GetProductDimensionsAsync(Product product, string attributesXml, bool ignoreFreeShippedItems = false)
+        {
+            var width = decimal.Zero;
+            var length = decimal.Zero;
+            var height = decimal.Zero;
+
+            if (!product.IsFreeShipping || !ignoreFreeShippedItems)
+            {
+                width = product.Width;
+                length = product.Length;
+                height = product.Height;
+            }
+
+            if (!string.IsNullOrEmpty(attributesXml) && _shippingSettings.ConsiderAssociatedProductsDimensions)
+            {
+                //bundled products (associated attributes)
+                var attributeValues = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
+                    .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct).ToList();
+                foreach (var attributeValue in attributeValues)
+                {
+                    var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+                    if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
+                        continue;
+
+                    width += associatedProduct.Width * attributeValue.Quantity;
+                    length += associatedProduct.Length * attributeValue.Quantity;
+                    height += associatedProduct.Height * attributeValue.Quantity;
+                }
+            }
+
+            return (width, length, height);
         }
 
         #endregion

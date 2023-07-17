@@ -800,8 +800,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var baseDimension = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId))?.Name;
             if (orderItem.ItemWeight.HasValue)
                 model.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
+
+            var (productWidth, productLength, productHeight)
+                = await _shippingService.GetProductDimensionsAsync(product, orderItem.AttributesXml);
+
             model.ItemDimensions =
-                $"{product.Length:F2} x {product.Width:F2} x {product.Height:F2} [{baseDimension}]";
+                $"{productLength:F2} x {productWidth:F2} x {productHeight:F2} [{baseDimension}]";
 
             if (!product.IsRental)
                 return;
@@ -1724,8 +1728,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (orderItem.ItemWeight.HasValue)
                         shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
 
+                    var (productWidth, productLength, productHeight)
+                        = await _shippingService.GetProductDimensionsAsync(product, orderItem.AttributesXml);
+
                     shipmentItemModel.ItemDimensions =
-                        $"{product.Length:F2} x {product.Width:F2} x {product.Height:F2} [{baseDimension}]";
+                        $"{productLength:F2} x {productWidth:F2} x {productHeight:F2} [{baseDimension}]";
 
                     return shipmentItemModel;
                 });
