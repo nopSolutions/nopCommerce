@@ -321,7 +321,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Pdf.Tax"] = "Tax",
 
                 //#43
-                ["admin.configuration.stores.info"] = "Info",
+                ["Admin.Configuration.Stores.Info"] = "Info",
 
                 //5701
                 ["Admin.Configuration.AppSettings.Common.UseAutofac"] = "Use Autofac IoC",
