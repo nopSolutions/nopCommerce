@@ -247,11 +247,14 @@ namespace Nop.Services.Catalog
                 else if (overridePublished.HasValue)
                     query = query.Where(c => c.Published == overridePublished.Value);
 
-                if (!showHidden)
+                if (!showHidden || storeId > 0)
                 {
                     //apply store mapping constraints
                     query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
 
+                if (!showHidden)
+                {
                     //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
                     query = await _aclService.ApplyAcl(query, customer);
