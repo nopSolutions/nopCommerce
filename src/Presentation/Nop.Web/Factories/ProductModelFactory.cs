@@ -963,15 +963,15 @@ namespace Nop.Web.Factories
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributeMapping)
             {
-                var productAttrubute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
+                var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
 
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Name),
-                    Description = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Description),
+                    Name = await _localizationService.GetLocalizedAsync(productAttribute, x => x.Name),
+                    Description = await _localizationService.GetLocalizedAsync(productAttribute, x => x.Description),
                     TextPrompt = await _localizationService.GetLocalizedAsync(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
