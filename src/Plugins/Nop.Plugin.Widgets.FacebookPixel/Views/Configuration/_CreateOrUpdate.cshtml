@@ -311,10 +311,8 @@
                                 <nop-select asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" asp-items="@Model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones" asp-multiple="true" />
                                 <script>
                                     $(document).ready(function() {
-                                        var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect");
-                                        input.setOptions({
-                                            autoClose: false,
-                                            filter: "contains"
+                                        var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').select2({
+                                            closeOnSelect: false,
                                         });
                                     });
                                 </script>
@@ -348,7 +346,7 @@
 
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val('');
-                                                var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect");
+                                                var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').select2();
                                                 input.value("");
                                                 input.trigger("change");
                                             } else {

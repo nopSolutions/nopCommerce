@@ -106,20 +106,6 @@
         }
     }
 
-    //tags
-    $(document).ready(function() {
-        @Html.Raw(Model.InitialProductTags)
-        $("#@Html.IdFor(model => model.ProductTags)").tagEditor({
-            autocomplete: {
-                delay: 0,
-                position: { collision: 'flip' },
-                source: initialProductTags
-            },
-            delimiter: ',',
-            placeholder: '@T("Admin.Catalog.Products.Fields.ProductTags.Placeholder")'
-        });
-    });
-
     //required product friendly names
     $(document).ready(function() {
         loadRequiredProductFriendlyNames();
@@ -260,24 +246,17 @@
             <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
             <script>
                 $(document).ready(function() {
-					var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
-					categoryIdsInput.setOptions({
-                    autoClose: false,
-                    filter: "contains"
+					var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableCategories.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")',
+                        </text>
+                        }
                     });
-
-				@if (Model.AvailableCategories.Count == 0)
-                {
-                    <text>
-                        categoryIdsInput.setOptions({
-                            enable: false,
-                            placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
-                        });
-                        categoryIdsInput._placeholder();
-                        categoryIdsInput._enable();
-                    </text>
-                }
-            });
+                });
             </script>
         </div>
     </div>
@@ -289,24 +268,17 @@
             <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
             <script>
                 $(document).ready(function() {
-                var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
-                manufacturersIdsInput.setOptions({
-                    autoClose: false,
-                    filter: "contains"
-                });
-
-				@if (Model.AvailableManufacturers.Count == 0)
-                {
-                    <text>
-                        manufacturersIdsInput.setOptions({
-                            enable: false,
-                            placeholder: '@T("Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable")'
-                        });
-                        manufacturersIdsInput._placeholder();
-                        manufacturersIdsInput._enable();
+                    var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableManufacturers.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable")',
                         </text>
-                }
-            });
+                        }
+                    });
+                });
             </script>
         </div>
     </div>
@@ -321,11 +293,11 @@
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.ProductTags ? null : "advanced-setting")">
         <div class="col-md-3">
-            <nop-label asp-for="ProductTags" />
+            <nop-label asp-for="SelectedProductTags" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ProductTags" />
-            <span asp-validation-for="ProductTags"></span>
+            <nop-select asp-for="SelectedProductTags" asp-items="Model.AvailableProductTags" asp-multiple="true" />
+            <span asp-validation-for="SelectedProductTags"></span>
         </div>
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.GTIN ? null : "advanced-setting")">
@@ -501,26 +473,18 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                     <script>
-                    $(document).ready(function() {
-                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
-                            .data("kendoMultiSelect");
-                        rolesIdsInput.setOptions({
-                            autoClose: false,
-                            filter: "contains"
+                        $(document).ready(function() {
+                                var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableCustomerRoles.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No customer roles available',
+                                </text>
+                                }
+                            });
                         });
-
-                        @if (Model.AvailableCustomerRoles.Count == 0)
-                        {
-                            <text>
-                                rolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No customer roles available'
-                                });
-                                rolesIdsInput._placeholder();
-                                rolesIdsInput._enable();
-                            </text>
-                        }
-                    });
                     </script>
                 </div>
                 <div class="col-md-8">
@@ -538,25 +502,18 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                    $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                        storesIdsInput.setOptions({
-                            autoClose: false,
-                            filter: "contains"
+                        $(document).ready(function() {
+                                var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableStores.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No stores available',
+                                </text>
+                                }
+                            });
                         });
-
-                        @if (Model.AvailableStores.Count == 0)
-                        {
-                            <text>
-                                storesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No stores available'
-                                });
-                                storesIdsInput._placeholder();
-                                storesIdsInput._enable();
-                            </text>
-                        }
-                    });
                     </script>
                 </div>
                 <div class="col-md-8">

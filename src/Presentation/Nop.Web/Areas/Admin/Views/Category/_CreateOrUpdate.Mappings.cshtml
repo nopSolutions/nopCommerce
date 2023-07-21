@@ -9,23 +9,16 @@
             <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
             <script>
 				$(document).ready(function() {
-					var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
-					discountsIdsInput.setOptions({
-						autoClose: false,
-						filter: "contains"
-					});
-
-					@if (Model.AvailableDiscounts.Count == 0)
-					{
-						<text>
-							discountsIdsInput.setOptions({
-								enable: false,
-								placeholder: '@T("Admin.Catalog.Categories.Fields.Discounts.NoDiscounts")'
-							});
-							discountsIdsInput._placeholder();
-							discountsIdsInput._enable();
-						</text>
-					}
+					var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableDiscounts.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Categories.Fields.Discounts.NoDiscounts")',
+                        </text>
+                        }
+                    });
 				});
             </script>
         </div>
@@ -40,24 +33,16 @@
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                     <script>
 						$(document).ready(function() {
-							var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
-								.data("kendoMultiSelect");
-							rolesIdsInput.setOptions({
-								autoClose: false,
-								filter: "contains"
-							});
-
-							@if (Model.AvailableCustomerRoles.Count == 0)
-							{
-								<text>
-								rolesIdsInput.setOptions({
-									enable: false,
-									placeholder: 'No customer roles available'
-								});
-								rolesIdsInput._placeholder();
-								rolesIdsInput._enable();
-								</text>
-							}
+							var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableCustomerRoles.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No customer roles available',
+                                </text>
+                                }
+                            });
 						});
                     </script>
                 </div>
@@ -77,24 +62,16 @@
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
 						$(document).ready(function() {
-							var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
-								.data("kendoMultiSelect");
-							storesIdsInput.setOptions({
-								autoClose: false,
-								filter: "contains"
-							});
-
-							@if (Model.AvailableStores.Count == 0)
-							{
-								<text>
-								storesIdsInput.setOptions({
-									enable: false,
-									placeholder: 'No stores available'
-								});
-								storesIdsInput._placeholder();
-								storesIdsInput._enable();
-								</text>
-							}
+							var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableStores.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No stores available',
+                                </text>
+                                }
+                            });
 						});
                     </script>
                 </div>

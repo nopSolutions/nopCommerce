@@ -263,10 +263,7 @@ label, label + * {
   display: none;
 }
 
-
 /*********** GLOBAL FORMS ***********/
-
-
 
 .fieldset, .section {
   position: relative;
@@ -396,10 +393,7 @@ label, label + * {
   height: auto;
 }
 
-
 /*********** GLOBAL TABLES ***********/
-
-
 
 .table-wrapper {
   overflow-x: auto;

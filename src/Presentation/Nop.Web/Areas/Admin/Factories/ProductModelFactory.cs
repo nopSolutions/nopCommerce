@@ -844,7 +844,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 model.LastStockQuantity = product.StockQuantity;
-                model.ProductTags = string.Join(", ", (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name));
+
+                model.SelectedProductTags = (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name).ToList();
+                model.AvailableProductTags = (await _productTagService.GetAllProductTagsAsync())
+                    .Select(pt => new SelectListItem { Text = pt.Name, Value = pt.Name }).ToList();
+
                 model.ProductAttributesExist = (await _productAttributeService.GetAllProductAttributesAsync()).Any();
 
                 model.CanCreateCombinations = await (await _productAttributeService
@@ -994,22 +998,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model stores
             await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
-
-            var productTags = await _productTagService.GetAllProductTagsAsync();
-            var productTagsSb = new StringBuilder();
-            productTagsSb.Append("var initialProductTags = [");
-            for (var i = 0; i < productTags.Count; i++)
-            {
-                var tag = productTags[i];
-                productTagsSb.Append('\'');
-                productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                productTagsSb.Append('\'');
-                if (i != productTags.Count - 1)
-                    productTagsSb.Append(',');
-            }
-            productTagsSb.Append(']');
-
-            model.InitialProductTags = productTagsSb.ToString();
 
             return model;
         }
