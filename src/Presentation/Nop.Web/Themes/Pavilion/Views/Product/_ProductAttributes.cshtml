@@ -151,6 +151,14 @@
                                         {
                                             attributeValue.IsPreSelected = is4ft;
                                         }
+
+                                        var undermessage = "";
+                                        if (attributeName.Contains(":"))
+                                        {
+                                            int index = attributeName.IndexOf(":");
+                                            undermessage = index >= 0 ? attributeName.Substring(index + 1) : string.Empty;
+                                        }
+
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
                                                    checked="@attributeValue.IsPreSelected"
@@ -162,6 +170,12 @@
                                             {
                                                 <div id="decline-new-hose" style="font-size: 8pt">
                                                     New hoses are recommended for all washer installations for coverage against property damage.
+                                                </div>
+                                            }
+                                            @if (attributeValue.Name.Contains("Home Delivery and Installation ("))
+                                            {
+                                                <div id="undermessage" style="font-size: 8pt">
+                                                    @undermessage
                                                 </div>
                                             }
                                             

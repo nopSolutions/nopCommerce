@@ -356,7 +356,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             var newDeliveryInstallPav = map.DeliveryInstall != 0 ? new ProductAttributeValue()
             {
                 ProductAttributeMappingId = deliveryOptionsPam.Id,
-                Name = string.Format("Home Delivery and Installation ({0})", deliveryInstallPriceFormatted),
+                Name = await GetDeliveryInstallMessageAsync(deliveryOptionsPam.ProductId, deliveryInstallPriceFormatted),
                 Cost = map.DeliveryInstall,
                 PriceAdjustment = deliveryInstallItem.Price,
                 IsPreSelected = false,
@@ -402,6 +402,30 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             // We don't need to add FedEx to results
 
             return results;
+        }
+
+        private async System.Threading.Tasks.Task<string> GetDeliveryInstallMessageAsync(
+            int productId,
+            string deliveryInstallPriceFormatted)
+        {
+            // TODO: add id here
+            string undermessage = string.Empty;
+            var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
+            foreach (var pc in productCategories)
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(pc.CategoryId);
+                var fullCategoryListNames = (await _categoryService.GetCategoryBreadCrumbAsync(category)).Select(c => c.Name);
+                if (fullCategoryListNames.Contains("Gas Dryers") || fullCategoryListNames.Contains("Electric Dryers"))
+                {
+                    undermessage = ":Installation does not include dryer vents. We can recommend a licensed contractor if needed.";
+                }
+                else if (fullCategoryListNames.Contains("Gas Ranges"))
+                {
+                    undermessage = ":Hookup of your gas range is available (additional charge applies), providing there is proper gas shut off valve above the floor behind the range.";
+                }
+            }
+
+            return string.Format("Home Delivery and Installation ({0}){1}", deliveryInstallPriceFormatted, undermessage);
         }
 
         private async System.Threading.Tasks.Task<ProductAttributeMapping> SaveProductAttributeMappingAsync(
