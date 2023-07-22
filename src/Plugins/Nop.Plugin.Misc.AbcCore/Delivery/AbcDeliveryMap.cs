@@ -26,5 +26,10 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
                    DeliveryHaulway != 0 ||
                    DeliveryHaulwayInstall != 0;
         }
+
+        public bool HasMailInRebate()
+        {
+            return DeliveryOnly == 90001 || DeliveryOnly == 90002;
+        }
     }
 }

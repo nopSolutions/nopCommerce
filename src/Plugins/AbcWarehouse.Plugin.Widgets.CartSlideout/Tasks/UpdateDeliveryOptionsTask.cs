@@ -328,10 +328,9 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 "MATTRESS" : 
                 await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
 
-            // Need to get the category to determine if furniture
             string message = await GetHomeDeliveryMessageAsync(
                 deliveryOnlyPriceFormatted,
-                deliveryOptionsPam.ProductId);
+                map.HasMailInRebate());
 
             var existingDeliveryOnlyPav = existingValues.Where(pav => pav.Name.Contains("Home Delivery (")).SingleOrDefault();
             var newDeliveryOnlyPav = map.DeliveryOnly != 0 ? new ProductAttributeValue()
@@ -462,26 +461,18 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return existingPav;
         }
 
-        private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(string deliveryOnlyPriceFormatted, int productId)
+        private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(
+            string deliveryOnlyPriceFormatted,
+            bool hasMailInRebate)
         {
             if (deliveryOnlyPriceFormatted == "MATTRESS")
             {
                 return "Home Delivery (Price in Cart)";
             }
 
-            // If Furniture, no mail-in rebate
-            var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
-            foreach (var pc in productCategories)
-            {
-                var category = await _categoryService.GetCategoryByIdAsync(pc.CategoryId);
-                var fullCategoryListNames = (await _categoryService.GetCategoryBreadCrumbAsync(category)).Select(c => c.Name);
-                if (fullCategoryListNames.Contains("Furniture"))
-                {
-                    return string.Format("Home Delivery ({0})", deliveryOnlyPriceFormatted);
-                }
-            }
-
-            return string.Format("Home Delivery (FREE With Mail-In Rebate)", deliveryOnlyPriceFormatted);
+            return hasMailInRebate ?
+                "Home Delivery (FREE With Mail-In Rebate)" :
+                string.Format("Home Delivery ({0})", deliveryOnlyPriceFormatted);
         }
 
         private async System.Threading.Tasks.Task<string> GetHaulawayMessageAsync(string price, int productId, string action)
