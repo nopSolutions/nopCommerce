@@ -157,6 +157,7 @@
                                         {
                                             int index = attributeName.IndexOf(":");
                                             undermessage = index >= 0 ? attributeName.Substring(index + 1) : string.Empty;
+                                            attributeName = attributeName.Split(":")[0];
                                         }
 
                                         <li>
