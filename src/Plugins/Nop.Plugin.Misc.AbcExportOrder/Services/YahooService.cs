@@ -152,7 +152,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 // also add a row for the delivery option itself
                 var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
                 var pickupPav = pavs?.FirstOrDefault(pav => pav.Name.Contains("Pickup"));
-                var hasDeliveryOptions = orderItem.HasDeliveryOptions() && pickupPav == null;
+                var isFedEx = pavs?.FirstOrDefault(pav => pav.Name.Contains("FedEx")) != null;
+                var hasDeliveryOptions = orderItem.HasDeliveryOptions() && pickupPav == null && !isFedEx;
                 if (hasDeliveryOptions)
                 {
                     var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
