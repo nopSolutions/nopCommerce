@@ -21,6 +21,7 @@
         // remove second price difference
         var braceIndex = deliveryPickupOptions.IndexOf('[') == -1 ? deliveryPickupOptions.Length : deliveryPickupOptions.IndexOf('[');
         deliveryPickupOptions = deliveryPickupOptions.Substring(0, braceIndex);
+        deliveryPickupOptions = deliveryPickupOptions.Split(":")[0];
         deliveryPickupOptions = deliveryPickupOptions.Trim();
     }
 
