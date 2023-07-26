@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
 using Nop.Plugin.Misc.AbcCore.Services;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcCore.Factories
 {
@@ -37,6 +38,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
         private readonly IAbcMattressListingPriceService _abcMattressListingPriceService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         public AbcProductModelFactory(
             CaptchaSettings captchaSettings,
@@ -92,6 +94,7 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             _abcMattressListingPriceService = abcMattressListingPriceService;
             _priceFormatter = priceFormatter;
             _productAbcDescriptionService = productAbcDescriptionService;
+            _productAttributeParser = productAttributeParser;
         }
 
         protected override async Task<ProductOverviewModel.ProductPriceModel>
@@ -125,9 +128,14 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             return models.Where(m => !new string[]{
                 "Home Delivery",
                 "Warranty",
-                "Delivery/Pickup Options",
+                AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
                 "Pickup",
-                "FedEx"
+                "Haul Away (Delivery)",
+                "Haul Away (Delivery/Install)",
+                "FedEx",
+                AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName,
+                AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName,
+                AbcDeliveryConsts.PickupAccessoriesProductAttributeName
             }.Contains(m.Name)).ToList();
         }
 
@@ -138,8 +146,24 @@ namespace Nop.Plugin.Misc.AbcCore.Factories
             string[] attributesToInclude
         ) {
             var models = await base.PrepareProductAttributeModelsAsync(product, updatecartitem);
+            var filteredModels = models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
 
-            return models.Where(m => attributesToInclude.Contains(m.Name)).ToList();
+            // Warranty needs to be pre-selected
+            if (updatecartitem != null)
+            {
+                var warrantyModel = filteredModels.FirstOrDefault(m => m.Name == "Warranty");
+                if (warrantyModel != null)
+                {
+                    var selectedValue = (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml, warrantyModel.Id)).FirstOrDefault();
+                    if (selectedValue != null)
+                    {
+                        selectedValue.IsPreSelected = true;
+                    }
+                }
+            }
+            
+
+            return filteredModels;
         }
 
         private async Task<string> AdjustMattressPriceAsync(int productId)

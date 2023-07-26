@@ -8,6 +8,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Media;
 using Nop.Web.Framework.Components;
+using Nop.Plugin.Misc.AbcCore.Extensions;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
 {
@@ -15,17 +16,20 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
     {
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IProductService _productService;
 
         public CartSlideoutProductInfoViewComponent(
             IGenericAttributeService genericAttributeService,
             IPictureService pictureService,
+            IPriceFormatter priceFormatter,
             IProductAbcDescriptionService productAbcDescriptionService,
             IProductService productService)
         {
             _genericAttributeService = genericAttributeService;
             _pictureService = pictureService;
+            _priceFormatter = priceFormatter;
             _productAbcDescriptionService = productAbcDescriptionService;
             _productService = productService;
         }
@@ -39,11 +43,20 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Components
                 await _pictureService.GetPictureUrlAsync(productPicture.PictureId) :
                 string.Empty;
 
+            var shouldShowPrice = !await product.IsAddToCartToSeePriceAsync() &&
+                                  !product.IsMattress();
+
             var model = new ProductInfoModel()
             {
                 ImageUrl = pictureUrl,
                 Name = productName,
                 Description = await GetProductDescriptionAsync(product),
+                OldPrice = shouldShowPrice && product.OldPrice != product.Price ?
+                    await _priceFormatter.FormatPriceAsync(product.OldPrice) :
+                    string.Empty,
+                Price = shouldShowPrice ?
+                    await _priceFormatter.FormatPriceAsync(product.Price) :
+                    string.Empty,
             };
 
             return View("~/Plugins/Widgets.CartSlideout/Views/_ProductInfo.cshtml", model);

@@ -147,6 +147,10 @@ namespace Nop.Plugin.Misc.AbcCore.Services
 
             // call backend service
             string xmlRequestString = await BuildXmlRequestStringAsync(backendId);
+            if (_settings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"BackendStockService request: {xmlRequestString}");
+            }
             using (var client = new HttpClient())
             {
                 StringContent content = new StringContent(xmlRequestString, Encoding.UTF8, "text/xml");
@@ -156,6 +160,11 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                     if (response.IsSuccessStatusCode)
                     {
                         string xmlResponse = response.Content.ReadAsStringAsync().Result;
+
+                        if (_settings.IsDebugMode)
+                        {
+                            await _logger.InformationAsync($"BackendStockService response: {xmlResponse}");
+                        }
 
                         byte[] byteArray = Encoding.UTF8.GetBytes(xmlResponse);
                         StreamReader reader = new StreamReader(new MemoryStream(byteArray));
@@ -220,15 +229,41 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                                     .Select(u => u.Slug)
                                     .FirstOrDefault();
 
-            ProductStock mockShop = new ProductStock()
+            // Bloomfield Township
+            ProductStock bloomfieldTownshipMockShop = new ProductStock()
             {
-                Shop = await _shopService.GetShopByIdAsync(shopAbc.ShopId),
-                ShopUrl = shopUrl,
+                Shop = await _shopService.GetShopByIdAsync(440),
                 Available = true,
-                Quantity = 1
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
             };
+            stockResponse.ProductStocks.Add(bloomfieldTownshipMockShop);
 
-            stockResponse.ProductStocks.Add(mockShop);
+            ProductStock rochesterMockShop = new ProductStock()
+            {
+                Shop = await _shopService.GetShopByIdAsync(477),
+                Available = false,
+                Quantity = 0
+            };
+            stockResponse.ProductStocks.Add(rochesterMockShop);
+
+            ProductStock troyMockShop = new ProductStock()
+            {
+                Shop = await _shopService.GetShopByIdAsync(445),
+                Available = true,
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
+            };
+            stockResponse.ProductStocks.Add(troyMockShop);
+
+            ProductStock farmingtonHillsMockShop = new ProductStock()
+            {
+                Shop = await _shopService.GetShopByIdAsync(443),
+                Available = true,
+                Quantity = 1,
+                Message = "Available on Display in Store, Ship to Store 1 to 3 days"
+            };
+            stockResponse.ProductStocks.Add(farmingtonHillsMockShop);
 
             return stockResponse;
         }

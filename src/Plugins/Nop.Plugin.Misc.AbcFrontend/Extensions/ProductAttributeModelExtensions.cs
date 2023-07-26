@@ -4,6 +4,7 @@ using Nop.Services.Common;
 using Nop.Services.Orders;
 using System;
 using Nop.Web.Models.Catalog;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcFrontend.Extensions
 {
@@ -16,9 +17,11 @@ namespace Nop.Plugin.Misc.AbcFrontend.Extensions
             return model.TextPrompt == "Box Spring or Adjustable Base" ||
                    model.TextPrompt == "Mattress Protector" ||
                    model.TextPrompt == "Frame" ||
-                   model.Name == "Delivery/Pickup Options" ||
-                   model.Name == "Haul Away (Delivery)" ||
-                   model.Name == "Haul Away (Delivery/Install)";
+                   model.Name == AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.DeliveryAccessoriesProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.DeliveryInstallAccessoriesProductAttributeName ||
+                   model.Name == AbcDeliveryConsts.PickupAccessoriesProductAttributeName;
         }
     }
 }

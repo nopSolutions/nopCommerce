@@ -10,6 +10,7 @@ using Nop.Plugin.Misc.AbcCore.Services.Custom;
 using Nop.Plugin.Misc.AbcCore.Data;
 using Nop.Plugin.Misc.AbcCore.Factories;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
+using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Web.Factories;
 using Nop.Services.Media.RoxyFileman;
 
@@ -60,6 +61,9 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<ICustomManufacturerService, CustomManufacturerService>();
             services.AddScoped<ICustomNopDataProvider, CustomMsSqlDataProvider>();
             services.AddScoped<ArchiveService>();
+            services.AddScoped<IAbcDeliveryService, AbcDeliveryService>();
+            services.AddScoped<IAbcProductAttributeService, AbcProductAttributeService>();
+            services.AddScoped<IGeocodeService, GeocodeService>();
             services.AddScoped<ICheckoutModelFactory, AbcCheckoutModelFactory>();
         }
     }

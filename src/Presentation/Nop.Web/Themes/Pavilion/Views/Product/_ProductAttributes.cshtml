@@ -6,8 +6,25 @@
 @using Nop.Services.Media
 @using Nop.Web.Models.Catalog
 @using Nop.Plugin.Misc.AbcFrontend.Extensions;
+@using Nop.Plugin.Misc.AbcCore.Delivery;
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
+
+@{
+    var isMattress = false;
+
+    foreach (var attribute in Model)
+    {
+        var values = attribute.Values;
+        if (values.Select(v => v.Name).Contains("Home Delivery (Price in Cart)"))
+        {
+            isMattress = true;
+            break;
+        }
+    }
+
+    var isAccessoryAlreadySelected = false;
+}
 
 @if (Model.Count > 0)
 {
@@ -17,6 +34,8 @@
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                // custom: change Warranty to Extended Warranty
+                textPrompt = textPrompt == "Warranty" ? "Extended Warranty" : textPrompt;
                 // custom: configure hidden items
                 var isHidden = attribute.IsHiddenPreload() ?
                     "display:none" :
@@ -26,18 +45,30 @@
                     <label class="text-prompt">
                         @textPrompt
                     </label>
-                    @if (attribute.IsRequired)
+                    @if (attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
+                    {
+                        <i class="fas fa-info-circle delivery-options-info"></i>
+                    }
+                    @if (attribute.Name == "Warranty")
+                    {
+                        <i class="fas fa-info-circle warranty-info"></i>
+                    }
+                    @* ABC: also require if warranty *@
+                    @if (attribute.IsRequired || attribute.Name == "Warranty")
                     {
                         <span class="required">*</span>
                     }
-                    @if (!string.IsNullOrEmpty(attribute.Description))
+                    @* ABC: Use warranty-specific description *@
+                    @if (attribute.Name != "Warranty" && !string.IsNullOrEmpty(attribute.Description))
                     {
                         <div class="attribute-description">
                             @Html.Raw(attribute.Description)
                         </div>
                     }
                 </dt>
-                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" style="@($"{isHidden}")">
+                var optionClass = "";
+                if (attribute.Name.Contains("Accessories")) { optionClass = "accessories"; }
+                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" class="@(optionClass)" style="@($"{isHidden}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -101,23 +132,72 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        // ABC: do not provide price adjustment if delivery option, this is included in the title of the pav
+                                        var attributeName = attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ?
                                             attributeValue.Name :
-                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+                                            string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                                attributeValue.Name :
+                                                $"{attributeValue.Name} ({attributeValue.PriceAdjustment.Trim('+')})";
+                                        // ABC: if an accessory is selected, don't select the "none" option
+                                        if (!isAccessoryAlreadySelected)
+                                        {
+                                            isAccessoryAlreadySelected = attribute.Name.Contains("Accessories") && attributeValue.IsPreSelected;
+                                        }
+                                        // ABC: Keep a list of the "default" options
+                                        var isDecline = attributeValue.Name.Contains("Decline");
+                                        var is4ft = attributeValue.Name.Contains("4ft Rubber Hoses");
+                                        var isWarranty = attribute.Name.Contains("Warranty");
+                                        if (!isAccessoryAlreadySelected && attribute.Name == "Accessories (Delivery)")
+                                        {
+                                            attributeValue.IsPreSelected = is4ft;
+                                        }
+
+                                        var undermessage = "";
+                                        if (attributeName.Contains(":"))
+                                        {
+                                            int index = attributeName.IndexOf(":");
+                                            undermessage = index >= 0 ? attributeName.Substring(index + 1) : string.Empty;
+                                            attributeName = attributeName.Split(":")[0];
+                                        }
+
                                         <li>
-                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id"
+                                                   checked="@attributeValue.IsPreSelected"
+                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)
+                                                   @(isWarranty ? Html.Raw($"class=\"is-warranty\"") : null) />
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                            <!-- ABC: special messaging for decline -->
+                                            @if (isDecline && attributeValue.Name == "Decline New Hose")
+                                            {
+                                                <div id="decline-new-hose" style="font-size: 8pt">
+                                                    New hoses are recommended for all washer installations for coverage against property damage.
+                                                </div>
+                                            }
+                                            @if (attributeValue.Name.Contains("Home Delivery and Installation ("))
+                                            {
+                                                <div id="undermessage" style="font-size: 8pt">
+                                                    @undermessage
+                                                </div>
+                                            }
+                                            
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                 </div>
                                             }
                                         </li>
+                                    }
+                                    @if (attribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
+                                    {
+                                        <div class="cart-slideout__pickup-in-store"></div>
+                                    }
+                                    @if (attribute.Name == "Warranty")
+                                    {
+                                        <input id="warranty-none" class="is-warranty" type="radio" name="@(controlId)" value="0" />
+                                        <label for="warranty-none">No Additional Warranty ($0)</label>
                                     }
                                 </ul>
                                 <script asp-location="Footer">
@@ -133,17 +213,22 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        // ABC: do not provide price adjustment, this is included in the title of the pav
+                                        @* var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
-                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
+                                                attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text; *@
+                                        var attributeName = attributeValue.Name;
+                                        var isHaulaway = attributeName.Contains("Haul Away Old") || attributeName.Contains("Move Old");
                                         <li>
+                                            @* ABC: add isHaulaway for dynamic switching *@
                                             <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
-                                                   @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>
+                                                   @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)
+                                                   @(isHaulaway ? Html.Raw($"class=\"is-haulaway\"") : null) />
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
@@ -152,6 +237,12 @@
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
                                                     </script>
+                                                </div>
+                                            }
+                                            @if (attributeName.Contains("Move Old"))
+                                            {
+                                                <div id="haulaway-move" style="font-size: 8pt">
+                                                    Old appliances must be disconnected from water and power.
                                                 </div>
                                             }
                                         </li>
@@ -370,6 +461,13 @@
                 </dd>
             }
         </dl>
+        @* ABC: section for mattresses *@
+        @if (isMattress)
+        {
+            <div>
+                @T("AbcWarehouse.Plugin.Widgets.CartSlideout.MattressMessaging")
+            </div>
+        }
         <script asp-location="Footer">
             function showHideDropdownQuantity(id) {
                 $('select[name=' + id + '] > option').each(function() {

@@ -32,10 +32,16 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CartSlideout_GetDeliveryOptions",
                             "AddToCart/GetDeliveryOptions",
                             new { controller = "CartSlideout", action = "GetDeliveryOptions"});
+            endpointRouteBuilder.MapControllerRoute("CartSlideout_GetEditCartItemInfo",
+                            "AddToCart/GetEditCartItemInfo",
+                            new { controller = "CartSlideout", action = "GetEditCartItemInfo"});
 
             endpointRouteBuilder.MapControllerRoute("GetProductAttributeValue",
                             "api/ProductAttributeValue/{productAttributeValueId}",
                             new { controller = "Api", action = "GetProductAttributeValue"});
+            endpointRouteBuilder.MapControllerRoute("CartSlideout_GetAddCartItemInfo",
+                            "AddToCart/GetAddCartItemInfo",
+                            new { controller = "CartSlideout", action = "GetAddCartItemInfo"});
         }
     }
 }

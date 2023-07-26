@@ -1,33 +1,50 @@
-#cart-slideout-overlay {
+/* slideout items */
+
+.cart-slideout-overlay {
     height: 100%;
     width: 100%;
     z-index: 100000;
     position: fixed;
     background-color: black;
-    opacity: 0.9;
+    opacity: 0.7;
     display: none;
 }
 
-#cart-slideout {
+.cart-slideout,
+.delivery-options-information,
+.warranty-information {
     height: 100%;
-    width: 0;
+    width: 100%;
     position: fixed;
     z-index: 100000;
     top: 0;
     right: 0;
     background-color: #fff;
     overflow-x: hidden; /* Disable horizontal scroll */
-}
-
-#cart-slideout__back {
-    position: absolute;
-    top: 13px;
-    right: 280px;
-    font-size: 20px;
     display: none;
 }
 
-#cart-slideout .cart-slideout__close {
+.delivery-options-information,
+.warranty-information {
+    padding: 1rem;
+}
+
+.cart-slideout {
+    flex-direction: column;
+}
+
+/* hide all sub-screens to start */
+.cart-slideout__delivery-input,
+.cart-slideout__delivery-not-available,
+.cart-slideout__delivery-options,
+.cart-slideout__delivery-options-continue,
+.cart-slideout__pickup-in-store {
+    display: none;
+}
+
+.cart-slideout .close,
+.delivery-options-information .close,
+.warranty-information .close {
     position: absolute;
     top: 0;
     right: 25px;
@@ -35,95 +52,233 @@
     margin-left: 50px;
 }
 
-#cart-slideout .cart-slideout__title {
+.cart-slideout__header {
+    padding: 2.5rem 1rem 0 1rem;
+}
+
+/* Cart Slideout Content */
+.cart-slideout__content {
+    padding: 1rem;
+    flex-grow: 2;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.cart-slideout__content::-webkit-scrollbar {
+  width: 10px;
+}
+.cart-slideout__content::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+}
+
+/* Product Info */
+#cart-slideout__product-name {
+    font-weight: bold;
+}
+#cart-slideout__product-description {
+    font-size: 8pt;
+}
+
+/* Cart Slideout Pickup In Store */
+.cart-slideout__pickup-in-store {
+    padding-top: 20px;
+}
+.cart-slideout__pickup-in-store h2 {
+    color: #4f4f4f;
+}
+
+.cart-slideout__pickup-in-store h2 {
+    display: inline;
+    /* this should match text-prompt */
+    font-size: 1.1rem;
+    color: #4f4f4f;
+}
+
+.cart-slideout__pickup-in-store p {
+    margin: 0 !important;
+}
+
+.cart-slideout__pickup-in-store button {
+    margin-right: 0.5rem;
+    border: 2px solid #176440;
+    height: 2.7rem;
+    background-color: white;
+    width: 12rem;
+    font-size: 9pt;
+}
+
+.cart-slideout__pickup-in-store button.selected {
+    background-color: #176440;
+    color: white;
+}
+
+.cart-slideout__pickup-in-store button.not-available {
+    border: 1px solid gray;
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Delivery options & warranty information */
+
+.delivery-options-information,
+.warranty-information {
+    z-index: 100001;
+    font-size: 0.8rem;
+}
+
+.delivery-options-information p,
+.warranty-information p {
+    margin: 0.5rem 0;
+}
+
+i.delivery-options-info,
+i.warranty-info {
+    cursor: pointer;
+}
+
+.warranty-information {
+    z-index: 100002;
+}
+
+.warranty-information td {
+    border: 1px solid black;
+    padding: 1.5rem 1rem;
+    font-size: 1rem;
+}
+
+.cart-slideout__back {
+    position: absolute;
+    top: 13px;
+    font-size: 20px;
+    display: none;
+}
+
+.cart-slideout .cart-slideout__title {
     font-weight: bold;
     font-size: 1.25rem;
 }
 
-#cart-slideout .cart-slideout__title i {
+.cart-slideout .cart-slideout__title i {
     color: #4bd37b;
 }
 
-#cart-slideout__product-info {
-    padding: 1rem 0 3rem 0;
+.cart-slideout__product-info {
+    display: flex;
+    padding: 1rem 0 1rem 0;
 }
 
-#cart-slideout__product-name {
+.cart-slideout__product-name {
     font-size: 0.75rem;
 }
 
-#cart-slideout__delivery-zip-code {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem 0 0.5rem 0;
-    align-items: center;
+.cart-slideout__delivery-zip-code {
+    text-align: right;
 }
 
-#cart-slideout__delivery-zip-code input {
-    width: 50%;
+.cart-slideout__delivery-zip-code input {
+    width: 6rem;
     height: 2rem;
     font-size: 1rem;
+    padding-left: 0.15rem;
+    margin-left: 0.5rem;
 }
 
-#cart-slideout__buttons {
-    position: absolute;
-    bottom: 1rem;
-}
-
-#cart-slideout__subtotal {
+.cart-slideout__subtotal {
     text-align: right;
-    color: #bb1b1b;
+    color: #A11717;
     font-size: 1.25rem;
 }
 
-#cart-slideout__buttons a {
+.cart-slideout__buttons {
+    padding: 0.5rem 1rem 1rem 1rem;
+    background-color: #F3F3F3;
+    border-top: 1px solid #4f4f4f;
+}
+
+.cart-slideout__buttons input {
     width: 100%;
-    background-color: white;
-    border: 2px solid #e1e1e1;
     font-weight: bold;
     padding: 1rem;
     margin-top: 0.25rem;
     display: inline-block;
     text-align: center;
+    background-color: #176440;
+    color: white;
+    border: 2px solid #176440;
 }
 
-.cart-slideout-btn {
-    font-size: 0.75rem;
-    background-color: white;
+.cart-slideout__buttons input:disabled {
+    background-color: lightgray;
+    color: block;
     border: 2px solid #e1e1e1;
-    margin-top: 0.25rem;
-    text-align: center;
-    padding: 0.5rem;
-    float: right;
-}
-
-.cart-slideout-btn:disabled {
-    opacity: 0.25;
     cursor: not-allowed;
 }
 
+.cart-slideout__buttons input.secondary {
+    background-color: white;
+    color: black;
+    border: 2px solid gray;
+}
+
+/* inline buttons */
+
+.cart-slideout__check-delivery-options__btn {
+    background-color: white;
+    border: 2px solid #e1e1e1;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    display: block;
+    margin-left: auto;
+    background-color: #176440;
+    color: white;
+    border: 2px solid #176440;
+}
+
+.cart-slideout__check-delivery-options__btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    background-color: transparent;
+    color: #4f4f4f;
+    border: 2px solid #e1e1e1;
+}
+
+.cart-slideout__delivery-not-available {
+    color: red;
+}
+
+/* Delivery Information */
+
+
 /* Delivery Options */
-#cart-slideout__delivery-not-available {
-    display: none;
-    color: #f74258;
+/* Override NOP ProductAttributes.cshtml styles */
+.cart-slideout .attributes {
+    margin: 0;
+}
+.cart-slideout .attributes .text-prompt {
+    color: #4f4f4f;
+    font-size: 1.1rem;
+}
+.cart-slideout dt {
+    float: none;
+}
+.cart-slideout .attributes p {
+    margin: 0.5rem 0;
 }
 
-#cart-slideout__delivery {
-    display: none;
-}
-
-#cart-slideout__delivery-options {
-    display: none;
-}
-
-#cart-slideout__attributes .text-prompt {
-    font-size: 1.25rem;
-}
-
-/* copied over from Pavilion theme to allow consistency */
+/* copied over from Pavilion theme to allow consistency in both desktop and mobile */
 .scrollYRemove {
     overflow: hidden !important;
     -ms-touch-action: none !important;
     touch-action: none !important;
     -webkit-overflow-scrolling: touch !important;
+}
+
+
+@media (min-width: 768px)
+{
+    .cart-slideout,
+    .delivery-options-information,
+    .warranty-information {
+        width: 28rem;
+    }
 }

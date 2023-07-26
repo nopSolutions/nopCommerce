@@ -21,11 +21,13 @@ using Nop.Plugin.Misc.AbcCore.HomeDelivery;
 using Nop.Services.Payments;
 using System;
 using System.Threading.Tasks;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcExportOrder.Services
 {
     public class YahooService : IYahooService
     {
+        private readonly IAbcDeliveryService _abcDeliveryService;
         private readonly IAbcMattressBaseService _abcMattressBaseService;
         private readonly IAbcMattressEntryService _abcMattressEntryService;
         private readonly IAbcMattressFrameService _abcMattressFrameService;
@@ -42,6 +44,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly IHomeDeliveryCostService _homeDeliveryCostService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -56,6 +60,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
 
 
         public YahooService(
+            IAbcDeliveryService abcDeliveryService,
             IAbcMattressBaseService abcMattressBaseService,
             IAbcMattressEntryService abcMattressEntryService,
             IAbcMattressFrameService abcMattressFrameService,
@@ -73,6 +78,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             IGiftCardService giftCardService,
             IHomeDeliveryCostService homeDeliveryCostService,
             IPriceCalculationService priceCalculationService,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IProductService productService,
             IProductAbcDescriptionService productAbcDescriptionService,
             IStateProvinceService stateProvinceService,
@@ -84,6 +91,7 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             IPaymentService paymentService
         )
         {
+            _abcDeliveryService = abcDeliveryService;
             _abcMattressBaseService = abcMattressBaseService;
             _abcMattressEntryService = abcMattressEntryService;
             _abcMattressFrameService = abcMattressFrameService;
@@ -100,6 +108,8 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
             _homeDeliveryCostService = homeDeliveryCostService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _productService = productService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _priceCalculationService = priceCalculationService;
@@ -138,6 +148,34 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                 (string code, decimal price) standardItemCodeAndPrice =
                     GetCodeAndPrice(orderItem, product, productAbcDescription);
 
+                // adjust the price here based on the delivery option selected
+                // also add a row for the delivery option itself
+                var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
+                var pickupPav = pavs?.FirstOrDefault(pav => pav.Name.Contains("Pickup"));
+                var isFedEx = pavs?.FirstOrDefault(pav => pav.Name.Contains("FedEx")) != null;
+                var hasDeliveryOptions = orderItem.HasDeliveryOptions() && pickupPav == null && !isFedEx;
+                if (hasDeliveryOptions)
+                {
+                    var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
+                    var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Haul Away Old ") || pav.Name.Contains("Move Old "));
+                    var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
+                    var priceAdjustment = haulawayPav != null ?
+                        haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
+                        hdPav.PriceAdjustment;
+                    standardItemCodeAndPrice.price -= priceAdjustment;
+                }
+
+                // adjust price based on accessories
+                var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(orderItem.AttributesXml);
+                var accessoryPam = await pams.FirstOrDefaultAwaitAsync(
+                    async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name.Contains("Accessories")
+                );
+                if (accessoryPam != null)
+                {
+                    var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
+                    standardItemCodeAndPrice.price -= accessoryPav.PriceAdjustment;
+                }
+
                 result.Add(new YahooDetailRow(
                     _settings.OrderIdPrefix,
                     orderItem,
@@ -162,6 +200,56 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                         warranty.PriceAdjustment,
                         warranty.Name,
                         "", // no url for warranty line items
+                        await GetPickupStoreAsync(orderItem)
+                    ));
+                    lineNumber++;
+                }
+
+                if (hasDeliveryOptions)
+                {
+                    var hdPav = pavs.First(pav => pav.Name.Contains("Home Delivery"));
+                    // Mattress - don't put this line in
+                    if (hdPav.Cost.ToString("F0") != "-2")
+                    {
+                        var haulawayPav = pavs.FirstOrDefault(pav => pav.Name.Contains("Haul Away Old ") ||
+                                                                 pav.Name.Contains("Move Old "));
+                        var code = Convert.ToInt32(haulawayPav?.Cost ?? hdPav.Cost).ToString();
+                        var priceAdjustment = haulawayPav != null ?
+                            haulawayPav.PriceAdjustment + hdPav.PriceAdjustment :
+                            hdPav.PriceAdjustment;
+                        result.Add(new YahooDetailRow(
+                            _settings.OrderIdPrefix,
+                            orderItem,
+                            lineNumber,
+                            "", // no item ID associated
+                            code,
+                            priceAdjustment,
+                            haulawayPav != null ? haulawayPav.Name.Split(" ")[0] :
+                                                "Delivery", // not sure if I need a name
+                            "", // no URL
+                            await GetPickupStoreAsync(orderItem)
+                        ));
+                        lineNumber++;
+                    }
+                }
+
+                // handle accessories here
+                if (accessoryPam != null)
+                {
+                    var accessoryPav = pavs.FirstOrDefault(pav => pav.ProductAttributeMappingId == accessoryPam.Id);
+                    // F0 - remove decimal, no currency
+                    var itemId = int.Parse(accessoryPav.Cost.ToString("F0"));
+                    var item = await _abcDeliveryService.GetAbcDeliveryItemByIdAsync(itemId);
+                    var code = item.Item_Number;
+                    result.Add(new YahooDetailRow(
+                        _settings.OrderIdPrefix,
+                        orderItem,
+                        lineNumber,
+                        "", // no item ID associated
+                        code,
+                        accessoryPav.PriceAdjustment,
+                        accessoryPav.Name,
+                        "", // no url for accessories
                         await GetPickupStoreAsync(orderItem)
                     ));
                     lineNumber++;
@@ -396,6 +484,14 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
 
                 decimal backendOrderTax, backendOrderTotal;
                 CalculateValues(shippingItems, out backendOrderTax, out backendOrderTotal);
+
+                // modify order shipping total including tax, remove tax if
+                // mattress delivery
+                var taxRate = order.TaxRates.Split(":")[0];
+                if (order.OrderShippingExclTax >= 99M && taxRate == "6.0000")
+                {
+                    order.OrderShippingInclTax -= (99M * 0.06M);
+                }
 
                 decimal shippingTax = order.OrderShippingInclTax - order.OrderShippingExclTax;
                 backendOrderTax += shippingTax;

@@ -44,21 +44,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
             _productAttributeService = productAttributeService;
         }
 
-        public async Task<bool> CartContainsWarrantiesAsync(IList<ShoppingCartItem> cart)
-        {
-            foreach (var sci in cart)
-            {
-                var pams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(sci.ProductId);
-                foreach (var pam in pams)
-                {
-                    var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
-                    if (pa.Name == "Warranty") { return true; }
-                }
-            }
-
-            return false;
-        }
-
         public string GetWarrantySkuByName(string name)
         {
             return _warrantySkuRepository.Table

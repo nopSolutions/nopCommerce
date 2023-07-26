@@ -29,6 +29,10 @@ namespace Nop.Plugin.Misc.AbcCore
         public const string MobilePhoneNumberHint =
             MobilePhoneNumber + ".Hint";
 
+        public const string GoogleMapsGeocodingAPIKey =
+            Base + "GoogleMapsGeocodingAPIKey";
+        public const string GoogleMapsGeocodingAPIKeyHint =
+            GoogleMapsGeocodingAPIKey + ".Hint";
         public const string IsFedExMode =
             Base + "IsFedExMode";
         public const string IsFedExModeHint =

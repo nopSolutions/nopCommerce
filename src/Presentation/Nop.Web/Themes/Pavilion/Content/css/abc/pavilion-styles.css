@@ -2,6 +2,21 @@
     Overwrites styles.css for the Pavilion theme.
 */
 
+/* cart attribute info */
+.abc-cart-attribute-info {
+    border: 1px solid gray;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+}
+
+.abc-cart-attribute-info a {
+    text-align: right;
+    display: block;
+}
+
+.abc-cart-attribute-info__section {
+    margin-bottom: 1rem;
+}
 /* Social media icons */
 .social-sharing .linkedin a {
     background-position: -256px 0;
@@ -184,6 +199,15 @@ body {
     #account-credit-card-img {
         flex-basis: auto;
         padding-right: 0.5rem;
+    }
+}
+
+@media (min-width: 520px) {
+    /* floats item price, quantity, total in cart to top */
+    .cart .unit-price,
+    .cart .quantity,
+    .cart .subtotal {
+        vertical-align: top;
     }
 }
 

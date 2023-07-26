@@ -98,7 +98,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
         {
-            return System.Threading.Tasks.Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock });
+            return System.Threading.Tasks.Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock, AdminWidgetZones.HeaderBefore });
         }
 
         public string GetWidgetViewComponentName(string widgetZone)
@@ -193,6 +193,8 @@ namespace Nop.Plugin.Misc.AbcCore
                     [CoreLocales.PLPDescriptionHint] = "Description displayed for PLP (Product Box).",
                     [CoreLocales.MobilePhoneNumber] = "Mobile Phone Header",
                     [CoreLocales.MobilePhoneNumberHint] = "The phone number used on the mobile header.",
+                    [CoreLocales.GoogleMapsGeocodingAPIKey] = "Google Maps Geocoding API Key",
+                    [CoreLocales.GoogleMapsGeocodingAPIKeyHint] = "API key for handling geocoding services, including delivery options/pickup in store.",
                     [CoreLocales.IsFedExMode] = "FedEx Mode",
                     [CoreLocales.IsFedExModeHint] = "Turns on FedEx mode (products require 'FedEx' attribute for delivery, intended for Mickey)."
                 }

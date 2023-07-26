@@ -41,7 +41,8 @@ namespace Nop.Plugin.Misc.AbcCore.HomeDelivery
             foreach (var orderItem in orderItems.OrderByDescending(oi => oi.PriceExclTax))
             {
                 var isMattress = orderItem.GetMattressSize() != null;
-                if (isMattress && skipMattress) { continue; }
+                var hasDeliveryOptions = orderItem.HasDeliveryOptions();
+                if ((hasDeliveryOptions && !isMattress) || (isMattress && skipMattress)) { continue; }
 
                 result += await GetHomeDeliveryCostOfItem(orderItem);
 
@@ -91,8 +92,6 @@ namespace Nop.Plugin.Misc.AbcCore.HomeDelivery
 
         private async Task<decimal> GetCostAsync(int productId, string attributesXml, int quantity)
         {
-            if (!attributesXml.Contains("delivered to you")) { return 0; }
-
             var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(productId);
             List<Category> categories = new List<Category>();
             foreach (var pc in productCategories)

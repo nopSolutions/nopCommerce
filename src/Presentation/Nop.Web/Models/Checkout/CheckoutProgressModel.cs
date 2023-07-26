@@ -14,8 +14,6 @@ namespace Nop.Web.Models.Checkout
         Shipping,
         Payment,
         Confirm,
-        Complete,
-        // ABC: Want to move all of this into the AbcCore plugin
-        Warranty
+        Complete
     }
 }

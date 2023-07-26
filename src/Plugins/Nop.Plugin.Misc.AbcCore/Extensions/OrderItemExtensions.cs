@@ -1,11 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Misc.AbcCore.Extensions
 {
     public static class OrderItemExtensions
     {
+        public static bool HasDeliveryOptions(this OrderItem oi)
+        {
+            return !string.IsNullOrWhiteSpace(oi.AttributeDescription) &&
+                   oi.AttributeDescription.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}:");
+        }
+
         public static bool IsPickup(this OrderItem oi)
         {
             return !string.IsNullOrWhiteSpace(oi.AttributeDescription) &&

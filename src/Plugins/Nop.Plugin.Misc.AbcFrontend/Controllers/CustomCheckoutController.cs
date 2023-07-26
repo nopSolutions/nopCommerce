@@ -311,6 +311,43 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
         #endregion
 
+        public override async Task<IActionResult> ShippingMethod()
+        {
+            var cart = await _shoppingCartService.GetShoppingCartAsync(
+                await _workContext.GetCurrentCustomerAsync(),
+                ShoppingCartType.ShoppingCart,
+                (await _storeContext.GetCurrentStoreAsync()).Id
+            );
+            if (!cart.Any())
+                return RedirectToRoute("ShoppingCart");
+            if (await _customerService.IsGuestAsync(
+                await _workContext.GetCurrentCustomerAsync()) && !_orderSettings.AnonymousCheckoutAllowed)
+            {
+                return Challenge();
+            }
+
+            var model = await _checkoutModelFactory.PrepareShippingMethodModelAsync(
+                cart,
+                await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync())
+            );
+
+            // this will blow up if there's more than one, which is how ABC is
+            // currently set up.
+            var shippingMethod = model.ShippingMethods.Single();
+            if (shippingMethod.Fee == "$0.00")
+            {
+                await _genericAttributeService.SaveAttributeAsync(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    NopCustomerDefaults.SelectedShippingOptionAttribute,
+                    shippingMethod.ShippingOption,
+                    (await _storeContext.GetCurrentStoreAsync()).Id
+                );
+                return RedirectToRoute("CheckoutPaymentMethod");
+            }
+                
+            return await base.ShippingMethod();
+        }
+
         // Makes an external request
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
@@ -389,11 +426,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             await SendExternalShippingMethodRequestAsync();
-
-            if (await _warrantyService.CartContainsWarrantiesAsync(cart))
-            {
-                return RedirectToRoute("WarrantySelection");
-            }
 
             return RedirectToRoute("CheckoutPaymentMethod");
         }

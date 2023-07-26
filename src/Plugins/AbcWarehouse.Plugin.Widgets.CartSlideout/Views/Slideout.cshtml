@@ -9,36 +9,82 @@
     Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.CartSlideout/scripts/cart-slideout.js");
 }
 
-<div id="cart-slideout-overlay"></div>
-<div id="cart-slideout">
-  <a href="javascript:void(0)" id="cart-slideout__back" onclick="back()">
-      <i class="fas fa-arrow-left"></i>
-  </a>
-  <a href="javascript:void(0)" class="cart-slideout__close" onclick="hideCartSlideout()">&times;</a>
-  <div class="cart-slideout__title">
-      <i class="fas fa-check-circle" style="color: "></i> Item Added to Cart
+<div class="cart-slideout-overlay"></div>
+<div class="cart-slideout">
+  <div class="cart-slideout__header">
+      <a href="javascript:void(0)" class="cart-slideout__back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <a href="javascript:void(0)" class="close" onclick="hideCartSlideout()">&times;</a>
+    <div class="cart-slideout__title" style="display: none">
+        <i class="fas fa-check-circle"></i> Item Added to Cart
+    </div>
+    <div class="cart-slideout__product-info"></div>
+    <hr />
   </div>
-  <div id="cart-slideout__product-info"></div>
-  <hr style="clear: both; margin-bottom: 1rem" />
-  <div id="cart-slideout__delivery-input">
-      <div id="cart-slideout__delivery-zip-code">
-          <label for="cart-slideout__delivery-zip-code">Enter Zip Code:</label>
-          <input id="cart-slideout__delivery-zip-code-input" />
+  <div class="cart-slideout__content">
+      <div class="cart-slideout__delivery-input">
+        <div class="cart-slideout__delivery-zip-code">
+            <label for="cart-slideout__delivery-zip-code">Enter Zip Code:</label>
+            <input class="cart-slideout__delivery-zip-code-input" />
+        </div>
+        <button class="cart-slideout__check-delivery-options__btn"
+                onclick="checkDeliveryShippingAvailabilityAsync()"
+                disabled>
+                Check Delivery/Shipping Availability
+        </button>
+    </div>
+    <div class="cart-slideout__delivery-not-available">
+        @T("AbcWarehouse.Plugin.Widgets.CartSlideout.DeliveryNotAvailable")
+    </div>
+    <!-- use the form to collect attributes -->
+    <form id="delivery-options">
+        <div class="cart-slideout__delivery-options"></div>
+    </form>
+  </div>
+  <div class="cart-slideout__buttons">
+      <div class="cart-slideout__buttons__add">
+          <input type="button" id="cart-slideout__add-to-cart" value="Add to Cart" onclick="AddToCart()" disabled />
+          <input type="button" id="cart-slideout__go-to-cart" class="secondary" value="Go to Cart" onclick="clickGoToCart()" style="display: none" />
+          <input type="button" id="cart-slideout__continue-shopping" class="secondary" value="Continue Shopping" onclick="hideCartSlideout()" style="display: none" />
       </div>
-      <button id="cart-slideout__check-delivery-options"
-              class="cart-slideout-btn"
-              onclick="checkDeliveryShippingAvailabilityAsync()"
-              disabled>
-            Check Delivery/Shipping Availability
-      </button>
   </div>
-  <div id="cart-slideout__delivery-not-available">
-      Home Delivery Shipping is not available for the given zip code.
-  </div>
-  <div id="cart-slideout__attributes"></div>
-  <div id="cart-slideout__buttons">
-      <div id="cart-slideout__subtotal"></div>
-      <a href="/cart">Go To Cart</a>
-      <a onclick="hideCartSlideout()">Continue Shopping</a>
-  </div>
+</div>
+<div class="delivery-options-information">
+    <a href="javascript:void(0)" class="close" onclick="hideDeliveryOptionsInformation()">&times;</a>
+    <h2>Delivery Information</h2>
+    <p>Free home delivery is available within our service area in Michigan, Ohio, and Indiana via mail in rebate.</p>
+    <p>Please provide clear access for your product being delivered.</p>
+    <p><b>Home Delivery Includes:</b> All appliances are unpacked and set in place.</p>
+    <p><b>Home Delivery and Installation Includes:</b> All appliances are unpacked and set in place. If applicable, the appliance will be installed.  Dishwashers, ovens, cooktops, range hoods, ice makers and other built-in appliances are delivered to your home and left in cartons.  We can recommend a sub-contractor to provide installation.</p>
+    <p><b>Haul Away:</b> Please make sure all items are disconnected before pickup. The old item will be removed from the home. All items must be empty and ready to be removed.  Haul-away is currently available on Appliances and Mattresses.  Currently, we are not able to haul away old furniture.</p>
+    <p><b>Move:</b> Your sales invoice must specify that moving of old appliances or haul-away services have been pre-arranged.  Drivers will move old appliances as specified, on a one-to-one basis, to the side of your home or basement providing the appliance is disconnected from existing water, gas and/or power, and is empty and ready to be moved.  Drivers will be as careful as possible, but we cannot be responsible for damage to the old unit or property when moving.  Drivers cannot dismantle or make house alterations when removing your old appliance.</p>
+    <p><b>In-Store Pick-Up:</b> Before going to the store, please wait to receive your store pickup notification e-mail. This email arrives within 30 minutes* on average, and confirms that your product is in stock and available for pickup.</p>
+    <p>For security purposes, only the person who placed the order can pick it up. Please bring your order #, photo ID, and the purchasing credit card (the name on the credit card used for purchase must match the name of the person who is picking up the order). If you purchased using a Gift Card only, please bring your order #, photo ID, and Gift Card with you.</p>
+    <p>Look for the "Internet Order Pick-Up" signs or ask the nearest salesperson to direct you.</p>
+    <p>*If you have ordered after store hours, you will not receive the store pickup notification E-mail until the next business day.</p>
+    <p>In order to avoid cancellation, please pick up your item(s) within 48 hours.</p>
+</div>
+<div class="warranty-information">
+    <a href="javascript:void(0)" class="close" onclick="hideWarrantyInformation()">&times;</a>
+    <h2>Extended Warranty</h2>
+    <p>No Deductibles | Fully Transferable | All Labor | All Parts | Factory Service | 800# for Service</p>
+    <p>Extend the original Manufacturer's Product Warranty for up to 5 years and receive up to 50% Merchandise Credit Back if you don't use it.</p>
+    <table>
+        <tr>
+            <td><b>2 YEAR*</b> GET 10% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>3 YEAR*</b> GET 20% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>4 YEAR*</b> GET 25% CREDIT BACK</td>
+        </tr>
+        <tr>
+            <td><b>5 YEAR*</b> GET 50% CREDIT BACK</td>
+        </tr>
+    </table>
+    <p>No Check-Ups or Repairs, Get Up To 50% Of Cost of Warranty Plus Coverage Towards Your Next Major Electronics or Appliance Purchase, 90 Days To Redeem For Merchandise Credit, Call Our Toll Free Number.</p>
+    <p>*including Manufacturer's Warranty</p>
+    <p>ABC Warehouse offers Extended Warranty Plans on the item(s) listed below. Please select from the following Warranty Options to include with your purchase.</p>
 </div>

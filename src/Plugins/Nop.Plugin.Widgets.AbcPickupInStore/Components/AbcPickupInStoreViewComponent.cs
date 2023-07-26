@@ -84,6 +84,12 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                 productId = (int)additionalData;
             }
 
+            Product product = await _productService.GetProductByIdAsync(productId);
+            if (await product.HasDeliveryOptionsAsync())
+            {
+                return Content("");
+            }
+
             // clearance store specific
             var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
             if (storeUrl.Contains("clearance"))
@@ -103,15 +109,11 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             // normal abc store
             else
             {
-                Product product = await _productService.GetProductByIdAsync(productId);
-                if (productId > 0)
+                // if the buy button is disabled, do not show any UI about
+                // products
+                if (productId > 0 && (product.DisableBuyButton || !product.Published))
                 {
-                    // if the buy button is disabled, do not show any UI about
-                    // products
-                    if (product.DisableBuyButton || !product.Published)
-                    {
-                        return Content("");
-                    }
+                    return Content("");
                 }
 
                 PickStoreModel model = await _pickStoreModelFactory.InitializePickStoreModelAsync();
@@ -127,9 +129,6 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                 // if item is pickup in store, then display the UI for pickup
                 // in store
                 var pams = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-                var pamsWithPickup = await pams.WhereAwait(
-                    async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "Pickup"
-                ).ToListAsync();
                 var pamsWithFedex = await pams.WhereAwait(
                     async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "FedEx"
                 ).ToListAsync();
@@ -139,23 +138,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                     model.HasFedExAttribute = true;
                 }
 
-                if (pamsWithPickup.Any())
-                {
-                    string url = "";
-                    if (widgetZone == PICKUP_INFO_WIDGET_ZONE)
-                    {
-                        url = "~/Plugins/Widgets.AbcPickupInStore/Views/PickupInStoreContainer.cshtml";
-                    }
-                    else if (widgetZone == DELIVERY_SELECTION_WIDGET_ZONE)
-                    {
-                        url = "~/Plugins/Widgets.AbcPickupInStore/Views/SelectDeliveryMethod.cshtml";
-                    }
-                    return View(url, model);
-                }
-                else
-                {
-                    return Content("");
-                }
+                return Content("");
             }
         }
     }

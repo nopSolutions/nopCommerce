@@ -18,6 +18,7 @@
 @using Nop.Web.Extensions
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Models.Catalog
+@using Nop.Plugin.Misc.AbcCore.Nop
 
 @inject CatalogSettings catalogSettings
 @inject IWorkContext workContext
@@ -25,11 +26,13 @@
 @* ABC: custom *@
 @inject FrontEndService frontEndService
 @inject IGenericAttributeService genericAttributeService
-@inject IProductAttributeService productAttributeService
+@inject IAbcProductAttributeService abcProductAttributeService
 @inject IProductService productService
 @inject IStoreContext storeContext
 
 @{
+    var hasDeliveryOptions = await abcProductAttributeService.ProductHasDeliveryOptionsAsync(Model.Id);
+
     //prepare "Add to cart" AJAX link
     var addtocartlink = "";
     var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
@@ -81,11 +84,11 @@
 
     // custom: if product is mattress, use "Build Package"
     var isMattress = false;
-    var pams = await productAttributeService.GetProductAttributeMappingsByProductIdAsync(Model.Id);
+    var pams = await abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(Model.Id);
 
     foreach (var pam in pams)
     {
-        var pa = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+        var pa = await abcProductAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
         if (pa.Name == "Mattress Size")
         {
             isMattress = true;
@@ -435,7 +438,6 @@
             }
         </div>
         <div class="buttons-lower">
-            @* ABC: add mattress messaging *@
             @if (productFlag != null && productFlag.IsInStoreOnly())
             {
                 <form action="@productUrl">
@@ -448,6 +450,12 @@
                     <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">Build Package</span></button>
                     <input type="hidden" name="size" value="@mattressSize" /> 
                 </form>
+            }
+            else if (hasDeliveryOptions && !Model.ProductPrice.DisableBuyButton)
+            {
+                <button type="button"
+                        class="button-2 product-box-add-to-cart-button"
+                        onclick="addCartItemAsync(@Model.Id)"><span>@T("ShoppingCart.AddToCart").Text</span></button>
             }
             @* end custom *@
             else if (!Model.ProductPrice.DisableBuyButton)

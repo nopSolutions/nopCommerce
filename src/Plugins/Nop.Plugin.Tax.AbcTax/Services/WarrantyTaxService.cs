@@ -7,6 +7,7 @@ using Nop.Plugin.Misc.AbcCore.Services;
 using Nop.Core.Domain.Catalog;
 using System.Linq;
 using Nop.Services.Common;
+using Nop.Plugin.Misc.AbcCore.Delivery;
 
 namespace Nop.Plugin.Tax.AbcTax.Services
 {
@@ -18,6 +19,7 @@ namespace Nop.Plugin.Tax.AbcTax.Services
         private readonly IAbcTaxService _abcTaxService;
         private readonly IAddressService _addressService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly ITaxService _taxService;
         private readonly ITaxCategoryService _taxCategoryService;
@@ -28,6 +30,7 @@ namespace Nop.Plugin.Tax.AbcTax.Services
             IAbcTaxService abcTaxService,
             IAddressService addressService,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IProductService productService,
             ITaxService taxService,
             ITaxCategoryService taxCategoryService
@@ -38,6 +41,7 @@ namespace Nop.Plugin.Tax.AbcTax.Services
             _abcTaxService = abcTaxService;
             _addressService = addressService;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _productService = productService;
             _taxService = taxService;
             _taxCategoryService = taxCategoryService;
@@ -67,44 +71,34 @@ namespace Nop.Plugin.Tax.AbcTax.Services
             var sciSubTotalInclTax = await _taxService.GetProductPriceAsync(product, sciSubTotalExclTax, true, customer);
             var sciUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, sciUnitPriceExclTax, true, customer);
 
-            var warrantyUnitPriceExclTax = decimal.Zero;
-            (decimal price, decimal taxRate) warrantyUnitPriceInclTax;
-            warrantyUnitPriceInclTax.price = decimal.Zero;
-            warrantyUnitPriceInclTax.taxRate = decimal.Zero;
-
-            // warranty item handling
-            ProductAttributeMapping warrantyPam = await _attributeUtilities.GetWarrantyAttributeMappingAsync(sci.AttributesXml);
-            if (warrantyPam != null)
+            // adjust the pricing based on whether delivery options exist
+            var isCustomerInTaxableState = await IsCustomerInTaxableStateAsync(customer);
+            if (!isCustomerInTaxableState)
             {
-                warrantyUnitPriceExclTax =
-                    (await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
-                    .Where(pav => pav.ProductAttributeMappingId == warrantyPam.Id)
-                    .Select(pav => pav.PriceAdjustment)
-                    .FirstOrDefault();
-
-                // get warranty "product" - this is so the warranties have a tax category
-                Product warrProduct = _importUtilities.GetExistingProductBySku("WARRPLACE_SKU");
-
-                var isCustomerInTaxableState = await IsCustomerInTaxableStateAsync(customer);
-
-                if (warrProduct == null)
+                var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(sci.AttributesXml);
+                foreach (var pam in pams)
                 {
-                    // taxed warranty price
-                    warrantyUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, warrantyUnitPriceExclTax, false, customer);
+                    var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                    var paName = pa.Name;
+                    var pasToRemove = new string[] {
+                        AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName,
+                        AbcDeliveryConsts.HaulAwayDeliveryProductAttributeName,
+                        AbcDeliveryConsts.HaulAwayDeliveryInstallProductAttributeName,
+                        AbcDeliveryConsts.WarrantyProductAttributeName
+                    };
+                    if (pasToRemove.Contains(paName))
+                    {
+                        var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml, pam.Id);
+                        foreach (var pav in pavs)
+                        {
+                            sciSubTotalInclTax.price -= (pav.PriceAdjustment * (sciUnitPriceInclTax.taxRate / 100)) * sci.Quantity;
+                            sciUnitPriceInclTax.price -= (pav.PriceAdjustment * (sciUnitPriceInclTax.taxRate / 100));
+                        }
+                    }
                 }
-                else
-                {
-                    warrantyUnitPriceInclTax = await _taxService.GetProductPriceAsync(warrProduct, warrantyUnitPriceExclTax, isCustomerInTaxableState, customer);
-                }
-
-                var productUnitPriceInclTax
-                    = await _taxService.GetProductPriceAsync(product, sciUnitPriceExclTax - warrantyUnitPriceExclTax, true, customer);
-
-                sciUnitPriceInclTax.price = productUnitPriceInclTax.price + warrantyUnitPriceInclTax.price;
-                sciSubTotalInclTax.price = sciUnitPriceInclTax.price * sci.Quantity;
             }
 
-            return (warrantyUnitPriceInclTax.taxRate, sciSubTotalInclTax.price, sciUnitPriceInclTax.price, warrantyUnitPriceExclTax, warrantyUnitPriceInclTax.price);
+            return (0, sciSubTotalInclTax.price, sciUnitPriceInclTax.price, 0, 0);
         }
 
         private async Task<bool> IsCustomerInTaxableStateAsync(Customer customer)

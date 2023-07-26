@@ -35,5 +35,10 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
 
             await _abcMattressModelRepository.UpdateAsync(model);
         }
+
+        public bool IsProductMattress(int productId)
+        {
+            return GetAllAbcMattressModels().Where(amm => amm.ProductId == productId).Any();
+        }
     }
 }

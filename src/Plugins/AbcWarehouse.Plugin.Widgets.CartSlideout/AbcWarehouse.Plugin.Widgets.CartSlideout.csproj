@@ -15,17 +15,13 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>AbcWarehouse.StyleCop.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="scripts/cart-slideout.js" />
     <None Remove="styles/cart-slideout.css" />
+    <None Remove="Views/_PickupInStore.cshtml" />
     <None Remove="Views/_ProductInfo.cshtml" />
-    <None Remove="Views/_Subtotal.cshtml" />
     <None Remove="Views/_ViewImports.cshtml" />
     <None Remove="Views/Slideout.cshtml" />
   </ItemGroup>
@@ -43,10 +39,10 @@
     <Content Include="styles/cart-slideout.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views/_ProductInfo.cshtml">
+    <Content Include="Views/_PickupInStore.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views/_Subtotal.cshtml">
+    <Content Include="Views/_ProductInfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views/_ViewImports.cshtml">
@@ -68,13 +64,6 @@
 
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -16,6 +16,9 @@ namespace Nop.Plugin.Misc.AbcCore.Models
         [NopResourceDisplayName(CoreLocales.MobilePhoneNumber)]
         public string MobilePhoneNumber { get; set; }
 
+        [NopResourceDisplayName(CoreLocales.GoogleMapsGeocodingAPIKey)]
+        public string GoogleMapsGeocodingAPIKey { get; set; }
+
         [NopResourceDisplayName(CoreLocales.IsFedExMode)]
         public bool IsFedExMode { get; set; }
     }

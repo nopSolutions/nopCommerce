@@ -1,0 +1,28 @@
+@using Nop.Plugin.Misc.AbcCore.Models
+
+@model List<ProductStock>
+
+<h2>Select Pick-Up Location</h2>
+@foreach (var item in Model)
+{
+    <div style="margin: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+        <div style="margin-right: 1rem">
+            <h3>@item.Shop.Name</h3>
+            @Html.Raw(@item.Shop.ShortDescription)
+        </div>
+        <div >
+            @if (@item.Available)
+            {
+                <button type="button"
+                   id="select_store_@item.Shop.Id"
+                   onclick="selectStoreAsync(@item.Shop.Id, '@item.Message')">@item.Message</button>
+            }
+            else
+            {
+                <button type="button"
+                   class="not-available"
+                   disabled>Not Available</button>
+            }
+        </div>
+    </div>
+}
