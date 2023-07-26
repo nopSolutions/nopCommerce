@@ -16,7 +16,7 @@ namespace Nop.Data.Migrations
         public NopUpdateMigrationAttribute(string dateTime, string nopVersion, UpdateMigrationType migrationType) :
             base(dateTime, nopVersion, migrationType, MigrationProcessType.Update)
         {
-            ApplyInDbOnDebugMode = !_config.NopVersion.Equals(NopVersion.FULL_VERSION, StringComparison.CurrentCultureIgnoreCase);
+            ApplyInDbOnDebugMode = !_config.NopVersion.Equals(NopVersion.CURRENT_VERSION, StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

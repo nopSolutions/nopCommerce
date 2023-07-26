@@ -18,7 +18,7 @@ using Nop.Services.Stores;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopUpdateMigration("2022-07-20 14:00:10", "4.60.0", UpdateMigrationType.Settings)]
+    [NopUpdateMigration("2023-07-26 14:00:00", "4.60", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>

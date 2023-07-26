@@ -15,7 +15,7 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopUpdateMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings)]
+    [NopUpdateMigration("2020-06-10 00:00:00", "4.40", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>

@@ -5,7 +5,7 @@ using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
-    [NopUpdateMigration("2023-01-01 00:00:00", "4.70.0", UpdateMigrationType.Data)]
+    [NopUpdateMigration("2023-01-01 00:00:00", "4.70", UpdateMigrationType.Data)]
     public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;

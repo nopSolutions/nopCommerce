@@ -242,7 +242,7 @@ With "cte_duplicates" AS
 	WHERE "KeyGroup" = 'Customer' AND 
 	"Key" IN ('FirstName', 'LastName', 'Gender', 'Company', 
 		'StreetAddress', 'StreetAddress2', 'ZipPostalCode', 'City', 'County', 'Phone', 'Fax', 'VatNumber', 
-		'TimeZoneId', 'CustomCustomerAttributesXML', 'CountryId', 'StateProvinceId', 'VatNumberStatusId', 
+		'TimeZoneId', 'CustomCustomerAttributes', 'CountryId', 'StateProvinceId', 'VatNumberStatusId', 
 		'CurrencyId', 'LanguageId', 'TaxDisplayTypeId', 'DateOfBirth'))
 DELETE FROM "GenericAttribute" WHERE "Id" IN (SELECT "Id" FROM "cte_duplicates" WHERE "rownumber" != 1);
 
@@ -319,8 +319,8 @@ UPDATE "Customer" AS "c" SET "TimeZoneId" = (SELECT "Value" FROM "GenericAttribu
 DELETE FROM "GenericAttribute" WHERE "KeyGroup" = 'Customer' AND "Key" = 'TimeZoneId';
 
 -- CustomCustomerAttributesXML
-UPDATE "Customer" AS "c" SET "CustomCustomerAttributesXML" = (SELECT "Value" FROM "GenericAttribute" AS "ga" WHERE "ga"."EntityId" = "c"."Id" AND "ga"."KeyGroup" = 'Customer' AND "ga"."Key" = 'CustomCustomerAttributesXML') WHERE "CustomCustomerAttributesXML" is NULL;
-DELETE FROM "GenericAttribute" WHERE "KeyGroup" = 'Customer' AND "Key" = 'CustomCustomerAttributesXML';
+UPDATE "Customer" AS "c" SET "CustomCustomerAttributesXML" = (SELECT "Value" FROM "GenericAttribute" AS "ga" WHERE "ga"."EntityId" = "c"."Id" AND "ga"."KeyGroup" = 'Customer' AND "ga"."Key" = 'CustomCustomerAttributes') WHERE "CustomCustomerAttributesXML" is NULL;
+DELETE FROM "GenericAttribute" WHERE "KeyGroup" = 'Customer' AND "Key" = 'CustomCustomerAttributes';
 
 -- CountryId
 UPDATE "Customer" AS "c" SET "CountryId" = (SELECT CAST("Value" as integer) FROM "GenericAttribute" AS "ga" WHERE "ga"."EntityId" = "c"."Id" AND "ga"."KeyGroup" = 'Customer' AND "ga"."Key" = 'CountryId') WHERE "CountryId" = 0 AND EXISTS (SELECT CAST("Value" as integer) FROM "GenericAttribute" AS "ga" WHERE "ga"."EntityId" = "c"."Id" AND "ga"."KeyGroup" = 'Customer' AND "ga"."Key" = 'CountryId');

@@ -10,7 +10,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470
 {
-    [NopUpdateMigration("2023-02-01 14:00:03", "4.70.0", UpdateMigrationType.Settings)]
+    [NopUpdateMigration("2023-02-01 14:00:03", "4.70", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>

@@ -9,7 +9,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo450
 {
-    [NopUpdateMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Data)]
+    [NopUpdateMigration("2021-04-23 00:00:00", "4.50", UpdateMigrationType.Data)]
     public class DataMigration : Migration
     {
         protected readonly INopDataProvider _dataProvider;
