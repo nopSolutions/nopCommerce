@@ -97,6 +97,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             
             return Json(new {
                 isDeliveryAvailable = await _deliveryService.CheckZipcodeAsync(zip.Value),
+                isFedExAvailable = await HasFedExProductAttributeAsync(productId.Value),
                 pickupInStoreHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutPickupInStore",
                     new {
@@ -183,6 +184,25 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                 ShoppingCartItemId = sci.Id,
                 ProductId = productId
             };
+        }
+
+        private async Task<bool> HasFedExProductAttributeAsync(int productId)
+        {
+            var product = await _productService.GetProductByIdAsync(productId);
+            var pams = await _abcProductAttributeService.GetProductAttributeMappingsByProductIdAsync(productId);
+            foreach (var pam in pams)
+            {
+                var pavs = await _abcProductAttributeService.GetProductAttributeValuesAsync(pam.Id);
+                foreach (var pav in pavs)
+                {
+                    if (pav.Name == "FedEx")
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
         }
     }
 }

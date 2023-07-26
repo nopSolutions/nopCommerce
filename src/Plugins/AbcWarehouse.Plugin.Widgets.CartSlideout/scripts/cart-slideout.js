@@ -73,7 +73,7 @@ function openDeliveryOptions(response) {
     deliveryNotAvailable.style.display = "none";
     deliveryOptions.style.display = "none";
 
-    if (response.isDeliveryAvailable) {
+    if (response.isDeliveryAvailable || response.isFedExAvailable) {
         deliveryOptions.style.display = "block";
     } else {
         addToCartButton.disabled = true;
