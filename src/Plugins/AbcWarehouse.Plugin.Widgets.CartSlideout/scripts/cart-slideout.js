@@ -26,6 +26,7 @@ var productId = 0;
 var editMode = false;
 var isMattress = false;
 var selectedShop = "";
+var isPickupExcluded = false;
 
 // Event listeners for updating the check delivery options button:
 zipCodeInput.addEventListener('keyup', updateCheckDeliveryAvailabilityButton);
@@ -79,6 +80,8 @@ function openDeliveryOptions(response) {
         addToCartButton.disabled = true;
         deliveryNotAvailable.style.display = "block";
     }
+
+    isPickupExcluded = !response.isDeliveryAvailable && response.isFedExAvailable;
 
     cartSlideoutBackButton.style.display = "block";
 }
@@ -254,6 +257,9 @@ function updateAttributes() {
         addToCartButton.disabled =
             !responseJson.IsAddEditCartAllowed ||
             (responseJson.IsPickup && selectedShop === "");
+
+        // hide pick up in store if required
+        alert('hide pickup in store');
     })
     .catch(err => {
         console.log(err)
