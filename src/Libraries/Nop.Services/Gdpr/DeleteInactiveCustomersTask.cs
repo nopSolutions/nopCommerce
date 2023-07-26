@@ -43,7 +43,7 @@ namespace Nop.Services.Gdpr
             var lastActivityToUtc = DateTime.UtcNow.AddMonths(-_gdprSettings.DeleteInactiveCustomersAfterMonths);
             var inactiveCustomers = await _customerService.GetAllCustomersAsync(lastActivityToUtc: lastActivityToUtc);
 
-            foreach (var customer in inactiveCustomers)
+            foreach (var customer in inactiveCustomers.Where(c => !c.IsSystemAccount))
                 await _gdprService.PermanentDeleteCustomerAsync(customer);
         }
 
