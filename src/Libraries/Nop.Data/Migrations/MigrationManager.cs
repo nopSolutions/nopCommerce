@@ -128,7 +128,7 @@ namespace Nop.Data.Migrations
 
 #if DEBUG
                 if (!string.IsNullOrEmpty(migrationInfo.Description) &&
-                    migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)))
+                    migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.CURRENT_VERSION)))
                     continue;
 #endif
                 try

@@ -17,7 +17,7 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+    [NopMigration("2023-07-26 14:00:00", "4.60", UpdateMigrationType.Data, MigrationProcessType.Update)]
     public class DataMigration : Migration 
     {
         private readonly INopDataProvider _dataProvider;
@@ -32,13 +32,16 @@ namespace Nop.Data.Migrations.UpgradeTo460
         /// </summary>
         public override void Up()
         {
+            //#6789 GenericAttribute was previously named CustomCustomerAttributes and not CustomCustomerAttributesXML
+            var customCustomerAttributeName = "CustomCustomerAttributes";
+
             //#4601 customer attribute values to customer table column values
             var attributeKeys = new[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
-                nameof(Customer.TimeZoneId), nameof(Customer.CustomCustomerAttributesXML), nameof(Customer.CountryId),
+                nameof(Customer.TimeZoneId), nameof(Customer.CountryId),
                 nameof(Customer.StateProvinceId), nameof(Customer.VatNumberStatusId), nameof(Customer.CurrencyId), nameof(Customer.LanguageId),
-                nameof(Customer.TaxDisplayTypeId), nameof(Customer.DateOfBirth)};
+                nameof(Customer.TaxDisplayTypeId), nameof(Customer.DateOfBirth), customCustomerAttributeName };
 
             var languages = _dataProvider.GetTable<Language>().ToList();
             var currencies = _dataProvider.GetTable<Currency>().ToList();
@@ -112,7 +115,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.Fax = getAttributeValue(customerAttributes, nameof(Customer.Fax), castToString);
                     customer.VatNumber = getAttributeValue(customerAttributes, nameof(Customer.VatNumber), castToString);
                     customer.TimeZoneId = getAttributeValue(customerAttributes, nameof(Customer.TimeZoneId), castToString);
-                    customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
                     customer.CountryId = getAttributeValue(customerAttributes, nameof(Customer.CountryId), castToInt);
                     customer.StateProvinceId = getAttributeValue(customerAttributes, nameof(Customer.StateProvinceId), castToInt);
                     customer.VatNumberStatusId = getAttributeValue(customerAttributes, nameof(Customer.VatNumberStatusId), castToInt);
@@ -120,6 +122,10 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.LanguageId = languages.FirstOrDefault(l => l.Id == getAttributeValue(customerAttributes, nameof(Customer.LanguageId), castToInt))?.Id;
                     customer.TaxDisplayTypeId = getAttributeValue(customerAttributes, nameof(Customer.TaxDisplayTypeId), castToInt);
                     customer.DateOfBirth = getAttributeValue(customerAttributes, nameof(Customer.DateOfBirth), castToDateTime);
+
+                    //#6789
+                    if (string.IsNullOrEmpty(customer.CustomCustomerAttributesXML))
+                        customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, customCustomerAttributeName, castToString, int.MaxValue);
                 }
 
                 _dataProvider.UpdateEntities(customers);
