@@ -258,8 +258,14 @@ function updateAttributes() {
             !responseJson.IsAddEditCartAllowed ||
             (responseJson.IsPickup && selectedShop === "");
 
-        // hide pick up in store if required
-        alert('hide pickup in store');
+        if (isPickupExcluded) {
+            var labels = document.querySelectorAll(`label[for^="product_attribute_"`);
+            labels.forEach(label => {
+                if (label.innerText.toLowerCase().includes('pickup in-store')) {
+                    label.parentElement.style.display = "none";
+                }
+            });
+        }
     })
     .catch(err => {
         console.log(err)
