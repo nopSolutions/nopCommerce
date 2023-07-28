@@ -1,4 +1,4 @@
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -19,7 +19,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-13 00:00:00", "Update datetime type precision", MigrationProcessType.Update)]
+    [NopMigration("2023-07-28 08:00:00", "Update datetime type precision", MigrationProcessType.Update)]
     public class MySqlDateTimeWithPrecisionMigration : Migration
     {
         public override void Up()
