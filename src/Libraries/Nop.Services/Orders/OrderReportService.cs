@@ -580,7 +580,7 @@ namespace Nop.Services.Orders
             {
                 GroupByOptions.Day => from oq in query
                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Date into result
-                                      let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                      let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                       select new
                                       {
                                           SummaryDate = result.Key,
@@ -595,7 +595,7 @@ namespace Nop.Services.Orders
                                       },
                 GroupByOptions.Week => from oq in query
                                        group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(- (int)oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).DayOfWeek).Date into result
-                                       let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                       let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                        select new
                                        {
                                            SummaryDate = result.Key,
@@ -610,7 +610,7 @@ namespace Nop.Services.Orders
                                        },
                 GroupByOptions.Month => from oq in query
                                         group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(1 - oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Day).Date into result
-                                        let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                        let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                         select new
                                         {
                                             SummaryDate = result.Key,
