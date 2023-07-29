@@ -506,7 +506,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<decimal> RoundPriceAsync(decimal value, Currency currency = null)
         {
-            //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
+            //we use this method because some currencies (e.g. Hungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
 
             currency ??= await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
