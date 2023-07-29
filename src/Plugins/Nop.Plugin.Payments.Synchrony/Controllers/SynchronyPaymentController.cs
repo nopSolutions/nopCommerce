@@ -448,10 +448,11 @@ namespace Nop.Plugin.Payments.Synchrony.Controllers
                 throw new Exception("Unable to retrieve AuthenticationTokenResponse");
             }
 
-            var transPromo = HttpContext.Session.GetString("TransPromo").Replace("\"", "");
+            var transPromo = HttpContext.Session.GetString("TransPromo");
             var sessionOrderTotal = HttpContext.Session.GetString("OrderTotal");
             if (!string.IsNullOrEmpty(transPromo))
             {
+                transPromo = transPromo.Replace("\"", "");
                 authTokenResponse.PromoCode = transPromo;
             }
             if (!string.IsNullOrEmpty(sessionOrderTotal))
