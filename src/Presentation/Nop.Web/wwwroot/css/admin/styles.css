@@ -843,7 +843,9 @@ i.false-icon {
   min-height: 0;
   padding-top: 0;
 }
-
+.select2-blue {
+  width: 100%;
+}
 .select2-blue .select2-container--default .select2-selection--single, .select2-blue .select2-container--default .select2-selection--multiple {
   height: 38px;
 }
@@ -906,76 +908,6 @@ i.false-icon {
 }
 
 /*GRID FOOTER*/
-.k-pager-numbers .k-link {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  margin-right: -1px;
-  border-radius: 0;
-  height: 32px;
-  line-height: 31px;
-  min-width: 31px;
-}
-
-.k-pager-numbers .k-state-selected {
-  border-radius: 0;
-  margin: 0px;
-  background: #3c8dbc;
-  height: 32px;
-  line-height: 31px;
-  min-width: 30px;
-}
-
-.k-pager-wrap > .k-link {
-  border-radius: 0;
-  margin: 0;
-  margin-left: -1px;
-  height: 32px;
-  line-height: 31px;
-  background: #ffffff;
-  border: 1px solid #ddd;
-  min-width: 30px;
-}
-
-.k-pager-wrap .k-link:hover {
-  background-color: #eee;
-  border-color: #ddd;
-}
-
-.k-pager-sizes {
-  padding-top: 0;
-}
-
-.k-pager-sizes .k-dropdown-wrap.k-state-default {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 0;
-  height: 32px;
-}
-
-.k-pager-sizes .k-dropdown-wrap.k-state-focused {
-  border: 1px solid #ddd !important;
-  box-shadow: none !important;
-}
-
-.k-pager-sizes .k-dropdown-wrap .k-input {
-  height: 28px;
-  line-height: 28px;
-}
-
-.k-pager-sizes .k-widget.k-dropdown {
-  margin-top: 0;
-  width: auto !important;
-  min-width: 60px;
-}
-
-.k-list .k-state-focused, .k-list .k-state-hover {
-  border-radius: 0;
-  background: #3c8dbc;
-}
-
-input[type="text"].k-input {
-  box-sizing: content-box;
-}
 
 .page-item.active .page-link {
   background-color: #337ab7;
@@ -1323,19 +1255,6 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   width: 320px;
 }
 
-.form-horizontal .k-autocomplete, .form-horizontal .k-combobox,
-.form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown,
-.form-horizontal .k-selectbox, .form-horizontal .k-textbox,
-.form-horizontal .k-colorpicker,
-.form-horizontal .k-timepicker, .form-horizontal .k-datetimepicker,
-.form-horizontal .k-datepicker {
-  width: 300px !important;
-  max-width: 100%;
-  border-radius: 0;
-  border-color: #d2d6de;
-  height: 38px;
-}
-
 .tag-editor {
   border: 1px solid #d2d6de !important;
   line-height: 31px !important;
@@ -1354,10 +1273,6 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 
 .card-search .form-control, .card-search .input-group-short {
   max-width: 425px;
-}
-
-.card-search .k-multiselect.k-header {
-  max-width: 423px;
 }
 
 .card-popup .btn-search {
@@ -1385,10 +1300,6 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   float: left;
   margin-right: 3px;
   width: 200px;
-}
-
-.input-group.input-group-short .k-widget {
-  margin-right: 10px;
 }
 
 .input-group.input-group-short .input-group-text {
