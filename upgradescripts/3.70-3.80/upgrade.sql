@@ -1278,7 +1278,7 @@ set @resources='
     <Value>There are two gift card types: virtual and physical. WARNING: not recommended to change the gift card type from one to another in a "live" store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload.Hint">
-    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it direct from your store. The link will be visible after checkout.</Value>
+    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it directly from your store. The link will be visible after checkout. Please note that it''s recommended to use ''Use download URL'' feature for large files.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Download.Hint">
     <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
