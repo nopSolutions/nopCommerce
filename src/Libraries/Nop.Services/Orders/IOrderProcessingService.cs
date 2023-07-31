@@ -321,7 +321,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// The task result contains the value indicating whether payment workflow is required
         /// </returns>
         Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
 

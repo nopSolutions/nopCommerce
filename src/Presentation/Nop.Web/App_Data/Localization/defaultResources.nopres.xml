@@ -9645,6 +9645,9 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Info">
+    <Value>Info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Ssl.Disable">
     <Value>Disable SSL</Value>
   </LocaleResource>

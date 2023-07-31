@@ -222,30 +222,25 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        private static void CopyDataToNewFile(ImportProductMetadata metadata, IXLWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
+        protected virtual void CopyDataToNewFile(ImportProductMetadata metadata, IXLWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
         {
-            using var stream = new FileStream(filePath, FileMode.OpenOrCreate);
-            // ok, we can run the real code of the sample now
-            using var workbook = new XLWorkbook(stream);
-            // uncomment this line if you want the XML written out to the outputDir
-            //xlPackage.DebugMode = true; 
+            using var workbook = new XLWorkbook();
 
             // get handles to the worksheets
-            var outWorksheet = workbook.Worksheets.Add(typeof(Product).Name);
+            var outWorksheet = workbook.Worksheets.Add(nameof(Product));
             metadata.Manager.WriteDefaultCaption(outWorksheet);
             var outRow = 2;
             for (var row = startRow; row <= endRow; row++)
             {
                 outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
+
                 for (var cell = 1; cell <= endCell; cell++)
-                {
                     outWorksheet.Row(outRow).Cell(cell).Value = worksheet.Row(row).Cell(cell).Value;
-                }
 
                 outRow += 1;
             }
 
-            workbook.Save();
+            workbook.SaveAs(filePath);
         }
 
         protected virtual int GetColumnIndex(string[] properties, string columnName)
