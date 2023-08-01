@@ -342,6 +342,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                     shippingMethod.ShippingOption,
                     (await _storeContext.GetCurrentStoreAsync()).Id
                 );
+                await SendExternalShippingMethodRequestAsync();
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
                 
