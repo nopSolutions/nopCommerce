@@ -716,7 +716,7 @@ namespace Nop.Services.Common
                 Products = await GetOrderProductItemsAsync(order, orderItems, language),
                 ShowSkuInProductList = _catalogSettings.ShowSkuOnProductDetailsPage,
                 ShowVendorInProductList = _vendorSettings.ShowVendorOnOrderDetailsPage,
-                CheckoutAttributes = vendor is null ? WebUtility.HtmlDecode(_htmlFormatter.ReplaceAnchorTags(order.CheckoutAttributeDescription)) : string.Empty, //vendors cannot see checkout attributes
+                CheckoutAttributes = vendor is null ? _htmlFormatter.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true) : string.Empty, //vendors cannot see checkout attributes
                 Totals = vendor is null ? await GetTotalsAsync(language, order) : new(), //vendors cannot see totals
                 OrderNotes = await GetOrderNotesAsync(pdfSettingsByStore, order, language),
                 FooterTextColumn1 = column1Lines,
