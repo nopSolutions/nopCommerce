@@ -66,3 +66,10 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 * ABC Stage - 163.123.137.99
 * Haw Prod - 163.123.137.41
 * Mickey Prod - 163.123.137.44
+
+## Setting Up Active Store (Main/Clearance)
+
+To set up the store to debug:
+
+1. Configuration > Stores
+2. Change the Display order of the stores so the desired store is on top.

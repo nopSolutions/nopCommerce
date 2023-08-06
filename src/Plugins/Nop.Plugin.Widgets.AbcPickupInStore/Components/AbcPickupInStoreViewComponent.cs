@@ -85,14 +85,14 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             }
 
             Product product = await _productService.GetProductByIdAsync(productId);
-            if (await product.HasDeliveryOptionsAsync())
+            var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
+            var isClearanceStore = storeUrl.Contains("clearance");
+            if (await product.HasDeliveryOptionsAsync() && !isClearanceStore)
             {
                 return Content("");
             }
-
             // clearance store specific
-            var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
-            if (storeUrl.Contains("clearance"))
+            else if (isClearanceStore)
             {
                 if (widgetZone == PICKUP_INFO_WIDGET_ZONE)
                 {
