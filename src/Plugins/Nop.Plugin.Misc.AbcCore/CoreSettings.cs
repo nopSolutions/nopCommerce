@@ -7,17 +7,14 @@ namespace Nop.Plugin.Misc.AbcCore
 {
     public class CoreSettings : ISettings
     {
-        public string BackendDbConnectionString { get; private set; }
         public bool AreExternalCallsSkipped { get; private set; }
         public bool IsDebugMode { get; private set; }
         public string MobilePhoneNumber { get; private set; }
         public string GoogleMapsGeocodingAPIKey { get; private set; }
-        public bool IsFedExMode { get; private set; }
 
         public bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(BackendDbConnectionString) &&
-                   !string.IsNullOrWhiteSpace(MobilePhoneNumber) &&
+            return !string.IsNullOrWhiteSpace(MobilePhoneNumber) &&
                    !string.IsNullOrWhiteSpace(GoogleMapsGeocodingAPIKey);
         }
 
@@ -25,7 +22,6 @@ namespace Nop.Plugin.Misc.AbcCore
         {
             return new CoreSettings()
             {
-                BackendDbConnectionString = model.BackendDbConnectionString,
                 AreExternalCallsSkipped = model.AreExternalCallsSkipped,
                 IsDebugMode = model.IsDebugMode,
                 MobilePhoneNumber = model.MobilePhoneNumber,
@@ -38,24 +34,12 @@ namespace Nop.Plugin.Misc.AbcCore
         {
             return new ConfigurationModel
             {
-                BackendDbConnectionString = BackendDbConnectionString,
                 AreExternalCallsSkipped = AreExternalCallsSkipped,
                 IsDebugMode = IsDebugMode,
                 MobilePhoneNumber = MobilePhoneNumber,
                 GoogleMapsGeocodingAPIKey = GoogleMapsGeocodingAPIKey,
                 IsFedExMode = IsFedExMode
             };
-        }
-        public OdbcConnection GetBackendDbConnection()
-        {
-            if (string.IsNullOrWhiteSpace(BackendDbConnectionString))
-            {
-                throw new ConfigurationErrorsException(
-                    "Backend DB connection string is not set, " +
-                    "please set in AbcCore configuration.");
-            }
-
-            return new OdbcConnection(BackendDbConnectionString);
         }
     }
 }

@@ -3,6 +3,7 @@ using Nop.Services.Tasks;
 using System.Data;
 using Nop.Plugin.Misc.AbcCore.Extensions;
 using Nop.Plugin.Misc.AbcCore.Services;
+using System.Data.Odbc;
 
 namespace Nop.Plugin.Misc.AbcCore
 {
@@ -22,7 +23,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            using (IDbConnection backendConn = _coreSettings.GetBackendDbConnection())
+            using (IDbConnection backendConn = new OdbcConnection("DSN=abc-erp"))
             {
                 await _archiveService.ArchiveProductContentAsync(backendConn);
             }

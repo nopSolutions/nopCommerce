@@ -32,9 +32,9 @@ namespace Nop.Plugin.Misc.AbcCore.Services
         private static readonly string _backendStockQuantity = "QTY_ON_HAND";
 
         // INVENTORY TABLE CONSTANTS
-        private static readonly string _backendInvTable = BackendDbConstants.InvTable;
-        private static readonly string _backendInvItemNum = BackendDbConstants.InvItemNumber;
-        private static readonly string _backendInvModel = BackendDbConstants.InvModel;
+        private static readonly string _backendInvTable = "DA1_INVENTORY_MASTER";
+        private static readonly string _backendInvItemNum = "ITEM_NUMBER";
+        private static readonly string _backendInvModel = "MODEL";
 
         private IShopService _shopService;
         private IProductService _productService;
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
 
             Dictionary<int, int> branchQuantityDict = new Dictionary<int, int>();
             // go to backend and get quantity
-            using (OdbcConnection dbConnection = _settings.GetBackendDbConnection())
+            using (OdbcConnection dbConnection = new OdbcConnection("DSN=abc-erp"))
             {
                 OdbcCommand dbCommand = dbConnection.CreateCommand();
 

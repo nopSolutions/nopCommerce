@@ -11,15 +11,6 @@
 		<div class="container-fluid">			
 				<div class="card card-default">
 					<div class="card-body">
-						<div class="form-group row">
-							<div class="col-md-3">
-								<nop-label asp-for="BackendDbConnectionString" />
-							</div>
-							<div class="col-md-9">
-								<nop-editor asp-for="BackendDbConnectionString" />
-								<span asp-validation-for="BackendDbConnectionString"></span>
-							</div>
-						</div>
                         <div class="form-group row">
 							<div class="col-md-3">
 								<nop-label asp-for="AreExternalCallsSkipped" />
@@ -54,7 +45,10 @@
 							<div class="col-md-9">
 								<nop-editor asp-for="GoogleMapsGeocodingAPIKey" />
 								<span asp-validation-for="GoogleMapsGeocodingAPIKey"></span>
-                            <div class="col-md-3">
+                            </div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3">
 								<nop-label asp-for="IsFedExMode" />
 							</div>
 							<div class="col-md-9">

@@ -181,8 +181,6 @@ namespace Nop.Plugin.Misc.AbcCore
             await _localizationService.AddLocaleResourceAsync(
                 new Dictionary<string, string>
                 {
-                    [CoreLocales.BackendDbConnectionString] = "Backend DB Connection String",
-                    [CoreLocales.BackendDbConnectionStringHint] = "Connection string for connecting to ERP database.",
                     ["Admin.Catalog.Products.PLPDescription"] = "PLP description",
                     ["Admin.Catalog.Products.PLPDescriptionHint"] = "Product listing page description.",
                     [CoreLocales.IsDebugMode] = "Debug Mode",

@@ -4,11 +4,6 @@ namespace Nop.Plugin.Misc.AbcCore
     {
         public const string Base = "Plugins.Misc.AbcCore.Fields.";
 
-        public const string BackendDbConnectionString =
-            Base + "BackendDbConnectionString";
-        public const string BackendDbConnectionStringHint =
-            BackendDbConnectionString + ".Hint";
-
         public const string AreExternalCallsSkipped =
             Base + "AreExternalCallsSkipped";
         public const string AreExternalCallsSkippedHint =
@@ -33,6 +28,7 @@ namespace Nop.Plugin.Misc.AbcCore
             Base + "GoogleMapsGeocodingAPIKey";
         public const string GoogleMapsGeocodingAPIKeyHint =
             GoogleMapsGeocodingAPIKey + ".Hint";
+
         public const string IsFedExMode =
             Base + "IsFedExMode";
         public const string IsFedExModeHint =
