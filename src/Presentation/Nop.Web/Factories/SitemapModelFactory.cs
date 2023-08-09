@@ -315,6 +315,42 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
+        /// Return localized blog post url
+        /// </summary>
+        /// <param name="post">Blog post to generate URL</param>
+        /// <param name="updateFreq">How often to update url</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<SitemapUrlModel> PrepareLocalizedBlogPostUrlModelAsync(BlogPost post, UpdateFrequency updateFreq = UpdateFrequency.Weekly)
+        {
+            //url for current language
+            var url = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new
+            {
+                SeName = await _urlRecordService.GetSeNameAsync(post, null,
+                    ensureTwoPublishedLanguages: false)
+            }, await GetHttpProtocolAsync());
+
+            var updatedOn = post.CreatedOnUtc;
+
+            if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
+
+            var lang = await _languageService.GetLanguageByIdAsync(post.LanguageId);
+
+            if (lang == null || !lang.Published)
+                return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
+
+            url = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new
+            {
+                SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId,
+                    ensureTwoPublishedLanguages: false)
+            }, await GetHttpProtocolAsync());
+            
+            url = GetLocalizedUrl(url, lang);
+
+            return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
+        }
+
+        /// <summary>
         /// Get blog post URLs for the sitemap
         /// </summary>
         /// <returns>
@@ -325,11 +361,13 @@ namespace Nop.Web.Factories
         {
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            return await (await _blogService.GetAllBlogPostsAsync(store.Id))
+            var urls = await (await _blogService.GetAllBlogPostsAsync(store.Id))
                 .Where(p => p.IncludeInSitemap)
-                .SelectAwait(async post => await PrepareLocalizedSitemapUrlAsync("BlogPost",
-                    async lang => new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
-                    post.CreatedOnUtc)).ToListAsync();
+                .SelectAwait(async post =>
+                    await PrepareLocalizedBlogPostUrlModelAsync(post)
+                ).ToListAsync();
+
+            return urls;
         }
 
         /// <summary>
@@ -535,6 +573,34 @@ namespace Nop.Web.Factories
             using var fileStream = _nopFileProvider.GetOrCreateFile(fullPath);
             stream.Position = 0;
             await stream.CopyToAsync(fileStream, 81920);
+        }
+
+        /// <summary>
+        /// Gets localized URL with SEO code
+        /// </summary>
+        /// <param name="currentUrl">URL to add SEO code</param>
+        /// <param name="lang">Language for localization</param>
+        /// <returns>Localized URL with SEO code</returns>
+        protected string GetLocalizedUrl(string currentUrl, Language lang)
+        {
+            if (string.IsNullOrEmpty(currentUrl))
+                return null;
+
+            if (_actionContextAccessor.ActionContext == null)
+                return null;
+
+            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+
+            //Extract server and path from url
+            var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+            var path = new Uri(currentUrl).PathAndQuery;
+
+            //Replace seo code
+            var localizedPath = path
+                .RemoveLanguageSeoCodeFromUrl(pathBase, true)
+                .AddLanguageSeoCodeToUrl(pathBase, true, lang);
+
+            return new Uri(new Uri(scheme), localizedPath).ToString();
         }
 
         #endregion
@@ -828,7 +894,6 @@ namespace Nop.Web.Factories
             if (languages == null || languages.Count == 1)
                 return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
-            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
             //return list of localized urls
             var localizedUrls = await languages
                 .SelectAwait(async lang =>
@@ -837,19 +902,7 @@ namespace Nop.Web.Factories
                         getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
                         await GetHttpProtocolAsync());
 
-                    if (string.IsNullOrEmpty(currentUrl))
-                        return null;
-
-                    //Extract server and path from url
-                    var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                    var path = new Uri(currentUrl).PathAndQuery;
-
-                    //Replace seo code
-                    var localizedPath = path
-                        .RemoveLanguageSeoCodeFromUrl(pathBase, true)
-                        .AddLanguageSeoCodeToUrl(pathBase, true, lang);
-
-                    return new Uri(new Uri(scheme), localizedPath).ToString();
+                    return GetLocalizedUrl(currentUrl, lang);
                 })
                 .Where(value => !string.IsNullOrEmpty(value))
                 .ToListAsync();
