@@ -344,7 +344,7 @@
             /// <summary>
             /// Gets a URL of the app settings docs page
             /// </summary>
-            public static string AppSettings => "https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html";
+            public static string AppSettings => " https://docs.nopcommerce.com/en/developer/tutorials/appsettings-json-file.html";
 
             /// <summary>
             /// Gets a URL of the themes docs page
@@ -365,11 +365,6 @@
             /// Gets a URL of the Avalara docs page
             /// </summary>
             public static string Avalara => "https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html";
-
-            /// <summary>
-            /// Gets a URL of the ShipStation docs page
-            /// </summary>
-            public static string ShipStation => "https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/shipstation.html";
         }
 
         /// <summary>
