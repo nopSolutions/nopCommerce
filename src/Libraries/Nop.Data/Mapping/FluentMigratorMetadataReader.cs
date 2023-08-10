@@ -27,7 +27,7 @@ namespace Nop.Data.Mapping
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets attributes of specified type, associated with specified type member

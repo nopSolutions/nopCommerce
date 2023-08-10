@@ -19,7 +19,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Creates the database connection by the current data configuration
