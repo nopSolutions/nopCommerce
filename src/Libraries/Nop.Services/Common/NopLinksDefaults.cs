@@ -344,7 +344,7 @@
             /// <summary>
             /// Gets a URL of the app settings docs page
             /// </summary>
-            public static string AppSettings => "https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html";
+            public static string AppSettings => " https://docs.nopcommerce.com/en/developer/tutorials/appsettings-json-file.html";
 
             /// <summary>
             /// Gets a URL of the themes docs page
