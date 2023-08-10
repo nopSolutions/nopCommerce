@@ -19,7 +19,7 @@ namespace Nop.Services.Common.Pdf
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Compose the shipment

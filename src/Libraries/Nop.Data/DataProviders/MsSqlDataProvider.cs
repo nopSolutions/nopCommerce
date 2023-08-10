@@ -13,7 +13,7 @@ namespace Nop.Data.DataProviders
     /// </summary>
     public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets the connection string builder

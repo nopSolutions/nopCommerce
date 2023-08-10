@@ -17,7 +17,7 @@ namespace Nop.Tests
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Configure processor

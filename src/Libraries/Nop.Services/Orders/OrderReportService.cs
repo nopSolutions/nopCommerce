@@ -74,7 +74,7 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Search order items
