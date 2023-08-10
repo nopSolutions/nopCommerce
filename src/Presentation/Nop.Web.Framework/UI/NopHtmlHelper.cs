@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.UI
 
         #endregion
 
-        #region Utilities
+        #region Utils
 
         protected IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
         {

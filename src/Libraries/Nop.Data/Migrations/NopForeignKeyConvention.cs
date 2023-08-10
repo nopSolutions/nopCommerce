@@ -24,7 +24,7 @@ namespace Nop.Data.Migrations
 
         #endregion
 
-        #region Utilities
+        #region Utils
 
         /// <summary>
         /// Gets the default name of a foreign key

@@ -26,7 +26,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #endregion
 
-        #region Utilities
+        #region Utils
 
         /// <summary>
         /// Check whether there are any restrictions on handling the file

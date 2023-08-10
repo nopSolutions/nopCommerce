@@ -17,7 +17,7 @@ namespace Nop.Services.Common.Pdf
 
         #endregion
 
-        #region Utilities
+        #region Utils
 
         /// <summary>
         /// Compose the catalog

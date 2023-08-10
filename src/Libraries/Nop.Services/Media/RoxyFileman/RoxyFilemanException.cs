@@ -40,7 +40,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #endregion
 
-        #region Utilities
+        #region Utils
 
         /// <summary>
         /// Get the language resource value
