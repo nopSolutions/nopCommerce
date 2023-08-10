@@ -10014,12 +10014,6 @@
   <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.Providers.Title">
     <Value>Shipping providers</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text">
-    <Value><![CDATA[If you want to provide more accurate shipping rates, we recommend using shipping services such as ShipStation. Read how to configure it in <a href="{0}" target="_blank">this article</a>.]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.ShipStation.Title">
-    <Value>ShipStation</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Name.Text">
     <Value>Enter your store name in this field. It will be displayed, for instance, in the newsletter and notification emails sent to your customers.</Value>
   </LocaleResource>

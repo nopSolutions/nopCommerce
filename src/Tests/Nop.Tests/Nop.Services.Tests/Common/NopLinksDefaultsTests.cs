@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Http;
-using Nop.Services.News;
 using NUnit.Framework;
 using static Nop.Services.Common.NopLinksDefaults;
 
