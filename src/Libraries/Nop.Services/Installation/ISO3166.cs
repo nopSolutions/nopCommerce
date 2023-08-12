@@ -272,7 +272,7 @@
                 new ISO3166Country("Tonga", "TO", "TON", 776, new[] { "676" }),
                 new ISO3166Country("Trinidad and Tobago", "TT", "TTO", 780, new[] { "1 868" }),
                 new ISO3166Country("Tunisia", "TN", "TUN", 788, new[] { "216" }, localizationInfo: new[] { new LocalizationInfo("ar-TN", "Arabic") }),
-                new ISO3166Country("Turkey", "TR", "TUR", 792, new[] { "90" }, localizationInfo: new[] { new LocalizationInfo("tr-TR", "Turkish") }),
+                new ISO3166Country("Türkiye", "TR", "TUR", 792, new[] { "90" }, localizationInfo: new[] { new LocalizationInfo("tr-TR", "Turkish") }),
                 new ISO3166Country("Turkmenistan", "TM", "TKM", 795, new[] { "993" }),
                 new ISO3166Country("Turks and Caicos Islands", "TC", "TCA", 796, new[] { "1 649" }),
                 new ISO3166Country("Tuvalu", "TV", "TUV", 798, new[] { "688" }),
