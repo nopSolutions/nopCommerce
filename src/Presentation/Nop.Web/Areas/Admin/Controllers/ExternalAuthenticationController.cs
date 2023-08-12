@@ -45,17 +45,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual async Task<IActionResult> Methods()
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _externalAuthenticationMethodModelFactory
-                .PrepareExternalAuthenticationMethodSearchModel(new ExternalAuthenticationMethodSearchModel());
-
-            return View(model);
-        }
 
         [HttpPost]
         public virtual async Task<IActionResult> Methods(ExternalAuthenticationMethodSearchModel searchModel)
