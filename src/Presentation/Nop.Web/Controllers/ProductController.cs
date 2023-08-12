@@ -357,7 +357,7 @@ namespace Nop.Web.Controllers
                     additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
                 }
 
-            return View(model);
+            return View("_ProductReviews",model);
         }
 
         [HttpPost, ActionName("ProductReviews")]
