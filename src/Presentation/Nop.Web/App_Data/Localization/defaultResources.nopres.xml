@@ -3028,7 +3028,7 @@
     <Value>Downloadable product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload.Hint">
-    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it direct from your store. The link will be visible after checkout.</Value>
+    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it directly from your store. The link will be visible after checkout. Please note that it's recommended to use the 'Use download URL' feature for large files (instead of uploading them to the database).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsFreeShipping">
     <Value>Free shipping</Value>

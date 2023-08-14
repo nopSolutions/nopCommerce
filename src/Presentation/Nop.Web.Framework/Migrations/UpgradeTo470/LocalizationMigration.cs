@@ -153,6 +153,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //433
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable"] = "The associated product is downloadable, keep in mind that customers won't be able to download it.",
 
+                //#6788
+                ["Admin.Catalog.Products.Fields.IsDownload.Hint"] = "Check if the product is downloadable. When customers purchase a downloadable product, they can download it directly from your store. The link will be visible after checkout. Please note that it's recommended to use the 'Use download URL' feature for large files (instead of uploading them to the database).",
             }, languageId);
 
             #endregion
