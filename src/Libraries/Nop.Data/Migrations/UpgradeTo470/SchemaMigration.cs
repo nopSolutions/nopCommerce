@@ -1,7 +1,12 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
@@ -58,6 +63,13 @@ namespace Nop.Data.Migrations.UpgradeTo470
             else
                 Alter.Table(productAttributeValueTableName)
                     .AddColumn(columnName).AsInt32().Nullable().SetExistingRowsTo(null).WithColumnDescription(description);
+
+            // 6771
+            Alter.Table(nameof(Customer)).AlterColumn(nameof(Customer.LastIpAddress)).AsString(100).Nullable();
+            Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumPost))).AlterColumn(nameof(ForumPost.IPAddress)).AsString(100).Nullable();
+            Alter.Table(nameof(ActivityLog)).AlterColumn(nameof(ActivityLog.IpAddress)).AsString(100).Nullable();
+            Alter.Table(nameof(Log)).AlterColumn(nameof(Log.IpAddress)).AsString(100).Nullable();
+            Alter.Table(nameof(Order)).AlterColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
         }
     }
 }

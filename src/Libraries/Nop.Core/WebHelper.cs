@@ -104,16 +104,10 @@ namespace Nop.Core
         /// <returns>String of IP address</returns>
         public virtual string GetCurrentIpAddress()
         {
-            if (!IsRequestAvailable())
+            if (!IsRequestAvailable() || _httpContextAccessor.HttpContext!.Connection.RemoteIpAddress is not { } remoteIp)
                 return string.Empty;
 
-            if (_httpContextAccessor.HttpContext.Connection?.RemoteIpAddress is not IPAddress remoteIp)
-                return "";
-
-            if (remoteIp.Equals(IPAddress.IPv6Loopback))
-                return IPAddress.Loopback.ToString();
-
-            return remoteIp.MapToIPv4().ToString();
+            return (remoteIp.Equals(IPAddress.IPv6Loopback) ? IPAddress.Loopback : remoteIp).ToString();
         }
 
         /// <summary>
