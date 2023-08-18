@@ -1176,7 +1176,7 @@ namespace Nop.Services.Orders
             if (shoppingCart.Count > _shoppingCartSettings.MaximumShoppingCartItems)
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
 
-            var hasStandartProducts = false;
+            var hasStandardProducts = false;
             var hasRecurringProducts = false;
 
             foreach (var sci in shoppingCart)
@@ -1191,11 +1191,11 @@ namespace Nop.Services.Orders
                 if (product.IsRecurring)
                     hasRecurringProducts = true;
                 else
-                    hasStandartProducts = true;
+                    hasStandardProducts = true;
             }
 
             //don't mix standard and recurring products
-            if (hasStandartProducts && hasRecurringProducts)
+            if (hasStandardProducts && hasRecurringProducts)
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
 
             //recurring cart validation
