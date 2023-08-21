@@ -155,18 +155,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the discount validation result
-        /// </returns>
-        Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer);
-
+        
         /// <summary>
         /// Validate discount
         /// </summary>

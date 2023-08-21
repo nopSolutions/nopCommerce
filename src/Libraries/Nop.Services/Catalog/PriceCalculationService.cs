@@ -77,10 +77,12 @@ namespace Nop.Services.Catalog
             if (!product.HasDiscountsApplied)
                 return allowedDiscounts;
 
+            var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+
             //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
             foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
                 if (discount.DiscountType == DiscountType.AssignedToSkus &&
-                    (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)
+                    (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                     allowedDiscounts.Add(discount);
 
             return allowedDiscounts;
@@ -117,13 +119,15 @@ namespace Nop.Services.Catalog
                         .ToList();
                 }
 
+                var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+
                 foreach (var categoryId in productCategoryIds)
                 {
                     if (!discountCategoryIds.Contains(categoryId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)
+                        (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                         allowedDiscounts.Add(discount);
                 }
             }
@@ -162,13 +166,15 @@ namespace Nop.Services.Catalog
                         .ToList();
                 }
 
+                var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+
                 foreach (var manufacturerId in productManufacturerIds)
                 {
                     if (!discountManufacturerIds.Contains(manufacturerId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)
+                        (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                         allowedDiscounts.Add(discount);
                 }
             }

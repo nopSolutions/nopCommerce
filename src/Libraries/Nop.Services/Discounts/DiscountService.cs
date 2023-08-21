@@ -466,29 +466,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the discount validation result
-        /// </returns>
-        public virtual async Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
-
-            return await ValidateDiscountAsync(discount, customer, couponCodesToValidate);
-        }
-
+        
         /// <summary>
         /// Validate discount
         /// </summary>

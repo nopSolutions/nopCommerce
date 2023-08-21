@@ -161,12 +161,14 @@ namespace Nop.Services.Orders
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToShipping);
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
+            {
+                var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+
                 foreach (var discount in allDiscounts)
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                        (await _discountService.ValidateDiscountAsync(discount, customer)).IsValid)
-                    {
+                        (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                         allowedDiscounts.Add(discount);
-                    }
+            }
 
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
 
