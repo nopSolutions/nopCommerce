@@ -262,7 +262,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         public override async Task InstallAsync()
         {
             //settings
-            await _settingService.SaveSettingAsync(new FixedByWeightByTotalSettings());
+            await _settingService.SaveSettingAsync(new FixedByWeightByTotalSettings
+            {
+                LoadAllRecord = true,
+            });
 
             //locales
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
