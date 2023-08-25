@@ -2862,6 +2862,7 @@ namespace Nop.Services.Installation
             await settingService.SaveSettingAsync(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
+                DisplayAddtoWishListButton = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
                 PublishBackProductWhenCancellingOrders = false,
                 ShowSkuOnProductDetailsPage = true,

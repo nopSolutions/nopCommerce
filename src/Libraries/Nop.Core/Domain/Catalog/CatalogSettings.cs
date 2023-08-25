@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Catalog
         /// Of course, when qty > configured minimum stock level
         /// </summary>
         public bool PublishBackProductWhenCancellingOrders { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating coustomers should see "Add To Wishlist" Button in Product
+        /// </summary>
+        public bool DisplayAddtoWishListButton { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display product SKU on the product details page

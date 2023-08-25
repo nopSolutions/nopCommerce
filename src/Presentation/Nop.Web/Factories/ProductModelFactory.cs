@@ -325,12 +325,14 @@ namespace Nop.Web.Factories
                                           !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
             //add to wishlist button
-            priceModel.DisableWishlistButton = product.DisableWishlistButton ||
+            priceModel.DisableAddToWishlistButton = product.DisableWishlistButton ||
                                                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
                                                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
             //compare products
             priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
+            //add to wishlist
+            priceModel.DisableAddToWishlistButton = !_catalogSettings.DisplayAddtoWishListButton;
             //rental
             priceModel.IsRental = product.IsRental;
 
@@ -544,7 +546,7 @@ namespace Nop.Web.Factories
                 !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
             //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
-            priceModel.DisableWishlistButton =
+            priceModel.DisableAddToWishlistButton =
                 !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
                 !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 

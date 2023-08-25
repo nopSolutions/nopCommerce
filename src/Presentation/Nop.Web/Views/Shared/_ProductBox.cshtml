@@ -129,7 +129,7 @@
                 {
                     <button type="button" class="button-2 add-to-compare-list-button" title="@T("ShoppingCart.AddToCompareList")" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">@T("ShoppingCart.AddToCompareList")</button>
                 }
-                @if (!Model.ProductPrice.DisableWishlistButton)
+                @if (!Model.ProductPrice.DisableAddToWishlistButton)
                 {
                     <button type="button" class="button-2 add-to-wishlist-button" title="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;">@T("ShoppingCart.AddToWishlist")</button>
                 }
