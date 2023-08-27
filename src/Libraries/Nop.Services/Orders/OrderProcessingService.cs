@@ -775,16 +775,16 @@ namespace Nop.Services.Orders
 
             //generate and set custom order number
             order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
-            await _orderService.UpdateOrderAsync(order);
 
             //reward points history
             if (details.RedeemedRewardPointsAmount <= decimal.Zero)
+            {
+                await _orderService.UpdateOrderAsync(order);
                 return order;
-
+            }
             order.RedeemedRewardPointsEntryId = await _rewardPointService.AddRewardPointsHistoryEntryAsync(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
                 string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
                 order, details.RedeemedRewardPointsAmount);
-            await _customerService.UpdateCustomerAsync(details.Customer);
             await _orderService.UpdateOrderAsync(order);
 
             return order;
