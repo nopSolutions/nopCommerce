@@ -11,6 +11,7 @@ namespace Nop.Plugin.Misc.AbcCore
         public bool IsDebugMode { get; private set; }
         public string MobilePhoneNumber { get; private set; }
         public string GoogleMapsGeocodingAPIKey { get; private set; }
+        public bool IsFedExMode { get; private set; }
 
         public bool IsValid()
         {
