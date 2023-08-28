@@ -24,6 +24,7 @@
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PickupInStoreContainer.cshtml" />
     <None Remove="Views\SelectStoreForPickup.cshtml" />
+    <None Remove="Views\SelectDeliveryMethod.cshtml" />
     <None Remove="styles\ClearanceStock.css" />
     <None Remove="styles\loading.css" />
     <None Remove="styles\SelectStoreForPickup.css" />
@@ -53,6 +54,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\SelectStoreForPickup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\SelectDeliveryMethod.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="styles\ClearanceStock.css">
