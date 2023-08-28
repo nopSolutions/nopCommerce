@@ -141,14 +141,9 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                     model.HasFedExAttribute = true;
                 }
 
-                if (pamsWithPickup.Any())
+                if (pamsWithPickup.Any() && widgetZone == PICKUP_INFO_WIDGET_ZONE)
                 {
-                    string url = "";
-                    if (widgetZone == PICKUP_INFO_WIDGET_ZONE)
-                    {
-                        url = "~/Plugins/Widgets.AbcPickupInStore/Views/PickupInStoreContainer.cshtml";
-                    }
-                    return View(url, model);
+                    return View("~/Plugins/Widgets.AbcPickupInStore/Views/PickupInStoreContainer.cshtml", model);
                 }
                 else
                 {
