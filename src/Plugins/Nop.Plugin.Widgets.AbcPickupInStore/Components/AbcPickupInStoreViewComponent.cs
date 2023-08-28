@@ -132,13 +132,28 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
                 var pamsWithFedex = await pams.WhereAwait(
                     async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "FedEx"
                 ).ToListAsync();
+                var pamsWithPickup = await pams.WhereAwait(
+                    async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name == "Pickup"
+                ).ToListAsync();
 
                 if (pamsWithFedex.Any())
                 {
                     model.HasFedExAttribute = true;
                 }
 
-                return Content("");
+                if (pamsWithPickup.Any())
+                {
+                    string url = "";
+                    if (widgetZone == PICKUP_INFO_WIDGET_ZONE)
+                    {
+                        url = "~/Plugins/Widgets.AbcPickupInStore/Views/PickupInStoreContainer.cshtml";
+                    }
+                    return View(url, model);
+                }
+                else
+                {
+                    return Content("");
+                }
             }
         }
     }

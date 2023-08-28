@@ -15,8 +15,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(MobilePhoneNumber) &&
-                   !string.IsNullOrWhiteSpace(GoogleMapsGeocodingAPIKey);
+            return !string.IsNullOrWhiteSpace(GoogleMapsGeocodingAPIKey);
         }
 
         public static CoreSettings FromModel(ConfigurationModel model)
