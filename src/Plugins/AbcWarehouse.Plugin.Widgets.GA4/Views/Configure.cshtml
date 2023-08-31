@@ -6,36 +6,38 @@
     Layout = "_ConfigurePlugin";
 }
 
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
 <form asp-controller="GA4" asp-action="Configure" method="post">
-	<section class="content">
-		<div class="container-fluid">			
-			<div class="card card-default">
-				<div class="card-body">
-					<div class="form-group row">
-						<div class="col-md-3">
-							<nop-label asp-for="GoogleTag" />
-						</div>
-						<div class="col-md-9">
-							<nop-editor asp-for="GoogleTag" />
-							<span asp-validation-for="GoogleTag"></span>
-						</div>
+	<div class="cards-group">
+		<div class="card card-default">
+			<div class="card-body">
+				<div class="form-group row">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="GoogleTag_OverrideForStore" asp-input="GoogleTag" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="GoogleTag" />
 					</div>
-                    <div class="form-group row">
-						<div class="col-md-3">
-							<nop-label asp-for="IsDebugMode" />
-						</div>
-						<div class="col-md-9">
-							<nop-editor asp-for="IsDebugMode" />
-							<span asp-validation-for="IsDebugMode"></span>
-						</div>
-					</div>
-					<div class="form-group row">
-                        <div class="col-md-9 offset-md-3">
-                            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
-                        </div>
+					<div class="col-md-9">
+						<nop-editor asp-for="GoogleTag" />
+						<span asp-validation-for="GoogleTag"></span>
 					</div>
 				</div>
-			</div>			
-		</div>
-	</section>
+				<div class="form-group row">
+					<div class="col-md-3">
+						<nop-override-store-checkbox asp-for="IsDebugMode_OverrideForStore" asp-input="IsDebugMode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+						<nop-label asp-for="IsDebugMode" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="IsDebugMode" />
+						<span asp-validation-for="IsDebugMode"></span>
+					</div>
+				</div>
+				<div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+				</div>
+			</div>
+		</div>		
+	</div>
 </form>
