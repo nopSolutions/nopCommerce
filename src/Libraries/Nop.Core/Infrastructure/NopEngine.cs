@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure.Mapper;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using Swashbuckle.AspNetCore;
 
 namespace Nop.Core.Infrastructure
 {
@@ -117,6 +121,11 @@ namespace Nop.Core.Infrastructure
             //configure services
             foreach (var instance in instances)
                 instance.ConfigureServices(services, configuration);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Values Api", Version = "v1" });
+            });
 
             services.AddSingleton(services);
 

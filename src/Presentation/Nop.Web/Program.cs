@@ -41,6 +41,13 @@ namespace Nop.Web
 
             var app = builder.Build();
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Values Api V1");
+            });
+
             //configure the application HTTP request pipeline
             app.ConfigureRequestPipeline();
             await app.StartEngineAsync();
