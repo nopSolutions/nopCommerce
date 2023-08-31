@@ -43,6 +43,7 @@
 
 @* ABC: custom *@
 @{
+    bool isAbc = frontEndService.StoreIsAbc(await storeContext.GetCurrentStoreAsync());
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
     string changeDeliveryMethodButtonColor = isHawthorne ?
                                                 await HtmlHelpers.GetPavilionPrimaryColorAsync() :
@@ -303,7 +304,15 @@
                                 @T("ShoppingCart.Quantity")
                             </th>
                             <th class="subtotal">
-                                @T("ShoppingCart.ItemTotal")
+                                @if (isAbc || isHawthorne)
+                                {
+                                    <span>Item Sub-total<br />(Including Shipping)</span>
+                                }
+                                else
+                                {
+                                    @T("ShoppingCart.ItemTotal")
+                                }
+                                
                             </th>
                         </tr>
                     </thead>

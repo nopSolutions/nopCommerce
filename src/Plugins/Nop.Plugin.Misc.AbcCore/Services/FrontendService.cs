@@ -25,6 +25,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
         private const string SEOSETTINGS_KEY = "Nop.settings.seosettings";
         private const string NONCLEARANCEURL_KEY = "Abc.nonclearanceurl";
         private const string STOREISCLEARANCE_KEY = "Abc.storeisclearance.{0}";
+        private const string STOREISABC_KEY = "Abc.isAbc.{0}";
         private const string STOREISHAWTHORNE_KEY = "Abc.isHawthorne.{0}";
         private const string STOREISHAWTHORNECLEARANCE_KEY = "Abc.isHawthorneClearance.{0}";
         private const string PRODUCTISABC_KEY = ProductAbcDescription.PRODUCTABCDESCRIPTION_PATTERN_KEY + "isabc.{0}";
@@ -76,6 +77,15 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             {
                 string hawthorneIdentifier = "hawthorne";
                 return currentStore.Url.Contains(hawthorneIdentifier);
+            });
+        }
+
+        public bool StoreIsAbc(Store currentStore)
+        {
+            return _staticCacheManager.Get(new CacheKey(string.Format(STOREISABC_KEY, currentStore.Id), "Abc."), () =>
+            {
+                string abcIdentifier = "abcwarehouse";
+                return currentStore.Url.Contains(abcIdentifier);
             });
         }
 
