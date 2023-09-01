@@ -198,6 +198,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IShippingService, ShippingService>();
             services.AddScoped<IDateRangeService, DateRangeService>();
             services.AddScoped<ITaxCategoryService, TaxCategoryService>();
+            services.AddScoped<ICheckVatService, CheckVatService>();
             services.AddScoped<ITaxService, TaxService>();
             services.AddScoped<ILogger, DefaultLogger>();
             services.AddScoped<ICustomerActivityService, CustomerActivityService>();

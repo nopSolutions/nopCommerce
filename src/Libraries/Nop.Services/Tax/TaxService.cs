@@ -26,6 +26,7 @@ namespace Nop.Services.Tax
         protected readonly AddressSettings _addressSettings;
         protected readonly CustomerSettings _customerSettings;
         protected readonly IAddressService _addressService;
+        protected readonly ICheckVatService _checkVatService;
         protected readonly ICountryService _countryService;
         protected readonly ICustomerService _customerService;
         protected readonly IEventPublisher _eventPublisher;
@@ -47,6 +48,7 @@ namespace Nop.Services.Tax
         public TaxService(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             IAddressService addressService,
+            ICheckVatService checkVatService,
             ICountryService countryService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
@@ -64,6 +66,7 @@ namespace Nop.Services.Tax
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
             _addressService = addressService;
+            _checkVatService = checkVatService;
             _countryService = countryService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
@@ -386,40 +389,19 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
         {
-            if (vatNumber == null)
-                vatNumber = string.Empty;
+            vatNumber ??= string.Empty;
             vatNumber = vatNumber.Trim().Replace(" ", string.Empty);
 
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!string.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpperInvariant();
-
-            string name;
-            string address;
+            twoLetterIsoCode ??= string.Empty;
 
             try
             {
-                var s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
-                {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
+                var (status, name, address) = await _checkVatService.CheckVatAsync(twoLetterIsoCode, vatNumber);
+                return (status, name, address, null);
             }
             catch (Exception ex)
             {
-                name = address = string.Empty;
-                var exception = ex;
-
-                return (VatNumberStatus.Unknown, name, address, exception);
+                return (VatNumberStatus.Unknown, string.Empty, string.Empty, ex);
             }
         }
 
@@ -779,7 +761,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. DE 111 1111 111)</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the vAT Number status. Name (if received). Address (if received)
@@ -793,8 +775,7 @@ namespace Nop.Services.Tax
                 return (VatNumberStatus.Empty, name, address);
             fullVatNumber = fullVatNumber.Trim();
 
-            //GB 111 1111 111 or GB 1111111111
-            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
+            //DE 111 1111 111 or DE 1111111111
             var r = new Regex(@"^(\w{2})(.*)");
             var match = r.Match(fullVatNumber);
             if (!match.Success)

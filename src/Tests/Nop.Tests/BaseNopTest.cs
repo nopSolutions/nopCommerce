@@ -352,6 +352,7 @@ namespace Nop.Tests
             services.AddTransient<IShippingService, ShippingService>();
             services.AddTransient<IDateRangeService, DateRangeService>();
             services.AddTransient<ITaxCategoryService, TaxCategoryService>();
+            services.AddTransient<ICheckVatService, CheckVatService>();
             services.AddTransient<ITaxService, TaxService>();
             services.AddTransient<ILogger, DefaultLogger>();
             services.AddTransient<ICustomerActivityService, CustomerActivityService>();
