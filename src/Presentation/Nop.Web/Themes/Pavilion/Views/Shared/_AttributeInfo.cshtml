@@ -7,13 +7,14 @@
     // Need to check whether Edit is an option
     string controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
     string actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+    
+
+    var attributes = @Model.attributeInfo.Split("<br />");
+    var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}: "));
     var showEdit = (controllerName.Equals("ShoppingCart") && actionName.Equals("Cart")) ||
                    (controllerName.Equals("Checkout") && actionName.Equals("BillingAddress")) ||
                    (controllerName.Equals("Checkout") && actionName.Equals("ShippingAddress")) ||
                    (controllerName.Equals("CustomCheckout") && actionName.Equals("ShippingMethod"));
-
-    var attributes = @Model.attributeInfo.Split("<br />");
-    var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}: "));
     if (deliveryPickupOptions != null)
     {
         // remove attribute name
@@ -128,7 +129,7 @@
                        mattressProtector != null;
 }
 
-@if (attributes.Any())
+@if (attributes.Any() && deliveryPickupOptions != null)
 {
     <div class="abc-cart-attribute-info">
         @if (showMattress)
