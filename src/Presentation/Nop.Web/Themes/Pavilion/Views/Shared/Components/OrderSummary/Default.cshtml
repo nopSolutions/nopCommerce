@@ -467,16 +467,16 @@
                                             bool isPickup = item.AttributeInfo.Contains("Pickup");
                                             string buttonMsg = isPickup ? "Change to FedEx" : "Change to Pickup in Store";
                                             
-                                            <span class="change">
+                                            <div class="change">
                                                 <button class="change-delivery-method" value="@item.Id">@buttonMsg</button>
                                                 <span id="change_method_error_@item.Id" class="delivery-method-error"></span>
-                                            </span>
-                                            if (isPickup)
-                                            {
-                                                <span class="edit-item">
-                                                    <a href="@editCartItemUrl">Change store</a>
-                                                </span>
-                                            }
+                                                @if (isPickup)
+                                                {
+                                                    <span class="edit-item">
+                                                        <a href="@editCartItemUrl">Change store</a>
+                                                    </span>
+                                                }
+                                            </div>
                                         }
                                     }
                                     @if (item.Warnings.Count > 0)
