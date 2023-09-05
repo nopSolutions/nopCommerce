@@ -99,13 +99,6 @@ namespace Nop.Plugin.Misc.AbcCore.HomeDelivery
                 categories.Add(await _categoryService.GetCategoryByIdAsync(pc.CategoryId));
             }
 
-            if (categories.Any(c => new string[]
-                { "recliners", "lift chairs", "massage chairs" }.Contains(c.Name.ToLower()))
-            )
-            {
-                return 49.00M * quantity;
-            }
-
             // Since that Package Item doesn't carry the actual item 
             if (categories.Any(c => new string[]
                 { "twin", "twin extra long", "full", "queen", "king", "california king" }
@@ -117,7 +110,7 @@ namespace Nop.Plugin.Misc.AbcCore.HomeDelivery
             }
 
             // default
-            return 14.75M * quantity;
+            return 0;
         }
 
         private async Task<decimal> GetMattressHomeDeliveryCostAsync(string attributesXml, int productId)
