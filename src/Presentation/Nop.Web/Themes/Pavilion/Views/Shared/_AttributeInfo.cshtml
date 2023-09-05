@@ -11,7 +11,8 @@
 
     var attributes = @Model.attributeInfo.Split("<br />");
     var deliveryPickupOptions = attributes.FirstOrDefault(a => a.Contains($"{AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName}: "));
-    var showEdit = (controllerName.Equals("ShoppingCart") && actionName.Equals("Cart")) ||
+    var showEdit = deliveryPickupOptions != null &&
+                   (controllerName.Equals("ShoppingCart") && actionName.Equals("Cart")) ||
                    (controllerName.Equals("Checkout") && actionName.Equals("BillingAddress")) ||
                    (controllerName.Equals("Checkout") && actionName.Equals("ShippingAddress")) ||
                    (controllerName.Equals("CustomCheckout") && actionName.Equals("ShippingMethod"));
@@ -129,7 +130,7 @@
                        mattressProtector != null;
 }
 
-@if (attributes.Any() && deliveryPickupOptions != null)
+@if (attributes.Any())
 {
     <div class="abc-cart-attribute-info">
         @if (showMattress)
@@ -158,6 +159,16 @@
                 }
             </div>
         }
+        else if (pickup != null)
+        {
+            <div class="abc-cart-attribute-info__section">
+                <h4>Pickup</h4>
+                <p>
+                    @pickup<br />
+                    @available
+                </p>
+            </div>
+        }
 
         @if (warranty != null)
         {
@@ -181,4 +192,3 @@
         }
     </div>
 }
-

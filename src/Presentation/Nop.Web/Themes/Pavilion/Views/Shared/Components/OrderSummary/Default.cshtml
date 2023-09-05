@@ -89,7 +89,6 @@
     }
 
     .edit-item {
-        display: inline-block;
         margin-left: 12px;
     }
 
@@ -366,8 +365,7 @@
                             ProductFlag productFlag = frontEndService.GetProductFlag(item.ProductId);
                             string stockMessage = "";
                             string attributeInfo = item.AttributeInfo;
-                            bool isOnlineOnly = productFlag != null && productFlag.PriceBucketImageUrl != null && productFlag.PriceBucketImageUrl.Contains("Online");
-
+                            
                             if (productFlag != null)
                             {
                                 stockMessage = productFlag.StockMessage;
@@ -457,13 +455,29 @@
                                             @Html.Raw(item.RentalInfo)
                                         </div>
                                     }
-                                    @if (Model.IsEditable && item.AllowItemEditing)
+                                    @if (Model.IsEditable)
                                     {
                                         var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                         @* <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div> *@
+                                        if (await product.IsPickupAsync() && !(await product.HasDeliveryOptionsAsync()))
+                                        {
+                                            bool isPickup = item.AttributeInfo.Contains("Pickup");
+                                            string buttonMsg = isPickup ? "Change to FedEx" : "Change to Pickup in Store";
+                                            
+                                            <span class="change">
+                                                <button class="change-delivery-method" value="@item.Id">@buttonMsg</button>
+                                                <span id="change_method_error_@item.Id" class="delivery-method-error"></span>
+                                            </span>
+                                            if (isPickup)
+                                            {
+                                                <span class="edit-item">
+                                                    <a href="@editCartItemUrl">Change store</a>
+                                                </span>
+                                            }
+                                        }
                                     }
                                     @if (item.Warnings.Count > 0)
                                     {

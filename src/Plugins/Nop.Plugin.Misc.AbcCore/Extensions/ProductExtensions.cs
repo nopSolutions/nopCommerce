@@ -70,5 +70,22 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             return await genericAttributeService.GetAttributeAsync<DateTime?>(product, "SpecialPriceEndDate");
         }
+
+        public static async Task<bool> IsPickupAsync(this Product product)
+        {
+            var productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+            var productAttributeMappings = await productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+
+            foreach (var pam in productAttributeMappings)
+            {
+                var productAttribute = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (productAttribute != null && productAttribute.Name == "Pickup")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
