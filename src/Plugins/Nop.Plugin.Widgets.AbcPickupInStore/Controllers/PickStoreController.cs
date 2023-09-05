@@ -87,6 +87,52 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Views.PickupInStore
             return View("~/Plugins/Widgets.AbcPickupInStore/Views/Configure.cshtml", _pickupInStoreSettings.ToModel());
         }
 
+                [HttpPost]
+        public async Task<IActionResult> StoreSelected(string shopId)
+        {
+            Shop shop = await _shopService.GetShopByIdAsync(Int32.Parse(shopId));
+            _customerShopService.InsertOrUpdateCustomerShop((await _workContext.GetCurrentCustomerAsync()).Id, Int32.Parse(shopId));
+            var shoppingCartItems = (await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart))
+                .Select(sci => sci);
+            // update all attribute definitions
+            foreach (var cartItem in shoppingCartItems)
+            {
+                // update attribute definitions to include the proper name
+                ProductAttributeMapping pickupAttribute = await _attributeUtilities.GetPickupAttributeMappingAsync(cartItem.AttributesXml);
+
+                if (pickupAttribute != null)
+                {
+                    // check if product is available at the selected store
+                    StockResponse stockResponse = await _backendStockService.GetApiStockAsync(cartItem.ProductId);
+                    bool available = false;
+                    if (stockResponse != null)
+                    {
+                        available = stockResponse.ProductStocks.Where(ps => ps.Available && ps.Shop.Id == shop.Id).Any();
+                    }
+
+                    if (available)
+                    {
+                        string removedAttr = _productAttributeParser.RemoveProductAttribute(cartItem.AttributesXml, pickupAttribute);
+
+                        cartItem.AttributesXml = await _attributeUtilities.InsertPickupAttributeAsync(
+                            await _productService.GetProductByIdAsync(cartItem.ProductId),
+                            stockResponse,
+                            removedAttr);
+                    }
+                    else
+                    {
+                        cartItem.AttributesXml = await _attributeUtilities.InsertHomeDeliveryAttributeAsync(
+                            await _productService.GetProductByIdAsync(cartItem.ProductId),
+                            cartItem.AttributesXml);
+                    }
+                    await _shoppingCartService.UpdateShoppingCartItemAsync(await _workContext.GetCurrentCustomerAsync(), cartItem.Id,
+                        cartItem.AttributesXml, cartItem.CustomerEnteredPrice, null, null, cartItem.Quantity, false);
+
+                }
+            }
+            return Json(await _shopService.GetShopByIdAsync(int.Parse(shopId)));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Configure(PickupInStoreModel model)
         {
