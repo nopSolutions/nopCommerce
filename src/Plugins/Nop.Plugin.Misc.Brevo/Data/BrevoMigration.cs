@@ -1,8 +1,10 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
@@ -15,6 +17,8 @@ namespace Nop.Plugin.Misc.Brevo.Data
 
         protected readonly ILocalizationService _localizationService;
         protected readonly INopDataProvider _dataProvider;
+        protected readonly ISettingService _settingService;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -22,11 +26,15 @@ namespace Nop.Plugin.Misc.Brevo.Data
 
         public BrevoMigration(
             ILocalizationService localizationService,
-            INopDataProvider dataProvider
+            INopDataProvider dataProvider,
+            ISettingService settingService,
+            WidgetSettings widgetSettings
             )
         {
             _localizationService = localizationService;
             _dataProvider = dataProvider;
+            _settingService = settingService;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -130,6 +138,12 @@ namespace Nop.Plugin.Misc.Brevo.Data
                     setting.Name = setting.Name.Replace("sendinbluesettings", "brevosettings");
                 }
                 _dataProvider.UpdateEntities(sendinblueSettings);
+            }
+
+            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(BrevoDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Add(BrevoDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
             }
 
             #endregion
