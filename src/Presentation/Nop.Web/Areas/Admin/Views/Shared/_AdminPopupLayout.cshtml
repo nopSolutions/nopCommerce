@@ -1,10 +1,15 @@
 ﻿@inject IEventPublisher eventPublisher
 @inject LocalizationSettings localizationSettings
+@inject AppSettings appSettings
+
 @using Nop.Core.Domain.Localization
+@using Nop.Core.Configuration
 @{
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
+
+    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
@@ -15,6 +20,9 @@
     <title>@adminPageTitle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+    <base href="@usePathBase" />
+
     @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@

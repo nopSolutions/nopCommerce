@@ -28,6 +28,11 @@
         /// <summary>
         /// Gets or sets addresses of known networks to accept forwarded headers from
         /// </summary>
-        public string KnownNetworks { get; protected set; } = string.Empty;
+        public string KnownNetworks { get; protected set; } = string.Empty;        
+        
+        /// <summary>
+        /// Ability to set a custom path base, for example domain.com/path/
+        /// </summary>
+        public string UsePathBase { get; protected set; } = "/";
     }
 }

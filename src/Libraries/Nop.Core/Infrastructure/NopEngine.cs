@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.Mapper;
 
 namespace Nop.Core.Infrastructure
@@ -146,6 +147,14 @@ namespace Nop.Core.Infrastructure
             var instances = startupConfigurations
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
+
+            var settings = ServiceProvider.GetService<AppSettings>().Get<HostingConfig>();
+
+            // Use Path Base
+            if (!string.IsNullOrEmpty(settings.UsePathBase))
+            {
+                application.UsePathBase(settings.UsePathBase);
+            }
 
             //configure request pipeline
             foreach (var instance in instances)
