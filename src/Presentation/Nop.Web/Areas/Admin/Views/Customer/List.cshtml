@@ -362,7 +362,7 @@
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "80",
                                     ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/Edit"))
                                 });
                             }
                             @await Html.PartialAsync("Table", gridModel)
