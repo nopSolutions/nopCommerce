@@ -7,7 +7,9 @@
 
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-  AdminTourNextPageButton.action = function () { window.location = '/Admin/Tax/Providers?showtour=True' };
+  AdminTourNextPageButton.action = function () {
+    window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Tax/Providers?showtour=True').replace(/\/\//g, "/");
+  };
 
   if (isConfigured) {
     tour.addStep({
