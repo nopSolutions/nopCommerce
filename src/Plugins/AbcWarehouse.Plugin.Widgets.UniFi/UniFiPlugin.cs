@@ -7,6 +7,7 @@ using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
 using Nop.Services.Cms;
 using Nop.Core;
+using Nop.Plugin.Misc.AbcCore.Infrastructure;
 
 namespace AbcWarehouse.Plugin.Widgets.UniFi
 {
@@ -35,6 +36,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
             return Task.FromResult<IList<string>>(new List<string>
             {
                 PublicWidgetZones.BodyEndHtmlTagBefore,
+                CustomPublicWidgetZones.ProductDetailsAfterPrice
             });
         }
 
@@ -68,8 +70,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
             await _localizationService.AddLocaleResourceAsync(
                 new Dictionary<string, string>
                 {
-                    [UniFiLocales.ProviderId] = "Provider ID",
-                    [UniFiLocales.ProviderIdHint] = "The provider ID provided by SYF.",
+                    [UniFiLocales.PartnerId] = "Partner ID",
+                    [UniFiLocales.PartnerIdHint] = "The partner ID provided by SYF.",
                 });
         }
     }

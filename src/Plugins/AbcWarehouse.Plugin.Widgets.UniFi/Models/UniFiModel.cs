@@ -1,12 +1,15 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace AbcWarehouse.Plugin.Widgets.UniFi.Models
 {
-    public class ConfigModel
+    public class UniFiModel
     {
-        [Required]
-        [NopResourceDisplayName(UniFiLocales.PartnerId)]
         public string PartnerId { get; set; }
+
+        public string FlowType { get; set; }
     }
 }

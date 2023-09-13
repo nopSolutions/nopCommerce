@@ -4,8 +4,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
     {
         public const string Base = "Plugins.Widgets.UniFi.Fields.";
 
-        public const string ProviderId = Base + "ProviderId";
+        public const string PartnerId = Base + "PartnerId";
 
-        public const string ProviderIdHint = ProviderId + ".Hint";
+        public const string PartnerIdHint = PartnerId + ".Hint";
     }
 }

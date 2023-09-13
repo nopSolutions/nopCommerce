@@ -1,7 +1,11 @@
-@model string
+@model AbcWarehouse.Plugin.Widgets.UniFi.Models.UniFiModel
 
 <script>
     var syfWidgetObject={};
-    syfWidgetObject.syfPartnerId = "@Model";
+    syfWidgetObject.syfPartnerId = "@Model.PartnerId";
+    @if (!string.IsNullOrWhiteSpace(@Model.FlowType))
+    {
+        <text>syfWidgetObject.flowType = "@Model.FlowType";</text>
+    }
 </script>
 <script id=”syfMPPScript” type="text/javascript" src = "https://spdpone.syfpos.com/mpp/UniFi.js"></script>

@@ -5,13 +5,13 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
 {
     public class UniFiSettings : ISettings
     {
-        public string ProviderId { get; private set; }
+        public string PartnerId { get; private set; }
 
         public static UniFiSettings FromModel(ConfigModel model)
         {
             return new UniFiSettings()
             {
-                ProviderId = model.ProviderId,
+                PartnerId = model.PartnerId,
             };
         }
 
@@ -19,7 +19,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
         {
             return new ConfigModel
             {
-                ProviderId = ProviderId,
+                PartnerId = PartnerId,
             };
         }
     }

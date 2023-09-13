@@ -126,7 +126,8 @@
                     }
 
                     @*render price*@
-                    <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@price" class="price-value-@(Model.ProductId)" </text> }>
+                    @* ABC: provides an ID for Synchrony UniFi *@
+                    <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@price" id="product-content" class="price-value-@(Model.ProductId)" </text> }>
                         @Html.Raw(Model.Price.Replace(".00", ""))
                         <span class="clearance-or-less">Or Less!</span>
                     </span>

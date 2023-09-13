@@ -21,6 +21,7 @@
     <None Remove="Views\_ViewImports.cshtml" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\Framework.cshtml" />
+    <None Remove="Views\SyncPrice.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,11 +40,18 @@
     <Content Include="Views\Framework.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\SyncPrice.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nop.Plugin.Misc.AbcCore\Nop.Plugin.Misc.AbcCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
