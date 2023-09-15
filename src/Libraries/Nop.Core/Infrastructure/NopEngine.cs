@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
@@ -83,15 +84,18 @@ namespace Nop.Core.Infrastructure
 
         protected virtual Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            var assemblyFullName = args.Name;
+
             //check for assembly already loaded
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
             if (assembly != null)
                 return assembly;
 
             //get assembly from TypeFinder
             var typeFinder = Singleton<ITypeFinder>.Instance;
-            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
-            return assembly;
+            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
+
+            return assembly ?? AssemblyResolver.GetAssemblyByFullName(assemblyFullName);
         }
 
         #endregion
@@ -228,6 +232,74 @@ namespace Nop.Core.Infrastructure
         /// Service provider
         /// </summary>
         public virtual IServiceProvider ServiceProvider { get; protected set; }
+
+        #endregion
+
+        #region Nested class
+
+        protected static class AssemblyResolver
+        {
+            private static readonly Dictionary<string, IDictionary<string, Assembly>> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
+
+            public static Assembly GetAssemblyByFullName(string assemblyFullName)
+            {
+                Assembly getAssembly(string fullName)
+                {
+                    var name = new AssemblyName(fullName);
+
+                    if (string.IsNullOrEmpty(name.Name))
+                        return null;
+
+                    if (!_assemblies.ContainsKey(name.Name))
+                        return null;
+
+                    var assemblies = _assemblies[name.Name];
+
+                    if (!assemblies.Any())
+                        return null;
+                    
+                    assemblies.TryGetValue(assemblyFullName, out var assembly);
+
+                    return assembly ?? assemblies.Values.First();
+                }
+
+                void addAssembly(Assembly assembly)
+                {
+                    var name = assembly.GetName();
+
+                    if (string.IsNullOrEmpty(name.Name))
+                        return;
+
+                    if (!_assemblies.TryGetValue(name.Name, out var assemblies))
+                    {
+                        assemblies = new Dictionary<string, Assembly>();
+                        _assemblies.Add(name.Name, assemblies);
+                    }
+
+                    assemblies.TryAdd(name.FullName, assembly);
+                }
+
+                if (_assemblies.Any())
+                    return getAssembly(assemblyFullName);
+                
+                var fileProvider = CommonHelper.DefaultFileProvider;
+
+                foreach (var dll in AppDomain.CurrentDomain.GetAssemblies())
+                    addAssembly(dll);
+
+                foreach (var dllPath in fileProvider.GetFiles(AppContext.BaseDirectory, "*.dll"))
+                    try
+                    {
+                        addAssembly(Assembly.LoadFrom(dllPath));
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(ex.ToString());
+                    }
+
+                return getAssembly(assemblyFullName);
+            }
+        }
 
         #endregion
     }
