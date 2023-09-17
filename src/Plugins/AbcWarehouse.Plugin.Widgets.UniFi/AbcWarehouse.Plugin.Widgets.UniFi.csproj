@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
+    <None Remove="styles/styles.css" />
     <None Remove="Views\_ViewImports.cshtml" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\Framework.cshtml" />
@@ -29,6 +30,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="styles/styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_ViewImports.cshtml">
