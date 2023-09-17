@@ -181,10 +181,10 @@ namespace Nop.Plugin.Widgets.AbcSynchronyPayments.Components
 
         private int CalculatePayment(decimal productPrice, bool isMinimumPayment, int months)
         {
-            // Synchrony requests minimum payment of $30
+            // Synchrony requests minimum payment of $31 or 3.5% of the product price
             var minimumPayment = (int)Math.Max(
                 Math.Round(Math.Ceiling(productPrice * 0.035M), 2),
-                30);
+                31);
 
             return isMinimumPayment ?
                 minimumPayment :
