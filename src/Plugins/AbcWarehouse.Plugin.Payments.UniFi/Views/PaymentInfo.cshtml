@@ -1,35 +1,19 @@
 ﻿@model AbcWarehouse.Plugin.Payments.UniFi.Models.PaymentInfoModel
 
 @{
-	// This allows for pop-up to work while not removing the remainder of
-	// NOP's referrer policy
-	// do we still need this?
-	Html.AddHeadCustomParts("<meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Payments.UniFi/scripts/payment-info.js");
 }
 
-<form name="dbuyform" id="dbuyform">
-	<div><label>Token to use:</label><input id="transactionToken" name="transactionToken" value="@Model.TransactionToken"/></div>
-	<div><label>Token to use:</label><input id="tokenId" name="tokenId" value="@Model.TokenId" /></div>
-	<div><label>Partner ID: </label><input id="syfPartnerId" name="syfPartnerId" value="@Model.PartnerId" /></div>
-	<div><label>Client Transaction ID: </label><input id="clientTransId" name="clientTransId" value="@Model.ClientTransactionId" /></div>
-	<div><label>Process Indicator: </label><input id="processInd" name="processInd" value="3" /></div>
-	<div><label>Address1: </label><input id="custAddress1" name="custAddress1" value="@Model.Address1"/></div>
-	<div><label>Address2: </label><input id="custAddress2" name="custAddress2" value="@Model.Address2"/></div>
-	<div><label>City: </label><input id="custCity" name="custCity" value="@Model.City" /></div>
-	<div><label>State: </label><input id="custState" name="custState" value="@Model.State" /></div>
-	<div><label>ZIP Code: </label><input id="custZipCode" name="custZipCode" value="@Model.Zip" /></div>
-	<div><label>Transaction Amount: </label><input id="transAmount1" name="transAmount1" value="@Model.TransactionAmount" /></div>
+<input type="hidden" id="transactionToken" name="transactionToken" value="@Model.TransactionToken"/>
+<input type="hidden" id="tokenId" name="tokenId" value="@Model.TokenId" />
+<input type="hidden" id="syfPartnerId" name="syfPartnerId" value="@Model.PartnerId" />
+<input type="hidden" id="clientTransId" name="clientTransId" value="@Model.ClientTransactionId" />
+<input type="hidden" id="processInd" name="processInd" value="3" />
+<input type="hidden" id="custAddress1" name="custAddress1" value="@Model.Address1"/>
+<input type="hidden" id="custAddress2" name="custAddress2" value="@Model.Address2"/>
+<input type="hidden" id="custCity" name="custCity" value="@Model.City" />
+<input type="hidden" id="custState" name="custState" value="@Model.State" />
+<input type="hidden" id="custZipCode" name="custZipCode" value="@Model.Zip" />
+<input type="hidden" id="transAmount1" name="transAmount1" value="@Model.TransactionAmount" />
 
-	<!-- call this automatically on page load -->
-	<button type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(this.form, null)">Pay Now with UniFi (HTML)</button>
-</form>
-
-<script>
-	window.addEventListener("message",function(event) {
-		if ((typeof event.data == 'string' || typeof event.data == 'object') && (event.data == 'Close
-		Model' || event.data == 'Return To Merchant Shipping' || event.data == 'Close' || event.data.action ==
-		'setPayCloseModal')) {
-			console.log('SYNCHRONY UNIFI MODAL CLOSED', event);
-		}
-	});
-</script>
+<button style="display: none" type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(document.querySelector('form[action=\'/checkout/paymentinfo\']'), null)">Pay Now with UniFi (HTML)</button>
