@@ -33,7 +33,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
             _settingService = settingService;
         }
 
-        public async Task<ActionResult> Configure()
+        public ActionResult Configure()
         {
             return View(
                 "~/Plugins/Payments.UniFi/Views/Configure.cshtml",
@@ -45,7 +45,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return await Configure();
+                return Configure();
             }
 
             await _settingService.SaveSettingAsync(UniFiPaymentsSettings.FromModel(model));
@@ -53,7 +53,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
             _notificationService.SuccessNotification(
                 await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return await Configure();
+            return Configure();
         }
     }
 }

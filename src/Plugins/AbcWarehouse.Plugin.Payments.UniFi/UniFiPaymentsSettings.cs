@@ -10,22 +10,25 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
     {
         public string ClientId { get; private set; }
         public string ClientSecret { get; private set; }
+        public bool UseIntegration { get; private set; }
 
         public static UniFiPaymentsSettings FromModel(ConfigModel model)
         {
             return new UniFiPaymentsSettings()
             {
                 ClientId = model.ClientId,
-                ClientSecret = model.ClientSecret
+                ClientSecret = model.ClientSecret,
+                UseIntegration = model.UseIntegration
             };
         }
 
-        public async Task<ConfigModel> ToModel()
+        public ConfigModel ToModel()
         {
             var model = new ConfigModel();
 
             model.ClientId = ClientId;
             model.ClientSecret = ClientSecret;
+            model.UseIntegration = UseIntegration;
 
             return model;
         }

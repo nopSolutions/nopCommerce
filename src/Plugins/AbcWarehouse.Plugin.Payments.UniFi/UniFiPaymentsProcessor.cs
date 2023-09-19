@@ -210,6 +210,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     [UniFiPaymentsLocales.ClientIdHint] = "Client ID provided by Synchrony.",
                     [UniFiPaymentsLocales.ClientSecret] = "Client Secret",
                     [UniFiPaymentsLocales.ClientSecretHint] = "Client Secret provided by Synchrony.",
+                    [UniFiPaymentsLocales.UseIntegration] = "Use Integration",
+                    [UniFiPaymentsLocales.UseIntegrationHint] = "Use the integration region (for testing).",
                 });
         }
     }

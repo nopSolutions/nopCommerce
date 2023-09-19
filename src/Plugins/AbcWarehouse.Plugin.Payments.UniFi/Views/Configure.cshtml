@@ -1,12 +1,10 @@
-@model ConfigModel
-
-@using AbcWarehouse.Plugin.Payments.UniFi.Models
+@model AbcWarehouse.Plugin.Payments.UniFi.Models.ConfigModel
 
 @{
     Layout = "_ConfigurePlugin";
 }
 
-<form asp-controller="UniFiPayment" asp-action="Configure" method="post">
+<form asp-controller="UniFiPayments" asp-action="Configure" method="post">
 	<div class="cards-group">
 		<div class="card card-default">
 			<div class="card-body">
@@ -26,6 +24,15 @@
 					<div class="col-md-9">
 						<nop-editor asp-for="ClientSecret" />
 						<span asp-validation-for="ClientSecret"></span>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-3">
+						<nop-label asp-for="UseIntegration" />
+					</div>
+					<div class="col-md-9">
+						<nop-editor asp-for="UseIntegration" />
+						<span asp-validation-for="UseIntegration"></span>
 					</div>
 				</div>
 				<div class="form-group row">

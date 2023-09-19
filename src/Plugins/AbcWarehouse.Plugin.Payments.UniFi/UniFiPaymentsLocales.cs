@@ -8,5 +8,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
         public const string ClientIdHint = ClientId + ".Hint";
         public const string ClientSecret = Base + "ClientSecret";
         public const string ClientSecretHint = ClientSecret + ".Hint";
+        public const string UseIntegration = Base + "UseIntegration";
+        public const string UseIntegrationHint = UseIntegration + ".Hint";
     }
 }

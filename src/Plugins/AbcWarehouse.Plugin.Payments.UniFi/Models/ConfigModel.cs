@@ -10,5 +10,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Models
 
         [NopResourceDisplayName(UniFiPaymentsLocales.ClientSecret)]
         public string ClientSecret { get; set; }
+
+        [NopResourceDisplayName(UniFiPaymentsLocales.UseIntegration)]
+        public bool UseIntegration { get; set; }
     }
 }
