@@ -549,7 +549,7 @@
                 financingText.style.display = overallPrice >= 697 ? "block" : "none";
 
                 if (financingText.innerText.includes('/month')) {
-                    var monthCount = document.getElementsByClassName("min-payment-months")[0].innerText.split(' ')[0];);
+                    var monthCount = document.getElementsByClassName("min-payment-months")[0].innerText.split(' ')[0];
                     var monthlyPayment = Math.ceil(overallPrice / parseInt(monthCount));
                     var oldPrice = financingText.innerHTML.substring(financingText.innerHTML.indexOf('<b>') + 3, financingText.innerHTML.indexOf('</b>'));
                     financingText.innerHTML = financingText.innerHTML.replace(oldPrice, '$' + monthlyPayment);
