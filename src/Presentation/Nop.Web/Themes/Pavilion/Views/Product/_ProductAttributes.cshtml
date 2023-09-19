@@ -549,9 +549,10 @@
                 financingText.style.display = overallPrice >= 697 ? "block" : "none";
 
                 if (financingText.innerText.includes('/month')) {
+                    var monthCount = document.getElementsByClassName("min-payment-months")[0].innerText;
+                    var monthlyPayment = Math.ceil(overallPrice / monthCount);
                     var oldPrice = financingText.innerHTML.substring(financingText.innerHTML.indexOf('<b>') + 3, financingText.innerHTML.indexOf('</b>'));
-                    var newPrice = document.getElementsByClassName("min-payment-monthly-payment")[0].innerText;
-                    financingText.innerHTML = financingText.innerHTML.replace(oldPrice, newPrice);
+                    financingText.innerHTML = financingText.innerHTML.replace(oldPrice, '$' + monthlyPayment);
 
                     // now reapply the listener
                     $('.deferredPricingIcon-@productId').on('click', function () {
