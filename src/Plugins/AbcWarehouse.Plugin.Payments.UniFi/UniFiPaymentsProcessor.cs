@@ -10,29 +10,58 @@ using Nop.Services.Payments;
 using Nop.Core.Domain.Orders;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
+using System.Net.Http;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi
 {
     public class UniFiPaymentsProcessor : BasePlugin, IPaymentMethod
     {
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly UniFiPaymentsSettings _settings;
 
         public UniFiPaymentsProcessor(
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IWebHelper webHelper
-        )
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            UniFiPaymentsSettings settings)
         {
+            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _webHelper = webHelper;
+            _workContext = workContext;
+            _settings = settings;
         }
 
-        public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
-            // I think we call Transmit API here
+            var httpClient = new HttpClient();
+            var bearerToken = await _genericAttributeService.GetAttributeAsync<string>(
+                await _workContext.GetCurrentCustomerAsync(),
+                "UniFiBearerToken");
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + bearerToken);
+
+            var transactionLookupEndpoint = _settings.UseIntegration ?
+                "https://api-stg.syf.com/v1/credit/authorizations/digital-buy/transactions" :
+                "https://api.syf.com/v1/credit/authorizations/digital-buy/transactions";
+            var transactionToken = GetCustomValue(processPaymentRequest, "TransactionToken");
+            var address1 = GetCustomValue(processPaymentRequest, "Address1");
+            var address2 = GetCustomValue(processPaymentRequest, "Address2");
+            var city = GetCustomValue(processPaymentRequest, "City");
+            var state = GetCustomValue(processPaymentRequest, "State");
+            var zip = GetCustomValue(processPaymentRequest, "Zip");
+            var amount = processPaymentRequest.OrderTotal;
+            //var response = await httpClient.GetAsync(transactionLookupEndpoint);
+
             var result = new ProcessPaymentResult();
 
-            return Task.FromResult(result);
+            result.AddError("Transact API call not implemented yet.");
+
+            return result;
         }
 
         public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
@@ -108,10 +137,19 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             return Task.FromResult<IList<string>>(warnings);
         }
 
-        public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+        public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            return paymentInfo;
+
+            paymentInfo.CustomValues.Add("TransactionToken", form["transactionToken"]);
+            paymentInfo.CustomValues.Add("Address1", form["custAddress1"]);
+            paymentInfo.CustomValues.Add("Address2", form["custAddress2"]);
+            paymentInfo.CustomValues.Add("City", form["custCity"]);
+            paymentInfo.CustomValues.Add("State", form["custState"]);
+            paymentInfo.CustomValues.Add("Zip", form["custZipCode"]);
+            paymentInfo.OrderTotal = Convert.ToDecimal(form["transAmount1"]);
+
+            return Task.FromResult(paymentInfo);
         }
 
         public string GetPublicViewComponentName()
@@ -214,6 +252,14 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     [UniFiPaymentsLocales.UseIntegration] = "Use Integration",
                     [UniFiPaymentsLocales.UseIntegrationHint] = "Use the integration region (for testing).",
                 });
+        }
+
+        private string GetCustomValue(ProcessPaymentRequest processPaymentRequest, string key)
+        {
+            return processPaymentRequest.CustomValues
+                                        .FirstOrDefault(x => x.Key == key)
+                                        .Value.ToString()
+                                        .Replace("[\n  \"", "").Replace("\"\n]", "");
         }
     }
 }
