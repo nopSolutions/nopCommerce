@@ -20,12 +20,16 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using System.Net.Http.Json;
+using Nop.Services.Common;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi.Components
 {
-    public class UnifiPaymentProcessorViewComponent : NopViewComponent
+    [ViewComponent(Name = "UniFiPaymentsProcessor")]
+
+    public class UnifiPaymentsProcessorViewComponent : NopViewComponent
     {
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IStateProvinceService _stateProvinceService;
@@ -34,8 +38,9 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
         private readonly UniFiPaymentsSettings _uniFiPaymentsSettings;
         private readonly UniFiSettings _uniFiSettings;
 
-        public UnifiPaymentProcessorViewComponent(
+        public UnifiPaymentsProcessorViewComponent(
             ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             IShoppingCartService shoppingCartService,
             IShoppingCartModelFactory shoppingCartModelFactory,
             IStateProvinceService stateProvinceService,
@@ -45,6 +50,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
             UniFiSettings uniFiSettings)
         {
             _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
             _shoppingCartService = shoppingCartService;
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _stateProvinceService = stateProvinceService;
@@ -57,6 +63,10 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var bearerToken = await GetBearerTokenAsync();
+            await _genericAttributeService.SaveAttributeAsync(
+                await _workContext.GetCurrentCustomerAsync(),
+                "UniFiBearerToken",
+                bearerToken);
             var transactionToken = await GetTransactionTokenAsync(bearerToken);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -80,7 +90,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
                 City = address.City,
                 State = stateAbbreviation,
                 Zip = address.ZipPostalCode,
-                TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", ""),
+                TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", "").Replace(",", "")
             };
 
             return View("~/Plugins/Payments.UniFi/Views/PaymentInfo.cshtml", model);

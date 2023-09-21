@@ -29,6 +29,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
 
         public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
+            // I think we call Transmit API here
             var result = new ProcessPaymentResult();
 
             return Task.FromResult(result);
@@ -115,7 +116,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
 
         public string GetPublicViewComponentName()
         {
-            return "UnifiPaymentProcessor";
+            return "UniFiPaymentsProcessor";
         }
 
         public Task<string> GetPaymentMethodDescriptionAsync() => Task.FromResult("Allows for payment via ABC Warehouse Card.");

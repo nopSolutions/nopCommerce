@@ -670,10 +670,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             return View(model);
         }
 
-        // Custom, allows for AJAX calls
-        // This requires ignoring the anti-forgery token since
-        // it is an AJAX method
-        [IgnoreAntiforgeryToken]
+        // Custom, makes payment request
         [HttpPost, ActionName("PaymentInfo")]
         [FormValueRequired("nextstep")]
         public override async Task<IActionResult> EnterPaymentInfo(IFormCollection form)
@@ -718,7 +715,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             // custom code is here
             string status_code = string.Empty;
             string response_message = string.Empty;
-            var isAjaxCall = Convert.ToBoolean(form["is_ajax_call"]);
 
             if (ModelState.IsValid)
             {
@@ -729,12 +725,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
                 HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", paymentInfo);
 
-                // If calling this route via AJAX (for Synchrony plugin), 
-                // return 200 so the plugin can handle redirecting to /confirm
-                if (isAjaxCall)
-                {
-                    return new OkResult();
-                }
                 var paymentResponse = await SendPaymentRequestAsync(paymentInfo);
 
                 if (paymentResponse.status_code == "00")

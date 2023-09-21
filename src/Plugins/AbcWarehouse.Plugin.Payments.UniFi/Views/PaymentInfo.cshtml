@@ -16,4 +16,6 @@
 <input type="hidden" id="custZipCode" name="custZipCode" value="@Model.Zip" />
 <input type="hidden" id="transAmount1" name="transAmount1" value="@Model.TransactionAmount" />
 
-<button style="display: none" type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(document.querySelector('form[action=\'/checkout/paymentinfo\']'), null)">Pay Now with UniFi (HTML)</button>
+<input type="hidden" id="nextstep" name="nextstep" value="confirm" />
+
+<button class="button-1" type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(document.querySelector('form[action=\'/checkout/paymentinfo\']'), null)">Pay Now with UniFi</button>
