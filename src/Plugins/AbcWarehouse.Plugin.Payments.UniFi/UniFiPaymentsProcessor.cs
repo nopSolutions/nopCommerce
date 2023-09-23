@@ -11,7 +11,14 @@ using Nop.Core.Domain.Orders;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
+using System.Text.Json;
+using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi
 {
@@ -45,21 +52,56 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                 "UniFiBearerToken");
             httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + bearerToken);
 
-            var transactionLookupEndpoint = _settings.UseIntegration ?
+            var transactEndpoint = _settings.UseIntegration ?
                 "https://api-stg.syf.com/v1/credit/authorizations/digital-buy/transactions" :
                 "https://api.syf.com/v1/credit/authorizations/digital-buy/transactions";
             var transactionToken = GetCustomValue(processPaymentRequest, "TransactionToken");
             var address1 = GetCustomValue(processPaymentRequest, "Address1");
-            var address2 = GetCustomValue(processPaymentRequest, "Address2");
             var city = GetCustomValue(processPaymentRequest, "City");
             var state = GetCustomValue(processPaymentRequest, "State");
             var zip = GetCustomValue(processPaymentRequest, "Zip");
             var amount = processPaymentRequest.OrderTotal;
-            //var response = await httpClient.GetAsync(transactionLookupEndpoint);
+
+            // https://stackoverflow.com/a/23121386
+            // allows dot notation in simple json object
+            var payload = new Dictionary<string, object>
+            {
+                { "transactionToken", transactionToken },
+                { "addressInfo", new Dictionary<string, object> {
+                    { "cipher.addressLine1", address1 },
+                    { "cipher.city", city },
+                    { "cipher.state", state },
+                    { "cipher.zipCode", zip },
+                } },
+                { "transactionInfo", new [] {
+                    new {
+                        amount = amount.ToString("0.00"),
+                    }
+                } }
+            };
+            var json = JsonConvert.SerializeObject(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(
+                transactEndpoint, content
+            );
 
             var result = new ProcessPaymentResult();
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                result.AddError("Failure to process payment.");
+                return result;
+            }
 
-            result.AddError("Transact API call not implemented yet.");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseJson = JsonDocument.Parse(responseContent);
+            var statusCode = responseJson.RootElement
+                                               .GetProperty("transactionInfo")
+                                               .GetProperty("statusCode").GetString();
+            
+            if (statusCode != "000")
+            {
+                result.AddError("Payment not approved.");
+            }
 
             return result;
         }
@@ -143,7 +185,6 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
 
             paymentInfo.CustomValues.Add("TransactionToken", form["transactionToken"]);
             paymentInfo.CustomValues.Add("Address1", form["custAddress1"]);
-            paymentInfo.CustomValues.Add("Address2", form["custAddress2"]);
             paymentInfo.CustomValues.Add("City", form["custCity"]);
             paymentInfo.CustomValues.Add("State", form["custState"]);
             paymentInfo.CustomValues.Add("Zip", form["custZipCode"]);
