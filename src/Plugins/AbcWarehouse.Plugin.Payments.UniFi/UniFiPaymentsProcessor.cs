@@ -19,12 +19,14 @@ using System.Text.Json;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Domain.Payments;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi
 {
     public class UniFiPaymentsProcessor : BasePlugin, IPaymentMethod
     {
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -32,12 +34,14 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
 
         public UniFiPaymentsProcessor(
             IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IWebHelper webHelper,
             IWorkContext workContext,
             UniFiPaymentsSettings settings)
         {
             _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -55,11 +59,11 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             var transactEndpoint = _settings.UseIntegration ?
                 "https://api-stg.syf.com/v1/credit/authorizations/digital-buy/transactions" :
                 "https://api.syf.com/v1/credit/authorizations/digital-buy/transactions";
-            var transactionToken = GetCustomValue(processPaymentRequest, "TransactionToken");
-            var address1 = GetCustomValue(processPaymentRequest, "Address1");
-            var city = GetCustomValue(processPaymentRequest, "City");
-            var state = GetCustomValue(processPaymentRequest, "State");
-            var zip = GetCustomValue(processPaymentRequest, "Zip");
+            var transactionToken = _httpContextAccessor.HttpContext.Session.GetString("TransactionToken");
+            var address1 = _httpContextAccessor.HttpContext.Session.GetString("Address1");
+            var city = _httpContextAccessor.HttpContext.Session.GetString("City");
+            var state = _httpContextAccessor.HttpContext.Session.GetString("State");
+            var zip = _httpContextAccessor.HttpContext.Session.GetString("Zip");
             var amount = processPaymentRequest.OrderTotal;
 
             // https://stackoverflow.com/a/23121386
@@ -101,6 +105,10 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             if (statusCode != "000")
             {
                 result.AddError("Payment not approved.");
+            }
+            else
+            {
+                result.NewPaymentStatus = PaymentStatus.Paid;
             }
 
             return result;
@@ -183,11 +191,11 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
         {
             var paymentInfo = new ProcessPaymentRequest();
 
-            paymentInfo.CustomValues.Add("TransactionToken", form["transactionToken"]);
-            paymentInfo.CustomValues.Add("Address1", form["custAddress1"]);
-            paymentInfo.CustomValues.Add("City", form["custCity"]);
-            paymentInfo.CustomValues.Add("State", form["custState"]);
-            paymentInfo.CustomValues.Add("Zip", form["custZipCode"]);
+            _httpContextAccessor.HttpContext.Session.SetString("TransactionToken", form["transactionToken"]);
+            _httpContextAccessor.HttpContext.Session.SetString("Address1", form["custAddress1"]);
+            _httpContextAccessor.HttpContext.Session.SetString("City", form["custCity"]);
+            _httpContextAccessor.HttpContext.Session.SetString("State", form["custState"]);
+            _httpContextAccessor.HttpContext.Session.SetString("Zip", form["custZipCode"]);
             paymentInfo.OrderTotal = Convert.ToDecimal(form["transAmount1"]);
 
             return Task.FromResult(paymentInfo);
@@ -293,14 +301,6 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     [UniFiPaymentsLocales.UseIntegration] = "Use Integration",
                     [UniFiPaymentsLocales.UseIntegrationHint] = "Use the integration region (for testing).",
                 });
-        }
-
-        private string GetCustomValue(ProcessPaymentRequest processPaymentRequest, string key)
-        {
-            return processPaymentRequest.CustomValues
-                                        .FirstOrDefault(x => x.Key == key)
-                                        .Value.ToString()
-                                        .Replace("[\n  \"", "").Replace("\"\n]", "");
         }
     }
 }
