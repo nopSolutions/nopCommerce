@@ -1,7 +1,7 @@
 ﻿@model AbcWarehouse.Plugin.Payments.UniFi.Models.PaymentInfoModel
 
 @{
-    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Payments.UniFi/scripts/payment-info.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Payments.UniFi/scripts/unifi.js");
 }
 
 <input type="hidden" id="transactionToken" name="transactionToken" value="@Model.TransactionToken"/>

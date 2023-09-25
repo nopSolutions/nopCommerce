@@ -1,3 +1,7 @@
+div.sync-price {
+    height: 45px;
+}
+
 div#syf-promo > div.widget-box {
     margin-bottom: 1rem;
 }
