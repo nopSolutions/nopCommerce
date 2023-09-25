@@ -18,7 +18,8 @@
   <ItemGroup>
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
-    <None Remove="scripts/payment-info.js" />
+    <None Remove="scripts/unifi.js" />
+    <None Remove="styles/unifi.js" />
     <None Remove="Views/_ViewImports.cshtml" />
     <None Remove="Views/Configure.cshtml" />
     <None Remove="Views/PaymentInfo.cshtml" />
@@ -31,7 +32,10 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="scripts/payment-info.js">
+    <Content Include="scripts/unifi.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="styles/unifi.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views/_ViewImports.cshtml">
