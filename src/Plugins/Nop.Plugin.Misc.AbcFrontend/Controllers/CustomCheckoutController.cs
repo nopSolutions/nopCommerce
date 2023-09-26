@@ -725,6 +725,12 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
                 HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", paymentInfo);
 
+                // ABC: if UniFi, just go to confirm
+                if (paymentMethodSystemName == "Payments.UniFi")
+                {
+                    return RedirectToRoute("CheckoutConfirm");
+                }
+
                 var paymentResponse = await SendPaymentRequestAsync(paymentInfo);
 
                 if (paymentResponse.status_code == "00")
