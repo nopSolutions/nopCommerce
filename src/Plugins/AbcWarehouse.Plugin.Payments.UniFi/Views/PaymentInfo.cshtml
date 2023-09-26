@@ -18,4 +18,5 @@
 
 <input type="hidden" id="nextstep" name="nextstep" value="confirm" />
 
-<button class="button-1" type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(document.querySelector('form[action=\'/checkout/paymentinfo\']'), null)">Pay Now with UniFi</button>
+<button style="display: none" class="button-1" type="button" id="checkouthtml" onclick="syfMPP.calldBuyProcess(document.querySelector('form[action=\'/checkout/paymentinfo\']'), null)">Pay Now with UniFi</button>
+<button style="display: none" class="button-1" type="button" id="synchrony-error-button" onclick="window.location.href = '/checkout/paymentmethod'">Back</button>

@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	// Auto-open the modal
-	//$('#checkouthtml').trigger("click");
+	$('#checkouthtml').trigger("click");
+	$('#checkouthtml').hide();
 	$('.payment-info-next-step-button').hide();
 
     window.addEventListener("message",function(event) {
@@ -22,7 +23,8 @@ $(document).ready(function () {
 							form.submit();
 						}
 						else {
-							alert(`Synchrony modal error: ${transactionMessage}.`);
+							alert(`UniFi Payment modal error: ${transactionMessage}.`);
+							$('#synchrony-error-button').show();
 						}
 					},
 					failure: function () {
