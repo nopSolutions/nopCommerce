@@ -31,7 +31,7 @@
     <Value>A SQL kapcsolati karakterlánc (connection string) szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Hibás az  SQL kapcsolati karakterlánc formátuma</Value>
+    <Value>Hibás az SQL kapcsolati karakterlánc formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Ország</Value>
