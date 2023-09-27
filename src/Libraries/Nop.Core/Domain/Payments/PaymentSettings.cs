@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Payments
 {
     /// <summary>
     /// Payment settings
     /// </summary>
-    public class PaymentSettings : ISettings
+    public partial class PaymentSettings : ISettings
     {
         public PaymentSettings()
         {

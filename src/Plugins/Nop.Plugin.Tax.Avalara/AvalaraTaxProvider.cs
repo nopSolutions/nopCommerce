@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tax;
+using Nop.Plugin.Tax.Avalara.Components;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Cms;
@@ -26,15 +23,15 @@ namespace Nop.Plugin.Tax.Avalara
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -108,16 +105,18 @@ namespace Nop.Plugin.Tax.Avalara
 
                 //and get tax details
                 taxTotalResult = new TaxTotalResult { TaxTotal = transaction.totalTax.Value };
-                transaction.summary?
+                var taxRates = transaction.summary?
                     .Where(summary => summary.rate.HasValue && summary.tax.HasValue)
                     .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
-                    .ToList().ForEach(taxRate =>
-                    {
-                        if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
-                            taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
-                        else
-                            taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
-                    });
+                    .ToList();
+
+                foreach (var taxRate in taxRates)
+                {
+                    if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
+                        taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
+                    else
+                        taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
+                }
 
                 _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
             }
@@ -154,29 +153,25 @@ namespace Nop.Plugin.Tax.Avalara
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone.Equals(AdminWidgetZones.CustomerDetailsBlock) ||
                 widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop))
-            {
-                return AvalaraTaxDefaults.ENTITY_USE_CODE_VIEW_COMPONENT_NAME;
-            }
+                return typeof(EntityUseCodeViewComponent);
 
             if (widgetZone.Equals(AdminWidgetZones.ProductListButtons))
-                return AvalaraTaxDefaults.EXPORT_ITEMS_VIEW_COMPONENT_NAME;
+                return typeof(ExportItemsViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.CheckoutConfirmTop) ||
                 widgetZone.Equals(PublicWidgetZones.OpCheckoutConfirmTop))
-            {
-                return AvalaraTaxDefaults.ADDRESS_VALIDATION_VIEW_COMPONENT_NAME;
-            }
+                return typeof(AddressValidationViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
-                return AvalaraTaxDefaults.APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME;
+                return typeof(AppliedCertificateViewComponent);
 
             return null;
         }

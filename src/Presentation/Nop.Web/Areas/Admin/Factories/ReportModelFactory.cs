@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -26,17 +22,18 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerReportService _customerReportService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderReportService _orderReportService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerReportService _customerReportService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderReportService _orderReportService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -52,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
+            IStoreContext storeContext,
             IWorkContext workContext)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -64,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
+            _storeContext = storeContext;
             _workContext = workContext;
         }
 
@@ -77,6 +76,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter orders
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -93,6 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 categoryId: searchModel.CategoryId,
                 productId: searchModel.ProductId,
                 manufacturerId: searchModel.ManufacturerId,
+                vendorId: currentVendor?.Id ?? searchModel.VendorId,
                 storeId: searchModel.StoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -128,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             return bestsellers;
-        }        
+        }
 
         #endregion
 
@@ -173,7 +176,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare "group by" filter
             searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
-            
+
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -292,16 +298,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }).ToListAsync());
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
             lowStockProductModels.AddRange(await combinations.SelectAwait(async combination =>
             {
                 var product = await _productService.GetProductByIdAsync(combination.ProductId);
+
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
 
                     Attributes = await _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), "<br />", true, true, true, false),
+                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, "<br />", true, true, true, false),
                     ManageInventoryMethod = await _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod),
 
                     StockQuantity = combination.StockQuantity,
@@ -389,11 +399,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     var bestsellerModel = new BestsellerModel
                     {
                         ProductId = bestseller.ProductId,
-                        TotalQuantity = bestseller.TotalQuantity
+                        TotalQuantity = bestseller.TotalQuantity,
+                        ProductName = bestseller.ProductName
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
                     bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
-using Nop.Services.Security;
 using Nop.Services.Seo;
-using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Models.Topics;
 
@@ -19,30 +14,24 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicService _topicService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly ITopicTemplateService _topicTemplateService;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
         #region Ctor
 
-        public TopicModelFactory(IAclService aclService,
-            ILocalizationService localizationService,
+        public TopicModelFactory(ILocalizationService localizationService,
             IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
             ITopicService topicService,
             ITopicTemplateService topicTemplateService,
             IUrlRecordService urlRecordService)
         {
-            _aclService = aclService;
             _localizationService = localizationService;
             _storeContext = storeContext;
-            _storeMappingService = storeMappingService;
             _topicService = topicService;
             _topicTemplateService = topicTemplateService;
             _urlRecordService = urlRecordService;
@@ -50,7 +39,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Utilities
+        #region Methods
 
         /// <summary>
         /// Prepare the topic model
@@ -58,14 +47,14 @@ namespace Nop.Web.Factories
         /// <param name="topic">Topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
-        protected virtual async Task<TopicModel> PrepareTopicModelAsync(Topic topic)
+        public virtual async Task<TopicModel> PrepareTopicModelAsync(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
 
-            var model = new TopicModel
+            return new TopicModel
             {
                 Id = topic.Id,
                 SystemName = topic.SystemName,
@@ -79,42 +68,6 @@ namespace Nop.Web.Factories
                 SeName = await _urlRecordService.GetSeNameAsync(topic),
                 TopicTemplateId = topic.TopicTemplateId
             };
-
-            return model;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Get the topic model by topic identifier
-        /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
-        /// </returns>
-        public virtual async Task<TopicModel> PrepareTopicModelByIdAsync(int topicId, bool showHidden = false)
-        {
-            var topic = await _topicService.GetTopicByIdAsync(topicId);
-
-            if (topic == null)
-                return null;
-
-            if (showHidden)
-                return await PrepareTopicModelAsync(topic);
-
-            if (!topic.Published ||
-                //ACL (access control list)
-                !await _aclService.AuthorizeAsync(topic) ||
-                //store mapping
-                !await _storeMappingService.AuthorizeAsync(topic))
-
-                return null;
-
-            return await PrepareTopicModelAsync(topic);
         }
 
         /// <summary>
@@ -123,7 +76,7 @@ namespace Nop.Web.Factories
         /// <param name="systemName">Topic system name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName)
         {

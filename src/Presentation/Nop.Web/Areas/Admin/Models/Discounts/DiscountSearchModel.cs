@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Discounts
 {
@@ -16,6 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
 
         public DiscountSearchModel()
         {
+            AvailableActiveOptions = new List<SelectListItem>();
             AvailableDiscountTypes = new List<SelectListItem>();
         }
 
@@ -41,6 +40,11 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchEndDate")]
         [UIHint("DateNullable")]
         public DateTime? SearchEndDate { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.List.IsActive")]
+        public int IsActiveId { get; set; }
+
+        public IList<SelectListItem> AvailableActiveOptions { get; set; }
 
         #endregion
     }

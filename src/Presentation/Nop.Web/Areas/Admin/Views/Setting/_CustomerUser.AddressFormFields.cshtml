@@ -1,89 +1,5 @@
 @model CustomerUserSettingsModel
 
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.CountyEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.IdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
-
-        toggleAddressCountryFormField();
-        toggleAddressRequiredFormField();
-    });
-
-    function toggleAddressCountryFormField() {
-        if ($('#@Html.IdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
-            $('#pnlAddressStateProvinceEnabled').showElement();
-        }
-        else {
-            $('#pnlAddressStateProvinceEnabled').hideElement();
-        }
-    }
-
-    function toggleAddressRequiredFormField() {
-        if ($('#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
-            $('#pnlAddressCompanyRequired').showElement();
-        }
-        else {
-            $('#pnlAddressCompanyRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
-            $('#pnlAddressStreetAddressRequired').showElement();
-        }
-        else {
-            $('#pnlAddressStreetAddressRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
-            $('#pnlAddressStreetAddress2Required').showElement();
-        }
-        else {
-            $('#pnlAddressStreetAddress2Required').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
-            $('#pnlAddressZipPostalCodeRequired').showElement();
-        }
-        else {
-            $('#pnlAddressZipPostalCodeRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
-            $('#pnlAddressCityRequired').showElement();
-        }
-        else {
-            $('#pnlAddressCityRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.CountyEnabled)').is(':checked')) {
-            $('#pnlAddressCountyRequired').showElement();
-        }
-        else {
-            $('#pnlAddressCountyRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
-            $('#pnlAddressPhoneRequired').showElement();
-        }
-        else {
-            $('#pnlAddressPhoneRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
-            $('#pnlAddressFaxRequired').showElement();
-        }
-        else {
-            $('#pnlAddressFaxRequired').hideElement();
-        }
-    }
-</script>
-
 <div class="card-body">
     <p>
         <em>@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description")</em>
@@ -97,8 +13,8 @@
             <span asp-validation-for="AddressSettings.CompanyEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.CompanyEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressCompanyRequired">
+    <nop-nested-setting asp-for="AddressSettings.CompanyEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.CompanyRequired" />
             </div>
@@ -117,8 +33,8 @@
             <span asp-validation-for="AddressSettings.StreetAddressEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.StreetAddressEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressStreetAddressRequired">
+    <nop-nested-setting asp-for="AddressSettings.StreetAddressEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.StreetAddressRequired" />
             </div>
@@ -137,8 +53,8 @@
             <span asp-validation-for="AddressSettings.StreetAddress2Enabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.StreetAddress2Enabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressStreetAddress2Required">
+    <nop-nested-setting asp-for="AddressSettings.StreetAddress2Enabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.StreetAddress2Required" />
             </div>
@@ -157,8 +73,8 @@
             <span asp-validation-for="AddressSettings.ZipPostalCodeEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.ZipPostalCodeEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressZipPostalCodeRequired">
+    <nop-nested-setting asp-for="AddressSettings.ZipPostalCodeEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.ZipPostalCodeRequired" />
             </div>
@@ -177,8 +93,8 @@
             <span asp-validation-for="AddressSettings.CityEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.CityEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressCityRequired">
+    <nop-nested-setting asp-for="AddressSettings.CityEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.CityRequired" />
             </div>
@@ -197,8 +113,8 @@
             <span asp-validation-for="AddressSettings.CountyEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.CountyEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressCountyRequired">
+    <nop-nested-setting asp-for="AddressSettings.CountyEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.CountyRequired" />
             </div>
@@ -217,8 +133,17 @@
             <span asp-validation-for="AddressSettings.CountryEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.CountryEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressStateProvinceEnabled">
+    <nop-nested-setting asp-for="AddressSettings.CountryEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AddressSettings.DefaultCountryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="AddressSettings.DefaultCountryId" asp-items="Model.AddressSettings.AvailableCountries" />
+                <span asp-validation-for="AddressSettings.DefaultCountryId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.StateProvinceEnabled" />
             </div>
@@ -237,8 +162,8 @@
             <span asp-validation-for="AddressSettings.PhoneEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.PhoneEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressPhoneRequired">
+    <nop-nested-setting asp-for="AddressSettings.PhoneEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.PhoneRequired" />
             </div>
@@ -257,8 +182,8 @@
             <span asp-validation-for="AddressSettings.FaxEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="AddressSettings.FaxEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlAddressFaxRequired">
+    <nop-nested-setting asp-for="AddressSettings.FaxEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AddressSettings.FaxRequired" />
             </div>

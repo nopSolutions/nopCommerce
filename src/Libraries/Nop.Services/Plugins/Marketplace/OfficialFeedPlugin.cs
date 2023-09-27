@@ -3,7 +3,7 @@
     /// <summary>
     /// Feed of plugins from nopCommerce.com marketplace
     /// </summary>
-    public class OfficialFeedPlugin
+    public partial class OfficialFeedPlugin
     {
         /// <summary>
         /// Name

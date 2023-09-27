@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
 using Nop.Services.Authentication.External;
@@ -18,15 +17,15 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
-        private readonly IMultiFactorAuthenticationMethodModelFactory _multiFactorAuthenticationMethodModelFactory;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+        protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
+        protected readonly IMultiFactorAuthenticationMethodModelFactory _multiFactorAuthenticationMethodModelFactory;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
         #endregion
 

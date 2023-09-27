@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Media
     /// <summary>
     /// Media settings
     /// </summary>
-    public class MediaSettings : ISettings
+    public partial class MediaSettings : ISettings
     {
         /// <summary>
         /// Picture size of customer avatars (if enabled)
@@ -53,6 +53,11 @@ namespace Nop.Core.Domain.Media
         public int CartThumbPictureSize { get; set; }
 
         /// <summary>
+        /// Picture size of product pictures on the order details page
+        /// </summary>
+        public int OrderThumbPictureSize { get; set; }
+
+        /// <summary>
         /// Picture size of product pictures for minishipping cart box
         /// </summary>
         public int MiniCartThumbPictureSize { get; set; }
@@ -71,6 +76,11 @@ namespace Nop.Core.Domain.Media
         /// A value indicating whether picture zoom is enabled
         /// </summary>
         public bool DefaultPictureZoomEnabled { get; set; }
+
+        /// <summary>
+        /// A value indicating whether to allow uploading of SVG files in admin area
+        /// </summary>
+        public bool AllowSVGUploads { get; set; }
 
         /// <summary>
         /// Maximum allowed picture size. If a larger picture is uploaded, then it'll be resized
@@ -111,5 +121,25 @@ namespace Nop.Core.Domain.Media
         /// Gets or sets a value indicating whether need to use absolute pictures path
         /// </summary>
         public bool UseAbsoluteImagePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value to specify a policy list for embedded content
+        /// </summary>
+        public string VideoIframeAllow { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of the frame in CSS pixels
+        /// </summary>
+        public int VideoIframeWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the height of the frame in CSS pixels
+        /// </summary>
+        public int VideoIframeHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product default image id. If 0, then wwwroot/images/default-image.png will be used
+        /// </summary>
+        public int ProductDefaultImageId { get; set; }
     }
 }

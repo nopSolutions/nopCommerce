@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Models;
@@ -11,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product model
     /// </summary>
-    public partial record ProductModel : BaseNopEntityModel, 
+    public partial record ProductModel : BaseNopEntityModel,
         IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -19,9 +17,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public ProductModel()
         {
             ProductPictureModels = new List<ProductPictureModel>();
+            ProductVideoModels = new List<ProductVideoModel>();
             Locales = new List<ProductLocalizedModel>();
             CopyProductModel = new CopyProductModel();
             AddPictureModel = new ProductPictureModel();
+            AddVideoModel = new ProductVideoModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             ProductEditorSettingsModel = new ProductEditorSettingsModel();
             StockQuantityHistory = new StockQuantityHistoryModel();
@@ -52,10 +52,14 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             SelectedDiscountIds = new List<int>();
             AvailableDiscounts = new List<SelectListItem>();
 
+            AvailableProductTags = new List<SelectListItem>();
+            SelectedProductTags = new List<string>();
+
             RelatedProductSearchModel = new RelatedProductSearchModel();
             CrossSellProductSearchModel = new CrossSellProductSearchModel();
             AssociatedProductSearchModel = new AssociatedProductSearchModel();
             ProductPictureSearchModel = new ProductPictureSearchModel();
+            ProductVideoSearchModel = new ProductVideoSearchModel();
             ProductSpecificationAttributeSearchModel = new ProductSpecificationAttributeSearchModel();
             ProductOrderSearchModel = new ProductOrderSearchModel();
             TierPriceSearchModel = new TierPriceSearchModel();
@@ -67,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-        
+
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
@@ -124,10 +128,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
-        public string ProductTags { get; set; }
+        public IList<SelectListItem> AvailableProductTags { get; set; }
 
-        public string InitialProductTags { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
+        public IList<string> SelectedProductTags { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         public string Sku { get; set; }
@@ -292,6 +296,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
         public bool NotReturnable { get; set; }
 
@@ -428,6 +435,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
 
+        //videos
+        public ProductVideoModel AddVideoModel { get; set; }
+        public IList<ProductVideoModel> ProductVideoModels { get; set; }
+
         //product attributes
         public bool ProductAttributesExist { get; set; }
         public bool CanCreateCombinations { get; set; }
@@ -455,6 +466,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public AssociatedProductSearchModel AssociatedProductSearchModel { get; set; }
 
         public ProductPictureSearchModel ProductPictureSearchModel { get; set; }
+
+        public ProductVideoSearchModel ProductVideoSearchModel { get; set; }
 
         public ProductSpecificationAttributeSearchModel ProductSpecificationAttributeSearchModel { get; set; }
 

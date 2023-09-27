@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Events
     /// Represents an event that occurs after the model is received from the view
     /// </summary>
     /// <typeparam name="T">Type of the model</typeparam>
-    public class ModelReceivedEvent<T>
+    public partial class ModelReceivedEvent<T>
     {
         #region Ctor
 
@@ -28,12 +28,12 @@ namespace Nop.Web.Framework.Events
         /// <summary>
         /// Gets a model
         /// </summary>
-        public T Model { get; private set; }
+        public T Model { get; protected set; }
 
         /// <summary>
         /// Gets a model state
         /// </summary>
-        public ModelStateDictionary ModelState { get; private set; }
+        public ModelStateDictionary ModelState { get; protected set; }
 
         #endregion
     }

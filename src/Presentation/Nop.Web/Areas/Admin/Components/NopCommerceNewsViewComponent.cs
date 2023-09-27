@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
@@ -8,11 +7,11 @@ namespace Nop.Web.Areas.Admin.Components
     /// <summary>
     /// Represents a view component that displays the nopCommerce news
     /// </summary>
-    public class NopCommerceNewsViewComponent : NopViewComponent
+    public partial class NopCommerceNewsViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly IHomeModelFactory _homeModelFactory;
+        protected readonly IHomeModelFactory _homeModelFactory;
 
         #endregion
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Localization;
@@ -17,12 +13,12 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -128,19 +124,23 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="keywords">Keywords to search by name, body, or subject</param>
+        /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message template list
         /// </returns>
-        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null)
+        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null, bool? isActive = null)
         {
             var messageTemplates = await _messageTemplateRepository.GetAllAsync(async query =>
             {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
+                if (isActive.HasValue)
+                    query = query.Where(mt => mt.IsActive == isActive);
+
                 return query.OrderBy(t => t.Name);
-            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
+            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId, isActive));
 
             if (!string.IsNullOrWhiteSpace(keywords))
             {

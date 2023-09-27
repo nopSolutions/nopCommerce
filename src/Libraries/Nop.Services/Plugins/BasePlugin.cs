@@ -1,11 +1,9 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Base plugin
     /// </summary>
-    public abstract class BasePlugin : IPlugin
+    public abstract partial class BasePlugin : IPlugin
     {
         /// <summary>
         /// Gets a configuration page URL
@@ -24,7 +22,7 @@ namespace Nop.Services.Plugins
         /// Install plugin
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual Task InstallAsync() 
+        public virtual Task InstallAsync()
         {
             return Task.CompletedTask;
         }
@@ -33,7 +31,7 @@ namespace Nop.Services.Plugins
         /// Uninstall plugin
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual Task UninstallAsync() 
+        public virtual Task UninstallAsync()
         {
             return Task.CompletedTask;
         }

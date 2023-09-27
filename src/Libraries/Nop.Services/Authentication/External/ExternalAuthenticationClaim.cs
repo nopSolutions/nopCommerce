@@ -1,12 +1,10 @@
-using System;
-
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
     /// External authentication claim
     /// </summary>
     [Serializable]
-    public class ExternalAuthenticationClaim
+    public partial class ExternalAuthenticationClaim
     {
         /// <summary>
         /// Ctor

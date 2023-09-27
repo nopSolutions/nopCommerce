@@ -10,7 +10,7 @@ namespace Nop.Data.Mapping.Builders
     /// <remarks>
     /// "Entity type <see cref="TEntity"/>" is needed to determine the right entity builder for a specific entity type
     /// </remarks>
-    public abstract class NopEntityBuilder<TEntity> : IEntityBuilder where TEntity : BaseEntity
+    public abstract partial class NopEntityBuilder<TEntity> : IEntityBuilder where TEntity : BaseEntity
     {
         /// <summary>
         /// Apply entity configuration

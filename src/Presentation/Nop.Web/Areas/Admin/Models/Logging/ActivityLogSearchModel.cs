@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Logging
 {
@@ -36,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
 
         [NopResourceDisplayName("Admin.Customers.ActivityLog.Fields.ActivityLogType")]
         public IList<SelectListItem> ActivityLogType { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Customers.ActivityLog.Fields.IpAddress")]
         public string IpAddress { get; set; }
 

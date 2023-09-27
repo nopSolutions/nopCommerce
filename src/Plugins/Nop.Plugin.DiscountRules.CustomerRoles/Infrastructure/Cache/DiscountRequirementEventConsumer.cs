@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Discounts;
+﻿using Nop.Core.Domain.Discounts;
 using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -9,11 +8,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
     /// <summary>
     /// Discount requirement rule event consumer (used for removing unused settings)
     /// </summary>
-    public partial class DiscountRequirementEventConsumer : IConsumer<EntityDeletedEvent<DiscountRequirement>>
+    public class DiscountRequirementEventConsumer : IConsumer<EntityDeletedEvent<DiscountRequirement>>
     {
         #region Fields
-        
-        private readonly ISettingService _settingService;
+
+        protected readonly ISettingService _settingService;
 
         #endregion
 

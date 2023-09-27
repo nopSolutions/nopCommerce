@@ -1,4 +1,7 @@
 ﻿@model CustomerDownloadableProductsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -10,13 +13,14 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
 <div class="page account-page downloadable-products-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.DownloadableProducts")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerDownloadableProductsTop, additionalData = Model })
         @if (Model.Items.Count > 0)
         {
             <div class="table-wrapper">
@@ -55,7 +59,7 @@
                                     @item.CreatedOn.ToString("d")
                                 </td>
                                 <td class="product">
-                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                    <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                                     @if (!string.IsNullOrEmpty(item.ProductAttributes))
                                     {
                                         <div class="attributes">
@@ -95,5 +99,6 @@
                 @T("DownloadableProducts.NoItems")
             </div>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerDownloadableProductsBottom, additionalData = Model })
     </div>
 </div>

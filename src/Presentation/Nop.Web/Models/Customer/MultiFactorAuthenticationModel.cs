@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
@@ -17,6 +16,6 @@ namespace Nop.Web.Models.Customer
         public List<MultiFactorAuthenticationProviderModel> Providers { get; set; }
 
         public string Message { get; set; }
-        
+
     }
 }

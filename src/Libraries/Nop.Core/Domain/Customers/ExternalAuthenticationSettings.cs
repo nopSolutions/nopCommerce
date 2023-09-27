@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// External authentication settings
     /// </summary>
-    public class ExternalAuthenticationSettings : ISettings
+    public partial class ExternalAuthenticationSettings : ISettings
     {
         /// <summary>
         /// Constructor

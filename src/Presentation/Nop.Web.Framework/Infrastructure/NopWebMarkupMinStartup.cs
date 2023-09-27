@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring WebMarkupMin services on application startup
     /// </summary>
-    public class NopWebMarkupMinStartup : INopStartup
+    public partial class NopWebMarkupMinStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
@@ -18,9 +15,9 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.News;
 
 namespace Nop.Web.Controllers
@@ -30,22 +27,23 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsModelFactory _newsModelFactory;
-        private readonly INewsService _newsService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly NewsSettings _newsSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsModelFactory _newsModelFactory;
+        protected readonly INewsService _newsService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly NewsSettings _newsSettings;
 
         #endregion
 
@@ -58,6 +56,7 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             INewsModelFactory newsModelFactory,
             INewsService newsService,
+            INopUrlHelper nopUrlHelper,
             IPermissionService permissionService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -75,6 +74,7 @@ namespace Nop.Web.Controllers
             _localizationService = localizationService;
             _newsModelFactory = newsModelFactory;
             _newsService = newsService;
+            _nopUrlHelper = nopUrlHelper;
             _permissionService = permissionService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
@@ -99,7 +99,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -116,7 +116,8 @@ namespace Nop.Web.Controllers
             var newsItems = await _newsService.GetAllNewsAsync(languageId, store.Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
+                var seName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{store.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
@@ -155,8 +156,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("NewsItem")]        
-        [FormValueRequired("add-comment")]
+        [HttpPost]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
@@ -198,7 +198,7 @@ namespace Nop.Web.Controllers
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)
-                    await _workflowMessageService.SendNewsCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendNewsCommentStoreOwnerNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddNewsComment",
@@ -214,10 +214,13 @@ namespace Nop.Web.Controllers
                     ? await _localizationService.GetResourceAsync("News.Comments.SuccessfullyAdded")
                     : await _localizationService.GetResourceAsync("News.Comments.SeeAfterApproving");
 
-                return RedirectToRoute("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                var seName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+                var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName });
+                return LocalRedirect(newsUrl);
             }
 
             //If we got this far, something failed, redisplay form
+            RouteData.Values["action"] = "NewsItem";
             model = await _newsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
             return View(model);
         }

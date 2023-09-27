@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
@@ -11,34 +9,17 @@ namespace Nop.Web.Framework.TagHelpers.Public
     /// "nop-bb-code-editor" tag helper
     /// </summary>
     [HtmlTargetElement("nop-bb-code-editor", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopBBCodeEditorTagHelper : TagHelper
+    public partial class NopBBCodeEditorTagHelper : TagHelper
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IWebHelper _webHelper;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -87,6 +68,23 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             return Task.CompletedTask;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// An expression to be evaluated against the current model
+        /// </summary>
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

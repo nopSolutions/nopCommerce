@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Nop.Core.ComponentModel;
+﻿using Nop.Core.ComponentModel;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Data.Mapping
@@ -15,14 +11,14 @@ namespace Nop.Data.Mapping
         #region Fields
 
         private static readonly Dictionary<Type, string> _tableNames = new();
-        private static readonly Dictionary<(Type, string), string> _columnName =new();
-        private static readonly IList<Type> _loadedFor=new List<Type>();
+        private static readonly Dictionary<(Type, string), string> _columnName = new();
+        private static readonly IList<Type> _loadedFor = new List<Type>();
         private static bool _isInitialized;
         private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         private static void Initialize()
         {

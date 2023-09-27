@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Validators;
 using Nop.Core.Domain.Customers;
@@ -9,9 +8,9 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Username validator
     /// </summary>
-    public class UsernamePropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
+    public partial class UsernamePropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
     {
-        private readonly CustomerSettings _customerSettings;
+        protected readonly CustomerSettings _customerSettings;
 
         public override string Name => "UsernamePropertyValidator";
 

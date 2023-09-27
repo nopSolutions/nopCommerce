@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
@@ -15,7 +14,7 @@ namespace Nop.Web.Models.Customer
         public int SelectedTab { get; set; }
     }
 
-    public record CustomerNavigationItemModel : BaseNopModel
+    public partial record CustomerNavigationItemModel : BaseNopModel
     {
         public string RouteName { get; set; }
         public string Title { get; set; }

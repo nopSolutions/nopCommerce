@@ -74,7 +74,7 @@
 "Copy":"Copiar",
 "Paste":"Colar",
 "E_CopyFile":"Erro ao copiar arquivo",
-"E_CopyFileInvalisPath":"Não é possivel copiar arquivo - caminho não existe",
+"E_CopyFileInvalidPath":"Não é possivel copiar arquivo - caminho não existe",
 "E_CopyDirInvalidPath":"Não é possivel copiar pasta - caminho não existe",
 "E_CreateArchive":"Erro ao criar o arquivo zip.",
 "E_UploadingFile":"erro"

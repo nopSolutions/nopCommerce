@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmailAccountDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.EmailAccountDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         <div class="form-group row" id="email-area">
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                 }
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmailAccountDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.EmailAccountDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

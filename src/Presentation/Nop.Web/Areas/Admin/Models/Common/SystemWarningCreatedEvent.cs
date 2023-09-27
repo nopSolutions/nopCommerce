@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Areas.Admin.Models.Common
+﻿namespace Nop.Web.Areas.Admin.Models.Common
 {
     /// <summary>
     /// Represents an event that occurs when system warnings are creating
     /// </summary>
-    public class SystemWarningCreatedEvent
+    public partial class SystemWarningCreatedEvent
     {
         #region Ctor
 

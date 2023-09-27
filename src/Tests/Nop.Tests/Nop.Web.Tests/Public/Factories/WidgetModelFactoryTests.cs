@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Configuration;
@@ -49,7 +47,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             args.Should().NotBeNull();
             args.Count.Should().Be(2);
             args["widgetZone"].Should().Be("test widget zone");
-            model.WidgetViewComponentName.Should().Be("TestWidgetPlugin");
+            model.WidgetViewComponent.Should().Be(typeof(TestWidgetPlugin));
         }
     }
 }

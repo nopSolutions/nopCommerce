@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 {
@@ -12,7 +11,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
         }
 
         public int ActiveStoreScopeConfiguration { get; set; }
-        
+
         [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
         public string DescriptionText { get; set; }
         public bool DescriptionText_OverrideForStore { get; set; }
@@ -33,10 +32,10 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 
         #region Nested class
 
-        public partial class ConfigurationLocalizedModel : ILocalizedLocaleModel
+        public class ConfigurationLocalizedModel : ILocalizedLocaleModel
         {
             public int LanguageId { get; set; }
-            
+
             [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
             public string DescriptionText { get; set; }
         }

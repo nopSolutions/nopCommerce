@@ -21,7 +21,7 @@
                 @T("Admin.ContentManagement.MessageTemplates.Test.Send")
             </button>
         </div>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
     </div>
     <input asp-for="Id" type="hidden" />
 

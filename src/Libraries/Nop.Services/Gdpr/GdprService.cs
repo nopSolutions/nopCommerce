@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Events;
@@ -27,21 +23,21 @@ namespace Nop.Services.Gdpr
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerService _customerService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INewsService _newsService;
-        private readonly IProductService _productService;
-        private readonly IRepository<GdprConsent> _gdprConsentRepository;
-        private readonly IRepository<GdprLog> _gdprLogRepository;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreService _storeService;
+        protected readonly IAddressService _addressService;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly IBlogService _blogService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IForumService _forumService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly INewsService _newsService;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<GdprConsent> _gdprConsentRepository;
+        protected readonly IRepository<GdprLog> _gdprLogRepository;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 
@@ -125,8 +121,8 @@ namespace Nop.Services.Gdpr
             var gdprConsents = await _gdprConsentRepository.GetAllAsync(query =>
             {
                 return from c in query
-                    orderby c.DisplayOrder, c.Id
-                    select c;
+                       orderby c.DisplayOrder, c.Id
+                       select c;
             }, cache => default);
 
             return gdprConsents;
@@ -189,7 +185,7 @@ namespace Nop.Services.Gdpr
         #endregion
 
         #region GDPR log
-        
+
         /// <summary>
         /// Get all GDPR log records
         /// </summary>
@@ -209,13 +205,13 @@ namespace Nop.Services.Gdpr
         {
             return await _gdprLogRepository.GetAllPagedAsync(query =>
             {
-                if (customerId > 0) 
+                if (customerId > 0)
                     query = query.Where(log => log.CustomerId == customerId);
 
-                if (consentId > 0) 
+                if (consentId > 0)
                     query = query.Where(log => log.ConsentId == consentId);
 
-                if (!string.IsNullOrEmpty(customerInfo)) 
+                if (!string.IsNullOrEmpty(customerInfo))
                     query = query.Where(log => log.CustomerInfo == customerInfo);
 
                 if (requestType != null)
@@ -255,7 +251,7 @@ namespace Nop.Services.Gdpr
 
             await InsertLogAsync(gdprLog);
         }
-        
+
         #endregion
 
         #region Customer
@@ -288,7 +284,7 @@ namespace Nop.Services.Gdpr
             var reviewedProducts = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
             await _productService.DeleteProductReviewsAsync(productReviews);
             //update product totals
-            foreach (var product in reviewedProducts) 
+            foreach (var product in reviewedProducts)
                 await _productService.UpdateProductReviewTotalsAsync(product);
 
             //external authentication record
@@ -366,7 +362,7 @@ namespace Nop.Services.Gdpr
             customer.Username = string.Empty;
             customer.Active = false;
             customer.Deleted = true;
-            
+
             await _customerService.UpdateCustomerAsync(customer);
 
             //raise event

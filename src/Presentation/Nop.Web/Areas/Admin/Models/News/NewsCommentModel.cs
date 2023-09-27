@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
@@ -22,10 +21,10 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
-        
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CommentTitle")]
         public string CommentTitle { get; set; }
-        
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CommentText")]
         public string CommentText { get; set; }
 

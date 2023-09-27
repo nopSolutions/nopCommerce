@@ -23,6 +23,6 @@
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }        
+        public int DisplayOrder { get; set; }
     }
 }

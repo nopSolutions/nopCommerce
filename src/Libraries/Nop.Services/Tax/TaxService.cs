@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -17,6 +12,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Tax.Events;
+using Country = Nop.Core.Domain.Directory.Country;
 
 namespace Nop.Services.Tax
 {
@@ -30,6 +26,7 @@ namespace Nop.Services.Tax
         protected readonly AddressSettings _addressSettings;
         protected readonly CustomerSettings _customerSettings;
         protected readonly IAddressService _addressService;
+        protected readonly ICheckVatService _checkVatService;
         protected readonly ICountryService _countryService;
         protected readonly ICustomerService _customerService;
         protected readonly IEventPublisher _eventPublisher;
@@ -51,6 +48,7 @@ namespace Nop.Services.Tax
         public TaxService(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             IAddressService addressService,
+            ICheckVatService checkVatService,
             ICountryService countryService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
@@ -68,6 +66,7 @@ namespace Nop.Services.Tax
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
             _addressService = addressService;
+            _checkVatService = checkVatService;
             _countryService = countryService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
@@ -108,10 +107,7 @@ namespace Nop.Services.Tax
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
-            {
-                var countryId = await _genericAttributeService.GetAttributeAsync<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
-                country = await _countryService.GetCountryByIdAsync(countryId);
-            }
+                country = await _countryService.GetCountryByIdAsync(customer.CountryId);
 
             //get country by IP address
             if (country == null)
@@ -130,7 +126,7 @@ namespace Nop.Services.Tax
                 return false;
 
             //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
@@ -236,25 +232,39 @@ namespace Nop.Services.Tax
                 }
             }
 
+            var autodetectedCountry = false;
+            var detectedAddress = new Address
+            {
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
             if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
                 basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
-                basedOn = TaxBasedOn.DefaultAddress;
-
-            switch (basedOn)
             {
-                case TaxBasedOn.BillingAddress:
-                    var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
-                    taxRateRequest.Address = billingAddress;
-                    break;
-                case TaxBasedOn.ShippingAddress:
-                    var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
-                    taxRateRequest.Address = shippingAddress;
-                    break;
-                case TaxBasedOn.DefaultAddress:
-                default:
-                    taxRateRequest.Address = await LoadDefaultTaxAddressAsync();
-                    break;
+                if (_taxSettings.AutomaticallyDetectCountry)
+                {
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                    var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
+
+                    if (country != null)
+                    {
+                        detectedAddress.CountryId = country.Id;
+                        autodetectedCountry = true;
+                    }
+                    else
+                        basedOn = TaxBasedOn.DefaultAddress;
+                }
+                else
+                    basedOn = TaxBasedOn.DefaultAddress;
             }
+
+            taxRateRequest.Address = basedOn switch
+            {
+                TaxBasedOn.BillingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerBillingAddressAsync(customer),
+                TaxBasedOn.ShippingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerShippingAddressAsync(customer),
+                _ => await LoadDefaultTaxAddressAsync(),
+            };
 
             return taxRateRequest;
         }
@@ -379,40 +389,19 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
         {
-            if (vatNumber == null)
-                vatNumber = string.Empty;
+            vatNumber ??= string.Empty;
             vatNumber = vatNumber.Trim().Replace(" ", string.Empty);
 
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!string.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpperInvariant();
-
-            string name;
-            string address;
+            twoLetterIsoCode ??= string.Empty;
 
             try
             {
-                var s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
-                {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
+                var (status, name, address) = await _checkVatService.CheckVatAsync(twoLetterIsoCode, vatNumber);
+                return (status, name, address, null);
             }
             catch (Exception ex)
             {
-                name = address = string.Empty;
-                var exception = ex;
-
-                return (VatNumberStatus.Unknown, name, address, exception);
+                return (VatNumberStatus.Unknown, string.Empty, string.Empty, ex);
             }
         }
 
@@ -443,7 +432,7 @@ namespace Nop.Services.Tax
 
             // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
             // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
 
             return country.Id != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&
@@ -528,7 +517,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //no need to calculate tax rate if passed "price" is 0
-            if (price == decimal.Zero) 
+            if (price == decimal.Zero)
                 return (price, taxRate);
 
             bool isTaxable;
@@ -671,7 +660,7 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer)
         {
             var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            
+
             return await GetPaymentMethodAdditionalFeeAsync(price, includingTax, customer);
         }
 
@@ -756,7 +745,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             var price = cav.PriceAdjustment;
-            if (ca.IsTaxExempt) 
+            if (ca.IsTaxExempt)
                 return (price, taxRate);
 
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
@@ -768,11 +757,11 @@ namespace Nop.Services.Tax
         #endregion
 
         #region VAT
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. DE 111 1111 111)</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the vAT Number status. Name (if received). Address (if received)
@@ -786,12 +775,11 @@ namespace Nop.Services.Tax
                 return (VatNumberStatus.Empty, name, address);
             fullVatNumber = fullVatNumber.Trim();
 
-            //GB 111 1111 111 or GB 1111111111
-            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
+            //DE 111 1111 111 or DE 1111111111
             var r = new Regex(@"^(\w{2})(.*)");
             var match = r.Match(fullVatNumber);
             if (!match.Success)
-                return (VatNumberStatus.Invalid, name, address); 
+                return (VatNumberStatus.Invalid, name, address);
 
             var twoLetterIsoCode = match.Groups[1].Value;
             var vatNumber = match.Groups[2].Value;

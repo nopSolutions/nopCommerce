@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Widgets.What3words.Models;
 using Nop.Services.Cms;
@@ -9,15 +8,14 @@ using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.What3words.Components
 {
-    [ViewComponent(Name = What3wordsDefaults.VIEW_COMPONENT_NAME)]
     public class What3wordsViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
-        private readonly What3wordsSettings _what3WordsSettings;
+        protected readonly ILogger _logger;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly What3wordsSettings _what3WordsSettings;
 
         #endregion
 

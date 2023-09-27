@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Nop.Core
 {
@@ -7,7 +6,7 @@ namespace Nop.Core
     /// Represents errors that occur during application execution
     /// </summary>
     [Serializable]
-    public class NopException : Exception
+    public partial class NopException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the Exception class.

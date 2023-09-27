@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -10,32 +8,16 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-textarea" tag helper
     /// </summary>
     [HtmlTargetElement("nop-textarea", Attributes = FOR_ATTRIBUTE_NAME)]
-    public class NopTextAreaTagHelper : TextAreaTagHelper
+    public partial class NopTextAreaTagHelper : TextAreaTagHelper
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
-        private const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
+        protected const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Custom html attributes
-        /// </summary>
-        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
-        public object CustomHtmlAttributes { set; get; }
-
-        /// <summary>
-        /// Indicates whether the field is required
-        /// </summary>
-        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
-        public string IsRequired { set; get; }
-
-        #endregion
-
+        
         #region Ctor
 
         public NopTextAreaTagHelper(IHtmlGenerator generator) : base(generator)
@@ -79,7 +61,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     output.Attributes.Add(key, value);
                 }
             }
-            
+
             //additional parameters
             var rowsNumber = output.Attributes.ContainsName("rows") ? output.Attributes["rows"].Value : 4;
             output.Attributes.SetAttribute("rows", rowsNumber);
@@ -95,6 +77,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             await base.ProcessAsync(context, output);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Custom html attributes
+        /// </summary>
+        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
+        public object CustomHtmlAttributes { set; get; }
+
+        /// <summary>
+        /// Indicates whether the field is required
+        /// </summary>
+        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
+        public string IsRequired { set; get; }
 
         #endregion
     }

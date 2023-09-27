@@ -6,13 +6,11 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject Nop.Services.Localization.ILanguageService languageService
-@using System.Globalization
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security
-@using Nop.Web.Framework.UI
 
 
 @{
@@ -47,7 +45,7 @@
     }
 
     @*Insert favicon and app icons head code*@
-    @await Component.InvokeAsync("Favicon")
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
 </head>
 <body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
     <div class="throbber">
@@ -72,13 +70,13 @@
         }
         else
         {
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderBefore })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderBefore })
             <nav class="main-header navbar navbar-expand-md navbar-dark bg-dark">
                 <ul class="navbar-nav pl-2 pl-md-0">
                     <li class="nav-item">
                         <a class="nav-link" id="nopSideBarPusher" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
                     </li>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
                 </ul>
                 <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark">
                     <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image logo d-block d-md-none d-sm-block d-sm-none">
@@ -86,11 +84,11 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav ml-auto pl-2">
                         <li class="nav-item">
-                            @await Component.InvokeAsync("AdminLanguageSelector")
+                            @await Component.InvokeAsync(typeof(AdminLanguageSelectorViewComponent))
                         </li>
                         @if (await customerService.IsRegisteredAsync(currentCustomer))
                         {
@@ -102,7 +100,7 @@
                             </li>
                         }
                         <li class="nav-item">
-                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderMiddle })
+                            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderMiddle })
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Index" asp-area="" class="nav-link">@T("Admin.Header.PublicStore")</a>
@@ -144,10 +142,10 @@
                         }
                     </ul>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
             </nav>
 
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderAfter })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderAfter })
         }
         @if (IsSectionDefined("headermenu"))
         {
@@ -168,13 +166,13 @@
                         </div>
                     </div>
                     <nav class="mt-2">
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SearchBoxBefore })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SearchBoxBefore })
                         <script>
                             $(document).ready(function () {
                                 Admin.Search.init();
                             });
                         </script>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MenuBefore })
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MenuBefore })
                         @await Html.PartialAsync("Menu")
 
                     </nav>

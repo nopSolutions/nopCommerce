@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
 {
@@ -21,7 +19,7 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic templates
+        /// The task result contains the topic templates
         /// </returns>
         Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync();
 
@@ -31,7 +29,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic template
+        /// The task result contains the topic template
         /// </returns>
         Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId);
 

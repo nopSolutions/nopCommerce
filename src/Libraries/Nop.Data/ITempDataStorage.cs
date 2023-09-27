@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Nop.Data
+﻿namespace Nop.Data
 {
     /// <summary>
     /// Represents temporary storage

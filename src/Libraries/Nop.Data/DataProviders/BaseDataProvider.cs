@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Concurrent;
 using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
+using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
 using LinqToDB;
@@ -17,6 +13,7 @@ using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Data.DataProviders.Interceptors;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -25,7 +22,7 @@ using StackExchange.Profiling.Data;
 
 namespace Nop.Data.DataProviders
 {
-    public abstract class BaseDataProvider : IMappingEntityAccessor
+    public abstract partial class BaseDataProvider : IMappingEntityAccessor
     {
         #region Fields
 
@@ -33,61 +30,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
-
-        /// <summary>
-        /// Gets an additional mapping schema
-        /// </summary>
-        private MappingSchema GetMappingSchema()
-        {
-            if (Singleton<MappingSchema>.Instance is null)
-            {
-                var mappings = new MappingSchema(ConfigurationName)
-                {
-                    MetadataReader = new FluentMigratorMetadataReader(this)
-                };
-
-                if (MiniProfillerEnabled)
-                {
-                    mappings.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
-                    mappings.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
-                    mappings.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
-                    mappings.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
-                }
-
-                Singleton<MappingSchema>.Instance = mappings;
-            }
-
-            return Singleton<MappingSchema>.Instance;
-        }
-
-        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
-        {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
-
-            if (parameter is null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            if (dataConnection.Command is IDbCommand command &&
-                command.Parameters.Count > 0 &&
-                command.Parameters.Contains(parameter.Name) &&
-                command.Parameters[parameter.Name] is IDbDataParameter param)
-            {
-                parameter.Value = param.Value;
-            }
-        }
-
-        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
-        {
-            if (dataParameters is null || dataParameters.Length == 0)
-                return;
-
-            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
-            {
-                UpdateParameterValue(dataConnection, dataParam);
-            }
-        }
+        #region Utilities
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -105,6 +48,21 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Creates database command instance using provided command text and parameters.
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        protected virtual CommandInfo CreateDbCommand(string sql, DataParameter[] dataParameters)
+        {
+            if (dataParameters is null)
+                throw new ArgumentNullException(nameof(dataParameters));
+
+            var dataConnection = CreateDataConnection(LinqToDbDataProvider);
+
+            return new CommandInfo(dataConnection, sql, dataParameters);
+        }
+
+        /// <summary>
         /// Creates the database connection
         /// </summary>
         /// <param name="dataProvider">Data provider</param>
@@ -114,10 +72,17 @@ namespace Nop.Data.DataProviders
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            return new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
             {
                 CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
+
+            if (MiniProfillerEnabled)
+            {
+                dataConnection.AddInterceptor(UnwrapProfilerInterceptor.Instance);
+            }
+
+            return dataConnection;
         }
 
         /// <summary>
@@ -125,7 +90,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected virtual IDbConnection CreateDbConnection(string connectionString = null)
+        protected virtual DbConnection CreateDbConnection(string connectionString = null)
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
 
@@ -159,7 +124,20 @@ namespace Nop.Data.DataProviders
         public virtual void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
+
+            var targetAssembly = typeof(NopDbStartup).Assembly;
+            migrationManager.ApplyUpMigrations(targetAssembly);
+
+            var typeFinder = Singleton<ITypeFinder>.Instance;
+            var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
+                .Select(t => t.Assembly)
+                .Where(assembly => !assembly.FullName?.Contains("FluentMigrator.Runner") ?? false)
+                .Distinct()
+                .ToArray();
+
+            //mark update migrations as applied
+            foreach (var assembly in mAssemblies)
+                migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
         }
 
         /// <summary>
@@ -195,6 +173,7 @@ namespace Nop.Data.DataProviders
                 return new NopEntityDescriptor
                 {
                     EntityName = tableName,
+                    SchemaName = builder.Expression.SchemaName,
                     Fields = builder.Expression.Columns.Select(column => new NopEntityFieldDescriptor
                     {
                         Name = column.Name,
@@ -253,6 +232,17 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Get or create mapping schema with specified configuration name (<see cref="ConfigurationName"/>) and base mapping schema
+        /// </summary>
+        public MappingSchema GetMappingSchema()
+        {
+            return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
+            {
+                MetadataReader = new FluentMigratorMetadataReader(this)
+            };
+        }
+
+        /// <summary>
         /// Returns queryable source for specified mapping class for current connection,
         /// mapped to database table or view.
         /// </summary>
@@ -260,7 +250,11 @@ namespace Nop.Data.DataProviders
         /// <returns>Queryable source</returns>
         public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
+            {
+                MappingSchema = GetMappingSchema(),
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+            }
                 .GetTable<TEntity>();
         }
 
@@ -307,6 +301,18 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Updates record in table, using values from entity parameter.
+        /// Record to update identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.Update(entity);
+        }
+
+        /// <summary>
         /// Updates records in table, using values from entity parameter.
         /// Records to update are identified by match on primary key value from obj value.
         /// </summary>
@@ -322,6 +328,20 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void UpdateEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            //we don't use the Merge API on this level, because this API not support all databases.
+            //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
+            foreach (var entity in entities)
+                UpdateEntity(entity);
+        }
+
+        /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
         /// </summary>
@@ -332,6 +352,18 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = CreateDataConnection();
             await dataContext.DeleteAsync(entity);
+        }
+
+        /// <summary>
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.Delete(entity);
         }
 
         /// <summary>
@@ -357,6 +389,23 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            if (entities.All(entity => entity.Id == 0))
+                foreach (var entity in entities)
+                    dataContext.Delete(entity);
+            else
+                dataContext.GetTable<TEntity>()
+                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
+                    .Delete();
+        }
+
+        /// <summary>
         /// Performs delete records in a table by a condition
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
@@ -374,7 +423,23 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
-        /// Performs bulk insert operation for entity colllection.
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// The number of deleted records
+        /// </returns>
+        public virtual int BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            return dataContext.GetTable<TEntity>()
+                .Where(predicate)
+                .Delete();
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity collection.
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -383,6 +448,17 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = CreateDataConnection(LinqToDbDataProvider);
             await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity collection.
+        /// </summary>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
         /// <summary>
@@ -396,11 +472,9 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, sql, dataParameters);
-            var affectedRecords = await command.ExecuteAsync();
-            UpdateOutputParameters(dataContext, dataParameters);
-            return affectedRecords;
+            var command = CreateDbCommand(sql, dataParameters);
+
+            return await command.ExecuteAsync();
         }
 
         /// <summary>
@@ -416,10 +490,8 @@ namespace Nop.Data.DataProviders
         /// </returns>
         public virtual Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
+            var command = CreateDbCommand(procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
-            UpdateOutputParameters(dataContext, parameters);
             return Task.FromResult<IList<T>>(rez ?? new List<T>());
         }
 

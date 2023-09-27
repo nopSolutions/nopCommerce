@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -15,8 +13,8 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
 
         #endregion
 
@@ -42,13 +40,13 @@ namespace Nop.Web.Framework.Mvc.Routing
         {
             //first try to get a language code from the route values
             var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
-            if (routeValues.TryGetValue(NopPathRouteDefaults.LanguageRouteValue, out var routeValue))
+            if (routeValues.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var routeValue))
             {
                 //ensure this language is available
                 var code = routeValue?.ToString();
                 var storeContext = EngineContext.Current.Resolve<IStoreContext>();
                 var store = storeContext.GetCurrentStore();
-                var languages = _languageService.GetAllLanguagesAsync(storeId: store.Id).Result;
+                var languages = _languageService.GetAllLanguages(storeId: store.Id);
                 var language = languages
                     .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(code, StringComparison.InvariantCultureIgnoreCase));
                 if (language is not null)

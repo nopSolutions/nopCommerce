@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -15,6 +10,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
+using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -45,44 +41,46 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly GdprSettings _gdprSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAffiliateService _affiliateService;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGeoLookupService _geoLookupService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly MediaSettings _mediaSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly GdprSettings _gdprSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
+        protected readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly IGdprService _gdprService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGeoLookupService _geoLookupService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -94,16 +92,17 @@ namespace Nop.Web.Areas.Admin.Factories
             GdprSettings gdprSettings,
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
+            IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
@@ -123,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             RewardPointsSettings rewardPointsSettings,
             TaxSettings taxSettings)
@@ -133,16 +133,17 @@ namespace Nop.Web.Areas.Admin.Factories
             _gdprSettings = gdprSettings;
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
             _affiliateService = affiliateService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
             _customerActivityService = customerActivityService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _externalAuthenticationService = externalAuthenticationService;
@@ -162,6 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeContext = storeContext;
             _storeService = storeService;
             _taxService = taxService;
+            _workContext = workContext;
             _mediaSettings = mediaSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _taxSettings = taxSettings;
@@ -234,7 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //get available customer attributes
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var customerAttributes = await _customerAttributeService.GetAllAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerModel.CustomerAttributeModel
@@ -245,10 +247,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     AttributeControlType = attribute.AttributeControlType
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new CustomerModel.CustomerAttributeValueModel
@@ -264,8 +266,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //set already selected attributes
                 if (customer != null)
                 {
-                    var selectedCustomerAttributes = await _genericAttributeService
-                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    var selectedCustomerAttributes = customer.CustomCustomerAttributesXML;
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -279,7 +280,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedCustomerAttributes);
+                                    var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -329,37 +330,17 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var separator = "<br />";
             var addressHtmlSb = new StringBuilder("<div>");
-
-            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(model.Company))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
-
-            if (_addressSettings.StreetAddressEnabled && !string.IsNullOrEmpty(model.Address1))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
-
-            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(model.Address2))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
-
-            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
-
-            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
-
-            if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
-
-            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
-
-            if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
-                addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
+            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var (addressLine, _) = await _addressService.FormatAddressAsync(address, languageId, separator, true);
+            addressHtmlSb.Append(addressLine);
 
             var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributesAsync(address?.CustomAttributes);
             if (!string.IsNullOrEmpty(customAttributesFormatted))
             {
                 //already encoded
-                addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+                addressHtmlSb.AppendFormat($"{separator}{customAttributesFormatted}");
             }
 
             addressHtmlSb.Append("</div>");
@@ -592,6 +573,31 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter customers
             _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
             _ = int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
+            var createdFromUtc = !searchModel.SearchRegistrationDateFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var createdToUtc = !searchModel.SearchRegistrationDateTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchRegistrationDateTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+            var lastActivityFromUtc = !searchModel.SearchLastActivityFrom.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var lastActivityToUtc = !searchModel.SearchLastActivityTo.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchLastActivityTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+            //exclude guests from the result when filter "by registration date" is used
+            if (createdFromUtc.HasValue || createdToUtc.HasValue)
+            {
+                if (!searchModel.SelectedCustomerRoleIds.Any())
+                {
+                    var customerRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+                    searchModel.SelectedCustomerRoleIds = customerRoles
+                        .Where(cr => cr.SystemName != NopCustomerDefaults.GuestsRoleName).Select(cr => cr.Id).ToList();
+                }
+                else
+                {
+                    var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+                    if (guestRole != null)
+                        searchModel.SelectedCustomerRoleIds.Remove(guestRole.Id);
+                }
+            }
 
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
@@ -602,6 +608,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 dayOfBirth: dayOfBirth,
                 monthOfBirth: monthOfBirth,
                 company: searchModel.SearchCompany,
+                createdFromUtc: createdFromUtc,
+                createdToUtc: createdToUtc,
+                lastActivityFromUtc: lastActivityFromUtc,
+                lastActivityToUtc: lastActivityToUtc,
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
                 ipAddress: searchModel.SearchIpAddress,
@@ -620,10 +630,9 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                     customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
-                    customerModel.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    customerModel.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    customerModel.ZipPostalCode = await _genericAttributeService
-                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                    customerModel.Company = customer.Company;
+                    customerModel.Phone = customer.Phone;
+                    customerModel.ZipPostalCode = customer.ZipPostalCode;
 
                     customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
                     customerModel.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -684,25 +693,23 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
-                    model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                    model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                    model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
-                    model.DateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                    model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                    model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                    model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                    model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
-                    model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
-                    model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                    model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                    model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
-                    model.TimeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
-                    model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
-                        .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
-                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+                    model.FirstName = customer.FirstName;
+                    model.LastName = customer.LastName;
+                    model.Gender = customer.Gender;
+                    model.DateOfBirth = customer.DateOfBirth;
+                    model.Company = customer.Company;
+                    model.StreetAddress = customer.StreetAddress;
+                    model.StreetAddress2 = customer.StreetAddress2;
+                    model.ZipPostalCode = customer.ZipPostalCode;
+                    model.City = customer.City;
+                    model.County = customer.County;
+                    model.CountryId = customer.CountryId;
+                    model.StateProvinceId = customer.StateProvinceId;
+                    model.Phone = customer.Phone;
+                    model.Fax = customer.Fax;
+                    model.TimeZoneId = customer.TimeZoneId;
+                    model.VatNumber = customer.VatNumber;
+                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
                     model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
@@ -711,6 +718,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
+                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
 
                     //prepare model affiliate
                     var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);

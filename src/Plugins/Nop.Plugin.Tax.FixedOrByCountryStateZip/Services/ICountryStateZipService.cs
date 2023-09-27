@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
@@ -7,7 +6,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     /// <summary>
     /// Tax rate service interface
     /// </summary>
-    public partial interface ICountryStateZipService
+    public interface ICountryStateZipService
     {
         /// <summary>
         /// Deletes a tax rate

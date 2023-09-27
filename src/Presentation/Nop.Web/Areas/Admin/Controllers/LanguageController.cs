@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Localization;
@@ -27,21 +22,21 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Const
 
-        private const string FLAGS_PATH = @"images\flags";
+        protected const string FLAGS_PATH = @"images\flags";
 
         #endregion
 
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILanguageModelFactory _languageModelFactory;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILanguageModelFactory _languageModelFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
 
         #endregion
 
@@ -224,6 +219,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //notification
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Updated"));
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -267,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //notification
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Deleted"));
             _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
-        
+
             return RedirectToAction("List");
         }
 
@@ -298,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 return Json(new
                 {
-                    Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"), 
+                    Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"),
                         Url.Action("GeneralCommon", "Setting"))
                 });
             }
@@ -335,9 +331,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
-                model.ResourceName = model.ResourceName.Trim();
+                model.ResourceName = model.ResourceName;
             if (model.ResourceValue != null)
-                model.ResourceValue = model.ResourceValue.Trim();
+                model.ResourceValue = model.ResourceValue;
 
             if (!ModelState.IsValid)
             {
@@ -371,9 +367,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
-                model.ResourceName = model.ResourceName.Trim();
+                model.ResourceName = model.ResourceName;
             if (model.ResourceValue != null)
-                model.ResourceValue = model.ResourceValue.Trim();
+                model.ResourceValue = model.ResourceValue;
 
             if (!ModelState.IsValid)
             {

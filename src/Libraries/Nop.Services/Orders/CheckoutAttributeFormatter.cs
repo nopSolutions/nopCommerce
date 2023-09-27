@@ -1,10 +1,10 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Html;
@@ -21,23 +21,23 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly ITaxService _taxService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public CheckoutAttributeFormatter(ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
+        public CheckoutAttributeFormatter(IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICurrencyService currencyService,
             IDownloadService downloadService,
             IHtmlFormatter htmlFormatter,
@@ -62,7 +62,7 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -84,8 +84,8 @@ namespace Nop.Services.Orders
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-            var currentLanguage = _workContext.GetWorkingLanguageAsync();
-            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(attributesXml);
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var attributes = await _checkoutAttributeParser.ParseAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
@@ -94,7 +94,7 @@ namespace Nop.Services.Orders
                 {
                     var valueStr = valuesStr[j];
                     var formattedAttribute = string.Empty;
-                    if (!attribute.ShouldHaveValues())
+                    if (!attribute.ShouldHaveValues)
                     {
                         //no values
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
@@ -151,7 +151,7 @@ namespace Nop.Services.Orders
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(attributeValueId);
+                            var attributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(attributeValueId);
 
                             if (attributeValue != null)
                             {

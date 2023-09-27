@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Services.Plugins;

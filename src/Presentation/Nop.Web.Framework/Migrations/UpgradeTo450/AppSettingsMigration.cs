@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using FluentMigrator;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
-using Nop.Web.Framework.Configuration;
+using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
@@ -17,7 +16,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
             var rootDir = fileProvider.MapPath("~/");
 
-            var config = new WebOptimizerConfig {
+            var config = new WebOptimizerConfig
+            {
                 EnableTagHelperBundling = false,
                 EnableCaching = true,
                 EnableDiskCache = true,

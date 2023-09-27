@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core;
 using FluentValidation;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -13,7 +11,7 @@ namespace Nop.Web.Framework.Validators
     /// Base class for validators
     /// </summary>
     /// <typeparam name="TModel">Type of model being validated</typeparam>
-    public abstract class BaseNopValidator<TModel> : AbstractValidator<TModel> where TModel : class
+    public abstract partial class BaseNopValidator<TModel> : AbstractValidator<TModel> where TModel : class
     {
         #region Ctor
 

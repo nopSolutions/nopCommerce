@@ -1,11 +1,7 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nop.Core;
 using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
@@ -14,18 +10,18 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// CSS bundling tag helper
     /// </summary>
     [HtmlTargetElement(LINK_TAG_NAME, Attributes = "[rel=stylesheet]")]
-    public class NopLinkTagHelper : UrlResolutionTagHelper
+    public partial class NopLinkTagHelper : UrlResolutionTagHelper
     {
         #region Constants
 
-        private const string LINK_TAG_NAME = "link";
-        private const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
-        private const string HREF_ATTRIBUTE_NAME = "href";
+        protected const string LINK_TAG_NAME = "link";
+        protected const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
+        protected const string HREF_ATTRIBUTE_NAME = "href";
 
         #endregion
 
         #region Fields
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
 
         #endregion
 

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Catalog
 {
-    public record CustomerProductReviewModel : BaseNopModel
+    public partial record CustomerProductReviewModel : BaseNopModel
     {
         public CustomerProductReviewModel()
         {
@@ -22,7 +22,7 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductReviewReviewTypeMappingModel> AdditionalProductReviewList { get; set; }
     }
 
-    public record CustomerProductReviewsModel : BaseNopModel
+    public partial record CustomerProductReviewsModel : BaseNopModel
     {
         public CustomerProductReviewsModel()
         {
@@ -39,7 +39,7 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public partial record CustomerProductReviewsRouteValues : IRouteValues
         {
-            public int pageNumber { get; set; }
+            public int PageNumber { get; set; }
         }
 
         #endregion

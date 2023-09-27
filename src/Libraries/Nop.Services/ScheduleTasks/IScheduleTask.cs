@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Services.ScheduleTasks
+﻿namespace Nop.Services.ScheduleTasks
 {
     /// <summary>
     /// Interface that should be implemented by each task
@@ -10,6 +8,7 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Executes a task
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ExecuteAsync();
     }
 }

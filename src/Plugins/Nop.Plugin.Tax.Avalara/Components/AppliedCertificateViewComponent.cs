@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Customers;
@@ -14,17 +12,16 @@ namespace Nop.Plugin.Tax.Avalara.Components
     /// <summary>
     /// Represents a view component to display applied exemption certificate on the order confirmation page
     /// </summary>
-    [ViewComponent(Name = AvalaraTaxDefaults.APPLIED_CERTIFICATE_VIEW_COMPONENT_NAME)]
     public class AppliedCertificateViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 

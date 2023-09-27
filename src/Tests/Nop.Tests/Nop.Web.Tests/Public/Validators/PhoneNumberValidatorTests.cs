@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
@@ -29,6 +28,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
         public async Task IsValidTests()
         {
             //optional value is not valid
+            _customerSettings.PhoneRequired = true;
             var result = await _validator.ValidateAsync(new Person { PhoneNumber = null });
             result.IsValid.Should().BeFalse();
             result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
@@ -50,8 +50,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
             result.IsValid.Should().BeFalse();
             result = await _validator.ValidateAsync(new Person { PhoneNumber = "123456789" });
             result.IsValid.Should().BeTrue();
+            _customerSettings.PhoneRequired = false;
             result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
-            result.IsValid.Should().BeFalse();
+            result.IsValid.Should().BeTrue();
             result = await _validator.ValidateAsync(new Person { PhoneNumber = "+123456789" });
             result.IsValid.Should().BeFalse();
         }

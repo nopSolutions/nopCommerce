@@ -1,11 +1,9 @@
-﻿using System.Threading.Tasks;
-
-namespace Nop.Web.Framework.Menu
+﻿namespace Nop.Web.Framework.Menu
 {
     /// <summary>
     /// XML sitemap interface
     /// </summary>
-    public interface IXmlSiteMap
+    public partial interface IXmlSiteMap
     {
         /// <summary>
         /// Root node

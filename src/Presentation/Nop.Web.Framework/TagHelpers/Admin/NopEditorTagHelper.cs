@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -13,69 +10,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-editor" tag helper
     /// </summary>
     [HtmlTargetElement("nop-editor", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopEditorTagHelper : TagHelper
+    public partial class NopEditorTagHelper : TagHelper
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
-        private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
-        private const string RENDER_FORM_CONTROL_CLASS_ATTRIBUTE_NAME = "asp-render-form-control-class";
-        private const string TEMPLATE_ATTRIBUTE_NAME = "asp-template";
-        private const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
+        protected const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
+        protected const string RENDER_FORM_CONTROL_CLASS_ATTRIBUTE_NAME = "asp-render-form-control-class";
+        protected const string TEMPLATE_ATTRIBUTE_NAME = "asp-template";
+        protected const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// Custom html attributes
-        /// </summary>
-        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
-        public object CustomHtmlAttributes { set; get; }
-
-        /// <summary>
-        /// Indicates whether the field is required
-        /// </summary>
-        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
-        public string IsRequired { set; get; }
-
-        /// <summary>
-        /// Indicates whether the "form-control" class shold be added to the input
-        /// </summary>
-        [HtmlAttributeName(RENDER_FORM_CONTROL_CLASS_ATTRIBUTE_NAME)]
-        public string RenderFormControlClass { set; get; }
-
-        /// <summary>
-        /// Editor template for the field
-        /// </summary>
-        [HtmlAttributeName(TEMPLATE_ATTRIBUTE_NAME)]
-        public string Template { set; get; }
-
-        /// <summary>
-        /// Postfix
-        /// </summary>
-        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
-        public string Postfix { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -137,7 +87,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
-            var pattern = $"{nameof(ILocalizedModel<object>.Locales)}" + @"(?=\[\w+\]\.)";
+            var pattern = @"(?=\[\w+\]\.)";
             if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
             {
                 var prefix = _htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
@@ -150,6 +100,53 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             return Task.CompletedTask;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// An expression to be evaluated against the current model
+        /// </summary>
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// Custom html attributes
+        /// </summary>
+        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
+        public object CustomHtmlAttributes { set; get; }
+
+        /// <summary>
+        /// Indicates whether the field is required
+        /// </summary>
+        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
+        public string IsRequired { set; get; }
+
+        /// <summary>
+        /// Indicates whether the "form-control" class shold be added to the input
+        /// </summary>
+        [HtmlAttributeName(RENDER_FORM_CONTROL_CLASS_ATTRIBUTE_NAME)]
+        public string RenderFormControlClass { set; get; }
+
+        /// <summary>
+        /// Editor template for the field
+        /// </summary>
+        [HtmlAttributeName(TEMPLATE_ATTRIBUTE_NAME)]
+        public string Template { set; get; }
+
+        /// <summary>
+        /// Postfix
+        /// </summary>
+        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
+        public string Postfix { set; get; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

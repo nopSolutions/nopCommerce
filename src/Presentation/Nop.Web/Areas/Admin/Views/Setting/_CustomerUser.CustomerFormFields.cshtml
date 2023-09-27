@@ -2,39 +2,24 @@
 
 <script>
     $(document).ready(function () {
-        $("#@Html.IdFor(model => model.CustomerSettings.FirstNameEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.FirstNameRequired)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.LastNameRequired)").click(toggleCustomerRequiredFormField);
-		$("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.CityEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.CountyEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
-        $("#@Html.IdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
 
         toggleCustomerCountryFormField();
         toggleCustomerStateProvinceFormField();
         toggleCustomerRequiredFormField();
-        toggleNewsletterEnabledField();
-        toggleHideNewsletterBlock();
     });
 
     function toggleCustomerCountryFormField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
             $('#pnlCustomerCountryRequired').showElement();
+            $('#pnlCustomerDefaultCountryId').showElement();
             $('#pnlCustomerStateProvinceEnabled').showElement();
             toggleCustomerStateProvinceFormField();
         } else {
             $('#pnlCustomerCountryRequired').hideElement();
+            $('#pnlCustomerDefaultCountryId').hideElement();
             $('#pnlCustomerStateProvinceEnabled').hideElement();
             toggleCustomerStateProvinceFormField();
         }
@@ -50,94 +35,11 @@
     }
 
     function toggleCustomerRequiredFormField() {
-        if ($('#@Html.IdFor(model => model.CustomerSettings.FirstNameEnabled)').is(':checked')) {
-            $('#pnlCustomerFirstNameRequired').showElement();
-        } else {
-            $('#pnlCustomerFirstNameRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)').is(':checked')) {
-            $('#pnlCustomerLastNameRequired').showElement();
-        } else {
-            $('#pnlCustomerLastNameRequired').hideElement();
-        }
-		
-		if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
-            $('#pnlCustomerDateOfBirthRequired').showElement();
-        } else {
-            $('#pnlCustomerDateOfBirthRequired').hideElement();
-        }
-
         if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
             $('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
             $('#pnlDateOfBirthMinimumAge').showElement();
         } else {
             $('#pnlDateOfBirthMinimumAge').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
-            $('#pnlCustomerCompanyRequired').showElement();
-        } else {
-            $('#pnlCustomerCompanyRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
-            $('#pnlCustomerStreetAddressRequired').showElement();
-        } else {
-            $('#pnlCustomerStreetAddressRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
-            $('#pnlCustomerStreetAddress2Required').showElement();
-        } else {
-            $('#pnlCustomerStreetAddress2Required').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
-            $('#pnlCustomerZipPostalCodeRequired').showElement();
-        } else {
-            $('#pnlCustomerZipPostalCodeRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
-            $('#pnlCustomerCityRequired').showElement();
-        } else {
-            $('#pnlCustomerCityRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.CountyEnabled)').is(':checked')) {
-            $('#pnlCustomerCountyRequired').showElement();
-        } else {
-            $('#pnlCustomerCountyRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
-            $('#pnlCustomerPhoneRequired').showElement();
-        } else {
-            $('#pnlCustomerPhoneRequired').hideElement();
-        }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
-            $('#pnlCustomerFaxRequired').showElement();
-        } else {
-            $('#pnlCustomerFaxRequired').hideElement();
-        }
-    }
-
-    function toggleNewsletterEnabledField() {
-        if ($('#@Html.IdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
-            $('#pnlCustomerNewsletterTickedByDefault').showElement();
-        } else {
-            $('#pnlCustomerNewsletterTickedByDefault').hideElement();
-        }
-    }
-
-    function toggleHideNewsletterBlock() {
-        if ($('#@Html.IdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
-            $('#pnlNewsletterBlockAllowToUnsubscribe').hideElement();
-        }
-        else {
-            $('#pnlNewsletterBlockAllowToUnsubscribe').showElement();
         }
     }
 </script>
@@ -164,8 +66,8 @@
             <span asp-validation-for="CustomerSettings.FirstNameEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.FirstNameEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerFirstNameRequired">
+    <nop-nested-setting asp-for="CustomerSettings.FirstNameEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FirstNameRequired" />
             </div>
@@ -184,8 +86,8 @@
             <span asp-validation-for="CustomerSettings.LastNameEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.LastNameEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerLastNameRequired">
+    <nop-nested-setting asp-for="CustomerSettings.LastNameEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.LastNameRequired" />
             </div>
@@ -204,8 +106,8 @@
             <span asp-validation-for="CustomerSettings.DateOfBirthEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.DateOfBirthEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerDateOfBirthRequired">
+    <nop-nested-setting asp-for="CustomerSettings.DateOfBirthEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DateOfBirthRequired" />
             </div>
@@ -235,8 +137,8 @@
             <span asp-validation-for="CustomerSettings.CompanyEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.CompanyEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerCompanyRequired">
+    <nop-nested-setting asp-for="CustomerSettings.CompanyEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CompanyRequired" />
             </div>
@@ -255,8 +157,8 @@
             <span asp-validation-for="CustomerSettings.StreetAddressEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.StreetAddressEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerStreetAddressRequired">
+    <nop-nested-setting asp-for="CustomerSettings.StreetAddressEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.StreetAddressRequired" />
             </div>
@@ -275,8 +177,8 @@
             <span asp-validation-for="CustomerSettings.StreetAddress2Enabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.StreetAddress2Enabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerStreetAddress2Required">
+    <nop-nested-setting asp-for="CustomerSettings.StreetAddress2Enabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.StreetAddress2Required" />
             </div>
@@ -295,8 +197,8 @@
             <span asp-validation-for="CustomerSettings.ZipPostalCodeEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.ZipPostalCodeEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerZipPostalCodeRequired">
+    <nop-nested-setting asp-for="CustomerSettings.ZipPostalCodeEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.ZipPostalCodeRequired" />
             </div>
@@ -315,8 +217,8 @@
             <span asp-validation-for="CustomerSettings.CityEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.CityEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerCityRequired">
+    <nop-nested-setting asp-for="CustomerSettings.CityEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CityRequired" />
             </div>
@@ -335,8 +237,8 @@
             <span asp-validation-for="CustomerSettings.CountyEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.CountyEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerCountyRequired">
+    <nop-nested-setting asp-for="CustomerSettings.CountyEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CountyRequired" />
             </div>
@@ -363,6 +265,15 @@
             <div class="col-md-9">
                 <nop-editor asp-for="CustomerSettings.CountryRequired" />
                 <span asp-validation-for="CustomerSettings.CountryRequired"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCustomerDefaultCountryId">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.DefaultCountryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="CustomerSettings.DefaultCountryId" asp-items="Model.CustomerSettings.AvailableCountries" />
+                <span asp-validation-for="CustomerSettings.DefaultCountryId"></span>
             </div>
         </div>
     </nop-nested-setting>
@@ -395,8 +306,8 @@
             <span asp-validation-for="CustomerSettings.PhoneEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.PhoneEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerPhoneRequired">
+    <nop-nested-setting asp-for="CustomerSettings.PhoneEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PhoneRequired" />
             </div>
@@ -415,8 +326,8 @@
             <span asp-validation-for="CustomerSettings.FaxEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.FaxEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerFaxRequired">
+    <nop-nested-setting asp-for="CustomerSettings.FaxEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FaxRequired" />
             </div>
@@ -444,8 +355,8 @@
             <span asp-validation-for="CustomerSettings.NewsletterEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.NewsletterEnabled" disable-auto-generation="true">
-        <div class="form-group row" id="pnlCustomerNewsletterTickedByDefault">
+    <nop-nested-setting asp-for="CustomerSettings.NewsletterEnabled">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.NewsletterTickedByDefault" />
             </div>

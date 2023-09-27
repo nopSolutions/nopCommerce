@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Customer settings
     /// </summary>
-    public class CustomerSettings : ISettings
+    public partial class CustomerSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether usernames are used instead of emails
@@ -68,6 +68,11 @@ namespace Nop.Core.Domain.Customers
         public int PasswordMinLength { get; set; }
 
         /// <summary>
+        /// Gets or sets a maximum password length
+        /// </summary>
+        public int PasswordMaxLength { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether password are have least one lowercase
         /// </summary>
         public bool PasswordRequireLowercase { get; set; }
@@ -81,7 +86,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether password are have least one non alphanumeric character
         /// </summary>
         public bool PasswordRequireNonAlphanumeric { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether password are have least one digit
         /// </summary>
@@ -235,7 +240,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }        
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         #region Form fields
 
@@ -350,6 +355,11 @@ namespace Nop.Core.Domain.Customers
         public bool CountryRequired { get; set; }
 
         /// <summary>
+        /// Gets or sets a Default Country
+        /// </summary>
+        public int? DefaultCountryId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'State / province' is enabled
         /// </summary>
         public bool StateProvinceEnabled { get; set; }
@@ -383,7 +393,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether privacy policy should accepted during registration
         /// </summary>
         public bool AcceptPrivacyPolicyEnabled { get; set; }
-        
+
         #endregion
     }
 }

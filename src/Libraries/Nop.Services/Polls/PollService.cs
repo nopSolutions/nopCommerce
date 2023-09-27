@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Polls;
 using Nop.Data;
 using Nop.Services.Stores;
@@ -15,10 +12,10 @@ namespace Nop.Services.Polls
     {
         #region Fields
 
-        private readonly IRepository<Poll> _pollRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<Poll> _pollRepository;
+        protected readonly IRepository<PollAnswer> _pollAnswerRepository;
+        protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -73,6 +70,12 @@ namespace Nop.Services.Polls
         {
             var query = _pollRepository.Table;
 
+            if (!showHidden || storeId > 0)
+            {
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            }
+
             //whether to load not published, not started and expired polls
             if (!showHidden)
             {
@@ -81,9 +84,6 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => !poll.StartDateUtc.HasValue || poll.StartDateUtc <= utcNow);
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
             }
-
-            //apply store mapping constraints
-            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
             //load homepage polls only
             if (loadShownOnHomepageOnly)

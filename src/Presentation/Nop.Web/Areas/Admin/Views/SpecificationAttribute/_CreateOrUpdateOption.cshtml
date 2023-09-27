@@ -43,7 +43,7 @@
     <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsTop, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsTop, additionalData = Model })
                     <div class="card card-default card-popup">
                         <div class="card-body">
                             @(await Html.LocalizedEditorAsync<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
@@ -107,7 +107,7 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsBottom, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsBottom, additionalData = Model })
                 </div>
             </div>
 </div>

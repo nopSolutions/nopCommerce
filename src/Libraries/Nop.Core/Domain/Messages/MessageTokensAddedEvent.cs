@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// A container for tokens that are added.
     /// </summary>
     /// <typeparam name="U">Type</typeparam>
-    public class MessageTokensAddedEvent<U>
+    public partial class MessageTokensAddedEvent<U>
     {
         /// <summary>
         /// Ctor

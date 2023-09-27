@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -10,7 +8,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// "nop-antiforgery-token" tag helper
     /// </summary>
     [HtmlTargetElement("nop-antiforgery-token", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopAntiForgeryTokenTagHelper : TagHelper
+    public partial class NopAntiForgeryTokenTagHelper : TagHelper
     {
         #region Properties
 

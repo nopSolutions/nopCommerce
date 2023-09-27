@@ -1,0 +1,30 @@
+﻿@model CustomerTokenModel
+
+<input class="token-id" asp-for="Id" type="hidden" />
+<div class="edit-address">
+    <div class="inputs">
+        <label asp-for="CardNumber" asp-postfix=":"></label>
+        <input type="text" class="card-number" asp-for="CardNumber" autocomplete="off" maxlength="22" />
+        <nop-required />
+        <span asp-validation-for="CardNumber"></span>
+    </div>
+    <div class="inputs">
+        <label asp-for="ExpireMonth" asp-postfix=":"></label>
+        <select asp-for="ExpireMonth" asp-items="Model.ExpireMonths" style="width:65px;"></select>
+        <select asp-for="ExpireYear" asp-items="Model.ExpireYears" style="width:100px;"></select>
+        <span asp-validation-for="ExpireMonth"></span>
+        <span asp-validation-for="ExpireYear"></span>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(document).ready(function() {
+        makeCardNumberReadOnly();
+    });
+
+    function makeCardNumberReadOnly() {
+        if ($('.token-id').val() != 0) {
+            $('.card-number').attr('disabled', true);
+        }
+    }
+</script>

@@ -1,12 +1,2 @@
 @model DateTime
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString())"/>
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDateTimePicker({
-            popup: {
-                position: "bottom right",
-                origin: "top right"
-            }
-        });
-    });
-</script>
+<input asp-for="@Model" class="form-control" type="datetime-local" />

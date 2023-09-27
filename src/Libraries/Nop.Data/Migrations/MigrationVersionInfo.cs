@@ -1,5 +1,4 @@
-﻿using System;
-using FluentMigrator.Runner.VersionTableInfo;
+﻿using FluentMigrator.Runner.VersionTableInfo;
 using Nop.Core;
 
 namespace Nop.Data.Migrations
@@ -7,7 +6,7 @@ namespace Nop.Data.Migrations
     /// <summary>
     /// The migration version table
     /// </summary>
-    public class MigrationVersionInfo : BaseEntity, IVersionTableMetaData
+    public partial class MigrationVersionInfo : BaseEntity, IVersionTableMetaData
     {
         #region Ctor
 

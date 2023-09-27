@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables
 {
     /// <summary>
     /// Represent DataTables filter parameter

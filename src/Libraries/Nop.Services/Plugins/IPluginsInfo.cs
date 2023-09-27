@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents an information about plugins
@@ -16,25 +12,24 @@ namespace Nop.Services.Plugins
         Task SaveAsync();
 
         /// <summary>
-        /// Save plugins info to the file
-        /// </summary>
-        void Save();
-
-        /// <summary>
         /// Get plugins info
         /// </summary>
         /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the rue if data are loaded, otherwise False
+        /// The true if data are loaded, otherwise False
         /// </returns>
-        Task<bool> LoadPluginInfoAsync();
+        void LoadPluginInfo();
+
+        /// <summary>
+        /// Save plugins info to the file
+        /// </summary>
+        void Save();
 
         /// <summary>
         /// Create copy from another instance of IPluginsInfo interface
         /// </summary>
         /// <param name="pluginsInfo">Plugins info</param>
         void CopyFrom(IPluginsInfo pluginsInfo);
-        
+
         /// <summary>
         /// Gets or sets the list of all installed plugin
         /// </summary>
@@ -63,11 +58,15 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets or sets a collection of plugin descriptors of all deployed plugins
         /// </summary>
-        IList<PluginDescriptor> PluginDescriptors { get; set; }
+        IList<(PluginDescriptor pluginDescriptor, bool needToDeploy)> PluginDescriptors { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of plugin names which are not compatible with the current version
+        /// Gets or sets the list of plugin which are not compatible with the current version
         /// </summary>
-        IList<string> IncompatiblePlugins { get; set; }
+        /// <remarks>
+        /// Key - the system name of plugin.
+        /// Value - the incompatibility type.
+        /// </remarks>
+        IDictionary<string, PluginIncompatibleType> IncompatiblePlugins { get; set; }
     }
 }

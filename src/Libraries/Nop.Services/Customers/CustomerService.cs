@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -30,28 +25,29 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IRepository<Address> _customerAddressRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
-        private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IRepository<Address> _customerAddressRepository;
+        protected readonly IRepository<BlogComment> _blogCommentRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
+        protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
+        protected readonly IRepository<CustomerRole> _customerRoleRepository;
+        protected readonly IRepository<ForumPost> _forumPostRepository;
+        protected readonly IRepository<ForumTopic> _forumTopicRepository;
+        protected readonly IRepository<GenericAttribute> _gaRepository;
+        protected readonly IRepository<NewsComment> _newsCommentRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<ProductReview> _productReviewRepository;
+        protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
+        protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -78,7 +74,8 @@ namespace Nop.Services.Customers
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings)
         {
             _customerSettings = customerSettings;
             _genericAttributeService = genericAttributeService;
@@ -102,6 +99,7 @@ namespace Nop.Services.Customers
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -115,6 +113,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="lastActivityFromUtc">Last activity date from (UTC); null to load all records</param>
+        /// <param name="lastActivityToUtc">Last activity date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
@@ -136,6 +136,7 @@ namespace Nop.Services.Customers
         /// The task result contains the customers
         /// </returns>
         public virtual async Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? lastActivityFromUtc = null, DateTime? lastActivityToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
@@ -148,6 +149,10 @@ namespace Nop.Services.Customers
                     query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
                 if (createdToUtc.HasValue)
                     query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+                if (lastActivityFromUtc.HasValue)
+                    query = query.Where(c => lastActivityFromUtc.Value <= c.LastActivityDateUtc);
+                if (lastActivityToUtc.HasValue)
+                    query = query.Where(c => lastActivityToUtc.Value >= c.LastActivityDateUtc);
                 if (affiliateId > 0)
                     query = query.Where(c => affiliateId == c.AffiliateId);
                 if (vendorId > 0)
@@ -169,109 +174,23 @@ namespace Nop.Services.Customers
                 if (!string.IsNullOrWhiteSpace(username))
                     query = query.Where(c => c.Username.Contains(username));
                 if (!string.IsNullOrWhiteSpace(firstName))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
-                                    z.Attribute.Value.Contains(firstName))
-                        .Select(z => z.Customer);
-                }
-
+                    query = query.Where(c => c.FirstName.Contains(firstName));
                 if (!string.IsNullOrWhiteSpace(lastName))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
-                                    z.Attribute.Value.Contains(lastName))
-                        .Select(z => z.Customer);
-                }
-
-                //date of birth is stored as a string into database.
-                //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
-                //so let's search it as a string
-                if (dayOfBirth > 0 && monthOfBirth > 0)
-                {
-                    //both are specified
-                    var dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" +
-                                         dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-
-                    //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
-                    //dateOfBirthStr.Length = 5
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Substring(5, 5) == dateOfBirthStr)
-                        .Select(z => z.Customer);
-                }
-                else if (dayOfBirth > 0)
-                {
-                    //only day is specified
-                    var dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-
-                    //z.Attribute.Value.Length - dateOfBirthStr.Length = 8
-                    //dateOfBirthStr.Length = 2
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Substring(8, 2) == dateOfBirthStr)
-                        .Select(z => z.Customer);
-                }
-                else if (monthOfBirth > 0)
-                {
-                    //only month is specified
-                    var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
-                                    z.Attribute.Value.Contains(dateOfBirthStr))
-                        .Select(z => z.Customer);
-                }
-
-                //search by company
+                    query = query.Where(c => c.LastName.Contains(lastName));
                 if (!string.IsNullOrWhiteSpace(company))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
-                                    z.Attribute.Value.Contains(company))
-                        .Select(z => z.Customer);
-                }
-
-                //search by phone
+                    query = query.Where(c => c.Company.Contains(company));
                 if (!string.IsNullOrWhiteSpace(phone))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
-                                    z.Attribute.Value.Contains(phone))
-                        .Select(z => z.Customer);
-                }
-
-                //search by zip
+                    query = query.Where(c => c.Phone.Contains(phone));
                 if (!string.IsNullOrWhiteSpace(zipPostalCode))
-                {
-                    query = query
-                        .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new { Customer = x, Attribute = y })
-                        .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
-                                    z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
-                                    z.Attribute.Value.Contains(zipPostalCode))
-                        .Select(z => z.Customer);
-                }
+                    query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
+
+                if (dayOfBirth > 0 && monthOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
+                        c.DateOfBirth.Value.Month == monthOfBirth);
+                else if (dayOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
+                else if (monthOfBirth > 0)
+                    query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
                 //search by IpAddress
                 if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
@@ -444,6 +363,27 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Get customers by guids
+        /// </summary>
+        /// <param name="customerGuids">Customer guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
+        public virtual async Task<IList<Customer>> GetCustomersByGuidsAsync(Guid[] customerGuids)
+        {
+            if (customerGuids == null)
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        where customerGuids.Contains(c.CustomerGuid)
+                        select c;
+            var customers = await query.ToListAsync();
+
+            return customers;
+        }
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
@@ -460,9 +400,9 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-           
+
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
-            
+
             return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
@@ -711,8 +651,6 @@ namespace Nop.Services.Customers
             //clear selected payment method
             if (clearPaymentMethod)
                 await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
-
-            await UpdateCustomerAsync(customer);
         }
 
         /// <summary>
@@ -772,6 +710,36 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets a tax display type for the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        public virtual async Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //default tax display type
+            var taxDisplayType = _taxSettings.TaxDisplayType;
+
+            //whether customers are allowed to select tax display type and the customer has previously saved one
+            if (_taxSettings.AllowCustomersToSelectTaxDisplayType && customer.TaxDisplayTypeId.HasValue)
+                taxDisplayType = (TaxDisplayType)customer.TaxDisplayTypeId.Value;
+            else
+            {
+                //default tax type by customer roles
+                var defaultRoleTaxDisplayType = await GetCustomerDefaultTaxDisplayTypeAsync(customer);
+                if (defaultRoleTaxDisplayType.HasValue)
+                    taxDisplayType = defaultRoleTaxDisplayType.Value;
+            }
+
+            return taxDisplayType;
+        }
+
+        /// <summary>
         /// Gets a default tax display type (if configured)
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -804,12 +772,17 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+            var firstName = customer.FirstName;
+            var lastName = customer.LastName;
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
-                fullName = $"{firstName} {lastName}";
+            {
+                //do not inject ILocalizationService via constructor because it'll cause circular references
+                var format = await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.FullNameFormat");
+
+                fullName = string.Format(format, firstName, lastName);
+            }
             else
             {
                 if (!string.IsNullOrWhiteSpace(firstName))
@@ -854,7 +827,7 @@ namespace Nop.Services.Customers
                     result = await GetCustomerFullNameAsync(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    result = customer.FirstName;
                     break;
                 default:
                     break;
@@ -1134,6 +1107,29 @@ namespace Nop.Services.Customers
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
+
+        /// <summary>
+        /// Returns a list of guids of not existing customers
+        /// </summary>
+        /// <param name="guids">The guids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of guids not existing customers
+        /// </returns>
+        public virtual async Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids)
+        {
+            if (guids == null)
+                throw new ArgumentNullException(nameof(guids));
+
+            var query = _customerRepository.Table;
+            var queryFilter = guids.Distinct().ToArray();
+            //filtering by guid
+            var filter = await query.Select(c => c.CustomerGuid)
+                .Where(c => queryFilter.Contains(c))
+                .ToListAsync();
+
+            return queryFilter.Except(filter).ToArray();
         }
 
         #endregion

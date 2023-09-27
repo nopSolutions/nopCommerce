@@ -19,7 +19,7 @@
 {
     @section left
     {
-        @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
+        @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.MultiFactorAuthentication })
     }
 }
 
@@ -34,7 +34,8 @@
             <h1>@T("PageTitle.MultiFactorAuthentication")</h1>
         }
     </div>
-    <div class="page-body">        
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerMultiFactorAuthenticationTop, additionalData = Model })
         <div class="description">
             @T("Account.MultiFactorAuthentication.Description")
         </div>
@@ -78,6 +79,7 @@
             <div class="buttons">
                 <button type="submit" id="save-mfa-settings-button" name="save-mfa-settsing-button" class="button-1 save-customer-mfa-button">@T("Common.Save")</button>
             </div>
-        </form>        
+        </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerMultiFactorAuthenticationBottom, additionalData = Model })
     </div>
 </div>

@@ -1,8 +1,10 @@
-﻿@using Nop.Core
+﻿@using Nop.Core.Domain.Catalog
 @using Nop.Services.Helpers
-@using Nop.Web.Framework.UI
+
+@inject CatalogSettings catalogSettings
 @inject IThemeContext themeContext
 @inject IUserAgentHelper userAgentHelper
+
 @{
     Layout ="";
     var themeName = await themeContext.GetWorkingThemeNameAsync();
@@ -10,8 +12,13 @@
 
     //add main CSS file
     NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+    
+    //add swiper css file
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
 
     //add jQuery UI css file
     NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
-
 }

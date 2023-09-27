@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Common
@@ -12,8 +9,8 @@ namespace Nop.Services.Common
     public partial class MaintenanceService : IMaintenanceService
     {
         #region Fields
-       
-        private readonly INopFileProvider _fileProvider;
+
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -53,13 +50,13 @@ namespace Nop.Services.Common
         {
             var path = GetBackupDirectoryPath();
 
-            if (!_fileProvider.DirectoryExists(path)) 
+            if (!_fileProvider.DirectoryExists(path))
                 throw new NopException("Backup directory not exists");
 
             return _fileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
                 .OrderByDescending(p => _fileProvider.GetLastWriteTime(p)).ToList();
         }
-        
+
         /// <summary>
         /// Returns the path to the backup file
         /// </summary>

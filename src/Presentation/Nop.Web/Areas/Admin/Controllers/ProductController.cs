@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -14,6 +8,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -35,6 +30,8 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -42,40 +39,43 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICopyProductService _copyProductService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly IDownloadService _downloadService;
-        private readonly IExportManager _exportManager;
-        private readonly IImportManager _importManager;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPdfService _pdfService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISettingService _settingService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly IAclService _aclService;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICopyProductService _copyProductService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IExportManager _exportManager;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpClientFactory _httpClientFactory;
+        protected readonly IImportManager _importManager;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISettingService _settingService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVideoService _videoService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -90,6 +90,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IDiscountService discountService,
             IDownloadService downloadService,
             IExportManager exportManager,
+            IGenericAttributeService genericAttributeService,
+            IHttpClientFactory httpClientFactory,
             IImportManager importManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -100,9 +102,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPdfService pdfService,
             IPermissionService permissionService,
             IPictureService pictureService,
+            IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
-            IProductAttributeFormatter productAttributeFormatter,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
@@ -112,7 +114,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISpecificationAttributeService specificationAttributeService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
-            IGenericAttributeService genericAttributeService,
+            IVideoService videoService,
+            IWebHelper webHelper,
             IWorkContext workContext,
             VendorSettings vendorSettings)
         {
@@ -125,6 +128,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _discountService = discountService;
             _downloadService = downloadService;
             _exportManager = exportManager;
+            _genericAttributeService = genericAttributeService;
+            _httpClientFactory = httpClientFactory;
             _importManager = importManager;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -135,9 +140,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pdfService = pdfService;
             _permissionService = permissionService;
             _pictureService = pictureService;
+            _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
-            _productAttributeFormatter = productAttributeFormatter;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _productTagService = productTagService;
@@ -147,7 +152,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _specificationAttributeService = specificationAttributeService;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
-            _genericAttributeService = genericAttributeService;
+            _videoService = videoService;
+            _webHelper = webHelper;
             _workContext = workContext;
             _vendorSettings = vendorSettings;
         }
@@ -322,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
         {
-            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
 
             foreach (var discount in allDiscounts)
             {
@@ -490,20 +496,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             return attributesXml;
-        }
-
-        protected virtual string[] ParseProductTags(string productTags)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrWhiteSpace(productTags))
-                return result.ToArray();
-
-            var values = productTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var val in values)
-                if (!string.IsNullOrEmpty(val.Trim()))
-                    result.Add(val.Trim());
-
-            return result.ToArray();
         }
 
         protected virtual async Task SaveProductWarehouseInventoryAsync(Product product, ProductModel model)
@@ -706,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true));
                 if (warnings.Count != 0)
                     continue;
 
@@ -721,10 +713,73 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ManufacturerPartNumber = null,
                     Gtin = null,
                     OverriddenPrice = null,
-                    NotifyAdminForQuantityBelow = 1,
-                    PictureId = 0
+                    NotifyAdminForQuantityBelow = 1
                 };
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
+            }
+        }
+
+        protected virtual async Task PingVideoUrlAsync(string videoUrl)
+        {
+            var path = videoUrl.StartsWith("/")
+                ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}"
+                : videoUrl;
+
+            var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+            await client.GetStringAsync(path);
+        }
+
+        protected virtual async Task SaveAttributeCombinationPicturesAsync(Product product, ProductAttributeCombination combination, ProductAttributeCombinationModel model)
+        {
+            var existingCombinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
+            var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
+
+            //delete manufacturers
+            foreach (var existingCombinationPicture in existingCombinationPictures)
+                if (!model.PictureIds.Contains(existingCombinationPicture.PictureId) || !productPictureIds.Contains(existingCombinationPicture.PictureId))
+                    await _productAttributeService.DeleteProductAttributeCombinationPictureAsync(existingCombinationPicture);
+
+            //add manufacturers
+            foreach (var pictureId in model.PictureIds)
+            {
+                if (!productPictureIds.Contains(pictureId))
+                    continue;
+
+                if (_productAttributeService.FindProductAttributeCombinationPicture(existingCombinationPictures, combination.Id, pictureId) == null)
+                {
+                    await _productAttributeService.InsertProductAttributeCombinationPictureAsync(new ProductAttributeCombinationPicture
+                    {
+                        ProductAttributeCombinationId = combination.Id,
+                        PictureId = pictureId
+                    });
+                }
+            }
+        }
+
+        protected virtual async Task SaveAttributeValuePicturesAsync(Product product, ProductAttributeValue value, ProductAttributeValueModel model)
+        {
+            var existingValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id);
+            var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
+
+            //delete manufacturers
+            foreach (var existingValuePicture in existingValuePictures)
+                if (!model.PictureIds.Contains(existingValuePicture.PictureId) || !productPictureIds.Contains(existingValuePicture.PictureId))
+                    await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+
+            //add manufacturers
+            foreach (var pictureId in model.PictureIds)
+            {
+                if (!productPictureIds.Contains(pictureId))
+                    continue;
+
+                if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id, pictureId) == null)
+                {
+                    await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
+                    {
+                        ProductAttributeValueId = value.Id,
+                        PictureId = pictureId
+                    });
+                }
             }
         }
 
@@ -864,7 +919,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SaveDiscountMappingsAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
+                await _productTagService.UpdateProductTagsAsync(product, model.SelectedProductTags.ToArray());
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
@@ -986,7 +1041,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await UpdateLocalesAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, ParseProductTags(model.ProductTags));
+                await _productTagService.UpdateProductTagsAsync(product, model.SelectedProductTags.ToArray());
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
@@ -1148,7 +1203,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (currentVendor != null && originalProduct.VendorId != currentVendor.Id)
                     return RedirectToAction("List");
 
-                var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyMultimedia);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
 
@@ -1633,48 +1688,55 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Product pictures
 
-        public virtual async Task<IActionResult> ProductPictureAdd(int pictureId, int displayOrder,
-            string overrideAltAttribute, string overrideTitleAttribute, int productId)
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> ProductPictureAdd(int productId, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (pictureId == 0)
+            if (productId == 0)
                 throw new ArgumentException();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id");
 
+            var files = form.Files.ToList();
+            if (!files.Any())
+                return Json(new { success = false });
+
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
             if (currentVendor != null && product.VendorId != currentVendor.Id)
                 return RedirectToAction("List");
-
-            if ((await _productService.GetProductPicturesByProductIdAsync(productId)).Any(p => p.PictureId == pictureId))
-                return Json(new { Result = false });
-
-            //try to get a picture with the specified id
-            var picture = await _pictureService.GetPictureByIdAsync(pictureId)
-                ?? throw new ArgumentException("No picture found with the specified id");
-
-            await _pictureService.UpdatePictureAsync(picture.Id,
-                await _pictureService.LoadPictureBinaryAsync(picture),
-                picture.MimeType,
-                picture.SeoFilename,
-                overrideAltAttribute,
-                overrideTitleAttribute);
-
-            await _pictureService.SetSeoFilenameAsync(pictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
-
-            await _productService.InsertProductPictureAsync(new ProductPicture
+            try
             {
-                PictureId = pictureId,
-                ProductId = productId,
-                DisplayOrder = displayOrder
-            });
+                foreach (var file in files)
+                {
+                    //insert picture
+                    var picture = await _pictureService.InsertPictureAsync(file);
 
-            return Json(new { Result = true });
+                    await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(product.Name));
+
+                    await _productService.InsertProductPictureAsync(new ProductPicture
+                    {
+                        PictureId = picture.Id,
+                        ProductId = product.Id,
+                        DisplayOrder = 0
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd")} {exc.Message}",
+                });
+            }
+
+            return Json(new { success = true });
         }
 
         [HttpPost]
@@ -1761,6 +1823,178 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No picture found with the specified id");
 
             await _pictureService.DeletePictureAsync(picture);
+
+            return new NullJsonResult();
+        }
+
+        #endregion
+
+        #region Product videos
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoAdd(int productId, [Validate] ProductVideoModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (productId == 0)
+                throw new ArgumentException();
+
+            //try to get a product with the specified id
+            var product = await _productService.GetProductByIdAsync(productId)
+                ?? throw new ArgumentException("No product found with the specified id");
+
+            if (string.IsNullOrEmpty(model.VideoUrl))
+                ModelState.AddModelError(string.Empty,
+                    await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"));
+
+            if (!ModelState.IsValid)
+                return ErrorJson(ModelState.SerializeErrors());
+
+            var videoUrl = model.VideoUrl.TrimStart('~');
+
+            try
+            {
+                await PingVideoUrlAsync(videoUrl);
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                });
+            }
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
+                return RedirectToAction("List");
+            try
+            {
+                var video = new Video
+                {
+                    VideoUrl = videoUrl
+                };
+
+                //insert video
+                await _videoService.InsertVideoAsync(video);
+
+                await _productService.InsertProductVideoAsync(new ProductVideo
+                {
+                    VideoId = video.Id,
+                    ProductId = product.Id,
+                    DisplayOrder = model.DisplayOrder
+                });
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
+                });
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoList(ProductVideoSearchModel searchModel)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return await AccessDeniedDataTablesJson();
+
+            //try to get a product with the specified id
+            var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+                ?? throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && product.VendorId != currentVendor.Id)
+                return Content("This is not your product");
+
+            //prepare model
+            var model = await _productModelFactory.PrepareProductVideoListModelAsync(searchModel, product);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoUpdate([Validate] ProductVideoModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //try to get a product picture with the specified id
+            var productVideo = await _productService.GetProductVideoByIdAsync(model.Id)
+                ?? throw new ArgumentException("No product video found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+            {
+                var product = await _productService.GetProductByIdAsync(productVideo.ProductId);
+                if (product != null && product.VendorId != currentVendor.Id)
+                    return Content("This is not your product");
+            }
+
+            //try to get a video with the specified id
+            var video = await _videoService.GetVideoByIdAsync(productVideo.VideoId)
+                ?? throw new ArgumentException("No video found with the specified id");
+
+            var videoUrl = model.VideoUrl.TrimStart('~');
+
+            try
+            {
+                await PingVideoUrlAsync(videoUrl);
+            }
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate")} {exc.Message}",
+                });
+            }
+
+            video.VideoUrl = videoUrl;
+
+            await _videoService.UpdateVideoAsync(video);
+
+            productVideo.DisplayOrder = model.DisplayOrder;
+            await _productService.UpdateProductVideoAsync(productVideo);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductVideoDelete(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //try to get a product video with the specified id
+            var productVideo = await _productService.GetProductVideoByIdAsync(id)
+                ?? throw new ArgumentException("No product video found with the specified id");
+
+            //a vendor should have access only to his products
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+            {
+                var product = await _productService.GetProductByIdAsync(productVideo.ProductId);
+                if (product != null && product.VendorId != currentVendor.Id)
+                    return Content("This is not your product");
+            }
+
+            var videoId = productVideo.VideoId;
+            await _productService.DeleteProductVideoAsync(productVideo);
+
+            //try to get a video with the specified id
+            var video = await _videoService.GetVideoByIdAsync(videoId)
+                ?? throw new ArgumentException("No video found with the specified id");
+
+            await _videoService.DeleteVideoAsync(video);
 
             return new NullJsonResult();
         }
@@ -2390,18 +2624,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
-                    
+
                     return RedirectToAction("List");
                 }
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Imported"));
-                
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
                 await _notificationService.ErrorNotificationAsync(exc);
-                
+
                 return RedirectToAction("List");
             }
         }
@@ -2811,12 +3045,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var mappings = await _productAttributeParser
                         .ParseProductAttributeMappingsAsync(combination.AttributesXml);
-                    
+
                     if (mappings?.Any(m => m.Id == productAttributeMapping.Id) == true)
                     {
                         _notificationService.ErrorNotification(
                             string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
-                                await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                                await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync(), ", ")));
 
                         return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
                     }
@@ -2932,6 +3166,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await _productAttributeService.InsertProductAttributeValueAsync(pav);
                 await UpdateLocalesAsync(pav, model);
+                await SaveAttributeValuePicturesAsync(product, pav, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -3030,6 +3265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _productAttributeService.UpdateProductAttributeValueAsync(productAttributeValue);
 
                 await UpdateLocalesAsync(productAttributeValue, model);
+                await SaveAttributeValuePicturesAsync(product, productAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -3073,11 +3309,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var combination in existedCombinations)
                 {
                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
-                    
+
                     if (attributeValues.Where(attribute => attribute.Id == id).Any())
                     {
                         return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
-                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync(), ", ")));
                     }
                 }
             }
@@ -3277,6 +3513,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await _productAttributeService.InsertProductAttributeCombinationAsync(combination);
 
+                await SaveAttributeCombinationPicturesAsync(product, combination, model);
+
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity, combination.StockQuantity,
                     message: await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Combination.Edit"), combinationId: combination.Id);
@@ -3338,9 +3576,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (requiredAttributeNames.Any())
             {
                 model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
-                model.ProductAttributes.SelectMany(pa => pa.Values)
+                var pavModels = model.ProductAttributes.SelectMany(pa => pa.Values)
                     .Where(v => allowedAttributeIds.Any(id => id == v.Id))
-                    .ToList().ForEach(v => v.Checked = "checked");
+                    .ToList();
+                foreach (var pavModel in pavModels)
+                {
+                    pavModel.Checked = "checked";
+                }
 
                 model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 
@@ -3427,6 +3669,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 combination.AttributesXml = attributesXml;
 
                 await _productAttributeService.UpdateProductAttributeCombinationAsync(combination);
+
+                await SaveAttributeCombinationPicturesAsync(product, combination, model);
 
                 //quantity change history
                 await _productService.AddStockQuantityHistoryEntryAsync(product, combination.StockQuantity - previousStockQuantity, combination.StockQuantity,

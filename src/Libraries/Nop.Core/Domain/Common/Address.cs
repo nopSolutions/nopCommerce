@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Common
+﻿namespace Nop.Core.Domain.Common
 {
     /// <summary>
     /// Address

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -254,7 +252,21 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the ag products model
         /// </returns>
-        Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command);        
+        Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command);
+
+        #endregion
+
+        #region New products
+
+        /// <summary>
+        /// Prepare new products model
+        /// </summary>
+        /// <param name="command">Model to get the catalog products</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new products model
+        /// </returns>
+        Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command);
 
         #endregion
 

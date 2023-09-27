@@ -1,9 +1,14 @@
 ﻿@model SearchBoxModel
+
+@using Nop.Core.Domain.Media
+
+@inject MediaSettings mediaSettings
+
 <form asp-route="ProductSearch" method="get" id="small-search-box-form">
     @if (Model.ShowSearchBox)
     {
         <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
         <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
         @if (Model.SearchTermMinimumLength > 0)
         {
@@ -48,14 +53,15 @@
                         showLinkToResultSearch = item.showlinktoresultsearch;
                         //html encode
                         t = htmlEncode(t);
+                        imageWidth = '@(mediaSettings.AutoCompleteSearchThumbPictureSize)';
                         return $("<li></li>")
                             .data("item.autocomplete", item)
-                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>")
                             .appendTo(ul);
                     };
                 });
             </script>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
     }
 </form>

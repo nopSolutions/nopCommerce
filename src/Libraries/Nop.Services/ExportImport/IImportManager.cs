@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace Nop.Services.ExportImport
+﻿namespace Nop.Services.ExportImport
 {
     /// <summary>
     /// Import manager interface
@@ -49,5 +46,19 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ImportCategoriesFromXlsxAsync(Stream stream);
+
+        /// <summary>
+        /// Import orders from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ImportOrdersFromXlsxAsync(Stream stream);
+
+        /// <summary>
+        /// Import customers from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ImportCustomersFromXlsxAsync(Stream stream);
     }
 }

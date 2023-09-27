@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Vendors;
+﻿using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories
@@ -104,26 +103,6 @@ namespace Nop.Web.Factories
         /// </returns>
         Task<ContactVendorModel> PrepareContactVendorModelAsync(ContactVendorModel model, Vendor vendor,
             bool excludeProperties);
-
-        /// <summary>
-        /// Prepare the sitemap model
-        /// </summary>
-        /// <param name="pageModel">Sitemap page model</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the sitemap model
-        /// </returns>
-        Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel);
-
-        /// <summary>
-        /// Get the sitemap in XML format
-        /// </summary>
-        /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the sitemap as string in XML format
-        /// </returns>
-        Task<string> PrepareSitemapXmlAsync( int? id);
 
         /// <summary>
         /// Prepare the store theme selector model

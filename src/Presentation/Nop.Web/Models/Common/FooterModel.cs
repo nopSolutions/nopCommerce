@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
@@ -45,11 +44,11 @@ namespace Nop.Web.Models.Common
         public bool DisplayCustomerAddressesFooterItem { get; set; }
         public bool DisplayShoppingCartFooterItem { get; set; }
         public bool DisplayWishlistFooterItem { get; set; }
-        public bool DisplayApplyVendorAccountFooterItem { get; set; }        
+        public bool DisplayApplyVendorAccountFooterItem { get; set; }
 
         #region Nested classes
 
-        public record FooterTopicModel : BaseNopEntityModel
+        public partial record FooterTopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
@@ -58,7 +57,7 @@ namespace Nop.Web.Models.Common
             public bool IncludeInFooterColumn2 { get; set; }
             public bool IncludeInFooterColumn3 { get; set; }
         }
-        
+
         #endregion
     }
 }

@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// Event for "Additional tokens added"
     /// </summary>
-    public class AdditionalTokensAddedEvent
+    public partial class AdditionalTokensAddedEvent
     {
         public AdditionalTokensAddedEvent()
         {
@@ -28,5 +26,11 @@ namespace Nop.Core.Domain.Messages
         /// Additional tokens
         /// </summary>
         public IList<string> AdditionalTokens { get; }
+
+
+        /// <summary>
+        /// Token groups which can be used to filter the AdditionalTokens
+        /// </summary>
+        public IEnumerable<string> TokenGroups { get; set; }
     }
 }

@@ -1,12 +1,9 @@
-﻿
-using System.Threading.Tasks;
-
-namespace Nop.Web.Framework.Themes
+﻿namespace Nop.Web.Framework.Themes
 {
     /// <summary>
     /// Represents a theme context
     /// </summary>
-    public interface IThemeContext
+    public partial interface IThemeContext
     {
         /// <summary>
         /// Get current theme system name

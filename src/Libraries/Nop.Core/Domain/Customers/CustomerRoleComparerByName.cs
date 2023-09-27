@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Custom comparer for the CustomerRole class by Name and SystemName
     /// </summary>
-    public class CustomerRoleComparerByName : IEqualityComparer<CustomerRole>
+    public partial class CustomerRoleComparerByName : IEqualityComparer<CustomerRole>
     {
         /// <summary>
         /// Customer roles are equal if their names and system names are equal.

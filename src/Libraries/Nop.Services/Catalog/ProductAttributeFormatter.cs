@@ -1,11 +1,10 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Directory;
 using Nop.Services.Html;
 using Nop.Services.Localization;
@@ -21,18 +20,19 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly ICurrencyService _currencyService;
-        private readonly IDownloadService _downloadService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -49,6 +49,7 @@ namespace Nop.Services.Catalog
             ITaxService taxService,
             IWebHelper webHelper,
             IWorkContext workContext,
+            IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings)
         {
             _currencyService = currencyService;
@@ -62,6 +63,7 @@ namespace Nop.Services.Catalog
             _taxService = taxService;
             _webHelper = webHelper;
             _workContext = workContext;
+            _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -81,7 +83,9 @@ namespace Nop.Services.Catalog
         public virtual async Task<string> FormatAttributesAsync(Product product, string attributesXml)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            return await FormatAttributesAsync(product, attributesXml, customer);
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            return await FormatAttributesAsync(product, attributesXml, customer, currentStore);
         }
 
         /// <summary>
@@ -90,6 +94,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
+        /// <param name="store">Store</param>
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
@@ -101,7 +106,7 @@ namespace Nop.Services.Catalog
         /// The task result contains the attributes
         /// </returns>
         public virtual async Task<string> FormatAttributesAsync(Product product, string attributesXml,
-            Customer customer, string separator = "<br />", bool htmlEncode = true, bool renderPrices = true,
+            Customer customer, Store store, string separator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true)
         {
@@ -197,7 +202,7 @@ namespace Nop.Services.Catalog
                                 }
                                 else
                                 {
-                                    var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer);
+                                    var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
                                     var (priceAdjustmentBase, _) = await _taxService.GetProductPriceAsync(product, attributeValuePriceAdjustment, customer);
                                     var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
 

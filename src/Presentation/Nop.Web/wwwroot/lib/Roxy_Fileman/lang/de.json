@@ -74,7 +74,7 @@
 "Copy":"Kopieren",
 "Paste":"Einfügen",
 "E_CopyFile":"Fehler beim Dateikopieren",
-"E_CopyFileInvalisPath":"Datei kann nicht kopiert werden - Pfad existiert nicht",
+"E_CopyFileInvalidPath":"Datei kann nicht kopiert werden - Pfad existiert nicht",
 "E_CopyDirInvalidPath":"Verzeichnis kann nicht kopiert werden - Pfad existiert nicht",
 "E_CreateArchive":"Error creating zip archive.",
 "E_UploadingFile":"fehler"

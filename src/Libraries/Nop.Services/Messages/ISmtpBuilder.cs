@@ -1,6 +1,5 @@
 ﻿using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Nop.Core.Domain.Messages;
 
@@ -9,7 +8,7 @@ namespace Nop.Services.Messages
     /// <summary>
     /// SMTP Builder
     /// </summary>
-    public interface ISmtpBuilder
+    public partial interface ISmtpBuilder
     {
         /// <summary>
         /// Create a new SMTP client for a specific email account

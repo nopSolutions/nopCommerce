@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
@@ -10,7 +9,7 @@ namespace Nop.Web.Framework.Globalization
     /// <summary>
     /// Determines the culture information for a request via the URL
     /// </summary>
-    public class NopSeoUrlCultureProvider : RequestCultureProvider
+    public partial class NopSeoUrlCultureProvider : RequestCultureProvider
     {
         /// <summary>
         /// Implements the provider to determine the culture of the given request

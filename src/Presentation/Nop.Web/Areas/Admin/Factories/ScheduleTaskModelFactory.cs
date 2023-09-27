@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Nop.Services.Common;
 using Nop.Services.Helpers;
 using Nop.Services.ScheduleTasks;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -17,8 +15,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IScheduleTaskService _scheduleTaskService;
 
         #endregion
 
@@ -68,7 +66,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get schedule tasks
-            var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync(true)).ToPagedList(searchModel);
+            var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync(true))
+                .Where(task => !string.Equals(task.Name, nameof(ResetLicenseCheckTask), StringComparison.InvariantCultureIgnoreCase))
+                .ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = await new ScheduleTaskListModel().PrepareToGridAsync(searchModel, scheduleTasks, () =>

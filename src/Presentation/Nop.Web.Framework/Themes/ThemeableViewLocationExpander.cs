@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Razor;
+﻿using Microsoft.AspNetCore.Mvc.Razor;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Themes
@@ -10,7 +8,7 @@ namespace Nop.Web.Framework.Themes
     /// </summary>
     public class ThemeableViewLocationExpander : IViewLocationExpander
     {
-        private const string THEME_KEY = "nop.themename";
+        protected const string THEME_KEY = "nop.themename";
 
         /// <summary>
         /// Invoked by a Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine to determine the
@@ -32,7 +30,7 @@ namespace Nop.Web.Framework.Themes
         /// </summary>
         /// <param name="context">Context</param>
         /// <param name="viewLocations">View locations</param>
-        /// <returns>iew locations</returns>
+        /// <returns>View locations</returns>
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
             if (context.Values.TryGetValue(THEME_KEY, out string theme))

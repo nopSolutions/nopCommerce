@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
@@ -12,14 +8,14 @@ namespace Nop.Services.Logging
     /// <summary>
     /// Customer activity service
     /// </summary>
-    public class CustomerActivityService : ICustomerActivityService
+    public partial class CustomerActivityService : ICustomerActivityService
     {
         #region Fields
 
-        private readonly IRepository<ActivityLog> _activityLogRepository;
-        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly IRepository<ActivityLog> _activityLogRepository;
+        protected readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -37,7 +33,7 @@ namespace Nop.Services.Logging
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -59,11 +55,11 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<IList<ActivityLogType>> GetAllActivityTypesAsync()
         {
-            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query=>
+            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query =>
             {
                 return from alt in query
-                    orderby alt.Name
-                    select alt;
+                       orderby alt.Name
+                       select alt;
             }, cache => default);
 
             return activityLogTypes;

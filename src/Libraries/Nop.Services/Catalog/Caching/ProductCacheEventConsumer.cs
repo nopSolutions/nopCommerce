@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
@@ -23,6 +22,7 @@ namespace Nop.Services.Catalog.Caching
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
             await RemoveAsync(NopCatalogDefaults.ProductsHomepageCacheKey);
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductMultiplePricePrefix, entity);
             await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
             await RemoveByPrefixAsync(NopCatalogDefaults.FeaturedProductIdsPrefix);
 

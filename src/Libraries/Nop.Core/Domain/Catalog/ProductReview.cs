@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product review

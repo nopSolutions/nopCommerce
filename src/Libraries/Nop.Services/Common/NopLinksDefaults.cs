@@ -344,7 +344,7 @@
             /// <summary>
             /// Gets a URL of the app settings docs page
             /// </summary>
-            public static string AppSettings => "https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html";
+            public static string AppSettings => " https://docs.nopcommerce.com/en/developer/tutorials/appsettings-json-file.html";
 
             /// <summary>
             /// Gets a URL of the themes docs page
@@ -359,17 +359,12 @@
             /// <summary>
             /// Gets a URL of the PayPal docs page
             /// </summary>
-            public static string PayPal => "https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-smart-payment-buttons.html";
+            public static string PayPal => "https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html";
 
             /// <summary>
             /// Gets a URL of the Avalara docs page
             /// </summary>
             public static string Avalara => "https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html";
-
-            /// <summary>
-            /// Gets a URL of the ShipStation docs page
-            /// </summary>
-            public static string ShipStation => "https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/shipstation.html";
         }
 
         /// <summary>
@@ -396,7 +391,7 @@
             /// Gets parameters used on admin area log
             /// </summary>
             public static string OnAdminLog => "?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details";
-            
+
             /// <summary>
             /// Gets parameters used on admin area log list
             /// </summary>

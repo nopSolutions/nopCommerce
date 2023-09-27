@@ -32,15 +32,15 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="forumsettings-cards">
@@ -49,8 +49,9 @@
                     <nop-card asp-name="forumsettings-page-sizes" asp-icon="fas fa-file" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.PageSizes")" asp-hide-block-attribute-name="@hidePageSizesBlockAttributeName" asp-hide="@hidePageSizesBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.PageSizes", Model)</nop-card>
                     <nop-card asp-name="forumsettings-feeds" asp-icon="fas fa-rss" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Feeds")" asp-hide-block-attribute-name="@hideFeedsBlockAttributeName" asp-hide="@hideFeedsBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.Feeds", Model)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumSettingsDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>
+            </div>
         </div>
-    </div>
+    </section>
 </form>

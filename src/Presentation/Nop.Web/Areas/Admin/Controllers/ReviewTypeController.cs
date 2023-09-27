@@ -1,14 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -21,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
-        private readonly IReviewTypeService _reviewTypeService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
+        protected readonly IReviewTypeService _reviewTypeService;
 
         #endregion
 
@@ -59,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 await _localizedEntityService.SaveLocalizedValueAsync(reviewType,
-                    x => x.Name,                    
+                    x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
@@ -123,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var reviewType = model.ToEntity<ReviewType>();
-                await _reviewTypeService.InsertReviewTypeAsync(reviewType);                
+                await _reviewTypeService.InsertReviewTypeAsync(reviewType);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("AddNewReviewType",
@@ -134,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Added"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
+                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
             }
 
             //prepare model
@@ -186,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Updated"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
+                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
             }
 
             //prepare model
@@ -224,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = reviewType.Id });
-            }            
+            }
         }
 
         #endregion

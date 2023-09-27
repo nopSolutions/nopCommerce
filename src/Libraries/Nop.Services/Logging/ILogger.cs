@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 
@@ -91,6 +88,18 @@ namespace Nop.Services.Logging
         Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
 
         /// <summary>
+        /// Inserts a log item
+        /// </summary>
+        /// <param name="logLevel">Log level</param>
+        /// <param name="shortMessage">The short message</param>
+        /// <param name="fullMessage">The full message</param>
+        /// <param name="customer">The customer to associate log record with</param>
+        /// <returns>
+        /// Log item
+        /// </returns>
+        Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+
+        /// <summary>
         /// Information
         /// </summary>
         /// <param name="message">Message</param>
@@ -98,6 +107,14 @@ namespace Nop.Services.Logging
         /// <param name="customer">Customer</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task InformationAsync(string message, Exception exception = null, Customer customer = null);
+
+        /// <summary>
+        /// Information
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Information(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
         /// Warning
@@ -109,6 +126,14 @@ namespace Nop.Services.Logging
         Task WarningAsync(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
+        /// Warning
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Warning(string message, Exception exception = null, Customer customer = null);
+
+        /// <summary>
         /// Error
         /// </summary>
         /// <param name="message">Message</param>
@@ -116,5 +141,13 @@ namespace Nop.Services.Logging
         /// <param name="customer">Customer</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ErrorAsync(string message, Exception exception = null, Customer customer = null);
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        void Error(string message, Exception exception = null, Customer customer = null);
     }
 }

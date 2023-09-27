@@ -1,4 +1,5 @@
 ﻿@using Nop.Services.Localization
+@using Nop.Web.Factories
 @model ActiveDiscussionsModel
 @inject ILocalizationService localizationService
 <div class="forums-table-section topic-group active-discussions">
@@ -18,7 +19,7 @@
             ShowTotalSummary = false,
             RouteActionName = "ActiveDiscussionsPaged",
             UseRouteLinks = true,
-            RouteValues = new ForumActiveDiscussionsRouteValues()
+            RouteValues = new ForumModelFactory.ForumActiveDiscussionsRouteValues()
         });
     }
     @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
@@ -106,7 +107,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

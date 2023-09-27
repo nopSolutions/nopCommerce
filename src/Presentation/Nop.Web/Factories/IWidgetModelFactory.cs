@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Web.Models.Cms;
+﻿using Nop.Web.Models.Cms;
 
 namespace Nop.Web.Factories
 {

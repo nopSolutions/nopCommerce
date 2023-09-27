@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
@@ -27,17 +25,17 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var response = new GetShippingOptionResponse();
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 1",
-                    Description = string.Empty,
-                    Rate = GetRate()
-                }); 
+            {
+                Name = "Shipping option 1",
+                Description = string.Empty,
+                Rate = GetRate()
+            });
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 2",
-                    Description = string.Empty,
-                    Rate = GetRate()
-                });
+            {
+                Name = "Shipping option 2",
+                Description = string.Empty,
+                Rate = GetRate()
+            });
 
             return Task.FromResult(response);
         }

@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nop.Services.Installation
+﻿namespace Nop.Services.Installation
 {
     /// <summary>
     /// Represents the implementation of ISO3166-1
     /// </summary>
     /// <remarks>https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes</remarks>
-    public static class ISO3166
+    public static partial class ISO3166
     {
         /// <summary>
         /// Obtain ISO3166-1 Country based on its ISO code.
@@ -214,7 +211,7 @@ namespace Nop.Services.Installation
                 new ISO3166Country("Niue", "NU", "NIU", 570, new[] { "683" }),
                 new ISO3166Country("Norfolk Island", "NF", "NFK", 574, new[] { "672" }),
                 new ISO3166Country("Northern Mariana Islands", "MP", "MNP", 580, new[] { "1 670" }),
-                new ISO3166Country("Norway", "NO", "NOR", 578, new[] { "47" }, localizationInfo: new[] { new LocalizationInfo("nn-NO", "Norwegian") }),
+                new ISO3166Country("Norway", "NO", "NOR", 578, new[] { "47" }, localizationInfo: new[] { new LocalizationInfo("nb-NO", "Norwegian") }),
                 new ISO3166Country("Oman", "OM", "OMN", 512, new[] { "968" }, localizationInfo: new[] { new LocalizationInfo("ar-OM", "Arabic") }),
                 new ISO3166Country("Pakistan", "PK", "PAK", 586, new[] { "92" }),
                 new ISO3166Country("Palau", "PW", "PLW", 585, new[] { "680" }),
@@ -305,7 +302,7 @@ namespace Nop.Services.Installation
     /// <summary>
     /// Representation of an ISO3166-1 Country
     /// </summary>
-    public class ISO3166Country
+    public partial class ISO3166Country
     {
         public ISO3166Country(string name, string alpha2, string alpha3, int numericCode, string[] dialCodes = null, bool subjectToVat = false, IEnumerable<LocalizationInfo> localizationInfo = null)
         {
@@ -321,37 +318,37 @@ namespace Nop.Services.Installation
         /// <summary>
         ///English short name of country
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         /// <summary>
         /// Two-letter country code
         /// </summary>
-        public string Alpha2 { get; private set; }
+        public string Alpha2 { get; protected set; }
 
         /// <summary>
         /// three-letter country code which allow a better visual association between the codes and the country names than the alpha-2 codes
         /// </summary>
-        public string Alpha3 { get; private set; }
+        public string Alpha3 { get; protected set; }
 
         /// <summary>
         /// Three-digit country code which are identical to those developed and maintained by the United Nations Statistics Division
         /// </summary>
-        public int NumericCode { get; private set; }
+        public int NumericCode { get; protected set; }
 
         /// <summary>
         /// Phone codes
         /// </summary>
-        public string[] DialCodes { get; private set; }
+        public string[] DialCodes { get; protected set; }
 
         /// <summary>
         /// Belonging to the European Union
         /// </summary>
-        public bool SubjectToVat { get; private set; }
+        public bool SubjectToVat { get; protected set; }
 
-        public IEnumerable<LocalizationInfo> LocalizationInfo { get; private set; }
+        public IEnumerable<LocalizationInfo> LocalizationInfo { get; protected set; }
     }
 
-    public class LocalizationInfo
+    public partial class LocalizationInfo
     {
         public LocalizationInfo(string culture, string language)
         {
@@ -359,8 +356,8 @@ namespace Nop.Services.Installation
             Language = language;
         }
 
-        public string Culture { get; private set; }
+        public string Culture { get; protected set; }
 
-        public string Language { get; private set; }
+        public string Language { get; protected set; }
     }
 }

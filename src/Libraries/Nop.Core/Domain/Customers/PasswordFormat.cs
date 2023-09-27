@@ -1,4 +1,4 @@
-﻿namespace Nop.Core.Domain.Customers 
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Password format

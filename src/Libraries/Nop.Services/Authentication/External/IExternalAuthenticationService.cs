@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Authentication.External
@@ -47,6 +45,16 @@ namespace Nop.Services.Authentication.External
         /// <param name="externalAuthenticationRecord">External authentication record</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteExternalAuthenticationRecordAsync(ExternalAuthenticationRecord externalAuthenticationRecord);
+
+        /// <summary>
+        /// Get the external authentication record
+        /// </summary>
+        /// <param name="parameters">External authentication parameters</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters);
 
         /// <summary>
         /// Associate external account with customer

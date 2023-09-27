@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Web.Framework.Extensions;
@@ -13,62 +9,21 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// "nop-override-store-checkbox" tag helper
     /// </summary>
     [HtmlTargetElement("nop-override-store-checkbox", Attributes = FOR_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class NopOverrideStoreCheckboxHelper : TagHelper
+    public partial class NopOverrideStoreCheckboxHelper : TagHelper
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string INPUT_ATTRIBUTE_NAME = "asp-input";
-        private const string INPUT_2_ATTRIBUTE_NAME = "asp-input2";
-        private const string STORE_SCOPE_ATTRIBUTE_NAME = "asp-store-scope";
-        private const string PARENT_CONTAINER_ATTRIBUTE_NAME = "asp-parent-container";
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string INPUT_ATTRIBUTE_NAME = "asp-input";
+        protected const string INPUT_2_ATTRIBUTE_NAME = "asp-input2";
+        protected const string STORE_SCOPE_ATTRIBUTE_NAME = "asp-store-scope";
+        protected const string PARENT_CONTAINER_ATTRIBUTE_NAME = "asp-parent-container";
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// The input #1
-        /// </summary>
-        [HtmlAttributeName(INPUT_ATTRIBUTE_NAME)]
-        public ModelExpression Input { set; get; }
-
-        /// <summary>
-        /// The input #2
-        /// </summary>
-        [HtmlAttributeName(INPUT_2_ATTRIBUTE_NAME)]
-        public ModelExpression Input2 { set; get; }
-
-        /// <summary>
-        ///The store scope
-        /// </summary>
-        [HtmlAttributeName(STORE_SCOPE_ATTRIBUTE_NAME)]
-        public int StoreScope { set; get; }
-
-        /// <summary>
-        /// Parent container
-        /// </summary>
-        [HtmlAttributeName(PARENT_CONTAINER_ATTRIBUTE_NAME)]
-        public string ParentContainer { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
-
+        
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -133,6 +88,47 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 output.Content.SetHtmlContent(htmlOutput);
             }
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// An expression to be evaluated against the current model
+        /// </summary>
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// The input #1
+        /// </summary>
+        [HtmlAttributeName(INPUT_ATTRIBUTE_NAME)]
+        public ModelExpression Input { set; get; }
+
+        /// <summary>
+        /// The input #2
+        /// </summary>
+        [HtmlAttributeName(INPUT_2_ATTRIBUTE_NAME)]
+        public ModelExpression Input2 { set; get; }
+
+        /// <summary>
+        ///The store scope
+        /// </summary>
+        [HtmlAttributeName(STORE_SCOPE_ATTRIBUTE_NAME)]
+        public int StoreScope { set; get; }
+
+        /// <summary>
+        /// Parent container
+        /// </summary>
+        [HtmlAttributeName(PARENT_CONTAINER_ATTRIBUTE_NAME)]
+        public string ParentContainer { set; get; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

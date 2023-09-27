@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -13,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI;
+using Nop.Web.Framework.WebOptimizer;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
@@ -24,24 +22,25 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// Script bundling tag helper
     /// </summary>
     [HtmlTargetElement(SCRIPT_TAG_NAME)]
-    public class NopScriptTagHelper : UrlResolutionTagHelper
+    public partial class NopScriptTagHelper : UrlResolutionTagHelper
     {
         #region Constants
-        private const string SCRIPT_TAG_NAME = "script";
-        private const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
-        private const string DEBUG_SRC_ATTRIBUTE_NAME = "asp-debug-src";
-        private const string LOCATION_ATTRIBUTE_NAME = "asp-location";
-        private const string SRC_ATTRIBUTE_NAME = "src";
+
+        protected const string SCRIPT_TAG_NAME = "script";
+        protected const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
+        protected const string DEBUG_SRC_ATTRIBUTE_NAME = "asp-debug-src";
+        protected const string LOCATION_ATTRIBUTE_NAME = "asp-location";
+        protected const string SRC_ATTRIBUTE_NAME = "src";
 
         #endregion
 
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IAssetPipeline _assetPipeline;
-        private readonly INopHtmlHelper _nopHtmlHelper;
-        private readonly IWebHelper _webHelper;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly AppSettings _appSettings;
+        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
 
@@ -64,9 +63,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
-        private static async Task<string> BuildInlineScriptTagAsync(TagHelperOutput output)
+        protected static async Task<string> BuildInlineScriptTagAsync(TagHelperOutput output)
         {
             //get JavaScript
             var scriptTag = new TagBuilder(SCRIPT_TAG_NAME);
@@ -82,7 +81,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             return await scriptTag.RenderHtmlContentAsync() + Environment.NewLine;
         }
 
-        private void ProcessSrcAttribute(TagHelperContext context, TagHelperOutput output)
+        protected void ProcessSrcAttribute(TagHelperContext context, TagHelperOutput output)
         {
             if (!string.IsNullOrEmpty(DebugSrc) && _webHostEnvironment.IsDevelopment())
                 Src = DebugSrc;
@@ -101,7 +100,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 Src = srcAttribute;
         }
 
-        private void ProcessAsset(TagHelperOutput output)
+        protected void ProcessAsset(TagHelperOutput output, WebOptimizerConfig woConfig)
         {
             if (string.IsNullOrEmpty(Src))
                 return;
@@ -122,7 +121,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 asset = _assetPipeline.AddJavaScriptBundle(sourceFile, sourceFile);
             }
 
-            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{Src}?v={asset.GenerateCacheKey(ViewContext.HttpContext)}");
+            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{Src}?v={asset.GenerateCacheKey(ViewContext.HttpContext, woConfig)}");
         }
 
         #endregion
@@ -145,10 +144,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             if (!output.Attributes.ContainsName("type")) // we don't touch other types e.g. text/template
                 output.Attributes.SetAttribute("type", MimeTypes.TextJavascript);
 
+            var woConfig = _appSettings.Get<WebOptimizerConfig>();
+
             if (Location == ResourceLocation.Auto)
             {
                 // move script to the footer bundle when bundling is enabled
-                Location = _appSettings.Get<WebOptimizerConfig>().EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
+                Location = woConfig.EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
             }
 
             if (Location == ResourceLocation.None)
@@ -156,7 +157,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 if (!string.IsNullOrEmpty(Src))
                 {
                     ProcessSrcAttribute(context, output);
-                    ProcessAsset(output);
+                    ProcessAsset(output, woConfig);
                 }
 
                 return;
@@ -199,6 +200,5 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         public string Src { get; set; }
 
         #endregion
-
     }
 }

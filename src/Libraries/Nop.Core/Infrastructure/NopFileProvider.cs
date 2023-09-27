@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -15,23 +9,31 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// IO functions using the on-disk file system
     /// </summary>
-    public class NopFileProvider : PhysicalFileProvider, INopFileProvider
+    public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
+        #region Ctor
+
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="webHostEnvironment">Hosting environment</param>
         public NopFileProvider(IWebHostEnvironment webHostEnvironment)
-            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath)! : webHostEnvironment.ContentRootPath)
         {
             WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
                 ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
                 : webHostEnvironment.WebRootPath;
         }
 
+        #endregion
+
         #region Utilities
 
-        private static void DeleteDirectoryRecursive(string path)
+        /// <summary>
+        /// Depth-first recursive delete
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void DeleteDirectoryRecursive(string path)
         {
             Directory.Delete(path, true);
             const int maxIterationToWait = 10;
@@ -44,8 +46,10 @@ namespace Nop.Core.Infrastructure
             while (Directory.Exists(path))
             {
                 curIteration += 1;
+
                 if (curIteration > maxIterationToWait)
                     return;
+
                 Thread.Sleep(100);
             }
         }
@@ -65,7 +69,7 @@ namespace Nop.Core.Infrastructure
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
@@ -93,7 +97,7 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Creates or overwrites a file in the specified path
+        /// Creates a file in the specified path
         /// </summary>
         /// <param name="path">The path and name of the file to create</param>
         public virtual void CreateFile(string path)
@@ -114,7 +118,7 @@ namespace Nop.Core.Infrastructure
         ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
         /// </summary>
         /// <param name="path">Directory path</param>
-        public void DeleteDirectory(string path)
+        public virtual void DeleteDirectory(string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(path);
@@ -260,7 +264,7 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if(paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);
@@ -395,9 +399,9 @@ namespace Nop.Core.Infrastructure
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*.*";
 
-            return Directory.GetFileSystemEntries(directoryPath, searchPattern, 
-                new EnumerationOptions 
-                { 
+            return Directory.GetFileSystemEntries(directoryPath, searchPattern,
+                new EnumerationOptions
+                {
                     IgnoreInaccessible = true,
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = !topDirectoryOnly,
@@ -440,6 +444,22 @@ namespace Nop.Core.Infrastructure
         public virtual DateTime GetLastWriteTimeUtc(string path)
         {
             return File.GetLastWriteTimeUtc(path);
+        }
+
+        /// <summary>
+        /// Creates or opens a file at the specified path for read/write access
+        /// </summary>
+        /// <param name="path">The path and name of the file to create</param>
+        /// <returns>A <see cref="FileStream"/> that provides read/write access to the file specified in <paramref name="path"/></returns>
+        public FileStream GetOrCreateFile(string path)
+        {
+            if (FileExists(path))
+                return File.Open(path, FileMode.Open, FileAccess.ReadWrite);
+
+            var fileInfo = new FileInfo(path);
+            CreateDirectory(fileInfo.DirectoryName);
+
+            return File.Create(path);
         }
 
         /// <summary>
@@ -521,7 +541,7 @@ namespace Nop.Core.Infrastructure
         {
             await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var streamReader = new StreamReader(fileStream, encoding);
-            
+
             return await streamReader.ReadToEndAsync();
         }
 
@@ -538,7 +558,7 @@ namespace Nop.Core.Infrastructure
 
             return streamReader.ReadToEnd();
         }
-        
+
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>
@@ -578,7 +598,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>Locate a file at the given path.</summary>
         /// <param name="subpath">Relative path that identifies the file.</param>
         /// <returns>The file information. Caller must check Exists property.</returns>
-        public new IFileInfo GetFileInfo(string subpath)
+        public virtual new IFileInfo GetFileInfo(string subpath)
         {
             subpath = subpath.Replace(Root, string.Empty);
 
@@ -587,6 +607,13 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        protected string WebRootPath { get; }
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
+        /// </summary>
+        public string WebRootPath { get; }
+
+        #endregion
     }
 }

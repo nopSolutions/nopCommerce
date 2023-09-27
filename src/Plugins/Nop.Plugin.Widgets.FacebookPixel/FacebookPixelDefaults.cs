@@ -38,9 +38,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         public static string CheckoutOnePageRouteName => "CheckoutOnePage";
 
         /// <summary>
-        /// Gets the name of the view component to place Facebook Pixel into the page
+        /// Gets the route name of area
         /// </summary>
-        public const string VIEW_COMPONENT = "FacebookPixel";
+        public static string AreaRouteName => "areaRoute";
 
         #region Caching
 
@@ -128,6 +128,25 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// Gets the name of a session value to store prepared scripts for tracked events
         /// </summary>
         public static string TrackedEventsSessionValue => "FacebookPixelTrackedEvents";
+
+        #endregion
+
+        #region Conversions API
+
+        /// <summary>
+        /// Gets the name of facebook conversions api base address to send tracked events
+        /// </summary>
+        public static string FbConversionsApiBaseAddress = "https://graph.facebook.com";
+
+        /// <summary>
+        /// Gets the name of facebook conversions api version to send tracked events
+        /// </summary>
+        public static string FbConversionsApiVersion = "v13.0";
+
+        /// <summary>
+        /// Gets the name of facebook conversions api event endpoint to send tracked events
+        /// </summary>
+        public static string FbConversionsApiEventEndpoint = "events";
 
         #endregion
     }

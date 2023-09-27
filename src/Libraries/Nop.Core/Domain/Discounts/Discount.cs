@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount
@@ -88,6 +86,11 @@ namespace Nop.Core.Domain.Discounts
         /// Used with "Assigned to categories" type only.
         /// </summary>
         public bool AppliedToSubCategories { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the discount is active
+        /// </summary>
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets the discount type

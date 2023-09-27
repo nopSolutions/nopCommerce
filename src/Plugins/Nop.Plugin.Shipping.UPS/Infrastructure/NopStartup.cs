@@ -22,7 +22,7 @@ namespace Nop.Plugin.Shipping.UPS.Infrastructure
             services.AddScoped<UPSService>();
         }
 
-        // <summary>
+        /// <summary>
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>

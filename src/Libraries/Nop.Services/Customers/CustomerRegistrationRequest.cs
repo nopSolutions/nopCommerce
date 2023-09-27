@@ -5,7 +5,7 @@ namespace Nop.Services.Customers
     /// <summary>
     /// Customer registration request
     /// </summary>
-    public class CustomerRegistrationRequest
+    public partial class CustomerRegistrationRequest
     {
         /// <summary>
         /// Ctor

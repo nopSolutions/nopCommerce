@@ -19,11 +19,11 @@
         <div class="news-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageBeforeBody, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageBeforeBody, additionalData = Model })
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageBeforeComments, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageBeforeComments, additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -40,21 +40,24 @@
                         <div class="result">@result</div>
                     }
                 </div>
-                <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
+                <form asp-controller="News" asp-action="NewsCommentAdd" asp-route-newsitemid="@Model.Id" method="post">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentTitle" asp-postfix=":"></label>
                             <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments" />
+                            <nop-required />
                             <span asp-validation-for="AddNewComment.CommentTitle"></span>
+                            
                         </div>
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
                             <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"></textarea>
+                            <nop-required />
                             <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <nop-captcha />
+                            <nop-captcha action-name="NewsCommentAdd" />
                         }
                     </div>
                     @if (!Model.PreventNotRegisteredUsersToLeaveComments)
@@ -119,13 +122,13 @@
                                         <p class="comment-text">@Html.Raw(htmlFormatter.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })
+                                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageInsideComment, additionalData = comment })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsItemPageAfterComments, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageAfterComments, additionalData = Model })
     </div>
 </div>

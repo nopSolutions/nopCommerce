@@ -3,7 +3,7 @@
     /// <summary>
     /// Encryption service
     /// </summary>
-    public interface IEncryptionService 
+    public partial interface IEncryptionService
     {
         /// <summary>
         /// Create salt key
@@ -20,7 +20,7 @@
         /// <param name="passwordFormat">Password format (hash algorithm)</param>
         /// <returns>Password hash</returns>
         string CreatePasswordHash(string password, string saltKey, string passwordFormat);
-        
+
         /// <summary>
         /// Encrypt text
         /// </summary>

@@ -1,25 +1,26 @@
 ﻿<div class="header">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    <a class="skip" href="#main">@T("Header.SkipNavigation.Text")</a>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderBefore })
     <div class="header-upper">
         <div class="header-selectors-wrapper">
-            @await Component.InvokeAsync("TaxTypeSelector")
-            @await Component.InvokeAsync("CurrencySelector")
-            @await Component.InvokeAsync("LanguageSelector")
-            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+            @await Component.InvokeAsync(typeof(TaxTypeSelectorViewComponent))
+            @await Component.InvokeAsync(typeof(CurrencySelectorViewComponent))
+            @await Component.InvokeAsync(typeof(LanguageSelectorViewComponent))
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderSelectors })
         </div>
         <div class="header-links-wrapper">
-            @await Component.InvokeAsync("HeaderLinks")
-            @await Component.InvokeAsync("FlyoutShoppingCart")
+            @await Component.InvokeAsync(typeof(HeaderLinksViewComponent))
+            @await Component.InvokeAsync(typeof(FlyoutShoppingCartViewComponent))
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMiddle })
     <div class="header-lower">
         <div class="header-logo">
-            @await Component.InvokeAsync("Logo")
+            @await Component.InvokeAsync(typeof(LogoViewComponent))
         </div>
         <div class="search-box store-search-box">
-            @await Component.InvokeAsync("SearchBox")
+            @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderAfter })
 </div>

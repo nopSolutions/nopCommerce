@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -22,15 +19,6 @@ namespace Nop.Services.Plugins
             LimitedToStores = new List<int>();
             LimitedToCustomerRoles = new List<int>();
             DependsOn = new List<string>();
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="referencedAssembly">Referenced assembly</param>
-        public PluginDescriptor(Assembly referencedAssembly) : this()
-        {
-            ReferencedAssembly = referencedAssembly;
         }
 
         #endregion
@@ -135,7 +123,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "FriendlyName")]
         public virtual string FriendlyName { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the supported versions of nopCommerce
         /// </summary>
@@ -177,7 +165,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "LimitedToCustomerRoles")]
         public virtual IList<int> LimitedToCustomerRoles { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the list of plugins' system name that this plugin depends on
         /// </summary>
@@ -197,13 +185,19 @@ namespace Nop.Services.Plugins
         public virtual Type PluginType { get; set; }
 
         /// <summary>
-        /// Gets or sets the original assembly file that a shadow copy was made from it
+        /// Gets or sets the original assembly file
         /// </summary>
         [JsonIgnore]
         public virtual string OriginalAssemblyFile { get; set; }
 
         /// <summary>
-        /// Gets or sets the assembly that has been shadow copied that is active in the application
+        /// Gets or sets the list of all library files in the plugin directory
+        /// </summary>
+        [JsonIgnore]
+        public virtual IList<string> PluginFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assembly that is active in the application
         /// </summary>
         [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; set; }

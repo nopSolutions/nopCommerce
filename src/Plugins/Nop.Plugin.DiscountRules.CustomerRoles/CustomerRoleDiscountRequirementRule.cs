@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
@@ -14,17 +10,17 @@ using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
-    public partial class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
+    public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         #region Fields
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHelper _webHelper;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 

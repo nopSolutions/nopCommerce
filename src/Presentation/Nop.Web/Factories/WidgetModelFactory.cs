@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Customers;
@@ -19,12 +15,12 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeContext _themeContext;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly IWorkContext _workContext;
+        protected readonly ICustomerService _customerService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeContext _themeContext;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -72,7 +68,7 @@ namespace Nop.Web.Factories
                 (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
-                    WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
+                    WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
                     WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone }
                 }));
 
@@ -80,7 +76,7 @@ namespace Nop.Web.Factories
             //We need to clone the cached model before modifications (the updated one should not be cached)
             var models = cachedModels.Select(renderModel => new RenderWidgetModel
             {
-                WidgetViewComponentName = renderModel.WidgetViewComponentName,
+                WidgetViewComponent = renderModel.WidgetViewComponent,
                 WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
             }).ToList();
 

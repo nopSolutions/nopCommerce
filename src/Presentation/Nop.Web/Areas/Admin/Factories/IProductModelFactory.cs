@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -164,6 +163,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the product picture list model
         /// </returns>
         Task<ProductPictureListModel> PrepareProductPictureListModelAsync(ProductPictureSearchModel searchModel, Product product);
+
+        /// <summary>
+        /// Prepare paged product video list model
+        /// </summary>
+        /// <param name="searchModel">Product video search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product video list model
+        /// </returns>
+        Task<ProductVideoListModel> PrepareProductVideoListModelAsync(ProductVideoSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product specification attribute list model

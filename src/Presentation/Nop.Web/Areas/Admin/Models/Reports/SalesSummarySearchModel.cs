@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -20,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
             AvailableManufacturers = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
             GroupByOptions = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         #endregion
@@ -58,6 +57,9 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         [NopResourceDisplayName("Admin.Reports.SalesSummary.GroupBy")]
         public int SearchGroupId { get; set; }
 
+        [NopResourceDisplayName("Admin.Reports.SalesSummary.Vendor")]
+        public int VendorId { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
@@ -69,8 +71,10 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         public IList<SelectListItem> AvailableManufacturers { get; set; }
 
         public IList<SelectListItem> AvailableCountries { get; set; }
-        
+
         public IList<SelectListItem> GroupByOptions { get; set; }
+
+        public IList<SelectListItem> AvailableVendors { get; set; }
 
         public bool IsLoggedInAsVendor { get; set; }
 

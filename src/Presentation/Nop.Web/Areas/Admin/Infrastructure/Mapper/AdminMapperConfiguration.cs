@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -63,15 +64,15 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 {
     /// <summary>
     /// AutoMapper configuration for admin area models
     /// </summary>
-    public class AdminMapperConfiguration : Profile, IOrderedMapperProfile
+    public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
     {
         #region Ctor
 
@@ -111,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateWarehouseMaps();
 
             //add some generic mapping rules
-            ForAllMaps((mapConfiguration, map) =>
+            this.Internal().ForAllMaps((mapConfiguration, map) =>
             {
                 //exclude Form and CustomProperties from mapping BaseNopModel
                 if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
@@ -339,7 +340,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NewProductsEnabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewProductsNumber_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.NewProductsPageSizeOptions_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyCustomerAboutProductReviewReply_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
@@ -369,6 +372,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowCategoryProductNumber_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowFreeShippingNotification_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowShortDescriptionOnCatalogPages_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowGtin_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowManufacturerPartNumber_OverrideForStore, options => options.Ignore())
@@ -392,11 +396,17 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.DisplayFromPrices_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
                 .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
                 .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
                 .ForMember(model => model.ReviewTypeSearchModel, options => options.Ignore())
-                .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
+                .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
+                .ForMember(model => model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DisplayAllPicturesOnCatalogPages_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ProductUrlStructureTypeId_OverrideForStore, mo => mo.Ignore())
+                .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
                 .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
@@ -415,7 +425,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
                 .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
                 .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
-                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore());
+                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
+                .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore());
 
             CreateMap<ProductCategory, CategoryProductModel>()
                 .ForMember(model => model.ProductName, options => options.Ignore());
@@ -510,9 +521,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductOrderSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductPictureModels, options => options.Ignore())
                 .ForMember(model => model.ProductPictureSearchModel, options => options.Ignore())
+                .ForMember(model => model.ProductVideoModels, options => options.Ignore())
+                .ForMember(model => model.ProductVideoSearchModel, options => options.Ignore())
+                .ForMember(model => model.AddVideoModel, options => options.Ignore())
                 .ForMember(model => model.ProductSpecificationAttributeSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductsTypesSupportedByProductTemplates, options => options.Ignore())
-                .ForMember(model => model.ProductTags, options => options.Ignore())
+                .ForMember(model => model.AvailableProductTags, options => options.Ignore())
                 .ForMember(model => model.ProductTypeName, options => options.Ignore())
                 .ForMember(model => model.ProductWarehouseInventoryModels, options => options.Ignore())
                 .ForMember(model => model.RelatedProductSearchModel, options => options.Ignore())
@@ -523,7 +537,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.StockQuantityHistorySearchModel, options => options.Ignore())
                 .ForMember(model => model.StockQuantityStr, options => options.Ignore())
                 .ForMember(model => model.TierPriceSearchModel, options => options.Ignore())
-                .ForMember(model => model.InitialProductTags, options => options.Ignore());
+                .ForMember(model => model.SelectedProductTags, options => options.Ignore())
+                .ForMember(model => model.AvailableProductTags, options => options.Ignore());
             CreateMap<ProductModel, Product>()
                 .ForMember(entity => entity.ApprovedRatingSum, options => options.Ignore())
                 .ForMember(entity => entity.ApprovedTotalReviews, options => options.Ignore())
@@ -556,9 +571,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(model => model.ProductAttributes, options => options.Ignore())
                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
                .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-               .ForMember(model => model.Warnings, options => options.Ignore());
+               .ForMember(model => model.Warnings, options => options.Ignore())
+               .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-               .ForMember(entity => entity.AttributesXml, options => options.Ignore());
+               .ForMember(entity => entity.AttributesXml, options => options.Ignore())
+                #pragma warning disable CS0618
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
@@ -595,10 +614,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.WeightAdjustmentStr, options => options.Ignore())
                 .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
                 .ForMember(model => model.DisplayImageSquaresPicture, options => options.Ignore())
-                .ForMember(model => model.ProductPictureModels, options => options.Ignore());
+                .ForMember(model => model.ProductPictureModels, options => options.Ignore())
+                .ForMember(model => model.PictureIds, options => options.Ignore());
             CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
                .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
-               .ForMember(entity => entity.Quantity, options => options.Ignore());
+               .ForMember(entity => entity.Quantity, options => options.Ignore())
+                #pragma warning disable CS0618
+               .ForMember(entity => entity.PictureId, options => options.Ignore());
+                #pragma warning restore CS0618
 
             CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
             CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
@@ -607,6 +630,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.OverrideAltAttribute, options => options.Ignore())
                 .ForMember(model => model.OverrideTitleAttribute, options => options.Ignore())
                 .ForMember(model => model.PictureUrl, options => options.Ignore());
+
+            CreateMap<ProductVideo, ProductVideoModel>()
+               .ForMember(model => model.VideoUrl, options => options.Ignore());
 
             CreateMap<Product, SpecificationAttributeProductModel>()
                 .ForMember(model => model.SpecificationAttributeId, options => options.Ignore())
@@ -721,7 +747,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
             CreateMap<AddressAttributeValueModel, AddressAttributeValue>();
 
-            CreateMap<AddressSettings, AddressSettingsModel>();
+            CreateMap<AddressSettings, AddressSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<AddressSettingsModel, AddressSettings>()
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
 
@@ -749,7 +776,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore());
             CreateMap<CustomerRoleModel, CustomerRole>();
 
-            CreateMap<CustomerSettings, CustomerSettingsModel>();
+            CreateMap<CustomerSettings, CustomerSettingsModel>()
+                .ForMember(model => model.AvailableCountries, options => options.Ignore());
             CreateMap<CustomerSettingsModel, CustomerSettings>()
                 .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
                 .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())
@@ -876,6 +904,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.LastLoginDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.BillingAddressId, options => options.Ignore())
                 .ForMember(entity => entity.ShippingAddressId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatusId, options => options.Ignore())
+                .ForMember(entity => entity.CustomCustomerAttributesXML, options => options.Ignore())
+                .ForMember(entity => entity.CurrencyId, options => options.Ignore())
+                .ForMember(entity => entity.LanguageId, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayTypeId, options => options.Ignore())
+                .ForMember(entity => entity.VatNumberStatus, options => options.Ignore())
+                .ForMember(entity => entity.TaxDisplayType, options => options.Ignore())
                 .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
 
             CreateMap<Customer, OnlineCustomerModel>()
@@ -1031,7 +1066,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DeleteInactiveCustomersAfterMonths_OverrideForStore, options => options.Ignore());
             CreateMap<GdprSettingsModel, GdprSettings>();
 
             CreateMap<GdprConsent, GdprConsentModel>();
@@ -1050,7 +1086,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<Language, LanguageModel>()
                 .ForMember(model => model.AvailableCurrencies, options => options.Ignore())
-                .ForMember(model => model.LocaleResourceSearchModel, options => options.Ignore());
+                .ForMember(model => model.LocaleResourceSearchModel, options => options.Ignore())
+                .ForMember(model => model.AvailableFlagImages, options => options.Ignore());
             CreateMap<LanguageModel, Language>();
 
             CreateMap<LocaleResourceModel, LocaleStringResource>()
@@ -1094,6 +1131,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AssociatedProductPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AvatarPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CartThumbPictureSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.OrderThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CategoryThumbPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultImageQuality_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultPictureZoomEnabled_OverrideForStore, options => options.Ignore())
@@ -1106,12 +1144,17 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductDetailsPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductThumbPictureSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.VendorThumbPictureSize_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.VendorThumbPictureSize_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ProductDefaultImageId_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AllowSVGUploads_OverrideForStore, options => options.Ignore());
             CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
                 .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
                 .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
-                .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore());
+                .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeAllow, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeHeight, options => options.Ignore())
+                .ForMember(settings => settings.VideoIframeWidth, options => options.Ignore());
         }
 
         /// <summary>
@@ -1270,7 +1313,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<OrderSettings, OrderSettingsModel>()
                 .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, options => options.Ignore())
@@ -1444,10 +1489,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowOnEmailWishlistToFriendPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnLoginPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowOnNewsletterPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowOnCheckoutPageForGuests_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CaptchaType_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ReCaptchaV3ScoreThreshold_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CaptchaTypeValues, options => options.Ignore());
@@ -1545,7 +1592,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         {
             CreateMap<Store, StoreModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore());
-            CreateMap<StoreModel, Store>();
+            CreateMap<StoreModel, Store>()
+                .ForMember(entity => entity.SslEnabled, options => options.Ignore())
+                .ForMember(entity => entity.Deleted, options => options.Ignore());
         }
 
         /// <summary>
@@ -1575,6 +1624,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<TaxSettings, TaxSettingsModel>()
                 .ForMember(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.AutomaticallyDetectCountry_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxCategoryId_OverrideForStore, options => options.Ignore())
@@ -1584,6 +1634,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.EuVatAssumeValid_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatEnabled_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.EuVatEnabledForGuests_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatShopCountries, options => options.Ignore())
                 .ForMember(model => model.EuVatShopCountryId_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.EuVatUseWebService_OverrideForStore, options => options.Ignore())

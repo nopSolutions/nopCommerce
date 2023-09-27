@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
@@ -8,7 +6,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// "nop-required" tag helper
     /// </summary>
     [HtmlTargetElement("nop-required", TagStructure = TagStructure.WithoutEndTag)]
-    public class NopRequiredTagHelper : TagHelper
+    public partial class NopRequiredTagHelper : TagHelper
     {
         #region Methods
 

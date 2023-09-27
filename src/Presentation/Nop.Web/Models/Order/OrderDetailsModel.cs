@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Order
 {
@@ -34,7 +33,7 @@ namespace Nop.Web.Models.Order
         public bool IsReOrderAllowed { get; set; }
 
         public bool IsReturnRequestAllowed { get; set; }
-        
+
         public bool IsShippable { get; set; }
         public bool PickupInStore { get; set; }
         public AddressModel PickupAddress { get; set; }
@@ -75,21 +74,27 @@ namespace Nop.Web.Models.Order
         public string RedeemedRewardPointsAmount { get; set; }
         public string OrderTotal { get; set; }
         public decimal OrderTotalValue { get; set; }
-        
+
         public IList<GiftCard> GiftCards { get; set; }
 
         public bool ShowSku { get; set; }
         public IList<OrderItemModel> Items { get; set; }
-        
+
         public IList<OrderNote> OrderNotes { get; set; }
 
         public bool ShowVendorName { get; set; }
-        
+        public bool ShowProductThumbnail { get; set; }
+
 
         #region Nested Classes
 
         public partial record OrderItemModel : BaseNopEntityModel
         {
+            public OrderItemModel()
+            {
+                Picture = new PictureModel();
+            }
+
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
             public int ProductId { get; set; }
@@ -100,6 +105,7 @@ namespace Nop.Web.Models.Order
             public string SubTotal { get; set; }
             public decimal SubTotalValue { get; set; }
             public int Quantity { get; set; }
+            public PictureModel Picture { get; set; }
             public string AttributeInfo { get; set; }
             public string RentalInfo { get; set; }
 
@@ -137,6 +143,6 @@ namespace Nop.Web.Models.Order
             public DateTime? DeliveryDate { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

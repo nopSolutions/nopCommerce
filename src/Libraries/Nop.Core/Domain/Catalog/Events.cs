@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Product review approved event
     /// </summary>
-    public class ProductReviewApprovedEvent
+    public partial class ProductReviewApprovedEvent
     {
         /// <summary>
         /// Ctor

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
@@ -28,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         public string Username { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Password")]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

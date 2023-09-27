@@ -1,12 +1,18 @@
 @model ShoppingCartModel
+
 @using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
+
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject MediaSettings mediaSettings
 @inject OrderSettings orderSettings
+
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore, additionalData = Model })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
     @if (Model.Items.Count > 0)
     {
@@ -101,11 +107,13 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        <a href="@Url.RouteUrl("Product", new {SeName = item.ProductSeName})"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                        </a>
                                     </td>
                                 }
                                 <td class="product">
-                                    <a href="@Url.RouteUrl("Product", new {SeName = item.ProductSeName})" class="product-name">@item.ProductName</a>
+                                    <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
                                     @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <div class="attributes">
@@ -126,7 +134,7 @@
                                     }
                                     @if (Model.IsEditable && item.AllowItemEditing)
                                     {
-                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
+                                        var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -170,7 +178,32 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" />
+                                            <div class="product-quantity">
+                                                <div class="quantity up" id="quantity-up-@(item.Id)"></div>
+                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" onchange="$('#updatecart').click();" />
+                                                <div class="quantity down" id="quantity-down-@(item.Id)"></div>
+                                            </div>
+                                            <script asp-location="Footer">
+                                                $(document).ready(function () {
+                                                    $('#quantity-up-@(item.Id)').on('click',
+                                                        function (e) {
+                                                            var input = $(document).find('#itemquantity@(item.Id)');
+                                                            var oldValue = parseInt(input.val());
+                                                            var newVal = oldValue + 1;
+                                                            input.val(newVal.toString());
+                                                            input.trigger("change");
+                                                        });
+
+                                                    $('#quantity-down-@(item.Id)').on('click',
+                                                        function (e) {
+                                                            var input = $(document).find('#itemquantity@(item.Id)');
+                                                            var oldValue = parseInt(input.val());
+                                                            var newVal = oldValue - 1;
+                                                            input.val(newVal.toString());
+                                                            input.trigger("change");
+                                                        });
+                                                });
+                                            </script>
                                         }
                                     }
                                     else
@@ -219,40 +252,40 @@
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info">
-                    @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
+                    @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
                 </div>
             }
             <div class="cart-options">
                 @if (Model.IsEditable)
                 {
                     <div class="common-buttons">
-                        <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+                        <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button" style="display: none;">@T("ShoppingCart.UpdateCart")</button>
 
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
-                        @await Component.InvokeAsync("ShoppingCartEstimateShipping")
+                        @await Component.InvokeAsync(typeof(ShoppingCartEstimateShippingViewComponent))
                     </div>
                 }
                 @if (Model.IsEditable)
                 {
                     @await Html.PartialAsync("_CheckoutAttributes", Model)
                 }
-                @await Component.InvokeAsync("SelectedCheckoutAttributes")
+                @await Component.InvokeAsync(typeof(SelectedCheckoutAttributesViewComponent))
             </div>
             <div class="cart-footer">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter, additionalData = Model })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter, additionalData = Model })
                 @if (Model.IsEditable)
                 {
                     <div class="cart-collaterals">
                         <div class="deals">
                             @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
                             @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals, additionalData = Model })
+                            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals, additionalData = Model })
                         </div>
                     </div>
                 }
             <div class="totals">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryTotals, additionalData = Model })
-                @await Component.InvokeAsync("OrderTotals", new { isEditable = Model.IsEditable })
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryTotals, additionalData = Model })
+                @await Component.InvokeAsync(typeof(OrderTotalsViewComponent), new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
                     if (!string.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
@@ -289,7 +322,7 @@
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }
@@ -330,7 +363,7 @@
                     </div>
                     <div class="addon-buttons">
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-                        @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)
+                        @foreach (var pm in Model.ButtonPaymentMethodViewComponents)
                         {
                             @await Component.InvokeAsync(pm)
                         }
@@ -340,7 +373,7 @@
             </div>
             @if (Model.IsEditable)
             {
-                @await Component.InvokeAsync("CrossSellProducts")
+                @await Component.InvokeAsync(typeof(CrossSellProductsViewComponent))
             }
         </form>
     }
@@ -350,5 +383,5 @@
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter, additionalData = Model })
 </div>

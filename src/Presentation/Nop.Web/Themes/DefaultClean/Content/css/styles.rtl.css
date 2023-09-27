@@ -560,6 +560,22 @@ label, label + * {
   text-align: center;
 }
 
+.cart .product-quantity div.up {
+  background: url('../images/vote-up.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
+.cart .product-quantity div.down {
+  background: url('../images/vote-down.png') no-repeat 50% 50%;
+  width: 50px;
+  height: 25px;
+  border: 0;
+  cursor: pointer;
+}
+
 .cart td.subtotal,
 .data-table td.total {
   white-space: nowrap;
@@ -803,7 +819,7 @@ label, label + * {
   right: 50%;
   z-index: 1050;
   width: 320px;
-  height: 180px;
+  height: auto;
   margin: -90px -160px 0 0;
   border: 1px solid #ccc;
   box-shadow: 0 0 2px rgba(0,0,0,0.15);
@@ -1194,7 +1210,7 @@ label, label + * {
   background-position: -114px 0;
 }
 
-.follow-us .social .google-plus a {
+.follow-us .social .instagram a {
   background-position: -152px 0;
 }
 
@@ -1778,7 +1794,18 @@ label, label + * {
   margin-right: auto;
 }
 
-.item-box .description {
+.product-grid .item-box .description:not([data-short-description]) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin: 0 0 15px;
+  height: 66px;
+  line-height: 22px;
+}
+
+.item-box .description[data-short-description] {
   display: none;
 }
 
@@ -2066,7 +2093,8 @@ label, label + * {
 }
 
 .gallery .picture img,
-.gallery .picture-thumbs img,
+.picture-gallery .picture-thumbs img,
+.video-gallery .video-thumbs iframe,
 .variant-picture img {
   position: absolute;
   top: 0;
@@ -2078,12 +2106,12 @@ label, label + * {
   margin: auto;
 }
 
-.gallery .picture-thumbs {
+.picture-gallery .picture-thumbs {
   overflow: hidden;
   font-size: 0;
 }
 
-.gallery .picture-thumbs .thumb-item {
+.picture-gallery .picture-thumbs .thumb-item {
   display: inline-block;
   position: relative;
   width: 100px;
@@ -2091,6 +2119,13 @@ label, label + * {
   margin: 0 5px 10px;
   overflow: hidden;
   cursor: pointer;
+}
+
+.video-gallery .video-thumbs .thumb-item {
+  display: inline-block;
+  position: relative;
+  margin: 0 5px 10px;
+  overflow: hidden;
 }
 
 .overview {
@@ -4778,6 +4813,17 @@ label, label + * {
   font-weight: bold;
   color: #444;
 }
+
+.vat-number-warning {
+  text-align: center;
+  font-size: 13px;
+  color: #e4434b;
+  margin-top: 5px;
+}
+
+  .vat-number-warning a {
+    text-decoration: underline;
+  }
 
 .checkout-page .pickup-in-store {
   text-align: center;
@@ -8105,7 +8151,8 @@ label, label + * {
   }
 
   .header-menu ul li:hover > .sublist,
-  .header-menu ul li:focus > .sublist {
+  .header-menu ul li:focus > .sublist,
+  .header-menu ul li:focus-within > .sublist {
     display: block;
   }
 
@@ -8284,7 +8331,12 @@ label, label + * {
     width: 46%;
   }
 
-  .gallery .picture {
+  .picture-gallery .picture {
+    width: auto;
+  }
+
+  .video-gallery {
+    float: right;
     width: auto;
   }
 
@@ -8819,4 +8871,33 @@ label, label + * {
     width: 930px;
     max-width: 100%;
   }
+}
+
+a.skip {
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  height: 1px;
+  width: 1px;
+  text-align: left;
+  overflow: hidden;
+}
+
+a.skip:active,
+a.skip:focus,
+a.skip:hover {
+  position: initial;
+  top: 0;
+  left: 0;
+  display: block;
+  height: auto;
+  margin: 3px 0;
+  overflow: visible;
+  padding: 2px;
+  color: #444444;
+  background: #ffffff;
+  text-decoration: underline;
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
 }

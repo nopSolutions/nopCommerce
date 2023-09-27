@@ -1,11 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Common;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -17,23 +13,20 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion
 
         #region Ctor
 
-        public BackInStockSubscriptionService(IGenericAttributeService genericAttributeService,
-            IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
+        public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IRepository<Customer> customerRepository,
             IRepository<Product> productRepository,
             IWorkflowMessageService workflowMessageService)
         {
-            _genericAttributeService = genericAttributeService;
             _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
@@ -79,9 +72,9 @@ namespace Nop.Services.Catalog
 
                 //product
                 query = from q in query
-                    join p in _productRepository.Table on q.ProductId equals p.Id
-                    where !p.Deleted
-                    select q;
+                        join p in _productRepository.Table on q.ProductId equals p.Id
+                        where !p.Deleted
+                        select q;
 
                 query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
@@ -135,7 +128,7 @@ namespace Nop.Services.Catalog
         {
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
         }
-        
+
         /// <summary>
         /// Send notification to subscribers
         /// </summary>
@@ -153,9 +146,8 @@ namespace Nop.Services.Catalog
             var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
             foreach (var subscription in subscriptions)
             {
-                var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
-
-                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
+                var customer = await _customerRepository.GetByIdAsync(subscription.CustomerId);
+                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)
@@ -163,7 +155,7 @@ namespace Nop.Services.Catalog
 
             return result;
         }
-        
+
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
@@ -187,9 +179,9 @@ namespace Nop.Services.Catalog
                     query = query.Where(biss => biss.StoreId == storeId);
                 //customer
                 query = from biss in query
-                    join c in _customerRepository.Table on biss.CustomerId equals c.Id
-                    where c.Active && !c.Deleted
-                    select biss;
+                        join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                        where c.Active && !c.Deleted
+                        select biss;
 
                 query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 

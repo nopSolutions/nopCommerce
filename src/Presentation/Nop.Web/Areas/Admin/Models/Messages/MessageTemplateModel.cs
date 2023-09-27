@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -52,6 +51,9 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         public int? DelayBeforeSend { get; set; }
 
         public int DelayPeriodId { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply")]
+        public bool AllowDirectReply { get; set; }
 
         public bool HasAttachedDownload { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload")]

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -21,7 +20,10 @@ namespace Nop.Services.Catalog.Caching
             await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsPrefix);
 
             if (entityEventType != EntityEventType.Insert)
+            {
+                await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersPrefix);
                 await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturersByCategoryPrefix);
+            }
 
             if (entityEventType == EntityEventType.Delete)
                 await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByManufacturerCacheKey, entity);

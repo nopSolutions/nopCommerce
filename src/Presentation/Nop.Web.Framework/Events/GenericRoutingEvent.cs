@@ -1,22 +1,19 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.Events
 {
     /// <summary>
-    /// Represents an event that occurs when a generic route is processed and no default handlers are found
+    /// Represents an event that occurs when a generic route is processed and before default transformation
     /// </summary>
-    public class GenericRoutingEvent
+    public partial class GenericRoutingEvent
     {
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="values">Route values</param>
-        /// <param name="urlRecord">Found URL record</param>
-        public GenericRoutingEvent(RouteValueDictionary values, UrlRecord urlRecord)
+        public GenericRoutingEvent(HttpContext httpContext, RouteValueDictionary values, UrlRecord urlRecord)
         {
+            HttpContext = httpContext;
             RouteValues = values;
             UrlRecord = urlRecord;
         }
@@ -26,14 +23,24 @@ namespace Nop.Web.Framework.Events
         #region Properties
 
         /// <summary>
-        /// Gets route values
+        /// Gets HTTP context
         /// </summary>
-        public RouteValueDictionary RouteValues { get; private set; }
+        public HttpContext HttpContext { get; protected set; }
 
         /// <summary>
-        /// Gets URL record found by the route slug
+        /// Gets route values associated with the current match
         /// </summary>
-        public UrlRecord UrlRecord { get; private set; }
+        public RouteValueDictionary RouteValues { get; protected set; }
+
+        /// <summary>
+        /// Gets record found by the URL slug
+        /// </summary>
+        public UrlRecord UrlRecord { get; protected set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the event was handled and values should be used without further processing
+        /// </summary>
+        public bool Handled { get; set; }
 
         #endregion
     }

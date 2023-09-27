@@ -1,10 +1,13 @@
 ﻿@model TopMenuModel
 
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Topics
+
 @functions {
     async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
     {
         <li>
-            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">@lineModel.Category.Name
+            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
@@ -45,7 +48,7 @@
 }
 
 <ul class="top-menu notmobile">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
     @if (Model.DisplayHomepageMenuItem)
     {
         <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
@@ -65,7 +68,7 @@
     }
     @foreach (var topic in Model.Topics)
     {
-        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+        <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
     }
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
@@ -91,15 +94,15 @@
     {
         <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
 </ul>
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
     var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
-    <div class="menu-toggle">@responsiveMenuTitle</div>
+    <div class="menu-toggle" tabindex="0" role="button" aria-controls="aria-categories-mobile-ul">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore, additionalData = Model })
         @if (Model.DisplayHomepageMenuItem)
         {
             <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
@@ -119,7 +122,7 @@
         }
         @foreach (var topic in Model.Topics)
         {
-            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+            <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
         }
         @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {
@@ -145,7 +148,7 @@
         {
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter, additionalData = Model })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter, additionalData = Model })
     </ul>
 
     @if (Model.UseAjaxMenu)
@@ -154,6 +157,11 @@
         $(document).ready(function () {
             $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
+            $('.menu-toggle').on('keydown', function (event) {
+                if (event.keyCode === 13 || event.keyCode === 32) {
+                    event.preventDefault();                 
+                    $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                }
             });
             var localized_data = {
                 AjaxFailure: "@T("MainMenu.AjaxFailure")"
@@ -171,6 +179,12 @@
             $(document).ready(function () {
                 $('.menu-toggle').on('click', function () {
                     $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                });
+                $('.menu-toggle').on('keydown', function (event) {
+                    if (event.keyCode === 13 || event.keyCode === 32) {
+                        event.preventDefault();
+                        $(this).siblings('.top-menu.mobile').slideToggle('slow');
+                    }
                 });
                 $('.top-menu.mobile .sublist-toggle').on('click', function () {
                     $(this).siblings('.sublist').slideToggle('slow');

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,20 +26,20 @@ namespace Nop.Web.Framework.Controllers
     [SaveLastActivity]
     [SaveLastVisitedPage]
     [ForceMultiFactorAuthentication]
-    public abstract class BaseController : Controller
+    public abstract partial class BaseController : Controller
     {
         #region Rendering
 
         /// <summary>
         /// Render component to string
         /// </summary>
-        /// <param name="componentName">Component name</param>
+        /// <param name="componentType">Component type</param>
         /// <param name="arguments">Arguments</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        protected virtual async Task<string> RenderViewComponentToStringAsync(string componentName, object arguments = null)
+        protected virtual async Task<string> RenderViewComponentToStringAsync(Type componentType, object arguments = null)
         {
             var helper = new DefaultViewComponentHelper(
                 EngineContext.Current.Resolve<IViewComponentDescriptorCollectionProvider>(),
@@ -55,12 +51,12 @@ namespace Nop.Web.Framework.Controllers
             using var writer = new StringWriter();
             var context = new ViewContext(ControllerContext, NullView.Instance, ViewData, TempData, writer, new HtmlHelperOptions());
             helper.Contextualize(context);
-            var result = await helper.InvokeAsync(componentName, arguments);
+            var result = await helper.InvokeAsync(componentType, arguments);
             result.WriteTo(writer, HtmlEncoder.Default);
             await writer.FlushAsync();
             return writer.ToString();
         }
-        
+
         /// <summary>
         /// Render partial view to string
         /// </summary>
@@ -203,7 +199,7 @@ namespace Nop.Web.Framework.Controllers
         /// A task that represents the asynchronous operation
         /// The task result contains the access denied JSON data
         /// </returns>
-        protected async Task<JsonResult> AccessDeniedDataTablesJson()
+        protected virtual async Task<JsonResult> AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 

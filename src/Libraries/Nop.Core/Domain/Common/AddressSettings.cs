@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Address settings
     /// </summary>
-    public class AddressSettings : ISettings
+    public partial class AddressSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is enabled
@@ -71,6 +71,11 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'Country' is enabled
         /// </summary>
         public bool CountryEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a Default Country
+        /// </summary>
+        public int? DefaultCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'State / province' is enabled

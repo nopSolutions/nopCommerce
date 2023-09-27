@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Messages
     /// <summary>
     /// Email unsubscribed event
     /// </summary>
-    public class EmailUnsubscribedEvent
+    public partial class EmailUnsubscribedEvent
     {
         /// <summary>
         /// Ctor
@@ -26,10 +26,10 @@ namespace Nop.Core.Domain.Messages
         /// <returns>Result</returns>
         public bool Equals(EmailUnsubscribedEvent other)
         {
-            if (other is null) 
+            if (other is null)
                 return false;
 
-            if (ReferenceEquals(this, other)) 
+            if (ReferenceEquals(this, other))
                 return true;
 
             return Equals(other.Subscription, Subscription);
@@ -42,13 +42,13 @@ namespace Nop.Core.Domain.Messages
         /// <returns>Result</returns>
         public override bool Equals(object obj)
         {
-            if (obj is null) 
+            if (obj is null)
                 return false;
 
-            if (ReferenceEquals(this, obj)) 
+            if (ReferenceEquals(this, obj))
                 return true;
 
-            if (obj.GetType() != typeof(EmailUnsubscribedEvent)) 
+            if (obj.GetType() != typeof(EmailUnsubscribedEvent))
                 return false;
 
             return Equals((EmailUnsubscribedEvent)obj);

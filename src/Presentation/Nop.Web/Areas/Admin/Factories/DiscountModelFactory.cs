@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -30,20 +26,20 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IDiscountPluginManager _discountPluginManager;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -194,6 +190,23 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available discount types
             await _baseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
 
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.List.IsActive.InactiveOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -219,6 +232,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var endDateUtc = searchModel.SearchEndDate.HasValue ?
                 (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
 
             //get discounts
             var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
@@ -226,7 +240,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc)).ToPagedList(searchModel);
+                endDateUtc: endDateUtc,
+                isActive: isActive)).ToPagedList(searchModel);
 
             //prepare list model
             var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
@@ -312,7 +327,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //set default values for the new model
             if (discount == null)
+            {
+                model.IsActive = true;
                 model.LimitationTimes = 1;
+            }
 
             return model;
         }

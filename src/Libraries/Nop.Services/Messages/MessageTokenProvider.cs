@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -28,6 +23,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
+using Nop.Services.Attributes;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -54,44 +50,44 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressService _addressService;
-        private readonly IBlogService _blogService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsService _newsService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
-        private readonly IWorkContext _workContext;
-        private readonly MessageTemplatesSettings _templatesSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
+        protected readonly IAttributeFormatter<VendorAttribute, VendorAttributeValue> _vendorAttributeFormatter;
+        protected readonly IBlogService _blogService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsService _newsService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MessageTemplatesSettings _templatesSettings;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly StoreInformationSettings _storeInformationSettings;
+        protected readonly TaxSettings _taxSettings;
 
-        private Dictionary<string, IEnumerable<string>> _allowedTokens;
+        protected Dictionary<string, IEnumerable<string>> _allowedTokens;
 
         #endregion
 
@@ -100,12 +96,13 @@ namespace Nop.Services.Messages
         public MessageTokenProvider(CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressService addressService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
+            IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> customerAttributeFormatter,
+            IAttributeFormatter<VendorAttribute, VendorAttributeValue> vendorAttributeFormatter,
             IBlogService blogService,
             ICountryService countryService,
             ICurrencyService currencyService,
-            ICustomerAttributeFormatter customerAttributeFormatter,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IEventPublisher eventPublisher,
@@ -127,7 +124,6 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
-            IVendorAttributeFormatter vendorAttributeFormatter,
             IWorkContext workContext,
             MessageTemplatesSettings templatesSettings,
             PaymentSettings paymentSettings,
@@ -137,12 +133,13 @@ namespace Nop.Services.Messages
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _addressService = addressService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _customerAttributeFormatter = customerAttributeFormatter;
+            _vendorAttributeFormatter = vendorAttributeFormatter;
             _blogService = blogService;
             _countryService = countryService;
             _currencyService = currencyService;
-            _customerAttributeFormatter = customerAttributeFormatter;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _eventPublisher = eventPublisher;
@@ -164,7 +161,6 @@ namespace Nop.Services.Messages
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
-            _vendorAttributeFormatter = vendorAttributeFormatter;
             _workContext = workContext;
             _templatesSettings = templatesSettings;
             _paymentSettings = paymentSettings;
@@ -200,7 +196,8 @@ namespace Nop.Services.Messages
                     "%Store.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
-                    "%YouTube.URL%"
+                    "%YouTube.URL%",
+                    "%Instagram.URL%"
                 });
 
                 //customer tokens
@@ -240,6 +237,7 @@ namespace Nop.Services.Messages
                     "%Order.BillingZipPostalCode%",
                     "%Order.BillingCountry%",
                     "%Order.BillingCustomAttributes%",
+                    "%Order.BillingAddressLine%",
                     "%Order.Shippable%",
                     "%Order.ShippingMethod%",
                     "%Order.ShippingFirstName%",
@@ -256,6 +254,7 @@ namespace Nop.Services.Messages
                     "%Order.ShippingZipPostalCode%",
                     "%Order.ShippingCountry%",
                     "%Order.ShippingCustomAttributes%",
+                    "%Order.ShippingAddressLine%",
                     "%Order.PaymentMethod%",
                     "%Order.VatNumber%",
                     "%Order.CustomValues%",
@@ -506,7 +505,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (await _orderService.IsDownloadAllowedAsync(orderItem))
                 {
-                    var downloadUrl  = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
+                    var downloadUrl = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
                     var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
@@ -514,7 +513,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
                 {
-                    var licenseUrl  = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
+                    var licenseUrl = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
                     var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(licenseLink);
@@ -902,16 +901,12 @@ namespace Nop.Services.Messages
             if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
 
-            //generate a URL with an absolute path
+            //generate the relative URL
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
-
-            //remove the application path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
-            url.StartsWithSegments(pathBase, out url);
+            var url = urlHelper.RouteUrl(routeName, routeValues);
 
             //compose the result
-            return new Uri(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"), UriKind.Absolute).AbsoluteUri;
+            return new Uri(new Uri(store.Url), url).AbsoluteUri;
         }
 
         #endregion
@@ -941,6 +936,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
             tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
 
             //event notification
             await _eventPublisher.EntityTokensAddedAsync(store, tokens);
@@ -960,6 +956,8 @@ namespace Nop.Services.Messages
             async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
 
             var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+            var (billingAddressLine, _) = await _addressService.FormatAddressAsync(billingAddress, languageId);
+            var (shippingAddressLine, _) = await _addressService.FormatAddressAsync(await orderAddress(order), languageId);
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
@@ -981,7 +979,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
             tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await _localizationService.GetLocalizedAsync(billingCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync(billingAddress.CustomAttributes), true));
-
+            tokens.Add(new Token("Order.BillingAddressLine", billingAddressLine));
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
             tokens.Add(new Token("Order.PickupInStore", order.PickupInStore));
@@ -999,6 +997,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
+            tokens.Add(new Token("Order.ShippingAddressLine", shippingAddressLine));
             tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
             tokens.Add(new Token("Order.IsCompletelyReadyForPickup", order.PickupInStore && !await _orderService.HasItemsToAddToShipmentAsync(order) && !await _orderService.HasItemsToReadyForPickupAsync(order)));
             tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));
@@ -1086,7 +1085,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", await ProductListToHtmlTableAsync(shipment, languageId), true));
 
-            var shipmentUrl  = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+            var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification
@@ -1104,7 +1103,7 @@ namespace Nop.Services.Messages
             var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
             tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
-            var orderNoteAttachmentUrl  = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
+            var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
@@ -1160,14 +1159,17 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="giftCard">Gift card</param>
+        /// <param name="languageId">Language identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard)
+        public virtual async Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard, int languageId)
         {
             tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
             tokens.Add(new Token("GiftCard.SenderEmail", giftCard.SenderEmail));
             tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
             tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
-            tokens.Add(new Token("GiftCard.Amount", await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false)));
+
+            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+            tokens.Add(new Token("GiftCard.Amount", await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, primaryStoreCurrency.CurrencyCode, false, languageId)));
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
@@ -1206,19 +1208,19 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));
-            tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
-            tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute)));
-            tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
+            tokens.Add(new Token("Customer.FirstName", customer.FirstName));
+            tokens.Add(new Token("Customer.LastName", customer.LastName));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.VatNumberStatusId).ToString()));
 
-            var customAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+            var customAttributesXml = customer.CustomCustomerAttributesXML;
             tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl  = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
-            var accountActivationUrl  = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
-            var emailRevalidationUrl  = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-            var wishlistUrl  = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
+            var passwordRecoveryUrl = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+            var accountActivationUrl = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+            var emailRevalidationUrl = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
+            var wishlistUrl = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
@@ -1331,7 +1333,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", await _productService.GetTotalStockQuantityAsync(product)));
 
-            var productUrl = await RouteUrlAsync(routeName: "Product", routeValues: new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+            var seName = await _urlRecordService.GetSeNameAsync(product);
+            var productUrl = await RouteUrlAsync(routeName: "ProductDetails", routeValues: new { SeName = seName });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
@@ -1353,10 +1356,13 @@ namespace Nop.Services.Messages
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
 
             var product = await _productService.GetProductByIdAsync(combination.ProductId);
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             var attributes = await productAttributeFormatter.FormatAttributesAsync(product,
                 combination.AttributesXml,
-                await _workContext.GetCurrentCustomerAsync(),
+                currentCustomer,
+                currentStore,
                 renderPrices: false);
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
@@ -1506,7 +1512,10 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null)
         {
-            var additionalTokens = new AdditionalTokensAddedEvent();
+            var additionalTokens = new AdditionalTokensAddedEvent
+            {
+                TokenGroups = tokenGroups
+            };
             await _eventPublisher.PublishAsync(additionalTokens);
 
             var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
@@ -1527,61 +1536,62 @@ namespace Nop.Services.Messages
             //groups depend on which tokens are added at the appropriate methods in IWorkflowMessageService
             return messageTemplate.Name switch
             {
-                MessageTemplateSystemNames.CustomerRegisteredNotification or 
-                MessageTemplateSystemNames.CustomerWelcomeMessage or 
-                MessageTemplateSystemNames.CustomerEmailValidationMessage or 
-                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or 
+                MessageTemplateSystemNames.CustomerRegisteredStoreOwnerNotification or
+                MessageTemplateSystemNames.CustomerWelcomeMessage or
+                MessageTemplateSystemNames.CustomerEmailValidationMessage or
+                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or
                 MessageTemplateSystemNames.CustomerPasswordRecoveryMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.OrderPlacedVendorNotification or 
-                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or 
-                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or 
-                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or 
-                MessageTemplateSystemNames.OrderPaidCustomerNotification or 
-                MessageTemplateSystemNames.OrderPaidVendorNotification or 
-                MessageTemplateSystemNames.OrderPaidAffiliateNotification or 
-                MessageTemplateSystemNames.OrderPlacedCustomerNotification or 
-                MessageTemplateSystemNames.OrderCompletedCustomerNotification or 
+                MessageTemplateSystemNames.OrderPlacedVendorNotification or
+                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or
+                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or
+                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or
+                MessageTemplateSystemNames.OrderPaidCustomerNotification or
+                MessageTemplateSystemNames.OrderPaidVendorNotification or
+                MessageTemplateSystemNames.OrderPaidAffiliateNotification or
+                MessageTemplateSystemNames.OrderPlacedCustomerNotification or
+                MessageTemplateSystemNames.OrderProcessingCustomerNotification or
+                MessageTemplateSystemNames.OrderCompletedCustomerNotification or
                 MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
-                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentSentCustomerNotification or
+                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or
                 MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 
+                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or
                 MessageTemplateSystemNames.OrderRefundedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or 
-                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or 
+                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or
+                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or
                 MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens },
 
-                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or 
+                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or
                 MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens },
 
                 MessageTemplateSystemNames.EmailAFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens },
                 MessageTemplateSystemNames.WishlistToFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens },
 
-                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or 
-                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or 
+                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or
+                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or
                 MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens },
 
                 MessageTemplateSystemNames.NewForumTopicMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
                 MessageTemplateSystemNames.NewForumPostMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
                 MessageTemplateSystemNames.PrivateMessageNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens },
                 MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens },
-                MessageTemplateSystemNames.VendorInformationChangeNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens },
+                MessageTemplateSystemNames.VendorInformationChangeStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens },
                 MessageTemplateSystemNames.GiftCardNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens },
 
-                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or 
+                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or
                 MessageTemplateSystemNames.ProductReviewReplyCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens },
                 MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens },
                 MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation },
-                MessageTemplateSystemNames.BlogCommentNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.NewsCommentNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.BlogCommentStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.NewsCommentStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens },
                 MessageTemplateSystemNames.BackInStockNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens },
                 MessageTemplateSystemNames.ContactUsMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs },
                 MessageTemplateSystemNames.ContactVendorMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor },

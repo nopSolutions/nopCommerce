@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
@@ -17,10 +13,10 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -195,6 +191,32 @@ namespace Nop.Services.Stores
         }
 
         /// <summary>
+        /// Find store identifiers with granted access (mapped to the entity)
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>
+        /// The store identifiers
+        /// </returns>
+        public virtual int[] GetStoresIdsWithAccess<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entityId = entity.Id;
+            var entityName = entity.GetType().Name;
+
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
+
+            var query = from sm in _storeMappingRepository.Table
+                        where sm.EntityId == entityId &&
+                              sm.EntityName == entityName
+                        select sm.StoreId;
+
+            return _staticCacheManager.Get(key, () => query.ToArray());
+        }
+
+        /// <summary>
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
@@ -236,6 +258,39 @@ namespace Nop.Services.Stores
                 return true;
 
             foreach (var storeIdWithAccess in await GetStoresIdsWithAccessAsync(entity))
+                if (storeId == storeIdWithAccess)
+                    //yes, we have such permission
+                    return true;
+
+            //no permission found
+            return false;
+        }
+
+        /// <summary>
+        /// Authorize whether entity could be accessed in a store (mapped to this store)
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>
+        /// The rue - authorized; otherwise, false
+        /// </returns>
+        public virtual bool Authorize<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            if (entity == null)
+                return false;
+
+            if (storeId == 0)
+                //return true if no store specified/found
+                return true;
+
+            if (_catalogSettings.IgnoreStoreLimitations)
+                return true;
+
+            if (!entity.LimitedToStores)
+                return true;
+
+            foreach (var storeIdWithAccess in GetStoresIdsWithAccess(entity))
                 if (storeId == storeIdWithAccess)
                     //yes, we have such permission
                     return true;

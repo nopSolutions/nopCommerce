@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core;
+﻿using Nop.Core;
 
 namespace Nop.Plugin.Payments.PayPalCommerce
 {
@@ -79,24 +78,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         };
 
         /// <summary>
-        /// Gets a name of the view component to display payment info in public store
+        /// Gets a list of currencies that do not support decimals. 
+        /// Refer to https://developer.paypal.com/docs/integration/direct/rest/currency-codes/ for more information 
         /// </summary>
-        public const string PAYMENT_INFO_VIEW_COMPONENT_NAME = "PayPalCommercePaymentInfo";
-
-        /// <summary>
-        /// Gets a name of the view component to add script to pages
-        /// </summary>
-        public const string SCRIPT_VIEW_COMPONENT_NAME = "PayPalCommerceScript";
-
-        /// <summary>
-        /// Gets a name of the view component to display buttons
-        /// </summary>
-        public const string BUTTONS_VIEW_COMPONENT_NAME = "PayPalCommerceButtons";
-
-        /// <summary>
-        /// Gets a name of the view component to display logo
-        /// </summary>
-        public const string LOGO_VIEW_COMPONENT_NAME = "PayPalCommerceLogo";
+        public static List<string> CurrenciesWithoutDecimals => new() { "HUF", "JPY", "TWD" };
 
         #region Onboarding
 

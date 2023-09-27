@@ -15,7 +15,7 @@
     <div class="float-right">
         <a asp-action="CreateForumGroup" class="btn btn-primary">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
         <a asp-action="CreateForum" class="btn btn-primary">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumListButtons, additionalData = Model })
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumListButtons, additionalData = Model })
     </div>
 </div>
 

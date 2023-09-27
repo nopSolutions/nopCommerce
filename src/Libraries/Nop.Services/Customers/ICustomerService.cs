@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -21,6 +18,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="lastActivityFromUtc">Last activity date from (UTC); null to load all records</param>
+        /// <param name="lastActivityToUtc">Last activity date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
@@ -42,6 +41,7 @@ namespace Nop.Services.Customers
         /// The task result contains the customers
         /// </returns>
         Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            DateTime? lastActivityFromUtc = null, DateTime? lastActivityToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
@@ -138,6 +138,16 @@ namespace Nop.Services.Customers
         Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds);
 
         /// <summary>
+        /// Get customers by guids
+        /// </summary>
+        /// <param name="customerGuids">Customer guids</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
+        Task<IList<Customer>> GetCustomersByGuidsAsync(Guid[] customerGuids);
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
@@ -227,6 +237,16 @@ namespace Nop.Services.Customers
         /// The task result contains the number of deleted customers
         /// </returns>
         Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
+
+        /// <summary>
+        /// Gets a tax display type for the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer);
 
         /// <summary>
         /// Gets a default tax display type (if configured)
@@ -323,6 +343,16 @@ namespace Nop.Services.Customers
         /// The task result contains the new coupon codes document
         /// </returns>
         Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Returns a list of guids of not existing customers
+        /// </summary>
+        /// <param name="guids">The guids of the customers to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of guids not existing customers
+        /// </returns>
+        Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids);
 
         #endregion
 

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace Nop.Core.Domain.Messages
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
     /// <typeparam name="U"></typeparam>
-    public class EntityTokensAddedEvent<T, U> where T : BaseEntity
+    public partial class EntityTokensAddedEvent<T, U> where T : BaseEntity
     {
         /// <summary>
         /// Ctor

@@ -43,6 +43,16 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="OrderThumbPictureSize_OverrideForStore" asp-input="OrderThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="OrderThumbPictureSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="OrderThumbPictureSize" />
+            <span asp-validation-for="OrderThumbPictureSize"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="MiniCartThumbPictureSize_OverrideForStore" asp-input="MiniCartThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="MiniCartThumbPictureSize" />
         </div>

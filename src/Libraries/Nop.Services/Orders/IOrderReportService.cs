@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -74,11 +71,11 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get sales summary report
         /// </summary>
-        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -129,7 +126,7 @@ namespace Nop.Services.Orders
         /// </returns>
         Task<IPagedList<BestsellersReportLine>> BestSellersReportAsync(
             int categoryId = 0,
-            int manufacturerId = 0, 
+            int manufacturerId = 0,
             int storeId = 0,
             int vendorId = 0,
             DateTime? createdFromUtc = null,
@@ -142,7 +139,7 @@ namespace Nop.Services.Orders
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             bool showHidden = false);
-        
+
         /// <summary>
         /// Get a total amount of best sellers
         /// </summary>
@@ -173,7 +170,7 @@ namespace Nop.Services.Orders
             ShippingStatus? ss = null,
             int billingCountryId = 0,
             bool showHidden = false);
-            
+
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>

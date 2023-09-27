@@ -6,7 +6,8 @@
 @{
     var showTour = ViewBag.ShowTour ?? false;
 }
-@if (showTour)
+
+@if (showTour && await workContext.GetCurrentVendorAsync() is null)
 {
     <link rel="stylesheet" href="~/lib_npm/shepherd.js/css/shepherd.css" />
     <script src="~/lib_npm/shepherd.js/js/shepherd.min.js"></script>
@@ -22,17 +23,17 @@
             <script asp-exclude-from-bundle="true" asp-location="Footer" src="~/js/admintour/admin.tour.generalsettings.js"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    PersonalizeStoreIntroTitle: '@T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Title")',
-                    PersonalizeStoreIntroText: '@T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Text")',
+                    PersonalizeStoreIntroTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Title").Text)',
+                    PersonalizeStoreIntroText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Text").Text)',
 
-                    PersonalizeStoreBasicAdvancedTitle: '@T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Title")',
-                    PersonalizeStoreBasicAdvancedText: '@T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Text")',
+                    PersonalizeStoreBasicAdvancedTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Title").Text)',
+                    PersonalizeStoreBasicAdvancedText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Text").Text)',
 
-                    PersonalizeStoreThemeTitle: '@T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Title")',
-                    PersonalizeStoreThemeText: '@T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Text", OfficialSite.Themes + Utm.OnAdminTour, Docs.Themes + Utm.OnAdminTourDocs)',
+                    PersonalizeStoreThemeTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Title").Text)',
+                    PersonalizeStoreThemeText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Text", OfficialSite.Themes + Utm.OnAdminTour, Docs.Themes + Utm.OnAdminTourDocs).Text)',
 
-                    PersonalizeStoreLogoTitle: '@T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Title")',
-                    PersonalizeStoreLogoText: '@T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Text")',
+                    PersonalizeStoreLogoTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Title").Text)',
+                    PersonalizeStoreLogoText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Text").Text)',
                 };
             </script>
             break;
@@ -42,18 +43,18 @@
             <script asp-exclude-from-bundle="true"  src="~/js/admintour/admin.tour.store.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    Back: '@T("Admin.ConfigurationSteps.Back")',
-                    NextStep: '@T("Admin.ConfigurationSteps.NextStep")',
-                    NextPage: '@T("Admin.ConfigurationSteps.NextPage")',
+                    Back: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Back").Text)',
+                    NextStep: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextStep").Text)',
+                    NextPage: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextPage").Text)',
 
-                    StoreNameTitle: '@T("Admin.ConfigurationSteps.Store.Name.Title")',
-                    StoreNameText: '@T("Admin.ConfigurationSteps.Store.Name.Text")',
+                    StoreNameTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Name.Title").Text)',
+                    StoreNameText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Name.Text").Text)',
 
-                    StoreUrlTitle: '@T("Admin.ConfigurationSteps.Store.Url.Title")',
-                    StoreUrlText: '@T("Admin.ConfigurationSteps.Store.Url.Text")',
+                    StoreUrlTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Url.Title").Text)',
+                    StoreUrlText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Url.Text").Text)',
 
-                    StoreSslTitle: '@T("Admin.ConfigurationSteps.Store.Ssl.Title")',
-                    StoreSslText: '@T("Admin.ConfigurationSteps.Store.Ssl.Text", Docs.SslInstall + Utm.OnAdminTourDocs)',
+                    StoreSslTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Ssl.Title").Text)',
+                    StoreSslText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Ssl.Text", Docs.SslInstall + Utm.OnAdminTourDocs).Text)',
                 };
             </script>
             break;
@@ -63,20 +64,17 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.shippingproviders.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    ShippingProvidersProvidersTitle: '@T("Admin.ConfigurationSteps.ShippingProviders.Providers.Title")',
-                    ShippingProvidersProvidersText: '@T("Admin.ConfigurationSteps.ShippingProviders.Providers.Text", OfficialSite.ShippingPlugins + Utm.OnAdminTourDocs.Replace('?', '&'))',
+                    ShippingProvidersProvidersTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Providers.Title").Text)',
+                    ShippingProvidersProvidersText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Providers.Text", OfficialSite.ShippingPlugins + Utm.OnAdminTourDocs.Replace('?', '&')).Text)',
 
-                    ShippingProvidersManualTitle: '@T("Admin.ConfigurationSteps.ShippingProviders.Manual.Title")',
-                    ShippingProvidersManualText: '@T("Admin.ConfigurationSteps.ShippingProviders.Manual.Text")',
+                    ShippingProvidersManualTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Manual.Title").Text)',
+                    ShippingProvidersManualText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Manual.Text").Text)',
+                    
+                    ShippingProvidersActivateTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Activate.Title").Text)',
+                    ShippingProvidersActivateText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Activate.Text").Text)',
 
-                    ShippingProvidersShipStationTitle: '@T("Admin.ConfigurationSteps.ShippingProviders.ShipStation.Title")',
-                    ShippingProvidersShipStationText: '@T("Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text", Docs.ShipStation + Utm.OnAdminTourDocs)',
-
-                    ShippingProvidersActivateTitle: '@T("Admin.ConfigurationSteps.ShippingProviders.Activate.Title")',
-                    ShippingProvidersActivateText: '@T("Admin.ConfigurationSteps.ShippingProviders.Activate.Text")',
-
-                    ShippingProvidersConfigureTitle: '@T("Admin.ConfigurationSteps.ShippingProviders.Configure.Title")',
-                    ShippingProvidersConfigureText: '@T("Admin.ConfigurationSteps.ShippingProviders.Configure.Text")',
+                    ShippingProvidersConfigureTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Configure.Title").Text)',
+                    ShippingProvidersConfigureText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Configure.Text").Text)',
                 };
             </script>
             break;
@@ -86,23 +84,23 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.shippingmanual.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    ConfigureManualSwitchTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.Switch.Title")',
-                    ConfigureManualSwitchText: '@T("Admin.ConfigurationSteps.ConfigureManual.Switch.Text")',
+                    ConfigureManualSwitchTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Switch.Title").Text)',
+                    ConfigureManualSwitchText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Switch.Text").Text)',
 
-                    ConfigureManualFixedRateTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Title")',
-                    ConfigureManualFixedRateText: '@T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Text")',
+                    ConfigureManualFixedRateTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Title").Text)',
+                    ConfigureManualFixedRateText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Text").Text)',
 
-                    ConfigureManualByWeightTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Title")',
-                    ConfigureManualByWeightText: '@T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Text")',
+                    ConfigureManualByWeightTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Title").Text)',
+                    ConfigureManualByWeightText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Text").Text)',
 
-                    ConfigureManualMethodsTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.Methods.Title")',
-                    ConfigureManualMethodsText: '@T("Admin.ConfigurationSteps.ConfigureManual.Methods.Text")',
+                    ConfigureManualMethodsTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Methods.Title").Text)',
+                    ConfigureManualMethodsText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Methods.Text").Text)',
 
-                    ConfigureManualEditTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.Edit.Title")',
-                    ConfigureManualEditText: '@T("Admin.ConfigurationSteps.ConfigureManual.Edit.Text")',
+                    ConfigureManualEditTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Edit.Title").Text)',
+                    ConfigureManualEditText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Edit.Text").Text)',
 
-                    ConfigureManualManageTitle: '@T("Admin.ConfigurationSteps.ConfigureManual.Manage.Title")',
-                    ConfigureManualManageText: '@T("Admin.ConfigurationSteps.ConfigureManual.Manage.Text")',
+                    ConfigureManualManageTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Manage.Title").Text)',
+                    ConfigureManualManageText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Manage.Text").Text)',
                 };
             </script>
             break;
@@ -112,24 +110,56 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.paymentmethods.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    PaymentMethodsPaymentMethodsTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Title")',
-                    PaymentMethodsPaymentMethodsText: '@T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Text")',
+                    PaymentMethodsPaymentMethodsTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Title").Text)',
+                    PaymentMethodsPaymentMethodsText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Text").Text)',
 
-                    PaymentMethodsCheckMoneyTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Title")',
-                    PaymentMethodsCheckMoneyText: '@T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Text")',
+                    PaymentMethodsCheckMoneyTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Title").Text)',
+                    PaymentMethodsCheckMoneyText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Text").Text)',
 
-                    PaymentMethodsManualTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.Manual.Title")',
-                    PaymentMethodsManualText: '@T("Admin.ConfigurationSteps.PaymentMethods.Manual.Text")',
+                    PaymentMethodsManualTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Title").Text)',
+                    PaymentMethodsManualText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Text").Text)',
 
-                    PaymentMethodsPayPalTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Title")',
-                    PaymentMethodsPayPalText: '@T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Text", Docs.PayPal + Utm.OnAdminTourDocs)',
+                    PaymentMethodsPayPalTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Title").Text)',
+                    PaymentMethodsPayPalText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Text", Docs.PayPal + Utm.OnAdminTourDocs).Text)',
 
-                    PaymentMethodsActivateTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.Activate.Title")',
-                    PaymentMethodsActivateText: '@T("Admin.ConfigurationSteps.PaymentMethods.Activate.Text")',
+                    PaymentMethodsActivateTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Activate.Title").Text)',
+                    PaymentMethodsActivateText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Activate.Text").Text)',
 
+                    PaymentMethodsConfigureTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Title").Text)',
+                    PaymentMethodsConfigureText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Text").Text)',
+                };
+            </script>
+            break;
 
-                    PaymentMethodsConfigureTitle: '@T("Admin.ConfigurationSteps.PaymentMethods.Configure.Title")',
-                    PaymentMethodsConfigureText: '@T("Admin.ConfigurationSteps.PaymentMethods.Configure.Text")',
+        case TourStep.PaymentPayPal:
+
+            <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.paymentpaypal.js" asp-location="Footer"></script>
+            <script asp-location="Footer">
+                var localized_data = {
+                    PaymentPayPalSignUpTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title")',
+                    PaymentPayPalSignUpText: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text")',
+
+                    PaymentPayPalRegisterTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Title")',
+                    PaymentPayPalRegisterText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text")',
+                    PaymentPayPalRegisterText2: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text2")',
+
+                    PaymentPayPalApiCredentialsTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title")',
+                    PaymentPayPalApiCredentialsText: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text")',
+
+                    PaymentPayPalSandboxTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title")',
+                    PaymentPayPalSandboxText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text")',
+
+                    PaymentPayPalCredentialsTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title")',
+                    PaymentPayPalCredentialsText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text")',
+
+                    PaymentPayPalPaymentTypeTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Title")',
+                    PaymentPayPalPaymentTypeText: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Text")',
+
+                    PaymentPayPalProminentlyTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Title")',
+                    PaymentPayPalProminentlyText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Text")',
+
+                    PaymentPayPalConfiguredTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Title")',
+                    PaymentPayPalConfiguredText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Text")',
                 };
             </script>
             break;
@@ -139,20 +169,20 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.taxproviders.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    TaxProvidersTaxProvidersTitle: '@T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title")',
-                    TaxProvidersTaxProvidersText: '@T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text", OfficialSite.TaxPlugins + Utm.OnAdminTourDocs.Replace('?', '&'))',
+                    TaxProvidersTaxProvidersTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title").Text)',
+                    TaxProvidersTaxProvidersText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text", OfficialSite.TaxPlugins + Utm.OnAdminTourDocs.Replace('?', '&')).Text)',
 
-                    TaxProvidersAvalaraTitle: '@T("Admin.ConfigurationSteps.TaxProviders.Avalara.Title")',
-                    TaxProvidersAvalaraText: '@T("Admin.ConfigurationSteps.TaxProviders.Avalara.Text", Docs.Avalara + Utm.OnAdminTourDocs)',
+                    TaxProvidersAvalaraTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Avalara.Title").Text)',
+                    TaxProvidersAvalaraText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Avalara.Text", Docs.Avalara + Utm.OnAdminTourDocs).Text)',
 
-                    TaxProvidersManualTitle: '@T("Admin.ConfigurationSteps.TaxProviders.Manual.Title")',
-                    TaxProvidersManualText: '@T("Admin.ConfigurationSteps.TaxProviders.Manual.Text")',
+                    TaxProvidersManualTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Manual.Title").Text)',
+                    TaxProvidersManualText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Manual.Text").Text)',
 
-                    TaxProvidersPrimaryProviderTitle: '@T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Title")',
-                    TaxProvidersPrimaryProviderText: '@T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Text")',
+                    TaxProvidersPrimaryProviderTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Title").Text)',
+                    TaxProvidersPrimaryProviderText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Text").Text)',
 
-                    TaxProvidersConfigureTitle: '@T("Admin.ConfigurationSteps.TaxProviders.Configure.Title")',
-                    TaxProvidersConfigureText: '@T("Admin.ConfigurationSteps.TaxProviders.Configure.Text")',
+                    TaxProvidersConfigureTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Configure.Title").Text)',
+                    TaxProvidersConfigureText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Configure.Text").Text)',
                 };
             </script>
             break;
@@ -162,20 +192,20 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.taxmanual.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    TaxManualSwitchTitle: '@T("Admin.ConfigurationSteps.TaxManual.Switch.Title")',
-                    TaxManualSwitchText: '@T("Admin.ConfigurationSteps.TaxManual.Switch.Text")',
+                    TaxManualSwitchTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Switch.Title").Text)',
+                    TaxManualSwitchText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Switch.Text").Text)',
 
-                    TaxManualFixedTitle: '@T("Admin.ConfigurationSteps.TaxManual.Fixed.Title")',
-                    TaxManualFixedText: '@T("Admin.ConfigurationSteps.TaxManual.Fixed.Text")',
+                    TaxManualFixedTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Fixed.Title").Text)',
+                    TaxManualFixedText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Fixed.Text").Text)',
 
-                    TaxManualByCountryTitle: '@T("Admin.ConfigurationSteps.TaxManual.ByCountry.Title")',
-                    TaxManualByCountryText: '@T("Admin.ConfigurationSteps.TaxManual.ByCountry.Text")',
+                    TaxManualByCountryTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.ByCountry.Title").Text)',
+                    TaxManualByCountryText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.ByCountry.Text").Text)',
 
-                    TaxManualCategoriesTitle: '@T("Admin.ConfigurationSteps.TaxManual.Categories.Title")',
-                    TaxManualCategoriesText: '@T("Admin.ConfigurationSteps.TaxManual.Categories.Text")',
+                    TaxManualCategoriesTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Categories.Title").Text)',
+                    TaxManualCategoriesText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Categories.Text").Text)',
 
-                    TaxManualEditTitle: '@T("Admin.ConfigurationSteps.TaxManual.Edit.Title")',
-                    TaxManualEditText: '@T("Admin.ConfigurationSteps.TaxManual.Edit.Text")',
+                    TaxManualEditTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Edit.Title").Text)',
+                    TaxManualEditText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Edit.Text").Text)',
                 };
             </script>
             break;
@@ -185,26 +215,26 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.product.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    ProductSettingsButtonTitle: '@T("Admin.ConfigurationSteps.Product.SettingsButton.Title")',
-                    ProductSettingsButtonText: '@T("Admin.ConfigurationSteps.Product.SettingsButton.Text")',
+                    ProductSettingsButtonTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.SettingsButton.Title").Text)',
+                    ProductSettingsButtonText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.SettingsButton.Text").Text)',
 
-                    ProductDetailsTitle: '@T("Admin.ConfigurationSteps.Product.Details.Title")',
-                    ProductDetailsText: '@T("Admin.ConfigurationSteps.Product.Details.Text")',
+                    ProductDetailsTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Details.Title").Text)',
+                    ProductDetailsText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Details.Text").Text)',
 
-                    ProductPriceTitle: '@T("Admin.ConfigurationSteps.Product.Price.Title")',
-                    ProductPriceText: '@T("Admin.ConfigurationSteps.Product.Price.Text", Docs.Currencies + Utm.OnAdminTourDocs)',
+                    ProductPriceTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Price.Title").Text)',
+                    ProductPriceText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Price.Text", Docs.Currencies + Utm.OnAdminTourDocs).Text)',
 
-                    ProductTaxTitle: '@T("Admin.ConfigurationSteps.Product.Tax.Title")',
-                    ProductTaxText: '@T("Admin.ConfigurationSteps.Product.Tax.Text")',
+                    ProductTaxTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Tax.Title").Text)',
+                    ProductTaxText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Tax.Text").Text)',
 
-                    ProductShippingTitle: '@T("Admin.ConfigurationSteps.Product.Shipping.Title")',
-                    ProductShippingText: '@T("Admin.ConfigurationSteps.Product.Shipping.Text")',
+                    ProductShippingTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Shipping.Title").Text)',
+                    ProductShippingText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Shipping.Text").Text)',
 
-                    ProductInventoryTitle: '@T("Admin.ConfigurationSteps.Product.Inventory.Title")',
-                    ProductInventoryText: '@T("Admin.ConfigurationSteps.Product.Inventory.Text")',
+                    ProductInventoryTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Inventory.Title").Text)',
+                    ProductInventoryText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Inventory.Text").Text)',
 
-                    ProductPicturesTitle: '@T("Admin.ConfigurationSteps.Product.Pictures.Title")',
-                    ProductPicturesText: '@T("Admin.ConfigurationSteps.Product.Pictures.Text")',
+                    ProductPicturesTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Pictures.Title").Text)',
+                    ProductPicturesText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Pictures.Text").Text)',
                 };
             </script>
             break;
@@ -215,17 +245,17 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.emailaccountlist.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    EmailAccountListEmailAccounts1Title: '@T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Title")',
-                    EmailAccountListEmailAccounts1Text: '@T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Text")',
+                    EmailAccountListEmailAccounts1Title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Title").Text)',
+                    EmailAccountListEmailAccounts1Text: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Text").Text)',
 
-                    EmailAccountListEmailAccounts2Title: '@T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Title")',
-                    EmailAccountListEmailAccounts2Text: '@T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Text")',
+                    EmailAccountListEmailAccounts2Title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Title").Text)',
+                    EmailAccountListEmailAccounts2Text: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Text").Text)',
 
-                    EmailAccountListDefaultEmailAccountTitle: '@T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Title")',
-                    EmailAccountListDefaultEmailAccountText: '@T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Text")',
+                    EmailAccountListDefaultEmailAccountTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Title").Text)',
+                    EmailAccountListDefaultEmailAccountText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Text").Text)',
 
-                    EmailAccountListEditTitle: '@T("Admin.ConfigurationSteps.EmailAccountList.Edit.Title")',
-                    EmailAccountListEditText: '@T("Admin.ConfigurationSteps.EmailAccountList.Edit.Text")',
+                    EmailAccountListEditTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.Edit.Title").Text)',
+                    EmailAccountListEditText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.Edit.Text").Text)',
                 };
             </script>
             break;
@@ -235,32 +265,32 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.emailaccount.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    EmailAccountEmailAddressTitle: '@T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Title")',
-                    EmailAccountEmailAddressText: '@T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Text")',
+                    EmailAccountEmailAddressTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Title").Text)',
+                    EmailAccountEmailAddressText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Text").Text)',
 
-                    EmailAccountDisplayNameTitle: '@T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Title")',
-                    EmailAccountDisplayNameText: '@T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Text")',
+                    EmailAccountDisplayNameTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Title").Text)',
+                    EmailAccountDisplayNameText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Text").Text)',
 
-                    EmailAccountHostTitle: '@T("Admin.ConfigurationSteps.EmailAccount.Host.Title")',
-                    EmailAccountHostText: '@T("Admin.ConfigurationSteps.EmailAccount.Host.Text")',
+                    EmailAccountHostTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Host.Title").Text)',
+                    EmailAccountHostText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Host.Text").Text)',
 
-                    EmailAccountPortTitle: '@T("Admin.ConfigurationSteps.EmailAccount.Port.Title")',
-                    EmailAccountPortText: '@T("Admin.ConfigurationSteps.EmailAccount.Port.Text")',
+                    EmailAccountPortTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Title").Text)',
+                    EmailAccountPortText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Text").Text)',
 
-                    EmailAccountUsernameTitle: '@T("Admin.ConfigurationSteps.EmailAccount.Username.Title")',
-                    EmailAccountUsernameText: '@T("Admin.ConfigurationSteps.EmailAccount.Username.Text")',
+                    EmailAccountUsernameTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Username.Title").Text)',
+                    EmailAccountUsernameText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Username.Text").Text)',
 
-                    EmailAccountPasswordTitle: '@T("Admin.ConfigurationSteps.EmailAccount.Password.Title")',
-                    EmailAccountPasswordText: '@T("Admin.ConfigurationSteps.EmailAccount.Password.Text")',
+                    EmailAccountPasswordTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Password.Title").Text)',
+                    EmailAccountPasswordText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Password.Text").Text)',
 
-                    EmailAccountUseSslTitle: '@T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Title")',
-                    EmailAccountUseSslText: '@T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Text")',
+                    EmailAccountUseSslTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Title").Text)',
+                    EmailAccountUseSslText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Text").Text)',
 
-                    EmailAccountDefaultCredentialsTitle: '@T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Title")',
-                    EmailAccountDefaultCredentialsText: '@T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Text")',
+                    EmailAccountDefaultCredentialsTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Title").Text)',
+                    EmailAccountDefaultCredentialsText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Text").Text)',
 
-                    EmailAccountTestEmailTitle: '@T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Title")',
-                    EmailAccountTestEmailText: '@T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Text")',
+                    EmailAccountTestEmailTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Title").Text)',
+                    EmailAccountTestEmailText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Text").Text)',
                 };
             </script>
             break;
@@ -271,22 +301,22 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.topiclist.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    Done: '@T("Admin.ConfigurationSteps.Done")',
+                    Done: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Done").Text)',
 
-                    TopicListTopics1Title: '@T("Admin.ConfigurationSteps.TopicList.Topics1.Title")',
-                    TopicListTopics1Text: '@T("Admin.ConfigurationSteps.TopicList.Topics1.Text")',
+                    TopicListTopics1Title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics1.Title").Text)',
+                    TopicListTopics1Text: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics1.Text").Text)',
 
-                    TopicListTopics2Title: '@T("Admin.ConfigurationSteps.TopicList.Topics2.Title")',
-                    TopicListTopics2Text: '@T("Admin.ConfigurationSteps.TopicList.Topics2.Text")',
+                    TopicListTopics2Title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics2.Title").Text)',
+                    TopicListTopics2Text: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics2.Text").Text)',
 
-                    TopicListShippingTitle: '@T("Admin.ConfigurationSteps.TopicList.Shipping.Title")',
-                    TopicListShippingText: '@T("Admin.ConfigurationSteps.TopicList.Shipping.Text")',
+                    TopicListShippingTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Shipping.Title").Text)',
+                    TopicListShippingText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Shipping.Text").Text)',
 
-                    TopicListLocationTitle: '@T("Admin.ConfigurationSteps.TopicList.Location.Title")',
-                    TopicListLocationText: '@T("Admin.ConfigurationSteps.TopicList.Location.Text")',
+                    TopicListLocationTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Location.Title").Text)',
+                    TopicListLocationText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Location.Text").Text)',
 
-                    TopicListEditTitle: '@T("Admin.ConfigurationSteps.TopicList.Edit.Title")',
-                    TopicListEditText: '@T("Admin.ConfigurationSteps.TopicList.Edit.Text")',
+                    TopicListEditTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Edit.Title").Text)',
+                    TopicListEditText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Edit.Text").Text)',
                 };
             </script>
             break;
@@ -296,13 +326,13 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.topic.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    Done: '@T("Admin.ConfigurationSteps.Done")',
+                    Done: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Done").Text)',
 
-                    TopicTitleContentTitle: '@T("Admin.ConfigurationSteps.Topic.TitleContent.Title")',
-                    TopicTitleContentText: '@T("Admin.ConfigurationSteps.Topic.TitleContent.Text")',
+                    TopicTitleContentTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.TitleContent.Title").Text)',
+                    TopicTitleContentText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.TitleContent.Text").Text)',
 
-                    TopicPreviewTitle: '@T("Admin.ConfigurationSteps.Topic.Preview.Title")',
-                    TopicPreviewText: '@T("Admin.ConfigurationSteps.Topic.Preview.Text")',
+                    TopicPreviewTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.Preview.Title").Text)',
+                    TopicPreviewText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.Preview.Text").Text)',
                 };
             </script>
             break;
@@ -312,9 +342,9 @@
     }
 
     <script asp-location="Footer">
-        localized_data.Back = '@T("Admin.ConfigurationSteps.Back")';
-        localized_data.NextStep = '@T("Admin.ConfigurationSteps.NextStep")';
-        localized_data.NextPage = '@T("Admin.ConfigurationSteps.NextPage")';
+        localized_data.Back = '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Back").Text)';
+        localized_data.NextStep = '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextStep").Text)';
+        localized_data.NextPage = '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextPage").Text)';
 
         AdminTourDataProvider.init(localized_data, @entityId);
     </script>

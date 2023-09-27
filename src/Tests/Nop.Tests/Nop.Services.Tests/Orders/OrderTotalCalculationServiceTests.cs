@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Orders;
+using Nop.Services.Stores;
 using Nop.Tests.Nop.Services.Tests.Payments;
 using NUnit.Framework;
 
@@ -32,10 +31,15 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         private ISettingService _settingService;
         private IShoppingCartService _shoppingCartService;
         private ShoppingCartSettings _shoppingCartSettings;
+        private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
+        private IGenericAttributeService _genericAttributeService;
+
 
         private Discount _discount;
         private Customer _customer;
+        private Store _store;
+        private string _checkoutAttrXml;
 
         #region Utilities
 
@@ -58,6 +62,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             {
                 CustomerId = _customer.Id,
                 ProductId = product.Id,
+                StoreId = _store.Id,
                 Quantity = quantity
             };
 
@@ -69,16 +74,21 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             var product = await _productService.GetProductBySkuAsync("FR_451_RB");
             var sci1 = new ShoppingCartItem
             {
-                ProductId = product.Id, Quantity = 2
+                ProductId = product.Id,
+                Quantity = 2
             };
             product = await _productService.GetProductBySkuAsync("FIRST_PRP");
             var sci2 = new ShoppingCartItem
             {
-                ProductId = product.Id, Quantity = 3
+                ProductId = product.Id,
+                Quantity = 3
             };
 
-            var cart = new List<ShoppingCartItem> {sci1, sci2};
-            cart.ForEach(sci => sci.CustomerId = _customer.Id);
+            var cart = new List<ShoppingCartItem> { sci1, sci2 };
+            foreach (var sci in cart)
+            {
+                sci.CustomerId = _customer.Id;
+            }
 
             return cart;
         }
@@ -103,13 +113,24 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             _customerService = GetService<ICustomerService>();
             _discountService = GetService<IDiscountService>();
             _shoppingCartService = GetService<IShoppingCartService>();
-
             _shoppingCartSettings = GetService<ShoppingCartSettings>();
-
+            _storeService = GetService<IStoreService>();
             _rewardPointsSettings = GetService<RewardPointsSettings>();
+
+            _genericAttributeService = GetService<IGenericAttributeService>();
+            var checkoutAttributeService = GetService<IAttributeService<CheckoutAttribute, CheckoutAttributeValue>>();
+
+            var attr = await checkoutAttributeService.GetAttributeByIdAsync(1);
+
+            var values = await checkoutAttributeService.GetAttributeValuesAsync(attr.Id);
+
+            var val = values.FirstOrDefault(p => p.Name == "Yes")?.Id.ToString();
+
+            _checkoutAttrXml = GetService<IAttributeParser<CheckoutAttribute, CheckoutAttributeValue>>().AddAttribute(string.Empty, attr, val);
 
             _discount = new Discount
             {
+                IsActive = true,
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToOrderSubTotal,
                 DiscountAmount = 3,
@@ -117,6 +138,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             };
 
             _customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
+            _store = (await _storeService.GetAllStoresAsync()).First();
 
             await GetService<IGenericAttributeService>().SaveAttributeAsync(_customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, "Payments.TestMethod", 1);
@@ -147,18 +169,20 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             await _productService.UpdateProductAsync(product);
 
             await GetService<IGenericAttributeService>().SaveAttributeAsync<string>(_customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, 1);
-            
-            foreach (var item in GetService<IRepository<Discount>>().Table.Where(d => d.Name == "Discount 1").ToList()) 
+
+            foreach (var item in GetService<IRepository<Discount>>().Table.Where(d => d.Name == "Discount 1").ToList())
                 await _discountService.DeleteDiscountAsync(item);
 
             await _productService.DeleteProductsAsync(GetService<IRepository<Product>>().Table.Where(p => p.Name == "Product name 1").ToList());
+
+            await _genericAttributeService.SaveAttributeAsync<string>(_customer, NopCustomerDefaults.CheckoutAttributes, null, _store.Id);
         }
 
         [Test]
         public async Task CanGetShoppingCartSubTotalExcludingTax()
         {
             //10% - default tax rate
-            var(discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), false);
+            var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), false);
             discountAmount.Should().Be(0);
             appliedDiscounts.Count.Should().Be(0);
             subTotalWithoutDiscount.Should().Be(207M);
@@ -171,7 +195,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         [Test]
         public async Task CanGetShoppingCartSubTotalIncludingTax()
         {
-            var(discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), true);
+            var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), true);
             discountAmount.Should().Be(0);
             appliedDiscounts.Count.Should().Be(0);
             subTotalWithoutDiscount.Should().Be(227.7M);
@@ -182,12 +206,62 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         }
 
         [Test]
+        public async Task CanGetShoppingCartSubTotal()
+        {
+            var (discountAmountInclTax, discountAmountExclTax, appliedDiscounts, subTotalWithoutDiscountInclTax, subTotalWithoutDiscountExclTax, subTotalWithDiscountInclTax, subTotalWithDiscountExclTax, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalsAsync(await GetShoppingCartAsync());
+
+            discountAmountExclTax.Should().Be(0);
+            subTotalWithoutDiscountExclTax.Should().Be(207M);
+            subTotalWithDiscountExclTax.Should().Be(207M);
+
+            discountAmountInclTax.Should().Be(0);
+            subTotalWithoutDiscountInclTax.Should().Be(227.7M);
+            subTotalWithDiscountInclTax.Should().Be(227.7M);
+
+            appliedDiscounts.Count.Should().Be(0);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(20.7M);
+        }
+
+        [Test]
+        public async Task CanGetShoppingCartSubTotalWithCheckoutAttribute()
+        {
+            var (discountAmountInclTax, discountAmountExclTax, appliedDiscounts, subTotalWithoutDiscountInclTax, subTotalWithoutDiscountExclTax, subTotalWithDiscountInclTax, subTotalWithDiscountExclTax, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalsAsync(await GetShoppingCartAsync());
+
+            discountAmountExclTax.Should().Be(0);
+            subTotalWithoutDiscountExclTax.Should().Be(207M);
+            subTotalWithDiscountExclTax.Should().Be(207M);
+
+            discountAmountInclTax.Should().Be(0);
+            subTotalWithoutDiscountInclTax.Should().Be(227.7M);
+            subTotalWithDiscountInclTax.Should().Be(227.7M);
+
+            appliedDiscounts.Count.Should().Be(0);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(20.7M);
+
+            await _genericAttributeService.SaveAttributeAsync(_customer, NopCustomerDefaults.CheckoutAttributes, _checkoutAttrXml, _store.Id);
+
+            (_, _, _, subTotalWithoutDiscountInclTax, subTotalWithoutDiscountExclTax, subTotalWithDiscountInclTax, subTotalWithDiscountExclTax, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalsAsync(await GetShoppingCartAsync());
+
+            subTotalWithoutDiscountExclTax.Should().Be(217M);
+            subTotalWithDiscountExclTax.Should().Be(217M);
+
+            subTotalWithoutDiscountInclTax.Should().Be(238.7M);
+            subTotalWithDiscountInclTax.Should().Be(238.7M);
+
+            await _genericAttributeService.SaveAttributeAsync<string>(_customer, NopCustomerDefaults.CheckoutAttributes, null, _store.Id);
+        }
+
+        [Test]
         public async Task CanGetShoppingCartSubtotalDiscountExcludingTax()
         {
             await _discountService.InsertDiscountAsync(_discount);
 
             //10% - default tax rate
-            var(discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), false);
+            var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), false);
 
             await _discountService.DeleteDiscountAsync(_discount);
 
@@ -206,7 +280,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         {
             await _discountService.InsertDiscountAsync(_discount);
 
-            var(discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), true);
+            var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalAsync(await GetShoppingCartAsync(), true);
 
             await _discountService.DeleteDiscountAsync(_discount);
 
@@ -221,7 +295,32 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].Should().Be(20.4M);
         }
-        
+
+        [Test]
+        public async Task CanGetShoppingCartSubtotalDiscountExcludingAndIncludingTax()
+        {
+            await _discountService.InsertDiscountAsync(_discount);
+
+            //10% - default tax rate
+            var (discountAmountInclTax, discountAmountExclTax, appliedDiscounts, subTotalWithoutDiscountInclTax, subTotalWithoutDiscountExclTax, subTotalWithDiscountInclTax, subTotalWithDiscountExclTax, taxRates) = await _orderTotalCalcService.GetShoppingCartSubTotalsAsync(await GetShoppingCartAsync());
+
+            await _discountService.DeleteDiscountAsync(_discount);
+
+            discountAmountExclTax.Should().Be(3);
+            subTotalWithoutDiscountExclTax.Should().Be(207M);
+            subTotalWithDiscountExclTax.Should().Be(204M);
+
+            (Math.Round(discountAmountInclTax, 10) == 3.3M).Should().BeTrue();
+            subTotalWithoutDiscountInclTax.Should().Be(227.7M);
+            subTotalWithDiscountInclTax.Should().Be(224.4M);
+
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(20.4M);
+        }
+
         [Test]
         public async Task ShippingShouldBeFreeWhenAllShoppingCartItemsAreMarkedAsFreeShipping()
         {
@@ -316,6 +415,33 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         }
 
         [Test]
+        public async Task CanGetShippingTotalsWithFixedShippingRate()
+        {
+            var product = await _productService.GetProductBySkuAsync("FR_451_RB");
+            product.AdditionalShippingCharge = 21.25M;
+            product.IsFreeShipping = false;
+            await _productService.UpdateProductAsync(product);
+
+            var (shippingInclTax, shippingExclTax, taxRate, appliedDiscounts) =
+                await _orderTotalCalcService.GetShoppingCartShippingTotalsAsync(await GetShoppingCartAsync());
+
+            product.AdditionalShippingCharge = 0M;
+            product.IsFreeShipping = true;
+            await _productService.UpdateProductAsync(product);
+
+            shippingInclTax.Should().NotBeNull();
+            //10 - default fixed shipping rate, 42.5 - additional shipping change
+            shippingInclTax.Should().Be(57.75M);
+            appliedDiscounts.Count.Should().Be(0);
+            //10 - default fixed tax rate
+            taxRate.Should().Be(10);
+
+            shippingExclTax.Should().NotBeNull();
+            //10 - default fixed shipping rate, 42.5 - additional shipping change
+            shippingExclTax.Should().Be(52.5M);
+        }
+
+        [Test]
         public async Task CanGetShippingTotalDiscountExcludingTax()
         {
             var product = await _productService.GetProductBySkuAsync("FR_451_RB");
@@ -389,7 +515,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
 
             await _settingService.SaveSettingAsync(_taxSettings);
 
-            var(taxTotal, taxRates) = await GetService<IOrderTotalCalculationService>().GetTaxTotalAsync(await GetShoppingCartAsync());
+            var (taxTotal, taxRates) = await GetService<IOrderTotalCalculationService>().GetTaxTotalAsync(await GetShoppingCartAsync());
             taxTotal.Should().Be(23.7M);
             taxRates.Should().NotBeNull();
             taxRates.Count.Should().Be(1);
@@ -475,7 +601,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             TestPaymentMethod.AdditionalHandlingFee = 20M;
 
             //207 - items, 10 - shipping (fixed), 20 - payment fee, 23.7 - tax
-            var (cartTotal, _, _, _, _, _) = 
+            var (cartTotal, _, _, _, _, _) =
                 await _orderTotalCalcService.GetShoppingCartTotalAsync(await GetShoppingCartAsync());
             cartTotal.Should().Be(260.7M);
 
@@ -589,7 +715,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
 
             rewardPointsToAmount.Should().Be(1500);
         }
-        
+
         [Test]
         public async Task CanCheckMinimumRewardPointsToUseRequirement()
         {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
@@ -40,13 +37,14 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
+        /// <param name="isActive">A value indicating whether to get active discounts; "null" to load all discounts; "false" to load only inactive discounts; "true" to load only active discounts</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the discounts
         /// </returns>
         Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false,
-            DateTime? startDateUtc = null, DateTime? endDateUtc = null);
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true);
 
         /// <summary>
         /// Inserts a discount
@@ -157,18 +155,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the discount validation result
-        /// </returns>
-        Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer);
-
+        
         /// <summary>
         /// Validate discount
         /// </summary>
@@ -201,6 +188,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountId">Discount identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <param name="orderId">Order identifier; null to load all records</param>
+        /// <param name="includeCancelledOrders">Include cancelled orders</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>
@@ -208,7 +196,7 @@ namespace Nop.Services.Discounts
         /// The task result contains the discount usage history records
         /// </returns>
         Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistoryAsync(int? discountId = null,
-            int? customerId = null, int? orderId = null,
+            int? customerId = null, int? orderId = null, bool includeCancelledOrders = true,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

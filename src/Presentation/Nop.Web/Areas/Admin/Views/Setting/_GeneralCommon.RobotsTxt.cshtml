@@ -1,0 +1,98 @@
+@model GeneralCommonSettingsModel
+
+@{
+    const int maxTextAreaRows = 10;
+    const int minTextAreaRows = 5;
+
+    int GetAreaRows(string rows)
+    {
+        if (string.IsNullOrEmpty(rows))
+            return 1;
+
+        var rowsCount = rows.Split(Environment.NewLine).Length;
+
+        return rowsCount switch
+        {
+            0 => 1,
+            < 10 => minTextAreaRows,
+            _ => maxTextAreaRows
+            };
+    }
+}
+
+<div class="card-body">
+    @if (!string.IsNullOrEmpty(Model.RobotsTxtSettings.CustomFileExists))
+    {
+        <p class="text-yellow">
+            <i class="icon fas fa-exclamation-triangle"></i>
+            @Model.RobotsTxtSettings.CustomFileExists
+        </p>
+    }
+    else
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="RobotsTxtSettings.AllowSitemapXml_OverrideForStore" asp-input="RobotsTxtSettings.AllowSitemapXml" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="@Model.RobotsTxtSettings.AllowSitemapXml"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.RobotsTxtSettings.AllowSitemapXml"/>
+                <span asp-validation-for="@Model.RobotsTxtSettings.AllowSitemapXml"></span>
+            </div>
+        </div>
+        @if (Model.RobotsTxtSettings.AvailableLanguages.Any())
+        {
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="RobotsTxtSettings.DisallowLanguages_OverrideForStore" asp-input="RobotsTxtSettings.DisallowLanguages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="RobotsTxtSettings.DisallowLanguages"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="RobotsTxtSettings.DisallowLanguages" asp-items="Model.RobotsTxtSettings.AvailableLanguages" asp-multiple="true"/>
+                    <script>
+                        $(document).ready(function() {
+                            var languageIds = $('#@Html.IdFor(model => model.RobotsTxtSettings.DisallowLanguages)').select2({
+                                closeOnSelect: false
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        }
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="RobotsTxtSettings.DisallowPaths_OverrideForStore" asp-input="RobotsTxtSettings.DisallowPaths" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="@Model.RobotsTxtSettings.DisallowPaths"/>
+            </div>
+            <div class="col-md-9">
+                <nop-textarea rows="@GetAreaRows(Model.RobotsTxtSettings.DisallowPaths)" asp-for="@Model.RobotsTxtSettings.DisallowPaths"></nop-textarea>
+                <span asp-validation-for="@Model.RobotsTxtSettings.DisallowPaths"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="RobotsTxtSettings.LocalizableDisallowPaths_OverrideForStore" asp-input="RobotsTxtSettings.LocalizableDisallowPaths" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="@Model.RobotsTxtSettings.LocalizableDisallowPaths"/>
+            </div>
+            <div class="col-md-9">
+                <nop-textarea rows="@GetAreaRows(Model.RobotsTxtSettings.LocalizableDisallowPaths)" asp-for="@Model.RobotsTxtSettings.LocalizableDisallowPaths"></nop-textarea>
+                <span asp-validation-for="@Model.RobotsTxtSettings.LocalizableDisallowPaths"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="RobotsTxtSettings.AdditionsRules_OverrideForStore" asp-input="RobotsTxtSettings.AdditionsRules" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="@Model.RobotsTxtSettings.AdditionsRules"/>
+            </div>
+            <div class="col-md-9">
+                <nop-textarea rows="@GetAreaRows(Model.RobotsTxtSettings.AdditionsRules)" asp-for="@Model.RobotsTxtSettings.AdditionsRules"></nop-textarea>
+                <span asp-validation-for="@Model.RobotsTxtSettings.AdditionsRules"></span>
+            </div>
+        </div>
+    }
+
+    <p>@Html.Raw(Model.RobotsTxtSettings.AdditionsInstruction)</p>
+</div>

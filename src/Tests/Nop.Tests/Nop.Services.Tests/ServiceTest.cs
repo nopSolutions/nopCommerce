@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -30,48 +28,53 @@ namespace Nop.Tests.Nop.Services.Tests
             webHostEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
             webHostEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
             CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
-            
+
             Environment.SetEnvironmentVariable("ConnectionStrings", Singleton<DataConfig>.Instance.ConnectionString);
 
             Singleton<IPluginsInfo>.Instance = new PluginsInfo(CommonHelper.DefaultFileProvider)
             {
-                PluginDescriptors = new List<PluginDescriptor>
+                PluginDescriptors = new List<(PluginDescriptor, bool)>
                 {
-                    new PluginDescriptor(typeof(FixedRateTestTaxProvider).Assembly)
+                    (new PluginDescriptor
                     {
                         PluginType = typeof(FixedRateTestTaxProvider),
                         SystemName = "FixedTaxRateTest",
                         FriendlyName = "Fixed tax test rate provider",
-                        Installed = true
-                    },
-                    new PluginDescriptor(typeof(FixedRateTestShippingRateComputationMethod).Assembly)
+                        Installed = true,
+                        ReferencedAssembly = typeof(FixedRateTestTaxProvider).Assembly
+                    }, true),
+                    (new PluginDescriptor
                     {
                         PluginType = typeof(FixedRateTestShippingRateComputationMethod),
                         SystemName = "FixedRateTestShippingRateComputationMethod",
                         FriendlyName = "Fixed rate test shipping computation method",
-                        Installed = true
-                    },
-                    new PluginDescriptor(typeof(TestPaymentMethod).Assembly)
+                        Installed = true,
+                        ReferencedAssembly = typeof(FixedRateTestShippingRateComputationMethod).Assembly
+                    }, true),
+                    (new PluginDescriptor
                     {
                         PluginType = typeof(TestPaymentMethod),
                         SystemName = "Payments.TestMethod",
                         FriendlyName = "Test payment method",
-                        Installed = true
-                    },
-                    new PluginDescriptor(typeof(TestDiscountRequirementRule).Assembly)
+                        Installed = true,
+                        ReferencedAssembly = typeof(TestPaymentMethod).Assembly
+                    }, true),
+                    (new PluginDescriptor
                     {
                         PluginType = typeof(TestDiscountRequirementRule),
                         SystemName = "TestDiscountRequirementRule",
                         FriendlyName = "Test discount requirement rule",
-                        Installed = true
-                    },
-                    new PluginDescriptor(typeof(TestExchangeRateProvider).Assembly)
+                        Installed = true,
+                        ReferencedAssembly = typeof(TestDiscountRequirementRule).Assembly
+                    }, true),
+                    (new PluginDescriptor
                     {
                         PluginType = typeof(TestExchangeRateProvider),
                         SystemName = "CurrencyExchange.TestProvider",
                         FriendlyName = "Test exchange rate provider",
-                        Installed = true
-                    }
+                        Installed = true,
+                        ReferencedAssembly = typeof(TestExchangeRateProvider).Assembly
+                    }, true)
                 }
             };
         }

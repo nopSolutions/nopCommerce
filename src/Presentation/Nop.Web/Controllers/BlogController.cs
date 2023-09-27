@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Localization;
@@ -18,9 +15,9 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
@@ -30,22 +27,23 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly IBlogModelFactory _blogModelFactory;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly IBlogModelFactory _blogModelFactory;
+        protected readonly IBlogService _blogService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -59,6 +57,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            INopUrlHelper nopUrlHelper,
             IPermissionService permissionService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -76,6 +75,7 @@ namespace Nop.Web.Controllers
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
+            _nopUrlHelper = nopUrlHelper;
             _permissionService = permissionService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
@@ -117,7 +117,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -134,9 +134,9 @@ namespace Nop.Web.Controllers
             var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
-                items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
-                    $"urn:store:{store.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
+                var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+                items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), $"urn:store:{store.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
@@ -172,8 +172,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BlogPost")]        
-        [FormValueRequired("add-comment")]
+        [HttpPost]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
@@ -213,7 +212,7 @@ namespace Nop.Web.Controllers
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)
-                    await _workflowMessageService.SendBlogCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendBlogCommentStoreOwnerNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddBlogComment",
@@ -228,12 +227,15 @@ namespace Nop.Web.Controllers
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
                     ? await _localizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
                     : await _localizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+
+                var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+                var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName });
+                return LocalRedirect(blogPostUrl);
             }
 
             //If we got this far, something failed, redisplay form
+            RouteData.Values["action"] = "BlogPost";
             await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
-            
             return View(model);
         }
 

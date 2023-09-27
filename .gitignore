@@ -170,6 +170,7 @@ glob:*.user
 *.hg
 src/Presentation/Nop.Web/.config/*
 src/Presentation/Nop.Web/App_Data/browscap.xml
+src/Presentation/Nop.Web/App_Data/additional.crawlers.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
 src/Presentation/Nop.Web/App_Data/plugins.json
 src/Presentation/Nop.Web/App_Data/dataSettings.json
@@ -180,9 +181,9 @@ src/Presentation/Nop.Web/App_Data/DataProtectionKeys/*
 !src/Presentation/Nop.Web/App_Data/DataProtectionKeys/Index.htm
 src/Presentation/Nop.Web/node_modules/*
 src/Presentation/Nop.Web/Plugins/*
-!src/Presentation/Nop.Web/Plugins/bin
-src/Presentation/Nop.Web/Plugins/bin/*
-!src/Presentation/Nop.Web/Plugins/bin/placeholder.txt
+!src/Presentation/Nop.Web/Plugins/Uploaded
+src/Presentation/Nop.Web/Plugins/Uploaded/*
+!src/Presentation/Nop.Web/Plugins/Uploaded/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/.well-known/*
 !src/Presentation/Nop.Web/wwwroot/.well-known/Index.htm
 src/Presentation/Nop.Web/wwwroot/bundles/*
@@ -196,7 +197,9 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
 src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
-!src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/*
+!src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/main.zip
+src/Presentation/Nop.Web/wwwroot/sitemaps/*
+!src/Presentation/Nop.Web/wwwroot/sitemaps/Index.htm
 src/packages/*
 src/Tests/Nop.Tests/Connections.resx

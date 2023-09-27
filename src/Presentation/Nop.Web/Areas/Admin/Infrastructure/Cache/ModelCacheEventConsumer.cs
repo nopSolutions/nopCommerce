@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Vendors;
@@ -32,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     {
         #region Fields
 
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -58,51 +57,51 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
         }
 
         //manufacturers
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
         }
 
         //vendors
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
         }
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
         }
 
         /// <summary>

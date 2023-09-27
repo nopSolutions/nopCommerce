@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
@@ -14,6 +10,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Logging;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Media
@@ -25,18 +22,17 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private static BlobContainerClient _blobContainerClient;
-        private static BlobServiceClient _blobServiceClient;
-        private static bool _azureBlobStorageAppendContainerName;
-        private static bool _isInitialized;
-        private static string _azureBlobStorageConnectionString;
-        private static string _azureBlobStorageContainerName;
-        private static string _azureBlobStorageEndPoint;
+        protected static BlobContainerClient _blobContainerClient;
+        protected static BlobServiceClient _blobServiceClient;
+        protected static bool _azureBlobStorageAppendContainerName;
+        protected static bool _isInitialized;
+        protected static string _azureBlobStorageConnectionString;
+        protected static string _azureBlobStorageContainerName;
+        protected static string _azureBlobStorageEndPoint;
 
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
-        private readonly object _locker = new();
+        protected readonly object _locker = new();
 
         #endregion
 
@@ -45,8 +41,10 @@ namespace Nop.Services.Media
         public AzurePictureService(AppSettings appSettings,
             IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
+            ILogger logger,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IRepository<Picture> pictureRepository,
             IRepository<PictureBinary> pictureBinaryRepository,
             IRepository<ProductPicture> productPictureRepository,
@@ -57,8 +55,10 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings)
             : base(downloadService,
                   httpContextAccessor,
+                  logger,
                   fileProvider,
                   productAttributeParser,
+                  productAttributeService,
                   pictureRepository,
                   pictureBinaryRepository,
                   productPictureRepository,
@@ -68,7 +68,6 @@ namespace Nop.Services.Media
                   mediaSettings)
         {
             _staticCacheManager = staticCacheManager;
-            _mediaSettings = mediaSettings;
 
             OneTimeInit(appSettings);
         }

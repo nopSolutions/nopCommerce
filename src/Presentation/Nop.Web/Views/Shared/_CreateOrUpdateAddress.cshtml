@@ -145,5 +145,5 @@
     {
         @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
 </div>

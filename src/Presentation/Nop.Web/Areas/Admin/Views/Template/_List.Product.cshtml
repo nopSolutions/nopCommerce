@@ -1,7 +1,7 @@
 @model TemplatesModel
 
 <div class="card-body">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTemplateListButtons, additionalData = Model })
+    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTemplateListButtons, additionalData = Model })
 
     @await Html.PartialAsync("Table", new DataTablesModel
     {
@@ -131,7 +131,7 @@
                                 //clear input value
                                 $("#@Html.IdFor(model => model.AddProductTemplate.Name)").val('');
                                 $("#@Html.IdFor(model => model.AddProductTemplate.ViewPath)").val('');
-                                $("#@Html.IdFor(model => model.AddProductTemplate.DisplayOrder)").data("kendoNumericTextBox").value(0);
+                                $("#@Html.IdFor(model => model.AddProductTemplate.DisplayOrder)").value(0);
                                 $("#@Html.IdFor(model => model.AddProductTemplate.IgnoredProductTypes)").val('');
 
                             } else {

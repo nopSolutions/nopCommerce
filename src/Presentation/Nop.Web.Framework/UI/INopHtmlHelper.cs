@@ -24,8 +24,9 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
-        /// <returns>Generated HTML string</returns>
-        IHtmlContent GenerateTitle(bool addDefaultTitle = true, string part = "");
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        Task<IHtmlContent> GenerateTitleAsync(bool addDefaultTitle = true, string part = "");
 
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
@@ -43,8 +44,9 @@ namespace Nop.Web.Framework.UI
         /// Generate all description parts
         /// </summary>
         /// <param name="part">Meta description part</param>
-        /// <returns>Generated HTML string</returns>
-        IHtmlContent GenerateMetaDescription(string part = "");
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        Task<IHtmlContent> GenerateMetaDescriptionAsync(string part = "");
 
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
@@ -62,8 +64,9 @@ namespace Nop.Web.Framework.UI
         /// Generate all keyword parts
         /// </summary>
         /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated HTML string</returns>
-        IHtmlContent GenerateMetaKeywords(string part = "");
+        /// <returns>A task that represents the asynchronous operation
+        /// The task result contains generated HTML string</returns>
+        Task<IHtmlContent> GenerateMetaKeywordsAsync(string part = "");
 
         /// <summary>
         /// Add script element
@@ -72,8 +75,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
+        void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Append script element
@@ -82,8 +84,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false);
+        void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false);
 
         /// <summary>
         /// Generate all script parts

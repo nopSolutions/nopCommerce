@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -56,7 +55,22 @@ namespace Nop.Web.Areas.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
         public string CompanyVat { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultMetaKeywords")]
+        public string DefaultMetaKeywords { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultMetaDescription")]
+        public string DefaultMetaDescription { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultTitle")]
+        public string DefaultTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.HomepageTitle")]
+        public string HomepageTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.HomepageDescription")]
+        public string HomepageDescription { get; set; }
+
         public IList<StoreLocalizedModel> Locales { get; set; }
 
         #endregion
@@ -68,5 +82,20 @@ namespace Nop.Web.Areas.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         public string Name { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultMetaKeywords")]
+        public string DefaultMetaKeywords { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultMetaDescription")]
+        public string DefaultMetaDescription { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultTitle")]
+        public string DefaultTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.HomepageTitle")]
+        public string HomepageTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.HomepageDescription")]
+        public string HomepageDescription { get; set; }
     }
 }

@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SQLite;
-using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Microsoft.Data.Sqlite;
 using Nop.Core;
 using Nop.Core.ComponentModel;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.DataProviders;
-using Nop.Data.Mapping;
-
 namespace Nop.Tests
 {
     /// <summary>
@@ -33,39 +24,8 @@ namespace Nop.Tests
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
         private static DataConnection _dataContext;
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SQLiteDataProvider(ProviderName.SQLiteMS), true);
 
         private static readonly ReaderWriterLockSlim _locker = new();
-
-        #endregion
-
-        #region Utils
-
-        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
-        {
-            if (dataParameters is null || dataParameters.Length == 0)
-                return;
-
-            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
-                UpdateParameterValue(dataConnection, dataParam);
-        }
-
-        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
-        {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
-
-            if (parameter is null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            if (dataConnection.Command is IDbCommand command &&
-                command.Parameters.Count > 0 &&
-                command.Parameters.Contains(parameter.Name) &&
-                command.Parameters[parameter.Name] is IDbDataParameter param)
-            {
-                parameter.Value = param.Value;
-            }
-        }
 
         #endregion
 
@@ -90,7 +50,7 @@ namespace Nop.Tests
                 ? DataSettingsManager.LoadSettings().ConnectionString
                 : connectionString);
         }
-        
+
         /// <summary>
         /// Inserts record into table. Returns inserted entity with identity
         /// </summary>
@@ -133,10 +93,29 @@ namespace Nop.Tests
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
                 await UpdateEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter.
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override void UpdateEntities<TEntity>(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+                UpdateEntity(entity);
         }
 
         /// <summary>
@@ -284,6 +263,11 @@ namespace Nop.Tests
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
         public string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
@@ -357,18 +341,24 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, sql, dataParameters);
-                var affectedRecords = command.Execute();
-
-                UpdateOutputParameters(DataContext, dataParameters);
-
-                return  Task.FromResult<int>(affectedRecords);
+                var command = CreateDbCommand(sql, dataParameters);
+                return command.ExecuteAsync();
             }
         }
 
-        public override Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query)
+        /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
+        public override Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
         {
-            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
+            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, DataContext));
         }
 
         public Task<bool> DatabaseExistsAsync()
@@ -393,33 +383,12 @@ namespace Nop.Tests
 
         #region Properties
 
-        protected DataConnection DataContext =>
-            _dataContext ??= new DataConnection(LinqToDbDataProvider, CreateDbConnection(), AdditionalSchema)
-            {
-                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-            };
-
-        /// <summary>
-        /// Additional mapping schema
-        /// </summary>
-        protected MappingSchema AdditionalSchema
-        {
-            get
-            {
-                if (Singleton<MappingSchema>.Instance is not null)
-                    return Singleton<MappingSchema>.Instance;
-
-                Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader(this) };
-
-                return Singleton<MappingSchema>.Instance;
-            }
-        }
+        protected DataConnection DataContext => _dataContext ??= CreateDataConnection();
 
         /// <summary>
         /// Linq2Db data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider { get; } = _dataProvider.Value;
+        protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(ProviderName.SQLiteMS);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

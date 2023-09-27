@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring exceptions and errors handling on application startup
     /// </summary>
-    public class ErrorHandlerStartup : INopStartup
+    public partial class ErrorHandlerStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

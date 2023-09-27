@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Mvc;
@@ -23,16 +21,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
     {
         #region Fields
 
-        private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -81,7 +79,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -149,6 +147,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
             //authenticate Nop user
             return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
+        }
+
+        public async Task<IActionResult> DataDeletionStatusCheck(int earId)
+        {
+            var externalAuthenticationRecord = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(earId);
+            if (externalAuthenticationRecord is not null)
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataExist"));
+            else
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
+
+            return RedirectToRoute("CustomerInfo");
         }
 
         #endregion

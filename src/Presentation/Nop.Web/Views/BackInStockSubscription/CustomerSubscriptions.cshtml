@@ -1,4 +1,7 @@
 ﻿@model CustomerBackInStockSubscriptionsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{    
     Layout = "_ColumnsTwo";
 
@@ -10,13 +13,14 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerBackInStockSubscriptionsTop, additionalData = Model })
         @if (Model.Subscriptions.Count > 0)
         {
             <div class="description">
@@ -62,7 +66,7 @@
                                         <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                     </td>
                                     <td class="product">
-                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
                                     </td>
                                 </tr>
                             }
@@ -90,5 +94,6 @@
                 @T("Account.BackInStockSubscriptions.NoSubscriptions")
             </div>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerBackInStockSubscriptionsBottom, additionalData = Model })
     </div>
 </div>

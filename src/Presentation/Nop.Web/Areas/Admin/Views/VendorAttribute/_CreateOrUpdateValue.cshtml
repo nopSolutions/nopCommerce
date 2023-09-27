@@ -2,7 +2,7 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<input asp-for="VendorAttributeId" type="hidden" />
+<input asp-for="AttributeId" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -17,7 +17,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeValueDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AdminVendorAttributeValueDetailsTop, additionalData = Model })
                 <div class="card card-default card-popup">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<VendorAttributeValueModel, VendorAttributeValueLocalizedModel>("vendorattributevalue-localized",
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeValueDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AdminVendorAttributeValueDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

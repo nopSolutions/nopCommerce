@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Google.Authenticator;
+﻿using Google.Authenticator;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
@@ -16,13 +13,12 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
     {
         #region Fields
 
-        private readonly IRepository<GoogleAuthenticatorRecord> _repository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
-        private TwoFactorAuthenticator _twoFactorAuthenticator;
+        protected readonly IRepository<GoogleAuthenticatorRecord> _repository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
+        protected TwoFactorAuthenticator _twoFactorAuthenticator;
         
-
         #endregion
 
         #region Ctr
@@ -39,20 +35,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             _googleAuthenticatorSettings = googleAuthenticatorSettings;
         }
         #endregion
-
-        #region Properties
-
-        private TwoFactorAuthenticator TwoFactorAuthenticator
-        {
-            get
-            {
-                _twoFactorAuthenticator = new TwoFactorAuthenticator();
-                return _twoFactorAuthenticator;
-            }
-        }
-
-        #endregion
-
+        
         #region Utilites
 
         /// <summary>
@@ -199,8 +182,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             var customer = await _workContext.GetCurrentCustomerAsync();
 
             return TwoFactorAuthenticator.GenerateSetupCode(
-                _googleAuthenticatorSettings.BusinessPrefix, 
-                customer.Email, 
+                _googleAuthenticatorSettings.BusinessPrefix,
+                customer.Email,
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 
@@ -213,6 +196,19 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         public bool ValidateTwoFactorToken(string secretkey, string token)
         {
             return TwoFactorAuthenticator.ValidateTwoFactorPIN(secretkey, token);
+        }
+
+        #endregion
+
+        #region Properties
+
+        protected TwoFactorAuthenticator TwoFactorAuthenticator
+        {
+            get
+            {
+                _twoFactorAuthenticator = new TwoFactorAuthenticator();
+                return _twoFactorAuthenticator;
+            }
         }
 
         #endregion

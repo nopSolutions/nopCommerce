@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
@@ -15,16 +14,15 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     /// <summary>
     /// Represents the view component to add script to pages
     /// </summary>
-    [ViewComponent(Name = PayPalCommerceDefaults.SCRIPT_VIEW_COMPONENT_NAME)]
     public class ScriptViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
 
         #endregion
 

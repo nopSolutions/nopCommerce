@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
@@ -20,14 +18,14 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly ITaxModelFactory _taxModelFactory;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly TaxSettings _taxSettings;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly ITaxModelFactory _taxModelFactory;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 

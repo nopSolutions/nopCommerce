@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Web.Factories;
@@ -14,10 +10,9 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 {
     [TestFixture]
-    public class AddressModelFactoryTests: BaseNopTest
+    public class AddressModelFactoryTests : BaseNopTest
     {
         private IAddressModelFactory _addressModelFactory;
-        private IGenericAttributeService _genericAttributeService;
         private Address _address;
         private AddressSettings _addressSettings;
         private ICountryService _countryService;
@@ -26,7 +21,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task SetUp()
         {
             _addressModelFactory = GetService<IAddressModelFactory>();
-            _genericAttributeService = GetService<IGenericAttributeService>();
 
             _address = await GetService<IAddressService>().GetAddressByIdAsync(1);
             _addressSettings = GetService<AddressSettings>();
@@ -118,6 +112,16 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.AvailableCountries.Any().Should().BeTrue();
             model.AvailableCountries.Count.Should().Be(250);
             model.AvailableStates.Any().Should().BeTrue();
+            model.AvailableStates.Count.Should().Be(63);
+
+            _addressSettings.DefaultCountryId = null;
+
+            model = new AddressModel();
+            await _addressModelFactory.PrepareAddressModelAsync(model, null, false, _addressSettings,
+                async () => await _countryService.GetAllCountriesAsync());
+            model.AvailableCountries.Any().Should().BeTrue();
+            model.AvailableCountries.Count.Should().Be(250);
+            model.AvailableStates.Any().Should().BeTrue();
             model.AvailableStates.Count.Should().Be(1);
 
             model = new AddressModel();
@@ -138,17 +142,17 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
                 prePopulateWithCustomerFields: true, customer: customer);
 
             model.Email.Should().Be(customer.Email);
-            model.FirstName.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute));
-            model.LastName.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute));
+            model.FirstName.Should().Be(customer.FirstName);
+            model.LastName.Should().Be(customer.LastName);
 
-            model.Company.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute));
-            model.Address1.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute));
-            model.Address2.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute));
-            model.ZipPostalCode.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute));
-            model.City.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute));
-            model.County.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute));
-            model.PhoneNumber.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute));
-            model.FaxNumber.Should().Be(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute));
+            model.Company.Should().Be(customer.Company);
+            model.Address1.Should().Be(customer.StreetAddress);
+            model.Address2.Should().Be(customer.StreetAddress2);
+            model.ZipPostalCode.Should().Be(customer.ZipPostalCode);
+            model.City.Should().Be(customer.City);
+            model.County.Should().Be(customer.County);
+            model.PhoneNumber.Should().Be(customer.Phone);
+            model.FaxNumber.Should().Be(customer.Fax);
         }
     }
 }

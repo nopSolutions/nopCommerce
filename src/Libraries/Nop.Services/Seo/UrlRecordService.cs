@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -19,15 +15,15 @@ namespace Nop.Services.Seo
     {
         #region Fields
 
-        private static readonly object _lock = new();
-        private static Dictionary<string, string> _seoCharacterTable;
+        protected static readonly object _lock = new();
+        protected static Dictionary<string, string> _seoCharacterTable;
 
-        private readonly ILanguageService _languageService;
-        private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly SeoSettings _seoSettings;
+        protected readonly ILanguageService _languageService;
+        protected readonly IRepository<UrlRecord> _urlRecordRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly SeoSettings _seoSettings;
 
         #endregion
 
@@ -51,7 +47,7 @@ namespace Nop.Services.Seo
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Stores Unicode characters and their "normalized"
         /// values to a hash table. Character codes are referenced
@@ -1120,7 +1116,7 @@ namespace Nop.Services.Seo
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Deletes an URL records
         /// </summary>
@@ -1176,36 +1172,32 @@ namespace Nop.Services.Seo
         {
             if (string.IsNullOrEmpty(slug))
                 return null;
-            
+
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
-                return await _staticCacheManager.GetAsync(key, async () =>
+                if (_localizationSettings.LoadAllUrlRecordsOnStartup)
                 {
-                    //load all records (we know they are cached)
-                    var source = await GetAllUrlRecordsAsync();
-                    var urlRecords = from ur in source
-                        where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
-                        //first, try to find an active record
-                        orderby ur.IsActive descending, ur.Id
-                        select ur;
-                    var urlRecordForCaching = urlRecords.FirstOrDefault();
+                    var lookup = await _staticCacheManager.GetAsync(
+                        _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordSlugLookupCacheKey),
+                        async () => (await GetAllUrlRecordsAsync())
+                            .ToGroupedDictionary(x => x.Slug.ToLowerInvariant()));
 
-                    return urlRecordForCaching;
-                });
-            }
+                    return lookup.TryGetValue(slug.ToLowerInvariant(), out var records)
+                        ? records.OrderByDescending(x => x.IsActive).ThenBy(x => x.Id).FirstOrDefault()
+                        : null;
+                }
 
-            //gradual loading
-            var query = from ur in _urlRecordRepository.Table
-                where ur.Slug == slug
-                //first, try to find an active record
-                orderby ur.IsActive descending, ur.Id
-                select ur;
+                // gradual loading
+                var query = from ur in _urlRecordRepository.Table
+                            where ur.Slug == slug
+                            //first, try to find an active record
+                            orderby ur.IsActive descending, ur.Id
+                            select ur;
 
-            var urlRecord = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
-
-            return urlRecord;
+                return await query.FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
@@ -1228,7 +1220,7 @@ namespace Nop.Services.Seo
                 query = query.OrderBy(ur => ur.Slug);
 
                 return query;
-            }, cache => default)).AsQueryable();
+            }, _ => default)).AsQueryable();
 
 
             if (!string.IsNullOrWhiteSpace(slug))
@@ -1260,38 +1252,33 @@ namespace Nop.Services.Seo
             //gradual loading
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordCacheKey, entityId, entityName, languageId);
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
-                return await _staticCacheManager.GetAsync(key, async () =>
+                if (_localizationSettings.LoadAllUrlRecordsOnStartup)
                 {
-                    //load all records (we know they are cached)
-                    var source = await GetAllUrlRecordsAsync();
-                    var urlRecords = from ur in source
-                        where ur.EntityId == entityId &&
-                              ur.EntityName == entityName &&
-                              ur.LanguageId == languageId &&
-                              ur.IsActive
-                        orderby ur.Id descending
-                        select ur.Slug;
+                    var lookup = await _staticCacheManager.GetAsync(
+                        _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordEntityIdLookupCacheKey, languageId),
+                        async () => (await GetAllUrlRecordsAsync()) // these are cached
+                            .Where(x => x.IsActive && x.LanguageId == languageId)
+                            .ToGroupedDictionary(x => x.EntityId));
 
-                    //little hack here. nulls aren't cacheable so set it to ""
-                    var slug = urlRecords.FirstOrDefault() ?? string.Empty;
+                    return lookup.TryGetValue(entityId, out var records)
+                        ? records.Where(x => x.EntityName == entityName).MinBy(x => x.Id)?.Slug ?? string.Empty
+                        : string.Empty;
+                }
 
-                    return slug;
-                });
-            }
+                //gradual loading
+                var query = from ur in _urlRecordRepository.Table
+                            where ur.EntityId == entityId &&
+                                  ur.EntityName == entityName &&
+                                  ur.LanguageId == languageId &&
+                                  ur.IsActive
+                            orderby ur.Id descending
+                            select ur.Slug;
 
-            var query = from ur in _urlRecordRepository.Table
-                where ur.EntityId == entityId &&
-                      ur.EntityName == entityName &&
-                      ur.LanguageId == languageId &&
-                      ur.IsActive
-                orderby ur.Id descending
-                select ur.Slug;
-
-            var rezSlug = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync()) ?? string.Empty;
-
-            return rezSlug;
+                //little hack here. nulls aren't cacheable so set it to ""
+                return await query.FirstOrDefaultAsync() ?? string.Empty;
+            }) ?? string.Empty;
         }
 
         /// <summary>
@@ -1435,7 +1422,7 @@ namespace Nop.Services.Seo
         {
             languageId ??= (await _workContext.GetWorkingLanguageAsync()).Id;
             var result = string.Empty;
-            
+
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
@@ -1515,11 +1502,11 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="seName">Search engine name to validate</param>
-        /// <param name="name">User-friendly name used to generate sename</param>
-        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <param name="name">User-friendly name used to generate seName</param>
+        /// <param name="ensureNotEmpty">Ensure that seName is not empty</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the valid sename
+        /// The task result contains the valid seName
         /// </returns>
         public virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported
         {
@@ -1537,15 +1524,15 @@ namespace Nop.Services.Seo
         /// <param name="entityId">Entity identifier</param>
         /// <param name="entityName">Entity name</param>
         /// <param name="seName">Search engine name to validate</param>
-        /// <param name="name">User-friendly name used to generate sename</param>
-        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <param name="name">User-friendly name used to generate seName</param>
+        /// <param name="ensureNotEmpty">Ensure that seName is not empty</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the valid sename
+        /// The task result contains the valid seName
         /// </returns>
         public virtual async Task<string> ValidateSeNameAsync(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
         {
-            //use name if sename is not specified
+            //use name if seName is not specified
             if (string.IsNullOrWhiteSpace(seName) && !string.IsNullOrWhiteSpace(name))
                 seName = name;
 
@@ -1559,7 +1546,7 @@ namespace Nop.Services.Seo
             {
                 if (ensureNotEmpty)
                 {
-                    //use entity identifier as sename if empty
+                    //use entity identifier as seName if empty
                     seName = entityId.ToString();
                 }
                 else
@@ -1569,7 +1556,7 @@ namespace Nop.Services.Seo
                 }
             }
 
-            //ensure this sename is not reserved yet
+            //ensure this seName is not reserved yet
             var i = 2;
             var tempSeName = seName;
             while (true)

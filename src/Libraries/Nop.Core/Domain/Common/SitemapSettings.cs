@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Sitemap settings
     /// </summary>
-    public class SitemapSettings : ISettings
+    public partial class SitemapSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether sitemap is enabled

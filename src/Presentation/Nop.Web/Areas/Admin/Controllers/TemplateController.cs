@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Catalog;
@@ -19,13 +17,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ITemplateModelFactory _templateModelFactory;
-        private readonly ITopicTemplateService _topicTemplateService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly ITemplateModelFactory _templateModelFactory;
+        protected readonly ITopicTemplateService _topicTemplateService;
 
         #endregion
 
@@ -202,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product templates
-                
+
         [HttpPost]
         public virtual async Task<IActionResult> ProductTemplates(ProductTemplateSearchModel searchModel)
         {
@@ -271,7 +269,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Topic templates
-        
+
         [HttpPost]
         public virtual async Task<IActionResult> TopicTemplates(TopicTemplateSearchModel searchModel)
         {

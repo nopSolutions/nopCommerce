@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Tax
 {
@@ -18,7 +18,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
 
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")]
         public bool IsPrimaryTaxProvider { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Configure")]
         public string ConfigurationUrl { get; set; }
 

@@ -179,23 +179,16 @@
             <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
             <script>
                 $(document).ready(function() {
-                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
-                    discountsIdsInput.setOptions({
-                        autoClose: false,
-                        filter: "contains"
+                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableDiscounts.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Products.Fields.Discounts.NoDiscounts")',
+                        </text>
+                        }
                     });
-
-                    @if (Model.AvailableDiscounts.Count == 0)
-            {
-                <text>
-                    discountsIdsInput.setOptions({
-                        enable: false,
-                        placeholder: '@T("Admin.Catalog.Products.Fields.Discounts.NoDiscounts")'
-                    });
-                    discountsIdsInput._placeholder();
-                    discountsIdsInput._enable();
-                    </text>
-            }
                 });
             </script>
         </div>

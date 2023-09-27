@@ -1,7 +1,5 @@
 ﻿@model DataTablesModel
 
-@using System.Net;
-
 @functions
 {
     string GetUrl(DataUrl dataUrl)
@@ -276,7 +274,11 @@
                 updateRowData.push({ 'pname': nameData, 'pvalue': data });
                 $.each(columnData_@(tableName), function (index, element) {
                     if (element.Editable == true) {
-                        var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                        var input = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]);
+                        var value = input.val();
+                        if (!/^\d+$/.test(value) && input.attr('type') == 'number')
+                            value = new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", { minimumFractionDigits: 10 }).format(value);
+
                         updateRowData.push({
                             'pname': element.Data, 'pvalue': value
                         });

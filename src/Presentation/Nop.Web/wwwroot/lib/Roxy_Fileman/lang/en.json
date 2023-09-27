@@ -47,7 +47,7 @@
 "E_CreateDirInvalidPath":"Cannot create directory - path doesn't exist",
 "E_CannotDeleteDir":"Error deleting directory",
 "E_DeleteDirInvalidPath":"Cannot delete directory - path doesn't exist",
-"E_DeletеFile":"Error deleting file",
+"E_DeleteFile":"Error deleting file",
 "E_DeleteFileInvalidPath":"Cannot delete file - path doesn't exist",
 "E_DeleteNonEmpty":"Cannot delete - folder is not empty",
 "E_CannotMoveDirToChild":"Cannot move directory to its subdirectory",
@@ -74,7 +74,7 @@
 "Copy":"Copy",
 "Paste":"Paste",
 "E_CopyFile":"Error copying file",
-"E_CopyFileInvalisPath":"Cannot copy file - path doesn't exist",
+"E_CopyFileInvalidPath":"Cannot copy file - path doesn't exist",
 "E_CopyDirInvalidPath":"Cannot copy directory - path doesn't exist",
 "E_CreateArchive":"Error creating zip archive.",
 "E_UploadingFile":"error"

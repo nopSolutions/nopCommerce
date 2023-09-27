@@ -34,10 +34,10 @@
     <Value>Rangt snið á SQL tengistreng</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Land</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Veldu þitt land...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Stofna gagnagrunn ef hann er ekki til</Value>
@@ -131,6 +131,9 @@
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Vista upplýsingar</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce uppsetning</Value>

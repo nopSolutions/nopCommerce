@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Cms
 {
     /// <summary>
     /// Widget settings
     /// </summary>
-    public class WidgetSettings : ISettings
+    public partial class WidgetSettings : ISettings
     {
         public WidgetSettings()
         {

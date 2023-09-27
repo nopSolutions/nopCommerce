@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Stores
 {
@@ -26,6 +24,14 @@ namespace Nop.Services.Stores
         Task<IList<Store>> GetAllStoresAsync();
 
         /// <summary>
+        /// Gets all stores
+        /// </summary>
+        /// <returns>
+        /// The stores
+        /// </returns>
+        IList<Store> GetAllStores();
+
+        /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
@@ -48,6 +54,12 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateStoreAsync(Store store);
+
+        /// <summary>
+        /// Updates the store
+        /// </summary>
+        /// <param name="store">Store</param>
+        void UpdateStore(Store store);
 
         /// <summary>
         /// Indicates whether a store contains a specified host

@@ -13,7 +13,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Migrations
 
             foreach (var columnName in new[]
             {
-                nameof(ShippingByWeightByTotalRecord.WeightFrom), 
+                nameof(ShippingByWeightByTotalRecord.WeightFrom),
                 nameof(ShippingByWeightByTotalRecord.WeightTo),
                 nameof(ShippingByWeightByTotalRecord.OrderSubtotalFrom),
                 nameof(ShippingByWeightByTotalRecord.OrderSubtotalTo),

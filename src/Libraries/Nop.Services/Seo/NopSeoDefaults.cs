@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 
 namespace Nop.Services.Seo
 {
@@ -25,7 +24,7 @@ namespace Nop.Services.Seo
         public static int SearchEngineNameLength => 200;
 
         /// <summary>
-        /// Gets a default list of slugs (sename) reserved for some other needs
+        /// Gets a default list of slugs (seName) reserved for some other needs
         /// </summary>
         public static List<string> ReservedUrlRecordSlugs => new()
         {
@@ -70,6 +69,21 @@ namespace Nop.Services.Seo
         /// </summary>
         public static int SitemapMaxUrlNumber => 50000;
 
+        /// <summary>
+        /// Gets the name of the sitemap directory
+        /// </summary>
+        public static string SitemapXmlDirectory => "sitemaps";
+
+        /// <summary>
+        /// Gets a pattern to build sitemap filename
+        /// </summary>
+        /// <remarks>
+        /// {0} : store Id
+        /// {1} : language Id
+        /// {0} : sitemap index
+        /// </remarks>
+        public static string SitemapXmlFilePattern => "sitemap-{0}-{1}-{2}.xml";
+
         #endregion
 
         #region Caching defaults
@@ -91,6 +105,19 @@ namespace Nop.Services.Seo
         /// {0} : slug
         /// </remarks>
         public static CacheKey UrlRecordBySlugCacheKey => new("Nop.urlrecord.byslug.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static CacheKey UrlRecordSlugLookupCacheKey => new("Nop.urlrecord.sluglookup");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public static CacheKey UrlRecordEntityIdLookupCacheKey => new("Nop.urlrecord.entityidlookup.{0}");
 
         #endregion
     }

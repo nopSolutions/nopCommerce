@@ -1,5 +1,4 @@
 @model Decimal
-<input asp-for="@Model" />
 @{
     var postfix = "";
     if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
@@ -8,15 +7,6 @@
     }
     var culture = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
 }
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoNumericTextBox({
-            value: "@Model.ToString(culture)",
-            min: @decimal.MinValue.ToString(culture),
-            max: @decimal.MaxValue.ToString(culture),
-            decimals: 4,
-            restrictDecimals: true,
-            format: "#.0000 @Html.Raw(postfix)"
-        });
-    });
-</script>
+<div class="input-postfix" data-postfix="@postfix">
+    <input asp-for="@Model" type="number" class="form-control" />
+</div>

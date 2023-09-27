@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -22,18 +20,18 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEmailAccountModelFactory _emailAccountModelFactory;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEmailSender _emailSender;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IEmailAccountModelFactory _emailAccountModelFactory;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IEmailSender _emailSender;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -269,6 +267,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _emailSender.SendEmailAsync(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.SendTestEmail.Success"));
+
+                return RedirectToAction("Edit", new { id = emailAccount.Id });
             }
             catch (Exception exc)
             {

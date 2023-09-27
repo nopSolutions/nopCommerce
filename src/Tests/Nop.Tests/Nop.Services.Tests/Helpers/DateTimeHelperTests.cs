@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -14,6 +11,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
     [TestFixture]
     public class DateTimeHelperTests : ServiceTest
     {
+        private ICustomerService _customerService;
         private IGenericAttributeService _genericAttributeService;
         private DateTimeSettings _dateTimeSettings;
         private IDateTimeHelper _dateTimeHelper;
@@ -24,7 +22,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
         /// (GMT+02:00) Minsk
         /// </summary>
         private string _gmtPlus2MinskTimeZoneId;
-       
+
         /// <summary>
         /// (GMT+03:00) Moscow, St. Petersburg, Volgograd
         /// </summary>
@@ -42,6 +40,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
         [OneTimeSetUp]
         public async Task SetUp()
         {
+            _customerService = GetService<ICustomerService>();
             _genericAttributeService = GetService<IGenericAttributeService>();
             _dateTimeSettings = GetService<DateTimeSettings>();
             _dateTimeHelper = GetService<IDateTimeHelper>();
@@ -49,7 +48,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
 
             _customer = await GetService<ICustomerService>().GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
 
-            _defaultTimeZone = await _genericAttributeService.GetAttributeAsync<string>(_customer, NopCustomerDefaults.TimeZoneIdAttribute);
+            _defaultTimeZone = _customer.TimeZoneId;
 
             _defaultAllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             _defaultDefaultStoreTimeZoneId = _dateTimeSettings.DefaultStoreTimeZoneId;
@@ -58,7 +57,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
             _gmtPlus3MoscowTimeZoneId = "Russian Standard Time"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
             _gmtPlus7KrasnoyarskTimeZoneId = "North Asia Standard Time"; //(GMT+07:00) Krasnoyarsk;
 
-            if (Environment.OSVersion.Platform != PlatformID.Unix) 
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
                 return;
 
             _gmtPlus2MinskTimeZoneId = "Europe/Minsk";  //(GMT+02:00) Minsk;
@@ -69,8 +68,7 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
         [OneTimeTearDown]
         public async Task TearDown()
         {
-            await _genericAttributeService.SaveAttributeAsync(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _defaultTimeZone);
-
+            _customer.TimeZoneId = _defaultTimeZone;
             _dateTimeSettings.AllowCustomersToSetTimeZone = _defaultAllowCustomersToSetTimeZone;
             _dateTimeSettings.DefaultStoreTimeZoneId = _defaultDefaultStoreTimeZoneId;
 
@@ -92,7 +90,8 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
             _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
             await _settingService.SaveSettingAsync(_dateTimeSettings);
 
-            await _genericAttributeService.SaveAttributeAsync(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _gmtPlus3MoscowTimeZoneId);
+            _customer.TimeZoneId = _gmtPlus3MoscowTimeZoneId;
+            await _customerService.UpdateCustomerAsync(_customer);
 
             var timeZone = await GetService<IDateTimeHelper>().GetCustomerTimeZoneAsync(_customer);
             timeZone.Should().NotBeNull();
@@ -106,8 +105,9 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
             _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
             await _settingService.SaveSettingAsync(_dateTimeSettings);
 
-            await _genericAttributeService.SaveAttributeAsync(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _gmtPlus3MoscowTimeZoneId);
-            
+            _customer.TimeZoneId = _gmtPlus3MoscowTimeZoneId;
+            await _customerService.UpdateCustomerAsync(_customer);
+
             var timeZone = await GetService<IDateTimeHelper>().GetCustomerTimeZoneAsync(_customer);
             timeZone.Should().NotBeNull();
             timeZone.Id.Should().Be(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk

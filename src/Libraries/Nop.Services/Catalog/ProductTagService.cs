@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
@@ -20,15 +16,15 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclService _aclService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
+        protected readonly IRepository<ProductTag> _productTagRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -106,8 +102,8 @@ namespace Nop.Services.Catalog
         protected virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
         {
             var query = from pt in _productTagRepository.Table
-                where pt.Name == name
-                select pt;
+                        where pt.Name == name
+                        select pt;
 
             var productTag = await query.FirstOrDefaultAsync();
             return productTag;
@@ -218,7 +214,7 @@ namespace Nop.Services.Catalog
         {
             return await _productTagRepository.GetByIdsAsync(productTagIds);
         }
-        
+
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
@@ -228,7 +224,7 @@ namespace Nop.Services.Catalog
         {
             await _productProductTagMappingRepository.InsertAsync(tagMapping);
         }
-        
+
         /// <summary>
         /// Updates the product tag
         /// </summary>
@@ -283,13 +279,19 @@ namespace Nop.Services.Catalog
             return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var query = _productProductTagMappingRepository.Table;
+                var productsQuery = _productRepository.Table;
+
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
 
                 if (!showHidden)
                 {
-                    var productsQuery = _productRepository.Table.Where(p => p.Published);
-
-                    //apply store mapping constraints
-                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+                    productsQuery = productsQuery.Where(p => p.Published);
 
                     //apply ACL constraints
                     productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
@@ -309,7 +311,7 @@ namespace Nop.Services.Catalog
                 return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
-        
+
         /// <summary>
         /// Update product tags
         /// </summary>

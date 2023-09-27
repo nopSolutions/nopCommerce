@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -88,7 +84,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [OneTimeTearDown]
         public async Task TearDown()
         {
-            foreach (var shoppingCartItem in _cart) 
+            foreach (var shoppingCartItem in _cart)
                 await _shoppingCartService.DeleteShoppingCartItemAsync(shoppingCartItem);
 
             await _addressService.DeleteAddressAsync(_address);
@@ -153,7 +149,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPreparePaymentMethodModel()
         {
             var model = await _checkoutModelFactory.PreparePaymentMethodModelAsync(_cart, 0);
-            
+
             model.DisplayRewardPoints.Should().BeTrue();
             model.PaymentMethods.Count.Should().Be(1);
             model.RewardPointsToUseAmount.Should().Be("$1,944.90");
@@ -188,7 +184,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _checkoutModelFactory.PreparePaymentInfoModelAsync(_paymentMethod);
 
-            model.PaymentViewComponentName.Should().Be(_paymentMethod.GetPublicViewComponentName());
+            model.PaymentViewComponent.Should().Be(_paymentMethod.GetPublicViewComponent());
             model.DisplayOrderTotals.Should().Be(_orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab);
         }
 

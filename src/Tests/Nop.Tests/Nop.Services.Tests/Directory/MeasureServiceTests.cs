@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using NUnit.Framework;
@@ -80,7 +79,8 @@ namespace Nop.Tests.Nop.Services.Tests.Directory
                 SystemKeyword = "test"
             };
 
-            var updateItem = new MeasureDimension {
+            var updateItem = new MeasureDimension
+            {
                 Name = "Test name 1",
                 SystemKeyword = "test"
             };

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -44,6 +43,22 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchLastName")]
         public string SearchLastName { get; set; }
         public bool LastNameEnabled { get; set; }
+
+        [UIHint("DateNullable")]
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchLastActivityFrom")]
+        public DateTime? SearchLastActivityFrom { get; set; }
+
+        [UIHint("DateNullable")]
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchLastActivityTo")]
+        public DateTime? SearchLastActivityTo { get; set; }
+
+        [UIHint("DateNullable")]
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchRegistrationDateFrom")]
+        public DateTime? SearchRegistrationDateFrom { get; set; }
+
+        [UIHint("DateNullable")]
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchRegistrationDateTo")]
+        public DateTime? SearchRegistrationDateTo { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchDateOfBirth")]
         public string SearchDayOfBirth { get; set; }

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
@@ -10,11 +8,11 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     /// <summary>
     /// Tax rate service
     /// </summary>
-    public partial class CountryStateZipService : ICountryStateZipService
+    public class CountryStateZipService : ICountryStateZipService
     {
         #region Fields
 
-        private readonly IRepository<TaxRate> _taxRateRepository;
+        protected readonly IRepository<TaxRate> _taxRateRepository;
 
         #endregion
 
@@ -51,8 +49,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             var rez = await _taxRateRepository.GetAllAsync(query =>
             {
                 return from tr in query
-                    orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
-                    select tr;
+                       orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                       select tr;
             }, cache => cache.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY));
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);

@@ -21,7 +21,7 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets the unique SEO code
         /// </summary>
         public string UniqueSeoCode { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the flag image file name
         /// </summary>

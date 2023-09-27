@@ -7,6 +7,8 @@
     {
         public string Summary { get; set; }
 
+        public DateTime SummaryDate { get; set; }
+
         public int NumberOfOrders { get; set; }
 
         public decimal Profit { get; set; }

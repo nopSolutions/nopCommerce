@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
@@ -15,6 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         public MessageTemplateSearchModel()
         {
             AvailableStores = new List<SelectListItem>();
+            AvailableActiveOptions = new List<SelectListItem>();
         }
 
         #endregion
@@ -27,7 +27,12 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
         public int SearchStoreId { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.IsActive")]
+        public int IsActiveId { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public IList<SelectListItem> AvailableActiveOptions { get; set; }
 
         public bool HideStoresList { get; set; }
 

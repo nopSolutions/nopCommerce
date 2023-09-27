@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -18,12 +15,12 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IRecurringPaymentModelFactory _recurringPaymentModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IRecurringPaymentModelFactory _recurringPaymentModelFactory;
 
         #endregion Fields
 
@@ -113,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = payment.Id });
             }
 
@@ -174,7 +171,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
                 if (errors.Any())
-                    errors.ForEach(error => _notificationService.ErrorNotification(error));
+                {
+                    foreach (var error in errors)
+                    {
+                        _notificationService.ErrorNotification(error);
+                    }
+                }
                 else
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.NextPaymentProcessed"));
 
@@ -182,9 +184,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);
 
                 //selected card
-                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedCardName("recurringpayment-history");
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = payment.Id });
             }
             catch (Exception exc)
             {
@@ -227,9 +229,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);
 
                 //selected card
-                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedCardName("recurringpayment-history");
 
-                return View(model);
+                return RedirectToAction("Edit", new { id = payment.Id });
             }
             catch (Exception exc)
             {

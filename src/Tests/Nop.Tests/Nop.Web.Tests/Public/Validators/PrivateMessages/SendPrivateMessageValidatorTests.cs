@@ -9,7 +9,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.PrivateMessages
     public class SendPrivateMessageValidatorTests : BaseNopTest
     {
         private SendPrivateMessageValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {

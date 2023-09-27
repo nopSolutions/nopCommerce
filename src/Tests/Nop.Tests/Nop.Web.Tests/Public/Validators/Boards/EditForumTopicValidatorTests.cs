@@ -9,7 +9,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
     public class EditForumTopicValidatorTests : BaseNopTest
     {
         private EditForumTopicValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {

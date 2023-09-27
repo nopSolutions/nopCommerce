@@ -1,17 +1,17 @@
 ﻿using FluentMigrator;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Shipping;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
 {
-    [NopMigration("2021-04-23 00:00:00", "4.50.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopUpdateMigration("2021-04-23 00:00:00", "4.50", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -26,42 +26,42 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
             //miniprofiler settings are moved to appSettings
             settingRepository
-                .DeleteAsync(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
-                    setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore").Wait();
+                .Delete(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
+                    setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore");
 
             //#4363
-            var commonSettings = settingService.LoadSettingAsync<CommonSettings>().Result;
+            var commonSettings = settingService.LoadSetting<CommonSettings>();
 
-            if (!settingService.SettingExistsAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Result)
+            if (!settingService.SettingExists(commonSettings, settings => settings.ClearLogOlderThanDays))
             {
                 commonSettings.ClearLogOlderThanDays = 0;
-                settingService.SaveSettingAsync(commonSettings, settings => settings.ClearLogOlderThanDays).Wait();
+                settingService.SaveSetting(commonSettings, settings => settings.ClearLogOlderThanDays);
             }
 
             //#5551
-            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
+            var catalogSettings = settingService.LoadSetting<CatalogSettings>();
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Result)
+            if (!settingService.SettingExists(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering))
             {
                 catalogSettings.EnableSpecificationAttributeFiltering = true;
-                settingService.SaveSettingAsync(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering).Wait();
+                settingService.SaveSetting(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering);
             }
 
             //#5204
-            var shippingSettings = settingService.LoadSettingAsync<ShippingSettings>().Result;
+            var shippingSettings = settingService.LoadSetting<ShippingSettings>();
 
-            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.ShippingSorting).Result)
+            if (!settingService.SettingExists(shippingSettings, settings => settings.ShippingSorting))
             {
                 shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
-                settingService.SaveSettingAsync(shippingSettings, settings => settings.ShippingSorting).Wait();
+                settingService.SaveSetting(shippingSettings, settings => settings.ShippingSorting);
             }
 
             //#5698
-            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
-            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayOrderSummary).Result)
+            var orderSettings = settingService.LoadSetting<OrderSettings>();
+            if (!settingService.SettingExists(orderSettings, settings => settings.DisplayOrderSummary))
             {
                 orderSettings.DisplayOrderSummary = true;
-                settingService.SaveSettingAsync(orderSettings, settings => settings.DisplayOrderSummary).Wait();
+                settingService.SaveSetting(orderSettings, settings => settings.DisplayOrderSummary);
             }
         }
 

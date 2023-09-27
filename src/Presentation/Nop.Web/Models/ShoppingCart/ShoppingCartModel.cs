@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
@@ -18,7 +17,7 @@ namespace Nop.Web.Models.ShoppingCart
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodViewComponentNames = new List<string>();
+            ButtonPaymentMethodViewComponents = new List<Type>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -27,7 +26,7 @@ namespace Nop.Web.Models.ShoppingCart
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
-        
+
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }
@@ -40,7 +39,7 @@ namespace Nop.Web.Models.ShoppingCart
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
+        public IList<Type> ButtonPaymentMethodViewComponents { get; set; }
 
         public bool HideCheckoutButton { get; set; }
         public bool ShowVendorName { get; set; }
@@ -60,7 +59,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public string VendorName { get; set; }
 
-            public PictureModel Picture {get;set;}
+            public PictureModel Picture { get; set; }
 
             public int ProductId { get; set; }
 
@@ -80,7 +79,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
+
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
@@ -144,7 +143,7 @@ namespace Nop.Web.Models.ShoppingCart
             public bool IsPreSelected { get; set; }
         }
 
-        public partial record DiscountBoxModel: BaseNopModel
+        public partial record DiscountBoxModel : BaseNopModel
         {
             public DiscountBoxModel()
             {
@@ -157,7 +156,7 @@ namespace Nop.Web.Models.ShoppingCart
             public List<string> Messages { get; set; }
             public bool IsApplied { get; set; }
 
-            public record DiscountInfoModel : BaseNopEntityModel
+            public partial record DiscountInfoModel : BaseNopEntityModel
             {
                 public string CouponCode { get; set; }
             }
@@ -177,7 +176,7 @@ namespace Nop.Web.Models.ShoppingCart
                 BillingAddress = new AddressModel();
                 ShippingAddress = new AddressModel();
                 PickupAddress = new AddressModel();
-                CustomValues= new Dictionary<string, object>();
+                CustomValues = new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 

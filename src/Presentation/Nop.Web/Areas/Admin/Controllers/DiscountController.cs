@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
@@ -25,17 +21,17 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDiscountModelFactory _discountModelFactory;
-        private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IDiscountModelFactory _discountModelFactory;
+        protected readonly IDiscountPluginManager _discountPluginManager;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
 
         #endregion
 
@@ -401,6 +397,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _discountService.UpdateDiscountAsync(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
+        }
+
+        //action displaying notification (warning) to a store owner that entered coupon code already exists
+        public virtual async Task<IActionResult> CouponCodeReservedWarning(int discountId, string couponCode)
+        {
+            if (string.IsNullOrEmpty(couponCode))
+                return Json(new { Result = string.Empty });
+
+            //check whether discount with passed coupon code exists
+            var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: couponCode, showHidden: true))
+                .Where(discount => discount.Id != discountId);
+            if (!discounts.Any())
+                return Json(new { Result = string.Empty });
+
+            var message = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.CouponCode.Reserved"), discounts.FirstOrDefault().Name);
+            return Json(new { Result = message });
         }
 
         #endregion

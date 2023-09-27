@@ -8,7 +8,7 @@ namespace Nop.Web.Infrastructure
     /// <summary>
     /// Represents base provider
     /// </summary>
-    public class BaseRouteProvider
+    public partial class BaseRouteProvider
     {
         /// <summary>
         /// Get pattern used to detect routes with language code
@@ -24,7 +24,7 @@ namespace Nop.Web.Infrastructure
                     //this pattern is set once at the application start, when we don't have the selected language yet
                     //so we use 'en' by default for the language value, later it'll be replaced with the working language code
                     var code = "en";
-                    return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}={code}}}";
+                    return $"{{{NopRoutingDefaults.RouteValue.Language}:maxlength(2):{NopRoutingDefaults.LanguageParameterTransformer}={code}}}";
                 }
             }
 

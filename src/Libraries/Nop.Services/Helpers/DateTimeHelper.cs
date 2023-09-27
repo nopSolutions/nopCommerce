@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Common;
 
 namespace Nop.Services.Helpers
 {
@@ -15,20 +11,17 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public DateTimeHelper(DateTimeSettings dateTimeSettings,
-            IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
             _dateTimeSettings = dateTimeSettings;
-            _genericAttributeService = genericAttributeService;
             _workContext = workContext;
         }
 
@@ -156,28 +149,28 @@ namespace Nop.Services.Helpers
         /// A task that represents the asynchronous operation
         /// The task result contains the customer time zone; if customer is null, then default store time zone
         /// </returns>
-        public virtual async Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer)
+        public virtual Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer)
         {
-            if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
-                return DefaultStoreTimeZone;
+            if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
+                return Task.FromResult(DefaultStoreTimeZone);
 
             TimeZoneInfo timeZoneInfo = null;
 
             var timeZoneId = string.Empty;
             if (customer != null)
-                timeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+                timeZoneId = customer.TimeZoneId;
 
             try
             {
                 if (!string.IsNullOrEmpty(timeZoneId))
                     timeZoneInfo = FindTimeZoneById(timeZoneId);
             }
-            catch (Exception exc)
+            catch
             {
-                Debug.Write(exc.ToString());
+                //ignore
             }
 
-            return timeZoneInfo ?? DefaultStoreTimeZone;
+            return Task.FromResult(timeZoneInfo ?? DefaultStoreTimeZone);
         }
 
         /// <summary>
@@ -189,7 +182,7 @@ namespace Nop.Services.Helpers
         /// </returns>
         public virtual async Task<TimeZoneInfo> GetCurrentTimeZoneAsync()
         {
-           return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
+            return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
         }
 
         /// <summary>
@@ -205,9 +198,9 @@ namespace Nop.Services.Helpers
                     if (!string.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
                         timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
-                catch (Exception exc)
+                catch
                 {
-                    Debug.Write(exc.ToString());
+                    //ignore
                 }
 
                 return timeZoneInfo ?? TimeZoneInfo.Local;

@@ -45,6 +45,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnNewsCommentPage { get; set; }
         public bool ShowOnNewsCommentPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage")]
+        public bool ShowOnNewsletterPage { get; set; }
+        public bool ShowOnNewsletterPage_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
         public bool ShowOnProductReviewPage { get; set; }
         public bool ShowOnProductReviewPage_OverrideForStore { get; set; }
@@ -60,6 +64,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum")]
         public bool ShowOnForum { get; set; }
         public bool ShowOnForum_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests")]
+        public bool ShowOnCheckoutPageForGuests { get; set; }
+        public bool ShowOnCheckoutPageForGuests_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
         public string ReCaptchaPublicKey { get; set; }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.News;
 using Nop.Data;
@@ -17,10 +13,10 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<NewsComment> _newsCommentRepository;
+        protected readonly IRepository<NewsItem> _newsItemRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -92,6 +88,12 @@ namespace Nop.Services.News
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(n => n.Title.Contains(title));
 
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     var utcNow = DateTime.UtcNow;
@@ -99,9 +101,6 @@ namespace Nop.Services.News
                     query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
                 }
-
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);

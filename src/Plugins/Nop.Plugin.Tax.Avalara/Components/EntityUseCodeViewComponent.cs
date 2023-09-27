@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Tax.Avalara.Models.EntityUseCode;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -27,27 +24,26 @@ namespace Nop.Plugin.Tax.Avalara.Components
     /// <summary>
     /// Represents a view component to render an additional field on customer details, customer role details, product details, checkout attribute details views
     /// </summary>
-    [ViewComponent(Name = AvalaraTaxDefaults.ENTITY_USE_CODE_VIEW_COMPONENT_NAME)]
     public class EntityUseCodeViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ITaxPluginManager _taxPluginManager;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 
         #region Ctor
 
         public EntityUseCodeViewComponent(AvalaraTaxManager avalaraTaxManager,
-            ICheckoutAttributeService checkoutAttributeService,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -150,7 +146,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (widgetZone.Equals(AdminWidgetZones.CheckoutAttributeDetailsBlock))
             {
                 model.PrecedingElementId = nameof(CheckoutAttributeModel.IsTaxExempt);
-                entity = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(entityModel.Id);
+                entity = await _checkoutAttributeService.GetAttributeByIdAsync(entityModel.Id);
             }
 
             //try to get previously saved entity use code

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Core;
@@ -13,15 +12,14 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components
     /// <summary>
     /// Represents the view component to display logo
     /// </summary>
-    [ViewComponent(Name = PayPalCommerceDefaults.LOGO_VIEW_COMPONENT_NAME)]
     public class LogoViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly PayPalCommerceSettings _settings;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly PayPalCommerceSettings _settings;
 
         #endregion
 

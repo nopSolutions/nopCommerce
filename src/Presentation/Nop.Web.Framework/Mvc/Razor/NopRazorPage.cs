@@ -8,10 +8,10 @@ namespace Nop.Web.Framework.Mvc.Razor
     /// Web view page
     /// </summary>
     /// <typeparam name="TModel">Model</typeparam>
-    public abstract class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+    public abstract partial class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
-        private ILocalizationService _localizationService;
-        private Localizer _localizer;
+        protected ILocalizationService _localizationService;
+        protected Localizer _localizer;
 
         /// <summary>
         /// Get a localized resources
@@ -45,7 +45,8 @@ namespace Nop.Web.Framework.Mvc.Razor
     /// <summary>
     /// Web view page
     /// </summary>
-    public abstract class NopRazorPage : NopRazorPage<dynamic>
+    /// TODO: Doesn't seem to be used anywhere
+    public abstract partial class NopRazorPage : NopRazorPage<dynamic>
     {
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Services
@@ -7,7 +6,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
     /// <summary>
     /// Store pickup point service interface
     /// </summary>
-    public partial interface IStorePickupPointService
+    public interface IStorePickupPointService
     {
         /// <summary>
         /// Gets all pickup points

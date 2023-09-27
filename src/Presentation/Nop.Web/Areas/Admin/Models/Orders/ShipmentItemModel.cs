@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
@@ -63,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested Classes
 
-        public record WarehouseInfo : BaseNopModel
+        public partial record WarehouseInfo : BaseNopModel
         {
             public int WarehouseId { get; set; }
             public string WarehouseName { get; set; }

@@ -13,6 +13,14 @@
         toggleLimitation();
         toggleUsePercentage();
         toggleRequiresCouponCode();
+
+        if ('@Model.CouponCode') {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: '@Model.CouponCode' });
+        }
+
+        $('#@Html.IdFor(model => model.CouponCode)').on('input change', function () {
+            warningValidation('@Url.Action("CouponCodeReservedWarning")', '@Html.NameFor(model => model.CouponCode)', { discountId: @Model.Id, couponCode: $(this).val() });
+        });
     });
 
     function toggleDiscountType() {
@@ -85,6 +93,15 @@
 </script>
 
 <div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsActive" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsActive" />
+            <span asp-validation-for="IsActive"></span>
+        </div>
+    </div>
     <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Name" />

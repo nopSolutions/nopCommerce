@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using System.Transactions;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -19,9 +15,9 @@ namespace Nop.Data
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -115,6 +111,28 @@ namespace Nop.Data
             return query.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
         }
 
+        /// <summary>
+        /// Transactionally deletes a list of entities
+        /// </summary>
+        /// <param name="entities">Entities to delete</param>
+        protected virtual async Task DeleteAsync(IList<TEntity> entities)
+        {
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            await _dataProvider.BulkDeleteEntitiesAsync(entities);
+            transaction.Complete();
+        }
+
+        /// <summary>
+        /// Soft-deletes <see cref="ISoftDeletedEntity"/> entities
+        /// </summary>
+        /// <param name="entities">Entities to delete</param>
+        protected virtual async Task DeleteAsync<T>(IList<T> entities) where T : ISoftDeletedEntity, TEntity
+        {
+            foreach (var entity in entities)
+                entity.Deleted = true;
+            await _dataProvider.UpdateEntitiesAsync(entities);
+        }
+
         #endregion
 
         #region Methods
@@ -150,6 +168,35 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Get the entity entry
+        /// </summary>
+        /// <param name="id">Entity entry identifier</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
+        /// <returns>
+        /// The entity entry
+        /// </returns>
+        public virtual TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        {
+            if (!id.HasValue || id == 0)
+                return null;
+
+            TEntity getEntity()
+            {
+                return AddDeletedFilter(Table, includeDeleted).FirstOrDefault(entity => entity.Id == Convert.ToInt32(id));
+            }
+
+            if (getCacheKey == null)
+                return getEntity();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
+
+            return _staticCacheManager.Get(cacheKey, getEntity);
+        }
+
+        /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
@@ -161,7 +208,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
-            if (!ids?.Any() ?? true)
+            if (ids?.Any() != true)
                 return new List<TEntity>();
 
             async Task<IList<TEntity>> getByIdsAsync()
@@ -169,14 +216,15 @@ namespace Nop.Data
                 var query = AddDeletedFilter(Table, includeDeleted);
 
                 //get entries
-                var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
+                var entriesById = await query
+                    .Where(entry => ids.Contains(entry.Id))
+                    .ToDictionaryAsync(entry => entry.Id);
 
                 //sort by passed identifiers
                 var sortedEntries = new List<TEntity>();
                 foreach (var id in ids)
                 {
-                    var sortedEntry = entries.Find(entry => entry.Id == id);
-                    if (sortedEntry != null)
+                    if (entriesById.TryGetValue(id, out var sortedEntry))
                         sortedEntries.Add(sortedEntry);
                 }
 
@@ -350,6 +398,23 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Insert the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Insert(TEntity entity, bool publishEvent = true)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dataProvider.InsertEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityInserted(entity);
+        }
+
+        /// <summary>
         /// Insert entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -370,6 +435,28 @@ namespace Nop.Data
             //event notification
             foreach (var entity in entities)
                 await _eventPublisher.EntityInsertedAsync(entity);
+        }
+
+        /// <summary>
+        /// Insert entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Insert(IList<TEntity> entities, bool publishEvent = true)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            _dataProvider.BulkInsertEntities(entities);
+            transaction.Complete();
+
+            if (!publishEvent)
+                return;
+
+            //event notification
+            foreach (var entity in entities)
+                _eventPublisher.EntityInserted(entity);
         }
 
         /// <summary>
@@ -405,6 +492,23 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Update the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Update(TEntity entity, bool publishEvent = true)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _dataProvider.UpdateEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityUpdated(entity);
+        }
+
+        /// <summary>
         /// Update entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -426,6 +530,29 @@ namespace Nop.Data
 
             foreach (var entity in entities)
                 await _eventPublisher.EntityUpdatedAsync(entity);
+        }
+
+        /// <summary>
+        /// Update entity entries
+        /// </summary>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Update(IList<TEntity> entities, bool publishEvent = true)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (entities.Count == 0)
+                return;
+
+            _dataProvider.UpdateEntities(entities);
+
+            //event notification
+            if (!publishEvent)
+                return;
+
+            foreach (var entity in entities)
+                _eventPublisher.EntityUpdated(entity);
         }
 
         /// <summary>
@@ -457,6 +584,33 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Delete the entity entry
+        /// </summary>
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        public virtual void Delete(TEntity entity, bool publishEvent = true)
+        {
+            switch (entity)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(entity));
+
+                case ISoftDeletedEntity softDeletedEntity:
+                    softDeletedEntity.Deleted = true;
+                    _dataProvider.UpdateEntity(entity);
+                    break;
+
+                default:
+                    _dataProvider.DeleteEntity(entity);
+                    break;
+            }
+
+            //event notification
+            if (publishEvent)
+                _eventPublisher.EntityDeleted(entity);
+        }
+
+        /// <summary>
         /// Delete entity entries
         /// </summary>
         /// <param name="entities">Entity entries</param>
@@ -467,23 +621,10 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            if (entities.OfType<ISoftDeletedEntity>().Any())
-            {
-                foreach (var entity in entities)
-                {
-                    if (entity is ISoftDeletedEntity softDeletedEntity)
-                    {
-                        softDeletedEntity.Deleted = true;
-                        await _dataProvider.UpdateEntityAsync(entity);
-                    }
-                }
-            }
-            else
-            {
-                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-                await _dataProvider.BulkDeleteEntitiesAsync(entities);
-                transaction.Complete();
-            }
+            if (!entities.Any())
+                return;
+
+            await DeleteAsync(entities);
 
             //event notification
             if (!publishEvent)
@@ -508,6 +649,25 @@ namespace Nop.Data
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            transaction.Complete();
+
+            return countDeletedRecords;
+        }
+
+        /// <summary>
+        /// Delete entity entries by the passed predicate
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition</param>
+        /// <returns>
+        /// The number of deleted records
+        /// </returns>
+        public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);
             transaction.Complete();
 
             return countDeletedRecords;

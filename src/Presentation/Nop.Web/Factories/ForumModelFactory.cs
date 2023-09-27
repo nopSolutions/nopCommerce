@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -17,6 +13,7 @@ using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
@@ -29,19 +26,19 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IBBCodeHelper _bbCodeHelper;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IBBCodeHelper _bbCodeHelper;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IForumService _forumService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -140,7 +137,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-        
+
         #endregion
 
         #region Methods
@@ -404,8 +401,7 @@ namespace Nop.Web.Factories
                 forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !customerIsGuest;
                 if (_customerSettings.ShowCustomersLocation)
                 {
-                    var countryId = await _genericAttributeService.GetAttributeAsync<Customer, int>(post.CustomerId, NopCustomerDefaults.CountryIdAttribute);
-                    var country = await _countryService.GetCountryByIdAsync(countryId);
+                    var country = await _countryService.GetCountryByIdAsync(customer.CountryId);
                     forumPostModel.CustomerLocation = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name) : string.Empty;
                 }
 
@@ -433,7 +429,7 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic move model
+        /// The task result contains the topic move model
         /// </returns>
         public virtual async Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic)
         {
@@ -570,7 +566,7 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = await _forumService.GetPostByIdAsync(quote.Value);
-                    
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId);
@@ -1000,7 +996,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerForumSubscriptions",
                 UseRouteLinks = true,
-                RouteValues = new ForumSubscriptionsRouteValues { pageNumber = pageIndex }
+                RouteValues = new ForumSubscriptionsRouteValues { PageNumber = pageIndex }
             };
 
             return model;
@@ -1070,6 +1066,36 @@ namespace Nop.Web.Factories
             };
 
             return forumModel;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
+        /// </summary>
+        public partial record ForumSubscriptionsRouteValues : BaseRouteValues
+        {
+        }
+
+        /// <summary>
+        /// record that has search options for route values. Used for Search result pagination
+        /// </summary>
+        public partial record ForumSearchRouteValues : BaseRouteValues
+        {
+            public string Searchterms { get; set; }
+            public string Advs { get; set; }
+            public string ForumId { get; set; }
+            public string Within { get; set; }
+            public string LimitDays { get; set; }
+        }
+
+        /// <summary>
+        /// record that has only page for route value. Used for Active Discussions (forums) pagination
+        /// </summary>
+        public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion

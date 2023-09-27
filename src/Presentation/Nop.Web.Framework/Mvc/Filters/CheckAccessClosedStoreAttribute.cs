@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -49,11 +46,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IPermissionService _permissionService;
-            private readonly IStoreContext _storeContext;
-            private readonly ITopicService _topicService;
-            private readonly StoreInformationSettings _storeInformationSettings;
+            protected readonly bool _ignoreFilter;
+            protected readonly IPermissionService _permissionService;
+            protected readonly IStoreContext _storeContext;
+            protected readonly ITopicService _topicService;
+            protected readonly StoreInformationSettings _storeInformationSettings;
 
             #endregion
 

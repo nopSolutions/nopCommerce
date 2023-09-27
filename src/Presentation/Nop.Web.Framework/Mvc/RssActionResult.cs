@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Rss;
@@ -11,7 +8,7 @@ namespace Nop.Web.Framework.Mvc
     /// <summary>
     /// RSS action result
     /// </summary>
-    public class RssActionResult : ContentResult
+    public partial class RssActionResult : ContentResult
     {
         /// <summary>
         /// Ctor

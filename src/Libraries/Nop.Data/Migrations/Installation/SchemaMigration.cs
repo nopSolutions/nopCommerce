@@ -28,8 +28,8 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Installation
 {
-    [NopMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema", MigrationProcessType.Installation)]
-    public class SchemaMigration : AutoReversingMigration
+    [NopSchemaMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema", MigrationProcessType.Installation)]
+    public class SchemaMigration : ForwardOnlyMigration
     {
         /// <summary>
         /// Collect the UP migration expressions
@@ -51,6 +51,7 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<StateProvince>();
             Create.TableFor<Address>();
             Create.TableFor<Affiliate>();
+            Create.TableFor<Language>();
             Create.TableFor<CustomerAttribute>();
             Create.TableFor<CustomerAttributeValue>();
             Create.TableFor<Customer>();
@@ -75,8 +76,10 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<SpecificationAttributeGroup>();
             Create.TableFor<SpecificationAttribute>();
             Create.TableFor<ProductAttributeCombination>();
+            Create.TableFor<ProductAttributeCombinationPicture>();
             Create.TableFor<ProductAttributeMapping>();
             Create.TableFor<ProductAttributeValue>();
+            Create.TableFor<ProductAttributeValuePicture>();
             Create.TableFor<Order>();
             Create.TableFor<OrderItem>();
             Create.TableFor<RewardPointsHistory>();
@@ -88,7 +91,6 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<ShoppingCartItem>();
             Create.TableFor<Store>();
             Create.TableFor<StoreMapping>();
-            Create.TableFor<Language>();
             Create.TableFor<LocaleStringResource>();
             Create.TableFor<LocalizedProperty>();
             Create.TableFor<BlogPost>();
@@ -120,6 +122,8 @@ namespace Nop.Data.Migrations.Installation
             Create.TableFor<Picture>();
             Create.TableFor<PictureBinary>();
             Create.TableFor<ProductPicture>();
+            Create.TableFor<Video>();
+            Create.TableFor<ProductVideo>();
             Create.TableFor<Setting>();
             Create.TableFor<Discount>();
             Create.TableFor<DiscountCategoryMapping>();

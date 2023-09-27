@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -14,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Http.Extensions;
+using Nop.Plugin.Payments.PayPalCommerce.Components;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Models;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
@@ -36,19 +33,19 @@ namespace Nop.Plugin.Payments.PayPalCommerce
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly PayPalCommerceSettings _settings;
-        private readonly ServiceManager _serviceManager;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly PayPalCommerceSettings _settings;
+        protected readonly ServiceManager _serviceManager;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -353,14 +350,14 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// A task that represents the asynchronous operation
         /// The task result contains the payment info holder
         /// </returns>
-        public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+        public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             //already set
-            return Task.FromResult(_actionContextAccessor.ActionContext.HttpContext.Session
-                .Get<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey));
+            return await _actionContextAccessor.ActionContext.HttpContext.Session
+                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
         }
 
         /// <summary>
@@ -374,9 +371,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// <summary>
         /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        public string GetPublicViewComponentName()
+        public Type GetPublicViewComponent()
         {
-            return PayPalCommerceDefaults.PAYMENT_INFO_VIEW_COMPONENT_NAME;
+            return typeof(PaymentInfoViewComponent);
         }
 
         /// <summary>
@@ -402,11 +399,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying widget
+        /// Gets a type of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <returns>View component name</returns>
-        public string GetWidgetViewComponentName(string widgetZone)
+        /// <returns>View component type</returns>
+        public Type GetWidgetViewComponent(string widgetZone)
         {
             if (widgetZone == null)
                 throw new ArgumentNullException(nameof(widgetZone));
@@ -416,16 +413,16 @@ namespace Nop.Plugin.Payments.PayPalCommerce
                 widgetZone.Equals(PublicWidgetZones.ProductDetailsTop) ||
                 widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
             {
-                return PayPalCommerceDefaults.SCRIPT_VIEW_COMPONENT_NAME;
+                return typeof(ScriptViewComponent);
             }
 
             if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) || widgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
-                return PayPalCommerceDefaults.BUTTONS_VIEW_COMPONENT_NAME;
+                return typeof(ButtonsViewComponent);
 
             if (widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) || widgetZone.Equals(PublicWidgetZones.Footer))
-                return PayPalCommerceDefaults.LOGO_VIEW_COMPONENT_NAME;
+                return typeof(LogoViewComponent);
 
-            return string.Empty;
+            return null;
         }
 
         /// <summary>

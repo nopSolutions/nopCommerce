@@ -7,7 +7,6 @@
     NopHtml.SetActiveMenuItemSystemName("Vendor settings");
 }
 
-
 @{
     const string hideCommonBlockAttributeName = "VendorSettingsPage.HideCommonBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
@@ -30,15 +29,15 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorSettingsButtons, additionalData = Model })
         </div>
     </div>
 
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
-                @await Component.InvokeAsync("StoreScopeConfiguration")
-                @await Component.InvokeAsync("SettingMode")
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="vendorsettings-cards">
@@ -46,7 +45,7 @@
                     <nop-card asp-name="vendorsettings-catalog" asp-icon="fas fa-list" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Catalog", Model)</nop-card>
                     <nop-card asp-name="vendorsettings-vendor-attributes" asp-icon="fas fa-paperclip" asp-title="@T("Admin.Vendors.VendorAttributes")" asp-hide-block-attribute-name="@hideVendorAttributeBlockAttributeName" asp-hide="@hideVendorAttributeBlock" asp-advanced="true">@await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)</nop-card>
 
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsDetailsBlock, additionalData = Model })
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
         </div>

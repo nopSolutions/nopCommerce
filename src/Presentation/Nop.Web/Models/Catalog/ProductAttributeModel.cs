@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
     /// <summary>
     /// Represents a product attribute model
     /// </summary>
-    public record ProductAttributeModel : BaseNopModel
+    public partial record ProductAttributeModel : BaseNopModel
     {
         #region Properties
 

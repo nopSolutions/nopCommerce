@@ -9,13 +9,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
     public class ChangePasswordValidatorTests : BaseNopTest
     {
         private ChangePasswordValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<ChangePasswordValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenOldPasswordIsNullOrEmpty()
         {

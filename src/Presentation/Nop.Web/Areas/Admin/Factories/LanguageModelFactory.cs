@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
 using Nop.Services;
 using Nop.Services.Localization;
@@ -20,8 +21,9 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class LanguageModelFactory : ILanguageModelFactory
     {
         #region Fields
-        
+
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly INopFileProvider _fileProvider;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
@@ -31,11 +33,13 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public LanguageModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            INopFileProvider fileProvider,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
+            _fileProvider = fileProvider;
             _languageService = languageService;
             _localizationService = localizationService;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
@@ -66,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -142,9 +146,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.DisplayOrder = (await _languageService.GetAllLanguagesAsync()).Max(l => l.DisplayOrder) + 1;
                 model.Published = true;
             }
+            var flagNames = _fileProvider
+                            .EnumerateFiles(_fileProvider.GetAbsolutePath(@"images\flags"), "*.png")
+                            .Select(_fileProvider.GetFileName)
+                            .ToList();
+
+            model.AvailableFlagImages = flagNames.ConvertAll(flagName => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Text = flagName,
+                Value = flagName
+            });
 
             //prepare available currencies
-            await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies, 
+            await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies,
                 defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare available stores

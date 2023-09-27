@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
@@ -22,14 +19,14 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IMessageTemplateService _messageTemplateService;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        protected readonly IStoreService _storeService;
 
         #endregion
 
@@ -74,6 +71,23 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly")
+            });
+
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
@@ -95,9 +109,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
+
             //get message templates
             var messageTemplates = (await _messageTemplateService
-                .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords)).ToPagedList(searchModel);
+                .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords, isActive)).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
             var stores = (await _storeService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();
@@ -111,15 +127,18 @@ namespace Nop.Web.Areas.Admin.Factories
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var storeNames = stores.Select(store => store.Name);
                     if (messageTemplate.LimitedToStores)
                     {
                         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
-                        storeNames = stores
+                        var storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
+                        messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
                     }
-
-                    messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
+                    else
+                    {
+                        var allstores = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
+                        messageTemplateModel.ListOfStores = allstores;
+                    }
 
                     return messageTemplateModel;
                 });

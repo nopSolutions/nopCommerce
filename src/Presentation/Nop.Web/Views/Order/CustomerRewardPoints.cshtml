@@ -10,13 +10,14 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
 <div class="page account-page reward-points-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerRewardPointsTop, additionalData = Model })
         <div class="reward-points-overview">
             <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
             @if (Model.MinimumRewardPointsBalance > 0)
@@ -99,4 +100,5 @@
             }
         </div>
     </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerRewardPointsBottom, additionalData = Model })
 </div>

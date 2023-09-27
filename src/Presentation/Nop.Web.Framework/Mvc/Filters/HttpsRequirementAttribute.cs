@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Data;
 
@@ -18,9 +18,21 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public HttpsRequirementAttribute() : base(typeof(HttpsRequirementFilter))
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public HttpsRequirementAttribute(bool ignore = false) : base(typeof(HttpsRequirementFilter))
         {
+            IgnoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter { get; }
 
         #endregion
 
@@ -33,17 +45,21 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly IStoreContext _storeContext;
-            private readonly IWebHelper _webHelper;
+            protected readonly bool _ignoreFilter;
+            protected readonly IStoreContext _storeContext;
+            protected readonly IWebHelper _webHelper;
+            protected readonly IWebHostEnvironment _webHostEnvironment;
 
             #endregion
 
             #region Ctor
 
-            public HttpsRequirementFilter(IStoreContext storeContext, IWebHelper webHelper)
+            public HttpsRequirementFilter(bool ignoreFilter, IStoreContext storeContext, IWebHelper webHelper, IWebHostEnvironment webHostEnvironment)
             {
+                _ignoreFilter = ignoreFilter;
                 _storeContext = storeContext;
                 _webHelper = webHelper;
+                _webHostEnvironment = webHostEnvironment;
             }
 
             #endregion
@@ -70,18 +86,31 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
+                //check whether this filter has been overridden for the action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter)
+                    .OfType<HttpsRequirementAttribute>()
+                    .FirstOrDefault();
+
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
+
                 var store = await _storeContext.GetCurrentStoreAsync();
 
                 //whether current connection is secured
                 var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
 
+                //link caching can cause unstable behavior in development environments, when we use permanent redirects
+                var isPermanent = !_webHostEnvironment.IsDevelopment();
+
                 //page should be secured, so redirect (permanent) to HTTPS version of page
                 if (store.SslEnabled && !currentConnectionSecured)
-                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
+                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), isPermanent);
 
                 //page shouldn't be secured, so redirect (permanent) to HTTP version of page
                 if (!store.SslEnabled && currentConnectionSecured)
-                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false), true);
+                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false), isPermanent);
             }
 
             #endregion

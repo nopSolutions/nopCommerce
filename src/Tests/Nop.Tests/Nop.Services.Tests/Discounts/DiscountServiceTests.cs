@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Discounts;
@@ -25,7 +22,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
         [Test]
         public async Task CanGetAllDiscount()
         {
-            var discounts = await _discountService.GetAllDiscountsAsync();
+            var discounts = await _discountService.GetAllDiscountsAsync(isActive: null);
             discounts.Should().NotBeNull();
             discounts.Any().Should().BeTrue();
         }
@@ -72,6 +69,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
         {
             return new Discount
             {
+                IsActive = true,
                 DiscountType = DiscountType.AssignedToSkus,
                 Name = "Discount 2",
                 UsePercentage = false,

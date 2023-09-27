@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Web.Framework.Components;
@@ -9,12 +8,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components
     /// <summary>
     /// Represents view component for setting GoogleAuthenticator
     /// </summary>
-    [ViewComponent(Name = GoogleAuthenticatorDefaults.VIEW_COMPONENT_NAME)]
     public class GAAuthenticationViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly AuthenticationModelFactory _authenticationModelFactory;
+        protected readonly AuthenticationModelFactory _authenticationModelFactory;
 
         #endregion
 

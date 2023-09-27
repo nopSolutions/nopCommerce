@@ -109,7 +109,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.Action("PostVote", "Boards")",
+                                url: "@Url.RouteUrl("PostVote")",
                                 data: postData,
                                 success: function (data, textStatus, jqXHR) {
                                     if (data.Error) {

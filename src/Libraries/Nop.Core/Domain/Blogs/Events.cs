@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Blogs
     /// <summary>
     /// Blog post comment approved event
     /// </summary>
-    public class BlogCommentApprovedEvent
+    public partial class BlogCommentApprovedEvent
     {
         /// <summary>
         /// Ctor

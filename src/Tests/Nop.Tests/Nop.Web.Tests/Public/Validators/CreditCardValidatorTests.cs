@@ -1,6 +1,4 @@
 ﻿using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
@@ -11,7 +9,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators
     public class CreditCardValidatorTests
     {
         private TestValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {

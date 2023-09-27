@@ -5,7 +5,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Store information settings
     /// </summary>
-    public class StoreInformationSettings : ISettings
+    public partial class StoreInformationSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether "powered by nopCommerce" text should be displayed.
@@ -52,5 +52,10 @@ namespace Nop.Core.Domain
         /// Gets or sets a value of YouTube channel URL of the site
         /// </summary>
         public string YoutubeLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of Instagram account URL of the site
+        /// </summary>
+        public string InstagramLink { get; set; }
     }
 }

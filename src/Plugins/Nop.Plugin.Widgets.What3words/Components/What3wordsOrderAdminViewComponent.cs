@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -8,15 +7,14 @@ using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.What3words.Components
 {
-    [ViewComponent(Name = What3wordsDefaults.ORDER_ADMIN_VIEW_COMPONENT_NAME)]
     public class What3wordsOrderAdminViewComponent : NopViewComponent
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWidgetPluginManager _widgetPluginManager;
-        private readonly What3wordsSettings _what3WordsSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWidgetPluginManager _widgetPluginManager;
+        protected readonly What3wordsSettings _what3WordsSettings;
 
         #endregion
 

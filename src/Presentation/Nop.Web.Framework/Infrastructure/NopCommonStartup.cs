@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Infrastructure
     /// <summary>
     /// Represents object for the configuring common features and middleware on application startup
     /// </summary>
-    public class NopCommonStartup : INopStartup
+    public partial class NopCommonStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.Infrastructure
             //add distributed cache
             services.AddDistributedCache();
 
-            //add HTTP sesion state feature
+            //add HTTP session state feature
             services.AddHttpSession();
 
             //add default HTTP clients
@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddRouting(options =>
             {
                 //add constraint key for language
-                options.ConstraintMap[NopPathRouteDefaults.LanguageParameterTransformer] = typeof(LanguageParameterTransformer);
+                options.ConstraintMap[NopRoutingDefaults.LanguageParameterTransformer] = typeof(LanguageParameterTransformer);
             });
         }
 
@@ -62,6 +62,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseNopRequestLocalization();
+
+            //configure PDF
+            application.UseNopPdf();
         }
 
         /// <summary>

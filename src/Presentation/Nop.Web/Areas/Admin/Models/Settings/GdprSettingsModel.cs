@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -36,6 +36,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.LogUserProfileChanges")]
         public bool LogUserProfileChanges { get; set; }
         public bool LogUserProfileChanges_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.DeleteInactiveCustomersAfterMonths")]
+        public int DeleteInactiveCustomersAfterMonths { get; set; }
+        public bool DeleteInactiveCustomersAfterMonths_OverrideForStore { get; set; }
 
         public GdprConsentSearchModel GdprConsentSearchModel { get; set; }
 

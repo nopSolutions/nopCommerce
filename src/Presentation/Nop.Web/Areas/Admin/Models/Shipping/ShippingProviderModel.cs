@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
@@ -21,7 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.IsActive")]
         public bool IsActive { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Logo")]
         public string LogoUrl { get; set; }
 

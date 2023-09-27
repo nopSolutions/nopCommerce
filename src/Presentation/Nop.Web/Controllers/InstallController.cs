@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -27,16 +23,16 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly Lazy<IInstallationLocalizationService> _locService;
-        private readonly Lazy<IInstallationService> _installationService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly Lazy<IPermissionService> _permissionService;
-        private readonly Lazy<IPluginService> _pluginService;
-        private readonly Lazy<IStaticCacheManager> _staticCacheManager;
-        private readonly Lazy<IUploadService> _uploadService;
-        private readonly Lazy<IWebHelper> _webHelper;
-        private readonly Lazy<NopHttpClient> _nopHttpClient;
+        protected readonly AppSettings _appSettings;
+        protected readonly Lazy<IInstallationLocalizationService> _locService;
+        protected readonly Lazy<IInstallationService> _installationService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly Lazy<IPermissionService> _permissionService;
+        protected readonly Lazy<IPluginService> _pluginService;
+        protected readonly Lazy<IStaticCacheManager> _staticCacheManager;
+        protected readonly Lazy<IUploadService> _uploadService;
+        protected readonly Lazy<IWebHelper> _webHelper;
+        protected readonly Lazy<NopHttpClient> _nopHttpClient;
 
         #endregion
 
@@ -69,7 +65,7 @@ namespace Nop.Web.Controllers
 
         #region Utilites
 
-        private InstallModel PrepareCountryList(InstallModel model)
+        protected virtual InstallModel PrepareCountryList(InstallModel model)
         {
             if (!model.InstallRegionalResources)
                 return model;
@@ -95,13 +91,13 @@ namespace Nop.Web.Controllers
             return model;
         }
 
-        private InstallModel PrepareLanguageList(InstallModel model)
+        protected virtual InstallModel PrepareLanguageList(InstallModel model)
         {
             foreach (var lang in _locService.Value.GetAvailableLanguages())
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
+                    Value = Url.RouteUrl("InstallationChangeLanguage", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.Value.GetCurrentLanguage().Code == lang.Code
                 });
@@ -110,7 +106,7 @@ namespace Nop.Web.Controllers
             return model;
         }
 
-        private InstallModel PrepareAvailableDataProviders(InstallModel model)
+        protected virtual InstallModel PrepareAvailableDataProviders(InstallModel model)
         {
             model.AvailableDataProviders.AddRange(
                 _locService.Value.GetAvailableProviderTypes()
@@ -137,6 +133,7 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
+                SubscribeNewsletters = true,
                 InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
                 DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
                 CreateDatabaseIfNotExists = false,
@@ -225,6 +222,18 @@ namespace Nop.Web.Controllers
 
                 dataProvider.InitializeDatabase();
 
+                if (model.SubscribeNewsletters)
+                {
+                    try
+                    {
+                        var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+
                 var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
                 var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
 
@@ -232,12 +241,16 @@ namespace Nop.Web.Controllers
                 if (model.InstallRegionalResources)
                 {
                     //try to get CultureInfo and RegionInfo
-                    try
-                    {
-                        cultureInfo = new CultureInfo(model.Country[3..]);
-                        regionInfo = new RegionInfo(model.Country[3..]);
-                    }
-                    catch { }
+                    if (model.Country != null)
+                        try
+                        {
+                            cultureInfo = new CultureInfo(model.Country[3..]);
+                            regionInfo = new RegionInfo(model.Country[3..]);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
 
                     //get URL to download language pack
                     if (cultureInfo.Name != NopCommonDefaults.DefaultLanguageCulture)
@@ -248,18 +261,21 @@ namespace Nop.Web.Controllers
                             var resultString = await _nopHttpClient.Value.InstallationCompletedAsync(model.AdminEmail, languageCode, cultureInfo.Name);
                             var result = JsonConvert.DeserializeAnonymousType(resultString,
                                 new { Message = string.Empty, LanguagePack = new { Culture = string.Empty, Progress = 0, DownloadLink = string.Empty } });
-                            if (result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
+
+                            if (result != null && result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
                             {
                                 languagePackInfo.DownloadUrl = result.LanguagePack.DownloadLink;
                                 languagePackInfo.Progress = result.LanguagePack.Progress;
                             }
-
                         }
-                        catch { }
+                        catch
+                        {
+                            // ignored
+                        }
                     }
 
                     //upload CLDR
-                    _uploadService.Value.UploadLocalePattern(cultureInfo);
+                    await _uploadService.Value.UploadLocalePatternAsync(cultureInfo);
                 }
 
                 //now resolve installation service
@@ -329,7 +345,7 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
-            return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
+            return View("Index", new InstallModel { RestartUrl = Url.RouteUrl("Installation") });
         }
 
         public virtual IActionResult RestartApplication()

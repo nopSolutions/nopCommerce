@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Checkout
@@ -25,5 +25,11 @@ namespace Nop.Web.Models.Checkout
         /// Used on one-page checkout page
         /// </summary>
         public bool NewAddressPreselected { get; set; }
+
+        public bool EuVatEnabled { get; set; }
+        public bool EuVatEnabledForGuests { get; set; }
+
+        [NopResourceDisplayName("Checkout.VatNumber")]
+        public string VatNumber { get; set; }
     }
 }

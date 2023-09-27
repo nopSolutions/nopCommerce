@@ -13,11 +13,11 @@
     <div class="container-fluid">
         <div asp-validation-summary="All"></div>
         <input asp-for="Id" type="hidden" />
-        <input asp-for="AddressAttributeId" type="hidden" />
+        <input asp-for="AttributeId" type="hidden" />
 
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeValueDetailsTop, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AddressAttributeValueDetailsTop, additionalData = Model })
                 <div class="card card-default card-popup">
                     <div class="card-body">
                         @(await Html.LocalizedEditorAsync<AddressAttributeValueModel, AddressAttributeValueLocalizedModel>("addressattributevalue-localized",
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeValueDetailsBottom, additionalData = Model })
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AddressAttributeValueDetailsBottom, additionalData = Model })
             </div>
         </div>
     </div>

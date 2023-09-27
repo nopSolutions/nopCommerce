@@ -1,8 +1,6 @@
-using System;
-
 namespace Nop.Data.Mapping
 {
-    public class NopEntityFieldDescriptor
+    public partial class NopEntityFieldDescriptor
     {
         public string Name { get; set; }
         public bool IsIdentity { get; set; }

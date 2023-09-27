@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -15,12 +14,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicModelFactory _topicModelFactory;
-        private readonly ITopicService _topicService;
+        protected readonly IAclService _aclService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly ITopicModelFactory _topicModelFactory;
+        protected readonly ITopicService _topicService;
 
         #endregion
 
@@ -47,12 +46,24 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
+            var topic = await _topicService.GetTopicByIdAsync(topicId);
+
+            if (topic == null)
+                return InvokeHttp404();
+
+            var notAvailable = !topic.Published ||
+                //ACL (access control list)
+                !await _aclService.AuthorizeAsync(topic) ||
+                //store mapping
+                !await _storeMappingService.AuthorizeAsync(topic);
+
             //allow administrators to preview any topic
             var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
 
-            var model = await _topicModelFactory.PrepareTopicModelByIdAsync(topicId, hasAdminAccess);
-            if (model == null)
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
+
+            var model = await _topicModelFactory.PrepareTopicModelAsync(topic);
 
             //display "edit" (manage) link
             if (hasAdminAccess)
@@ -63,7 +74,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [CheckLanguageSeoCode(true)]
+        [CheckLanguageSeoCode(ignore: true)]
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
             var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);

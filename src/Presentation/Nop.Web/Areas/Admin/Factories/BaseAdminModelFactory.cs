@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Gdpr;
-using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -28,6 +23,7 @@ using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
+using LogLevel = Nop.Core.Domain.Logging.LogLevel;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -38,29 +34,29 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPluginService _pluginService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IShippingService _shippingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IVendorService _vendorService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly IPluginService _pluginService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly ITopicTemplateService _topicTemplateService;
+        protected readonly IVendorService _vendorService;
 
         #endregion
 
@@ -146,17 +142,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get category list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the category list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetCategoryListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetCategoryListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.CategoriesListKey, async () =>
             {
-                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: showHidden);
+                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true);
                 return await categories.SelectAwait(async c => new SelectListItem
                 {
                     Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
@@ -181,17 +175,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get manufacturer list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.ManufacturersListKey, async () =>
             {
-                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: showHidden);
+                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true);
                 return manufacturers.Select(m => new SelectListItem
                 {
                     Text = m.Name,
@@ -216,17 +208,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Get vendor list
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the vendor list
         /// </returns>
-        protected virtual async Task<List<SelectListItem>> GetVendorListAsync(bool showHidden = true)
+        protected virtual async Task<List<SelectListItem>> GetVendorListAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
-            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.VendorsListKey, async () =>
             {
-                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: showHidden);
+                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: true);
                 return vendors.Select(v => new SelectListItem
                 {
                     Text = v.Name,

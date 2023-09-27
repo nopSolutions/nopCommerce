@@ -74,7 +74,7 @@
 "Copy":"Kopírovať",
 "Paste":"Prilepiť",
 "E_CopyFile":"Chyba pri kopírovaní súboru",
-"E_CopyFileInvalisPath":"Nedá sa kopírovať súbor - cesta neexistuje",
+"E_CopyFileInvalidPath":"Nedá sa kopírovať súbor - cesta neexistuje",
 "E_CopyDirInvalidPath":"Nedá sa kopírovať priečinok - cesta neexistuje",
 "E_CreateArchive":"Chyba pri vytváraní zip archívu.",
 "E_UploadingFile":"chyba"

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Payments;
+﻿using Nop.Web.Areas.Admin.Models.Payments;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -27,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the payment method list model
         /// </returns>
         Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel);
-        
+
         /// <summary>
         /// Prepare payment method search model
         /// </summary>

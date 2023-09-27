@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -16,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         {
             ProductPictureModels = new List<ProductPictureModel>();
             Locales = new List<ProductAttributeValueLocalizedModel>();
+            PictureIds = new List<int>();
         }
 
         #endregion
@@ -82,8 +82,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
-        public int PictureId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures")]
+        public IList<int> PictureIds { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
         public string PictureThumbnailUrl { get; set; }

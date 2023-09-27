@@ -4,8 +4,8 @@
     {
         public static string AccountNavigationAfter => "account_navigation_after";
         public static string AccountNavigationBefore => "account_navigation_before";
-        public static string AdminHeaderLinksAfter => "admin_header_links_after";
         public static string AddressBottom => "address_bottom";
+        public static string AdminHeaderLinksAfter => "admin_header_links_after";
         public static string ApplyVendorBottom => "applyvendor_bottom";
         public static string ApplyVendorTop => "applyvendor_top";
         public static string BlogListPageAfterPost => "bloglist_page_after_post";
@@ -81,6 +81,36 @@
         public static string ContactVendorTop => "contactvendor_top";
         public static string ContentAfter => "content_after";
         public static string ContentBefore => "content_before";
+        public static string CustomerAddressesBottom => "customer_addresses_bottom";
+        public static string CustomerAddressesTop => "customer_addresses_top";
+        public static string CustomerAvatarBottom => "customer_avatar_bottom";
+        public static string CustomerAvatarTop => "customer_avatar_top";
+        public static string CustomerBackInStockSubscriptionsBottom => "customer_back_in_stock_subscriptions_bottom";
+        public static string CustomerBackInStockSubscriptionsTop => "customer_back_in_stock_subscriptions_top";
+        public static string CustomerChangePasswordBottom => "customer_change_password_bottom";
+        public static string CustomerChangePasswordTop => "customer_change_password_top";
+        public static string CustomerCheckGiftCardBalanceBottom => "customer_check_gift_card_balance_bottom";
+        public static string CustomerCheckGiftCardBalanceTop => "customer_check_gift_card_balance_top";
+        public static string CustomerDownloadableProductsBottom => "customer_downloadable_products_bottom";
+        public static string CustomerDownloadableProductsTop => "customer_downloadable_products_top";
+        public static string CustomerForumSubscriptionsBottom => "customer_forum_subscriptions_bottom";
+        public static string CustomerForumSubscriptionsTop => "customer_forum_subscriptions_top";
+        public static string CustomerGdprToolsBottom => "customer_gdpr_tools_bottom";
+        public static string CustomerGdprToolsTop => "customer_gdpr_tools_top";
+        public static string CustomerInfoBottom => "customer_info_bottom";
+        public static string CustomerInfoTop => "customer_info_top";
+        public static string CustomerMultiFactorAuthenticationBottom => "customer_multi_factor_authentication_bottom";
+        public static string CustomerMultiFactorAuthenticationTop => "customer_multi_factor_authentication_top";
+        public static string CustomerOrdersBottom => "customer_orders_bottom";
+        public static string CustomerOrdersTop => "customer_orders_top";
+        public static string CustomerProductReviewsBottom => "customer_product_reviews_bottom";
+        public static string CustomerProductReviewsTop => "customer_product_reviews_top";
+        public static string CustomerReturnRequestsBottom => "customer_return_requests_bottom";
+        public static string CustomerReturnRequestsTop => "customer_return_requests_top";
+        public static string CustomerRewardPointsBottom => "customer_reward_points_bottom";
+        public static string CustomerRewardPointsTop => "customer_reward_points_top";
+        public static string CustomerTopicDetailsBottom => "customer_topic_details_bottom";
+        public static string CustomerTopicDetailsTop => "customer_topic_details_top";
         public static string Footer => "footer";
         public static string HeaderAfter => "header_after";
         public static string HeaderBefore => "header_before";
@@ -104,6 +134,8 @@
         public static string LeftSideColumnBefore => "left_side_column_before";
         public static string LeftSideColumnBlogAfter => "left_side_column_blog_after";
         public static string LeftSideColumnBlogBefore => "left_side_column_blog_before";
+        public static string LoginBottom => "login_bottom";
+        public static string LoginTop => "login_top";
         public static string MainColumnAfter => "main_column_after";
         public static string MainColumnBefore => "main_column_before";
         public static string ManufacturerDetailsAfterFeaturedProducts => "manufacturerdetails_after_featured_products";
@@ -151,7 +183,9 @@
         public static string OrderSummaryContentAfter => "order_summary_content_after";
         public static string OrderSummaryContentBefore => "order_summary_content_before";
         public static string OrderSummaryContentDeals => "order_summary_content_deals";
+        public static string OrderSummaryPaymentMethodInfo => "order_summary_payment_method_info";
         public static string OrderSummaryShippingAddress => "order_summary_shipping_address";
+        public static string OrderSummaryShippingMethodInfo => "order_summary_shipping_method_info";
         public static string OrderSummaryTotals => "order_summary_totals";
         public static string ProductBoxAddinfoAfter => "productbox_addinfo_after";
         public static string ProductBoxAddinfoBefore => "productbox_addinfo_before";
@@ -161,8 +195,10 @@
         public static string ProductDetailsAddInfo => "productdetails_add_info";
         public static string ProductDetailsAfterBreadcrumb => "productdetails_after_breadcrumb";
         public static string ProductDetailsAfterPictures => "productdetails_after_pictures";
+        public static string ProductDetailsAfterVideos => "productdetails_after_videos";
         public static string ProductDetailsBeforeCollateral => "productdetails_before_collateral";
         public static string ProductDetailsBeforePictures => "productdetails_before_pictures";
+        public static string ProductDetailsBeforeVideos => "productdetails_before_videos";
         public static string ProductDetailsBottom => "productdetails_bottom";
         public static string ProductDetailsEssentialBottom => "productdetails_essential_bottom";
         public static string ProductDetailsEssentialTop => "productdetails_essential_top";
@@ -171,6 +207,8 @@
         public static string ProductDetailsOverviewBottom => "productdetails_overview_bottom";
         public static string ProductDetailsOverviewTop => "productdetails_overview_top";
         public static string ProductDetailsTop => "productdetails_top";
+        public static string ProductPriceBottom => "product_price_bottom";
+        public static string ProductPriceTop => "product_price_top";
         public static string ProductReviewsPageBottom => "productreviews_page_bottom";
         public static string ProductReviewsPageInsideReview => "productreviews_page_inside_review";
         public static string ProductReviewsPageTop => "productreviews_page_top";
@@ -183,11 +221,17 @@
         public static string ProductSearchPageBeforeResults => "productsearch_page_before_results";
         public static string ProfilePageInfoUserdetails => "profile_page_info_userdetails";
         public static string ProfilePageInfoUserstats => "profile_page_info_userstats";
+        public static string RegisterBottom => "register_bottom";
+        public static string RegisterTop => "register_top";
         public static string SearchBox => "searchbox";
         public static string SearchBoxBeforeSearchButton => "searchbox_before_search_button";
         public static string SitemapAfter => "sitemap_after";
         public static string SitemapBefore => "sitemap_before";
         public static string VendorDetailsBottom => "vendordetails_bottom";
         public static string VendorDetailsTop => "vendordetails_top";
+        public static string VendorInfoBottom => "vendor_info_bottom";
+        public static string VendorInfoTop => "vendor_info_top";
+        public static string WishlistBottom => "wishlist_bottom";
+        public static string WishlistTop => "wishlist_top";
     }
 }
