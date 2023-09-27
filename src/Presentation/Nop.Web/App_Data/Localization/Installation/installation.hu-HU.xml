@@ -70,7 +70,7 @@
     <Value>Ha információra van szüksége, hogyan kell használni nopCommerce-t, látogasson el a</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>A dokumentáció szakasz nopCommerce.com-on</Value>
+    <Value>a nopCommerce.com dokumentációs részéhez</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
     <Value>Példa</Value>
