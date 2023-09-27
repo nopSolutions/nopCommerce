@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
@@ -41,6 +42,7 @@ namespace Nop.Services.Orders
         protected readonly ICustomerService _customerService;
         protected readonly IDateRangeService _dateRangeService;
         protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEventPublisher _eventPublisher;
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IPermissionService _permissionService;
@@ -74,6 +76,7 @@ namespace Nop.Services.Orders
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -103,6 +106,7 @@ namespace Nop.Services.Orders
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -644,6 +648,28 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Clear shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ClearShoppingCartAsync(Customer customer, int storeId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var cart = await GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId);
+
+            //delete items
+            await _sciRepository.DeleteAsync(cart, publishEvent: false);
+            await _eventPublisher.PublishAsync(new ClearShoppingCartEvent(cart));
+
+            //reset "HasShoppingCartItems" property used for performance optimization
+            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            await _customerService.UpdateCustomerAsync(customer);
+        }
+
+        /// <summary>
         /// Delete shopping cart item
         /// </summary>
         /// <param name="shoppingCartItemId">Shopping cart item ID</param>
@@ -1150,7 +1176,7 @@ namespace Nop.Services.Orders
             if (shoppingCart.Count > _shoppingCartSettings.MaximumShoppingCartItems)
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
 
-            var hasStandartProducts = false;
+            var hasStandardProducts = false;
             var hasRecurringProducts = false;
 
             foreach (var sci in shoppingCart)
@@ -1165,11 +1191,11 @@ namespace Nop.Services.Orders
                 if (product.IsRecurring)
                     hasRecurringProducts = true;
                 else
-                    hasStandartProducts = true;
+                    hasStandardProducts = true;
             }
 
             //don't mix standard and recurring products
-            if (hasStandartProducts && hasRecurringProducts)
+            if (hasStandardProducts && hasRecurringProducts)
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
 
             //recurring cart validation
@@ -1575,15 +1601,16 @@ namespace Nop.Services.Orders
             {
                 //update existing shopping cart item
                 var newQuantity = shoppingCartItem.Quantity + quantity;
-                warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
-                    storeId, attributesXml,
-                    customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
+
+                await addRequiredProductsToCartAsync(newQuantity);
 
                 if (warnings.Any())
                     return warnings;
 
-                await addRequiredProductsToCartAsync();
+                warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
+                    storeId, attributesXml,
+                    customerEnteredPrice, rentalStartDate, rentalEndDate,
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
                 if (warnings.Any())
                     return warnings;
@@ -1659,7 +1686,7 @@ namespace Nop.Services.Orders
 
             return warnings;
 
-            async Task addRequiredProductsToCartAsync()
+            async Task addRequiredProductsToCartAsync(int qty = 0)
             {
                 //get these required products
                 var requiredProducts = await _productService.GetProductsByIdsAsync(_productService.ParseRequiredProductIds(product));
@@ -1671,7 +1698,7 @@ namespace Nop.Services.Orders
                     var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
 
                     //get the required quantity of the required product
-                    var requiredProductRequiredQuantity = quantity +
+                    var requiredProductRequiredQuantity = (qty > 0 ? qty : quantity) +
                         cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
                             .Where(item => item.Id != (shoppingCartItem?.Id ?? 0))
                             .Sum(item => item.Quantity);

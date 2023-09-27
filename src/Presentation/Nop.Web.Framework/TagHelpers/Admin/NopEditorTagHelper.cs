@@ -87,7 +87,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
-            var pattern = $"{nameof(ILocalizedModel<object>.Locales)}" + @"(?=\[\w+\]\.)";
+            var pattern = @"(?=\[\w+\]\.)";
             if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
             {
                 var prefix = _htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;

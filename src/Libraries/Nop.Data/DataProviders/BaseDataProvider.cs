@@ -30,7 +30,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets a connection to the database for a current data provider

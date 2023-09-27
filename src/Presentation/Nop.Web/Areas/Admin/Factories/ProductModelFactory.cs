@@ -844,7 +844,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 model.LastStockQuantity = product.StockQuantity;
-                model.ProductTags = string.Join(", ", (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name));
+
+                model.SelectedProductTags = (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name).ToList();
+                model.AvailableProductTags = (await _productTagService.GetAllProductTagsAsync())
+                    .Select(pt => new SelectListItem { Text = pt.Name, Value = pt.Name }).ToList();
+
                 model.ProductAttributesExist = (await _productAttributeService.GetAllProductAttributesAsync()).Any();
 
                 model.CanCreateCombinations = await (await _productAttributeService
@@ -994,22 +998,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model stores
             await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
-
-            var productTags = await _productTagService.GetAllProductTagsAsync();
-            var productTagsSb = new StringBuilder();
-            productTagsSb.Append("var initialProductTags = [");
-            for (var i = 0; i < productTags.Count; i++)
-            {
-                var tag = productTags[i];
-                productTagsSb.Append('\'');
-                productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-                productTagsSb.Append('\'');
-                if (i != productTags.Count - 1)
-                    productTagsSb.Append(',');
-            }
-            productTagsSb.Append(']');
-
-            model.InitialProductTags = productTagsSb.ToString();
 
             return model;
         }
@@ -2179,7 +2167,9 @@ namespace Nop.Web.Areas.Admin.Factories
                         productAttributeValueModel.AssociatedProductName = (await _productService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
                     }
 
-                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(value.PictureId, 75, false);
+                    var valuePicture = (await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id)).FirstOrDefault();
+                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(valuePicture?.PictureId ?? 0, 75, false);
+
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
@@ -2234,7 +2224,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     Quantity = productAttributeValue.Quantity,
                     IsPreSelected = productAttributeValue.IsPreSelected,
                     DisplayOrder = productAttributeValue.DisplayOrder,
-                    PictureId = productAttributeValue.PictureId
+                    PictureIds = (await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id))
+                        .Select(c => c.PictureId).ToList(),
                 };
 
                 model.AssociatedProductName = (await _productService.GetProductByIdAsync(productAttributeValue.AssociatedProductId))?.Name;
@@ -2391,7 +2382,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     productAttributeCombinationModel.AttributesXml = await _productAttributeFormatter
                         .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, "<br />", true, true, true, false);
-                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(combination.PictureId, 75, false);
+
+                    var combinationPicture = (await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id)).FirstOrDefault();
+                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(combinationPicture?.PictureId ?? 0, 75, false);
+                    
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
@@ -2440,7 +2434,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     ManufacturerPartNumber = productAttributeCombination.ManufacturerPartNumber,
                     NotifyAdminForQuantityBelow = productAttributeCombination.NotifyAdminForQuantityBelow,
                     OverriddenPrice = productAttributeCombination.OverriddenPrice,
-                    PictureId = productAttributeCombination.PictureId,
+                    PictureIds = (await _productAttributeService.GetProductAttributeCombinationPicturesAsync(productAttributeCombination.Id))
+                        .Select(c => c.PictureId).ToList(),
                     ProductId = productAttributeCombination.ProductId,
                     Sku = productAttributeCombination.Sku,
                     StockQuantity = productAttributeCombination.StockQuantity,

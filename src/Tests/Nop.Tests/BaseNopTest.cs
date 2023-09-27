@@ -352,6 +352,7 @@ namespace Nop.Tests
             services.AddTransient<IShippingService, ShippingService>();
             services.AddTransient<IDateRangeService, DateRangeService>();
             services.AddTransient<ITaxCategoryService, TaxCategoryService>();
+            services.AddTransient<ICheckVatService, CheckVatService>();
             services.AddTransient<ITaxService, TaxService>();
             services.AddTransient<ILogger, DefaultLogger>();
             services.AddTransient<ICustomerActivityService, CustomerActivityService>();
@@ -515,6 +516,7 @@ namespace Nop.Tests
             services
                 .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
                     Web.Factories.ExternalAuthenticationModelFactory>();
+            services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
             services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
             services.AddTransient<Web.Factories.INewsletterModelFactory, Web.Factories.NewsletterModelFactory>();
             services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
@@ -681,11 +683,11 @@ namespace Nop.Tests
         {
             public TestPictureService(IDownloadService downloadService,
                 IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
-                IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
-                IRepository<PictureBinary> pictureBinaryRepository,
+                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
+                IRepository<Picture> pictureRepository, IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser, productAttributeService,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {

@@ -189,7 +189,12 @@ namespace Nop.Services.Catalog
         /// {2} : roles of the current user
         /// {3} : store ID
         /// </remarks>
-        public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}", ProductManufacturersByProductPrefix);
+        public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}", ProductManufacturersPrefix, ProductManufacturersByProductPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ProductManufacturersPrefix => "Nop.productmanufacturer.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -359,6 +364,22 @@ namespace Nop.Services.Catalog
         /// {0} : Product attribute ID
         /// </remarks>
         public static CacheKey PredefinedProductAttributeValuesByAttributeCacheKey => new("Nop.predefinedproductattributevalue.byattribute.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : combination ID
+        /// </remarks>
+        public static CacheKey ProductAttributeCombinationPicturesByCombinationCacheKey => new("Nop.productattributecombinationpicture.bycombination.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : value ID
+        /// </remarks>
+        public static CacheKey ProductAttributeValuePicturesByValueCacheKey => new("Nop.productattributevaluepicture.byvalue.{0}");
 
         #endregion
 

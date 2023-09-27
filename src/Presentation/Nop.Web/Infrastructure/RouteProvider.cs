@@ -60,10 +60,20 @@ namespace Nop.Web.Infrastructure
                 pattern: $"cart/estimateshipping",
                 defaults: new { controller = "ShoppingCart", action = "GetEstimateShipping" });
 
+            //select shipping option (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "SelectShippingOption",
+                pattern: $"cart/selectshippingoption",
+                defaults: new { controller = "ShoppingCart", action = "SelectShippingOption" });
+
             //wishlist
             endpointRouteBuilder.MapControllerRoute(name: "Wishlist",
                 pattern: $"{lang}/wishlist/{{customerGuid?}}",
                 defaults: new { controller = "ShoppingCart", action = "Wishlist" });
+
+            //checkout attribute change (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutAttributeChange",
+                pattern: "shoppingcart/checkoutattributechange/{{isEditable}}",
+                defaults: new { controller = "ShoppingCart", action = "CheckoutAttributeChange" });
 
             //customer account links
             endpointRouteBuilder.MapControllerRoute(name: "CustomerInfo",
@@ -73,6 +83,16 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "CustomerAddresses",
                 pattern: $"{lang}/customer/addresses",
                 defaults: new { controller = "Customer", action = "Addresses" });
+
+            //customer address delete (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerAddressDelete",
+                pattern: $"customer/addressdelete",
+                defaults: new { controller = "Customer", action = "AddressDelete" });
+
+            //remove external association (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerRemoveExternalAssociation",
+                pattern: $"customer/removeexternalassociation",
+                defaults: new { controller = "Customer", action = "RemoveExternalAssociation" });
 
             endpointRouteBuilder.MapControllerRoute(name: "CustomerOrders",
                 pattern: $"{lang}/order/history",
@@ -107,6 +127,11 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "ChangeTaxType",
                 pattern: $"{lang}/changetaxtype/{{customertaxtype:min(0)}}",
                 defaults: new { controller = "Common", action = "SetTaxType" });
+
+            //set store theme
+            endpointRouteBuilder.MapControllerRoute(name: "SetStoreTheme",
+                pattern: $"{lang}/setstoretheme/{{themeName}}/{{returnUrl}}",
+                defaults: new { controller = "Common", action = "SetStoreTheme" });
 
             //recently viewed products
             endpointRouteBuilder.MapControllerRoute(name: "RecentlyViewedProducts",
@@ -173,6 +198,11 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{lang}/productemailafriend/{{productId:min(0)}}",
                 defaults: new { controller = "Product", action = "ProductEmailAFriend" });
 
+            //product estimate shipping (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "ProductEstimateShipping",
+                pattern: "product/estimateshipping/{{ProductId:min(0)}}",
+                defaults: new { controller = "Product", action = "EstimateShipping" });
+
             //reviews
             endpointRouteBuilder.MapControllerRoute(name: "CustomerProductReviews",
                 pattern: $"{lang}/customer/productreviews",
@@ -195,6 +225,11 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "GetSampleDownload",
                 pattern: $"download/sample/{{productid:min(0)}}",
                 defaults: new { controller = "Download", action = "Sample" });
+
+            //downloads
+            endpointRouteBuilder.MapControllerRoute(name: "DownloadGetFileUpload",
+                pattern: $"download/getfileupload/{{downloadId}}",
+                defaults: new { controller = "Download", action = "GetFileUpload" });
 
             //checkout pages
             endpointRouteBuilder.MapControllerRoute(name: "Checkout",
@@ -497,7 +532,7 @@ namespace Nop.Web.Infrastructure
                 defaults: new { controller = "Catalog", action = "GetTagProducts" });
 
             endpointRouteBuilder.MapControllerRoute(name: "SearchProducts",
-                pattern: $"product/search",
+                pattern: "product/search",
                 defaults: new { controller = "Catalog", action = "SearchProducts" });
 
             endpointRouteBuilder.MapControllerRoute(name: "GetVendorProducts",
@@ -522,6 +557,11 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "UploadFileCheckoutAttribute",
                 pattern: $"uploadfilecheckoutattribute/{{attributeId:min(0)}}",
                 defaults: new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
+
+            //attribute change (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "ProductDetailsAttributeChange",
+                pattern: $"shoppingcart/productdetails_attributechange/{{productId:min(0)}}/{{validateAttributeConditions}}/{{loadPicture}}",
+                defaults: new { controller = "ShoppingCart", action = "ProductDetails_AttributeChange" });
 
             //return request with "upload file" support (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "UploadFileReturnRequest",
@@ -613,6 +653,11 @@ namespace Nop.Web.Infrastructure
                 pattern: $"{lang}/boards/search",
                 defaults: new { controller = "Boards", action = "Search" });
 
+            //post vote (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "PostVote",
+                pattern: "boards/postvote",
+                defaults: new { controller = "Boards", action = "PostVote" });
+
             //private messages
             endpointRouteBuilder.MapControllerRoute(name: "PrivateMessages",
                 pattern: $"{lang}/privatemessages/{{tab?}}",
@@ -679,6 +724,15 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "Installation",
                 pattern: $"{NopInstallationDefaults.InstallPath}",
                 defaults: new { controller = "Install", action = "Index" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "InstallationChangeLanguage",
+                pattern: $"{NopInstallationDefaults.InstallPath}/ChangeLanguage/{{language}}",
+                defaults: new { controller = "Install", action = "ChangeLanguage" });
+
+            //restart application (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "InstallationRestartApplication",
+                pattern: $"{NopInstallationDefaults.InstallPath}/restartapplication",
+                defaults: new { controller = "Install", action = "RestartApplication" });
 
             //page not found
             endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",

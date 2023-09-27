@@ -201,7 +201,13 @@ namespace Nop.Services.Caching
         {
             var endPoints = await GetEndPointsAsync();
             await Task.WhenAll(endPoints.Select(async endPoint =>
-                await (await GetServerAsync(endPoint)).FlushDatabaseAsync()));
+            {
+                var server = await GetServerAsync(endPoint);
+                if (!server.IsReplica)
+                {
+                    await server.FlushDatabaseAsync();
+                }
+            }));
         }
 
         /// <summary>

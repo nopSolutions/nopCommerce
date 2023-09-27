@@ -148,7 +148,7 @@ namespace Nop.Services.ScheduleTasks
 
                 var scheduleTaskUrl = $"{store.Url}{NopTaskDefaults.ScheduleTaskPath}";
 
-                scheduleTask.Enabled = !scheduleTask.StopOnError;
+                scheduleTask.Enabled = scheduleTask.Enabled && !scheduleTask.StopOnError;
                 scheduleTask.LastEndUtc = DateTime.UtcNow;
                 await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
 

@@ -33,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         protected virtual JsonResult JsonOk()
         {

@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -9,7 +10,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470
 {
-    [NopUpdateMigration("2023-02-01 14:00:03", "4.70.0", UpdateMigrationType.Settings)]
+    [NopUpdateMigration("2023-02-01 14:00:03", "4.70", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -53,6 +54,48 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 addressSettings.DefaultCountryId = null;
                 settingService.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
             }
+
+            var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
+            //#6682
+            if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
+            {
+                captchaSettings.ShowOnNewsletterPage = false;
+                settingService.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
+            }
+
+            var taxSettings = settingService.LoadSetting<TaxSettings>();
+            if (!settingService.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
+            {
+                taxSettings.AutomaticallyDetectCountry = true;
+                settingService.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
+            }
+
+            //#6716
+            var newDisallowPaths = new[]
+            {
+                "/cart/estimateshipping", "/cart/selectshippingoption", "/customer/addressdelete",
+                "/customer/removeexternalassociation", "/customer/checkusernameavailability",
+                "/catalog/searchtermautocomplete", "/catalog/getcatalogroot", "/addproducttocart/catalog/*",
+                "/addproducttocart/details/*", "/compareproducts/add/*", "/backinstocksubscribe/*",
+                "/subscribenewsletter", "/t-popup/*", "/setproductreviewhelpfulness", "/poll/vote",
+                "/country/getstatesbycountryid/", "/eucookielawaccept", "/topic/authenticate",
+                "/category/products/", "/product/combinations", "/uploadfileproductattribute/*",
+                "/shoppingcart/productdetails_attributechange/*", "/uploadfilereturnrequest",
+                "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication",
+                "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
+            };
+
+            var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
+
+            foreach (var path in newDisallowPaths)
+            {
+                if (robotsTxtSettings.DisallowPaths.Contains(path))
+                    continue;
+
+                robotsTxtSettings.DisallowPaths.Add(path);
+            }
+
+            settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
         }
 
         public override void Down()

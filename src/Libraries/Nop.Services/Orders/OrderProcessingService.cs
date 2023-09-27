@@ -1307,8 +1307,7 @@ namespace Nop.Services.Orders
                     string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
             }
 
-            //clear shopping cart
-            await Task.WhenAll(details.Cart.ToList().Select(sci => _shoppingCartService.DeleteShoppingCartItemAsync(sci, false)));
+            await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
         }
 
         /// <summary>
@@ -3135,7 +3134,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the rue - OK; false - minimum order total amount is not reached
+        /// The task result contains the value indicating whether payment workflow is required
         /// </returns>
         public virtual async Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
@@ -3145,9 +3144,11 @@ namespace Nop.Services.Orders
             var result = true;
 
             //check whether order total equals zero
-            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints)).shoppingCartTotal;
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+            var shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, useRewardPoints: useRewardPoints, usePaymentMethodAdditionalFee: false)).shoppingCartTotal;
+
+            if (shoppingCartTotalBase is decimal.Zero)
                 result = false;
+
             return result;
         }
 

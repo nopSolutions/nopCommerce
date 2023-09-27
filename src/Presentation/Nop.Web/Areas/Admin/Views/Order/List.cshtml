@@ -358,7 +358,7 @@
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
                                     {
                                         Title = T("Admin.Orders.Fields.Customer").Text,
-                                        Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                                        Render = new RenderCustom("renderColumnCustomer")
                                     });
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
                                     {
@@ -411,6 +411,11 @@
                                         break;
                                     }
                                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';
+                                }
+
+                                function renderColumnCustomer(data, type, row, meta) {
+                                    var link = '@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId;
+                                    return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
                                 }
 
                                 $(document).ready(function() {

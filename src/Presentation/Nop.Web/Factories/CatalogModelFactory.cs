@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -10,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
@@ -43,6 +45,7 @@ namespace Nop.Web.Factories
         protected readonly ICustomerService _customerService;
         protected readonly IEventPublisher _eventPublisher;
         protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IJsonLdModelFactory _jsonLdModelFactory;
         protected readonly ILocalizationService _localizationService;
         protected readonly IManufacturerService _manufacturerService;
         protected readonly IManufacturerTemplateService _manufacturerTemplateService;
@@ -61,6 +64,7 @@ namespace Nop.Web.Factories
         protected readonly IWebHelper _webHelper;
         protected readonly IWorkContext _workContext;
         protected readonly MediaSettings _mediaSettings;
+        protected readonly SeoSettings _seoSettings;
         protected readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -77,6 +81,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
+            IJsonLdModelFactory jsonLdModelFactory,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
@@ -95,6 +100,7 @@ namespace Nop.Web.Factories
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
+            SeoSettings seoSettings,
             VendorSettings vendorSettings)
         {
             _blogSettings = blogSettings;
@@ -107,6 +113,7 @@ namespace Nop.Web.Factories
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
+            _jsonLdModelFactory = jsonLdModelFactory;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _manufacturerTemplateService = manufacturerTemplateService;
@@ -125,6 +132,7 @@ namespace Nop.Web.Factories
             _webHelper = webHelper;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
+            _seoSettings = seoSettings;
             _vendorSettings = vendorSettings;
         }
 
@@ -404,6 +412,14 @@ namespace Nop.Web.Factories
                         Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
                         SeName = await _urlRecordService.GetSeNameAsync(catBr)
                     }).ToListAsync();
+
+                if (_seoSettings.MicrodataEnabled)
+                {
+                    var categoryBreadcrumb = model.CategoryBreadcrumb.Select(c => new CategorySimpleModel { Id = c.Id, Name = c.Name, SeName = c.SeName }).ToList();
+                    var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdCategoryBreadcrumbAsync(categoryBreadcrumb);
+                    model.JsonLd = JsonConvert
+                        .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
             }
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();

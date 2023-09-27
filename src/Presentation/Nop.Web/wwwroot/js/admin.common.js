@@ -69,23 +69,9 @@ function checkOverriddenStoreValue(obj, selector) {
 
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
-        //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function (key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
-            if (kenoduiElement !== undefined && kenoduiElement !== null) {
-                kenoduiElement.enable(false);
-            }
-        });
     }
     else {
         $(selector).removeAttr('disabled');
-        //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function (key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
-            if (kenoduiElement !== undefined && kenoduiElement !== null) {
-                kenoduiElement.enable();
-            }
-        });
     }
 }
 

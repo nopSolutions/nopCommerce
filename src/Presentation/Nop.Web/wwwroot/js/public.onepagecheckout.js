@@ -705,14 +705,16 @@ var PaymentInfo = {
 
 
 var ConfirmOrder = {
-    form: false,
+    form: false,    
     saveUrl: false,
     isSuccess: false,
     isCaptchaEnabled: false,
     isReCaptchaV3: false,
     recaptchaPublicKey: "",
+    div: false,
 
-    init: function (saveUrl, successUrl, isCaptchaEnabled, isReCaptchaV3, recaptchaPublicKey) {
+  init: function (saveUrl, successUrl, isCaptchaEnabled, isReCaptchaV3, recaptchaPublicKey, div) {
+        this.div = div;
         this.saveUrl = saveUrl;
         this.successUrl = successUrl;
         this.isCaptchaEnabled = isCaptchaEnabled;
@@ -766,12 +768,11 @@ var ConfirmOrder = {
                     recaptchaToken = token;
                 });
             });
+            while (recaptchaToken == '') {
+              await new Promise(t => setTimeout(t, 100));
+            }
         } else {
-            recaptchaToken = grecaptcha.getResponse();
-        }
-
-        while (recaptchaToken == '') {
-            await new Promise(t => setTimeout(t, 100));
+          recaptchaToken = $(this.div).find('.captcha-box textarea[name="g-recaptcha-response"]').val();
         }
 
         return recaptchaToken;

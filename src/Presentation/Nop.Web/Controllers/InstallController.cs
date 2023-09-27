@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
+                    Value = Url.RouteUrl("InstallationChangeLanguage", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.Value.GetCurrentLanguage().Code == lang.Code
                 });
@@ -345,7 +345,7 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.IsDatabaseInstalled())
                 return RedirectToRoute("Homepage");
 
-            return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
+            return View("Index", new InstallModel { RestartUrl = Url.RouteUrl("Installation") });
         }
 
         public virtual IActionResult RestartApplication()

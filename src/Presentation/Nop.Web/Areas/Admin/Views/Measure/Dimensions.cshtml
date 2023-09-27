@@ -154,10 +154,13 @@
                 $(document).ready(function () {
                     $('#addMeasureDimension').click(function () {
                         $('#addMeasureDimension').attr('disabled', true);
+
+                        var ratio = $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val();
+
                         var postData = {
                             Name: $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val(),
                             SystemKeyword: $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val(),
-                            Ratio: $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val(),
+                            Ratio: new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", { minimumFractionDigits: 10 }).format(ratio),
                             DisplayOrder: $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val()
                         };
                         addAntiForgeryToken(postData);
@@ -175,8 +178,8 @@
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val('');
                                     $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val('');
-                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").data("kendoNumericTextBox").value(0);
-                                    $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").data("kendoNumericTextBox").value(0);
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val(0);
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val(0);
 
                                 } else {
                                     //display errors if returned

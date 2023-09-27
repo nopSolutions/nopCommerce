@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopUpdateMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization)]
+    [NopUpdateMigration("2020-06-10 00:00:00", "4.40", UpdateMigrationType.Localization)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>

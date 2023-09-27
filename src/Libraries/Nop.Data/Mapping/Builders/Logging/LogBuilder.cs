@@ -20,7 +20,7 @@ namespace Nop.Data.Mapping.Builders.Logging
         {
             table
                 .WithColumn(nameof(Log.ShortMessage)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(Log.IpAddress)).AsString(200).Nullable()
+                .WithColumn(nameof(Log.IpAddress)).AsString(100).Nullable()
                 .WithColumn(nameof(Log.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>();
         }
 

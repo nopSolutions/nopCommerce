@@ -15,6 +15,7 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -421,10 +422,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+
                 //prepare supported cultures
-                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                var cultures = languageService
+                    .GetAllLanguages()
                     .OrderBy(language => language.DisplayOrder)
-                    .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
+                    .Select(language => new CultureInfo(language.LanguageCulture))
+                    .ToList();
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault() ?? new CultureInfo(NopCommonDefaults.DefaultLanguageCulture));
@@ -435,6 +441,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 var cookieRequestCultureProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
                 if (cookieRequestCultureProvider is not null)
                     cookieRequestCultureProvider.CookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CultureCookie}";
+                if (!localizationSettings.AutomaticallyDetectLanguage)
+                {
+                    var headerRequestCultureProvider = options
+                        .RequestCultureProviders
+                        .OfType<AcceptLanguageHeaderRequestCultureProvider>()
+                        .FirstOrDefault();
+                    if (headerRequestCultureProvider is not null)
+                        options.RequestCultureProviders.Remove(headerRequestCultureProvider);
+                }
             });
         }
 

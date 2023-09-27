@@ -788,8 +788,10 @@ namespace Nop.Web.Controllers
                 //raise logged out event       
                 await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(customer));
 
+                customer = await _customerService.InsertGuestCustomerAsync();
+
                 //Save a new record
-                await _workContext.SetCurrentCustomerAsync(await _customerService.InsertGuestCustomerAsync());
+                await _workContext.SetCurrentCustomerAsync(customer);
             }
 
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -1354,7 +1356,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.Action("Info"),
+                    redirect = Url.RouteUrl("CustomerInfo"),
                 });
             }
 
@@ -1362,7 +1364,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                redirect = Url.Action("Info"),
+                redirect = Url.RouteUrl("CustomerInfo"),
             });
         }
 

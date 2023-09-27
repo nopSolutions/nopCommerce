@@ -132,7 +132,7 @@ With cte_duplicates AS
 	WHERE [KeyGroup] = 'Customer' AND 
 	[Key] in ('FirstName', 'LastName', 'Gender', 'Company', 
 		'StreetAddress', 'StreetAddress2', 'ZipPostalCode', 'City', 'County', 'Phone', 'Fax', 'VatNumber', 
-		'TimeZoneId', 'CustomCustomerAttributesXML', 'CountryId', 'StateProvinceId', 'VatNumberStatusId', 
+		'TimeZoneId', 'CustomCustomerAttributes', 'CountryId', 'StateProvinceId', 'VatNumberStatusId', 
 		'CurrencyId', 'LanguageId', 'TaxDisplayTypeId', 'DateOfBirth')) 
 delete FROM cte_duplicates where rownumber != 1
 
@@ -249,10 +249,10 @@ DELETE FROM [GenericAttribute] where [KeyGroup] = 'Customer' AND [Key] = 'TimeZo
 
 -- CustomCustomerAttributesXML
 MERGE Customer AS c USING [GenericAttribute] AS ga
-ON ga.EntityId = c.Id AND ga.KeyGroup = 'Customer' AND ga.[Key] = 'CustomCustomerAttributesXML'
+ON ga.EntityId = c.Id AND ga.KeyGroup = 'Customer' AND ga.[Key] = 'CustomCustomerAttributes'
 WHEN MATCHED THEN UPDATE SET c.CustomCustomerAttributesXML = ga.[Value];
 
-DELETE FROM [GenericAttribute] where [KeyGroup] = 'Customer' AND [Key] = 'CustomCustomerAttributesXML'
+DELETE FROM [GenericAttribute] where [KeyGroup] = 'Customer' AND [Key] = 'CustomCustomerAttributes'
 
 -- CountryId
 MERGE Customer AS c USING [GenericAttribute] AS ga

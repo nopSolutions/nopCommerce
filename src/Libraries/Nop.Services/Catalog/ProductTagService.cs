@@ -279,13 +279,19 @@ namespace Nop.Services.Catalog
             return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var query = _productProductTagMappingRepository.Table;
+                var productsQuery = _productRepository.Table;
+
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
 
                 if (!showHidden)
                 {
-                    var productsQuery = _productRepository.Table.Where(p => p.Published);
-
-                    //apply store mapping constraints
-                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+                    productsQuery = productsQuery.Where(p => p.Published);
 
                     //apply ACL constraints
                     productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);

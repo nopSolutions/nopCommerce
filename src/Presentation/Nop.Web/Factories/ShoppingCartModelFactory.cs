@@ -748,7 +748,7 @@ namespace Nop.Web.Factories
             //custom values
             var processPaymentRequestTask = _httpContextAccessor.HttpContext?.Session?.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
             if (processPaymentRequestTask != null)
-                model.CustomValues = (await processPaymentRequestTask).CustomValues;
+                model.CustomValues = (await processPaymentRequestTask)?.CustomValues;
 
             return model;
         }
@@ -899,10 +899,11 @@ namespace Nop.Web.Factories
             //discount and gift card boxes
             model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
             var discountCouponCodes = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+            
             foreach (var couponCode in discountCouponCodes)
             {
                 var discount = await (await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
-                    .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer)).IsValid);
+                    .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer, discountCouponCodes)).IsValid);
 
                 if (discount != null)
                 {

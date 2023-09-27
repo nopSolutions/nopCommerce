@@ -490,6 +490,7 @@ namespace Nop.Services.ExportImport
                 {
                     DropDownElements = await AttributeValueType.Simple.ToSelectListAsync(useLocalization: false)
                 },
+
                 new PropertyByName<ExportProductAttribute, Language>("AssociatedProductId", (p, l) => p.AssociatedProductId),
                 new PropertyByName<ExportProductAttribute, Language>("ColorSquaresRgb", (p, l) => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute, Language>("ImageSquaresPictureId", (p, l) => p.ImageSquaresPictureId),
@@ -501,7 +502,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute, Language>("Quantity", (p, l) => p.Quantity),
                 new PropertyByName<ExportProductAttribute, Language>("IsPreSelected", (p, l) => p.IsPreSelected),
                 new PropertyByName<ExportProductAttribute, Language>("DisplayOrder", (p, l) => p.DisplayOrder),
-                new PropertyByName<ExportProductAttribute, Language>("PictureId", (p, l) => p.PictureId)
+                new PropertyByName<ExportProductAttribute, Language>("PictureIds", async (p, l) => string.Join(",",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(p.Id)).Select(vp => vp.PictureId)))
             };
 
             var localizedProperties = new[]
@@ -622,7 +624,8 @@ namespace Nop.Services.ExportImport
                     var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
 
                     if (values?.Any() ?? false)
-                        return values.Select(pav =>
+                    {
+                        IEnumerable<ExportProductAttribute> productAttributes = await values.SelectAwait(async pav =>
                             new ExportProductAttribute
                             {
                                 AttributeId = productAttribute.Id,
@@ -646,8 +649,12 @@ namespace Nop.Services.ExportImport
                                 Quantity = pav.Quantity,
                                 IsPreSelected = pav.IsPreSelected,
                                 DisplayOrder = pav.DisplayOrder,
-                                PictureId = pav.PictureId
-                            });
+                                PictureIds = string.Join(";",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(pav.Id)).Select(vp => vp.PictureId))
+                            }).ToListAsync();
+
+                        return productAttributes;
+                    }
 
                     var attribute = new ExportProductAttribute
                     {
@@ -1367,7 +1374,8 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Quantity", productAttributeValue.Quantity);
                             await xmlWriter.WriteStringAsync("IsPreSelected", productAttributeValue.IsPreSelected);
                             await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeValue.DisplayOrder);
-                            await xmlWriter.WriteStringAsync("PictureId", productAttributeValue.PictureId);
+                            await xmlWriter.WriteStringAsync("PictureIds", string.Join(",", 
+                                (await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id)).Select(vp => vp.PictureId)));
                             await xmlWriter.WriteEndElementAsync();
                         }
 
@@ -1651,6 +1659,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product, Language>("ProductTags", async (p, l) =>  await GetProductTagsAsync(p), await IgnoreExportProductPropertyAsync(p => p.ProductTags)),
                 new PropertyByName<Product, Language>("IsLimitedToStores", (p, l) => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
                 new PropertyByName<Product, Language>("LimitedToStores",async (p, l) =>  await GetLimitedToStoresAsync(p), await IgnoreExportLimitedToStoreAsync()),
+                new PropertyByName<Product, Language>("DisplayAttributeCombinationImagesOnly",(p, l) =>  p.DisplayAttributeCombinationImagesOnly, !_productEditorSettings.DisplayAttributeCombinationImagesOnly),
                 new PropertyByName<Product, Language>("Picture1", async (p, l) => await GetPictureAsync(p, 0)),
                 new PropertyByName<Product, Language>("Picture2", async (p, l) => await GetPictureAsync(p, 1)),
                 new PropertyByName<Product, Language>("Picture3", async (p, l) => await GetPictureAsync(p, 2))

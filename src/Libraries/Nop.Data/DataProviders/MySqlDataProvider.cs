@@ -20,7 +20,7 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Creates the database connection
@@ -273,6 +273,7 @@ namespace Nop.Data.DataProviders
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
+                UseXaTransactions = false
             };
 
             return builder.ConnectionString;

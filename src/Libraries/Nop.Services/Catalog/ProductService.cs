@@ -861,6 +861,8 @@ namespace Nop.Services.Catalog
             else if (overridePublished.HasValue)
                 productsQuery = productsQuery.Where(p => p.Published == overridePublished.Value);
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
             if (!showHidden || storeId > 0)
             {
                 //apply store mapping constraints
@@ -870,7 +872,6 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 //apply ACL constraints
-                var customer = await _workContext.GetCurrentCustomerAsync();
                 productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
             }
 
@@ -903,7 +904,6 @@ namespace Nop.Services.Catalog
                 var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
                 IQueryable<int> productsByKeywords;
 
-                var customer = await _workContext.GetCurrentCustomerAsync();
                 var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
 
                 if (activeSearchProvider is not null)
@@ -949,10 +949,23 @@ namespace Nop.Services.Catalog
                 //search by category name if admin allows
                 if (_catalogSettings.AllowCustomersToSearchWithCategoryName)
                 {
+                    var categoryQuery = _categoryRepository.Table;
+
+                    if (!showHidden)
+                        categoryQuery = categoryQuery.Where(p => p.Published);
+                    else if (overridePublished.HasValue)
+                        categoryQuery = categoryQuery.Where(p => p.Published == overridePublished.Value);
+
+                    if (!showHidden || storeId > 0)
+                        categoryQuery = await _storeMappingService.ApplyStoreMapping(categoryQuery, storeId);
+
+                    if (!showHidden)
+                        categoryQuery = await _aclService.ApplyAcl(categoryQuery, customer);
+
                     productsByKeywords = productsByKeywords.Union(
                         from pc in _productCategoryRepository.Table
-                        join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                        where c.Name.Contains(keywords)
+                        join c in categoryQuery on pc.CategoryId equals c.Id
+                        where c.Name.Contains(keywords) && !c.Deleted
                         select pc.ProductId
                     );
 
@@ -972,10 +985,23 @@ namespace Nop.Services.Catalog
                 //search by manufacturer name if admin allows
                 if (_catalogSettings.AllowCustomersToSearchWithManufacturerName)
                 {
+                    var manufacturerQuery = _manufacturerRepository.Table;
+
+                    if (!showHidden)
+                        manufacturerQuery = manufacturerQuery.Where(p => p.Published);
+                    else if (overridePublished.HasValue)
+                        manufacturerQuery = manufacturerQuery.Where(p => p.Published == overridePublished.Value);
+
+                    if (!showHidden || storeId > 0)
+                        manufacturerQuery = await _storeMappingService.ApplyStoreMapping(manufacturerQuery, storeId);
+
+                    if (!showHidden)
+                        manufacturerQuery = await _aclService.ApplyAcl(manufacturerQuery, customer);
+
                     productsByKeywords = productsByKeywords.Union(
                         from pm in _productManufacturerRepository.Table
-                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        where m.Name.Contains(keywords)
+                        join m in manufacturerQuery on pm.ManufacturerId equals m.Id
+                        where m.Name.Contains(keywords) && !m.Deleted
                         select pm.ProductId
                     );
 

@@ -34,7 +34,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Adjust image measures to target size

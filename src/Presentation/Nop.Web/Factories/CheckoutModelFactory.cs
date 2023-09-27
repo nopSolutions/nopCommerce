@@ -161,6 +161,15 @@ namespace Nop.Web.Factories
                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
                     customer, storeId: store.Id);
                 if (pickupPointsResponse.Success)
+                {
+                    var selectedPickupPoint = await _genericAttributeService
+                        .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
+
+                    var selectedShippingOption = await _genericAttributeService
+                        .GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+
+                    model.PickupInStore = selectedShippingOption is not null && selectedShippingOption.IsPickupInStore;
+
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
                     {
                         var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(point.CountryCode);
@@ -180,7 +189,8 @@ namespace Nop.Web.Factories
                             ZipPostalCode = point.ZipPostalCode,
                             Latitude = point.Latitude,
                             Longitude = point.Longitude,
-                            OpeningHours = point.OpeningHours
+                            OpeningHours = point.OpeningHours,
+                            IsPreSelected = selectedPickupPoint is not null && selectedPickupPoint.Id == point.Id,
                         };
 
                         var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
@@ -201,6 +211,7 @@ namespace Nop.Web.Factories
 
                         return pickupPointModel;
                     }).ToListAsync();
+                }                    
                 else
                     foreach (var error in pickupPointsResponse.Errors)
                         model.Warnings.Add(error);

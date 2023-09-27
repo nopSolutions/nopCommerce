@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Nop.Web.Framework.Models
 {
@@ -38,6 +39,7 @@ namespace Nop.Web.Framework.Models
         /// Gets or sets property to store any custom values for models 
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public Dictionary<string, string> CustomProperties { get; set; }
 
         #endregion

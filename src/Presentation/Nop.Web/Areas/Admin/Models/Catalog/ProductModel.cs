@@ -52,6 +52,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             SelectedDiscountIds = new List<int>();
             AvailableDiscounts = new List<SelectListItem>();
 
+            AvailableProductTags = new List<SelectListItem>();
+            SelectedProductTags = new List<string>();
+
             RelatedProductSearchModel = new RelatedProductSearchModel();
             CrossSellProductSearchModel = new CrossSellProductSearchModel();
             AssociatedProductSearchModel = new AssociatedProductSearchModel();
@@ -125,10 +128,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
-        public string ProductTags { get; set; }
+        public IList<SelectListItem> AvailableProductTags { get; set; }
 
-        public string InitialProductTags { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
+        public IList<string> SelectedProductTags { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         public string Sku { get; set; }
@@ -292,6 +295,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
         public bool NotReturnable { get; set; }

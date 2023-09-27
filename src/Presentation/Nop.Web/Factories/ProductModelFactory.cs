@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -49,6 +50,7 @@ namespace Nop.Web.Factories
         protected readonly IDateTimeHelper _dateTimeHelper;
         protected readonly IDownloadService _downloadService;
         protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IJsonLdModelFactory _jsonLdModelFactory;
         protected readonly ILocalizationService _localizationService;
         protected readonly IManufacturerService _manufacturerService;
         protected readonly IPermissionService _permissionService;
@@ -93,6 +95,7 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
+            IJsonLdModelFactory jsonLdModelFactory,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IPermissionService permissionService,
@@ -133,6 +136,7 @@ namespace Nop.Web.Factories
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
+            _jsonLdModelFactory = jsonLdModelFactory;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _permissionService = permissionService;
@@ -713,6 +717,13 @@ namespace Nop.Web.Factories
                 });
             }
 
+            if (_seoSettings.MicrodataEnabled)
+            {
+                var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdProductBreadcrumbAsync(breadcrumbModel);
+                breadcrumbModel.JsonLd = JsonConvert
+                    .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
             return breadcrumbModel;
         }
 
@@ -952,15 +963,15 @@ namespace Nop.Web.Factories
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributeMapping)
             {
-                var productAttrubute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
+                var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
 
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Name),
-                    Description = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Description),
+                    Name = await _localizationService.GetLocalizedAsync(productAttribute, x => x.Name),
+                    Description = await _localizationService.GetLocalizedAsync(productAttribute, x => x.Description),
                     TextPrompt = await _localizationService.GetLocalizedAsync(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
@@ -1048,7 +1059,7 @@ namespace Nop.Web.Factories
                         }
 
                         //picture of a product attribute value
-                        valueModel.PictureId = attributeValue.PictureId;
+                        valueModel.PictureId = (await _productAttributeService.GetProductAttributeValuePicturesAsync(attributeValue.Id)).FirstOrDefault()?.PictureId ?? 0;
                     }
                 }
 
@@ -1280,6 +1291,7 @@ namespace Nop.Web.Factories
 
                     var pictureModel = new PictureModel
                     {
+                        Id = picture.Id,
                         ImageUrl = imageUrl,
                         ThumbImageUrl = thumbImageUrl,
                         FullSizeImageUrl = fullSizeImageUrl,
@@ -1509,7 +1521,8 @@ namespace Nop.Web.Factories
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc,
                 VisibleIndividually = product.VisibleIndividually,
-                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations
+                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
+                DisplayAttributeCombinationImagesOnly = product.DisplayAttributeCombinationImagesOnly
             };
 
             //automatically generate product description?
@@ -1716,6 +1729,11 @@ namespace Nop.Web.Factories
                         model.AssociatedProducts.Add(await PrepareProductDetailsModelAsync(associatedProduct, null, true));
                 }
                 model.InStock = model.AssociatedProducts.Any(associatedProduct => associatedProduct.InStock);
+            }
+            if (_seoSettings.MicrodataEnabled)
+            {
+                var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdProductAsync(model);
+                model.JsonLd = JsonConvert.SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
             return model;

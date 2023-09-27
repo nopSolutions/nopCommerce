@@ -9,17 +9,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
     public interface IShippingByWeightByTotalService
     {
         /// <summary>
-        /// Get all shipping by weight records
-        /// </summary>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the list of the shipping by weight record
-        /// </returns>
-        Task<IPagedList<ShippingByWeightByTotalRecord>> GetAllAsync(int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
         /// Get a shipping by weight record by passed parameters
         /// </summary>
         /// <param name="shippingMethodId">Shipping method identifier</param>

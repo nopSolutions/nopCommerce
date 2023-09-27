@@ -231,28 +231,19 @@
                                             <div class="col-md-8">                                               
                                                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />                                                                                                                                              
                                                 <script>
-                                            $(document).ready(function() {
-                                                var rolesIdsInput =
-                                                    $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
-                                                        .data("kendoMultiSelect");
-                                                rolesIdsInput.setOptions({
-                                                    autoClose: false,
-                                                    filter: "contains"
-                                                });
-
-                                                @if (Model.AvailableCustomerRoles.Count == 0)
-                                                {
-                                                    <text>
-                                                        rolesIdsInput.setOptions({
-                                                            enable: false,
-                                                            placeholder:
-                                                                '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
-                                                        });
-                                                        rolesIdsInput._placeholder();
-                                                        rolesIdsInput._enable();
-                                                    </text>
-                                                }
-                                            });
+                                                    $(document).ready(function() {
+                                                        var rolesIdsInput =
+                                                            $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                                                closeOnSelect: false,
+                                                                @if (!Model.AvailableCustomerRoles.Any())
+                                                                {
+                                                                <text>
+                                                                disabled: true,
+                                                                placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")',
+                                                                </text>
+                                                                }
+                                                            });
+                                                    });
                                                 </script>
                                             </div>
                                             </div>

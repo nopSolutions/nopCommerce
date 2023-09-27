@@ -74,7 +74,7 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Search order items
@@ -506,6 +506,7 @@ namespace Nop.Services.Orders
 
             //filter by category
             if (categoryId > 0)
+            {
                 query = from o in query
                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                         join p in _productRepository.Table on oi.ProductId equals p.Id
@@ -513,8 +514,12 @@ namespace Nop.Services.Orders
                         where pc.CategoryId == categoryId
                         select o;
 
+                query = query.Distinct();
+            }
+
             //filter by manufacturer
             if (manufacturerId > 0)
+            {
                 query = from o in query
                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                         join p in _productRepository.Table on oi.ProductId equals p.Id
@@ -522,20 +527,31 @@ namespace Nop.Services.Orders
                         where pm.ManufacturerId == manufacturerId
                         select o;
 
+                query = query.Distinct();
+            }
+
             //filter by country
             if (billingCountryId > 0)
+            {
                 query = from o in query
                         join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
                         where
                             billingCountryId <= 0 || oba.CountryId == billingCountryId
                         select o;
 
+                query = query.Distinct();
+            }
+
             //filter by product
             if (productId > 0)
+            {
                 query = from o in query
                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                         where oi.ProductId == productId
                         select o;
+
+                query = query.Distinct();
+            }
 
             //filter by store
             if (storeId > 0)
@@ -548,6 +564,8 @@ namespace Nop.Services.Orders
                         join p in _productRepository.Table on oi.ProductId equals p.Id
                         where p.VendorId == vendorId
                         select o;
+
+                query = query.Distinct();
             }
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
@@ -558,7 +576,7 @@ namespace Nop.Services.Orders
             {
                 GroupByOptions.Day => from oq in query
                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Date into result
-                                      let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                      let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                       select new
                                       {
                                           SummaryDate = result.Key,
@@ -573,7 +591,7 @@ namespace Nop.Services.Orders
                                       },
                 GroupByOptions.Week => from oq in query
                                        group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(-(int)oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).DayOfWeek).Date into result
-                                       let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                       let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                        select new
                                        {
                                            SummaryDate = result.Key,
@@ -588,7 +606,7 @@ namespace Nop.Services.Orders
                                        },
                 GroupByOptions.Month => from oq in query
                                         group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(1 - oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Day).Date into result
-                                        let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                        let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                         select new
                                         {
                                             SummaryDate = result.Key,

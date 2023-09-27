@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets the format string to create the description of update migration
         /// <remarks>
-        /// 0 - nopCommerce full version
+        /// 0 - nopCommerce version
         /// 1 - update migration type
         /// </remarks>
         /// </summary>

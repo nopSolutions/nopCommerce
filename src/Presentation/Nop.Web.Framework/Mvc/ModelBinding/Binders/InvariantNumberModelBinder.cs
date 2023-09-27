@@ -27,7 +27,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         protected virtual T? TryParse<T>(string value, TryParseNumber<T> handler) where T : struct
         {

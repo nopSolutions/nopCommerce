@@ -19,7 +19,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopSchemaMigration("2022-07-13 00:00:00", "Update datetime type precision")]
+    [NopSchemaMigration("2023-07-28 08:00:00", "Update datetime type precision")]
     public class MySqlDateTimeWithPrecisionMigration : ForwardOnlyMigration
     {
         public override void Up()

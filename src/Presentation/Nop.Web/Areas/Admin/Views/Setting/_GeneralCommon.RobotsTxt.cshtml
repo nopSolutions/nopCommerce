@@ -51,10 +51,8 @@
                     <nop-select asp-for="RobotsTxtSettings.DisallowLanguages" asp-items="Model.RobotsTxtSettings.AvailableLanguages" asp-multiple="true"/>
                     <script>
                         $(document).ready(function() {
-                            var languageIds = $('#@Html.IdFor(model => model.RobotsTxtSettings.DisallowLanguages)').data("kendoMultiSelect");
-                            languageIds.setOptions({
-                                autoClose: false,
-                                filter: "contains"
+                            var languageIds = $('#@Html.IdFor(model => model.RobotsTxtSettings.DisallowLanguages)').select2({
+                                closeOnSelect: false
                             });
                         });
                     </script>

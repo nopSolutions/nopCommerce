@@ -155,7 +155,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? DateTimeNullable => !string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
+        public DateTime? DateTimeNullable => string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
 
         /// <summary>
         /// Converted property value to guid
