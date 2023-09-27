@@ -22,7 +22,7 @@
     <Value>Jelszó megerősítése</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Adja meg a jelszó megerősítését</Value>
+    <Value>Adja meg újra a jelszót</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
     <Value>Csatlakozási szöveg</Value>
