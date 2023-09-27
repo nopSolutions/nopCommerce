@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Admin felhasználó e-mail</Value>
+    <Value>Adminisztrátor e-mail cím</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Adja meg a rendszergazda emailt</Value>
+    <Value>Adja meg a adminisztrátor email címét</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Rendszergazda felhasználó jelszó</Value>
+    <Value>Adminisztrátor jelszó</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Írja be rendszergazdai jelszót</Value>
+    <Value>Írja be adminisztrátori jelszót</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>A '{0}' fiókot nem biztosították a :Módosítás engedély mappában "{1}". Kérjük, adja meg ezeket az engedélyeket.</Value>
+    <Value>A '{0}' fiók nem rendelkezik módosítási engedéllyel a mappán "{1}". Kérjük, adja meg ezeket az engedélyeket.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>A '{0}' fiókot nem biztosították a: Módosítás engedély a fájlban '{1}'. Kérjük, adja meg ezeket az engedélyeket.</Value>
+    <Value>A '{0}' fiók nem rendelkezik módosítási engedéllyel a fájlon "{1}". Kérjük, adja meg ezeket az engedélyeket.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Erősítse meg a jelszót</Value>
+    <Value>Jelszó megerősítése</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Adja meg a a jelszó megerősítését</Value>
+    <Value>Adja meg a jelszó megerősítését</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
     <Value>Csatlakozási szöveg</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>A SQL kapcsolat string szükséges</Value>
+    <Value>A SQL kapcsolati karakterlánc (connection string) szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Hibás az  SQL kapcsolat string formátuma</Value>
+    <Value>Hibás az  SQL kapcsolati karakterlánc formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Ország</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Válassza ki az országot...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Hozzon létre adatbázist, ha nem létezik</Value>
+    <Value>Hozza létre az adatbázist, ha nem létezik</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
     <Value>Mintaadat létrehozása</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Adja meg az egyéni egyeztetést</Value>
+    <Value>Adja meg az egyéni karakterkészletet (collation)</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Adatbázis</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
+    <Value>Hiba történt az adatbázis létrehozásakor: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Adatbázis információk</Value>
@@ -94,10 +94,10 @@
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Adja meg a nyers kapcsolati karakter láncot (haladó)</Value>
+    <Value>Adja meg a nyers kapcsolati karakterláncot (haladó)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>A  telepítés újraindítása</Value>
+    <Value>A telepítés újraindítása</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Ide kattintva indítsa újra a telepítést (törli az összes tárolt értékeket)</Value>
@@ -136,6 +136,6 @@
     <Value>nopCommerce telepítés</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
+    <Value>A varázsló befejezéséhez ismernie kell néhány információt az adatbázis-kiszolgálóról ("kapcsolati karakterlánc/connection string"). Ha szükséges, forduljon internetszolgáltatójához. Ha helyi gépre vagy kiszolgálóra telepít, akkor szükség lehet a rendszeradminisztrátor információira.</Value>
   </LocaleResource>
 </Language>
