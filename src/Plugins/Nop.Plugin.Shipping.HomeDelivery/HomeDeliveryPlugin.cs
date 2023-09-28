@@ -93,11 +93,17 @@ namespace Nop.Plugin.Shipping.HomeDelivery
 
             foreach (var item in getShippingOptionRequest.Items)
             {
+                var matchedType = false;
                 var itemAttributeXml = item.ShoppingCartItem.AttributesXml;
                 var pams = await _productAttributeParser.ParseProductAttributeMappingsAsync(itemAttributeXml);
                 foreach (var pam in pams)
                 {
                     var pa = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                    if (pa.Name == "Pickup")
+                    {
+                        matchedType = true;
+                        continue;
+                    }
                     if (pa.Name != AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName)
                     {
                         continue;
@@ -110,16 +116,18 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                     if (pav.Name.Contains("Home Delivery (Price in Cart)"))
                     {
                         legacyHomeDeliveryItems.Add(item);
+                        matchedType = true;
                     }
                     else if (pav.Name.Contains("Home Delivery") || pav.Name.Contains("Pickup"))
                     {
                         // not included in home delivery calculations
-                        continue;
+                        matchedType = true;
                     }
-                    else
-                    {
-                        fedexDeliveryItems.Add(item);
-                    }
+                }
+
+                if (!matchedType)
+                {
+                    fedexDeliveryItems.Add(item);
                 }
             }
 
