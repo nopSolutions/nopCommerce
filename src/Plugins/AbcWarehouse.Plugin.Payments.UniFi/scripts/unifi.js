@@ -1,12 +1,10 @@
 $(document).ready(function () {
 	// Auto-open the modal
 	$('#checkouthtml').trigger("click");
-	$('#checkouthtml').hide();
 	$('.payment-info-next-step-button').hide();
 
     window.addEventListener("message",function(event) {
 		if ((typeof event.data == 'string' || typeof event.data == 'object') && (event.data == 'Close Model' || event.data == 'Return To Merchant Shipping' || event.data == 'Close' || event.data.action == 'setPayCloseModal')) {
-				console.log('SYNCHRONY UNIFI MODAL CLOSED', event);
 				var transactionToken = document.getElementById('transactionToken').value;
 				$.ajax({
 					cache: false,
@@ -15,6 +13,7 @@ $(document).ready(function () {
 					data: null,
 					dataType: 'json',
 					success: function (response) {
+						$('#checkouthtml').hide();
 						var transactionMessage = response.transactionMessage;
 						if (transactionMessage == 'Customer Approval Success') {
 							var form = document.querySelector('form[action=\'https://spdpone.syfpos.com/mppcore/mppcheckout\']');
@@ -23,7 +22,7 @@ $(document).ready(function () {
 							form.submit();
 						}
 						else {
-							alert(`UniFi Payment modal error: ${transactionMessage}.`);
+							alert(`${transactionMessage}.`);
 							$('#synchrony-error-button').show();
 						}
 					},
