@@ -11,5 +11,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Models
         public string PartnerId { get; set; }
 
         public string FlowType { get; set; }
+
+        public string Tags { get; set; }
     }
 }

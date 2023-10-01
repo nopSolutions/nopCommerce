@@ -369,7 +369,7 @@
                     }
                     @if (savedPrice.HasValue && savedPrice.Value > 0)
                     {
-                        var saveStr = "You Save $" + savedPrice.Value.ToString().Replace(".00", "");
+                        var saveStr = "Save $" + savedPrice.Value.ToString().Replace(".00", "");
                         <span class="price you-save">@saveStr</span>
                     }
                     else

@@ -15,19 +15,26 @@ using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
 using AbcWarehouse.Plugin.Widgets.UniFi.Models;
 using Nop.Plugin.Misc.AbcCore.Infrastructure;
+using Nop.Plugin.Misc.AbcCore.Services;
 
 namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
 {
     public class UniFiViewComponent : NopViewComponent
     {
         private readonly ILogger _logger;
+        private readonly IProductAbcDescriptionService _productAbcDescriptionService;
+        private readonly IProductAbcFinanceService _productAbcFinanceService;
         private readonly UniFiSettings _settings;
 
         public UniFiViewComponent(
             ILogger logger,
+            IProductAbcDescriptionService productAbcDescriptionService,
+            IProductAbcFinanceService productAbcFinanceService,
             UniFiSettings settings)
         {
             _logger = logger;
+            _productAbcDescriptionService = productAbcDescriptionService;
+            _productAbcFinanceService = productAbcFinanceService;
             _settings = settings;
         }
 
@@ -47,7 +54,29 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                     PartnerId = partnerId
                 };
 
-                if (IsProductDetailsPage()) { model.FlowType = "PDP"; }
+                if (IsProductDetailsPage())
+                {
+                    model.FlowType = "PDP";
+
+                    var routeData = Url.ActionContext.RouteData;
+                    var productIdAsString = routeData.Values["productId"].ToString();
+                    var productId = int.Parse(productIdAsString);
+
+                    if (productId != 0)
+                    {
+                        var productAbcDescription =
+                            await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(productId);
+                        if (productAbcDescription != null)
+                        {
+                            var productAbcFinance =
+                                await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(productAbcDescription.AbcItemNumber);
+                            if (productAbcFinance != null)
+                            {
+                                model.Tags = productAbcFinance.TransPromo;
+                            }
+                        }
+                    }
+                }
 
                 return View("~/Plugins/Widgets.UniFi/Views/Framework.cshtml", model);
             }

@@ -7,5 +7,9 @@
     {
         <text>syfWidgetObject.flowType = "@Model.FlowType";</text>
     }
+    @if (!string.IsNullOrWhiteSpace(@Model.Tags))
+    {
+        <text>syfWidgetObject.tags = "@Model.Tags";</text>
+    }
 </script>
 <script id=”syfMPPScript” type="text/javascript" src = "https://spdpone.syfpos.com/mpp/UniFi.js"></script>

@@ -2,10 +2,6 @@
     display: block;
 }
 
-.overview .old-product-price {
-    text-decoration: none;
-}
-
 .overview .prices .product-price {
     color: #B70000;
     display: inline-block;
