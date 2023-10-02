@@ -24,17 +24,26 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
         private readonly ILogger _logger;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IProductAbcFinanceService _productAbcFinanceService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
         private readonly UniFiSettings _settings;
 
         public UniFiViewComponent(
             ILogger logger,
             IProductAbcDescriptionService productAbcDescriptionService,
             IProductAbcFinanceService productAbcFinanceService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            IWorkContext workContext,
             UniFiSettings settings)
         {
             _logger = logger;
             _productAbcDescriptionService = productAbcDescriptionService;
             _productAbcFinanceService = productAbcFinanceService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _workContext = workContext;
             _settings = settings;
         }
 
@@ -78,6 +87,43 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                     }
                 }
 
+                if (IsCheckout())
+                {
+                    model.FlowType = "CHECKOUT";
+
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    var cart = await _shoppingCartService.GetShoppingCartAsync(
+                        customer,
+                        ShoppingCartType.ShoppingCart,
+                        (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                    foreach (var item in cart)
+                    {
+                        var productAbcDescription =
+                            await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(item.ProductId);
+                        if (productAbcDescription != null)
+                        {
+                            var productAbcFinance =
+                                await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(productAbcDescription.AbcItemNumber);
+                            if (productAbcFinance != null)
+                            {
+                                if (string.IsNullOrWhiteSpace(model.Tags))
+                                {
+                                    model.Tags = productAbcFinance.TransPromo;
+                                }
+                                else
+                                {
+                                    var existingTransPromos = model.Tags.Split(',');
+                                    if (!existingTransPromos.Contains(productAbcFinance.TransPromo))
+                                    {
+                                        model.Tags += $",{productAbcFinance.TransPromo}";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 return View("~/Plugins/Widgets.UniFi/Views/Framework.cshtml", model);
             }
 
@@ -95,6 +141,14 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             var controller = routeData.Values["controller"];
             var action = routeData.Values["action"];
             return controller.ToString() == "Product" && action.ToString() == "ProductDetails";
+        }
+
+        private bool IsCheckout()
+        {
+            var routeData = Url.ActionContext.RouteData;
+            var controller = routeData.Values["controller"];
+            var action = routeData.Values["action"];
+            return controller.ToString() == "CustomCheckout" && action.ToString() == "PaymentInfo";
         }
     }
 }
