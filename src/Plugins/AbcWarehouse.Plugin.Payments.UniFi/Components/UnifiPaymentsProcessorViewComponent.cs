@@ -21,6 +21,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using System.Net.Http.Json;
 using Nop.Services.Common;
+using Nop.Plugin.Misc.AbcCore.Services;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi.Components
 {
@@ -34,6 +35,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
+        private readonly ITermLookupService _termLookupService;
         private readonly IWorkContext _workContext;
         private readonly UniFiPaymentsSettings _uniFiPaymentsSettings;
         private readonly UniFiSettings _uniFiSettings;
@@ -45,6 +47,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
             IShoppingCartModelFactory shoppingCartModelFactory,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
+            ITermLookupService termLookupService,
             IWorkContext workContext,
             UniFiPaymentsSettings uniFiPaymentsSettings,
             UniFiSettings uniFiSettings)
@@ -55,6 +58,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
+            _termLookupService = termLookupService;
             _workContext = workContext;
             _uniFiPaymentsSettings = uniFiPaymentsSettings;
             _uniFiSettings = uniFiSettings;
@@ -79,6 +83,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
                 ShoppingCartType.ShoppingCart,
                 (await _storeContext.GetCurrentStoreAsync()).Id);
             var orderTotalsModel = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(cart, false);
+            var termLookup = await _termLookupService.GetTermAsync(cart);
 
             var model = new PaymentInfoModel() {
                 TransactionToken = transactionToken,
@@ -90,7 +95,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
                 City = address.City,
                 State = stateAbbreviation,
                 Zip = address.ZipPostalCode,
-                TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", "").Replace(",", "")
+                TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", "").Replace(",", ""),
+                Tags = termLookup.termNo ?? "",
             };
 
             return View("~/Plugins/Payments.UniFi/Views/PaymentInfo.cshtml", model);

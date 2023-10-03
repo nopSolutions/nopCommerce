@@ -26,7 +26,6 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
         private readonly IProductAbcFinanceService _productAbcFinanceService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
-        private readonly ITermLookupService _termLookupService;
         private readonly IWorkContext _workContext;
         private readonly UniFiSettings _settings;
 
@@ -36,7 +35,6 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             IProductAbcFinanceService productAbcFinanceService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
-            ITermLookupService termLookupService,
             IWorkContext workContext,
             UniFiSettings settings)
         {
@@ -45,7 +43,6 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             _productAbcFinanceService = productAbcFinanceService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
-            _termLookupService = termLookupService;
             _workContext = workContext;
             _settings = settings;
         }
@@ -90,23 +87,6 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                     }
                 }
 
-                if (IsCheckout())
-                {
-                    model.FlowType = "CHECKOUT";
-
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    var cart = await _shoppingCartService.GetShoppingCartAsync(
-                        customer,
-                        ShoppingCartType.ShoppingCart,
-                        (await _storeContext.GetCurrentStoreAsync()).Id);
-
-                    var termLookup = await _termLookupService.GetTermAsync(cart);
-                    if (termLookup.termNo != null)
-                    {
-                        model.Tags = termLookup.termNo;
-                    }
-                }
-
                 return View("~/Plugins/Widgets.UniFi/Views/Framework.cshtml", model);
             }
 
@@ -124,14 +104,6 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             var controller = routeData.Values["controller"];
             var action = routeData.Values["action"];
             return controller.ToString() == "Product" && action.ToString() == "ProductDetails";
-        }
-
-        private bool IsCheckout()
-        {
-            var routeData = Url.ActionContext.RouteData;
-            var controller = routeData.Values["controller"];
-            var action = routeData.Values["action"];
-            return controller.ToString() == "CustomCheckout" && action.ToString() == "PaymentInfo";
         }
     }
 }

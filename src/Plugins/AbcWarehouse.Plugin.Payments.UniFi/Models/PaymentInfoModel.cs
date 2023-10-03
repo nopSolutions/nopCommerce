@@ -15,5 +15,6 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Models
         public string State { get; init; }
         public string Zip { get; init; }
         public string TransactionAmount { get; init; }
+        public string Tags { get; init; }
     }
 }
