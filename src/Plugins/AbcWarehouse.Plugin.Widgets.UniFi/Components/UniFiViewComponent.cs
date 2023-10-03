@@ -26,6 +26,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
         private readonly IProductAbcFinanceService _productAbcFinanceService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
+        private readonly ITermLookupService _termLookupService;
         private readonly IWorkContext _workContext;
         private readonly UniFiSettings _settings;
 
@@ -35,6 +36,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             IProductAbcFinanceService productAbcFinanceService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
+            ITermLookupService termLookupService,
             IWorkContext workContext,
             UniFiSettings settings)
         {
@@ -43,6 +45,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             _productAbcFinanceService = productAbcFinanceService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
+            _termLookupService = termLookupService;
             _workContext = workContext;
             _settings = settings;
         }
@@ -97,30 +100,10 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                         ShoppingCartType.ShoppingCart,
                         (await _storeContext.GetCurrentStoreAsync()).Id);
 
-                    foreach (var item in cart)
+                    var termLookup = await _termLookupService.GetTermAsync(cart);
+                    if (termLookup.termNo != null)
                     {
-                        var productAbcDescription =
-                            await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(item.ProductId);
-                        if (productAbcDescription != null)
-                        {
-                            var productAbcFinance =
-                                await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(productAbcDescription.AbcItemNumber);
-                            if (productAbcFinance != null)
-                            {
-                                if (string.IsNullOrWhiteSpace(model.Tags))
-                                {
-                                    model.Tags = productAbcFinance.TransPromo;
-                                }
-                                else
-                                {
-                                    var existingTransPromos = model.Tags.Split(',');
-                                    if (!existingTransPromos.Contains(productAbcFinance.TransPromo))
-                                    {
-                                        model.Tags += $",{productAbcFinance.TransPromo}";
-                                    }
-                                }
-                            }
-                        }
+                        model.Tags == termLookup.termNo;
                     }
                 }
 
