@@ -114,6 +114,15 @@
                             @T("Admin.Customers.Customers.Fields.Gender.Female")
                         </label>
                     </div>
+                    @if (Model.NeutralGenderEnabled)
+                    {
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="Gender" id="Gender_Neutral" value="N" @(Model.Gender == "N" ? Html.Raw("checked") : null)>
+                            <label class="form-check-label" for="Gender_Female">
+                                @T("Admin.Customers.Customers.Fields.Gender.Neutral")
+                            </label>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

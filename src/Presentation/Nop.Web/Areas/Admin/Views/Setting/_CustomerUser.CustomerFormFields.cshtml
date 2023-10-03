@@ -57,6 +57,17 @@
             <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
         </div>
     </div>
+    <nop-nested-setting asp-for="CustomerSettings.GenderEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.NeutralGenderEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.NeutralGenderEnabled" />
+                <span asp-validation-for="CustomerSettings.NeutralGenderEnabled"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 	<div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.FirstNameEnabled" />

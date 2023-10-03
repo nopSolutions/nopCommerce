@@ -96,6 +96,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
             }
 
             settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
+
+            //#6853
+            if (!settingService.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
+            {
+                customerSettings.NeutralGenderEnabled = false;
+                settingService.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
+            }
         }
 
         public override void Down()

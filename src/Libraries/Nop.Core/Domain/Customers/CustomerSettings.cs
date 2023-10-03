@@ -270,6 +270,11 @@ namespace Nop.Core.Domain.Customers
         public bool GenderEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Neutral Gender' is enabled
+        /// </summary>
+        public bool NeutralGenderEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Date of Birth' is enabled
         /// </summary>
         public bool DateOfBirthEnabled { get; set; }

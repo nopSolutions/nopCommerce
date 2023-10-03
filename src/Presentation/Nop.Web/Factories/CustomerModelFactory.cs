@@ -307,6 +307,7 @@ namespace Nop.Web.Factories
             model.FirstNameRequired = _customerSettings.FirstNameRequired;
             model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.NeutralGenderEnabled = _customerSettings.NeutralGenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
@@ -411,6 +412,7 @@ namespace Nop.Web.Factories
             model.FirstNameRequired = _customerSettings.FirstNameRequired;
             model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.NeutralGenderEnabled = _customerSettings.NeutralGenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;

@@ -833,6 +833,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.Password, options => options.Ignore())
                 .ForMember(model => model.AvailableVendors, options => options.Ignore())
                 .ForMember(model => model.GenderEnabled, options => options.Ignore())
+                .ForMember(model => model.NeutralGenderEnabled, options => options.Ignore())
                 .ForMember(model => model.Gender, options => options.Ignore())
                 .ForMember(model => model.FirstNameEnabled, options => options.Ignore())
                 .ForMember(model => model.FirstName, options => options.Ignore())
