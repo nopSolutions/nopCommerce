@@ -96,7 +96,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
                 State = stateAbbreviation,
                 Zip = address.ZipPostalCode,
                 TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", "").Replace(",", ""),
-                Tags = termLookup.termNo ?? "",
+                Tags = termLookup.termNo != null ? $"0{termLookup.termNo}" : ""
             };
 
             return View("~/Plugins/Payments.UniFi/Views/PaymentInfo.cshtml", model);
