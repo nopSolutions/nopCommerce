@@ -103,7 +103,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                     var termLookup = await _termLookupService.GetTermAsync(cart);
                     if (termLookup.termNo != null)
                     {
-                        model.Tags == termLookup.termNo;
+                        model.Tags = termLookup.termNo;
                     }
                 }
 
