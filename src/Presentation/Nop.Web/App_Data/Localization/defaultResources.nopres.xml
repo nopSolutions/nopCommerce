@@ -6705,9 +6705,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GenderEnabled">
     <Value>'Gender' enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled">
+      <Value>'Neutral Gender' enabled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GenderEnabled.Hint">
     <Value>Set if 'Gender' is enabled.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled.Hint">
+        <Value>Set if 'Neutral Gender' is enabled.</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab">
     <Value>Hide 'Back in stock subscriptions' tab</Value>
   </LocaleResource>
@@ -11876,6 +11882,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Gender.Male">
     <Value>Male</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Gender.Neutral">
+      <Value>Neutral</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.IPAddress">
     <Value>IP Address</Value>

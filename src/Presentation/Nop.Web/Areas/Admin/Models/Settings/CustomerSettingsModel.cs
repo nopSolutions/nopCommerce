@@ -137,6 +137,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled")]
+        public bool NeutralGenderEnabled { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameEnabled")]
         public bool FirstNameEnabled { get; set; }
 

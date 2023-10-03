@@ -767,6 +767,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.NeutralGenderEnabled = _customerSettings.NeutralGenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;

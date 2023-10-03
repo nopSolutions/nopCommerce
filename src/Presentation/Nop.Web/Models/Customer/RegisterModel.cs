@@ -48,6 +48,8 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool NeutralGenderEnabled { get; set; }
+
         public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
