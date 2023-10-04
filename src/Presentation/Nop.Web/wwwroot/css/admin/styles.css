@@ -846,8 +846,12 @@ i.false-icon {
 .select2-blue {
   width: 100%;
 }
-.select2-blue .select2-container--default .select2-selection--single, .select2-blue .select2-container--default .select2-selection--multiple {
+.select2-blue .select2-container--default .select2-selection--single {
   height: 38px;
+}
+
+.select2-selection--multiple {
+  height: auto;
 }
 
 .select2-blue .select2-container--default .select2-selection--single, .select2-blue .select2-container--default .select2-selection--multiple {

@@ -71,8 +71,12 @@
       url: url,
       data: $(this.form).serialize(),
       type: "POST",
-      success: function(response) {
-        location.href = response.redirect;
+      success: function (response) {
+        if (response.redirect)
+          location.href = response.redirect;
+        else if (response.error)
+          alert(response.message);
+
         return true;
       },
       error: function (err) {
