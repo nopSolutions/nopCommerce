@@ -64,6 +64,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             var city = _httpContextAccessor.HttpContext.Session.GetString("City");
             var state = _httpContextAccessor.HttpContext.Session.GetString("State");
             var zip = _httpContextAccessor.HttpContext.Session.GetString("Zip");
+            var tags = _httpContextAccessor.HttpContext.Session.GetString("Tags");
             var amount = processPaymentRequest.OrderTotal;
 
             // https://stackoverflow.com/a/23121386
@@ -81,8 +82,10 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     new {
                         amount = amount.ToString("0.00"),
                     }
-                } }
+                } },
+                { "promotionalTags", tags },
             };
+
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(
@@ -196,6 +199,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             _httpContextAccessor.HttpContext.Session.SetString("City", form["custCity"]);
             _httpContextAccessor.HttpContext.Session.SetString("State", form["custState"]);
             _httpContextAccessor.HttpContext.Session.SetString("Zip", form["custZipCode"]);
+            _httpContextAccessor.HttpContext.Session.SetString("Tags", form["productCategoryNames"]);
             paymentInfo.OrderTotal = Convert.ToDecimal(form["transAmount1"]);
 
             return Task.FromResult(paymentInfo);

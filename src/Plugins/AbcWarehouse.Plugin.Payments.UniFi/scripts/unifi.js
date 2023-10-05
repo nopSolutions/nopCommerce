@@ -16,7 +16,7 @@ $(document).ready(function () {
 						$('#checkouthtml').hide();
 						var transactionMessage = response.transactionMessage;
 						if (transactionMessage == 'Customer Approval Success') {
-							var form = document.querySelector('form[action=\'https://spdpone.syfpos.com/mppcore/mppcheckout\']');
+							var form = document.querySelector('.section.payment-info').getElementsByTagName('form')[0];
 							form.action = "/checkout/paymentinfo";
 							form.removeAttribute('target');
 							form.submit();
