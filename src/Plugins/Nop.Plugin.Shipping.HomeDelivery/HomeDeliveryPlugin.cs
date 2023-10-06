@@ -186,21 +186,15 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             }
 
             var firstFive = zip.Substring(0, 5);
-            int zipNum;
-            if (int.TryParse(firstFive, out zipNum))
-            {
-                var isZipEligible = await _deliveryService.CheckZipcodeAsync(zipNum);
-
-                if (isZipEligible)
-                    return true;
-                else
-                    response.AddError("Home Delivery Shipping is not available for the given zip code.");
-            }
+            var isZipEligible = await _deliveryService.CheckZipcodeAsync(firstFive);
+            if (isZipEligible)
+                return true;
             else
             {
-                response.AddError("Invalid Zipcode");
+                response.AddError("Home Delivery Shipping is not available for the given zip code.");
+                return false;
             }
-            return false;
+                
         }
 
         /// <summary>

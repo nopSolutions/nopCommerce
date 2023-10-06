@@ -16,7 +16,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             _nopDataProvider = nopDataProvider;
         }
 
-        public async Task<bool> CheckZipcodeAsync(int zip)
+        public async Task<bool> CheckZipcodeAsync(string zip)
         {
             var returnCode = new DataParameter { Name = "ReturnCode", DataType = DataType.Int32, Direction = ParameterDirection.Output };
             var parameters = new DataParameter[] { returnCode, new DataParameter { Name = "zip", DataType = DataType.Int32, Value = zip } };

@@ -65,9 +65,9 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             _workContext = workContext;
         }
 
-        public async Task<IActionResult> GetDeliveryOptions(int? productId, int? zip)
+        public async Task<IActionResult> GetDeliveryOptions(int? productId, string zip)
         {
-            if (zip == null || zip.ToString().Length != 5)
+            if (zip == null || zip.Length != 5)
             {
                 return BadRequest("Zip code must be a 5 digit number provided as a query parameter 'zip'.");
             }
@@ -81,7 +81,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             StockResponse stockResponse = await _backendStockService.GetApiStockAsync(productId.Value);
                 
             // get 5 closest based on zip code
-            var coords = _geocodeService.GeocodeZip(zip.Value);
+            var coords = _geocodeService.GeocodeZip(zip);
             if (stockResponse == null)
             {
                 stockResponse = new StockResponse();
@@ -96,7 +96,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             }
             
             return Json(new {
-                isDeliveryAvailable = await _deliveryService.CheckZipcodeAsync(zip.Value),
+                isDeliveryAvailable = await _deliveryService.CheckZipcodeAsync(zip),
                 isFedExAvailable = await HasFedExProductAttributeAsync(productId.Value),
                 pickupInStoreHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutPickupInStore",

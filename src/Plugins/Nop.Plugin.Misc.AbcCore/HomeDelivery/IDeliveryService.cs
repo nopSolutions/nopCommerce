@@ -4,6 +4,6 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
 {
     public interface IDeliveryService
     {
-        Task<bool> CheckZipcodeAsync(int zip);
+        Task<bool> CheckZipcodeAsync(string zip);
     }
 }

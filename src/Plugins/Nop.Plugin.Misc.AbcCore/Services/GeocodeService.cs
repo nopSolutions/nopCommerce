@@ -19,7 +19,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             }
         }
 
-        public (double lat, double lng) GeocodeZip(int zip) {
+        public (double lat, double lng) GeocodeZip(string zip) {
             string requestUri = 
                 string.Format(
                     "https://maps.googleapis.com/maps/api/geocode/xml?key={1}&address={0}&sensor=false",
