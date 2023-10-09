@@ -5089,11 +5089,19 @@ label, label + * {
   margin: 0;
 }
 
+.opc-select-address-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 10px 5px;
+}
+
+.checkout-page .opc-select-address-container .button-1 {
+  min-width: 100px;
+  padding: 5px 20px
+}
 
 /****** ORDER DETAILS & SHIPPING DETAILS ******/
-
-
-
 .order-details-page .page-title {
   border-bottom: none;
 }
