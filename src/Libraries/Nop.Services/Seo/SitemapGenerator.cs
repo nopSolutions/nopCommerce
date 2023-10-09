@@ -460,7 +460,7 @@ namespace Nop.Services.Seo
 
             var numberOfParts = (int)Math.Ceiling((decimal)sitemapUrls.Sum(x => (x.AlternateLocations?.Count ?? 0) + 1) / NopSeoDefaults.SitemapMaxUrlNumber);
 
-            //split URLs into separate lists based on the max size 
+            //split URLs into separate lists based on the max size
             var sitemaps = sitemapUrls
                 .Select((url, index) => new { Index = index, Value = url })
                 .GroupBy(group => group.Index % numberOfParts)
@@ -483,7 +483,7 @@ namespace Nop.Services.Seo
             else
             {
                 //URLs more than the maximum allowable, so generate a sitemap index file
-                if (sitemapUrls.Count >= NopSeoDefaults.SitemapMaxUrlNumber)
+                if (numberOfParts > 1)
                 {
                     //write a sitemap index file into the stream
                     await WriteSitemapIndexAsync(stream, sitemaps.Count);
