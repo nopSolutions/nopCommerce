@@ -1142,12 +1142,8 @@ namespace Nop.Services.Orders
                 //bundled (associated) products
                 var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
                 foreach (var attributeValue in attributeValues)
-                {
                     if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                    {
                         purchasedProductIds.Add(attributeValue.AssociatedProductId);
-                    }
-                }
             }
 
             //list of customer roles
@@ -1162,28 +1158,20 @@ namespace Nop.Services.Orders
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
             foreach (var customerRole in customerRoles)
-            {
                 if (!await _customerService.IsInCustomerRoleAsync(customer, customerRole.SystemName))
                 {
                     //not in the list yet
                     if (add)
-                    {
                         //add
                         await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
-                    }
                 }
                 else
                 {
                     //already in the list
                     if (!add)
-                    {
                         //remove
                         await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
-                    }
                 }
-            }
-
-            await _customerService.UpdateCustomerAsync(customer);
         }
 
         /// <summary>
