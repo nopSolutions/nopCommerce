@@ -1906,18 +1906,14 @@ namespace Nop.Services.Orders
             RecurringProductCyclePeriod? cyclePeriod = null;
             int? totalCycles = null;
 
+            var conflictError = await _localizationService.GetResourceAsync("ShoppingCart.ConflictingShipmentSchedules");
+
             foreach (var sci in shoppingCart)
             {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
-                if (product == null)
-                {
-                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
-                }
+                var product = await _productService.GetProductByIdAsync(sci.ProductId) ?? throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
 
                 if (!product.IsRecurring)
                     continue;
-
-                var conflictError = await _localizationService.GetResourceAsync("ShoppingCart.ConflictingShipmentSchedules");
 
                 //cycle length
                 if (cycleLength.HasValue && cycleLength.Value != product.RecurringCycleLength)
