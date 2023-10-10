@@ -784,7 +784,7 @@ namespace Nop.Services.Orders
             order.RedeemedRewardPointsEntryId = await _rewardPointService.AddRewardPointsHistoryEntryAsync(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
                 string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
                 order, details.RedeemedRewardPointsAmount);
-            await _customerService.UpdateCustomerAsync(details.Customer);
+
             await _orderService.UpdateOrderAsync(order);
 
             return order;
