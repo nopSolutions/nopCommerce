@@ -1845,9 +1845,6 @@ namespace Nop.Services.Orders
                 //gift card
                 foreach (var code in await _customerService.ParseAppliedGiftCardCouponCodesAsync(fromCustomer))
                     await _customerService.ApplyGiftCardCouponCodeAsync(toCustomer, code);
-
-                //save customer
-                await _customerService.UpdateCustomerAsync(toCustomer);
             }
 
             //move selected checkout attributes
