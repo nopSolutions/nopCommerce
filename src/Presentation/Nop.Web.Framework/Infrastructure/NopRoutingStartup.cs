@@ -18,8 +18,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add MiniProfiler services
-            services.AddNopMiniProfiler();
         }
 
         /// <summary>
@@ -28,9 +26,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use MiniProfiler must come before UseNopEndpoints
-            application.UseMiniProfiler();
-
             //Add the RoutingMiddleware
             application.UseRouting();
         }

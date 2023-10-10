@@ -26,9 +26,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider")]
         public bool UseSessionStateTempDataProvider { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.MiniProfilerEnabled")]
-        public bool MiniProfilerEnabled { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout")]
         [UIHint("Int32Nullable")]
         public int? ScheduleTaskRunTimeout { get; set; }

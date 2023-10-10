@@ -11,14 +11,10 @@ using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Data.DataProviders.Interceptors;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
 
 namespace Nop.Data.DataProviders
 {
@@ -77,11 +73,6 @@ namespace Nop.Data.DataProviders
                 CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
 
-            if (MiniProfillerEnabled)
-            {
-                dataConnection.AddInterceptor(UnwrapProfilerInterceptor.Instance);
-            }
-
             return dataConnection;
         }
 
@@ -92,9 +83,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection to a database</returns>
         protected virtual DbConnection CreateDbConnection(string connectionString = null)
         {
-            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
-
-            return MiniProfillerEnabled ? new ProfiledDbConnection(dbConnection, MiniProfiler.Current) : dbConnection;
+            return GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
         }
 
         /// <summary>
@@ -530,11 +519,6 @@ namespace Nop.Data.DataProviders
         /// Linq2Db data provider
         /// </summary>
         protected abstract IDataProvider LinqToDbDataProvider { get; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
-        /// </summary>
-        protected static bool MiniProfillerEnabled => Singleton<AppSettings>.Instance.Get<CommonConfig>().MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string

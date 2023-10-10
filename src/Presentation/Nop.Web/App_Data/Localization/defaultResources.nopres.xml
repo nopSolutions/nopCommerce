@@ -4500,12 +4500,6 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.DisplayFullErrorStack.Hint">
     <Value>Enable this setting to display the full error in production environment. It's ignored (always enabled) in development environment.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.MiniProfilerEnabled">
-    <Value>Enable MiniProfiler</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.MiniProfilerEnabled.Hint">
-    <Value>Enable this setting to display the performance indicator by MiniProfiler. By default, the performance indicator can see only Administrators, to change this behavior set ACL rules in the admin area.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist">
     <Value>Plugin static file extensions blacklist</Value>
   </LocaleResource>
@@ -18614,9 +18608,6 @@
   </LocaleResource>
   <LocaleResource Name="Permission.AccessAdminPanel">
     <Value>Access admin area</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.AccessProfiling">
-    <Value>Public store. Access MiniProfiler results</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.AccessWebService">
     <Value>Plugins. Access Web Service</Value>

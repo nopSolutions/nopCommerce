@@ -23,7 +23,6 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
-using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
@@ -31,7 +30,6 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Framework.WebOptimizer;
-using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNetCore7;
 using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
@@ -344,30 +342,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
             services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
-        }
-
-        /// <summary>
-        /// Add and configure MiniProfiler service
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopMiniProfiler(this IServiceCollection services)
-        {
-            //whether database is already installed
-            if (!DataSettingsManager.IsDatabaseInstalled())
-                return;
-
-            var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.Get<CommonConfig>().MiniProfilerEnabled)
-            {
-                services.AddMiniProfiler(miniProfilerOptions =>
-                {
-                    //use memory cache provider for storing each result
-                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.Get<CacheConfig>().DefaultCacheTime);
-
-                    //determine who can access the MiniProfiler results
-                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.AccessProfiling).Result;
-                });
-            }
         }
 
         /// <summary>

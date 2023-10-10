@@ -1,7 +1,9 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
@@ -128,6 +130,12 @@ namespace Nop.Data.Migrations.UpgradeTo470
 
                     pageIndex++;
                 }
+            }
+
+            // new permission
+            if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
             }
         }
 
