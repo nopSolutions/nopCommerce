@@ -156,6 +156,67 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             discount.DiscountPercentage = 1;
             discount.GetDiscountAmount(200).Should().Be(2);
         }
+
+        [TestCase(RequirementGroupInteractionType.And)]
+        [TestCase(RequirementGroupInteractionType.Or)]
+        [TestCase(RequirementGroupInteractionType.And, true)]
+        [TestCase(RequirementGroupInteractionType.Or, true)]
+        [Test]
+        public async Task CanCheckRequirements(RequirementGroupInteractionType interactionType, bool checkFalse = false)
+        {
+            var discount = CreateDiscount();
+            discount.RequiresCouponCode = false;
+            var customer = CreateCustomer();
+
+            await _discountService.InsertDiscountAsync(discount);
+
+            var groupRequirement = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                IsGroup = true,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                InteractionType = interactionType
+            };
+
+            await _discountService.InsertDiscountRequirementAsync(groupRequirement);
+
+            var requirement1 = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                ParentId = groupRequirement.Id
+            };
+
+            var requirement2 = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                ParentId = groupRequirement.Id
+            };
+
+            if (interactionType == RequirementGroupInteractionType.Or || checkFalse)
+            {
+                requirement1.InteractionType = RequirementGroupInteractionType.And;
+
+                if (interactionType == RequirementGroupInteractionType.Or && checkFalse)
+                    requirement2.InteractionType = RequirementGroupInteractionType.Or;
+            }
+
+            await _discountService.InsertDiscountRequirementAsync(requirement1);
+            await _discountService.InsertDiscountRequirementAsync(requirement2);
+
+            try
+            {
+                var result = await _discountService.ValidateDiscountAsync(discount, customer, null);
+                result.IsValid.Should().Be(!checkFalse);
+
+            }
+            finally
+            {
+                await _discountService.DeleteDiscountRequirementAsync(groupRequirement, true);
+                await _discountService.DeleteDiscountAsync(discount);
+            }
+        }
     }
 
     public static class DiscountExtensions

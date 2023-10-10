@@ -72,16 +72,21 @@ namespace Nop.Services.Discounts
         /// A task that represents the asynchronous operation
         /// The task result contains the rue if result is valid; otherwise false
         /// </returns>
-        protected virtual async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
+        protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
             var result = false;
 
-            foreach (var requirement in requirements)
+            var requirementsForCheck = requirements.Any(r => !r.ParentId.HasValue)
+                ? requirements.Where(r => !r.ParentId.HasValue)
+                : requirements;
+
+            foreach (var requirement in requirementsForCheck)
             {
                 if (requirement.IsGroup)
                 {
-                    var childRequirements = await GetDiscountRequirementsByParentAsync(requirement);
+                    var childRequirements = requirements.Where(r => r.ParentId == requirement.Id).ToList();
+                    
                     //get child requirements for the group
                     var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
                     result = await GetValidationResultAsync(childRequirements, interactionType, customer, errors);
@@ -92,6 +97,7 @@ namespace Nop.Services.Discounts
                     var store = await _storeContext.GetCurrentStoreAsync();
                     var requirementRulePlugin = await _discountPluginManager
                         .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, store.Id);
+                    
                     if (requirementRulePlugin == null)
                         continue;
 
@@ -582,11 +588,11 @@ namespace Nop.Services.Discounts
             //discount requirements
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, discount);
 
-            var requirements = await _staticCacheManager.GetAsync(key, async () => await GetAllDiscountRequirementsAsync(discount.Id, true));
+            var requirements = await _staticCacheManager.GetAsync(key, async () => await GetAllDiscountRequirementsAsync(discount.Id));
 
             //get top-level group
-            var topLevelGroup = requirements.FirstOrDefault();
-            if (topLevelGroup == null || (topLevelGroup.IsGroup && !(await GetDiscountRequirementsByParentAsync(topLevelGroup)).Any()) || !topLevelGroup.InteractionType.HasValue)
+            var topLevelGroup = requirements.FirstOrDefault(r => !r.ParentId.HasValue);
+            if (topLevelGroup == null || !topLevelGroup.InteractionType.HasValue || (topLevelGroup.IsGroup && requirements.All(r => r.ParentId != topLevelGroup.Id)))
             {
                 //there are no requirements, so discount is valid
                 result.IsValid = true;
