@@ -15,6 +15,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using AbcWarehouse.Plugin.Payments.UniFi.Services;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
 {
@@ -26,6 +27,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly ISettingService _settingService;
+        private readonly ITransactionLookupService _transactionLookupService;
         private readonly IWorkContext _workContext;
 
         public UniFiPaymentsController(
@@ -35,6 +37,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
             ILocalizationService localizationService,
             INotificationService notificationService,
             ISettingService settingService,
+            ITransactionLookupService transactionLookupService,
             IWorkContext workContext)
         {
             _uniFiSettings = uniFiSettings;
@@ -43,6 +46,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
             _localizationService = localizationService;
             _notificationService = notificationService;
             _settingService = settingService;
+            _transactionLookupService = transactionLookupService;
             _workContext = workContext;
         }
 
@@ -77,28 +81,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Controllers
 
         public async Task<ActionResult> TransactionLookup(string transactionToken)
         {
-            var httpClient = new HttpClient();
-            var bearerToken = await _genericAttributeService.GetAttributeAsync<string>(
-                await _workContext.GetCurrentCustomerAsync(),
-                "UniFiBearerToken");
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + bearerToken);
-            httpClient.DefaultRequestHeaders.Add("X-SYF-ChannelId", "DY");
-
-            var transactionLookupEndpoint = _settings.UseIntegration ?
-                $"https://api-stg.syf.com/v1/dpos/utility/lookup/transaction/{transactionToken}?lookupType=PARTNERID&lookupId={_uniFiSettings.PartnerId}" :
-                $"https://api.syf.com/v1/dpos/utility/lookup/transaction/{transactionToken}?lookupType=PARTNERID&lookupId={_uniFiSettings.PartnerId}";
-            var response = await httpClient.GetAsync(transactionLookupEndpoint);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new NopException("Payments.UniFi: Failure to perform transaction lookup.");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseJson = JsonDocument.Parse(responseContent);
-            var transactionMessage = responseJson.RootElement
-                                                 .GetProperty("creditAuthorizationInfo")
-                                                 .GetProperty("transactionMessage").GetString();
+            var transactionLookup = await _transactionLookupService.TransactionLookupAsync(transactionToken);
+            var transactionMessage = transactionLookup.creditAuthorizationInfo.transactionMessage; 
 
             return Ok(new
             {

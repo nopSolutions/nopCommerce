@@ -446,6 +446,32 @@ namespace Nop.Plugin.Misc.AbcExportOrder.Services
                             .FirstOrDefault() :
                 null;
 
+            // UniFi card number and promo code
+            if (string.IsNullOrWhiteSpace(cardNumber) && string.IsNullOrWhiteSpace(cardCvv2))
+            {
+                var gas = await _genericAttributeService.GetAttributesForEntityAsync(
+                    order.CustomerId,
+                    "Customer"
+                );
+
+                var unifiCardNumberGa = gas.Where(ga => ga.Key == "UniFiAccountNumber")
+                                         .FirstOrDefault();
+                var unifiPromoCodeGa = gas.Where(ga => ga.Key == "UniFiPromoCode")
+                                         .FirstOrDefault();
+
+                if (unifiCardNumberGa != null)
+                {
+                    cardNumber = unifiCardNumberGa.Value;
+                    await _genericAttributeService.DeleteAttributeAsync(unifiCardNumberGa);
+                }
+
+                if (unifiPromoCodeGa != null)
+                {
+                    cardCvv2 = unifiPromoCodeGa.Value;
+                    await _genericAttributeService.DeleteAttributeAsync(unifiPromoCodeGa);
+                }
+            }
+
             var pickupItems = splitItems.pickupItems;
             if (pickupItems.Any())
             {

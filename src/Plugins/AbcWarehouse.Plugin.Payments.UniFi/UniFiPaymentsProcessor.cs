@@ -20,6 +20,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Payments;
+using AbcWarehouse.Plugin.Payments.UniFi.Services;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi
 {
@@ -28,6 +29,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly ITransactionLookupService _transactionLookupService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly UniFiPaymentsSettings _settings;
@@ -36,6 +38,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
+            ITransactionLookupService transactionLookupService,
             IWebHelper webHelper,
             IWorkContext workContext,
             UniFiPaymentsSettings settings)
@@ -43,6 +46,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
+            _transactionLookupService = transactionLookupService;
             _webHelper = webHelper;
             _workContext = workContext;
             _settings = settings;
@@ -82,9 +86,13 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     new {
                         amount = amount.ToString("0.00"),
                     }
-                } },
-                { "promotionalTags", tags },
+                } }
             };
+
+            if (!string.IsNullOrWhiteSpace(tags))
+            {
+                payload.Add("promotionalTags", tags);
+            }
 
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -112,6 +120,21 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             else
             {
                 result.NewPaymentStatus = PaymentStatus.Paid;
+                
+                var transactionLookup = await _transactionLookupService.TransactionLookupAsync(transactionToken);
+                result.AuthorizationTransactionCode = transactionLookup.creditAuthorizationInfo.transactionInfo.authorizationCode;
+
+                // need to store these for the order
+                await _genericAttributeService.SaveAttributeAsync<string>(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    "UniFiAccountNumber",
+                    transactionLookup.creditAuthorizationInfo.accountInfo.cipheraccountNumber
+                );
+                await _genericAttributeService.SaveAttributeAsync<string>(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    "UniFiPromoCode",
+                    transactionLookup.creditAuthorizationInfo.transactionInfo.promoCode
+                );
             }
 
             return result;
