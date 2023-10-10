@@ -671,6 +671,10 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
         }
 
         // Custom, makes payment request
+        // uses is_ajax_call until UniFi implemented
+        // This requires ignoring the anti-forgery token since
+        // it is an AJAX method
+        [IgnoreAntiforgeryToken]
         [HttpPost, ActionName("PaymentInfo")]
         [FormValueRequired("nextstep")]
         public override async Task<IActionResult> EnterPaymentInfo(IFormCollection form)
@@ -715,6 +719,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             // custom code is here
             string status_code = string.Empty;
             string response_message = string.Empty;
+            var isAjaxCall = Convert.ToBoolean(form["is_ajax_call"]);
 
             if (ModelState.IsValid)
             {
@@ -724,6 +729,13 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 _paymentService.GenerateOrderGuid(paymentInfo);
 
                 HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", paymentInfo);
+
+                // If calling this route via AJAX (for Synchrony plugin), 
+                // return 200 so the plugin can handle redirecting to /confirm
+                if (isAjaxCall)
+                {
+                    return new OkResult();
+                }
 
                 // ABC: if UniFi, just go to confirm
                 if (paymentMethodSystemName == "Payments.UniFi")
