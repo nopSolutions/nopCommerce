@@ -603,8 +603,12 @@ namespace Nop.Services.Orders
             await _sciRepository.DeleteAsync(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-            await _customerService.UpdateCustomerAsync(customer);
+            var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            if (hasShoppingCartItems != customer.HasShoppingCartItems)
+            {
+                customer.HasShoppingCartItems = hasShoppingCartItems;
+                await _customerService.UpdateCustomerAsync(customer);
+            }
 
             //validate checkout attributes
             if (ensureOnlyActiveCheckoutAttributes &&
@@ -665,8 +669,12 @@ namespace Nop.Services.Orders
             await _eventPublisher.PublishAsync(new ClearShoppingCartEvent(cart));
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-            await _customerService.UpdateCustomerAsync(customer);
+            var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            if (hasShoppingCartItems != customer.HasShoppingCartItems)
+            {
+                customer.HasShoppingCartItems = hasShoppingCartItems;
+                await _customerService.UpdateCustomerAsync(customer);
+            }
         }
 
         /// <summary>
@@ -1679,9 +1687,12 @@ namespace Nop.Services.Orders
                 await _sciRepository.InsertAsync(shoppingCartItem);
 
                 //updated "HasShoppingCartItems" property used for performance optimization
-                customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-
-                await _customerService.UpdateCustomerAsync(customer);
+                var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+                if (hasShoppingCartItems != customer.HasShoppingCartItems)
+                {
+                    customer.HasShoppingCartItems = hasShoppingCartItems;
+                    await _customerService.UpdateCustomerAsync(customer);
+                }
             }
 
             return warnings;
