@@ -30,13 +30,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Sales summary
 
-        public virtual async Task<IActionResult> SalesSummary()
+        public virtual async Task<IActionResult> SalesSummary(List<int> orderStatuses = null, List<int> paymentStatuses = null)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _reportModelFactory.PrepareSalesSummarySearchModelAsync(new SalesSummarySearchModel());
+            var model = await _reportModelFactory.PrepareSalesSummarySearchModelAsync(new SalesSummarySearchModel
+            {
+                OrderStatusIds = orderStatuses,
+                PaymentStatusIds = paymentStatuses
+            });
 
             return View(model);
         }

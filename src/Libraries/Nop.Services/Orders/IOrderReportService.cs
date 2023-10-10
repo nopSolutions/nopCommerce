@@ -78,8 +78,8 @@ namespace Nop.Services.Orders
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="osIds">Order status identifiers; null to load all orders</param>
+        /// <param name="psIds">Payment status identifiers; null to load all orders</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
         /// <param name="pageIndex">Page index</param>
@@ -96,8 +96,8 @@ namespace Nop.Services.Orders
             int vendorId = 0,
             DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null,
-            OrderStatus? os = null,
-            PaymentStatus? ps = null,
+            List<int> osIds = null,
+            List<int> psIds = null,
             int billingCountryId = 0,
             GroupByOptions groupBy = GroupByOptions.Day,
             int pageIndex = 0,
