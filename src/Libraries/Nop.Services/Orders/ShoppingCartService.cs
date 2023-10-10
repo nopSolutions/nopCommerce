@@ -1782,7 +1782,6 @@ namespace Nop.Services.Orders
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
 
                 await _sciRepository.UpdateAsync(shoppingCartItem);
-                await _customerService.UpdateCustomerAsync(customer);
             }
             else
             {
