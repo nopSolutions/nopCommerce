@@ -7,24 +7,28 @@ using AbcWarehouse.Plugin.Widgets.UniFi;
 using System.Net;
 using AbcWarehouse.Plugin.Payments.UniFi.Models;
 using Newtonsoft.Json;
+using Nop.Services.Logging;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi.Services
 {
     public class TransactionLookupService : ITransactionLookupService
     {
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
         private readonly UniFiPaymentsSettings _settings;
         private readonly UniFiSettings _uniFiSettings;
 
         public TransactionLookupService(
             IGenericAttributeService genericAttributeService,
+            ILogger logger,
             IWorkContext workContext,
             UniFiPaymentsSettings settings,
             UniFiSettings uniFiSettings
         )
         {
             _genericAttributeService = genericAttributeService;
+            _logger = logger;
             _workContext = workContext;
             _settings = settings;
             _uniFiSettings = uniFiSettings;
@@ -43,13 +47,19 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Services
                 $"https://api-stg.syf.com/v1/dpos/utility/lookup/transaction/{transactionToken}?lookupType=PARTNERID&lookupId={_uniFiSettings.PartnerId}" :
                 $"https://api.syf.com/v1/dpos/utility/lookup/transaction/{transactionToken}?lookupType=PARTNERID&lookupId={_uniFiSettings.PartnerId}";
             var response = await httpClient.GetAsync(transactionLookupEndpoint);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
+                await _logger.ErrorAsync($"Payments.UniFi: Failure to perform transaction lookup. {responseContent}");
                 throw new NopException("Payments.UniFi: Failure to perform transaction lookup.");
             }
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            if (_settings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"Payments.UniFi: Transaction lookup response: {responseContent}");
+            }
+
             return JsonConvert.DeserializeObject<TransactionLookupResponse>(responseContent);
         }
     }

@@ -13,5 +13,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Models
 
         [NopResourceDisplayName(UniFiPaymentsLocales.UseIntegration)]
         public bool UseIntegration { get; set; }
+
+        [NopResourceDisplayName(UniFiPaymentsLocales.IsDebugMode)]
+        public bool IsDebugMode { get; set; }
     }
 }

@@ -21,6 +21,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Payments;
 using AbcWarehouse.Plugin.Payments.UniFi.Services;
+using Nop.Services.Logging;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi
 {
@@ -29,6 +30,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
         private readonly ITransactionLookupService _transactionLookupService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -38,6 +40,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
+            ILogger logger,
             ITransactionLookupService transactionLookupService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -46,6 +49,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
+            _logger = logger;
             _transactionLookupService = transactionLookupService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -96,18 +100,30 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
 
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            if (_settings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"Payments.UniFi: Transact API request: {json}");
+            }
+
             var response = await httpClient.PostAsync(
                 transactEndpoint, content
             );
 
             var result = new ProcessPaymentResult();
+            var responseContent = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
+                await _logger.ErrorAsync($"Payments.UniFi: Failure to process payment. {responseContent}");
                 result.AddError("Failure to process payment.");
                 return result;
             }
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            if (_settings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"Payments.UniFi: Transact API response: {responseContent}");
+            }
+            
             var responseJson = JsonDocument.Parse(responseContent);
             var statusCode = responseJson.RootElement
                                                .GetProperty("transactionInfo")
@@ -327,6 +343,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                     [UniFiPaymentsLocales.ClientSecretHint] = "Client Secret provided by Synchrony.",
                     [UniFiPaymentsLocales.UseIntegration] = "Use Integration",
                     [UniFiPaymentsLocales.UseIntegrationHint] = "Use the integration region (for testing).",
+                    [UniFiPaymentsLocales.IsDebugMode] = "Is Debug Mode",
+                    [UniFiPaymentsLocales.IsDebugModeHint] = "Track API calls in the nopCommerce logger.",
                 });
         }
     }
