@@ -36,6 +36,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 "Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture",
                 "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.Hint",
                 "Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture",
+
+                "Admin.Configuration.AppSettings.Common.MiniProfilerEnabled",
+                "Admin.Configuration.AppSettings.Common.MiniProfilerEnabled.Hint",
+                "Permission.AccessProfiling",
             });
 
             #endregion

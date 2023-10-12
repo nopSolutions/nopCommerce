@@ -64,7 +64,6 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord EnableWishlist = new() { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
         public static readonly PermissionRecord PublicStoreAllowNavigation = new() { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new() { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
-        public static readonly PermissionRecord AccessProfiling = new() { Name = "Public store. Access MiniProfiler results", SystemName = "AccessProfiling", Category = "PublicStore" };
 
         //Security
         public static readonly PermissionRecord EnableMultiFactorAuthentication = new() { Name = "Security. Enable Multi-factor authentication", SystemName = "EnableMultiFactorAuthentication", Category = "Security" };
@@ -130,7 +129,6 @@ namespace Nop.Services.Security
                 EnableWishlist,
                 PublicStoreAllowNavigation,
                 AccessClosedStore,
-                AccessProfiling,
                 EnableMultiFactorAuthentication
             };
         }
@@ -200,7 +198,6 @@ namespace Nop.Services.Security
                         EnableWishlist,
                         PublicStoreAllowNavigation,
                         AccessClosedStore,
-                        AccessProfiling,
                         EnableMultiFactorAuthentication
                     }
                 ),

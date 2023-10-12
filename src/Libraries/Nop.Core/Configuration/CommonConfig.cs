@@ -31,11 +31,6 @@
         public bool UseSessionStateTempDataProvider { get; protected set; } = false;
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to use MiniProfiler services
-        /// </summary>
-        public bool MiniProfilerEnabled { get; protected set; } = false;
-
-        /// <summary>
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
         /// </summary>
         public int? ScheduleTaskRunTimeout { get; protected set; } = null;
