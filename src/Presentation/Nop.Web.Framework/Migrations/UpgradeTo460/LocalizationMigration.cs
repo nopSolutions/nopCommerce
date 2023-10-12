@@ -8,7 +8,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2023-07-26 14:00:00", "4.60", UpdateMigrationType.Localization, MigrationProcessType.Update)]
+    [NopMigration("2023-07-26 14:00:10", "4.60", UpdateMigrationType.Localization, MigrationProcessType.Update)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -83,6 +83,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 "PDFProductCatalog.Price",
                 "PDFProductCatalog.SKU",
 
+                //#6814
+                "Admin.ConfigurationSteps.ShippingProviders.ShipStation.Title",
+                "Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text"
             });
 
             #endregion

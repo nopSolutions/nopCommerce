@@ -1578,15 +1578,16 @@ namespace Nop.Services.Orders
             {
                 //update existing shopping cart item
                 var newQuantity = shoppingCartItem.Quantity + quantity;
-                warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
-                    storeId, attributesXml,
-                    customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
+
+                await addRequiredProductsToCartAsync(newQuantity);
 
                 if (warnings.Any())
                     return warnings;
 
-                await addRequiredProductsToCartAsync();
+                warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
+                    storeId, attributesXml,
+                    customerEnteredPrice, rentalStartDate, rentalEndDate,
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
                 if (warnings.Any())
                     return warnings;
@@ -1662,7 +1663,7 @@ namespace Nop.Services.Orders
 
             return warnings;
 
-            async Task addRequiredProductsToCartAsync()
+            async Task addRequiredProductsToCartAsync(int qty = 0)
             {
                 //get these required products
                 var requiredProducts = await _productService.GetProductsByIdsAsync(_productService.ParseRequiredProductIds(product));
@@ -1674,7 +1675,7 @@ namespace Nop.Services.Orders
                     var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
 
                     //get the required quantity of the required product
-                    var requiredProductRequiredQuantity = quantity +
+                    var requiredProductRequiredQuantity = (qty > 0 ? qty : quantity) +
                         cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
                             .Where(item => item.Id != (shoppingCartItem?.Id ?? 0))
                             .Sum(item => item.Quantity);
