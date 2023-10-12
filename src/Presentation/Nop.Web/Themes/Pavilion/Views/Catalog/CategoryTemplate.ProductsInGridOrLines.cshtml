@@ -115,7 +115,22 @@
         }
     });
 
-    
+	// Update the title of the page if applicable
+    $(document).ajaxComplete(function(event,request,settings) {
+		var dataJson = settings.data;
+		if (dataJson === undefined || dataJson === null) {
+			return;
+		}
+		var data = JSON.parse(dataJson);
+		var pageNumber = data.pageNumber;
+		if (pageNumber === undefined || pageNumber === null) {
+			return;
+		}
+		var currentTitle = document.title;
+		var parts = currentTitle.split(" | ");
+		var newTitle = parts[0] + " | Page " + pageNumber + " | " + parts[1];
+		document.title = newTitle;
+	});
 </script>
 @*category breadcrumb*@
 @section Breadcrumb
