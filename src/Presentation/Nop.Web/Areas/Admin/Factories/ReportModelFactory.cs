@@ -74,8 +74,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<IPagedList<SalesSummaryReportLine>> GetSalesSummaryReportAsync(SalesSummarySearchModel searchModel)
         {
             //get parameters to filter orders
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
+            var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
 
             var currentVendor = await _workContext.GetCurrentVendorAsync();
 
@@ -88,8 +88,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var salesSummary = await _orderReportService.SalesSummaryReportAsync(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
                 billingCountryId: searchModel.BillingCountryId,
                 groupBy: (GroupByOptions)searchModel.SearchGroupId,
                 categoryId: searchModel.CategoryId,
@@ -159,9 +159,37 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available order statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+            if (searchModel.AvailableOrderStatuses.Any())
+            {
+                if (searchModel.OrderStatusIds?.Any() ?? false)
+                {
+                    var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
+                    var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
+                    foreach (var statusItem in statusItems)
+                    {
+                        statusItem.Selected = true;
+                    }
+                }
+                else
+                    searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
+            }
 
             //prepare available payment statuses
             await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+            if (searchModel.AvailablePaymentStatuses.Any())
+            {
+                if (searchModel.PaymentStatusIds?.Any() ?? false)
+                {
+                    var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
+                    var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
+                    foreach (var statusItem in statusItems)
+                    {
+                        statusItem.Selected = true;
+                    }
+                }
+                else
+                    searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
+            }
 
             //prepare available categories
             await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);

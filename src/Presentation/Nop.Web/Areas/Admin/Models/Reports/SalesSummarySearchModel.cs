@@ -17,6 +17,8 @@ namespace Nop.Web.Areas.Admin.Models.Reports
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
+            OrderStatusIds = new List<int>();
+            PaymentStatusIds = new List<int>();
             GroupByOptions = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
         }
@@ -37,10 +39,10 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         public int StoreId { get; set; }
 
         [NopResourceDisplayName("Admin.Reports.SalesSummary.OrderStatus")]
-        public int OrderStatusId { get; set; }
+        public IList<int> OrderStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Reports.SalesSummary.PaymentStatus")]
-        public int PaymentStatusId { get; set; }
+        public IList<int> PaymentStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Reports.SalesSummary.Category")]
         public int CategoryId { get; set; }
