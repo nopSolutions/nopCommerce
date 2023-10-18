@@ -502,7 +502,7 @@ namespace Nop.Tests
             services.AddTransient<ITopicModelFactory, TopicModelFactory>();
             services.AddTransient<IVendorAttributeModelFactory, VendorAttributeModelFactory>();
             services.AddTransient<IVendorModelFactory, VendorModelFactory>();
-            services.AddTransient<IWidgetModelFactory, WidgetModelFactory>();
+            services.AddTransient<Web.Framework.Factories.IWidgetModelFactory, Web.Framework.Factories.WidgetModelFactory>();
 
             //factories
             services.AddTransient<Web.Factories.IAddressModelFactory, Web.Factories.AddressModelFactory>();
@@ -530,7 +530,6 @@ namespace Nop.Tests
             services.AddTransient<Web.Factories.ISitemapModelFactory, Web.Factories.SitemapModelFactory>();
             services.AddTransient<Web.Factories.ITopicModelFactory, Web.Factories.TopicModelFactory>();
             services.AddTransient<Web.Factories.IVendorModelFactory, Web.Factories.VendorModelFactory>();
-            services.AddTransient<Web.Factories.IWidgetModelFactory, Web.Factories.WidgetModelFactory>();
 
             _serviceProvider = services.BuildServiceProvider();
 

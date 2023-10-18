@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
@@ -38,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             //prepare model
-            var models = await _widgetModelFactory.PrepareRenderWidgetModelsAsync(widgetZone, additionalData);
+            var models = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData, false);
 
             //no data?
             if (!models.Any())

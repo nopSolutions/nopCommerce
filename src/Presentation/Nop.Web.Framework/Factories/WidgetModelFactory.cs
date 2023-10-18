@@ -1,12 +1,12 @@
-﻿using Nop.Core;
+﻿using Microsoft.AspNetCore.Routing;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Customers;
+using Nop.Web.Framework.Models.Cms;
 using Nop.Web.Framework.Themes;
-using Nop.Web.Infrastructure.Cache;
-using Nop.Web.Models.Cms;
 
-namespace Nop.Web.Factories
+namespace Nop.Web.Framework.Factories
 {
     /// <summary>
     /// Represents the widget model factory
@@ -50,21 +50,32 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="widgetZone">Name of widget zone</param>
         /// <param name="additionalData">Additional data object</param>
+        /// <param name="useCache">Value indicating whether to get widget models from cache</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the list of the render widget models
         /// </returns>
-        public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModelAsync(string widgetZone, object additionalData = null)
+        public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModelAsync(string widgetZone, object additionalData = null, bool useCache = true)
         {
             var theme = await _themeContext.GetWorkingThemeNameAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
             var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(WidgetModelDefaults.WidgetModelKey,
                 customerRoleIds, store, widgetZone, theme);
 
-            var cachedModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            if (!useCache)
+            {
+                return (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
+                .Select(widget => new RenderWidgetModel
+                {
+                    WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
+                    WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
+                }).ToList();
+            }
+
+            var widgetModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
                 (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
@@ -74,7 +85,7 @@ namespace Nop.Web.Factories
 
             //"WidgetViewComponentArguments" property of widget models depends on "additionalData".
             //We need to clone the cached model before modifications (the updated one should not be cached)
-            var models = cachedModels.Select(renderModel => new RenderWidgetModel
+            var models = widgetModels.Select(renderModel => new RenderWidgetModel
             {
                 WidgetViewComponent = renderModel.WidgetViewComponent,
                 WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }

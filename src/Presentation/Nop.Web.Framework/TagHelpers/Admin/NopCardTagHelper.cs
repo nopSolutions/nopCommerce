@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Models.Cms;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -20,19 +24,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
         protected const string CARD_ICON_ATTRIBUTE_NAME = "asp-icon";
 
+
         #endregion
-        
+
         #region Fields
 
-        protected readonly IHtmlHelper _htmlHelper;
+        protected readonly IViewComponentHelper _viewComponentHelper;
+        protected readonly IWidgetModelFactory _widgetModelFactory;
 
         #endregion
 
         #region Ctor
 
-        public NopCardTagHelper(IHtmlHelper htmlHelper)
+        public NopCardTagHelper(IViewComponentHelper viewComponentHelper, IWidgetModelFactory widgetModelFactory)
         {
-            _htmlHelper = htmlHelper;
+            _viewComponentHelper = viewComponentHelper;
+            _widgetModelFactory = widgetModelFactory;
         }
 
         #endregion
@@ -54,7 +61,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
 
             //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
+            var viewContextAware = _viewComponentHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //create card
@@ -113,8 +120,26 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //add heading and container to card
             card.InnerHtml.AppendHtml(cardHeading);
+
+            var modelsBefore = await _widgetModelFactory.PrepareRenderWidgetModelAsync(AdminWidgetZones.CardBefore, new WidgetNopCardModel { CardName = Name });
+
+            foreach (var model in modelsBefore)
+            {
+                var content = await _viewComponentHelper.InvokeAsync(model.WidgetViewComponent, model.WidgetViewComponentArguments);
+                card.InnerHtml.AppendHtml(content);
+            }
+
             var childContent = await output.GetChildContentAsync();
             card.InnerHtml.AppendHtml(childContent.GetContent());
+
+            var modelsAfter = await _widgetModelFactory.PrepareRenderWidgetModelAsync(AdminWidgetZones.CardAfter, new WidgetNopCardModel { CardName = Name });
+
+            foreach (var model in modelsAfter)
+            {
+                var content = await _viewComponentHelper.InvokeAsync(model.WidgetViewComponent, model.WidgetViewComponentArguments);
+                card.InnerHtml.AppendHtml(content);
+            }
+
             output.Content.AppendHtml(await card.RenderHtmlContentAsync());
         }
 

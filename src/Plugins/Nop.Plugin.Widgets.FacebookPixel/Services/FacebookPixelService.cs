@@ -20,6 +20,7 @@ using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Models.Cms;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 
@@ -1347,7 +1348,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             configuration.CustomEvents = JsonConvert.SerializeObject(customEvents);
             await UpdateConfigurationAsync(configuration);
             await _staticCacheManager.RemoveByPrefixAsync(FacebookPixelDefaults.PrefixCacheKey);
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.WidgetPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(WidgetModelDefaults.WidgetPrefixCacheKey);
         }
 
         /// <summary>
