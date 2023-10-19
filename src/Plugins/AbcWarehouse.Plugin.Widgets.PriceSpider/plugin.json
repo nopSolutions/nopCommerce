@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "PriceSpider",
+  "SystemName": "Widgets.PriceSpider",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 1,
+  "FileName": "AbcWarehouse.Plugin.Widgets.PriceSpider.dll",
+  "Description": "PriceSpider integration."
+}

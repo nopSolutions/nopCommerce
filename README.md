@@ -73,3 +73,14 @@ To set up the store to debug:
 
 1. Configuration > Stores
 2. Change the Display order of the stores so the desired store is on top.
+
+## Creating a Plugin
+
+1. Copy a plugin folder related to what you're created (Widget, Misc, etc.)
+2. Edit the following files:
+   1. .csproj
+   2. logo.png
+   3. plugin.json
+   4. .cs
+3. Add to solution: `dotnet sln src/NopCommerce.sln add <PLUGIN_CSPROJ_PATH>`
+4. Build, verify plugin is available in backend list.
