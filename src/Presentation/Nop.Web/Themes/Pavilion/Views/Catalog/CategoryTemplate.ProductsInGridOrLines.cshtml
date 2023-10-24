@@ -128,7 +128,9 @@
 		}
 		var currentTitle = document.title;
 		var parts = currentTitle.split(" | ");
-		var newTitle = parts[0] + " | Page " + pageNumber + " | " + parts[1];
+		var newTitle = parts.length === 3 ?
+			parts[0] + " | Page " + pageNumber + " | " + parts[2] :
+			parts[0] + " | Page " + pageNumber + " | " + parts[1];
 		document.title = newTitle;
 	});
 </script>
