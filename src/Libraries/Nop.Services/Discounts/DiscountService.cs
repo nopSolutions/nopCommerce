@@ -426,9 +426,9 @@ namespace Nop.Services.Discounts
             if (discountRequirement is null)
                 throw new ArgumentNullException(nameof(discountRequirement));
 
-            return await _discountRequirementRepository.Table
-                .Where(dr => dr.ParentId == discountRequirement.Id)
-                .ToListAsync();
+            return await _discountRequirementRepository.GetAllAsync(
+                query => query.Where(dr => dr.ParentId == discountRequirement.Id),
+                cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementsByParentCacheKey, discountRequirement));
         }
 
         /// <summary>
