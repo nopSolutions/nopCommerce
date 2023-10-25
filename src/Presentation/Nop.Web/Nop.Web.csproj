@@ -48,6 +48,12 @@
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
+    <!-- ABC: robot additions -->
+    <Content Include="robots.additions.txt" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="robots.additions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
