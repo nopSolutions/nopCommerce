@@ -1,6 +1,6 @@
 ﻿{
   "Group": "Widgets",
-  "FriendlyName": "UniFi Payments",
+  "FriendlyName": "ABC Warehouse Card",
   "SystemName": "Payments.UniFi",
   "Version": "4.40.0",
   "SupportedVersions": [ "4.40" ],

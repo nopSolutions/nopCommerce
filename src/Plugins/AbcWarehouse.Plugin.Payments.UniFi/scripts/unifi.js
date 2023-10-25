@@ -22,7 +22,10 @@ $(document).ready(function () {
 							form.submit();
 						}
 						else {
-							alert(`${transactionMessage}.`);
+							if (transactionMessage !== 'Address verification check Fail') {
+								alert(`${transactionMessage}`);
+							}
+							
 							$('#synchrony-error-button').show();
 						}
 					},
