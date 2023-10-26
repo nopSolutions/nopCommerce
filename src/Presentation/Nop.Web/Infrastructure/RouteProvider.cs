@@ -738,6 +738,10 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",
                 pattern: $"{lang}/page-not-found",
                 defaults: new { controller = "Common", action = "PageNotFound" });
+
+            //fallback is intended to handle cases when no other endpoint has matched
+            //we use it to invoke [CheckLanguageSeoCode] and give a chance to find a localized route
+            endpointRouteBuilder.MapFallbackToController("FallbackRedirect", "Common");
         }
 
         #endregion

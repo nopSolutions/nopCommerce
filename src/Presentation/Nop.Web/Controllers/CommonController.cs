@@ -406,6 +406,16 @@ namespace Nop.Web.Controllers
             return Redirect(url);
         }
 
+        //available even when a store is closed
+        [CheckAccessClosedStore(ignore: true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(ignore: true)]
+        public virtual IActionResult FallbackRedirect()
+        {
+            //nothing was found
+            return InvokeHttp404();
+        }
+
         #endregion
     }
 }

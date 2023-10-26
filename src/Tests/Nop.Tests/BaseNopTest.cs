@@ -433,7 +433,7 @@ namespace Nop.Tests
             services.AddTransient<Lazy<IStoreContext>>();
             services.AddTransient<IWorkContext, WebWorkContext>();
             services.AddTransient<IThemeContext, ThemeContext>();
-
+            services.AddTransient<Lazy<ILocalizationService>>();
             services.AddTransient<INopHtmlHelper, NopHtmlHelper>();
 
             //schedule tasks
