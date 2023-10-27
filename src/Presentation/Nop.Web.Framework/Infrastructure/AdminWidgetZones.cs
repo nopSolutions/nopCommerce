@@ -27,6 +27,8 @@
         public static string CampaignDetailsButtons => "admin_campaign_details_buttons";
         public static string CampaignDetailsTop => "admin_campaign_details_top";
         public static string CampaignListButtons => "admin_campaign_list_buttons";
+        public static string CardAfter => "admin_card_after";
+        public static string CardBefore => "admin_card_before";
         public static string CatalogSettingsDetailsBlock => "admin_catalog_settings_details_block";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
         public static string CategoryDetailsBlock => "admin_category_details_block";
