@@ -9,9 +9,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Models
     public class UniFiModel
     {
         public string PartnerId { get; set; }
-
         public string FlowType { get; set; }
-
         public string Tags { get; set; }
+        public string Url { get; set; }
     }
 }

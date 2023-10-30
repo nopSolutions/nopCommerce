@@ -72,6 +72,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
                 {
                     [UniFiLocales.PartnerId] = "Partner ID",
                     [UniFiLocales.PartnerIdHint] = "The partner ID provided by SYF.",
+                    [UniFiLocales.UseIntegration] = "Use Integration",
+                    [UniFiLocales.UseIntegrationHint] = "Whether to use sandbox or production values.",
                 });
         }
     }

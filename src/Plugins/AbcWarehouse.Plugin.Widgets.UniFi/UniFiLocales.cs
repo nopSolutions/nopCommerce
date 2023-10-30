@@ -7,5 +7,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
         public const string PartnerId = Base + "PartnerId";
 
         public const string PartnerIdHint = PartnerId + ".Hint";
+        public const string UseIntegration = Base + "UseIntegration";
+
+        public const string UseIntegrationHint = UseIntegration + ".Hint";
     }
 }

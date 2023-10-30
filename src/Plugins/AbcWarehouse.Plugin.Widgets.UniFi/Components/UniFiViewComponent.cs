@@ -60,7 +60,10 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
 
                 var model = new UniFiModel
                 {
-                    PartnerId = partnerId
+                    PartnerId = partnerId,
+                    Url = _settings.UseIntegration ?
+                        "https://spdpone.syfpos.com/mpp/UniFi.js" :
+                        "https://pdpone.syfpayments.com/mpp/UniFi.js"
                 };
 
                 if (IsProductDetailsPage())
