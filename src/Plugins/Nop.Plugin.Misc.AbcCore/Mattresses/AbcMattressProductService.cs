@@ -159,6 +159,7 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             product.AllowCustomerReviews = false;
             product.Published = entries.Any();
             product.CreatedOnUtc = DateTime.UtcNow;
+            product.UpdatedOnUtc = DateTime.UtcNow;
             product.VisibleIndividually = true;
             product.ProductType = ProductType.SimpleProduct;
             product.OrderMinimumQuantity = 1;
