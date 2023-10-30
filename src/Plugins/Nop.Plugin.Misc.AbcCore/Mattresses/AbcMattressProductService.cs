@@ -153,8 +153,6 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
                 new Product();
 
             product.Name = await GetProductNameAsync(abcMattressModel);
-            // So I'd like to only use this once we totally migrate off of
-            // old mattresses
             product.Sku = $"M{abcMattressModel.Name}";
             product.AllowCustomerReviews = false;
             product.Published = entries.Any();
