@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
@@ -137,6 +137,14 @@ namespace Nop.Data.Migrations.UpgradeTo470
             {
                 _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
             }
+
+            //#6890
+            var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
+
+            //remove column
+            var isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName = "IsTelecommunicationsOrBroadcastingOrElectronicServices";
+            if (Schema.Table(productTableName).Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).Exists())
+                Delete.Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).FromTable(productTableName);
         }
 
         public override void Down()

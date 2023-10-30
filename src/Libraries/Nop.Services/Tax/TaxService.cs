@@ -12,7 +12,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Tax.Events;
-using Country = Nop.Core.Domain.Directory.Country;
 
 namespace Nop.Services.Tax
 {
@@ -84,55 +83,7 @@ namespace Nop.Services.Tax
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Get a value indicating whether a customer is consumer (a person, not a company) located in Europe Union
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        protected virtual async Task<bool> IsEuConsumerAsync(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            Country country = null;
-
-            //get country from billing address
-            if (_addressSettings.CountryEnabled && await _customerService.GetCustomerShippingAddressAsync(customer) is Address billingAddress)
-                country = await _countryService.GetCountryByAddressAsync(billingAddress);
-
-            //get country specified during registration?
-            if (country == null && _customerSettings.CountryEnabled)
-                country = await _countryService.GetCountryByIdAsync(customer.CountryId);
-
-            //get country by IP address
-            if (country == null)
-            {
-                var ipAddress = _webHelper.GetCurrentIpAddress();
-                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
-                country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
-            }
-
-            //we cannot detect country
-            if (country == null)
-                return false;
-
-            //outside EU
-            if (!country.SubjectToVat)
-                return false;
-
-            //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
-            if (customerVatStatus == VatNumberStatus.Valid)
-                return false;
-
-            //consumer
-            return true;
-        }
+        #region Utilities               
 
         /// <summary>
         /// Gets a default tax address
@@ -201,27 +152,10 @@ namespace Nop.Services.Tax
                 CurrentStoreId = store.Id
             };
 
-            var basedOn = _taxSettings.TaxBasedOn;
-
-            //new EU VAT rules starting January 1st 2015
-            //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            var overriddenBasedOn =
-                //EU VAT enabled?
-                _taxSettings.EuVatEnabled &&
-                //telecommunications, broadcasting and electronic services?
-                product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices &&
-                //January 1st 2015 passed? Yes, not required anymore
-                //DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc) &&
-                //Europe Union consumer?
-                await IsEuConsumerAsync(customer);
-            if (overriddenBasedOn)
-            {
-                //We must charge VAT in the EU country where the customer belongs (not where the business is based)
-                basedOn = TaxBasedOn.BillingAddress;
-            }
+            var basedOn = _taxSettings.TaxBasedOn;            
 
             //tax is based on pickup point address
-            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
+            if (_taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
