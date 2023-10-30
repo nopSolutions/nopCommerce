@@ -185,7 +185,6 @@ function setAttributeListeners() {
     setInformationalIconListeners();
 
     var deliveryOptions = document.querySelectorAll('.cart-slideout__delivery-options [name^=product_attribute_]');
-    if (deliveryOptions.length < 2) { return; }
     for (option in deliveryOptions) {
         deliveryOptions[option].onclick = function() { updateAttributes(); };
     }
