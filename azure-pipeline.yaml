@@ -1,0 +1,17 @@
+---
+pool: default
+
+trigger:
+  - master
+
+steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: build
+      projects: src/NopCommerce.sln
+      configuration: Release
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: test
+      projects: "**/*.Tests.csproj"
+      publishTestResults: true
