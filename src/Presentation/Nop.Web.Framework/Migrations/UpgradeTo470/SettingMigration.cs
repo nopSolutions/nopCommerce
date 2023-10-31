@@ -103,6 +103,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 customerSettings.NeutralGenderEnabled = false;
                 settingService.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
             }
+
+            //#6891
+            if (!settingService.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
+            {
+                customerSettings.RequiredReLoginAfterPasswordChange = false;
+                settingService.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
+            }
         }
 
         public override void Down()
