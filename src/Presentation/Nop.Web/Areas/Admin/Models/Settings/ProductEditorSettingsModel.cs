@@ -105,9 +105,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DeliveryDate")]
         public bool DeliveryDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices")]
-        public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange")]
         public bool ProductAvailabilityRange { get; set; }
 

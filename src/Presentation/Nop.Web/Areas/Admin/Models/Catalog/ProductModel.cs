@@ -238,9 +238,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
 

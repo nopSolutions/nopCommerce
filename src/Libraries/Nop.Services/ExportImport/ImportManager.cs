@@ -2230,9 +2230,6 @@ namespace Nop.Services.ExportImport
                         case "TaxCategory":
                             product.TaxCategoryId = property.IntValue;
                             break;
-                        case "IsTelecommunicationsOrBroadcastingOrElectronicServices":
-                            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = property.BooleanValue;
-                            break;
                         case "ManageInventoryMethod":
                             product.ManageInventoryMethodId = property.IntValue;
                             break;

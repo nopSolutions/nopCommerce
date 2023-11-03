@@ -432,27 +432,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                         : string.Empty,
 
                     quantity = orderItem.Quantity
-                };
-
-                //force to use billing address as the tax address one in the accordance with EU VAT rules (if enabled)
-                if (_taxSettings.EuVatEnabled)
-                {
-                    var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-                    var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-                    var useEuVatRules = (product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
-                        && ((await _countryService.GetCountryByAddressAsync(billingAddress)
-                            ?? await _countryService.GetCountryByIdAsync(customer.CountryId)
-                            ?? await _countryService.GetCountryByTwoLetterIsoCodeAsync(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress)))
-                            ?.SubjectToVat ?? false)
-                        && customer.VatNumberStatusId != (int)VatNumberStatus.Valid;
-
-                    if (useEuVatRules)
-                    {
-                        var address = await MapAddressAsync(billingAddress);
-                        if (address != null)
-                            item.addresses = new AddressesModel { singleLocation = address };
-                    }
-                }
+                };                
 
                 //set tax code
                 var productTaxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(product?.TaxCategoryId ?? 0);

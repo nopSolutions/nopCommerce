@@ -40,6 +40,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 "Admin.Configuration.AppSettings.Common.MiniProfilerEnabled",
                 "Admin.Configuration.AppSettings.Common.MiniProfilerEnabled.Hint",
                 "Permission.AccessProfiling",
+
+                //6890
+                "Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices",
+                "Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint",
+                "Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices",
             });
 
             #endregion
