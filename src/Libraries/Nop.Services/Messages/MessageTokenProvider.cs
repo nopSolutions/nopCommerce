@@ -33,6 +33,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -68,6 +69,7 @@ namespace Nop.Services.Messages
         protected readonly IHtmlFormatter _htmlFormatter;
         protected readonly ILanguageService _languageService;
         protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
         protected readonly INewsService _newsService;
         protected readonly IOrderService _orderService;
         protected readonly IPaymentPluginManager _paymentPluginManager;
@@ -111,6 +113,7 @@ namespace Nop.Services.Messages
             IHtmlFormatter htmlFormatter,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            ILogger logger,
             INewsService newsService,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
@@ -148,6 +151,7 @@ namespace Nop.Services.Messages
             _htmlFormatter = htmlFormatter;
             _languageService = languageService;
             _localizationService = localizationService;
+            _logger = logger;
             _newsService = newsService;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
@@ -893,20 +897,30 @@ namespace Nop.Services.Messages
         /// </returns>
         protected virtual async Task<string> RouteUrlAsync(int storeId = 0, string routeName = null, object routeValues = null)
         {
-            //try to get a store by the passed identifier
-            var store = await _storeService.GetStoreByIdAsync(storeId) ?? await _storeContext.GetCurrentStoreAsync()
-                ?? throw new Exception("No store could be loaded");
+            try
+            {
+                //try to get a store by the passed identifier
+                var store = await _storeService.GetStoreByIdAsync(storeId) ?? await _storeContext.GetCurrentStoreAsync()
+                    ?? throw new Exception("No store could be loaded");
 
-            //ensure that the store URL is specified
-            if (string.IsNullOrEmpty(store.Url))
-                throw new Exception("URL cannot be null");
+                //ensure that the store URL is specified
+                if (string.IsNullOrEmpty(store.Url))
+                    throw new Exception("Store URL cannot be empty");
 
-            //generate the relative URL
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var url = urlHelper.RouteUrl(routeName, routeValues);
+                //generate the relative URL
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+                var url = urlHelper.RouteUrl(routeName, routeValues);
 
-            //compose the result
-            return new Uri(new Uri(store.Url), url).AbsoluteUri;
+                //compose the result
+                return new Uri(new Uri(store.Url), url).AbsoluteUri;
+            }
+            catch (Exception exception)
+            {
+                var warning = $"When sending a notification, an error occurred while creating a link for '{routeName}', ensure that URL of the store #{storeId} is correct.";
+                await _logger.WarningAsync(warning, exception);
+
+                return string.Empty;
+            }
         }
 
         #endregion
