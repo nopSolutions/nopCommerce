@@ -118,6 +118,11 @@ namespace Nop.Core.Domain.Customers
         public int FailedPasswordLockoutMinutes { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers are required to re-login after password changing
+        /// </summary>
+        public bool RequiredReLoginAfterPasswordChange { get; set; }
+
+        /// <summary>
         /// User registration type
         /// </summary>
         public UserRegistrationType UserRegistrationType { get; set; }

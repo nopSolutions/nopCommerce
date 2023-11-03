@@ -3001,6 +3001,7 @@ namespace Nop.Services.Installation
                 PasswordLifetime = 90,
                 FailedPasswordAllowedAttempts = 0,
                 FailedPasswordLockoutMinutes = 30,
+                RequiredReLoginAfterPasswordChange = false,
                 UserRegistrationType = UserRegistrationType.Standard,
                 AllowCustomersToUploadAvatars = false,
                 AvatarMaximumSizeBytes = 20000,
