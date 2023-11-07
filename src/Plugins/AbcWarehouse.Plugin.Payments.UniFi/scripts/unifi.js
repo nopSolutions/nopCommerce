@@ -4,8 +4,7 @@ $(document).ready(function () {
 	$('.payment-info-next-step-button').hide();
 
     window.addEventListener("message",function(event) {
-		debugger;
-		if ((typeof event.data == 'string' || typeof event.data == 'object') && (event.data == 'return-to-partner' || event.data == 'Close Model' || event.data == 'Return To Merchant Shipping' || event.data == 'Close' || event.data.action == 'setPayCloseModal')) {
+		if ((typeof event.data == 'string' || typeof event.data == 'object') && (event.data == 'Close Model' || event.data == 'Return To Merchant Shipping' || event.data == 'Close' || event.data.action == 'setPayCloseModal' || event.data.event == 'return-to-partner')) {
 				var transactionToken = document.getElementById('transactionToken').value;
 				$.ajax({
 					cache: false,
