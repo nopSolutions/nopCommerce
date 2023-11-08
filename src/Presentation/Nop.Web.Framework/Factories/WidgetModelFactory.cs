@@ -16,6 +16,7 @@ namespace Nop.Web.Framework.Factories
         #region Fields
 
         protected readonly ICustomerService _customerService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreContext _storeContext;
         protected readonly IThemeContext _themeContext;
@@ -27,6 +28,7 @@ namespace Nop.Web.Framework.Factories
         #region Ctor
 
         public WidgetModelFactory(ICustomerService customerService,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
@@ -34,6 +36,7 @@ namespace Nop.Web.Framework.Factories
             IWorkContext workContext)
         {
             _customerService = customerService;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _themeContext = themeContext;
@@ -62,26 +65,21 @@ namespace Nop.Web.Framework.Factories
             var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(WidgetModelDefaults.WidgetModelKey,
-                customerRoleIds, store, widgetZone, theme);
-
             if (!useCache)
-            {
                 return (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
-                .Select(widget => new RenderWidgetModel
-                {
-                    WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
-                    WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
-                }).ToList();
-            }
+                    .Select(widget => new RenderWidgetModel
+                    {
+                        WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
+                        WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
+                    }).ToList();
 
-            var widgetModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            var widgetModels = await _shortTermCacheManager.GetAsync(async () =>
                 (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
                     WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone }
-                }));
+                }), WidgetModelDefaults.WidgetModelKey, customerRoleIds, store, widgetZone, theme);
 
             //"WidgetViewComponentArguments" property of widget models depends on "additionalData".
             //We need to clone the cached model before modifications (the updated one should not be cached)

@@ -33,6 +33,7 @@ namespace Nop.Services.Orders
         protected readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         protected readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         protected readonly IShipmentService _shipmentService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
 
         #endregion
 
@@ -49,7 +50,8 @@ namespace Nop.Services.Orders
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
-            IShipmentService shipmentService)
+            IShipmentService shipmentService,
+            IShortTermCacheManager shortTermCacheManager)
         {
             _htmlFormatter = htmlFormatter;
             _productService = productService;
@@ -63,6 +65,7 @@ namespace Nop.Services.Orders
             _recurringPaymentRepository = recurringPaymentRepository;
             _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             _shipmentService = shipmentService;
+            _shortTermCacheManager = shortTermCacheManager;
         }
 
         #endregion
@@ -119,8 +122,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            return await _orderRepository.GetByIdAsync(orderId,
-                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Order>.ByIdCacheKey, orderId));
+            return await _orderRepository.GetByIdAsync(orderId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -506,8 +508,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<OrderItem> GetOrderItemByIdAsync(int orderItemId)
         {
-            return await _orderItemRepository.GetByIdAsync(orderItemId,
-                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<OrderItem>.ByIdCacheKey, orderItemId));
+            return await _orderItemRepository.GetByIdAsync(orderItemId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

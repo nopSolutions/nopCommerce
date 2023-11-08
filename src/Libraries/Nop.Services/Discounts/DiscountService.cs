@@ -27,6 +27,7 @@ namespace Nop.Services.Discounts
         protected readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         protected readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         protected readonly IRepository<Order> _orderRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreContext _storeContext;
 
@@ -42,6 +43,7 @@ namespace Nop.Services.Discounts
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IRepository<Order> orderRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext)
         {
@@ -53,6 +55,7 @@ namespace Nop.Services.Discounts
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
             _orderRepository = orderRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
         }
@@ -240,17 +243,14 @@ namespace Nop.Services.Discounts
         public virtual async Task<IList<Discount>> GetAppliedDiscountsAsync<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
             var discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
-
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
-
-            var appliedDiscounts = await _staticCacheManager.GetAsync(cacheKey,
-                async () =>
+            
+            var appliedDiscounts = await _shortTermCacheManager.GetAsync(async () =>
                 {
                     return await (from d in _discountRepository.Table
-                                  join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
-                                  where ad.EntityId == entity.Id
-                                  select d).ToListAsync();
-                });
+                        join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
+                        where ad.EntityId == entity.Id
+                        select d).ToListAsync();
+                }, NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
 
             return appliedDiscounts;
         }

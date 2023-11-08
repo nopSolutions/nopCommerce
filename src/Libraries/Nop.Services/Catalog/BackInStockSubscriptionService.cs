@@ -116,7 +116,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<BackInStockSubscription> GetSubscriptionByIdAsync(int subscriptionId)
         {
-            return await _backInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default);
+            return await _backInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

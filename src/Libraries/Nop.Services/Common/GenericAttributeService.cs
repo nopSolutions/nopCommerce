@@ -13,6 +13,7 @@ namespace Nop.Services.Common
         #region Fields
 
         protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -20,9 +21,11 @@ namespace Nop.Services.Common
         #region Ctor
 
         public GenericAttributeService(IRepository<GenericAttribute> genericAttributeRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager)
         {
             _genericAttributeRepository = genericAttributeRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -91,13 +94,11 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IList<GenericAttribute>> GetAttributesForEntityAsync(int entityId, string keyGroup)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
-
             var query = from ga in _genericAttributeRepository.Table
-                        where ga.EntityId == entityId &&
-                              ga.KeyGroup == keyGroup
-                        select ga;
-            var attributes = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+                where ga.EntityId == entityId &&
+                      ga.KeyGroup == keyGroup
+                select ga;
+            var attributes = await _shortTermCacheManager.GetAsync(async () => await query.ToListAsync(), NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
 
             return attributes;
         }

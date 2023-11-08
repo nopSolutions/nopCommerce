@@ -304,7 +304,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordByIdAsync(int externalAuthenticationRecordId)
         {
-            return await _externalAuthenticationRecordRepository.GetByIdAsync(externalAuthenticationRecordId, cache => default);
+            return await _externalAuthenticationRecordRepository.GetByIdAsync(externalAuthenticationRecordId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
