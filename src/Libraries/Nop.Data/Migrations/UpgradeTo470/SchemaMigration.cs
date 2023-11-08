@@ -143,7 +143,6 @@ namespace Nop.Data.Migrations.UpgradeTo470
 				.OnColumn(nameof(NewsComment.CustomerId)).Ascending()
 				.WithOptions().NonClustered();
 
-
 			Create.Index("IX_CustomerAddressMapping_CustomerId").OnTable(nameof(CustomerAddressMapping))
 				.OnColumn(nameof(CustomerAddressMapping.CustomerId)).Ascending()
 				.WithOptions().NonClustered();
