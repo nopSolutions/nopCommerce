@@ -80,6 +80,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             var payload = new Dictionary<string, object>
             {
                 { "transactionToken", transactionToken },
+                { "dbuyTokenId", transactionToken },
                 { "addressInfo", new Dictionary<string, object> {
                     { "cipher.addressLine1", address1 },
                     { "cipher.city", city },

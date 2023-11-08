@@ -22,6 +22,7 @@ using Nop.Services.Directory;
 using System.Net.Http.Json;
 using Nop.Services.Common;
 using Nop.Plugin.Misc.AbcCore.Services;
+using System.Linq;
 
 namespace AbcWarehouse.Plugin.Payments.UniFi.Components
 {
@@ -94,7 +95,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi.Components
                 Address2 = address.Address2,
                 City = address.City,
                 State = stateAbbreviation,
-                Zip = address.ZipPostalCode,
+                // strip non-numeric characters
+                Zip = new String(address.ZipPostalCode.Where(Char.IsDigit).ToArray()),
                 TransactionAmount = orderTotalsModel.OrderTotal.Replace("$", "").Replace(",", ""),
                 Tags = termLookup.termNo != null ? $"0{termLookup.termNo}" : ""
             };
