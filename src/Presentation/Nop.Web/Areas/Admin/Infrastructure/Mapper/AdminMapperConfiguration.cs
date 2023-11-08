@@ -785,7 +785,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.HashedPasswordFormat, options => options.Ignore())
                 .ForMember(settings => settings.OnlineCustomerMinutes, options => options.Ignore())
                 .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
-                .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore());
+                .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore())
+                .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore());
 
             CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
             CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
