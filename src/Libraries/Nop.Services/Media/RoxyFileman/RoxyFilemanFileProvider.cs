@@ -403,7 +403,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">The name of the file to move. Can include a relative or absolute path</param>
         /// <param name="destinationPath">The new path and name for the file</param>
-        public void FileMove(string sourcePath, string destinationPath)
+        public virtual void FileMove(string sourcePath, string destinationPath)
         {
             var sourceFile = GetFileInfo(sourcePath);
 
