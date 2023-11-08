@@ -126,11 +126,11 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             }
             
             var responseJson = JsonDocument.Parse(responseContent);
-            var statusCode = responseJson.RootElement
+            var status = responseJson.RootElement
                                                .GetProperty("transactionInfo")
-                                               .GetProperty("statusCode").GetString();
+                                               .GetProperty("status").GetString();
             
-            if (statusCode != "000")
+            if (status != "Auth Approved")
             {
                 result.AddError("Payment not approved.");
             }
