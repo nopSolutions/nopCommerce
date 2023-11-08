@@ -440,7 +440,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         break;
                     case AttributeControlType.FileUpload:
-                        var httpPostedFile = Request.Form.Files[controlId];
+                        var requestForm = await Request.ReadFormAsync();
+                        var httpPostedFile = requestForm.Files[controlId];
                         if (!string.IsNullOrEmpty(httpPostedFile?.FileName))
                         {
                             var fileSizeOk = true;
@@ -511,7 +512,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var warehouses = await _shippingService.GetAllWarehousesAsync();
 
-            var formData = Request.Form.ToDictionary(x => x.Key, x => x.Value.ToString());
+            var form = await Request.ReadFormAsync();
+            var formData = form.ToDictionary(x => x.Key, x => x.Value.ToString());
 
             foreach (var warehouse in warehouses)
             {

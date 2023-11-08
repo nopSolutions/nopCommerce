@@ -1,7 +1,7 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 
@@ -110,7 +110,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     throw new ArgumentNullException(nameof(context));
 
                 //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsPostRequest())
                     return;
 
                 if (IgnoreFilter(context))

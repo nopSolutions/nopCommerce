@@ -1,7 +1,7 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
@@ -59,12 +59,9 @@ namespace Nop.Web.Framework.Mvc.Filters
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
-
+                
                 //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsPostRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

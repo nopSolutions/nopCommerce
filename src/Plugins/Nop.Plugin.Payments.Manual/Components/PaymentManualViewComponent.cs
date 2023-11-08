@@ -8,7 +8,7 @@ namespace Nop.Plugin.Payments.Manual.Components
 {
     public class PaymentManualViewComponent : NopViewComponent
     {
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = new PaymentInfoModel()
             {
@@ -37,7 +37,8 @@ namespace Nop.Plugin.Payments.Manual.Components
             //set postback values (we cannot access "Form" with "GET" requests)
             if (Request.Method != WebRequestMethods.Http.Get)
             {
-                var form = Request.Form;
+                var form = await Request.ReadFormAsync();
+
                 model.CardholderName = form["CardholderName"];
                 model.CardNumber = form["CardNumber"];
                 model.CardCode = form["CardCode"];

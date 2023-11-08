@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -190,7 +191,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -205,8 +206,8 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (string.IsNullOrEmpty(fileName) && await Request.IsFormKeyExistsAsync(qqFileNameParameter))
+                fileName = await Request.GetFormValueAsync(qqFileNameParameter);
             //remove path (passed in IE)
             fileName = _fileProvider.GetFileName(fileName);
 

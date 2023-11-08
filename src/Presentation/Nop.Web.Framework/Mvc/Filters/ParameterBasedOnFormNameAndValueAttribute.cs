@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -57,20 +58,15 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that represents the asynchronous operation</returns>
-            private Task CheckParameterBasedOnFormNameAndValueAsync(ActionExecutingContext context)
+            private async Task CheckParameterBasedOnFormNameAndValueAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (context.HttpContext.Request == null)
-                    return Task.CompletedTask;
-
                 //if form key with '_formKeyName' exists and value of this form parameter equals passed '_formValue', 
                 //then set specified '_actionParameterName' to true
-                var formValue = context.HttpContext.Request.Form[_formKeyName];
+                var formValue = await context.HttpContext.Request.GetFormValueAsync(_formKeyName);
                 context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(formValue) && formValue.Equals(_formValue);
-
-                return Task.CompletedTask;
             }
 
             #endregion
