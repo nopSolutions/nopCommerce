@@ -1016,6 +1016,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(topic));
 
             var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
+            var firstPost = await _forumService.GetFirstPostAsync(topic);
 
             var topicModel = new ForumTopicRowModel
             {
@@ -1029,14 +1030,10 @@ namespace Nop.Web.Factories
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
-                CustomerName = await _customerService.FormatUsernameAsync(customer)
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                TotalPostPages = (topic.NumPosts / _forumSettings.PostsPageSize) + 1,
+                Votes = firstPost?.VoteCount ?? 0
             };
-
-            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
-            topicModel.TotalPostPages = forumPosts.TotalPages;
-
-            var firstPost = await _forumService.GetFirstPostAsync(topic);
-            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
 
             return topicModel;
         }
