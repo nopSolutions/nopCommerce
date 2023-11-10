@@ -1,13 +1,10 @@
 ﻿using FluentMigrator;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
@@ -73,87 +70,6 @@ namespace Nop.Data.Migrations.UpgradeTo470
             Alter.Table(nameof(ActivityLog)).AlterColumn(nameof(ActivityLog.IpAddress)).AsString(100).Nullable();
             Alter.Table(nameof(Log)).AlterColumn(nameof(Log.IpAddress)).AsString(100).Nullable();
             Alter.Table(nameof(Order)).AlterColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
-
-			// #6906
-			Create.Index("IX_ActivityLog_CustomerId").OnTable(nameof(ActivityLog))
-				.OnColumn(nameof(ActivityLog.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(nameof(CustomerCustomerRoleMapping))
-				.OnColumn(nameof(CustomerCustomerRoleMapping.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ForumTopic_CustomerId").OnTable(nameof(ForumTopic))
-				.OnColumn(nameof(ForumTopic.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ForumPost_CustomerId").OnTable(nameof(ForumPost))
-				.OnColumn(nameof(ForumPost.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_CustomerPassword_CustomerId").OnTable(nameof(CustomerPassword))
-				.OnColumn(nameof(CustomerPassword.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ExternalAuthenticationRecord_CustomerId").OnTable(nameof(ExternalAuthenticationRecord))
-				.OnColumn(nameof(ExternalAuthenticationRecord.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_PrivateMessage_From_CustomerId").OnTable(nameof(PrivateMessage))
-				.OnColumn(nameof(PrivateMessage.FromCustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_PrivateMessage_To_CustomerId").OnTable(nameof(PrivateMessage))
-				.OnColumn(nameof(PrivateMessage.ToCustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ForumSubscription_CustomerId").OnTable(nameof(ForumSubscription))
-				.OnColumn(nameof(ForumSubscription.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_PollVotingRecord_CustomerId").OnTable(nameof(PollVotingRecord))
-				.OnColumn(nameof(PollVotingRecord.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_Order_CustomerId").OnTable(nameof(Order))
-				.OnColumn(nameof(Order.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_Log_CustomerId").OnTable(nameof(Log))
-				.OnColumn(nameof(Log.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_BlogComment_CustomerId").OnTable(nameof(BlogComment))
-				.OnColumn(nameof(BlogComment.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_BackInStockSubscription_CustomerId").OnTable(nameof(BackInStockSubscription))
-				.OnColumn(nameof(BackInStockSubscription.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ReturnRequest_CustomerId").OnTable(nameof(ReturnRequest))
-				.OnColumn(nameof(ReturnRequest.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_RewardPointsHistory_CustomerId").OnTable(nameof(RewardPointsHistory))
-				.OnColumn(nameof(RewardPointsHistory.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_NewsComment_CustomerId").OnTable(nameof(NewsComment))
-				.OnColumn(nameof(NewsComment.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_CustomerAddressMapping_CustomerId").OnTable(nameof(CustomerAddressMapping))
-				.OnColumn(nameof(CustomerAddressMapping.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ShoppingCartItem_CustomerId").OnTable(nameof(ShoppingCartItem))
-				.OnColumn(nameof(ShoppingCartItem.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-
-			Create.Index("IX_ProductReview_CustomerId").OnTable(nameof(ProductReview))
-				.OnColumn(nameof(ProductReview.CustomerId)).Ascending()
-				.WithOptions().NonClustered();
-		}
-	}
+        }
+    }
 }
