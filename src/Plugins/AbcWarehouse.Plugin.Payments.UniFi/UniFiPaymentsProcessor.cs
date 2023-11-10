@@ -139,7 +139,8 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                 result.NewPaymentStatus = PaymentStatus.Paid;
                 
                 var transactionLookup = await _transactionLookupService.TransactionLookupAsync(transactionToken);
-                result.AuthorizationTransactionCode = transactionLookup.creditAuthorizationInfo.transactionInfo.authorizationCode;
+                result.AuthorizationTransactionCode =
+                    transactionLookup.creditAuthorizationInfo.transactionInfo?.authorizationCode;
 
                 // need to store these for the order
                 await _genericAttributeService.SaveAttributeAsync<string>(
@@ -150,7 +151,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
                 await _genericAttributeService.SaveAttributeAsync<string>(
                     await _workContext.GetCurrentCustomerAsync(),
                     "UniFiPromoCode",
-                    transactionLookup.creditAuthorizationInfo.transactionInfo.promoCode
+                    transactionLookup.creditAuthorizationInfo.transactionInfo?.promoCode
                 );
             }
 
