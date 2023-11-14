@@ -23,6 +23,7 @@ namespace Nop.Web.Models.Customer
 
         [DataType(DataType.Password)]
         [NoTrim]
+        [MaxLength(length: 1000)]
         [NopResourceDisplayName("Account.Login.Fields.Password")]
         public string Password { get; set; }
 
