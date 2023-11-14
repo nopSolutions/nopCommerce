@@ -17,19 +17,24 @@
         <div class="col-md-9">
             @{
                 var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
-                    .OrderBy(x => x.EnglishName)
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.IetfLanguageTag,
-                        Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
-                    });
+                .OrderBy(x => x.EnglishName)
+                .Select(x => new SelectListItem
+            {
+                Value = x.IetfLanguageTag,
+                Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
+            });
             }
             <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
             <span asp-validation-for="LanguageCulture"></span>
             <script>
-                $(document).ready(function() {
+                $(document).ready(function () {
                     $('#@Html.IdFor(model => model.LanguageCulture)').on('input change', function () {
-                        warningValidation('@Url.Action("LanguageCultureWarning")', '@Html.NameFor(model => model.LanguageCulture)', { currentCulture: '@(Model.LanguageCulture)', changedCulture: $(this).val() });
+                        let changedCulture = $(this).val();
+                        warningValidation('@Url.Action("LanguageCultureWarning")', '@Html.NameFor(model => model.LanguageCulture)', { currentCulture: '@(Model.LanguageCulture)', changedCulture: changedCulture });
+                        let seoCode = changedCulture.split('-')[0];
+                        let flag = changedCulture.split('-')[1].toLowerCase() + '.png';
+                        $("#@Html.IdFor(model=>model.UniqueSeoCode)").val(seoCode);
+                        $("#@Html.IdFor(model=>model.FlagImageFileName)").val(flag).trigger('change');;
                     });
                 });
             </script>
@@ -50,11 +55,11 @@
         </div>
         <div class="col-md-9">
             <div class="select2-blue">
-                <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages" class="form-control" data-dropdown-css-class="select2-blue"/>
+                <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages" class="form-control" data-dropdown-css-class="select2-blue" />
             </div>
             <span asp-validation-for="FlagImageFileName"></span>
             <script>
-                $(function() {
+                $(function () {
                     $('#FlagImageFileName').select2({
                         templateResult: function (data) {
                             if (data.loading) {
@@ -75,7 +80,7 @@
             <nop-label asp-for="Rtl" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="Rtl"/>
+            <nop-editor asp-for="Rtl" />
             <span asp-validation-for="Rtl"></span>
         </div>
     </div>
@@ -97,18 +102,18 @@
                 <div class="col-md-3">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                                 closeOnSelect: false,
-                                @if (!Model.AvailableStores.Any())
-                                {
-                                <text>
-                                disabled: true,
-                                placeholder: 'No stores available',
-                                </text>
-                                }
-                            });
-                        });
+                        @if (!Model.AvailableStores.Any())
+                        {
+                            <text>
+                                    disabled: true,
+                                    placeholder: 'No stores available',
+                            </text>
+                        }
+                                                    });
+                                                });
                     </script>
                 </div>
                 <div class="col-md-9">
