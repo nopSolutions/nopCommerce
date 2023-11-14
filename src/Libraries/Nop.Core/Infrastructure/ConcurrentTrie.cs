@@ -454,7 +454,7 @@ namespace Nop.Core.Infrastructure
             if (prefix is null)
                 throw new ArgumentNullException(nameof(prefix));
 
-            if (!SearchOrPrune(prefix, false, out var node))
+            if (!Find(prefix, _root, out var node))
                 return Enumerable.Empty<KeyValuePair<string, TValue>>();
 
             // depth-first traversal
@@ -482,7 +482,7 @@ namespace Nop.Core.Infrastructure
                     yield return kv;
             }
 
-            return traverse(node, node.Label);
+            return traverse(node, prefix);
         }
 
         /// <summary>
@@ -507,23 +507,10 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual bool Prune(string prefix, out IConcurrentCollection<TValue> subCollection)
         {
-            var succeeded = SearchOrPrune(prefix, true, out var subtreeRoot);
-            subCollection = succeeded ? new ConcurrentTrie<TValue>(subtreeRoot) : default;
-            return succeeded;
-        }
-
-        protected bool SearchOrPrune(string prefix, bool prune, out TrieNode subtreeRoot)
-        {
             if (prefix is null)
                 throw new ArgumentNullException(nameof(prefix));
 
-            if (prefix.Length == 0)
-            {
-                subtreeRoot = _root;
-                return true;
-            }
-
-            subtreeRoot = default;
+            subCollection = default;
             var node = _root;
             var parent = node;
             var span = prefix.AsSpan();
@@ -545,16 +532,15 @@ namespace Nop.Core.Infrastructure
 
                     if (k == span.Length - i)
                     {
-                        subtreeRoot = new TrieNode(prefix[..i] + node.Label, node);
-                        if (!prune)
-                            return true;
-
                         parentLock.EnterWriteLock();
 
                         try
                         {
                             if (parent.Children.Remove(c, out node))
+                            {
+                                subCollection = new ConcurrentTrie<TValue>(new TrieNode(prefix[..i] + node.Label, node));
                                 return true;
+                            }
                         }
                         finally
                         {

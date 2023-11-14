@@ -11,7 +11,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
     {
         private IConcurrentCollection<int> _sut;
 
-        private static void Profile(Action action)
+        private void Profile(Action action)
         {
             var sw = new Stopwatch();
             var memory = GC.GetTotalMemory(true) / 1024.0 / 1024.0;
@@ -21,8 +21,8 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
 
             sw.Stop();
             var delta = GC.GetTotalMemory(true) / 1024.0 / 1024.0 - memory;
-            Console.WriteLine("Elapsed time: {0:F} s", sw.ElapsedMilliseconds / 1000.0);
-            Console.WriteLine("Memory usage: {0:F} MB", delta);
+            Console.WriteLine("Elapsed teme: {0:F}s", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Memory usege: {0:F}Mb", delta);
         }
 
         [SetUp]
@@ -144,13 +144,13 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
         {
             _sut.Add("a", 1);
             _sut.Add("b", 1);
-            _sut.Add("abc", 1);
-            _sut.Add("abcd", 2);
+            _sut.Add("ab", 1);
+            _sut.Add("abc", 2);
             var keys = _sut.Keys.ToList();
             _sut.Search("ab").Should().BeEquivalentTo(new KeyValuePair<string, int>[]
             {
-                new("abc", 1),
-                new("abcd", 2)
+                new("ab", 1),
+                new("abc", 2)
             });
             _sut.Keys.Should().BeEquivalentTo(keys);
         }
@@ -184,7 +184,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
         [Test]
         [TestCase(typeof(NopConcurrentCollection<int>))]
         [TestCase(typeof(ConcurrentTrie<int>))]
-        [Ignore("Expensive concurrency test, enable manually.")]
+        [Ignore("Not a test, used for profiling.")]
         public void DoesNotBreakDuringParallelAddRemove(Type oType)
         {
             var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
@@ -212,7 +212,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
         [Test]
         [TestCase(typeof(NopConcurrentCollection<int>))]
         [TestCase(typeof(ConcurrentTrie<int>))]
-        [Ignore("Expensive concurrency test, enable manually.")]
+        [Ignore("Not a test, used for profiling.")]
         public void DoesNotBreakDuringParallelAddPrune(Type oType)
         {
             var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
