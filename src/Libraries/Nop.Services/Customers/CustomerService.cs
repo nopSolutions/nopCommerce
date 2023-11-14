@@ -1184,6 +1184,19 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets a dictionary of all customer roles mapped by ID.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation and contains a dictionary of all customer roles mapped by ID.
+        /// </returns>
+        public virtual async Task<IDictionary<int, CustomerRole>> GetAllCustomerRolesDictionaryAsync()
+        {
+            return await _staticCacheManager.GetAsync(
+                _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<CustomerRole>.AllCacheKey),
+                async () => await _customerRoleRepository.Table.ToDictionaryAsync(cr => cr.Id));
+        }
+
+        /// <summary>
         /// Gets a customer role
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
@@ -1193,7 +1206,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerRole> GetCustomerRoleByIdAsync(int customerRoleId)
         {
-            return await _customerRoleRepository.GetByIdAsync(customerRoleId, cache => default);
+            return (await GetAllCustomerRolesDictionaryAsync()).TryGetValue(customerRoleId, out var role) ? role : null;
         }
 
         /// <summary>
@@ -1235,15 +1248,9 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var query = from cr in _customerRoleRepository.Table
-                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                        where crm.CustomerId == customer.Id &&
-                        (showHidden || cr.Active)
-                        select cr.Id;
-
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRoleIdsCacheKey, customer, showHidden);
-
-            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+            return (await GetCustomerRolesAsync(customer, showHidden: showHidden))
+                .Select(cr => cr.Id)
+                .ToArray();
         }
 
         /// <summary>
@@ -1260,15 +1267,18 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            return await _customerRoleRepository.GetAllAsync(query =>
-            {
-                return from cr in query
-                       join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                       where crm.CustomerId == customer.Id &&
-                             (showHidden || cr.Active)
-                       select cr;
-            }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer, showHidden));
+            var allRolesById = await GetAllCustomerRolesDictionaryAsync();
 
+            var mappings = await _customerCustomerRoleMappingRepository.GetAllAsync(query =>
+            {
+                return from crm in query
+                       where crm.CustomerId == customer.Id
+                       select crm;
+            }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer));
+
+            return mappings.Select(mapping => allRolesById.TryGetValue(mapping.CustomerRoleId, out var role) ? role : null)
+                .Where(cr => cr != null && (showHidden || cr.Active))
+                .ToList();
         }
 
         /// <summary>
@@ -1281,16 +1291,9 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<CustomerRole>> GetAllCustomerRolesAsync(bool showHidden = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
-
-            var query = from cr in _customerRoleRepository.Table
-                        orderby cr.Name
-                        where showHidden || cr.Active
-                        select cr;
-
-            var customerRoles = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
-
-            return customerRoles;
+            return (await GetAllCustomerRolesDictionaryAsync()).Values
+                .Where(cr => showHidden || cr.Active)
+                .ToList();
         }
 
         /// <summary>

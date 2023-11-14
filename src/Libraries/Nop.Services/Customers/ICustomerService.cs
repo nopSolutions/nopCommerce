@@ -381,6 +381,14 @@ namespace Nop.Services.Customers
         Task DeleteCustomerRoleAsync(CustomerRole customerRole);
 
         /// <summary>
+        /// Gets a dictionary of all customer roles mapped by ID.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation and contains a dictionary of all customer roles mapped by ID.
+        /// </returns>
+        Task<IDictionary<int, CustomerRole>> GetAllCustomerRolesDictionaryAsync();
+
+        /// <summary>
         /// Gets a customer role
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
