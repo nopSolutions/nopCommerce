@@ -78,18 +78,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <remarks>
         /// {0} : customer identifier
-        /// {1} : show hidden
         /// </remarks>
-        public static CacheKey CustomerRoleIdsCacheKey => new("Nop.customer.customerrole.ids.{0}-{1}", CustomerCustomerRolesPrefix);
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer identifier
-        /// {1} : show hidden
-        /// </remarks>
-        public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}-{1}", CustomerCustomerRolesByCustomerPrefix, CustomerCustomerRolesPrefix);
+        public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}", CustomerCustomerRolesByCustomerPrefix, CustomerCustomerRolesPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
