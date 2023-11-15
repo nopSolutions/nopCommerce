@@ -208,7 +208,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
         {
-            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default);
+            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

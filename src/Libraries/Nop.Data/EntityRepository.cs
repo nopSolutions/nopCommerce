@@ -18,6 +18,7 @@ namespace Nop.Data
 
         protected readonly IEventPublisher _eventPublisher;
         protected readonly INopDataProvider _dataProvider;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly bool _usingDistributedCache;
 
@@ -27,11 +28,13 @@ namespace Nop.Data
 
         public EntityRepository(IEventPublisher eventPublisher,
             INopDataProvider dataProvider,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager,
             AppSettings appSettings)
         {
             _eventPublisher = eventPublisher;
             _dataProvider = dataProvider;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
             _usingDistributedCache = appSettings.Get<DistributedCacheConfig>().DistributedCacheType switch
             {
@@ -151,12 +154,13 @@ namespace Nop.Data
         /// </summary>
         /// <param name="id">Entity entry identifier</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
-        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
+        /// <param name="useShortTermCache">Whether to use short term cache instead of static cache</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entry
         /// </returns>
-        public virtual async Task<TEntity> GetByIdAsync(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        public virtual async Task<TEntity> GetByIdAsync(int? id, Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true, bool useShortTermCache = false)
         {
             if (!id.HasValue || id == 0)
                 return null;
@@ -169,9 +173,14 @@ namespace Nop.Data
             if (getCacheKey == null)
                 return await getEntityAsync();
 
+            ICacheKeyService cacheKeyService = useShortTermCache ? _shortTermCacheManager : _staticCacheManager;
+
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
+            var cacheKey = getCacheKey(cacheKeyService)
+                ?? cacheKeyService.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
+
+            if (useShortTermCache)
+                return await _shortTermCacheManager.GetAsync(getEntityAsync, cacheKey);
 
             return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
@@ -185,7 +194,7 @@ namespace Nop.Data
         /// <returns>
         /// The entity entry
         /// </returns>
-        public virtual TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        public virtual TEntity GetById(int? id, Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             if (!id.HasValue || id == 0)
                 return null;
@@ -215,7 +224,7 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
-        public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             if (ids?.Any() != true)
                 return new List<TEntity>();
@@ -285,7 +294,7 @@ namespace Nop.Data
         /// The task result contains the entity entries
         /// </returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+            Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
@@ -306,7 +315,7 @@ namespace Nop.Data
         /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entries</returns>
         public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+            Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             IList<TEntity> getAll()
             {
@@ -331,7 +340,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
-            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+            Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
@@ -356,7 +365,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
-            Func<IStaticCacheManager, Task<CacheKey>> getCacheKey = null, bool includeDeleted = true)
+            Func<ICacheKeyService, Task<CacheKey>> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {

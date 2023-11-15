@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Security.Captcha;
@@ -84,14 +85,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether CAPTCHA is enabled
-                if (_captchaSettings.Enabled && context.HttpContext?.Request != null)
+                if (_captchaSettings.Enabled)
                 {
                     //push the validation result as an action parameter
                     var isValid = false;
 
                     //get form values
-                    var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
-                    var gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY];
+                    var captchaResponseValue = await context.HttpContext.Request.GetFormValueAsync(RESPONSE_FIELD_KEY);
+                    var gCaptchaResponseValue = await context.HttpContext.Request.GetFormValueAsync(G_RESPONSE_FIELD_KEY);
 
                     if (!StringValues.IsNullOrEmpty(captchaResponseValue) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                     {

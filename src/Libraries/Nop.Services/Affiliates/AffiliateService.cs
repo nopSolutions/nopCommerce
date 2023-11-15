@@ -59,7 +59,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<Affiliate> GetAffiliateByIdAsync(int affiliateId)
         {
-            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default);
+            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

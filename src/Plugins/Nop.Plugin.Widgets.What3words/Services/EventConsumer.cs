@@ -110,7 +110,7 @@ namespace Nop.Plugin.Widgets.What3words.Services
                 return;
 
             //cache the value within the request, we save it to the address later
-            var form = _httpContextAccessor.HttpContext.Request.Form;
+            var form = await _httpContextAccessor.HttpContext.Request.ReadFormAsync();
             if (form.TryGetValue(What3wordsDefaults.ComponentName, out var addressValue) && !StringValues.IsNullOrEmpty(addressValue))
                 _httpContextAccessor.HttpContext.Items[What3wordsDefaults.AddressValueAttribute] = addressValue.ToString().TrimStart('/');
         }

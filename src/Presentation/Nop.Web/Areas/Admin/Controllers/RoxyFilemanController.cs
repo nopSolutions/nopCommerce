@@ -315,10 +315,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
-                if (HttpContext.Request.Form.Files.Count == 0)
+                var form = await HttpContext.Request.ReadFormAsync();
+
+                if (form.Files.Count == 0)
                     throw new RoxyFilemanException("E_UploadNoFiles");
 
-                await _roxyFilemanService.UploadFilesAsync(uploadModel.D, HttpContext.Request.Form.Files);
+                await _roxyFilemanService.UploadFilesAsync(uploadModel.D, form.Files);
 
                 return JsonOk();
             }

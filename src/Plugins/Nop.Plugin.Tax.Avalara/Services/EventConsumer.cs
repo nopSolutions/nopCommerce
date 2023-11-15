@@ -5,6 +5,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -194,8 +195,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //whether there is a form value for the entity use code
-            if (_httpContextAccessor.HttpContext.Request.Form.TryGetValue(AvalaraTaxDefaults.EntityUseCodeAttribute, out var entityUseCodeValue)
-                && !StringValues.IsNullOrEmpty(entityUseCodeValue))
+            var (keyExists, entityUseCodeValue) = await _httpContextAccessor.HttpContext.Request.TryGetFormValueAsync(AvalaraTaxDefaults.EntityUseCodeAttribute);
+            if (keyExists && !StringValues.IsNullOrEmpty(entityUseCodeValue))
             {
                 //save attribute
                 var entityUseCode = !entityUseCodeValue.ToString().Equals(Guid.Empty.ToString()) ? entityUseCodeValue.ToString() : null;

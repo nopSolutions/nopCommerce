@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -53,22 +54,17 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that represents the asynchronous operation</returns>
-            private Task CheckParameterBasedOnFormNameAsync(ActionExecutingContext context)
+            private async Task CheckParameterBasedOnFormNameAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (context.HttpContext.Request == null)
-                    return Task.CompletedTask;
-
                 //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true
-                context.ActionArguments[_actionParameterName] = context.HttpContext.Request.Form.Keys.Any(key => key.Equals(_formKeyName));
+                context.ActionArguments[_actionParameterName] = await context.HttpContext.Request.IsFormAnyAsync(key => key.Equals(_formKeyName));
 
                 //we check whether form key with '_formKeyName' exists only
                 //uncomment the code below if you want to check whether form value is specified
-                //context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(context.HttpContext.Request.Form[_formKeyName]);
-
-                return Task.CompletedTask;
+                //context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(await context.HttpContext.Request.GetFormValueAsync(_formKeyName));
             }
 
             #endregion

@@ -14,6 +14,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
         protected readonly FixedByWeightByTotalSettings _pluginSettings;
         protected readonly IRepository<ShippingByWeightByTotalRecord> _sbwtRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -22,10 +23,12 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
         public ShippingByWeightByTotalService(FixedByWeightByTotalSettings pluginSettings,
             IRepository<ShippingByWeightByTotalRecord> sbwtRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager)
         {
             _pluginSettings = pluginSettings;
             _sbwtRepository = sbwtRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -53,58 +56,53 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             int stateProvinceId,
             string zip)
         {
-            var rez = await _sbwtRepository.GetAllAsync(query =>
-                {
-                    var data = _pluginSettings.LoadAllRecord
-                        ? _sbwtRepository.GetAll(q => q, cache => cache.PrepareKeyForShortTermCache(
-                            FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey,
-                            null, null, null, null, null, null)).AsQueryable()
-                        : query;
+            var rez = await _shortTermCacheManager.GetAsync(async ()=> await _sbwtRepository.GetAllAsync(async query =>
+            {
+                var data = _pluginSettings.LoadAllRecord
+                    ? (await _shortTermCacheManager.GetAsync(async () => await _sbwtRepository.GetAllAsync(q => q), FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey, null, null, null, null, null, null)).AsQueryable()
+                    : query;
 
-                    //filter by shipping method
-                    data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
+                //filter by shipping method
+                data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
 
-                    //filter by store
-                    data = storeId == 0
-                        ? data
-                        : data.Where(r => r.StoreId == storeId || r.StoreId == 0);
+                //filter by store
+                data = storeId == 0
+                    ? data
+                    : data.Where(r => r.StoreId == storeId || r.StoreId == 0);
 
-                    //filter by warehouse
-                    data = warehouseId == 0
-                        ? data
-                        : data.Where(r => r.WarehouseId == warehouseId || r.WarehouseId == 0);
+                //filter by warehouse
+                data = warehouseId == 0
+                    ? data
+                    : data.Where(r => r.WarehouseId == warehouseId || r.WarehouseId == 0);
 
-                    //filter by country
-                    data = countryId == 0
-                        ? data
-                        : data.Where(r => r.CountryId == countryId || r.CountryId == 0);
+                //filter by country
+                data = countryId == 0
+                    ? data
+                    : data.Where(r => r.CountryId == countryId || r.CountryId == 0);
 
-                    //filter by state/province
-                    data = stateProvinceId == 0
-                        ? data
-                        : data.Where(r => r.StateProvinceId == stateProvinceId || r.StateProvinceId == 0);
+                //filter by state/province
+                data = stateProvinceId == 0
+                    ? data
+                    : data.Where(r => r.StateProvinceId == stateProvinceId || r.StateProvinceId == 0);
 
-                    zip = zip?.Trim() ?? string.Empty;
+                zip = zip?.Trim() ?? string.Empty;
 
-                    //filter by zip
-                    data = string.IsNullOrEmpty(zip)
-                        ? data
-                        : data.Where(r => string.IsNullOrEmpty(r.Zip) || r.Zip.Equals(zip));
+                //filter by zip
+                data = string.IsNullOrEmpty(zip)
+                    ? data
+                    : data.Where(r => string.IsNullOrEmpty(r.Zip) || r.Zip.Equals(zip));
 
-                    data = data.OrderBy(sbw => sbw.StoreId)
-                        .ThenBy(sbw => sbw.CountryId)
-                        .ThenBy(sbw => sbw.StateProvinceId)
-                        .ThenBy(sbw => sbw.Zip)
-                        .ThenBy(sbw => sbw.ShippingMethodId)
-                        .ThenBy(sbw => sbw.WeightFrom)
-                        .ThenBy(sbw => sbw.OrderSubtotalFrom);
+                data = data.OrderBy(sbw => sbw.StoreId)
+                    .ThenBy(sbw => sbw.CountryId)
+                    .ThenBy(sbw => sbw.StateProvinceId)
+                    .ThenBy(sbw => sbw.Zip)
+                    .ThenBy(sbw => sbw.ShippingMethodId)
+                    .ThenBy(sbw => sbw.WeightFrom)
+                    .ThenBy(sbw => sbw.OrderSubtotalFrom);
 
-                    return data;
-                },
-                cache => cache.PrepareKeyForShortTermCache(
-                    FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey,
-                    shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip));
-
+                return data;
+            }), FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey, shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip);
+            
             return rez;
         }
 

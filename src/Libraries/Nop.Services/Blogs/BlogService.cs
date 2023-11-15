@@ -60,7 +60,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogPost> GetBlogPostByIdAsync(int blogPostId)
         {
-            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default);
+            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogComment> GetBlogCommentByIdAsync(int blogCommentId)
         {
-            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default);
+            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

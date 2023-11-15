@@ -12,10 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Cache.DefaultCacheTime")]
         public int DefaultCacheTime { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Cache.ShortTermCacheTime")]
-        public int ShortTermCacheTime { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime")]
         public int BundledFilesCacheTime { get; set; }
 

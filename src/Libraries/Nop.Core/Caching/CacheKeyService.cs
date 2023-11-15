@@ -7,7 +7,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents the default cache key service implementation
     /// </summary>
-    public abstract partial class CacheKeyService
+    public abstract partial class CacheKeyService : ICacheKeyService
     {
         #region Fields
 
@@ -101,22 +101,7 @@ namespace Nop.Core.Caching
 
             return key;
         }
-
-        /// <summary>
-        /// Create a copy of cache key using the short cache time and fills it by passed parameters
-        /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        public virtual CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters)
-        {
-            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-
-            key.CacheTime = _appSettings.Get<CacheConfig>().ShortTermCacheTime;
-
-            return key;
-        }
-
+        
         #endregion
 
         #region Properties

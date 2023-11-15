@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a manager for caching between HTTP requests (long term caching)
     /// </summary>
-    public interface IStaticCacheManager : IDisposable
+    public interface IStaticCacheManager : IDisposable, ICacheKeyService
     {
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
@@ -80,33 +80,5 @@
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task ClearAsync();
-
-        #region Cache key
-
-        /// <summary>
-        /// Create a copy of cache key and fills it by passed parameters
-        /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        CacheKey PrepareKey(CacheKey cacheKey, params object[] cacheKeyParameters);
-
-        /// <summary>
-        /// Create a copy of cache key using the default cache time and fills it by passed parameters
-        /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        CacheKey PrepareKeyForDefaultCache(CacheKey cacheKey, params object[] cacheKeyParameters);
-
-        /// <summary>
-        /// Create a copy of cache key using the short cache time and fills it by passed parameters
-        /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters);
-
-        #endregion
     }
 }
