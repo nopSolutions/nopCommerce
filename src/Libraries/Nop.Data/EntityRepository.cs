@@ -2,7 +2,6 @@
 using System.Transactions;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
 
@@ -19,7 +18,6 @@ namespace Nop.Data
         protected readonly IEventPublisher _eventPublisher;
         protected readonly INopDataProvider _dataProvider;
         protected readonly IStaticCacheManager _staticCacheManager;
-        protected readonly bool _usingDistributedCache;
 
         #endregion
 
@@ -27,18 +25,11 @@ namespace Nop.Data
 
         public EntityRepository(IEventPublisher eventPublisher,
             INopDataProvider dataProvider,
-            IStaticCacheManager staticCacheManager,
-            AppSettings appSettings)
+            IStaticCacheManager staticCacheManager)
         {
             _eventPublisher = eventPublisher;
             _dataProvider = dataProvider;
             _staticCacheManager = staticCacheManager;
-            _usingDistributedCache = appSettings.Get<DistributedCacheConfig>().DistributedCacheType switch
-            {
-                DistributedCacheType.Redis => true,
-                DistributedCacheType.SqlServer => true,
-                _ => false
-            };
         }
 
         #endregion
@@ -210,7 +201,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
-        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
@@ -220,58 +211,33 @@ namespace Nop.Data
             if (ids?.Any() != true)
                 return new List<TEntity>();
 
-            static IList<TEntity> sortByIdList(IList<int> ids_, IDictionary<int, TEntity> entitiesById)
+            async Task<IList<TEntity>> getByIdsAsync()
             {
-                var sortedEntities = new List<TEntity>(ids_.Count);
-                foreach (var id in ids_)
+                var query = AddDeletedFilter(Table, includeDeleted);
+
+                //get entries
+                var entriesById = await query
+                    .Where(entry => ids.Contains(entry.Id))
+                    .ToDictionaryAsync(entry => entry.Id);
+
+                //sort by passed identifiers
+                var sortedEntries = new List<TEntity>();
+                foreach (var id in ids)
                 {
-                    if (entitiesById.TryGetValue(id, out var entry))
-                        sortedEntities.Add(entry);
+                    if (entriesById.TryGetValue(id, out var sortedEntry))
+                        sortedEntries.Add(sortedEntry);
                 }
-                return sortedEntities;
-            }
 
-            async Task<IList<TEntity>> getByIdsAsync(IList<int> ids_, bool sort = true)
-            {
-                var query = AddDeletedFilter(Table, includeDeleted)
-                    .Where(entry => ids_.Contains(entry.Id));
-
-                return sort
-                    ? sortByIdList(ids_, await query.ToDictionaryAsync(entry => entry.Id))
-                    : await query.ToListAsync();
+                return sortedEntries;
             }
 
             if (getCacheKey == null)
-                return await getByIdsAsync(ids);
+                return await getByIdsAsync();
 
             //caching
-            var cacheKey = getCacheKey(_staticCacheManager);
-            if (cacheKey == null && _usingDistributedCache)
-                cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
-            if (cacheKey != null)
-                return await _staticCacheManager.GetAsync(cacheKey, async () => await getByIdsAsync(ids));
-
-            //If we are using an in-memory cache, we can optimize by caching each entity individually for maximum reusability.
-            //With a distributed cache, the overhead would be too high.
-            var cachedById = await ids
-                .Distinct()
-                .SelectAwait(async id => await _staticCacheManager.GetAsync(
-                    _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id),
-                    default(TEntity)))
-                .Where(entity => entity != default)
-                .ToDictionaryAsync(entity => entity.Id, entity => entity);
-            var missingIds = ids.Except(cachedById.Keys).ToList();
-            var missingEntities = missingIds.Count > 0 ? await getByIdsAsync(missingIds, false) : new List<TEntity>();
-
-            foreach (var entity in missingEntities)
-            {
-                await _staticCacheManager.SetAsync(
-                    _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity.Id),
-                    entity);
-                cachedById[entity.Id] = entity;
-            }
-
-            return sortByIdList(ids, cachedById);
+            var cacheKey = getCacheKey(_staticCacheManager)
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
+            return await _staticCacheManager.GetAsync(cacheKey, getByIdsAsync);
         }
 
         /// <summary>
