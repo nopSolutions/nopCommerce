@@ -221,7 +221,7 @@ namespace Nop.Services.ScheduleTasks
             {
                 try
                 {
-                    _timer.Change(-1, -1);
+                    _timer.Change(Timeout.Infinite, Timeout.Infinite);
 
                     RunAsync().Wait();
                 }
