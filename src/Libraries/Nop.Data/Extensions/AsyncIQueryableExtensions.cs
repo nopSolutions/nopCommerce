@@ -629,6 +629,20 @@ namespace System.Linq
         }
 
         /// <summary>
+        /// Asynchronously loads data from query to an array
+        /// </summary>
+        /// <typeparam name="TSource">Query element type</typeparam>
+        /// <param name="source">Source query</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the array with query results
+        /// </returns>
+        public static Task<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return AsyncExtensions.ToArrayAsync(source);
+        }
+
+        /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="source">source</param>

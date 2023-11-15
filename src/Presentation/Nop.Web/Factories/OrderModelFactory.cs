@@ -56,6 +56,7 @@ namespace Nop.Web.Factories
         protected readonly IProductService _productService;
         protected readonly IRewardPointService _rewardPointService;
         protected readonly IShipmentService _shipmentService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStateProvinceService _stateProvinceService;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreContext _storeContext;
@@ -95,6 +96,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
+            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -130,6 +132,7 @@ namespace Nop.Web.Factories
             _productService = productService;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
+            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -165,10 +168,8 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.OrderPictureModelKey,
-                orderItem, pictureSize, showDefaultPicture, language, _webHelper.IsCurrentConnectionSecured(), store);
-
-            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+            
+            var model = await _shortTermCacheManager.GetAsync(async () =>
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
@@ -181,7 +182,7 @@ namespace Nop.Web.Factories
                     Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
                     AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
                 };
-            });
+            }, NopModelCacheDefaults.OrderPictureModelKey, orderItem, pictureSize, showDefaultPicture, language, _webHelper.IsCurrentConnectionSecured(), store);
 
             return model;
         }

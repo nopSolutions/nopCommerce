@@ -644,7 +644,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumPost> GetPostByIdAsync(int forumPostId)
         {
-            return await _forumPostRepository.GetByIdAsync(forumPostId, cache => default);
+            return await _forumPostRepository.GetByIdAsync(forumPostId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -779,7 +779,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
         {
-            return await _forumPrivateMessageRepository.GetByIdAsync(privateMessageId, cache => default);
+            return await _forumPrivateMessageRepository.GetByIdAsync(privateMessageId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -887,7 +887,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumSubscription> GetSubscriptionByIdAsync(int forumSubscriptionId)
         {
-            return await _forumSubscriptionRepository.GetByIdAsync(forumSubscriptionId, cache => default);
+            return await _forumSubscriptionRepository.GetByIdAsync(forumSubscriptionId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

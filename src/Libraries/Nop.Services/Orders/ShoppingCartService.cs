@@ -53,6 +53,7 @@ namespace Nop.Services.Orders
         protected readonly IProductService _productService;
         protected readonly IRepository<ShoppingCartItem> _sciRepository;
         protected readonly IShippingService _shippingService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreContext _storeContext;
         protected readonly IStoreService _storeService;
@@ -87,6 +88,7 @@ namespace Nop.Services.Orders
             IProductService productService,
             IRepository<ShoppingCartItem> sciRepository,
             IShippingService shippingService,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -117,6 +119,7 @@ namespace Nop.Services.Orders
             _productService = productService;
             _sciRepository = sciRepository;
             _shippingService = shippingService;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -782,9 +785,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
-
-            return await _staticCacheManager.GetAsync(key, async () => await items.ToListAsync());
+            return await _shortTermCacheManager.GetAsync(async () => await items.ToListAsync(), NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
         }
 
         /// <summary>

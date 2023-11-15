@@ -160,7 +160,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
         {
-            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
+            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

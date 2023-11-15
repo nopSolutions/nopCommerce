@@ -92,6 +92,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddTransient(typeof(IConcurrentCollection<>), typeof(ConcurrentTrie<>));
 
             services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
+            services.AddScoped<IShortTermCacheManager, PerRequestCacheManager>();
 
             if (distributedCacheConfig.Enabled)
             {
@@ -99,18 +100,22 @@ namespace Nop.Web.Framework.Infrastructure
                 {
                     case DistributedCacheType.Memory:
                         services.AddScoped<IStaticCacheManager, MemoryDistributedCacheManager>();
+                        services.AddScoped<ICacheKeyService, MemoryDistributedCacheManager>();
                         break;
                     case DistributedCacheType.SqlServer:
                         services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
+                        services.AddScoped<ICacheKeyService, MsSqlServerCacheManager>();
                         break;
                     case DistributedCacheType.Redis:
                         services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
                         services.AddScoped<IStaticCacheManager, RedisCacheManager>();
+                        services.AddScoped<ICacheKeyService, RedisCacheManager>();
                         break;
                     case DistributedCacheType.RedisSynchronizedMemory:
                         services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
                         services.AddSingleton<ISynchronizedMemoryCache, RedisSynchronizedMemoryCache>();
                         services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
+                        services.AddScoped<ICacheKeyService, SynchronizedMemoryCacheManager>();
                         break;
                 }
 
@@ -120,6 +125,7 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 services.AddSingleton<ILocker, MemoryCacheLocker>();
                 services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+                services.AddScoped<ICacheKeyService, MemoryCacheManager>();
             }
 
             //work context

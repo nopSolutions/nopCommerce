@@ -256,6 +256,8 @@ namespace Nop.Tests
             //plugins
             services.AddTransient<IPluginService, PluginService>();
 
+            services.AddScoped<IShortTermCacheManager, PerRequestCacheManager>();
+
             services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
             services.AddSingleton<IMemoryCache>(memoryCache);
             services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();

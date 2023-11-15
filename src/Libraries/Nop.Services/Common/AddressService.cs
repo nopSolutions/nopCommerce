@@ -22,6 +22,7 @@ namespace Nop.Services.Common
         protected readonly ICountryService _countryService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IRepository<Address> _addressRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
@@ -34,6 +35,7 @@ namespace Nop.Services.Common
             ICountryService countryService,
             ILocalizationService localizationService,
             IRepository<Address> addressRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
@@ -42,6 +44,7 @@ namespace Nop.Services.Common
             _countryService = countryService;
             _localizationService = localizationService;
             _addressRepository = addressRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
         }
 
@@ -109,8 +112,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<Address> GetAddressByIdAsync(int addressId)
         {
-            return await _addressRepository.GetByIdAsync(addressId,
-                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Address>.ByIdCacheKey, addressId));
+            return await _addressRepository.GetByIdAsync(addressId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

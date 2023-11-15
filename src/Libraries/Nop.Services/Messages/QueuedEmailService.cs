@@ -76,7 +76,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<QueuedEmail> GetQueuedEmailByIdAsync(int queuedEmailId)
         {
-            return await _queuedEmailRepository.GetByIdAsync(queuedEmailId, cache => default);
+            return await _queuedEmailRepository.GetByIdAsync(queuedEmailId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
