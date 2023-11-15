@@ -104,6 +104,23 @@ namespace Nop.Services.Customers
 
         #endregion
 
+        #region Utils
+
+        /// <summary>
+        /// Gets a dictionary of all customer roles mapped by ID.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation and contains a dictionary of all customer roles mapped by ID.
+        /// </returns>
+        protected virtual async Task<IDictionary<int, CustomerRole>> GetAllCustomerRolesDictionaryAsync()
+        {
+            return await _staticCacheManager.GetAsync(
+                _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<CustomerRole>.AllCacheKey),
+                async () => await _customerRoleRepository.Table.ToDictionaryAsync(cr => cr.Id));
+        }
+
+        #endregion
+
         #region Methods
 
         #region Customers
@@ -1184,19 +1201,6 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Gets a dictionary of all customer roles mapped by ID.
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation and contains a dictionary of all customer roles mapped by ID.
-        /// </returns>
-        public virtual async Task<IDictionary<int, CustomerRole>> GetAllCustomerRolesDictionaryAsync()
-        {
-            return await _staticCacheManager.GetAsync(
-                _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<CustomerRole>.AllCacheKey),
-                async () => await _customerRoleRepository.Table.ToDictionaryAsync(cr => cr.Id));
-        }
-
-        /// <summary>
         /// Gets a customer role
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
@@ -1206,7 +1210,9 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerRole> GetCustomerRoleByIdAsync(int customerRoleId)
         {
-            return (await GetAllCustomerRolesDictionaryAsync()).TryGetValue(customerRoleId, out var role) ? role : null;
+            var allRolesById = await GetAllCustomerRolesDictionaryAsync();
+
+            return allRolesById.TryGetValue(customerRoleId, out var role) ? role : null;
         }
 
         /// <summary>
@@ -1269,12 +1275,8 @@ namespace Nop.Services.Customers
 
             var allRolesById = await GetAllCustomerRolesDictionaryAsync();
 
-            var mappings = await _customerCustomerRoleMappingRepository.GetAllAsync(query =>
-            {
-                return from crm in query
-                       where crm.CustomerId == customer.Id
-                       select crm;
-            }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer));
+            var mappings = await _customerCustomerRoleMappingRepository.GetAllAsync(query => query.Where(crm => crm.CustomerId == customer.Id),
+                cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer));
 
             return mappings.Select(mapping => allRolesById.TryGetValue(mapping.CustomerRoleId, out var role) ? role : null)
                 .Where(cr => cr != null && (showHidden || cr.Active))
@@ -1291,7 +1293,9 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<CustomerRole>> GetAllCustomerRolesAsync(bool showHidden = false)
         {
-            return (await GetAllCustomerRolesDictionaryAsync()).Values
+            var allRolesById = await GetAllCustomerRolesDictionaryAsync();
+
+            return allRolesById.Values
                 .Where(cr => showHidden || cr.Active)
                 .ToList();
         }
