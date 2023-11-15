@@ -71,6 +71,7 @@ namespace Nop.Services.Orders
         protected readonly IShippingService _shippingService;
         protected readonly IShoppingCartService _shoppingCartService;
         protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
         protected readonly ITaxService _taxService;
         protected readonly IVendorService _vendorService;
@@ -121,6 +122,7 @@ namespace Nop.Services.Orders
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
+            IStoreMappingService storeMappingService,
             IStoreService storeService,
             ITaxService taxService,
             IVendorService vendorService,
@@ -167,6 +169,7 @@ namespace Nop.Services.Orders
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
+            _storeMappingService = storeMappingService;
             _storeService = storeService;
             _taxService = taxService;
             _vendorService = vendorService;
@@ -550,14 +553,14 @@ namespace Nop.Services.Orders
 
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyByIdAsync(details.Customer.CurrencyId ?? 0);
-            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
+            var customerCurrency = currencyTmp != null && currencyTmp.Published && await _storeMappingService.AuthorizeAsync(currencyTmp) ? currencyTmp : currentCurrency;
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
 
             //customer language
             details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.Customer.LanguageId ?? 0);
-            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
+            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published || !await _storeMappingService.AuthorizeAsync(details.CustomerLanguage))
                 details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
         }
 
