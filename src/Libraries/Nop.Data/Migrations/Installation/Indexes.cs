@@ -308,11 +308,11 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerCustomerRoleMapping), nameof(CustomerCustomerRoleMapping.CustomerId))).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
+            IfDatabase(databaseType).Create.Index("IX_ForumTopic_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
                 .OnColumn(nameof(ForumTopic.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumPost)))
+            IfDatabase(databaseType).Create.Index("IX_ForumPost_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumPost)))
                 .OnColumn(nameof(ForumPost.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
@@ -324,15 +324,15 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(ExternalAuthenticationRecord.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
+            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
                 .OnColumn(nameof(PrivateMessage.FromCustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
+            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
                 .OnColumn(nameof(PrivateMessage.ToCustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
+            IfDatabase(databaseType).Create.Index("IX_ForumSubscription_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
                 .OnColumn(nameof(ForumSubscription.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
@@ -368,7 +368,7 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(NewsComment.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_CustomerCustomerRoleMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(CustomerAddressMapping)))
+            IfDatabase(databaseType).Create.Index("IX_CustomerAddressMapping_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(CustomerAddressMapping)))
                 .OnColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAddressMapping), nameof(CustomerAddressMapping.CustomerId))).Ascending()
                 .WithOptions().NonClustered();
 
