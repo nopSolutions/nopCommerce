@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
@@ -286,9 +287,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var action = Request.Form["action"];
+            var action = await Request.GetFormValueAsync("action");
 
-            var fileName = Request.Form["backupFileName"];
+            var fileName = await Request.GetFormValueAsync("backupFileName");
             fileName = _fileProvider.GetFileName(_fileProvider.GetAbsolutePath(fileName));
 
             var backupPath = _maintenanceService.GetBackupPath(fileName);

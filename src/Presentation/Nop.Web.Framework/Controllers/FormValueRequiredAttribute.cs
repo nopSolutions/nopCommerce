@@ -57,6 +57,8 @@ namespace Nop.Web.Framework.Controllers
             if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
                 return false;
 
+            var form = routeContext.HttpContext.Request.ReadFormAsync().Result;
+
             foreach (var buttonName in _submitButtonNames)
             {
                 try
@@ -68,14 +70,14 @@ namespace Nop.Web.Framework.Controllers
                                 if (_validateNameOnly)
                                 {
                                     //"name" only
-                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.Equals(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                    if (form.Keys.Any(x => x.Equals(buttonName, StringComparison.InvariantCultureIgnoreCase)))
                                         return true;
                                 }
                                 else
                                 {
                                     //validate "value"
                                     //do not iterate because "Invalid request" exception can be thrown
-                                    string value = routeContext.HttpContext.Request.Form[buttonName];
+                                    string value = form[buttonName];
                                     if (!string.IsNullOrEmpty(value))
                                         return true;
                                 }
@@ -86,16 +88,16 @@ namespace Nop.Web.Framework.Controllers
                                 if (_validateNameOnly)
                                 {
                                     //"name" only
-                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                    if (form.Keys.Any(x => x.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase)))
                                         return true;
                                 }
                                 else
                                 {
                                     //validate "value"
-                                    foreach (var formValue in routeContext.HttpContext.Request.Form.Keys)
+                                    foreach (var formValue in form.Keys)
                                         if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
                                         {
-                                            var value = routeContext.HttpContext.Request.Form[formValue];
+                                            var value = form[formValue];
                                             if (!string.IsNullOrEmpty(value))
                                                 return true;
                                         }
