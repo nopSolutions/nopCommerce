@@ -48,6 +48,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 //6893
                 "Admin.Configuration.AppSettings.Cache.ShortTermCacheTime",
+
+                //#6894
+                "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime",
+                "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint",
             });
 
             #endregion
