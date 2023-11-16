@@ -124,24 +124,20 @@ namespace Nop.Services.Catalog
         {
             if (categoriesByParentId == null)
                 throw new ArgumentNullException(nameof(categoriesByParentId));
-            
+
             var remaining = parentId > 0
                 ? new HashSet<int>(0)
                 : categoriesByParentId.Select(g => g.Key).ToHashSet();
             remaining.Remove(parentId);
 
-            static IOrderedEnumerable<Category> sort(IEnumerable<Category> categories) => categories
-                .OrderBy(c => c.DisplayOrder)
-                .ThenBy(c => c.Id);
-
-            foreach (var cat in sort(categoriesByParentId[parentId]))
+            foreach (var cat in categoriesByParentId[parentId].OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id))
             {
                 yield return cat;
                 remaining.Remove(cat.Id);
-                await foreach (var subCat in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id, true))
+                await foreach (var subCategory in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id, true))
                 {
-                    yield return subCat;
-                    remaining.Remove(subCat.Id);
+                    yield return subCategory;
+                    remaining.Remove(subCategory.Id);
                 }
             }
 
@@ -150,9 +146,11 @@ namespace Nop.Services.Catalog
 
             //find categories without parent in provided category source and return them
             var orphans = remaining
-                .OrderBy(parentId => parentId)
-                .SelectMany(id => categoriesByParentId[id]);
-            foreach (var orphan in sort(orphans))
+                .SelectMany(id => categoriesByParentId[id])
+                .OrderBy(c => c.ParentCategoryId)
+                .ThenBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Id);
+            foreach (var orphan in orphans)
                 yield return orphan;
         }
 
@@ -272,9 +270,7 @@ namespace Nop.Services.Catalog
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
 
-                query = query.Where(c => !c.Deleted);
-
-                return query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                return query.Where(c => !c.Deleted);
             });
 
             //sort categories
