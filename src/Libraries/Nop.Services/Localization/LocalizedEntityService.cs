@@ -170,27 +170,28 @@ namespace Nop.Services.Localization
         /// </returns>
         public virtual async Task<string> GetLocalizedValueAsync(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
+            if (_localizationSettings.LoadAllLocalizedPropertiesOnStartup)
+            {
+                //value tuples aren't json-serializable by default, so we use a string key
+                static string formatKey(string keyGroup, string key, int id) => $"{keyGroup}:{key}:{id}";
+
+                var localizedValues = await _staticCacheManager.GetAsync(
+                    _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyLookupCacheKey, languageId),
+                    async () => (await GetAllLocalizedPropertiesAsync(languageId))
+                        .GroupBy(p => formatKey(p.LocaleKeyGroup, p.LocaleKey, p.EntityId))
+                        .ToDictionary(g => g.Key, g => g.First().LocaleValue));
+
+                return localizedValues.TryGetValue(formatKey(localeKeyGroup, localeKey, entityId), out var localeValue)
+                    ? localeValue
+                    : string.Empty;
+            }
+
+            //gradual loading
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
                 , languageId, entityId, localeKeyGroup, localeKey);
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                if (_localizationSettings.LoadAllLocalizedPropertiesOnStartup)
-                {
-                    var lookupKey = _staticCacheManager.PrepareKeyForDefaultCache(
-                        NopLocalizationDefaults.LocalizedPropertyLookupCacheKey,
-                        languageId);
-                    var lookup = await _staticCacheManager.GetAsync(
-                        lookupKey,
-                        async () => (await GetAllLocalizedPropertiesAsync(languageId))
-                            .ToGroupedDictionary(p => p.EntityId));
-
-                    return lookup.TryGetValue(entityId, out var localizedProperties)
-                        ? localizedProperties.FirstOrDefault(p => p.LocaleKeyGroup == localeKeyGroup && p.LocaleKey == localeKey)
-                            ?.LocaleValue ?? string.Empty
-                        : string.Empty;
-                }
-
                 var query = from lp in _localizedPropertyRepository.Table
                             where lp.LanguageId == languageId &&
                                   lp.EntityId == entityId &&
@@ -199,7 +200,7 @@ namespace Nop.Services.Localization
                             select lp.LocaleValue;
 
                 //little hack here. nulls aren't cacheable so set it to ""
-                return query.FirstOrDefault() ?? string.Empty;
+                return await query.FirstOrDefaultAsync() ?? string.Empty;
             });
         }
 
