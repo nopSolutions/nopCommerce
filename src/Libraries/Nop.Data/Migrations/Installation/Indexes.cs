@@ -324,11 +324,11 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(ExternalAuthenticationRecord.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
+            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_FromCustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
                 .OnColumn(nameof(PrivateMessage.FromCustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_CustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
+            IfDatabase(databaseType).Create.Index("IX_PrivateMessage_ToCustomerId").OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
                 .OnColumn(nameof(PrivateMessage.ToCustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
