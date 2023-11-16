@@ -107,7 +107,7 @@ namespace Nop.Services.Customers
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets a dictionary of all customer roles mapped by ID.

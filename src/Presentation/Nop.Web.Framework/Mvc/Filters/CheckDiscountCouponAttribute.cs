@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -75,11 +76,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                     throw new ArgumentNullException(nameof(context));
 
                 //check request query parameters
-                if (!context.HttpContext.Request?.Query?.Any() ?? true)
+                if (!context.HttpContext.Request.Query.Any())
                     return;
 
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsGetRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

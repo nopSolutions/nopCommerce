@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -62,12 +63,9 @@ namespace Nop.Web.Framework.Mvc.Filters
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
-
+                
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsGetRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
