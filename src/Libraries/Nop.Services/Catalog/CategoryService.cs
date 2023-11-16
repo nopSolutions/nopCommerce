@@ -138,7 +138,7 @@ namespace Nop.Services.Catalog
             {
                 yield return cat;
                 remaining.Remove(cat.Id);
-                await foreach (var subCat in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id))
+                await foreach (var subCat in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id, true))
                 {
                     yield return subCat;
                     remaining.Remove(subCat.Id);
