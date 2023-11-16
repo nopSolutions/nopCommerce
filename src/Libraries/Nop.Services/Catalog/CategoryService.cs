@@ -115,7 +115,7 @@ namespace Nop.Services.Catalog
         /// <param name="parentId">Parent category identifier</param>
         /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
         /// <returns>
-        /// An async-enumerable that contains the sorted categories
+        /// An enumerable containing the sorted categories
         /// </returns>
         protected virtual IEnumerable<Category> SortCategoriesForTree(
             ILookup<int, Category> categoriesByParentId,
