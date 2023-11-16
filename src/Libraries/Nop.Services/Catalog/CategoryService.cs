@@ -117,7 +117,7 @@ namespace Nop.Services.Catalog
         /// <returns>
         /// An async-enumerable that contains the sorted categories
         /// </returns>
-        protected virtual async IAsyncEnumerable<Category> SortCategoriesForTreeAsync(
+        protected virtual IEnumerable<Category> SortCategoriesForTree(
             ILookup<int, Category> categoriesByParentId,
             int parentId = 0,
             bool ignoreCategoriesWithoutExistingParent = false)
@@ -134,7 +134,7 @@ namespace Nop.Services.Catalog
             {
                 yield return cat;
                 remaining.Remove(cat.Id);
-                await foreach (var subCategory in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id, true))
+                foreach (var subCategory in SortCategoriesForTree(categoriesByParentId, cat.Id, true))
                 {
                     yield return subCategory;
                     remaining.Remove(subCategory.Id);
@@ -274,8 +274,8 @@ namespace Nop.Services.Catalog
             });
 
             //sort categories
-            var sortedCategories = await SortCategoriesForTreeAsync(unsortedCategories.ToLookup(c => c.ParentCategoryId))
-                .ToListAsync();
+            var sortedCategories = SortCategoriesForTree(unsortedCategories.ToLookup(c => c.ParentCategoryId))
+                .ToList();
 
             //paging
             return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
