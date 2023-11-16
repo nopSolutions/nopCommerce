@@ -115,32 +115,45 @@ namespace Nop.Services.Catalog
         /// <param name="parentId">Parent category identifier</param>
         /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
         /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the sorted categories
+        /// An async-enumerable that contains the sorted categories
         /// </returns>
-        protected virtual async Task<IList<Category>> SortCategoriesForTreeAsync(IList<Category> source, int parentId = 0,
+        protected virtual async IAsyncEnumerable<Category> SortCategoriesForTreeAsync(
+            ILookup<int, Category> categoriesByParentId,
+            int parentId = 0,
             bool ignoreCategoriesWithoutExistingParent = false)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            if (categoriesByParentId == null)
+                throw new ArgumentNullException(nameof(categoriesByParentId));
+            
+            var remaining = parentId > 0
+                ? new HashSet<int>(0)
+                : categoriesByParentId.Select(g => g.Key).ToHashSet();
+            remaining.Remove(parentId);
 
-            var result = new List<Category>();
+            static IOrderedEnumerable<Category> sort(IEnumerable<Category> categories) => categories
+                .OrderBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Id);
 
-            foreach (var cat in source.Where(c => c.ParentCategoryId == parentId).ToList())
+            foreach (var cat in sort(categoriesByParentId[parentId]))
             {
-                result.Add(cat);
-                result.AddRange(await SortCategoriesForTreeAsync(source, cat.Id, true));
+                yield return cat;
+                remaining.Remove(cat.Id);
+                await foreach (var subCat in SortCategoriesForTreeAsync(categoriesByParentId, cat.Id))
+                {
+                    yield return subCat;
+                    remaining.Remove(subCat.Id);
+                }
             }
 
-            if (ignoreCategoriesWithoutExistingParent || result.Count == source.Count)
-                return result;
+            if (ignoreCategoriesWithoutExistingParent)
+                yield break;
 
-            //find categories without parent in provided category source and insert them into result
-            foreach (var cat in source)
-                if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
-                    result.Add(cat);
-
-            return result;
+            //find categories without parent in provided category source and return them
+            var orphans = remaining
+                .OrderBy(parentId => parentId)
+                .SelectMany(id => categoriesByParentId[id]);
+            foreach (var orphan in sort(orphans))
+                yield return orphan;
         }
 
         #endregion
@@ -265,7 +278,8 @@ namespace Nop.Services.Catalog
             });
 
             //sort categories
-            var sortedCategories = await SortCategoriesForTreeAsync(unsortedCategories);
+            var sortedCategories = await SortCategoriesForTreeAsync(unsortedCategories.ToLookup(c => c.ParentCategoryId))
+                .ToListAsync();
 
             //paging
             return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
