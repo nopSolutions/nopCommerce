@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 using Nop.Services.Attributes;
@@ -22,7 +21,6 @@ namespace Nop.Services.Common
         protected readonly ICountryService _countryService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IRepository<Address> _addressRepository;
-        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
@@ -35,7 +33,6 @@ namespace Nop.Services.Common
             ICountryService countryService,
             ILocalizationService localizationService,
             IRepository<Address> addressRepository,
-            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
@@ -44,7 +41,6 @@ namespace Nop.Services.Common
             _countryService = countryService;
             _localizationService = localizationService;
             _addressRepository = addressRepository;
-            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
         }
 

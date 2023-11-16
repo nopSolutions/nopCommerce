@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -33,7 +32,6 @@ namespace Nop.Services.Orders
         protected readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         protected readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         protected readonly IShipmentService _shipmentService;
-        protected readonly IShortTermCacheManager _shortTermCacheManager;
 
         #endregion
 
@@ -50,8 +48,7 @@ namespace Nop.Services.Orders
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
-            IShipmentService shipmentService,
-            IShortTermCacheManager shortTermCacheManager)
+            IShipmentService shipmentService)
         {
             _htmlFormatter = htmlFormatter;
             _productService = productService;
@@ -65,7 +62,6 @@ namespace Nop.Services.Orders
             _recurringPaymentRepository = recurringPaymentRepository;
             _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             _shipmentService = shipmentService;
-            _shortTermCacheManager = shortTermCacheManager;
         }
 
         #endregion
