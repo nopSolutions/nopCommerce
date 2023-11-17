@@ -1163,7 +1163,7 @@ namespace Nop.Services.Forums
             if (customer == null)
                 return false;
 
-            if (await _customerService.IsGuestAsync(customer))
+            if (customer.IsSearchEngineAccount() || await _customerService.IsGuestAsync(customer))
                 return false;
 
             return true;

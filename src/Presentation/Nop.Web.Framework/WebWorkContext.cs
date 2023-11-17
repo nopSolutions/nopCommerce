@@ -325,8 +325,12 @@ namespace Nop.Web.Framework
         {
             //save passed language identifier
             var customer = await GetCurrentCustomerAsync();
-            customer.LanguageId = language?.Id;
-            await _customerService.UpdateCustomerAsync(customer);
+
+            if (!customer.IsSystemAccount)
+            {
+                customer.LanguageId = language?.Id;
+                await _customerService.UpdateCustomerAsync(customer);
+            }
 
             //set cookie
             SetLanguageCookie(language);

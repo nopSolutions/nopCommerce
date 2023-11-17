@@ -76,8 +76,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (affiliate.Id == customer.AffiliateId)
                     return;
 
-                //ignore search engines
-                if (customer.IsSearchEngineAccount())
+                //ignore system accounts
+                if (customer.IsSystemAccount)
                     return;
 
                 //update affiliate identifier
