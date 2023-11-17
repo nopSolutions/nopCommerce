@@ -851,7 +851,7 @@ namespace Nop.Services.Customers
             if (stripTooLong && maxLength > 0)
                 result = CommonHelper.EnsureMaximumLength(result, maxLength);
 
-            return result;
+            return result ?? string.Empty;
         }
 
         /// <summary>
