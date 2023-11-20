@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -20,28 +19,23 @@
     <!--When true, compiles and emits the Razor assembly as part of publishing the project-->
     <RazorCompileOnPublish>false</RazorCompileOnPublish>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
     <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
     <ProjectReference Include="..\Nop.Web.Framework\Nop.Web.Framework.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <!-- We copy the entire \App_Data directory. But we ignore JSON files and data protection keys  -->
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
     <Content Remove="App_Data\*.json" />
     <Content Update="App_Data\DataProtectionKeys\*.xml" CopyToPublishDirectory="Never" />
-
     <Compile Remove="Plugins\**;Themes\**" />
     <Content Remove="Plugins\**;Themes\**" />
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
     <None Remove="Plugins\**;Themes\**" />
     <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\runtimes\**;Plugins\**\ref\**;Plugins\**\*.pdb" />
-
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Never" />
-
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
     <None Remove="Plugins\Uploaded\placeholder.txt" />
@@ -49,12 +43,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <!-- This setting fixes the problem caused by this update in the websdk in vs2019
     https://github.com/aspnet/websdk/commit/7e6b193ddcf1eec5c0a88a9748c626775555273e#diff-edf5a48ed0d4aa5a4289cb857bf46a04
@@ -63,7 +55,6 @@
     We can also use “ExcludeConfigFilesFromBuildOutput” according to https://github.com/aspnet/AspNetCore/issues/14017 -->
     <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
-
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">
@@ -72,10 +63,8 @@
       <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
       <!-- Get paths for all plugins -->
       <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
-
       <!-- Get paths for ClearPluginAssemblies project -->
       <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
-
     </ItemGroup>
     <PropertyGroup>
       <PluginsFolders>@(PluginsFolders)</PluginsFolders>
@@ -84,9 +73,7 @@
       For plugins it creates too many unnecessary files that just take up space.
       At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
     <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(PluginsFolders)" Targets="NopClear" />
-
   </Target>
-
   <PropertyGroup>
     <!--The common language runtime (CLR) supports two types of garbage collection:
       workstation garbage collection, which is available on all systems, and server garbage collection,
@@ -112,5 +99,4 @@
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
   </PropertyGroup>
-
 </Project>
