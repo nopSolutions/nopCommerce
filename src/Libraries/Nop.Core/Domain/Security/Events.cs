@@ -1,23 +1,37 @@
-﻿using Nop.Core.Configuration;
-
-namespace Nop.Core.Domain.Security
+﻿namespace Nop.Core.Domain.Security
 {
     /// <summary>
-    /// Security settings
+    /// Security setting changed event
     /// </summary>
     public partial class SecuritySettingsChangedEvent
     {
-        public SecuritySettings SecuritySettings { get; set; }
-        public string OldEncryptionPrivateKey { get; set; }
+        #region Ctor
+
         /// <summary>
-        /// 
+        /// Initialize a new instance of the SecuritySettingsChangedEvent
         /// </summary>
-        /// <param name="SecuritySettings"></param>
-        /// <param name="oldEncryptionPrivateKey"></param>
-        public SecuritySettingsChangedEvent(SecuritySettings SecuritySettings, string oldEncryptionPrivateKey)
+        /// <param name="SecuritySettings">Security settings</param>
+        /// <param name="oldEncryptionPrivateKey">Previous encryption key value</param>
+        public SecuritySettingsChangedEvent(SecuritySettings securitySettings, string oldEncryptionPrivateKey)
         {
-            this.SecuritySettings = SecuritySettings;
-            this.OldEncryptionPrivateKey = oldEncryptionPrivateKey;
+            SecuritySettings = securitySettings;
+            OldEncryptionPrivateKey = oldEncryptionPrivateKey;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Security settings
+        /// </summary>
+        public SecuritySettings SecuritySettings { get; set; }
+
+        /// <summary>
+        /// Previous encryption key value
+        /// </summary>
+        public string OldEncryptionPrivateKey { get; set; }
+
+        #endregion
     }
 }
