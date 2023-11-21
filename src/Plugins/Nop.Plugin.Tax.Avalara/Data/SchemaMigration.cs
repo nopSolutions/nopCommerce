@@ -16,6 +16,7 @@ namespace Nop.Plugin.Tax.Avalara.Data
         public override void Up()
         {
             Create.TableFor<TaxTransactionLog>();
+            Create.TableFor<ItemClassification>();
         }
 
         #endregion

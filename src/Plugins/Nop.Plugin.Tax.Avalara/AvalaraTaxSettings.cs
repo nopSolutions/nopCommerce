@@ -119,5 +119,19 @@ namespace Nop.Plugin.Tax.Avalara
         public bool FillOnly { get; set; }
 
         #endregion
+
+        #region Item Classification
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use item classification
+        /// </summary>
+        public bool UseItemClassification { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifiers of countries for which the HS code needs to be calculated
+        /// </summary>
+        public List<int> SelectedCountryIds { get; set; } = new();
+
+        #endregion
     }
 }

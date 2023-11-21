@@ -28,6 +28,8 @@
     <None Remove="Views\Customer\ExemptionCertificates.cshtml" />
     <None Remove="Views\EntityUseCode\EntityUseCode.cshtml" />
     <None Remove="Views\EntityUseCode\_EntityUseCodeField.cshtml" />
+    <None Remove="Views\ItemClassification\_ItemClassificationConfiguration.cshtml" />
+    <None Remove="Views\ItemClassification\ProductToClassification.cshtml" />
     <None Remove="Views\Log\List.cshtml" />
     <None Remove="Views\Log\View.cshtml" />
     <None Remove="Views\Product\ExportItems.cshtml" />
@@ -68,6 +70,12 @@
     <Content Include="Views\EntityUseCode\_EntityUseCodeField.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\ItemClassification\_ItemClassificationConfiguration.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ItemClassification\ProductToClassification.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Log\List.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -92,7 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalara.AvaTax" Version="21.10.0" />
+    <PackageReference Include="Avalara.AvaTax" Version="23.5.0" />
   </ItemGroup>
 
   <ItemGroup>
