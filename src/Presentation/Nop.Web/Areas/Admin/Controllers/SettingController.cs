@@ -1817,6 +1817,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 await _settingService.SaveSettingAsync(securitySettings);
+                await _eventPublisher.PublishAsync(new SecuritySettingsChangedEvent(securitySettings, oldEncryptionPrivateKey));
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
             }
