@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
+using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Localization;
@@ -36,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected readonly IPaymentPluginManager _paymentPluginManager;
         protected readonly IPickupPluginManager _pickupPluginManager;
         protected readonly IPluginService _pluginService;
+        protected readonly ISearchPluginManager _searchPluginManager;
         protected readonly IShippingPluginManager _shippingPluginManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
@@ -57,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
+            ISearchPluginManager searchPluginManager,
             IShippingPluginManager shippingPluginManager,
             IStaticCacheManager staticCacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
@@ -74,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _paymentPluginManager = paymentPluginManager;
             _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
+            _searchPluginManager = searchPluginManager;
             _shippingPluginManager = shippingPluginManager;
             _staticCacheManager = staticCacheManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
@@ -133,6 +137,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
                     model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                    break;
+
+                case ISearchProvider searchProvider:
+                    model.IsEnabled = _searchPluginManager.IsPluginActive(searchProvider);
                     break;
 
                 case IWidgetPlugin widgetPlugin:
