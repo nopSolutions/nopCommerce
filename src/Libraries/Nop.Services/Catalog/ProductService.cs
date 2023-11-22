@@ -896,6 +896,9 @@ namespace Nop.Services.Catalog
                     (priceMax == null || p.Price <= priceMax)
                 select p;
 
+            var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
+            var providerResults = new List<int>();
+
             if (!string.IsNullOrEmpty(keywords))
             {
                 var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
@@ -904,11 +907,10 @@ namespace Nop.Services.Catalog
                 var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
                 IQueryable<int> productsByKeywords;
 
-                var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
-
-                if (activeSearchProvider is not null)
+                if (activeSearchProvider is not null && !showHidden)
                 {
-                    productsByKeywords = (await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue)).AsQueryable();
+                    providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
+                    productsByKeywords = providerResults.AsQueryable();
                 }
                 else
                 {
@@ -1131,7 +1133,15 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+            var products = await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+
+            if (providerResults.Any() && orderBy == ProductSortingEnum.Position && !showHidden)
+            {
+                var sortedProducts = products.OrderBy(p => providerResults.IndexOf(p.Id)).ToList();
+                return new PagedList<Product>(sortedProducts, pageIndex, pageSize, products.TotalCount);
+            }
+
+            return products;
         }
 
         /// <summary>
