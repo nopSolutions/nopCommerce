@@ -22,7 +22,7 @@ namespace Nop.Services.Stores.Caching
             await RemoveAsync(NopStoreDefaults.StoreMappingExistsCacheKey, entity.EntityName);
 
             if (entity.EntityName.Equals(nameof(Category)))
-                await RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryIdLookupByStorePrefix, entity.StoreId);
+                await RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryLookupByStorePrefix, entity.StoreId);
         }
     }
 }
