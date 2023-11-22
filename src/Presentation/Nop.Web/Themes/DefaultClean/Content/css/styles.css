@@ -1273,6 +1273,7 @@ label, label + * {
 
 .footer-powered-by {
   margin: 10px 0 0;
+  font-size: 16px;
 }
 
 .footer-powered-by a {
