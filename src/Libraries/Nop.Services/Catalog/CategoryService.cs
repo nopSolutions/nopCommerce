@@ -168,7 +168,6 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>A lookup of child categories accessible by parent ID</returns>
-        /// <remarks>MAJAKO_CHANGE</remarks>
         protected async Task<IDictionary<int, IList<Category>>> GetChildCategoryLookupAsync(int storeId, bool showHidden = false)
         {
             return await _staticCacheManager.GetAsync(
