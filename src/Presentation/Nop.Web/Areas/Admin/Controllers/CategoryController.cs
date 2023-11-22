@@ -327,11 +327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //if parent category changes, we need to clear cache for previous parent category
                 if (category.ParentCategoryId != model.ParentCategoryId)
-                {
-                    await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
-                    await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
                     await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.ChildCategoryLookupPrefix);
-                }
 
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;

@@ -47,44 +47,6 @@ namespace Nop.Services.Catalog
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : parent category ID
-        /// {1} : show hidden records?
-        /// {2} : roles of the current user
-        /// {3} : store ID
-        /// </remarks>
-        public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}", CategoriesByParentCategoryPrefix);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        /// <remarks>
-        /// {0} : parent category ID
-        /// </remarks>
-        public static string CategoriesByParentCategoryPrefix => "Nop.category.byparent.{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : parent category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// {3} : show hidden records?
-        /// </remarks>
-        public static CacheKey CategoriesChildIdsCacheKey => new("Nop.category.childids.{0}-{1}-{2}-{3}", CategoriesChildIdsPrefix);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        /// <remarks>
-        /// {0} : parent category ID
-        /// </remarks>
-        public static string CategoriesChildIdsPrefix => "Nop.category.childids.{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
         /// {0} : current store ID
         /// {1} : show hidden records?
         /// </remarks>

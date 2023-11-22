@@ -17,10 +17,6 @@ namespace Nop.Services.Catalog.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Category entity, EntityEventType entityEventType)
         {
-            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
-            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
-            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
-            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesHomepagePrefix);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoryBreadcrumbPrefix);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoryProductsNumberPrefix);
