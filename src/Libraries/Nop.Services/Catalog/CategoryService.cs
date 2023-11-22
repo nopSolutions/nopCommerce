@@ -153,7 +153,7 @@ namespace Nop.Services.Catalog
         {
             if (categoriesByParentId.TryGetValue(categoryId, out var categories))
             {
-                foreach (var category in categories.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id))
+                foreach (var category in categories)
                 {
                     yield return category;
                     foreach (var child in GetChildCategories(categoriesByParentId, category.Id))
@@ -174,7 +174,11 @@ namespace Nop.Services.Catalog
             return await _staticCacheManager.GetAsync(
                 _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ChildCategoryLookupCacheKey, storeId, showHidden),
                 async () => (await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden))
-                    .ToGroupedDictionary(c => c.ParentCategoryId));
+                    .ToGroupedDictionary(c => c.ParentCategoryId, (x, y) => 
+                    {
+                        var cmp = x.DisplayOrder.CompareTo(y.DisplayOrder);
+                        return cmp == 0 ? x.Id.CompareTo(y.Id) : cmp;
+                    }));
         }
 
         #endregion
@@ -319,8 +323,7 @@ namespace Nop.Services.Catalog
         {
             var store = await _storeContext.GetCurrentStoreAsync();
             var categoriesByParentId = await GetChildCategoryLookupAsync(store.Id, showHidden);
-            var children = categoriesByParentId.TryGetValue(parentCategoryId, out var categories) ? categories : new List<Category>();
-            return children.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id).ToList();
+            return categoriesByParentId.TryGetValue(parentCategoryId, out var categories) ? categories : new List<Category>();
         }
 
         /// <summary>

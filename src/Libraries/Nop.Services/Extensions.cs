@@ -67,11 +67,13 @@ namespace Nop.Services
         /// <param name="xs">List of objects</param>
         /// <param name="keySelector">A key-selector function</param>
         /// <param name="valueSelector">A value-selector function</param>
+        /// <param name="comparer">An optional comparison function for sorting the value lists</param>
         /// <returns>A dictionary with values grouped by key</returns>
         public static IDictionary<TKey, IList<TValue>> ToGroupedDictionary<T, TKey, TValue>(
           this IEnumerable<T> xs,
           Func<T, TKey> keySelector,
-          Func<T, TValue> valueSelector)
+          Func<T, TValue> valueSelector,
+          Comparison<TValue> comparer = null)
         {
             var result = new Dictionary<TKey, IList<TValue>>();
 
@@ -84,6 +86,12 @@ namespace Nop.Services
                     list.Add(value);
                 else
                     result[key] = new List<TValue> { value };
+            }
+
+            if (comparer != null)
+            {
+                foreach (var list in result.Values)
+                    ((List<TValue>)list).Sort(comparer);    // sort in-place
             }
 
             return result;
@@ -99,9 +107,10 @@ namespace Nop.Services
         /// <returns>A dictionary with values grouped by key</returns>
         public static IDictionary<TKey, IList<T>> ToGroupedDictionary<T, TKey>(
           this IEnumerable<T> xs,
-          Func<T, TKey> keySelector)
+          Func<T, TKey> keySelector,
+          Comparison<T> comparer = null)
         {
-            return xs.ToGroupedDictionary(keySelector, x => x);
+            return xs.ToGroupedDictionary(keySelector, x => x, comparer);
         }
     }
 }
