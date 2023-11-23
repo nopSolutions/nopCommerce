@@ -178,6 +178,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Customers.Customers.Fields.Gender.Neutral"] = "Neutral",
                 ["Account.Fields.Gender.Neutral"] = "Neutral",
 
+                //#6930
+                ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
+                ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
+
             }, languageId);
 
             #endregion
