@@ -139,6 +139,19 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
+        public override IQueryable<TEntity> GetTable<TEntity>()
+        {
+            var table = (ITable<TEntity>)base.GetTable<TEntity>();
+
+            return DataSettingsManager.UseNoLock() ? table.AsSqlServer().WithNoLock() : table;
+        }
+
+        /// <summary>
         /// Get the current identity value
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
