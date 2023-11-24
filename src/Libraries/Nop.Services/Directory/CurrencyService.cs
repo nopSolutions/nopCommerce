@@ -176,8 +176,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertToPrimaryStoreCurrencyAsync(decimal amount, Currency sourceCurrencyCode)
         {
-            if (sourceCurrencyCode == null)
-                throw new ArgumentNullException(nameof(sourceCurrencyCode));
+            ArgumentNullException.ThrowIfNull(sourceCurrencyCode);
 
             var primaryStoreCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             var result = await ConvertCurrencyAsync(amount, sourceCurrencyCode, primaryStoreCurrency);
@@ -214,11 +213,9 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertCurrencyAsync(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
-            if (sourceCurrencyCode == null)
-                throw new ArgumentNullException(nameof(sourceCurrencyCode));
+            ArgumentNullException.ThrowIfNull(sourceCurrencyCode);
 
-            if (targetCurrencyCode == null)
-                throw new ArgumentNullException(nameof(targetCurrencyCode));
+            ArgumentNullException.ThrowIfNull(targetCurrencyCode);
 
             var result = amount;
 
@@ -241,12 +238,9 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertToPrimaryExchangeRateCurrencyAsync(decimal amount, Currency sourceCurrencyCode)
         {
-            if (sourceCurrencyCode == null)
-                throw new ArgumentNullException(nameof(sourceCurrencyCode));
+            ArgumentNullException.ThrowIfNull(sourceCurrencyCode);
 
-            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
-            if (primaryExchangeRateCurrency == null)
-                throw new Exception("Primary exchange rate currency cannot be loaded");
+            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId) ?? throw new Exception("Primary exchange rate currency cannot be loaded");
 
             var result = amount;
             if (result == decimal.Zero || sourceCurrencyCode.Id == primaryExchangeRateCurrency.Id)
@@ -271,12 +265,9 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryExchangeRateCurrencyAsync(decimal amount, Currency targetCurrencyCode)
         {
-            if (targetCurrencyCode == null)
-                throw new ArgumentNullException(nameof(targetCurrencyCode));
+            ArgumentNullException.ThrowIfNull(targetCurrencyCode);
 
-            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
-            if (primaryExchangeRateCurrency == null)
-                throw new Exception("Primary exchange rate currency cannot be loaded");
+            var primaryExchangeRateCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId) ?? throw new Exception("Primary exchange rate currency cannot be loaded");
 
             var result = amount;
             if (result == decimal.Zero || targetCurrencyCode.Id == primaryExchangeRateCurrency.Id)

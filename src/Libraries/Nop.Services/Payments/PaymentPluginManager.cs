@@ -91,12 +91,11 @@ namespace Nop.Services.Payments
         /// </returns>
         public virtual async Task<IList<int>> GetRestrictedCountryIdsAsync(IPaymentMethod paymentMethod)
         {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
+            ArgumentNullException.ThrowIfNull(paymentMethod);
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? new List<int>();
+            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? [];
         }
 
         /// <summary>
@@ -107,8 +106,7 @@ namespace Nop.Services.Payments
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveRestrictedCountriesAsync(IPaymentMethod paymentMethod, IList<int> countryIds)
         {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
+            ArgumentNullException.ThrowIfNull(paymentMethod);
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 

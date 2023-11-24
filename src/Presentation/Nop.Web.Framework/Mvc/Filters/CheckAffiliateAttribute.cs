@@ -92,12 +92,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckAffiliateAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //check request query parameters
                 var request = context.HttpContext.Request;
-                if (request?.Query == null || !request.Query.Any())
+                if (request?.Query == null || request.Query.Count == 0)
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

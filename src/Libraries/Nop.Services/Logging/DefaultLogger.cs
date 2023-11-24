@@ -14,7 +14,7 @@ namespace Nop.Services.Logging
         #region Fields
 
         protected readonly CommonSettings _commonSettings;
-        
+
         protected readonly IRepository<Log> _logRepository;
         protected readonly IWebHelper _webHelper;
 
@@ -42,7 +42,7 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         protected virtual bool IgnoreLog(string message)
         {
-            if (!_commonSettings.IgnoreLogWordlist.Any())
+            if (_commonSettings.IgnoreLogWordlist.Count == 0)
                 return false;
 
             if (string.IsNullOrWhiteSpace(message))
@@ -78,8 +78,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLogAsync(Log log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
+            ArgumentNullException.ThrowIfNull(log);
 
             await _logRepository.DeleteAsync(log, false);
         }

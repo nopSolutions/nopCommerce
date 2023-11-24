@@ -89,7 +89,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
                 await _facebookPixelService.SendInitiateCheckoutEventAsync();
 
-            if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.Admin)
+            if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.ADMIN)
                 await _facebookPixelService.SendPageViewEventAsync();
         }
 
@@ -111,7 +111,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
         {
-            if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
+            if (eventMessage?.Message?.Name == MessageTemplateSystemNames.CONTACT_US_MESSAGE)
                 await _facebookPixelService.SendContactEventAsync();
         }
 

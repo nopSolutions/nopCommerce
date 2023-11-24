@@ -44,6 +44,7 @@ namespace Nop.Web.Controllers
         protected readonly IWorkflowMessageService _workflowMessageService;
         protected readonly LocalizationSettings _localizationSettings;
         protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -97,8 +98,7 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task<string> ParseVendorAttributesAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = "";
             var attributes = await _vendorAttributeService.GetAllAttributesAsync();
@@ -125,7 +125,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                                 )
                                 {
                                     var selectedAttributeId = int.Parse(item);

@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public PublishModelEventsAttribute(bool ignore = false) : base(typeof(PublishModelEventsFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -106,8 +106,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task PublishModelReceivedEventAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in POST requests
                 if (!context.HttpContext.Request.IsPostRequest())
@@ -132,8 +131,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task PublishModelPreparedEventAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (IgnoreFilter(context))
                     return;
@@ -167,8 +165,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (IgnoreFilter(context))
                     return;

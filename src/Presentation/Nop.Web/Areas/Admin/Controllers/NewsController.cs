@@ -338,7 +338,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var comments = await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
+            var comments = await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds]);
 
             await _newsService.DeleteNewsCommentsAsync(comments);
 
@@ -362,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter not approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => !comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {
@@ -391,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {

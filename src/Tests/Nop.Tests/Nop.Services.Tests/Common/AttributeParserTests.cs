@@ -23,17 +23,17 @@ namespace Nop.Tests.Nop.Services.Tests.Common
         private IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
         private IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
 
-        private List<int> _customerAttributeIds = new();
-        private List<int> _customerAttributeValuesIds = new();
+        private List<int> _customerAttributeIds = [];
+        private List<int> _customerAttributeValuesIds = [];
 
-        private List<int> _vendorAttributeIds = new();
-        private List<int> _vendorAttributeValuesIds = new();
+        private List<int> _vendorAttributeIds = [];
+        private List<int> _vendorAttributeValuesIds = [];
 
-        private List<int> _addressAttributeIds = new();
-        private List<int> _addressAttributeValuesIds = new();
+        private List<int> _addressAttributeIds = [];
+        private List<int> _addressAttributeValuesIds = [];
 
-        private List<int> _checkoutAttributeIds = new();
-        private List<int> _checkoutAttributeValuesIds = new();
+        private List<int> _checkoutAttributeIds = [];
+        private List<int> _checkoutAttributeValuesIds = [];
 
         protected void PrepareTestData(Type attributeType)
         {

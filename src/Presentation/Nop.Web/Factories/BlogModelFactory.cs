@@ -82,11 +82,9 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.MetaTitle;
@@ -137,8 +135,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPagingFilteringModel command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command.PageSize <= 0)
                 command.PageSize = _blogSettings.PostsPageSize;
@@ -243,7 +240,7 @@ namespace Nop.Web.Factories
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || !model.Any())
+                        if (date.Year > current || model.Count == 0)
                         {
                             var yearModel = new BlogPostYearModel
                             {
@@ -278,8 +275,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
+            ArgumentNullException.ThrowIfNull(blogComment);
 
             var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
 

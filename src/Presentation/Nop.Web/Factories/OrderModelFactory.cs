@@ -168,7 +168,7 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            
+
             var model = await _shortTermCacheManager.GetAsync(async () =>
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
@@ -260,8 +260,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<OrderDetailsModel> PrepareOrderDetailsModelAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
             var model = new OrderDetailsModel
             {
                 Id = order.Id,
@@ -438,7 +437,7 @@ namespace Nop.Web.Factories
                 else
                 {
                     var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -590,13 +589,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ShipmentDetailsModel> PrepareShipmentDetailsModelAsync(Shipment shipment)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-            if (order == null)
-                throw new Exception("order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("order cannot be loaded");
             var model = new ShipmentDetailsModel
             {
                 Id = shipment.Id

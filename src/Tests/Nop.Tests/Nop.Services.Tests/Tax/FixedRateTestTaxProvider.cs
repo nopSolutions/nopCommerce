@@ -70,10 +70,10 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
                 if (taxRate <= decimal.Zero || taxValue <= decimal.Zero)
                     continue;
 
-                if (!taxRates.ContainsKey(taxRate))
+                if (!taxRates.TryGetValue(taxRate, out var value))
                     taxRates.Add(taxRate, taxValue);
                 else
-                    taxRates[taxRate] = taxRates[taxRate] + taxValue;
+                    taxRates[taxRate] = value + taxValue;
             }
 
             //shipping
@@ -92,10 +92,10 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
                     //tax rates
                     if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
                     {
-                        if (!taxRates.ContainsKey(taxRate))
+                        if (!taxRates.TryGetValue(taxRate, out var value))
                             taxRates.Add(taxRate, shippingTax);
                         else
-                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
+                            taxRates[taxRate] = value + shippingTax;
                     }
                 }
             }
@@ -116,15 +116,15 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
                 //tax rates
                 if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
                 {
-                    if (!taxRates.ContainsKey(taxRate))
+                    if (!taxRates.TryGetValue(taxRate, out var value))
                         taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
                     else
-                        taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
+                        taxRates[taxRate] = value + paymentMethodAdditionalFeeTax;
                 }
             }
 
             //add at least one tax rate (0%)
-            if (!taxRates.Any())
+            if (taxRates.Count == 0)
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             //summarize taxes

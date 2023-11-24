@@ -18,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly ILocalizationService _localizationService;
         protected readonly IPermissionService _permissionService;
         protected readonly INotificationService _notificationService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //get identifiers of selected activity types
             var selectedActivityTypesIds = form["checkbox_activity_types"]
-                .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .SelectMany(value => value.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                 .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 

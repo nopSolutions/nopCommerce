@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string DISABLE_AUTOGENERATION = "disable-auto-generation";
 
         #endregion
-        
+
         #region Ctor
 
         public NopNestedSettingTagHelper(IHtmlGenerator generator)
@@ -39,11 +39,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var parentSettingName = For.Name;
             var jsConsistentParentSettingName = parentSettingName.Replace('.', '_');

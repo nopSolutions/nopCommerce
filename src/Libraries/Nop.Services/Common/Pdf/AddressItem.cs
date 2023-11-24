@@ -11,8 +11,8 @@ namespace Nop.Services.Common.Pdf
 
         public AddressItem()
         {
-            AddressAttributes = new();
-            CustomValues = new();
+            AddressAttributes = [];
+            CustomValues = [];
         }
 
         #endregion

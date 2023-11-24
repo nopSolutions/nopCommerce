@@ -8,6 +8,6 @@
         /// <summary>
         /// Admin area
         /// </summary>
-        public const string Admin = "Admin";
+        public const string ADMIN = "Admin";
     }
 }

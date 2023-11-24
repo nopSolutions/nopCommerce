@@ -55,7 +55,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets supported extensions of logo file
         /// </summary>
-        public static List<string> SupportedLogoImageExtensions => new() { "jpg", "png", "gif" };
+        public static List<string> SupportedLogoImageExtensions => ["jpg", "png", "gif"];
 
         /// <summary>
         /// Gets the path to temp directory with uploads

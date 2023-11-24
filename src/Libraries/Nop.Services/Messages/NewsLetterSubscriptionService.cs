@@ -75,10 +75,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-            {
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
-            }
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
@@ -99,10 +96,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-            {
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
-            }
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
@@ -141,8 +135,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
 
@@ -252,9 +245,8 @@ namespace Nop.Services.Messages
             }
 
             //filter by customer role
-            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-            if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
+            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName)
+                ?? throw new NopException("'Guests' role could not be loaded");
 
             if (guestRole.Id == customerRoleId)
             {

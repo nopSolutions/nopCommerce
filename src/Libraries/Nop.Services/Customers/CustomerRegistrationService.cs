@@ -210,8 +210,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerRegistrationResult> RegisterCustomerAsync(CustomerRegistrationRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             if (request.Customer == null)
                 throw new ArgumentException("Can't load current customer");
@@ -302,9 +301,7 @@ namespace Nop.Services.Customers
             request.Customer.Active = request.IsApproved;
 
             //add to 'Registered' role
-            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
-            if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaded");
+            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName) ?? throw new NopException("'Registered' role could not be loaded");
 
             await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
 
@@ -339,8 +336,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<ChangePasswordResult> ChangePasswordAsync(ChangePasswordRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var result = new ChangePasswordResult();
             if (string.IsNullOrWhiteSpace(request.Email))
@@ -468,8 +464,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetEmailAsync(Customer customer, string newEmail, bool requireValidation)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (newEmail == null)
                 throw new NopException("Email cannot be null");
@@ -527,8 +522,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetUsernameAsync(Customer customer, string newUsername)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");

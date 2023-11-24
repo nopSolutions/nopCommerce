@@ -460,7 +460,7 @@ namespace Nop.Services.ExportImport
             Language language) where TEntity : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
-                return default(TProperty);
+                return default;
 
             return await _localizationService.GetLocalizedAsync(entity, keySelector, language.Id, false);
         }
@@ -681,7 +681,7 @@ namespace Nop.Services.ExportImport
                     };
                 }).ToListAsync();
 
-            if (!attributes.Any())
+            if (attributes.Count == 0)
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -723,7 +723,7 @@ namespace Nop.Services.ExportImport
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
                 async psa => await ExportSpecificationAttribute.CreateAsync(psa, _specificationAttributeService)).ToListAsync();
 
-            if (!attributes.Any())
+            if (attributes.Count == 0)
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -842,8 +842,7 @@ namespace Nop.Services.ExportImport
             if (ignore)
                 return;
 
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
@@ -884,8 +883,7 @@ namespace Nop.Services.ExportImport
             if (ignore)
                 return;
 
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var nodeName = "SEName";
             if (!string.IsNullOrWhiteSpace(overriddenNodeName))
@@ -1373,7 +1371,7 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Quantity", productAttributeValue.Quantity);
                             await xmlWriter.WriteStringAsync("IsPreSelected", productAttributeValue.IsPreSelected);
                             await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeValue.DisplayOrder);
-                            await xmlWriter.WriteStringAsync("PictureIds", string.Join(",", 
+                            await xmlWriter.WriteStringAsync("PictureIds", string.Join(",",
                                 (await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id)).Select(vp => vp.PictureId)));
                             await xmlWriter.WriteEndElementAsync();
                         }
@@ -1800,7 +1798,7 @@ namespace Nop.Services.ExportImport
 
                 //shipments
                 var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id)).OrderBy(x => x.CreatedOnUtc).ToList();
-                if (shipments.Any())
+                if (shipments.Count != 0)
                 {
                     await xmlWriter.WriteStartElementAsync("Shipments");
                     foreach (var shipment in shipments)
@@ -2022,7 +2020,7 @@ namespace Nop.Services.ExportImport
 
                     var password = await _customerService.GetCurrentPasswordAsync(p.Id);
 
-                    if(password == null) 
+                    if(password == null)
                         return string.Empty;
 
                     if (password.PasswordFormat == PasswordFormat.Hashed)
@@ -2048,7 +2046,7 @@ namespace Nop.Services.ExportImport
                 }, !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
 
             }, _catalogSettings);
-            
+
             //activity log
             await _customerActivityService.InsertActivityAsync("ExportCustomers",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportCustomers"), customers.Count));
@@ -2158,8 +2156,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
         {
-            if (subscriptions == null)
-                throw new ArgumentNullException(nameof(subscriptions));
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
             const char separator = ',';
             var sb = new StringBuilder();
@@ -2198,8 +2195,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<string> ExportStatesToTxtAsync(IList<StateProvince> states)
         {
-            if (states == null)
-                throw new ArgumentNullException(nameof(states));
+            ArgumentNullException.ThrowIfNull(states);
 
             const char separator = ',';
             var sb = new StringBuilder();
@@ -2235,8 +2231,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //lambda expressions for choosing correct order address
             async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
@@ -2346,7 +2341,7 @@ namespace Nop.Services.ExportImport
             List<PrivateMessage> pmList = null;
             if (_forumSettings.AllowPrivateMessages)
             {
-                pmList = (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
+                pmList = [.. (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null))];
                 pmList.AddRange((await _forumService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
             }
 

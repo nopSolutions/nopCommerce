@@ -335,8 +335,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCustomerAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (customer.IsSystemAccount)
                 throw new NopException($"System customer account ({customer.SystemName}) could not be deleted");
@@ -416,10 +415,10 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                where c.CustomerGuid == customerGuid
-                orderby c.Id
-                select c;
-            
+                        where c.CustomerGuid == customerGuid
+                        orderby c.Id
+                        select c;
+
             return await _shortTermCacheManager.GetAsync(async () => await query.FirstOrDefaultAsync(), NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
         }
 
@@ -498,10 +497,7 @@ namespace Nop.Services.Customers
 
                 await InsertCustomerAsync(backgroundTaskUser);
 
-                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-
-                if (guestRole is null)
-                    throw new NopException("'Guests' role could not be loaded");
+                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName) ?? throw new NopException("'Guests' role could not be loaded");
 
                 await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
             }
@@ -539,10 +535,7 @@ namespace Nop.Services.Customers
 
                 await InsertCustomerAsync(searchEngineUser);
 
-                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-
-                if (guestRole is null)
-                    throw new NopException("'Guests' role could not be loaded");
+                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName) ?? throw new NopException("'Guests' role could not be loaded");
 
                 await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
             }
@@ -590,9 +583,7 @@ namespace Nop.Services.Customers
             };
 
             //add to 'Guests' role
-            var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-            if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
+            var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName) ?? throw new NopException("'Guests' role could not be loaded");
 
             await _customerRepository.InsertAsync(customer);
 
@@ -637,8 +628,7 @@ namespace Nop.Services.Customers
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
         {
-            if (customer == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(customer);
 
             //clear entered coupon codes
             if (clearCouponCodes)
@@ -734,8 +724,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //default tax display type
             var taxDisplayType = _taxSettings.TaxDisplayType;
@@ -764,8 +753,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<TaxDisplayType?> GetCustomerDefaultTaxDisplayTypeAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var roleWithOverriddenTaxType = (await GetCustomerRolesAsync(customer)).FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
             if (roleWithOverriddenTaxType == null)
@@ -784,8 +772,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var firstName = customer.FirstName;
             var lastName = customer.LastName;
@@ -864,14 +851,13 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<string[]> ParseAppliedDiscountCouponCodesAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
-                return couponCodes.ToArray();
+                return [.. couponCodes];
 
             try
             {
@@ -892,7 +878,7 @@ namespace Nop.Services.Customers
                 // ignored
             }
 
-            return couponCodes.ToArray();
+            return [.. couponCodes];
         }
 
         /// <summary>
@@ -906,8 +892,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task ApplyDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var result = string.Empty;
             try
@@ -974,8 +959,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task RemoveDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get applied coupon codes
             var existingCouponCodes = await ParseAppliedDiscountCouponCodesAsync(customer);
@@ -999,14 +983,13 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<string[]> ParseAppliedGiftCardCouponCodesAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
-                return couponCodes.ToArray();
+                return [.. couponCodes];
 
             try
             {
@@ -1028,7 +1011,7 @@ namespace Nop.Services.Customers
                 // ignored
             }
 
-            return couponCodes.ToArray();
+            return [.. couponCodes];
         }
 
         /// <summary>
@@ -1042,8 +1025,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task ApplyGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var result = string.Empty;
             try
@@ -1109,8 +1091,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get applied coupon codes
             var existingCouponCodes = await ParseAppliedGiftCardCouponCodesAsync(customer);
@@ -1134,8 +1115,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<Guid[]> GetNotExistingCustomersAsync(Guid[] guids)
         {
-            if (guids == null)
-                throw new ArgumentNullException(nameof(guids));
+            ArgumentNullException.ThrowIfNull(guids);
 
             var query = _customerRepository.Table;
             var queryFilter = guids.Distinct().ToArray();
@@ -1169,11 +1149,9 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RemoveCustomerRoleMappingAsync(Customer customer, CustomerRole role)
         {
-            if (customer is null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (role is null)
-                throw new ArgumentNullException(nameof(role));
+            ArgumentNullException.ThrowIfNull(role);
 
             var mapping = await _customerCustomerRoleMappingRepository.Table
                 .SingleOrDefaultAsync(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
@@ -1189,8 +1167,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCustomerRoleAsync(CustomerRole customerRole)
         {
-            if (customerRole == null)
-                throw new ArgumentNullException(nameof(customerRole));
+            ArgumentNullException.ThrowIfNull(customerRole);
 
             if (customerRole.IsSystemRole)
                 throw new NopException("System role could not be deleted");
@@ -1249,8 +1226,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<int[]> GetCustomerRoleIdsAsync(Customer customer, bool showHidden = false)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             return (await GetCustomerRolesAsync(customer, showHidden: showHidden))
                 .Select(cr => cr.Id)
@@ -1268,14 +1244,13 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<IList<CustomerRole>> GetCustomerRolesAsync(Customer customer, bool showHidden = false)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var allRolesById = await GetAllCustomerRolesDictionaryAsync();
 
             var mappings = await _shortTermCacheManager.GetAsync(
                 async () => await _customerCustomerRoleMappingRepository.GetAllAsync(query => query.Where(crm => crm.CustomerId == customer.Id)), NopCustomerServicesDefaults.CustomerRolesCacheKey, customer);
-            
+
             return mappings.Select(mapping => allRolesById.TryGetValue(mapping.CustomerRoleId, out var role) ? role : null)
                 .Where(cr => cr != null && (showHidden || cr.Active))
                 .ToList();
@@ -1321,8 +1296,7 @@ namespace Nop.Services.Customers
         public virtual async Task<bool> IsInCustomerRoleAsync(Customer customer,
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
@@ -1494,8 +1468,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<bool> IsPasswordRecoveryTokenValidAsync(Customer customer, string token)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var cPrt = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
             if (string.IsNullOrEmpty(cPrt))
@@ -1517,8 +1490,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<bool> IsPasswordRecoveryLinkExpiredAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (_customerSettings.PasswordRecoveryLinkDaysValid == 0)
                 return false;
@@ -1544,8 +1516,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<bool> IsPasswordExpiredAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //the guests don't have a password
             if (await IsGuestAsync(customer))
@@ -1585,8 +1556,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RemoveCustomerAddressAsync(Customer customer, Address address)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (await _customerAddressMappingRepository.Table
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
@@ -1609,11 +1579,9 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerAddressAsync(Customer customer, Address address)
         {
-            if (customer is null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (address is null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             if (await _customerAddressMappingRepository.Table
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
@@ -1640,10 +1608,10 @@ namespace Nop.Services.Customers
         public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
         {
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId
-                select address;
-            
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId
+                        select address;
+
             return await _shortTermCacheManager.GetAsync(async () => await query.ToListAsync(), NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
         }
 
@@ -1662,10 +1630,10 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId && address.Id == addressId
-                select address;
-            
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId && address.Id == addressId
+                        select address;
+
             return await _shortTermCacheManager.GetAsync(async () => await query.FirstOrDefaultAsync(), NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
         }
 
@@ -1679,8 +1647,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<Address> GetCustomerBillingAddressAsync(Customer customer)
         {
-            if (customer is null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             return await GetCustomerAddressAsync(customer.Id, customer.BillingAddressId ?? 0);
         }
@@ -1695,8 +1662,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<Address> GetCustomerShippingAddressAsync(Customer customer)
         {
-            if (customer is null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
         }

@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ParameterBasedOnFormNameAttribute(string formKeyName, string actionParameterName) : base(typeof(ParameterBasedOnFormNameFilter))
         {
-            Arguments = new object[] { formKeyName, actionParameterName };
+            Arguments = [formKeyName, actionParameterName];
         }
 
         #endregion
@@ -56,8 +56,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckParameterBasedOnFormNameAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true
                 context.ActionArguments[_actionParameterName] = await context.HttpContext.Request.IsFormAnyAsync(key => key.Equals(_formKeyName));

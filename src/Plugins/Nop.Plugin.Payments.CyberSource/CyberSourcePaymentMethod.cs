@@ -103,8 +103,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
-            if (processPaymentRequest is null)
-                throw new ArgumentNullException(nameof(processPaymentRequest));
+            ArgumentNullException.ThrowIfNull(processPaymentRequest);
 
             var result = new ProcessPaymentResult();
             var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
@@ -177,7 +176,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     if (!string.IsNullOrEmpty(processPaymentRequest.CreditCardNumber))
                     {
                         firstSixDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 6
-                            ? processPaymentRequest.CreditCardNumber.Substring(0, 6)
+                            ? processPaymentRequest.CreditCardNumber[..6]
                             : string.Empty;
                         lastFourDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 4
                             ? processPaymentRequest.CreditCardNumber[^4..]
@@ -376,7 +375,7 @@ namespace Nop.Plugin.Payments.CyberSource
             //request succeeded
             var refundIds = await _genericAttributeService
                 .GetAttributeAsync<List<string>>(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName)
-                ?? new List<string>();
+                ?? [];
             if (!refundIds.Contains(refundId))
                 refundIds.Add(refundId);
             await _genericAttributeService.SaveAttributeAsync(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName, refundIds);
@@ -453,8 +452,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             return Task.FromResult(false);
         }
@@ -469,8 +467,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
-            if (form is null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var warnings = new List<string>();
 
@@ -505,8 +502,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
-            if (form is null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var processPaymentRequest = new ProcessPaymentRequest();
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -584,8 +580,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone is null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             if (widgetZone.Equals(PublicWidgetZones.BodyStartHtmlTagAfter))
                 return typeof(PayerAuthenticationViewComponent);

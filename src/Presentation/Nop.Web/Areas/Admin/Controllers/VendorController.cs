@@ -41,6 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IUrlRecordService _urlRecordService;
         protected readonly IVendorModelFactory _vendorModelFactory;
         protected readonly IVendorService _vendorService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -127,8 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task<string> ParseVendorAttributesAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = string.Empty;
             var vendorAttributes = await _vendorAttributeService.GetAllAttributesAsync();
@@ -154,7 +154,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var cblAttributes = form[controlId];
                         if (!StringValues.IsNullOrEmpty(cblAttributes))
                         {
-                            foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                            foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)

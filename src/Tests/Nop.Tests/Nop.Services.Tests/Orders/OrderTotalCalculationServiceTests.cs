@@ -723,6 +723,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             _rewardPointsSettings.MinimumRewardPointsToUse = 0;
 
             await _settingService.SaveSettingAsync(_rewardPointsSettings);
+            //var orderTotalCalculationService = GetService<IOrderTotalCalculationService>();
 
             GetService<IOrderTotalCalculationService>().CheckMinimumRewardPointsToUseRequirement(0).Should().BeTrue();
             GetService<IOrderTotalCalculationService>().CheckMinimumRewardPointsToUseRequirement(1).Should().BeTrue();

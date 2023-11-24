@@ -119,7 +119,7 @@ namespace Nop.Services.Messages
                     Condition = regexCondition.Match(capture.Value).Value
                 })).ToList();
 
-            if (!conditionalStatements.Any())
+            if (conditionalStatements.Count == 0)
                 return template;
 
             //replace conditional statements
@@ -165,8 +165,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(template))
                 throw new ArgumentNullException(nameof(template));
 
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens));
+            ArgumentNullException.ThrowIfNull(tokens);
 
             //replace conditional statements
             template = ReplaceConditionalStatements(template, tokens);

@@ -247,8 +247,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            ArgumentNullException.ThrowIfNull(nopConnectionString);
 
             var builder = new SqlConnectionStringBuilder
             {

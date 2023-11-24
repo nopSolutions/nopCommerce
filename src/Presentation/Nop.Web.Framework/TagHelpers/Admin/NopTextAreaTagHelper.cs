@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
 
         #endregion
-        
+
         #region Ctor
 
         public NopTextAreaTagHelper(IHtmlGenerator generator) : base(generator)
@@ -36,11 +36,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             //tag details
             output.TagName = "textarea";

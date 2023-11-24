@@ -26,8 +26,8 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Gets a default list of slugs (seName) reserved for some other needs
         /// </summary>
-        public static List<string> ReservedUrlRecordSlugs => new()
-        {
+        public static List<string> ReservedUrlRecordSlugs =>
+        [
             //routes that redirected customers to the specific actions
             "admin",
             "blog",
@@ -55,7 +55,7 @@ namespace Nop.Services.Seo
             "sitemap",
             "storeclosed",
             "wishlist",
-        };
+        ];
 
         #region Sitemap
 

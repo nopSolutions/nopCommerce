@@ -555,7 +555,7 @@ namespace Nop.Web.Framework.UI.Paging
             foreach (var routeValue in routeValues)
                 url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
-            if (_renderEmptyParameters && parametersWithEmptyValues.Any())
+            if (_renderEmptyParameters && parametersWithEmptyValues.Count != 0)
                 foreach (var key in parametersWithEmptyValues)
                     url = webHelper.ModifyQueryString(url, key);
 

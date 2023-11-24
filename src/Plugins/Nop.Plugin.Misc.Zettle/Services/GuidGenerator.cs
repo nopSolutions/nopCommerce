@@ -84,21 +84,18 @@
             var bytes = BitConverter.GetBytes(utc.Ticks);
 
             if (bytes.Length == 0)
-                return new byte[] { 0x0, 0x0 };
+                return [0x0, 0x0];
 
             if (bytes.Length == 1)
-                return new byte[] { 0x0, bytes[0] };
+                return [0x0, bytes[0]];
 
-            return new byte[] { bytes[0], bytes[1] };
+            return [bytes[0], bytes[1]];
         }
 
         private static Guid GenerateTimeBasedGuid(DateTimeOffset dateTime, byte[] clockSequence, byte[] node)
         {
-            if (clockSequence == null)
-                throw new ArgumentNullException(nameof(clockSequence));
-
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(clockSequence);
+            ArgumentNullException.ThrowIfNull(node);
 
             if (clockSequence.Length != 2)
                 throw new ArgumentOutOfRangeException(nameof(clockSequence), "The clockSequence must be 2 bytes.");

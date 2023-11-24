@@ -66,7 +66,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
                 return Content(string.Empty);
 
             //ACL
-            if (_avalaraTaxSettings.CustomerRoleIds.Any())
+            if (_avalaraTaxSettings.CustomerRoleIds.Count != 0)
             {
                 var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                 if (!customerRoleIds.Intersect(_avalaraTaxSettings.CustomerRoleIds).Any())

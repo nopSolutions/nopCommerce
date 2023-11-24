@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         protected const string WRAP_TAGS_ATTRIBUTE_NAME = "asp-wrap-tags";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly IHtmlHelper _htmlHelper;
@@ -54,11 +54,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;

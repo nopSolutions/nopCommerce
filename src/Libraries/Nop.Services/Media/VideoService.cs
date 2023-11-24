@@ -102,8 +102,7 @@ namespace Nop.Services.Media
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteVideoAsync(Video video)
         {
-            if (video == null)
-                throw new ArgumentNullException(nameof(video));
+            ArgumentNullException.ThrowIfNull(video);
 
             await _videoRepository.DeleteAsync(video);
         }

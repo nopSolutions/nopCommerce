@@ -69,9 +69,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task SaveLastVisitedPageAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-                
+                ArgumentNullException.ThrowIfNull(context);
+
                 //only in GET requests
                 if (!context.HttpContext.Request.IsGetRequest())
                     return;

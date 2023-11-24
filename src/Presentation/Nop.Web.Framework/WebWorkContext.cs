@@ -437,12 +437,10 @@ namespace Nop.Web.Framework
             }
 
             //if the default currency for the current store not found, then try to get the first one
-            if (customerCurrency == null)
-                customerCurrency = allStoreCurrencies.FirstOrDefault();
+            customerCurrency ??= allStoreCurrencies.FirstOrDefault();
 
             //if there are no currencies for the current store try to get the first one regardless of the store
-            if (customerCurrency == null)
-                customerCurrency = (await _currencyService.GetAllCurrenciesAsync()).FirstOrDefault();
+            customerCurrency ??= (await _currencyService.GetAllCurrenciesAsync()).FirstOrDefault();
 
             //cache the found currency
             _cachedCurrency = customerCurrency;

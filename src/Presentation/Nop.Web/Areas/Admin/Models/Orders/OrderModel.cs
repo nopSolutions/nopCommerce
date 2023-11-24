@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public OrderModel()
         {
-            CustomValues = new Dictionary<string, object>();
+            CustomValues = [];
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
@@ -268,9 +268,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     public partial record OrderAggreratorModel : BaseNopModel
     {
         //aggergator properties
-        public string aggregatorprofit { get; set; }
-        public string aggregatorshipping { get; set; }
-        public string aggregatortax { get; set; }
-        public string aggregatortotal { get; set; }
+        public string AggregatorProfit { get; set; }
+        public string AggregatorShipping { get; set; }
+        public string AggregatorTax { get; set; }
+        public string AggregatorTotal { get; set; }
     }
 }

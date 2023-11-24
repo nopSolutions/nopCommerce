@@ -116,8 +116,7 @@ namespace Nop.Services.Attributes
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAttributesAsync(IList<TAttribute> attributes)
         {
-            if (attributes == null)
-                throw new ArgumentNullException(nameof(attributes));
+            ArgumentNullException.ThrowIfNull(attributes);
 
             await _attributeRepository.DeleteAsync(attributes);
         }

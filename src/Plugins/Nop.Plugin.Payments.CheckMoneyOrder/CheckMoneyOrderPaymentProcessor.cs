@@ -180,8 +180,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// </returns>
         public Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //it's not a redirection payment method. So we always return false
             return Task.FromResult(false);

@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var warnings = new List<SystemWarningModel>();
             await _commonModelFactory.PreparePluginsWarningModelAsync(warnings);
 
-            if (warnings.Any())
+            if (warnings.Count != 0)
                 _notificationService.WarningNotification(string.Join("<br />", warnings), false);
 
             return View(model);
@@ -199,16 +199,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //events
-                if (pluginDescriptors.Any())
+                if (pluginDescriptors.Count != 0)
                     await _eventPublisher.PublishAsync(new PluginsUploadedEvent(pluginDescriptors));
 
-                if (themeDescriptors.Any())
+                if (themeDescriptors.Count != 0)
                     await _eventPublisher.PublishAsync(new ThemesUploadedEvent(themeDescriptors));
 
                 var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
-                if (themeDescriptors.Any())
+                if (themeDescriptors.Count != 0)
                     return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)

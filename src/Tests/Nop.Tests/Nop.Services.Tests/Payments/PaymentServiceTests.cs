@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Services.Tests.Payments
         [Test]
         public async Task CanLoadActivePaymentMethods()
         {
-            var paymentMethods = await _paymentPluginManager.LoadActivePluginsAsync(new List<string> { "Payments.TestMethod" });
+            var paymentMethods = await _paymentPluginManager.LoadActivePluginsAsync(["Payments.TestMethod"]);
             paymentMethods.Should().NotBeNull();
             paymentMethods.Any().Should().BeTrue();
         }

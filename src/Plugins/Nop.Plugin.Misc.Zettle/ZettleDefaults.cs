@@ -50,13 +50,13 @@ namespace Nop.Plugin.Misc.Zettle
         /// <summary>
         /// Gets webhook event names to subscribe
         /// </summary>
-        public static List<string> WebhookEventNames => new()
-        {
+        public static List<string> WebhookEventNames =>
+        [
             "ProductCreated",
             "InventoryBalanceChanged",
             "InventoryTrackingStopped",
             "ApplicationConnectionRemoved"
-        };
+        ];
 
         /// <summary>
         /// Gets the configuration route name

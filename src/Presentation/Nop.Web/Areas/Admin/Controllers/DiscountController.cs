@@ -340,8 +340,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (interactionType.HasValue)
             {
-                requirements = (await _discountModelFactory
-                    .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)).ToList();
+                requirements =
+                [
+                    .. (await _discountModelFactory
+                                        .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)),
+                ];
             }
 
             //get available groups
@@ -358,9 +361,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var discount = await _discountService.GetDiscountByIdAsync(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
+            var discount = await _discountService.GetDiscountByIdAsync(discountId) ?? throw new ArgumentException("Discount could not be loaded");
 
             var defaultGroup = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id, true)).FirstOrDefault(requirement => requirement.IsGroup);
             if (defaultGroup == null)
@@ -492,7 +493,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
             if (selectedProducts.Any())
             {
                 foreach (var product in selectedProducts)

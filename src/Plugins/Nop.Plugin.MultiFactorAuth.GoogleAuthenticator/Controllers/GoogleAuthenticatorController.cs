@@ -20,7 +20,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 {
     [AutoValidateAntiforgeryToken]
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     public class GoogleAuthenticatorController : BasePluginController
     {
         #region Fields
@@ -28,7 +28,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         protected readonly GoogleAuthenticatorService _googleAuthenticatorService;
         protected readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
         protected readonly ICustomerService _customerService;
-        protected readonly IGenericAttributeService _genericAttributeService;        
+        protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly ILocalizationService _localizationService;
         protected readonly INotificationService _notificationService;
         protected readonly IPermissionService _permissionService;

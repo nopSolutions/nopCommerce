@@ -50,10 +50,9 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection to a database</returns>
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
-
-            return new NpgsqlConnection(connectionString);
+            return string.IsNullOrEmpty(connectionString)
+                ? throw new ArgumentNullException(nameof(connectionString))
+                : (DbConnection)new NpgsqlConnection(connectionString);
         }
 
         /// <summary>
@@ -64,13 +63,10 @@ namespace Nop.Data.DataProviders
         /// <returns>Returns the name of the sequence, or NULL if no sequence is associated with the column</returns>
         protected virtual string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
         {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
+            ArgumentNullException.ThrowIfNull(dataConnection);
 
-            var descriptor = GetEntityDescriptor(typeof(TEntity));
-
-            if (descriptor is null)
-                throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
+            var descriptor = GetEntityDescriptor(typeof(TEntity)) 
+                ?? throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
 
             var tableName = descriptor.EntityName;
             var columnName = descriptor.Fields.FirstOrDefault(x => x.IsIdentity && x.IsPrimaryKey)?.Name;
@@ -316,8 +312,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            ArgumentNullException.ThrowIfNull(nopConnectionString);
 
             if (nopConnectionString.IntegratedSecurity)
                 throw new NopException("Data provider supports connection only with login and password");

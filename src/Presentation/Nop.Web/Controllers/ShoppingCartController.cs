@@ -82,6 +82,7 @@ namespace Nop.Web.Controllers
         protected readonly OrderSettings _orderSettings;
         protected readonly ShoppingCartSettings _shoppingCartSettings;
         protected readonly ShippingSettings _shippingSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -170,11 +171,9 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task ParseAndSaveCheckoutAttributesAsync(IList<ShoppingCartItem> cart, IFormCollection form)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = string.Empty;
             var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
@@ -206,7 +205,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -326,7 +325,7 @@ namespace Nop.Web.Controllers
                 addToCartWarnings.AddRange(await _shoppingCartService.UpdateShoppingCartItemAsync(customer,
                     updatecartitem.Id, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate, quantity + (otherCartItemWithSameParameters?.Quantity ?? 0), true));
-                if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
+                if (otherCartItemWithSameParameters != null && addToCartWarnings.Count == 0)
                 {
                     //delete the same shopping cart item (the other one)
                     await _shoppingCartService.DeleteShoppingCartItemAsync(otherCartItemWithSameParameters);
@@ -337,7 +336,7 @@ namespace Nop.Web.Controllers
         protected virtual async Task<IActionResult> GetProductToCartDetailsAsync(List<string> addToCartWarnings, ShoppingCartType cartType,
             Product product)
         {
-            if (addToCartWarnings.Any())
+            if (addToCartWarnings.Count != 0)
             {
                 //cannot be added to the cart/wishlist
                 //let's display warnings
@@ -464,7 +463,7 @@ namespace Nop.Web.Controllers
                 shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                     NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
 
-                if (shippingOptions == null || !shippingOptions.Any())
+                if (shippingOptions == null || shippingOptions.Count == 0)
                 {
                     var address = new Address
                     {
@@ -478,7 +477,7 @@ namespace Nop.Web.Controllers
                         customer, storeId: store.Id);
 
                     if (getShippingOptionResponse.Success)
-                        shippingOptions = getShippingOptionResponse.ShippingOptions.ToList();
+                        shippingOptions = [.. getShippingOptionResponse.ShippingOptions];
                     else
                         foreach (var error in getShippingOptionResponse.Errors)
                             errors.Add(error);
@@ -599,7 +598,7 @@ namespace Nop.Web.Controllers
                 .GetShoppingCartItemWarningsAsync(customer, cartType,
                 product, store.Id, string.Empty,
                 decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
-            if (addToCartWarnings.Any())
+            if (addToCartWarnings.Count != 0)
             {
                 //cannot be added to the cart
                 //let's display standard warnings
@@ -617,7 +616,7 @@ namespace Nop.Web.Controllers
                 storeId: store.Id,
                 attributesXml: attXml,
                 quantity: quantity);
-            if (addToCartWarnings.Any())
+            if (addToCartWarnings.Count != 0)
             {
                 //cannot be added to the cart
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
@@ -941,7 +940,7 @@ namespace Nop.Web.Controllers
                 pictureDefaultSizeUrl,
                 pictureIds,
                 isFreeShipping,
-                message = errors.Any() ? errors.ToArray() : null
+                message = errors.Count != 0 ? errors.ToArray() : null
             });
         }
 
@@ -1176,7 +1175,7 @@ namespace Nop.Web.Controllers
 
             //get identifiers of items to remove
             var itemIdsToRemove = form["removefromcart"]
-                .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .SelectMany(value => value.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                 .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
@@ -1189,7 +1188,7 @@ namespace Nop.Web.Controllers
                 //try to get a new quantity for the item, set 0 for items to remove
                 NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out var quantity) ? quantity : item.Quantity,
                 Item = item,
-                Product = products.ContainsKey(item.ProductId) ? products[item.ProductId] : null
+                Product = products.TryGetValue(item.ProductId, out var value) ? value : null
             }).Where(item => item.NewQuantity != item.Item.Quantity);
 
             //order cart items
@@ -1261,7 +1260,7 @@ namespace Nop.Web.Controllers
             var checkoutAttributes = await _genericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.CheckoutAttributes, store.Id);
             var checkoutAttributeWarnings = await _shoppingCartService.GetShoppingCartWarningsAsync(cart, checkoutAttributes, true);
-            if (checkoutAttributeWarnings.Any())
+            if (checkoutAttributeWarnings.Count != 0)
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
@@ -1311,12 +1310,12 @@ namespace Nop.Web.Controllers
                 var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: discountcouponcode, showHidden: true))
                     .Where(d => d.RequiresCouponCode)
                     .ToList();
-                if (discounts.Any())
+                if (discounts.Count != 0)
                 {
                     var userErrors = new List<string>();
                     var anyValidDiscount = await discounts.AnyAwaitAsync(async discount =>
                     {
-                        var validationResult = await _discountService.ValidateDiscountAsync(discount, customer, new[] { discountcouponcode });
+                        var validationResult = await _discountService.ValidateDiscountAsync(discount, customer, [discountcouponcode]);
                         userErrors.AddRange(validationResult.Errors);
 
                         return validationResult.IsValid;
@@ -1331,7 +1330,7 @@ namespace Nop.Web.Controllers
                     }
                     else
                     {
-                        if (userErrors.Any())
+                        if (userErrors.Count != 0)
                             //some user errors
                             model.DiscountBox.Messages = userErrors;
                         else
@@ -1518,10 +1517,9 @@ namespace Nop.Web.Controllers
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
 
             var allIdsToRemove = form.ContainsKey("removefromcart")
-                ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
-                .ToList()
-                : new List<int>();
+                ? form["removefromcart"].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(int.Parse).ToList()
+                : [];
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<int, IList<string>>();
@@ -1593,8 +1591,8 @@ namespace Nop.Web.Controllers
             var allWarnings = new List<string>();
             var countOfAddedItems = 0;
             var allIdsToAdd = form.ContainsKey("addtocart")
-                ? form["addtocart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
-                : new List<int>();
+                ? form["addtocart"].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
+                : [];
             foreach (var sci in pageCart)
             {
                 if (allIdsToAdd.Contains(sci.Id))
@@ -1606,11 +1604,11 @@ namespace Nop.Web.Controllers
                         store.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
-                    if (!warnings.Any())
+                    if (warnings.Count == 0)
                         countOfAddedItems++;
                     if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
                         !customerGuid.HasValue && //own wishlist
-                        !warnings.Any()) //no warnings ( already in the cart)
+                        warnings.Count == 0) //no warnings ( already in the cart)
                     {
                         //let's remove the item from wishlist
                         await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
@@ -1624,7 +1622,7 @@ namespace Nop.Web.Controllers
             {
                 //redirect to the shopping cart page
 
-                if (allWarnings.Any())
+                if (allWarnings.Count != 0)
                 {
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
                 }
@@ -1637,7 +1635,7 @@ namespace Nop.Web.Controllers
             }
             //no items added. redisplay the wishlist page
 
-            if (allWarnings.Any())
+            if (allWarnings.Count != 0)
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
             }
@@ -1657,7 +1655,7 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.Wishlist, store.Id);
 
-            if (!cart.Any())
+            if (cart.Count == 0)
                 return RedirectToRoute("Homepage");
 
             var model = new WishlistEmailAFriendModel();
@@ -1677,7 +1675,7 @@ namespace Nop.Web.Controllers
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
 
-            if (!cart.Any())
+            if (cart.Count == 0)
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA

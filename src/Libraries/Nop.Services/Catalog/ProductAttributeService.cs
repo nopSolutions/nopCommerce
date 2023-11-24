@@ -77,8 +77,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductAttributesAsync(IList<ProductAttribute> productAttributes)
         {
-            if (productAttributes == null)
-                throw new ArgumentNullException(nameof(productAttributes));
+            ArgumentNullException.ThrowIfNull(productAttributes);
 
             foreach (var productAttribute in productAttributes)
                 await DeleteProductAttributeAsync(productAttribute);
@@ -162,8 +161,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<int[]> GetNotExistingAttributesAsync(int[] attributeId)
         {
-            if (attributeId == null)
-                throw new ArgumentNullException(nameof(attributeId));
+            ArgumentNullException.ThrowIfNull(attributeId);
 
             var query = _productAttributeRepository.Table;
             var queryFilter = attributeId.Distinct().ToArray();
@@ -205,7 +203,7 @@ namespace Nop.Services.Catalog
                         where pam.ProductId == productId
                         select pam;
 
-            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
+            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? [];
 
             return attributes;
         }
@@ -365,7 +363,7 @@ namespace Nop.Services.Catalog
                         select pacp;
 
             var valuePictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync())
-                ?? new List<ProductAttributeValuePicture>();
+                ?? [];
 
             return valuePictures;
         }
@@ -605,7 +603,7 @@ namespace Nop.Services.Catalog
                         select pacp;
 
             var combinationPictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) 
-                ?? new List<ProductAttributeCombinationPicture>();
+                ?? [];
 
             return combinationPictures;
         }

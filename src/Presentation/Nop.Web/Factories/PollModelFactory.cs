@@ -49,8 +49,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<PollModel> PreparePollModelAsync(Poll poll, bool setAlreadyVotedProperty)
         {
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
+            ArgumentNullException.ThrowIfNull(poll);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
 

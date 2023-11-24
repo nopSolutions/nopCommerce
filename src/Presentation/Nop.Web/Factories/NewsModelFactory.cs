@@ -85,11 +85,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (newsItem == null)
-                throw new ArgumentNullException(nameof(newsItem));
+            ArgumentNullException.ThrowIfNull(newsItem);
 
             model.Id = newsItem.Id;
             model.MetaTitle = newsItem.MetaTitle;
@@ -213,8 +211,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
         {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
+            ArgumentNullException.ThrowIfNull(newsComment);
 
             var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
 

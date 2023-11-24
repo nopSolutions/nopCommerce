@@ -11,7 +11,7 @@ namespace Nop.Services.Common.Pdf
 
         public ProductItem()
         {
-            ProductAttributes = new();
+            ProductAttributes = [];
         }
 
         #endregion

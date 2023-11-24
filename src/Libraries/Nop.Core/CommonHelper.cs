@@ -188,20 +188,18 @@ namespace Nop.Core
         /// <param name="value">The value to set the property to.</param>
         public static void SetProperty(object instance, string propertyName, object value)
         {
-            if (instance == null)
-                throw new ArgumentNullException(nameof(instance));
-            if (propertyName == null)
-                throw new ArgumentNullException(nameof(propertyName));
+            ArgumentNullException.ThrowIfNull(instance);
+            ArgumentNullException.ThrowIfNull(propertyName);
 
             var instanceType = instance.GetType();
-            var pi = instanceType.GetProperty(propertyName);
-            if (pi == null)
-                throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
+            var pi = instanceType.GetProperty(propertyName) 
+                ?? throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
+
             if (!pi.CanWrite)
                 throw new NopException("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType);
             if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
                 value = To(value, pi.PropertyType);
-            pi.SetValue(instance, value, Array.Empty<object>());
+            pi.SetValue(instance, value, []);
         }
 
         /// <summary>

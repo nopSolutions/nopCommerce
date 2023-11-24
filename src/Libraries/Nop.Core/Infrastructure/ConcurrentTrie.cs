@@ -42,7 +42,7 @@ namespace Nop.Core.Infrastructure
             var i = 0;
             var minLength = Math.Min(s1.Length, s2.Length);
 
-            while (i < minLength && s2[i] == s1[i]) 
+            while (i < minLength && s2[i] == s1[i])
                 i++;
 
             return i;
@@ -86,7 +86,7 @@ namespace Nop.Core.Infrastructure
                 var span = node.Label.AsSpan();
                 var i = GetCommonPrefixLength(suffix, span);
 
-                if (i != span.Length) 
+                if (i != span.Length)
                     return false;
 
                 if (i == suffix.Length)
@@ -120,10 +120,10 @@ namespace Nop.Core.Infrastructure
                             var label = nextNode.Label.AsSpan();
                             var i = GetCommonPrefixLength(label, suffix);
                             // suffix starts with label
-                            if (i == label.Length) 
+                            if (i == label.Length)
                             {
                                 // keys are equal - this is the node we're looking for
-                                if (i == suffix.Length) 
+                                if (i == suffix.Length)
                                 {
                                     if (overwrite)
                                         nextNode.SetValue(value);
@@ -186,10 +186,10 @@ namespace Nop.Core.Infrastructure
                     var i = GetCommonPrefixLength(label, suffix);
 
                     // suffix starts with label?
-                    if (i == label.Length)   
+                    if (i == label.Length)
                     {
                         // if the keys are equal, the key has already been inserted
-                        if (i == suffix.Length)    
+                        if (i == suffix.Length)
                         {
                             if (overwrite)
                                 nextNode.SetValue(value);
@@ -209,7 +209,7 @@ namespace Nop.Core.Infrastructure
                     TrieNode outNode;
 
                     // label starts with suffix, so we can return splitNode
-                    if (i == suffix.Length) 
+                    if (i == suffix.Length)
                         outNode = splitNode;
                     // the keys diverge, so we need to branch from splitNode
                     else
@@ -413,8 +413,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual bool TryGetValue(string key, out TValue value)
         {
-            if (key is null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
 
             value = default;
 
@@ -451,8 +450,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual IEnumerable<KeyValuePair<string, TValue>> Search(string prefix)
         {
-            if (prefix is null)
-                throw new ArgumentNullException(nameof(prefix));
+            ArgumentNullException.ThrowIfNull(prefix);
 
             if (!Find(prefix, _root, out var node))
                 return Enumerable.Empty<KeyValuePair<string, TValue>>();
@@ -470,7 +468,7 @@ namespace Nop.Core.Infrastructure
                 try
                 {
                     // we can't know what is done during enumeration, so we need to make a copy of the children
-                    children = n.Children.Values.ToList();
+                    children = [.. n.Children.Values];
                 }
                 finally
                 {
@@ -478,8 +476,8 @@ namespace Nop.Core.Infrastructure
                 }
 
                 foreach (var child in children)
-                foreach (var kv in traverse(child, s + child.Label))
-                    yield return kv;
+                    foreach (var kv in traverse(child, s + child.Label))
+                        yield return kv;
             }
 
             return traverse(node, prefix);
@@ -507,8 +505,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual bool Prune(string prefix, out IConcurrentCollection<TValue> subCollection)
         {
-            if (prefix is null)
-                throw new ArgumentNullException(nameof(prefix));
+            ArgumentNullException.ThrowIfNull(prefix);
 
             subCollection = default;
             var node = _root;
@@ -548,7 +545,7 @@ namespace Nop.Core.Infrastructure
                         }
 
                         // was removed by another thread
-                        return false; 
+                        return false;
                     }
 
                     if (k < label.Length)
@@ -570,7 +567,7 @@ namespace Nop.Core.Infrastructure
         #endregion
 
         #region Properties
-        
+
         /// <summary>
         /// Gets a collection that contains the keys in the <see cref="ConcurrentTrie{TValue}" />
         /// </summary>
@@ -597,7 +594,7 @@ namespace Nop.Core.Infrastructure
             // defaults to 8 times the number of processor cores
             public StripedReaderWriterLock(int nLocks = 0)
             {
-                if(nLocks == 0)
+                if (nLocks == 0)
                     nLocks = Environment.ProcessorCount * MULTIPLIER;
 
                 _locks = new ReaderWriterLockSlim[nLocks];
@@ -639,7 +636,7 @@ namespace Nop.Core.Infrastructure
             public TrieNode(string label = "")
             {
                 Label = label;
-                Children = new Dictionary<char, TrieNode>();
+                Children = [];
             }
 
             public TrieNode(ReadOnlySpan<char> label) : this(label.ToString())
@@ -687,7 +684,7 @@ namespace Nop.Core.Infrastructure
                 var wrapper = Interlocked.Exchange(ref _value, null);
                 value = default;
 
-                if (wrapper == null) 
+                if (wrapper == null)
                     return false;
 
                 value = wrapper.Value;
@@ -703,7 +700,7 @@ namespace Nop.Core.Infrastructure
             public TValue GetOrAddValue(TValue value)
             {
                 var wrapper = Interlocked.CompareExchange(ref _value, new ValueWrapper(value), null);
-                
+
                 return wrapper != null ? wrapper.Value : value;
             }
 

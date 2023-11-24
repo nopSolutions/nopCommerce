@@ -33,8 +33,9 @@ using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using QuestPDF.Drawing;
-using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.AspNetCore8;
 using WebOptimizer;
+using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -221,8 +222,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
 
-            application.UseWebOptimizer(webHostEnvironment, new[]
-            {
+            application.UseWebOptimizer(webHostEnvironment,
+            [
                 new FileProviderOptions
                 {
                     RequestPath =  new PathString("/Plugins"),
@@ -233,7 +234,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     RequestPath =  new PathString("/Themes"),
                     FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Themes"))
                 }
-            });
+            ]);
         }
 
         /// <summary>
@@ -504,7 +505,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     foreach (var strIpNet in appSettings.Get<HostingConfig>().KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
                     {
-                        string[] ipNetParts = strIpNet.Split("/");
+                        var ipNetParts = strIpNet.Split("/");
                         if (ipNetParts.Length == 2)
                         {
                             if (IPAddress.TryParse(ipNetParts[0], out var ip) && int.TryParse(ipNetParts[1], out var length))

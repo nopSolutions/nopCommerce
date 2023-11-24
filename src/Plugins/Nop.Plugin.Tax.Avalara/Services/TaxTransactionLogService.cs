@@ -82,8 +82,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task InsertTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
-            if (logItem == null)
-                throw new ArgumentNullException(nameof(logItem));
+            ArgumentNullException.ThrowIfNull(logItem);
 
             await _taxTransactionLogRepository.InsertAsync(logItem, false);
         }
@@ -95,8 +94,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
-            if (logItem == null)
-                throw new ArgumentNullException(nameof(logItem));
+            ArgumentNullException.ThrowIfNull(logItem);
 
             await _taxTransactionLogRepository.UpdateAsync(logItem, false);
         }

@@ -69,11 +69,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareConditionAttributesModelAsync(ConditionModel model, CheckoutAttribute checkoutAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (checkoutAttribute == null)
-                throw new ArgumentNullException(nameof(checkoutAttribute));
+            ArgumentNullException.ThrowIfNull(checkoutAttribute);
 
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
 
@@ -112,11 +110,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (checkoutAttribute == null)
-                throw new ArgumentNullException(nameof(checkoutAttribute));
+            ArgumentNullException.ThrowIfNull(checkoutAttribute);
 
             searchModel.CheckoutAttributeId = checkoutAttribute.Id;
 
@@ -140,8 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<CheckoutAttributeSearchModel> PrepareCheckoutAttributeSearchModelAsync(CheckoutAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -159,8 +154,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CheckoutAttributeListModel> PrepareCheckoutAttributeListModelAsync(CheckoutAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get checkout attributes
             var checkoutAttributes = (await _checkoutAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
@@ -250,11 +244,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CheckoutAttributeValueListModel> PrepareCheckoutAttributeValueListModelAsync(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (checkoutAttribute == null)
-                throw new ArgumentNullException(nameof(checkoutAttribute));
+            ArgumentNullException.ThrowIfNull(checkoutAttribute);
 
             //get checkout attribute values
             var checkoutAttributeValues = (await _checkoutAttributeService
@@ -295,8 +287,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModelAsync(CheckoutAttributeValueModel model,
             CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, bool excludeProperties = false)
         {
-            if (checkoutAttribute == null)
-                throw new ArgumentNullException(nameof(checkoutAttribute));
+            ArgumentNullException.ThrowIfNull(checkoutAttribute);
 
             Func<CheckoutAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 

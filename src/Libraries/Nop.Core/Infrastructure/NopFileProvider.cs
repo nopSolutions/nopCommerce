@@ -77,7 +77,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The combined paths</returns>
         public virtual string Combine(params string[] paths)
         {
-            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
+            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? [p] : p.Split('\\', '/')).ToArray());
 
             if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
                 //add leading slash to correctly form path in the UNIX system
@@ -264,12 +264,12 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Length != 0 && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);
 
-            return Combine(allPaths.ToArray());
+            return Combine([.. allPaths]);
         }
 
         /// <summary>
@@ -525,7 +525,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
+            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : [];
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>Locate a file at the given path.</summary>
         /// <param name="subpath">Relative path that identifies the file.</param>
         /// <returns>The file information. Caller must check Exists property.</returns>
-        public virtual new IFileInfo GetFileInfo(string subpath)
+        public new virtual IFileInfo GetFileInfo(string subpath)
         {
             subpath = subpath.Replace(Root, string.Empty);
 

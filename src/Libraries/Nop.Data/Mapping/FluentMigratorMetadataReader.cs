@@ -89,10 +89,10 @@ namespace Nop.Data.Mapping
         {
             if (type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == attributeType && GetAttribute<T>(type, memberInfo) is T attr)
             {
-                return new[] { attr };
+                return [attr];
             }
 
-            return Array.Empty<T>();
+            return [];
         }
 
         #endregion
@@ -131,7 +131,7 @@ namespace Nop.Data.Mapping
         /// <returns>All dynamic columns defined on given type</returns>
         public MemberInfo[] GetDynamicColumns(Type type)
         {
-            return Array.Empty<MemberInfo>();
+            return [];
         }
 
         #endregion

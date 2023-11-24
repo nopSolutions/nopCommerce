@@ -130,11 +130,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context is null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             if (_webHelper.IsAjaxRequest(ViewContext.HttpContext?.Request))
                 return;

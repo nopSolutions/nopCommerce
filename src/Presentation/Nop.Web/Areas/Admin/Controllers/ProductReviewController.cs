@@ -230,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter not approved reviews
-            var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => !review.IsApproved);
+            var productReviews = (await _productService.GetProductReviewsByIdsAsync([.. selectedIds])).Where(review => !review.IsApproved);
 
             foreach (var productReview in productReviews)
             {
@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter approved reviews
-            var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => review.IsApproved);
+            var productReviews = (await _productService.GetProductReviewsByIdsAsync([.. selectedIds])).Where(review => review.IsApproved);
 
             foreach (var productReview in productReviews)
             {
@@ -292,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var productReviews = await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray());
+            var productReviews = await _productService.GetProductReviewsByIdsAsync([.. selectedIds]);
             var products = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
             await _productService.DeleteProductReviewsAsync(productReviews);

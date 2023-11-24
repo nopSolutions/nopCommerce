@@ -7,7 +7,7 @@
     {
         public InstallationLanguage()
         {
-            Resources = new List<InstallationLocaleResource>();
+            Resources = [];
         }
         public string Name { get; set; }
         public string Code { get; set; }

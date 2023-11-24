@@ -11,8 +11,8 @@ namespace Nop.Services.Common.Pdf
 
         public InvoiceTotals()
         {
-            GiftCards = new();
-            TaxRates = new();
+            GiftCards = [];
+            TaxRates = [];
         }
 
         #endregion

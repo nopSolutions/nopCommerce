@@ -21,7 +21,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class FixedOrByCountryStateZipController : BasePluginController
     {
@@ -38,7 +38,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         protected readonly ITaxCategoryService _taxCategoryService;
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly IWorkContext _workContext;
-        
+
         #endregion
 
         #region Ctor
@@ -163,7 +163,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                     TaxCategoryName = taxCategory.Name,
 
                     Rate = await _settingService
-                        .GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id))
+                        .GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxCategory.Id))
                 });
             });
 
@@ -176,7 +176,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            await _settingService.SetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, model.TaxCategoryId), model.Rate);
+            await _settingService.SetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, model.TaxCategoryId), model.Rate);
 
             return new NullJsonResult();
         }

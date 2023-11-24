@@ -1291,8 +1291,7 @@ namespace Nop.Services.Seo
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveSlugAsync<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -1397,8 +1396,7 @@ namespace Nop.Services.Seo
         public virtual async Task<string> GetSeNameAsync<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityName = entity.GetType().Name;
 
@@ -1510,8 +1508,7 @@ namespace Nop.Services.Seo
         /// </returns>
         public virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityName = entity.GetType().Name;
 
