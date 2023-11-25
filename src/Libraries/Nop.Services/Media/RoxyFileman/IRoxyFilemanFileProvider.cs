@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
@@ -39,9 +39,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
         /// <returns>
-        /// The list of <see cref="RoxyImageInfo"/>
+        /// The list of <see cref="RoxyFileInfo"/>
         /// </returns>
-        IEnumerable<RoxyImageInfo> GetFiles(string directoryPath = "", string type = "");
+        IEnumerable<RoxyFileInfo> GetFiles(string directoryPath = "", string type = "");
 
         /// <summary>
         /// Moves a file or a directory and its contents to a new location

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -383,9 +383,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
         /// <returns>
-        /// The list of <see cref="RoxyImageInfo"/>
+        /// The list of <see cref="RoxyFileInfo"/>
         /// </returns>
-        public virtual IEnumerable<RoxyImageInfo> GetFiles(string directoryPath = "", string type = "")
+        public virtual IEnumerable<RoxyFileInfo> GetFiles(string directoryPath = "", string type = "")
         {
             var files = GetDirectoryContents(directoryPath);
 
@@ -393,10 +393,23 @@ namespace Nop.Services.Media.RoxyFileman
                 .Where(f => !f.IsDirectory && isMatchType(f.Name))
                 .Select(f =>
                 {
-                    using var skData = SKData.Create(f.PhysicalPath);
-                    var image = SKBitmap.DecodeBounds(skData);
+                    var width = 0;
+                    var height = 0;
 
-                    return new RoxyImageInfo(getRelativePath(f.Name), f.LastModified, f.Length, image.Width, image.Height);
+                    if (GetFileType(f.Name) == "image")
+                    {
+                        using var skData = SKData.Create(f.PhysicalPath);
+                        
+                        if (skData != null)
+                        {
+                            var image = SKBitmap.DecodeBounds(skData);
+
+                            width = image.Width;
+                            height = image.Height;
+                        }
+                    }
+
+                    return new RoxyFileInfo(getRelativePath(f.Name), f.LastModified, f.Length, width, height);
                 });
 
             bool isMatchType(string name) => string.IsNullOrEmpty(type) || GetFileType(name) == type;
