@@ -1,13 +1,14 @@
 ﻿using System.Security.AccessControl;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
+using Nop.Core.Common.Interfaces;
 
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// A file provider abstraction
     /// </summary>
-    public interface INopFileProvider : IFileProvider
+    public interface INopFileProvider : IFileProvider,IScopedService
     {
         /// <summary>
         /// Combines an array of strings into a path

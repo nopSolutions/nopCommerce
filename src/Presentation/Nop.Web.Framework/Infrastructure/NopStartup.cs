@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Common.Interfaces;
+using Nop.Core.Common;
 using Nop.Core.Configuration;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -72,11 +74,23 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            // Registers all implementations of ITransientService in generic way
+            services.RegisterImplementations(typeof(ITransientService), ServiceLifetime.Transient);
+            // Registers all implementations of IScopedService in generic way
+            services.RegisterImplementations(typeof(IScopedService), ServiceLifetime.Scoped);
+            // Registers all implementations of ISingletonService in generic way
+            services.RegisterImplementations(typeof(ISingletonService), ServiceLifetime.Singleton);
+
+            // You can configure all services here in generic way by inherting IScopedService in the interface type.
+            // Example: file provider and web helper only
+
             //file provider
-            services.AddScoped<INopFileProvider, NopFileProvider>();
+            //INopFileProvider configured in generic way by inherting IScopedService in INopFileProvider.
+            //services.AddScoped<INopFileProvider, NopFileProvider>();
 
             //web helper
-            services.AddScoped<IWebHelper, WebHelper>();
+            //IWebHelper configured in generic way by inherting IScopedService in IWebHelper.
+            //services.AddScoped<IWebHelper, WebHelper>();
 
             //user agent helper
             services.AddScoped<IUserAgentHelper, UserAgentHelper>();

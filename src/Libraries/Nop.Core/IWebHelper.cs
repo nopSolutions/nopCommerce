@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Nop.Core.Common.Interfaces;
 
 namespace Nop.Core
 {
     /// <summary>
     /// Represents a web helper
     /// </summary>
-    public partial interface IWebHelper
+    public partial interface IWebHelper: IScopedService
     {
         /// <summary>
         /// Get URL referrer if exists
