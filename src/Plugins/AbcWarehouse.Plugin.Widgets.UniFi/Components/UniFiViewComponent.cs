@@ -108,6 +108,7 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
                         {
                             var productAbcFinance =
                                 await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(abcItemNumber);
+                            model.AbcItemNumber = abcItemNumber;
                             if (productAbcFinance != null)
                             {
                                 model.Tags = productAbcFinance.TransPromo;

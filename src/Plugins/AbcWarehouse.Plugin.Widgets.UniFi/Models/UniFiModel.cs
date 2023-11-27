@@ -12,5 +12,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Models
         public string FlowType { get; set; }
         public string Tags { get; set; }
         public string Url { get; set; }
+
+        // For debugging
+        public string AbcItemNumber { get; set; }
     }
 }
