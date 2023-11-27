@@ -383,9 +383,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
         /// <returns>
-        /// The list of <see cref="RoxyFileInfo"/>
+        /// The list of <see cref="RoxyImageInfo"/>
         /// </returns>
-        public virtual IEnumerable<RoxyFileInfo> GetFiles(string directoryPath = "", string type = "")
+        public virtual IEnumerable<RoxyImageInfo> GetFiles(string directoryPath = "", string type = "")
         {
             var files = GetDirectoryContents(directoryPath);
 
@@ -409,7 +409,7 @@ namespace Nop.Services.Media.RoxyFileman
                         }
                     }
 
-                    return new RoxyFileInfo(getRelativePath(f.Name), f.LastModified, f.Length, width, height);
+                    return new RoxyImageInfo(getRelativePath(f.Name), f.LastModified, f.Length, width, height);
                 });
 
             bool isMatchType(string name) => string.IsNullOrEmpty(type) || GetFileType(name) == type;
