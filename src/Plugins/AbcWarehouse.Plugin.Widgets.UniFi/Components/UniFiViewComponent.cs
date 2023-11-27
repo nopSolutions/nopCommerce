@@ -16,11 +16,15 @@ using Nop.Web.Framework.Infrastructure;
 using AbcWarehouse.Plugin.Widgets.UniFi.Models;
 using Nop.Plugin.Misc.AbcCore.Infrastructure;
 using Nop.Plugin.Misc.AbcCore.Services;
+using Nop.Plugin.Misc.AbcCore.Mattresses;
 
 namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
 {
     public class UniFiViewComponent : NopViewComponent
     {
+        private readonly IAbcMattressEntryService _abcMattressEntryService;
+        private readonly IAbcMattressModelService _abcMattressModelService;
+        private readonly IAbcMattressProductService _abcMattressProductService;
         private readonly ILogger _logger;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IProductAbcFinanceService _productAbcFinanceService;
@@ -30,6 +34,9 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
         private readonly UniFiSettings _settings;
 
         public UniFiViewComponent(
+            IAbcMattressEntryService abcMattressEntryService,
+            IAbcMattressModelService abcMattressModelService,
+            IAbcMattressProductService abcMattressProductService,
             ILogger logger,
             IProductAbcDescriptionService productAbcDescriptionService,
             IProductAbcFinanceService productAbcFinanceService,
@@ -38,6 +45,9 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
             IWorkContext workContext,
             UniFiSettings settings)
         {
+            _abcMattressEntryService = abcMattressEntryService;
+            _abcMattressModelService = abcMattressModelService;
+            _abcMattressProductService = abcMattressProductService;
             _logger = logger;
             _productAbcDescriptionService = productAbcDescriptionService;
             _productAbcFinanceService = productAbcFinanceService;
@@ -76,12 +86,28 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
 
                     if (productId != 0)
                     {
-                        var productAbcDescription =
-                            await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(productId);
-                        if (productAbcDescription != null)
+                        string abcItemNumber = null;
+
+                        // need to check if this is a mattress
+                        var isMattress = _abcMattressProductService.IsMattressProduct(productId);
+                        if (isMattress)
+                        {
+                            var abcMattressModel = _abcMattressModelService.GetAbcMattressModelByProductId(productId);
+                            // just to keep it simple, grab the first entry
+                            var abcMattressEntry = _abcMattressEntryService.GetAbcMattressEntriesByModelId(abcMattressModel.Id).First();
+                            
+                            abcItemNumber = abcMattressEntry?.ItemNo;
+                        }
+                        else
+                        {
+                            var productAbcDescription = await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(productId);
+                            abcItemNumber = productAbcDescription?.AbcItemNumber;
+                        }
+
+                        if (abcItemNumber != null)
                         {
                             var productAbcFinance =
-                                await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(productAbcDescription.AbcItemNumber);
+                                await _productAbcFinanceService.GetProductAbcFinanceByAbcItemNumberAsync(abcItemNumber);
                             if (productAbcFinance != null)
                             {
                                 model.Tags = productAbcFinance.TransPromo;
