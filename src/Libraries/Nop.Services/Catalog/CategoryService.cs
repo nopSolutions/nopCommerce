@@ -111,7 +111,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Sort categories for tree representation
         /// </summary>
-        /// <param name="source">Source</param>
+        /// <param name="categoriesByParentId">Categories for sort</param>
         /// <param name="parentId">Parent category identifier</param>
         /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
         /// <returns>
@@ -133,7 +133,9 @@ namespace Nop.Services.Catalog
             foreach (var cat in categoriesByParentId[parentId].OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id))
             {
                 yield return cat;
+
                 remaining.Remove(cat.Id);
+                
                 foreach (var subCategory in SortCategoriesForTree(categoriesByParentId, cat.Id, true))
                 {
                     yield return subCategory;
@@ -150,6 +152,7 @@ namespace Nop.Services.Catalog
                 .OrderBy(c => c.ParentCategoryId)
                 .ThenBy(c => c.DisplayOrder)
                 .ThenBy(c => c.Id);
+            
             foreach (var orphan in orphans)
                 yield return orphan;
         }
