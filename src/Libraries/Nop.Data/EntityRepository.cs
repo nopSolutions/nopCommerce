@@ -229,24 +229,24 @@ namespace Nop.Data
             if (ids?.Any() != true)
                 return new List<TEntity>();
 
-            static IList<TEntity> sortByIdList(IList<int> ids_, IDictionary<int, TEntity> entitiesById)
+            static IList<TEntity> sortByIdList(IList<int> listOfId, IDictionary<int, TEntity> entitiesById)
             {
-                var sortedEntities = new List<TEntity>(ids_.Count);
-                foreach (var id in ids_)
-                {
+                var sortedEntities = new List<TEntity>(listOfId.Count);
+
+                foreach (var id in listOfId)
                     if (entitiesById.TryGetValue(id, out var entry))
                         sortedEntities.Add(entry);
-                }
+
                 return sortedEntities;
             }
 
-            async Task<IList<TEntity>> getByIdsAsync(IList<int> ids_, bool sort = true)
+            async Task<IList<TEntity>> getByIdsAsync(IList<int> listOfId, bool sort = true)
             {
                 var query = AddDeletedFilter(Table, includeDeleted)
-                    .Where(entry => ids_.Contains(entry.Id));
+                    .Where(entry => listOfId.Contains(entry.Id));
 
                 return sort
-                    ? sortByIdList(ids_, await query.ToDictionaryAsync(entry => entry.Id))
+                    ? sortByIdList(listOfId, await query.ToDictionaryAsync(entry => entry.Id))
                     : await query.ToListAsync();
             }
 
@@ -260,8 +260,8 @@ namespace Nop.Data
             if (cacheKey != null)
                 return await _staticCacheManager.GetAsync(cacheKey, async () => await getByIdsAsync(ids));
 
-            //If we are using an in-memory cache, we can optimize by caching each entity individually for maximum reusability.
-            //With a distributed cache, the overhead would be too high.
+            //if we are using an in-memory cache, we can optimize by caching each entity individually for maximum reusability.
+            //with a distributed cache, the overhead would be too high.
             var cachedById = await ids
                 .Distinct()
                 .SelectAwait(async id => await _staticCacheManager.GetAsync(
@@ -274,9 +274,7 @@ namespace Nop.Data
 
             foreach (var entity in missingEntities)
             {
-                await _staticCacheManager.SetAsync(
-                    _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity.Id),
-                    entity);
+                await _staticCacheManager.SetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity.Id), entity);
                 cachedById[entity.Id] = entity;
             }
 
