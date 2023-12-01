@@ -19,8 +19,7 @@ namespace Nop.Services.ScheduleTasks
 
         protected static readonly List<TaskThread> _taskThreads = new();
         protected readonly AppSettings _appSettings;
-        protected readonly IScheduleTaskService _scheduleTaskService;
-        protected readonly IStoreContext _storeContext;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         #endregion
 
@@ -28,15 +27,12 @@ namespace Nop.Services.ScheduleTasks
 
         public TaskScheduler(AppSettings appSettings,
             IHttpClientFactory httpClientFactory,
-            IScheduleTaskService scheduleTaskService,
-            IServiceScopeFactory serviceScopeFactory,
-            IStoreContext storeContext)
+            IServiceScopeFactory serviceScopeFactory)
         {
             _appSettings = appSettings;
+            _serviceScopeFactory = serviceScopeFactory;
             TaskThread.HttpClientFactory = httpClientFactory;
-            _scheduleTaskService = scheduleTaskService;
             TaskThread.ServiceScopeFactory = serviceScopeFactory;
-            _storeContext = storeContext;
         }
 
         #endregion
@@ -54,12 +50,17 @@ namespace Nop.Services.ScheduleTasks
             if (_taskThreads.Any())
                 return;
 
+            using var scope = _serviceScopeFactory.CreateScope();
+            var scheduleTaskService = scope.ServiceProvider.GetService<IScheduleTaskService>() ?? throw new NullReferenceException($"Can't get {nameof(IScheduleTaskService)} implementation from the scope");
+
             //initialize and start schedule tasks
-            var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync())
+            var scheduleTasks = (await scheduleTaskService.GetAllTasksAsync())
                 .OrderBy(x => x.Seconds)
                 .ToList();
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var storeContext = scope.ServiceProvider.GetService<IStoreContext>() ?? throw new NullReferenceException($"Can't get {nameof(IStoreContext)} implementation from the scope");
+
+            var store = await storeContext.GetCurrentStoreAsync();
 
             var scheduleTaskUrl = $"{store.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
             var timeout = _appSettings.Get<CommonConfig>().ScheduleTaskRunTimeout;

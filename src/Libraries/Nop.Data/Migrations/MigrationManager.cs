@@ -3,6 +3,7 @@ using FluentMigrator;
 using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Nop.Data.Migrations
 {
@@ -13,26 +14,18 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        protected readonly IFilteringMigrationSource _filteringMigrationSource;
-        protected readonly IMigrationRunner _migrationRunner;
         protected readonly IMigrationRunnerConventions _migrationRunnerConventions;
-        protected readonly Lazy<IVersionLoader> _versionLoader;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         #endregion
 
         #region Ctor
 
-        public MigrationManager(
-            IFilteringMigrationSource filteringMigrationSource,
-            IMigrationRunner migrationRunner,
-            IMigrationRunnerConventions migrationRunnerConventions,
-            Lazy<IVersionLoader> versionLoader)
+        public MigrationManager(IMigrationRunnerConventions migrationRunnerConventions,
+            IServiceScopeFactory serviceScopeFactory)
         {
-            _versionLoader = versionLoader;
-
-            _filteringMigrationSource = filteringMigrationSource;
-            _migrationRunner = migrationRunner;
             _migrationRunnerConventions = migrationRunnerConventions;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         #endregion
@@ -48,17 +41,22 @@ namespace Nop.Data.Migrations
         /// <param name="isApplied">A value indicating whether to select those migrations that have been applied</param>
         /// <param name="isSchemaMigration">Indicate whether to found only schema migration; if set to true will by returns only that migrations which has the IsSchemaMigration property set to true</param>
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
-        protected virtual IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly, bool exactlyProcessType,
+        protected virtual IList<IMigrationInfo> GetMigrations(Assembly assembly, bool exactlyProcessType,
             MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter, bool isApplied = false, bool isSchemaMigration = false)
         {
             if (exactlyProcessType && migrationProcessType == MigrationProcessType.NoMatter)
                 throw new ArgumentException("Migration process type can't be NoMatter if exactlyProcessType set to true", nameof(migrationProcessType));
 
+            using var scope = _serviceScopeFactory.CreateScope();
+            var versionLoader = scope.ServiceProvider.GetService<IVersionLoader>() ?? throw new NullReferenceException($"Can't get {nameof(IVersionLoader)} implementation from the scope");
+
             //load all version data stored in the version table
             //we do this for avoid a problem with state of migration
-            _versionLoader.Value.LoadVersionInfo();
+            versionLoader.LoadVersionInfo();
 
-            var migrations = _filteringMigrationSource
+            var filteringMigrationSource = scope.ServiceProvider.GetService<IFilteringMigrationSource>() ?? throw new NullReferenceException($"Can't get {nameof(IFilteringMigrationSource)} implementation from the scope");
+
+            var migrations = filteringMigrationSource
                 .GetMigrations(t =>
                 {
                     var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
@@ -69,7 +67,7 @@ namespace Nop.Data.Migrations
                     if (isSchemaMigration && !migrationAttribute.IsSchemaMigration)
                         return false;
 
-                    if (isApplied == !_versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
+                    if (isApplied == !versionLoader.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
                         return false;
 
                     if (exactlyProcessType && migrationProcessType != migrationAttribute.TargetMigrationProcess)
@@ -83,7 +81,7 @@ namespace Nop.Data.Migrations
                     return assembly == null || t.Assembly == assembly;
                 }) ?? Enumerable.Empty<IMigration>();
 
-            return migrations.Select(_migrationRunnerConventions.GetMigrationInfoForMigration);
+            return migrations.Select(_migrationRunnerConventions.GetMigrationInfoForMigration).ToList();
         }
 
         #endregion
@@ -140,8 +138,14 @@ namespace Nop.Data.Migrations
             if (migrationInfo is null)
                 throw new ArgumentNullException(nameof(migrationInfo));
 
-            _migrationRunner.Down(migrationInfo.Migration);
-            _versionLoader.Value.DeleteVersion(migrationInfo.Version);
+            using var scope = _serviceScopeFactory.CreateScope();
+
+            var migrationRunner = scope.ServiceProvider.GetService<IMigrationRunner>() ?? throw new NullReferenceException($"Can't get {nameof(IMigrationRunner)} implementation from the scope");
+
+            var versionLoader = scope.ServiceProvider.GetService<IVersionLoader>() ?? throw new NullReferenceException($"Can't get {nameof(IVersionLoader)} implementation from the scope");
+
+            migrationRunner.Down(migrationInfo.Migration);
+            versionLoader.DeleteVersion(migrationInfo.Version);
         }
 
         /// <summary>
@@ -154,14 +158,21 @@ namespace Nop.Data.Migrations
             if (migrationInfo is null)
                 throw new ArgumentNullException(nameof(migrationInfo));
 
+            using var scope = _serviceScopeFactory.CreateScope();
+
             if (!commitVersionOnly)
-                _migrationRunner.Up(migrationInfo.Migration);
+            {
+                var migrationRunner = scope.ServiceProvider.GetService<IMigrationRunner>() ?? throw new NullReferenceException($"Can't get {nameof(IMigrationRunner)} implementation from the scope");
+
+                migrationRunner.Up(migrationInfo.Migration);
+            }
 #if DEBUG
             if (!migrationInfo.IsNeedToApplyInDbOnDebugMode())
                 return;
 #endif
-            _versionLoader.Value
-                    .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
+            var versionLoader = scope.ServiceProvider.GetService<IVersionLoader>() ?? throw new NullReferenceException($"Can't get {nameof(IVersionLoader)} implementation from the scope");
+
+            versionLoader.UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
         }
 
         #endregion
