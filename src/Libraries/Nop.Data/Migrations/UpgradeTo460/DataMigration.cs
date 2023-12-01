@@ -90,13 +90,13 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 var genericAttributes = _dataProvider.GetTable<GenericAttribute>()
                     .Where(ga => ga.KeyGroup == nameof(Customer) && customerIds.Contains(ga.EntityId) && attributeKeys.Contains(ga.Key)).ToList();
 
-                if (!genericAttributes.Any())
+                if (genericAttributes.Count == 0)
                     continue;
 
                 foreach (var customer in customers)
                 {
                     var customerAttributes = genericAttributes.Where(ga => ga.EntityId == customer.Id).ToList();
-                    if (!customerAttributes.Any())
+                    if (customerAttributes.Count == 0)
                         continue;
 
                     customer.FirstName = getAttributeValue(customerAttributes, nameof(Customer.FirstName), castToString);
@@ -277,12 +277,12 @@ namespace Nop.Data.Migrations.UpgradeTo460
             }
 
             //#3651
-            if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.OrderProcessingCustomerNotification, StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
             {
                 var _ = _dataProvider.InsertEntity(
                     new MessageTemplate
                     {
-                        Name = MessageTemplateSystemNames.OrderProcessingCustomerNotification,
+                        Name = MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION,
                         Subject = "%Store.Name%. Your order is processing",
                         Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Your order is processing. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress2%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress2%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
                         IsActive = false,

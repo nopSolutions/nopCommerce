@@ -51,7 +51,7 @@ namespace Nop.Web.Models.ShoppingCart
             public ShoppingCartItemModel()
             {
                 Picture = new PictureModel();
-                AllowedQuantities = new List<SelectListItem>();
+                AllowedQuantities = [];
                 Warnings = new List<string>();
             }
 
@@ -147,8 +147,8 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public DiscountBoxModel()
             {
-                AppliedDiscountsWithCodes = new List<DiscountInfoModel>();
-                Messages = new List<string>();
+                AppliedDiscountsWithCodes = [];
+                Messages = [];
             }
 
             public List<DiscountInfoModel> AppliedDiscountsWithCodes { get; set; }
@@ -176,7 +176,7 @@ namespace Nop.Web.Models.ShoppingCart
                 BillingAddress = new AddressModel();
                 ShippingAddress = new AddressModel();
                 PickupAddress = new AddressModel();
-                CustomValues = new Dictionary<string, object>();
+                CustomValues = [];
             }
             public bool Display { get; set; }
 

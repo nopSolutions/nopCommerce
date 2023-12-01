@@ -17,7 +17,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Infrastructure
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             endpointRouteBuilder.MapControllerRoute(FacebookPixelDefaults.ConfigurationRouteName, "Plugins/FacebookPixel/Configure",
-                new { controller = "FacebookPixel", action = "Configure", area = AreaNames.Admin });
+                new { controller = "FacebookPixel", action = "Configure", area = AreaNames.ADMIN });
         }
 
         /// <summary>

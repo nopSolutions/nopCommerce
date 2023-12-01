@@ -24,8 +24,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             _customerModelFactory = GetService<ICustomerModelFactory>();
             _customer = await GetService<IWorkContext>().GetCurrentCustomerAsync();
 
-            _customerAttributes = new[]
-            {
+            _customerAttributes =
+            [
                 new CustomerAttribute
                 {
                     AttributeControlType = AttributeControlType.Checkboxes, Name = "Test customer attribute 1"
@@ -66,7 +66,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
                 {
                     AttributeControlType = AttributeControlType.TextBox, Name = "Test customer attribute 10"
                 }
-            };
+            ];
 
             foreach (var customerAttribute in _customerAttributes)
                 await _customerAttributeService.InsertAttributeAsync(customerAttribute);

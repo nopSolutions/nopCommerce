@@ -7,9 +7,9 @@ namespace Nop.Web.Models.Boards
     {
         public SearchModel()
         {
-            LimitList = new List<SelectListItem>();
-            ForumList = new List<SelectListItem>();
-            WithinList = new List<SelectListItem>();
+            LimitList = [];
+            ForumList = [];
+            WithinList = [];
             ForumTopics = new List<ForumTopicRowModel>();
         }
 

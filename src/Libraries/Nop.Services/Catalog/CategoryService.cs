@@ -122,8 +122,7 @@ namespace Nop.Services.Catalog
             int parentId = 0,
             bool ignoreCategoriesWithoutExistingParent = false)
         {
-            if (categoriesByParentId == null)
-                throw new ArgumentNullException(nameof(categoriesByParentId));
+            ArgumentNullException.ThrowIfNull(categoriesByParentId);            
 
             var remaining = parentId > 0
                 ? new HashSet<int>(0)
@@ -168,8 +167,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountCategoryMappingAsync(Discount discount)
         {
-            if (discount is null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
@@ -201,8 +199,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoriesAsync(IList<Category> categories)
         {
-            if (categories == null)
-                throw new ArgumentNullException(nameof(categories));
+            ArgumentNullException.ThrowIfNull(categories);
 
             foreach (var category in categories)
                 await DeleteCategoryAsync(category);
@@ -369,8 +366,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<int>> GetAppliedCategoryIdsAsync(Discount discount, Customer customer)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.CategoryIdsByDiscountCacheKey,
@@ -535,8 +531,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCategoryAsync(Category category)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
             //validate category hierarchy
             var parentCategory = await GetCategoryByIdAsync(category.ParentCategoryId);
@@ -664,8 +659,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string[]> GetNotExistingCategoriesAsync(string[] categoryIdsNames)
         {
-            if (categoryIdsNames == null)
-                throw new ArgumentNullException(nameof(categoryIdsNames));
+            ArgumentNullException.ThrowIfNull(categoryIdsNames);
 
             var query = _categoryRepository.Table.Where(c => !c.Deleted);
             var queryFilter = categoryIdsNames.Distinct().ToArray();
@@ -677,8 +671,8 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (!queryFilter.Any())
-                return queryFilter.ToArray();
+            if (queryFilter.Length == 0)
+                return [.. queryFilter];
 
             //filtering by IDs
             filter = await query.Select(c => c.Id.ToString())
@@ -775,8 +769,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
             var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
                 category,

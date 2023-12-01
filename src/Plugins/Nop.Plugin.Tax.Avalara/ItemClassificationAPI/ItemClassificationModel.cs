@@ -4,11 +4,11 @@ namespace Nop.Plugin.Tax.Avalara.ItemClassificationAPI
 {
     public class ItemClassificationModel
     {
-        
+
         public ItemClassificationModel()
         {
-            ClassificationParameters = new List<ClassificationParameters>();
-            Parameters = new List<ClassificationParameters>();
+            ClassificationParameters = [];
+            Parameters = [];
         }
 
         /// <summary>

@@ -61,11 +61,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             searchModel.RecurringPaymentId = recurringPayment.Id;
 
@@ -89,8 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<RecurringPaymentSearchModel> PrepareRecurringPaymentSearchModelAsync(RecurringPaymentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -108,8 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<RecurringPaymentListModel> PrepareRecurringPaymentListModelAsync(RecurringPaymentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get recurringPayments
             var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(showHidden: true,
@@ -211,11 +207,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<RecurringPaymentHistoryListModel> PrepareRecurringPaymentHistoryListModelAsync(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             //get recurring payments history
             var recurringPayments = (await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment))

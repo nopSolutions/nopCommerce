@@ -45,11 +45,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
+            ArgumentNullException.ThrowIfNull(vendorAttribute);
 
             searchModel.VendorAttributeId = vendorAttribute.Id;
 
@@ -73,8 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<VendorAttributeSearchModel> PrepareVendorAttributeSearchModelAsync(VendorAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -92,8 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<VendorAttributeListModel> PrepareVendorAttributeListModelAsync(VendorAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get vendor attributes
             var vendorAttributes = (await _vendorAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
@@ -165,11 +161,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<VendorAttributeValueListModel> PrepareVendorAttributeValueListModelAsync(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
+            ArgumentNullException.ThrowIfNull(vendorAttribute);
 
             //get vendor attribute values
             var vendorAttributeValues = (await _vendorAttributeService.GetAttributeValuesAsync(vendorAttribute.Id)).ToPagedList(searchModel);
@@ -198,8 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<VendorAttributeValueModel> PrepareVendorAttributeValueModelAsync(VendorAttributeValueModel model,
             VendorAttribute vendorAttribute, VendorAttributeValue vendorAttributeValue, bool excludeProperties = false)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
+            ArgumentNullException.ThrowIfNull(vendorAttribute);
 
             Func<VendorAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 

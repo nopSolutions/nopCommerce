@@ -360,7 +360,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
+            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync([.. selectedIds]);
             await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
 
             foreach (var specificationAttribute in specificationAttributes)

@@ -78,7 +78,7 @@ namespace Nop.Core.Http.Extensions
 
             var form = await request.ReadFormAsync();
 
-            return  predicate == null ? form.Any() : form.Keys.Any(predicate);
+            return  predicate == null ? form.Count != 0 : form.Keys.Any(predicate);
         }
 
         /// <summary>

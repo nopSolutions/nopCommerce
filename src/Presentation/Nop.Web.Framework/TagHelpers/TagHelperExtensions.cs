@@ -41,8 +41,7 @@ namespace Nop.Web.Framework.TagHelpers
         /// <returns>Collection of key/string value pairs</returns>
         public static async Task<IDictionary<string, string>> GetAttributeDictionaryAsync(this TagHelperOutput output)
         {
-            if (output is null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var result = new Dictionary<string, string>();
 

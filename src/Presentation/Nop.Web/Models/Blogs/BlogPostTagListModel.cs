@@ -6,13 +6,12 @@ namespace Nop.Web.Models.Blogs
     {
         public BlogPostTagListModel()
         {
-            Tags = new List<BlogPostTagModel>();
+            Tags = [];
         }
 
         public int GetFontSize(BlogPostTagModel blogPostTag)
         {
-            if (blogPostTag == null)
-                throw new ArgumentNullException(nameof(blogPostTag));
+            ArgumentNullException.ThrowIfNull(blogPostTag);
 
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
@@ -40,8 +39,7 @@ namespace Nop.Web.Models.Blogs
 
         protected double Mean(IEnumerable<double> values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(values);
 
             double sum = 0;
             var count = 0;
@@ -59,8 +57,7 @@ namespace Nop.Web.Models.Blogs
 
         protected double StdDev(IEnumerable<double> values, out double mean)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(values);
 
             mean = Mean(values);
 

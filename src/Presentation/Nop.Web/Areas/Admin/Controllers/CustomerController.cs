@@ -71,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IWorkContext _workContext;
         protected readonly IWorkflowMessageService _workflowMessageService;
         protected readonly TaxSettings _taxSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -151,11 +152,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task<string> ValidateCustomerRolesAsync(IList<CustomerRole> customerRoles, IList<CustomerRole> existingCustomerRoles)
         {
-            if (customerRoles == null)
-                throw new ArgumentNullException(nameof(customerRoles));
+            ArgumentNullException.ThrowIfNull(customerRoles);
 
-            if (existingCustomerRoles == null)
-                throw new ArgumentNullException(nameof(existingCustomerRoles));
+            ArgumentNullException.ThrowIfNull(existingCustomerRoles);
 
             //check ACL permission to manage customer roles
             var rolesToAdd = customerRoles.Except(existingCustomerRoles, new CustomerRoleComparerByName());
@@ -181,8 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = string.Empty;
             var customerAttributes = await _customerAttributeService.GetAllAttributesAsync();
@@ -210,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (!StringValues.IsNullOrEmpty(cblAttributes))
                         {
                             foreach (var item in cblAttributes.ToString()
-                                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)
@@ -259,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task<bool> SecondAdminAccountExistsAsync(Customer customer)
         {
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id });
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [(await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id]);
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
@@ -337,7 +335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
+            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
@@ -347,7 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
+            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
@@ -543,7 +541,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
+            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
@@ -552,7 +550,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
+            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
@@ -1022,11 +1020,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (string.IsNullOrWhiteSpace(model.SendEmail.Body))
                     throw new NopException("Email body is empty");
 
-                var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    emailAccount = (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
-                if (emailAccount == null)
-                    throw new NopException("Email account can't be loaded");
+                var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+                    ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault())
+                    ?? throw new NopException("Email account can't be loaded");
                 var email = new QueuedEmail
                 {
                     Priority = QueuedEmailPriority.High,
@@ -1612,7 +1608,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. model.SelectedCustomerRoleIds],
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1645,7 +1641,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 customers.AddRange(await _customerService.GetCustomersByIdsAsync(ids));
@@ -1670,7 +1666,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. model.SelectedCustomerRoleIds],
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1703,7 +1699,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 customers.AddRange(await _customerService.GetCustomersByIdsAsync(ids));

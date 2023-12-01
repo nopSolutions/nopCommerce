@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
         public CaptchaResponse()
         {
-            Errors = new List<string>();
+            Errors = [];
         }
 
         #endregion

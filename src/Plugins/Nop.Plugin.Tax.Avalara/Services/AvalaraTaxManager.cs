@@ -63,6 +63,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
         protected AvaTaxClient _serviceClient;
         protected bool _disposed;
 
+        private static readonly char[] _separator = [','];
+
         #endregion
 
         #region Ctor
@@ -463,7 +465,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             var itemsClassification = countryId > 0
                 ? (await _itemClassificationService.GetItemClassificationAsync(countryId)).ToList()
-                : new();
+                : [];
 
             return await orderItems.SelectAwait(async orderItem =>
             {
@@ -490,7 +492,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                         : string.Empty,
 
                     quantity = orderItem.Quantity
-                };                
+                };
 
                 //set tax code
                 var productTaxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(product?.TaxCategoryId ?? 0);
@@ -697,7 +699,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} is empty");
 
             var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-            if (!lines.Any() || lines[0].Split(',').Length < 14)
+            if (lines.Length == 0 || lines[0].Split(',').Length < 14)
                 throw new NopException($"Unsupported file {AvalaraTaxDefaults.TaxRatesFilePath} structure");
 
             //prepare tax rates
@@ -772,7 +774,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
             var customerDetails = customerExists
                 ? await ServiceClient.UpdateCustomerAsync(companyId, customer.Id.ToString(), model)
-                : (await ServiceClient.CreateCustomersAsync(companyId, new List<CustomerModel> { model }))?.FirstOrDefault();
+                : (await ServiceClient.CreateCustomersAsync(companyId, [model]))?.FirstOrDefault();
 
             return customerDetails;
         }
@@ -960,7 +962,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var taxCodes = await ServiceClient.ListTaxCodesByCompanyAsync(selectedCompany.id, "isActive eq true", null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
-                var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
+                var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? [];
 
                 //prepare tax codes to export
                 var taxCodesToExport = await (await _taxCategoryService.GetAllTaxCategoriesAsync()).SelectAwait(async taxCategory => new TaxCodeModel
@@ -977,14 +979,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
                     ?? throw new NopException("No response from the service");
 
-                var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
+                var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? [];
                 existingTaxCodes.AddRange(systemTaxCodes);
 
                 //remove duplicates
                 taxCodesToExport = taxCodesToExport.Where(taxCode => !existingTaxCodes.Contains(taxCode.taxCode)).Distinct().ToList();
 
                 //export tax codes
-                if (!taxCodesToExport.Any())
+                if (taxCodesToExport.Count == 0)
                     return 0;
 
                 //create items and get the result
@@ -1073,10 +1075,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("No response from the service");
 
                 //return the paginated and filtered list
-                var existingItemCodes = items.value?.Select(item => item.itemCode).ToList() ?? new List<string>();
+                var existingItemCodes = items.value?.Select(item => item.itemCode).ToList() ?? [];
 
                 //prepare exported items
-                var productIds = selectedIds?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+                var productIds = selectedIds?.Split(_separator, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
                 var exportedItems = new List<ItemModel>();
                 foreach (var product in await _productService.GetProductsByIdsAsync(productIds))
                 {
@@ -1119,7 +1121,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 exportedItems = exportedItems.Where(item => !existingItemCodes.Contains(item.itemCode)).Distinct().ToList();
 
                 //export items
-                if (!exportedItems.Any())
+                if (exportedItems.Count == 0)
                     return 0;
 
                 //create items and get the result
@@ -1197,7 +1199,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 //create tax transaction for a simplified item and without saving 
                 var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
-                model.lines = new List<LineItemModel> { new LineItemModel { amount = 100, quantity = 1 } };
+                model.lines = [new LineItemModel { amount = 100, quantity = 1 }];
                 return CreateTransaction(model);
             });
         }
@@ -1249,8 +1251,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     //create tax transaction for a single item and without saving
                     var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
                     var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(taxCategoryId);
-                    model.lines = new List<LineItemModel>
-                    {
+                    model.lines =
+                    [
                         new LineItemModel
                         {
                             amount = 100,
@@ -1261,7 +1263,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                                 ? CommonHelper.EnsureMaximumLength($"Exempt-product-#{taxRateRequest.Product.Id}", 25)
                                 : string.Empty
                         }
-                    };
+                    ];
 
                     //prepare tax exemption 
                     if (!_avalaraTaxSettings.GetTaxRateByAddressOnly)
@@ -1697,7 +1699,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 //create invitation for customer
                 var invitationModel = new List<CreateCertExpressInvitationModel>
                 {
-                    new CreateCertExpressInvitationModel  { deliveryMethod = CertificateRequestDeliveryMethod.Download }
+                    new() { deliveryMethod = CertificateRequestDeliveryMethod.Download }
                 };
                 var invitation = (await ServiceClient
                     .CreateCertExpressInvitationAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), invitationModel))

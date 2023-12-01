@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Payments
     {
         public PaymentSettings()
         {
-            ActivePaymentMethodSystemNames = new List<string>();
+            ActivePaymentMethodSystemNames = [];
         }
 
         /// <summary>

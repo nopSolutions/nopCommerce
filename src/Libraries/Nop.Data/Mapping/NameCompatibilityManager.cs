@@ -10,8 +10,8 @@ namespace Nop.Data.Mapping
     {
         #region Fields
 
-        private static readonly Dictionary<Type, string> _tableNames = new();
-        private static readonly Dictionary<(Type, string), string> _columnName = new();
+        private static readonly Dictionary<Type, string> _tableNames = [];
+        private static readonly Dictionary<(Type, string), string> _columnName = [];
         private static readonly IList<Type> _loadedFor = new List<Type>();
         private static bool _isInitialized;
         private static readonly ReaderWriterLockSlim _locker = new();
@@ -30,7 +30,7 @@ namespace Nop.Data.Mapping
 
                 var typeFinder = Singleton<ITypeFinder>.Instance;
                 var compatibilities = typeFinder.FindClassesOfType<INameCompatibility>()
-                    ?.Select(type => EngineContext.Current.ResolveUnregistered(type) as INameCompatibility).ToList() ?? new List<INameCompatibility>();
+                    ?.Select(type => EngineContext.Current.ResolveUnregistered(type) as INameCompatibility).ToList() ?? [];
 
                 compatibilities.AddRange(AdditionalNameCompatibilities.Select(type => EngineContext.Current.ResolveUnregistered(type) as INameCompatibility));
 
@@ -68,7 +68,7 @@ namespace Nop.Data.Mapping
             if (!_isInitialized)
                 Initialize();
 
-            return _tableNames.ContainsKey(type) ? _tableNames[type] : type.Name;
+            return _tableNames.TryGetValue(type, out var value) ? value : type.Name;
         }
 
         /// <summary>
@@ -90,6 +90,6 @@ namespace Nop.Data.Mapping
         /// <summary>
         /// Additional name compatibility types
         /// </summary>
-        public static List<Type> AdditionalNameCompatibilities { get; } = new List<Type>();
+        public static List<Type> AdditionalNameCompatibilities { get; } = [];
     }
 }

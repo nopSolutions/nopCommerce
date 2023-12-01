@@ -70,14 +70,14 @@ namespace Nop.Services.Common.Pdf
 
                 table.Header(header =>
                 {
-                    header.Cell().Element(CellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
-                    header.Cell().Element(CellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
-                    header.Cell().Element(CellHeaderStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
+                    header.Cell().Element(cellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
+                    header.Cell().Element(cellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
+                    header.Cell().Element(cellHeaderStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
                 });
 
                 foreach (var product in Source.Products)
                 {
-                    table.Cell().Element(CellContentStyle).Element(productContainer =>
+                    table.Cell().Element(cellContentStyle).Element(productContainer =>
                     {
                         productContainer.Column(pColumn =>
                         {
@@ -88,16 +88,16 @@ namespace Nop.Services.Common.Pdf
                         });
                     });
 
-                    table.Cell().Element(CellContentStyle).Text(product.Sku);
-                    table.Cell().Element(CellContentStyle).AlignRight().Text(product.Quantity);
+                    table.Cell().Element(cellContentStyle).Text(product.Sku);
+                    table.Cell().Element(cellContentStyle).AlignRight().Text(product.Quantity);
                 }
 
-                static IContainer CellHeaderStyle(IContainer container)
+                static IContainer cellHeaderStyle(IContainer container)
                 {
                     return container.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
                 }
 
-                static IContainer CellContentStyle(IContainer container)
+                static IContainer cellContentStyle(IContainer container)
                 {
                     return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
                 }

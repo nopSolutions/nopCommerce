@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -19,8 +20,7 @@ namespace Nop.Web.Components
         public async Task<IViewComponentResult> InvokeAsync(int customerProfileId)
         {
             var customer = await _customerService.GetCustomerByIdAsync(customerProfileId);
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var model = await _profileModelFactory.PrepareProfileInfoModelAsync(customer);
             return View(model);

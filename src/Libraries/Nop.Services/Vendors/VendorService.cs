@@ -83,8 +83,7 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<Vendor>> GetVendorsByProductIdsAsync(int[] productIds)
         {
-            if (productIds is null)
-                throw new ArgumentNullException(nameof(productIds));
+            ArgumentNullException.ThrowIfNull(productIds);
 
             return await (from v in _vendorRepository.Table
                           join p in _productRepository.Table on v.Id equals p.VendorId
@@ -102,8 +101,7 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<Vendor>> GetVendorsByCustomerIdsAsync(int[] customerIds)
         {
-            if (customerIds is null)
-                throw new ArgumentNullException(nameof(customerIds));
+            ArgumentNullException.ThrowIfNull(customerIds);
 
             return await (from v in _vendorRepository.Table
                           join c in _customerRepository.Table on v.Id equals c.VendorId
@@ -234,8 +232,7 @@ namespace Nop.Services.Vendors
         /// <returns>Formatted text</returns>
         public virtual string FormatVendorNoteText(VendorNote vendorNote)
         {
-            if (vendorNote == null)
-                throw new ArgumentNullException(nameof(vendorNote));
+            ArgumentNullException.ThrowIfNull(vendorNote);
 
             var text = vendorNote.Note;
 

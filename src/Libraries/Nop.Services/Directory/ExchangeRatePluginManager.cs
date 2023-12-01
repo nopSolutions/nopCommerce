@@ -50,7 +50,7 @@ namespace Nop.Services.Directory
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExchangeRateProvider exchangeRateProvider)
         {
-            return IsPluginActive(exchangeRateProvider, new List<string> { _currencySettings.ActiveExchangeRateProviderSystemName });
+            return IsPluginActive(exchangeRateProvider, [_currencySettings.ActiveExchangeRateProviderSystemName]);
         }
 
         #endregion

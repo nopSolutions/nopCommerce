@@ -399,7 +399,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSetting(pdfSettings, settings => settings.FontFamily);
 
                 //delete old setting
-                settingRepository.Delete(setting => setting.Name == $"{nameof(PdfSettings)}.FontFileName".ToLower());
+                settingRepository.Delete(setting => setting.Name.Equals($"{nameof(PdfSettings)}.FontFileName", StringComparison.CurrentCultureIgnoreCase));
             }
 
             var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();

@@ -431,7 +431,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
+            await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync([.. selectedIds])).WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
 
             return Json(new { Result = true });
         }
@@ -591,7 +591,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //get selected products
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
             if (selectedProducts.Any())
             {
                 var existingProductCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(model.CategoryId, showHidden: true);

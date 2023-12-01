@@ -40,11 +40,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context is null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             _nopHtmlHelper.AddCssFileParts(Href, string.Empty, ExcludeFromBundle);
 

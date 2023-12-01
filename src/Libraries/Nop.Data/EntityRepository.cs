@@ -428,8 +428,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAsync(TEntity entity, bool publishEvent = true)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             await _dataProvider.InsertEntityAsync(entity);
 
@@ -445,8 +444,7 @@ namespace Nop.Data
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Insert(TEntity entity, bool publishEvent = true)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             _dataProvider.InsertEntity(entity);
 
@@ -463,8 +461,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAsync(IList<TEntity> entities, bool publishEvent = true)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            ArgumentNullException.ThrowIfNull(entities);
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             await _dataProvider.BulkInsertEntitiesAsync(entities);
@@ -485,8 +482,7 @@ namespace Nop.Data
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Insert(IList<TEntity> entities, bool publishEvent = true)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            ArgumentNullException.ThrowIfNull(entities);
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             _dataProvider.BulkInsertEntities(entities);
@@ -522,8 +518,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAsync(TEntity entity, bool publishEvent = true)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             await _dataProvider.UpdateEntityAsync(entity);
 
@@ -539,8 +534,7 @@ namespace Nop.Data
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Update(TEntity entity, bool publishEvent = true)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             _dataProvider.UpdateEntity(entity);
 
@@ -557,8 +551,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAsync(IList<TEntity> entities, bool publishEvent = true)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            ArgumentNullException.ThrowIfNull(entities);
 
             if (entities.Count == 0)
                 return;
@@ -580,8 +573,7 @@ namespace Nop.Data
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Update(IList<TEntity> entities, bool publishEvent = true)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            ArgumentNullException.ThrowIfNull(entities);
 
             if (entities.Count == 0)
                 return;
@@ -659,8 +651,7 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAsync(IList<TEntity> entities, bool publishEvent = true)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            ArgumentNullException.ThrowIfNull(entities);
 
             if (!entities.Any())
                 return;
@@ -685,8 +676,7 @@ namespace Nop.Data
         /// </returns>
         public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(predicate);
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
@@ -704,8 +694,7 @@ namespace Nop.Data
         /// </returns>
         public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(predicate);
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);

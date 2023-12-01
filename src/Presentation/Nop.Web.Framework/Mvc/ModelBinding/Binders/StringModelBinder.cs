@@ -10,9 +10,8 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     {
         Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
-                throw new ArgumentNullException(nameof(bindingContext));
-            
+            ArgumentNullException.ThrowIfNull(bindingContext);
+
             var valueProviderResult =
                 bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
 

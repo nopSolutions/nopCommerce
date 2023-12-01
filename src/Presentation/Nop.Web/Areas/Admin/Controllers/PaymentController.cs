@@ -33,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly IWorkContext _workContext;
         protected readonly PaymentSettings _paymentSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -173,8 +174,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
-                        ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
-                        : new List<string>())
+                        ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
+                        : [])
                     .Select(x => Convert.ToInt32(x)).ToList();
 
                 var newCountryIds = new List<int>();

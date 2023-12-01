@@ -77,13 +77,13 @@ namespace Nop.Tests.Nop.Services.Tests.Security
 
             public HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions()
             {
-                return new()
-                {
+                return
+                [
                     (
                         NopCustomerDefaults.AdministratorsRoleName,
                         new[] {_permissionRecord}
                     )
-                };
+                ];
             }
         }
     }

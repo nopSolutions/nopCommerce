@@ -28,7 +28,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Array</returns>
         protected virtual string[] GetStringArray(string input)
         {
-            return string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(',').Select(x => x.Trim()).ToArray();
+            return string.IsNullOrEmpty(input) ? [] : input.Split(',').Select(x => x.Trim()).ToArray();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nop.Core.ComponentModel
                 return base.CanConvertFrom(context, sourceType);
 
             var items = GetStringArray(sourceType.ToString());
-            return items.Any();
+            return items.Length != 0;
         }
 
         /// <summary>

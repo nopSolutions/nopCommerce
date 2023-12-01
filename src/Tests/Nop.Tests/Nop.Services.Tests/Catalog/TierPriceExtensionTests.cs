@@ -13,43 +13,37 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
         {
             var tierPrices = new List<TierPrice>
             {
-                new TierPrice
-                {
+                new() {
                     //will be removed
                     Id = 1,
                     Price = 150,
                     Quantity = 1
                 },
-                new TierPrice
-                {
+                new() {
                     //will stay
                     Id = 2,
                     Price = 100,
                     Quantity = 1
                 },
-                new TierPrice
-                {
+                new() {
                     //will stay
                     Id = 3,
                     Price = 200,
                     Quantity = 3
                 },
-                new TierPrice
-                {
+                new() {
                     //will stay
                     Id = 4,
                     Price = 250,
                     Quantity = 4
                 },
-                new TierPrice
-                {
+                new() {
                     //will be removed
                     Id = 5,
                     Price = 300,
                     Quantity = 4
                 },
-                new TierPrice
-                {
+                new() {
                     //will stay
                     Id = 6,
                     Price = 350,

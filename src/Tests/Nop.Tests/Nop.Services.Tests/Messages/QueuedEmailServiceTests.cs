@@ -33,14 +33,14 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         [SetUp]
         public async Task SetUp()
         {
-            _emails = new List<QueuedEmail>
-            {
+            _emails =
+            [
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentTries = 5},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentOnUtc = DateTime.UtcNow},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentOnUtc = DateTime.UtcNow}
-            };
+            ];
 
             foreach (var queuedEmail in _emails)
                 await _queuedEmailService.InsertQueuedEmailAsync(queuedEmail);

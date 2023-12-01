@@ -46,13 +46,11 @@ namespace Nop.Services.ScheduleTasks
         /// </summary>
         protected virtual async Task PerformTaskAsync(ScheduleTask scheduleTask)
         {
-            var type = Type.GetType(scheduleTask.Type) ??
+            var type = (Type.GetType(scheduleTask.Type) ??
                        //ensure that it works fine when only the type name is specified (do not require fully qualified names)
                        AppDomain.CurrentDomain.GetAssemblies()
                            .Select(a => a.GetType(scheduleTask.Type))
-                           .FirstOrDefault(t => t != null);
-            if (type == null)
-                throw new Exception($"Schedule task ({scheduleTask.Type}) cannot by instantiated");
+                           .FirstOrDefault(t => t != null)) ?? throw new Exception($"Schedule task ({scheduleTask.Type}) cannot by instantiated");
 
             object instance = null;
 

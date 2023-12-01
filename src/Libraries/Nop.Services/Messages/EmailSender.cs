@@ -40,8 +40,7 @@ namespace Nop.Services.Messages
         /// <returns>A leaf-node MIME part that contains an attachment.</returns>
         protected MimePart CreateMimeAttachment(Download download)
         {
-            if (download is null)
-                throw new ArgumentNullException(nameof(download));
+            ArgumentNullException.ThrowIfNull(download);
 
             var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
 

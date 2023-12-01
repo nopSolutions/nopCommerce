@@ -46,7 +46,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.ADMIN }));
 
             var model = await _profileModelFactory.PrepareProfileIndexModelAsync(customer, pageNumber);
             return View(model);

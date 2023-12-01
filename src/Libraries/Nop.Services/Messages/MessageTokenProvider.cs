@@ -186,10 +186,12 @@ namespace Nop.Services.Messages
                 if (_allowedTokens != null)
                     return _allowedTokens;
 
-                _allowedTokens = new Dictionary<string, IEnumerable<string>>();
-
-                //store tokens
-                _allowedTokens.Add(TokenGroupNames.StoreTokens, new[]
+                _allowedTokens = new Dictionary<string, IEnumerable<string>>
+                {
+                    //store tokens
+                    {
+                        TokenGroupNames.StoreTokens,
+                        new[]
                 {
                     "%Store.Name%",
                     "%Store.URL%",
@@ -202,10 +204,13 @@ namespace Nop.Services.Messages
                     "%Twitter.URL%",
                     "%YouTube.URL%",
                     "%Instagram.URL%"
-                });
+                }
+                    },
 
-                //customer tokens
-                _allowedTokens.Add(TokenGroupNames.CustomerTokens, new[]
+                    //customer tokens
+                    {
+                        TokenGroupNames.CustomerTokens,
+                        new[]
                 {
                     "%Customer.Email%",
                     "%Customer.Username%",
@@ -219,10 +224,13 @@ namespace Nop.Services.Messages
                     "%Customer.AccountActivationURL%",
                     "%Customer.EmailRevalidationURL%",
                     "%Wishlist.URLForCustomer%"
-                });
+                }
+                    },
 
-                //order tokens
-                _allowedTokens.Add(TokenGroupNames.OrderTokens, new[]
+                    //order tokens
+                    {
+                        TokenGroupNames.OrderTokens,
+                        new[]
                 {
                     "%Order.OrderNumber%",
                     "%Order.CustomerFullName%",
@@ -270,49 +278,67 @@ namespace Nop.Services.Messages
                     "%Order.IsCompletelyShipped%",
                     "%Order.IsCompletelyReadyForPickup%",
                     "%Order.IsCompletelyDelivered%"
-                });
+                }
+                    },
 
-                //shipment tokens
-                _allowedTokens.Add(TokenGroupNames.ShipmentTokens, new[]
+                    //shipment tokens
+                    {
+                        TokenGroupNames.ShipmentTokens,
+                        new[]
                 {
                     "%Shipment.ShipmentNumber%",
                     "%Shipment.TrackingNumber%",
                     "%Shipment.TrackingNumberURL%",
                     "%Shipment.Product(s)%",
                     "%Shipment.URLForCustomer%"
-                });
+                }
+                    },
 
-                //refunded order tokens
-                _allowedTokens.Add(TokenGroupNames.RefundedOrderTokens, new[]
+                    //refunded order tokens
+                    {
+                        TokenGroupNames.RefundedOrderTokens,
+                        new[]
                 {
                     "%Order.AmountRefunded%"
-                });
+                }
+                    },
 
-                //order note tokens
-                _allowedTokens.Add(TokenGroupNames.OrderNoteTokens, new[]
+                    //order note tokens
+                    {
+                        TokenGroupNames.OrderNoteTokens,
+                        new[]
                 {
                     "%Order.NewNoteText%",
                     "%Order.OrderNoteAttachmentUrl%"
-                });
+                }
+                    },
 
-                //recurring payment tokens
-                _allowedTokens.Add(TokenGroupNames.RecurringPaymentTokens, new[]
+                    //recurring payment tokens
+                    {
+                        TokenGroupNames.RecurringPaymentTokens,
+                        new[]
                 {
                     "%RecurringPayment.ID%",
                     "%RecurringPayment.CancelAfterFailedPayment%",
                     "%RecurringPayment.RecurringPaymentType%"
-                });
+                }
+                    },
 
-                //newsletter subscription tokens
-                _allowedTokens.Add(TokenGroupNames.SubscriptionTokens, new[]
+                    //newsletter subscription tokens
+                    {
+                        TokenGroupNames.SubscriptionTokens,
+                        new[]
                 {
                     "%NewsLetterSubscription.Email%",
                     "%NewsLetterSubscription.ActivationUrl%",
                     "%NewsLetterSubscription.DeactivationUrl%"
-                });
+                }
+                    },
 
-                //product tokens
-                _allowedTokens.Add(TokenGroupNames.ProductTokens, new[]
+                    //product tokens
+                    {
+                        TokenGroupNames.ProductTokens,
+                        new[]
                 {
                     "%Product.ID%",
                     "%Product.Name%",
@@ -320,10 +346,13 @@ namespace Nop.Services.Messages
                     "%Product.ProductURLForCustomer%",
                     "%Product.SKU%",
                     "%Product.StockQuantity%"
-                });
+                }
+                    },
 
-                //return request tokens
-                _allowedTokens.Add(TokenGroupNames.ReturnRequestTokens, new[]
+                    //return request tokens
+                    {
+                        TokenGroupNames.ReturnRequestTokens,
+                        new[]
                 {
                     "%ReturnRequest.CustomNumber%",
                     "%ReturnRequest.OrderId%",
@@ -334,46 +363,64 @@ namespace Nop.Services.Messages
                     "%ReturnRequest.CustomerComment%",
                     "%ReturnRequest.StaffNotes%",
                     "%ReturnRequest.Status%"
-                });
+                }
+                    },
 
-                //forum tokens
-                _allowedTokens.Add(TokenGroupNames.ForumTokens, new[]
+                    //forum tokens
+                    {
+                        TokenGroupNames.ForumTokens,
+                        new[]
                 {
                     "%Forums.ForumURL%",
                     "%Forums.ForumName%"
-                });
+                }
+                    },
 
-                //forum topic tokens
-                _allowedTokens.Add(TokenGroupNames.ForumTopicTokens, new[]
+                    //forum topic tokens
+                    {
+                        TokenGroupNames.ForumTopicTokens,
+                        new[]
                 {
                     "%Forums.TopicURL%",
                     "%Forums.TopicName%"
-                });
+                }
+                    },
 
-                //forum post tokens
-                _allowedTokens.Add(TokenGroupNames.ForumPostTokens, new[]
+                    //forum post tokens
+                    {
+                        TokenGroupNames.ForumPostTokens,
+                        new[]
                 {
                     "%Forums.PostAuthor%",
                     "%Forums.PostBody%"
-                });
+                }
+                    },
 
-                //private message tokens
-                _allowedTokens.Add(TokenGroupNames.PrivateMessageTokens, new[]
+                    //private message tokens
+                    {
+                        TokenGroupNames.PrivateMessageTokens,
+                        new[]
                 {
                     "%PrivateMessage.Subject%",
                     "%PrivateMessage.Text%"
-                });
+                }
+                    },
 
-                //vendor tokens
-                _allowedTokens.Add(TokenGroupNames.VendorTokens, new[]
+                    //vendor tokens
+                    {
+                        TokenGroupNames.VendorTokens,
+                        new[]
                 {
                     "%Vendor.Name%",
                     "%Vendor.Email%",
                     "%Vendor.VendorAttributes%"
-                });
+                }
+                    },
 
-                //gift card tokens
-                _allowedTokens.Add(TokenGroupNames.GiftCardTokens, new[]
+                    //gift card tokens
+                    {
+                        TokenGroupNames.GiftCardTokens,
+                        new[]
                 {
                     "%GiftCard.SenderName%",
                     "%GiftCard.SenderEmail%",
@@ -382,81 +429,113 @@ namespace Nop.Services.Messages
                     "%GiftCard.Amount%",
                     "%GiftCard.CouponCode%",
                     "%GiftCard.Message%"
-                });
+                }
+                    },
 
-                //product review tokens
-                _allowedTokens.Add(TokenGroupNames.ProductReviewTokens, new[]
+                    //product review tokens
+                    {
+                        TokenGroupNames.ProductReviewTokens,
+                        new[]
                 {
                     "%ProductReview.ProductName%",
                     "%ProductReview.Title%",
                     "%ProductReview.IsApproved%",
                     "%ProductReview.ReviewText%",
                     "%ProductReview.ReplyText%"
-                });
+                }
+                    },
 
-                //attribute combination tokens
-                _allowedTokens.Add(TokenGroupNames.AttributeCombinationTokens, new[]
+                    //attribute combination tokens
+                    {
+                        TokenGroupNames.AttributeCombinationTokens,
+                        new[]
                 {
                     "%AttributeCombination.Formatted%",
                     "%AttributeCombination.SKU%",
                     "%AttributeCombination.StockQuantity%"
-                });
+                }
+                    },
 
-                //blog comment tokens
-                _allowedTokens.Add(TokenGroupNames.BlogCommentTokens, new[]
+                    //blog comment tokens
+                    {
+                        TokenGroupNames.BlogCommentTokens,
+                        new[]
                 {
                     "%BlogComment.BlogPostTitle%"
-                });
+                }
+                    },
 
-                //news comment tokens
-                _allowedTokens.Add(TokenGroupNames.NewsCommentTokens, new[]
+                    //news comment tokens
+                    {
+                        TokenGroupNames.NewsCommentTokens,
+                        new[]
                 {
                     "%NewsComment.NewsTitle%"
-                });
+                }
+                    },
 
-                //product back in stock tokens
-                _allowedTokens.Add(TokenGroupNames.ProductBackInStockTokens, new[]
+                    //product back in stock tokens
+                    {
+                        TokenGroupNames.ProductBackInStockTokens,
+                        new[]
                 {
                     "%BackInStockSubscription.ProductName%",
                     "%BackInStockSubscription.ProductUrl%"
-                });
+                }
+                    },
 
-                //email a friend tokens
-                _allowedTokens.Add(TokenGroupNames.EmailAFriendTokens, new[]
+                    //email a friend tokens
+                    {
+                        TokenGroupNames.EmailAFriendTokens,
+                        new[]
                 {
                     "%EmailAFriend.PersonalMessage%",
                     "%EmailAFriend.Email%"
-                });
+                }
+                    },
 
-                //wishlist to friend tokens
-                _allowedTokens.Add(TokenGroupNames.WishlistToFriendTokens, new[]
+                    //wishlist to friend tokens
+                    {
+                        TokenGroupNames.WishlistToFriendTokens,
+                        new[]
                 {
                     "%Wishlist.PersonalMessage%",
                     "%Wishlist.Email%"
-                });
+                }
+                    },
 
-                //VAT validation tokens
-                _allowedTokens.Add(TokenGroupNames.VatValidation, new[]
+                    //VAT validation tokens
+                    {
+                        TokenGroupNames.VatValidation,
+                        new[]
                 {
                     "%VatValidationResult.Name%",
                     "%VatValidationResult.Address%"
-                });
+                }
+                    },
 
-                //contact us tokens
-                _allowedTokens.Add(TokenGroupNames.ContactUs, new[]
+                    //contact us tokens
+                    {
+                        TokenGroupNames.ContactUs,
+                        new[]
                 {
                     "%ContactUs.SenderEmail%",
                     "%ContactUs.SenderName%",
                     "%ContactUs.Body%"
-                });
+                }
+                    },
 
-                //contact vendor tokens
-                _allowedTokens.Add(TokenGroupNames.ContactVendor, new[]
+                    //contact vendor tokens
+                    {
+                        TokenGroupNames.ContactVendor,
+                        new[]
                 {
                     "%ContactUs.SenderEmail%",
                     "%ContactUs.SenderName%",
                     "%ContactUs.Body%"
-                });
+                }
+                    }
+                };
 
                 return _allowedTokens;
             }
@@ -707,11 +786,11 @@ namespace Nop.Services.Messages
                 }
                 else
                 {
-                    taxRates = new SortedDictionary<decimal, decimal>();
+                    taxRates = [];
                     foreach (var tr in _orderService.ParseTaxRates(order, order.TaxRates))
                         taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -936,8 +1015,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount)
         {
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             tokens.Add(new Token("Store.Name", await _localizationService.GetLocalizedAsync(store, x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));
@@ -1550,66 +1628,66 @@ namespace Nop.Services.Messages
             //groups depend on which tokens are added at the appropriate methods in IWorkflowMessageService
             return messageTemplate.Name switch
             {
-                MessageTemplateSystemNames.CustomerRegisteredStoreOwnerNotification or
-                MessageTemplateSystemNames.CustomerWelcomeMessage or
-                MessageTemplateSystemNames.CustomerEmailValidationMessage or
-                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or
-                MessageTemplateSystemNames.CustomerPasswordRecoveryMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.CUSTOMER_REGISTERED_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE or
+                MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE or
+                MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE or
+                MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
-                MessageTemplateSystemNames.OrderPlacedVendorNotification or
-                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or
-                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or
-                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or
-                MessageTemplateSystemNames.OrderPaidCustomerNotification or
-                MessageTemplateSystemNames.OrderPaidVendorNotification or
-                MessageTemplateSystemNames.OrderPaidAffiliateNotification or
-                MessageTemplateSystemNames.OrderPlacedCustomerNotification or
-                MessageTemplateSystemNames.OrderProcessingCustomerNotification or
-                MessageTemplateSystemNames.OrderCompletedCustomerNotification or
-                MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PLACED_AFFILIATE_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PAID_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PAID_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PAID_VENDOR_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PAID_AFFILIATE_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-                MessageTemplateSystemNames.ShipmentSentCustomerNotification or
-                MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification or
-                MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.SHIPMENT_DELIVERED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or
-                MessageTemplateSystemNames.OrderRefundedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.ORDER_REFUNDED_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_REFUNDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens],
 
-                MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.NEW_ORDER_NOTE_ADDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or
-                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or
-                MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens },
+                MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens],
 
-                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or
-                MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens },
+                MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE or
+                MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens],
 
-                MessageTemplateSystemNames.EmailAFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens },
-                MessageTemplateSystemNames.WishlistToFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens },
+                MessageTemplateSystemNames.EMAIL_A_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens],
+                MessageTemplateSystemNames.WISHLIST_TO_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens],
 
-                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or
-                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or
-                MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens },
+                MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens],
 
-                MessageTemplateSystemNames.NewForumTopicMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.NewForumPostMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.PrivateMessageNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens },
-                MessageTemplateSystemNames.VendorInformationChangeStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens },
-                MessageTemplateSystemNames.GiftCardNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens },
+                MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
+                MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
+                MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
+                MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],
+                MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens],
+                MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens],
 
-                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or
-                MessageTemplateSystemNames.ProductReviewReplyCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.PRODUCT_REVIEW_STORE_OWNER_NOTIFICATION or
+                MessageTemplateSystemNames.PRODUCT_REVIEW_REPLY_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens],
 
-                MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens },
-                MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens },
-                MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation },
-                MessageTemplateSystemNames.BlogCommentStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.NewsCommentStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens },
-                MessageTemplateSystemNames.BackInStockNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens },
-                MessageTemplateSystemNames.ContactUsMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs },
-                MessageTemplateSystemNames.ContactVendorMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor },
-                _ => Array.Empty<string>(),
+                MessageTemplateSystemNames.QUANTITY_BELOW_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens],
+                MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
+                MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation],
+                MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens],
+                MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens],
+                MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
+                MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
+                MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],
+                _ => [],
             };
         }
 

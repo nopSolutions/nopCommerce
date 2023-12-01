@@ -45,8 +45,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Adjusted width and height</returns>
         protected virtual (int width, int height) ValidateImageMeasures(SKBitmap image, int maxWidth = 0, int maxHeight = 0)
         {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
+            ArgumentNullException.ThrowIfNull(image);
 
             float width = Math.Min(image.Width, maxWidth);
             float height = Math.Min(image.Height, maxHeight);
@@ -225,7 +224,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </param>
         public virtual void DirectoryMove(string sourceDirName, string destDirName)
         {
-            if (destDirName.IndexOf(sourceDirName, StringComparison.InvariantCulture) == 0)
+            if (destDirName.StartsWith(sourceDirName, StringComparison.InvariantCulture))
                 throw new RoxyFilemanException("E_CannotMoveDirToChild");
 
             var sourceDirInfo = new DirectoryInfo(GetFullPath(sourceDirName));

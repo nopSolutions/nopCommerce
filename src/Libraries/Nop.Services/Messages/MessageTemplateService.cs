@@ -162,8 +162,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<MessageTemplate> CopyMessageTemplateAsync(MessageTemplate messageTemplate)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
+            ArgumentNullException.ThrowIfNull(messageTemplate);
 
             var mtCopy = new MessageTemplate
             {

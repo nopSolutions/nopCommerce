@@ -52,7 +52,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ISearchProvider searchProvider)
         {
-            return IsPluginActive(searchProvider, new List<string> { _catalogSettings.ActiveSearchProviderSystemName });
+            return IsPluginActive(searchProvider, [_catalogSettings.ActiveSearchProviderSystemName]);
         }
 
         /// <summary>

@@ -10,8 +10,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     {
         async Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
-                throw new ArgumentNullException(nameof(bindingContext));
+            ArgumentNullException.ThrowIfNull(bindingContext);
 
             var modelName = bindingContext.ModelName;
 
@@ -38,8 +37,8 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
                     foreach (var key in keys)
                     {
-                        var dicKey = key[(key.IndexOf("[", StringComparison.Ordinal) + 1)..key.IndexOf("]", StringComparison.Ordinal)];
-                        var value = key[(key.IndexOf("=", StringComparison.Ordinal) + 1)..];
+                        var dicKey = key[(key.IndexOf('[') + 1)..key.IndexOf(']')];
+                        var value = key[(key.IndexOf('=') + 1)..];
 
                         result.Add(dicKey, value);
                     }

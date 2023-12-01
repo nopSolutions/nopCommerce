@@ -18,7 +18,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class PickupInStoreController : BasePluginController

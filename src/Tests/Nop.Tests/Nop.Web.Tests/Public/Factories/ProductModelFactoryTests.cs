@@ -28,12 +28,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task CanPrepareProductTemplateViewPath()
         {
             var productTemplateRepository = GetService<IRepository<ProductTemplate>>();
-            var productTemplateSimple = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
-            if (productTemplateSimple == null)
-                throw new Exception("Simple product template could not be loaded");
-            var productTemplateGrouped = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)");
-            if (productTemplateGrouped == null)
-                throw new Exception("Grouped product template could not be loaded");
+            var productTemplateSimple = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product") ?? throw new Exception("Simple product template could not be loaded");
+            var productTemplateGrouped = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)") ?? throw new Exception("Grouped product template could not be loaded");
 
             var modelSimple = await _productModelFactory.PrepareProductTemplateViewPathAsync(new Product
             {

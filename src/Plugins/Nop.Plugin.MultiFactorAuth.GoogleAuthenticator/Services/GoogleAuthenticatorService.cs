@@ -45,8 +45,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task InsertConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(configuration);
 
             await _repository.InsertAsync(configuration);
             await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
@@ -59,8 +58,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task UpdateConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(configuration);
 
             await _repository.UpdateAsync(configuration);
             await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
@@ -72,8 +70,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <param name="configuration">Configuration</param>
         internal async Task DeleteConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(configuration);
 
             await _repository.DeleteAsync(configuration);
             await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);

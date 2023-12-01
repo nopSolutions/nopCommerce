@@ -130,11 +130,9 @@ namespace Nop.Services.Directory
         public virtual async Task<decimal> ConvertDimensionAsync(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
-            if (sourceMeasureDimension == null)
-                throw new ArgumentNullException(nameof(sourceMeasureDimension));
+            ArgumentNullException.ThrowIfNull(sourceMeasureDimension);
 
-            if (targetMeasureDimension == null)
-                throw new ArgumentNullException(nameof(targetMeasureDimension));
+            ArgumentNullException.ThrowIfNull(targetMeasureDimension);
 
             var result = value;
             if (result != decimal.Zero && sourceMeasureDimension.Id != targetMeasureDimension.Id)
@@ -161,8 +159,7 @@ namespace Nop.Services.Directory
         public virtual async Task<decimal> ConvertFromPrimaryMeasureDimensionAsync(decimal value,
             MeasureDimension targetMeasureDimension)
         {
-            if (targetMeasureDimension == null)
-                throw new ArgumentNullException(nameof(targetMeasureDimension));
+            ArgumentNullException.ThrowIfNull(targetMeasureDimension);
 
             var result = value;
             var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
@@ -189,8 +186,7 @@ namespace Nop.Services.Directory
         public virtual async Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
             MeasureDimension sourceMeasureDimension)
         {
-            if (sourceMeasureDimension == null)
-                throw new ArgumentNullException(nameof(sourceMeasureDimension));
+            ArgumentNullException.ThrowIfNull(sourceMeasureDimension);
 
             var result = value;
             var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
@@ -306,11 +302,9 @@ namespace Nop.Services.Directory
         public virtual async Task<decimal> ConvertWeightAsync(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
-            if (sourceMeasureWeight == null)
-                throw new ArgumentNullException(nameof(sourceMeasureWeight));
+            ArgumentNullException.ThrowIfNull(sourceMeasureWeight);
 
-            if (targetMeasureWeight == null)
-                throw new ArgumentNullException(nameof(targetMeasureWeight));
+            ArgumentNullException.ThrowIfNull(targetMeasureWeight);
 
             var result = value;
             if (result != decimal.Zero && sourceMeasureWeight.Id != targetMeasureWeight.Id)
@@ -337,8 +331,7 @@ namespace Nop.Services.Directory
         public virtual async Task<decimal> ConvertFromPrimaryMeasureWeightAsync(decimal value,
             MeasureWeight targetMeasureWeight)
         {
-            if (targetMeasureWeight == null)
-                throw new ArgumentNullException(nameof(targetMeasureWeight));
+            ArgumentNullException.ThrowIfNull(targetMeasureWeight);
 
             var result = value;
             var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
@@ -364,8 +357,7 @@ namespace Nop.Services.Directory
         /// </returns>
         public virtual async Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight)
         {
-            if (sourceMeasureWeight == null)
-                throw new ArgumentNullException(nameof(sourceMeasureWeight));
+            ArgumentNullException.ThrowIfNull(sourceMeasureWeight);
 
             var result = value;
             var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);

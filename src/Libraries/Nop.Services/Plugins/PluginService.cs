@@ -65,8 +65,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             return loadMode switch
             {
@@ -85,8 +84,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByPluginGroup(PluginDescriptor pluginDescriptor, string group)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             if (string.IsNullOrEmpty(group))
                 return true;
@@ -105,8 +103,7 @@ namespace Nop.Services.Plugins
         /// </returns>
         protected virtual async Task<bool> FilterByCustomerAsync(PluginDescriptor pluginDescriptor, Customer customer)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
                 return true;
@@ -125,8 +122,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByStore(PluginDescriptor pluginDescriptor, int storeId)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             //no validation required
             if (storeId == 0)
@@ -146,8 +142,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByDependsOn(PluginDescriptor pluginDescriptor, string dependsOnSystemName)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             if (string.IsNullOrEmpty(dependsOnSystemName))
                 return true;
@@ -163,8 +158,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByPluginFriendlyName(PluginDescriptor pluginDescriptor, string friendlyName)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             if (string.IsNullOrEmpty(friendlyName))
                 return true;
@@ -180,8 +174,7 @@ namespace Nop.Services.Plugins
         /// <returns>Result of check</returns>
         protected virtual bool FilterByPluginAuthor(PluginDescriptor pluginDescriptor, string author)
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             if (string.IsNullOrEmpty(author))
                 return true;
@@ -245,8 +238,11 @@ namespace Nop.Services.Plugins
                 pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType)).ToList();
 
             //order by group name
-            pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group)
-                .ThenBy(descriptor => descriptor.DisplayOrder).ToList();
+            pluginDescriptors =
+            [
+                .. pluginDescriptors.OrderBy(descriptor => descriptor.Group)
+                                .ThenBy(descriptor => descriptor.DisplayOrder),
+            ];
 
             return pluginDescriptors;
         }
@@ -299,8 +295,7 @@ namespace Nop.Services.Plugins
         /// <returns>Plugin</returns>
         public virtual IPlugin FindPluginByTypeInAssembly(Type typeInAssembly)
         {
-            if (typeInAssembly == null)
-                throw new ArgumentNullException(nameof(typeInAssembly));
+            ArgumentNullException.ThrowIfNull(typeInAssembly);
 
             //try to do magic
             var pluginDescriptor = _pluginsInfo.PluginDescriptors.FirstOrDefault(descriptor =>
@@ -364,7 +359,7 @@ namespace Nop.Services.Plugins
                     var dependsOn = descriptor.DependsOn
                         .Where(dependsOnSystemName => !pluginsAfterRestart.Contains(dependsOnSystemName)).ToList();
 
-                    if (dependsOn.Any())
+                    if (dependsOn.Count != 0)
                     {
                         var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
 
@@ -412,7 +407,7 @@ namespace Nop.Services.Plugins
                         : dependentPlugin.FriendlyName);
                 }
 
-                if (dependsOn.Any())
+                if (dependsOn.Count != 0)
                 {
                     var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
 
@@ -492,7 +487,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to install
             pluginDescriptors = pluginDescriptors.Where(descriptor => _pluginsInfo.PluginNamesToInstall
                 .Any(item => item.SystemName.Equals(descriptor.pluginDescriptor.SystemName))).ToList();
-            if (!pluginDescriptors.Any())
+            if (pluginDescriptors.Count == 0)
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -548,7 +543,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to uninstall
             pluginDescriptors = pluginDescriptors
                 .Where(descriptor => _pluginsInfo.PluginNamesToUninstall.Contains(descriptor.pluginDescriptor.SystemName)).ToList();
-            if (!pluginDescriptors.Any())
+            if (pluginDescriptors.Count == 0)
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -604,7 +599,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to delete
             pluginDescriptors = pluginDescriptors
                 .Where(descriptor => _pluginsInfo.PluginNamesToDelete.Contains(descriptor.pluginDescriptor.SystemName)).ToList();
-            if (!pluginDescriptors.Any())
+            if (pluginDescriptors.Count == 0)
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -724,11 +719,11 @@ namespace Nop.Services.Plugins
                 var pluginsDirectories =
                     _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath));
 
-                if (!pluginsDirectories.Any())
+                if (pluginsDirectories.Length == 0)
                     return false;
 
                 return pluginsDirectories.Any(d =>
-                    _fileProvider.GetFiles(d, "*.dll").Any() || _fileProvider.GetFiles(d, "plugin.json").Any());
+                    _fileProvider.GetFiles(d, "*.dll").Length != 0 || _fileProvider.GetFiles(d, "plugin.json").Length != 0);
             }
         }
 

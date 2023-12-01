@@ -78,7 +78,7 @@ namespace Nop.Plugin.Misc.NopMobileApp
                 ActionName = "Configure",
                 IconClass = "far fa-dot-circle",
                 Visible = true,
-                RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } }
+                RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
             });
         }
 

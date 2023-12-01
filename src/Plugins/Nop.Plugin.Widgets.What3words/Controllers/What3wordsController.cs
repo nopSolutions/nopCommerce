@@ -14,7 +14,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Widgets.What3words.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class What3wordsController : BasePluginController
     {

@@ -18,7 +18,7 @@ namespace Nop.Web.Components
             var model = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData);
 
             //no data?
-            if (!model.Any())
+            if (model.Count == 0)
                 return Content("");
 
             return View(model);

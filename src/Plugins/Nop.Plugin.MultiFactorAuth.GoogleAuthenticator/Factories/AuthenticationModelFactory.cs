@@ -32,8 +32,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<AuthModel> PrepareAuthModel(AuthModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var secretkey = Guid.NewGuid().ToString().Replace("-", "")[0..10];
             var setupInfo = await _googleAuthenticatorService.GenerateSetupCode(secretkey);

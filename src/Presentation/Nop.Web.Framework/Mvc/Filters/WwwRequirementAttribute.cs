@@ -85,8 +85,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">Authorization filter context</param>
             private void CheckWwwRequirement(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
                 if (!context.HttpContext.Request.IsGetRequest())

@@ -11,6 +11,7 @@ namespace Nop.Services.Stores
         #region Fields
 
         protected readonly IRepository<Store> _storeRepository;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -32,15 +33,14 @@ namespace Nop.Services.Stores
         /// <returns>Comma-separated hosts</returns>
         protected virtual string[] ParseHostValues(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
+            ArgumentNullException.ThrowIfNull(store);
 
             var parsedValues = new List<string>();
             if (string.IsNullOrEmpty(store.Hosts))
-                return parsedValues.ToArray();
+                return [.. parsedValues];
 
-            var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            
+            var hosts = store.Hosts.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
+
             foreach (var host in hosts)
             {
                 var tmp = host.Trim();
@@ -48,7 +48,7 @@ namespace Nop.Services.Stores
                     parsedValues.Add(tmp);
             }
 
-            return parsedValues.ToArray();
+            return [.. parsedValues];
         }
 
         #endregion
@@ -62,8 +62,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStoreAsync(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
+            ArgumentNullException.ThrowIfNull(store);
 
             var allStores = await GetAllStoresAsync();
             if (allStores.Count == 1)
@@ -151,8 +150,7 @@ namespace Nop.Services.Stores
         /// <returns>true - contains, false - no</returns>
         public virtual bool ContainsHostValue(Store store, string host)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
+            ArgumentNullException.ThrowIfNull(store);
 
             if (string.IsNullOrEmpty(host))
                 return false;
@@ -172,8 +170,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
         {
-            if (storeIdsNames == null)
-                throw new ArgumentNullException(nameof(storeIdsNames));
+            ArgumentNullException.ThrowIfNull(storeIdsNames);
 
             var query = _storeRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
@@ -184,8 +181,8 @@ namespace Nop.Services.Stores
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (!queryFilter.Any())
-                return queryFilter.ToArray();
+            if (queryFilter.Length == 0)
+                return [.. queryFilter];
 
             //filtering by IDs
             filter = await query.Select(store => store.Id.ToString())
@@ -193,7 +190,7 @@ namespace Nop.Services.Stores
                 .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
-            return queryFilter.ToArray();
+            return [.. queryFilter];
         }
 
         #endregion

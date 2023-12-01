@@ -349,11 +349,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -368,11 +368,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -385,11 +385,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             return View("RestartApplication", returnUrl);
         }
@@ -441,7 +441,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
+            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync([.. selectedIds]));
 
             return Json(new { Result = true });
         }

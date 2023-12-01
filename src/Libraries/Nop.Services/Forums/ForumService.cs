@@ -313,8 +313,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteForumAsync(Forum forum)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             //delete forum subscriptions (topics)
             var queryTopicIds = from ft in _forumTopicRepository.Table
@@ -404,8 +403,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteTopicAsync(ForumTopic forumTopic)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             var customerId = forumTopic.CustomerId;
             var forumId = forumTopic.ForumId;
@@ -605,8 +603,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePostAsync(ForumPost forumPost)
         {
-            if (forumPost == null)
-                throw new ArgumentNullException(nameof(forumPost));
+            ArgumentNullException.ThrowIfNull(forumPost);
 
             var forumTopicId = forumPost.TopicId;
             var customerId = forumPost.CustomerId;
@@ -839,9 +836,8 @@ namespace Nop.Services.Forums
         {
             await _forumPrivateMessageRepository.InsertAsync(privateMessage);
 
-            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
-            if (customerTo == null)
-                throw new NopException("Recipient could not be loaded");
+            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId)
+                ?? throw new NopException("Recipient could not be loaded");
 
             //UI notification
             await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
@@ -858,8 +854,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePrivateMessageAsync(PrivateMessage privateMessage)
         {
-            if (privateMessage == null)
-                throw new ArgumentNullException(nameof(privateMessage));
+            ArgumentNullException.ThrowIfNull(privateMessage);
 
             if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
                 await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
@@ -1255,8 +1250,7 @@ namespace Nop.Services.Forums
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePostVoteAsync(ForumPostVote postVote)
         {
-            if (postVote == null)
-                throw new ArgumentNullException(nameof(postVote));
+            ArgumentNullException.ThrowIfNull(postVote);
 
             await _forumPostVoteRepository.DeleteAsync(postVote);
 
@@ -1370,8 +1364,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<ForumPost> GetFirstPostAsync(ForumTopic forumTopic)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             var forumPosts = await GetAllPostsAsync(forumTopic.Id, 0, string.Empty, 0, 1);
             if (forumPosts.Any())
@@ -1390,8 +1383,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<string> GetForumGroupSeNameAsync(ForumGroup forumGroup)
         {
-            if (forumGroup == null)
-                throw new ArgumentNullException(nameof(forumGroup));
+            ArgumentNullException.ThrowIfNull(forumGroup);
 
             var seName = await _urlRecordService.GetSeNameAsync(forumGroup.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
@@ -1408,8 +1400,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<string> GetForumSeNameAsync(Forum forum)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             var seName = await _urlRecordService.GetSeNameAsync(forum.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
@@ -1426,8 +1417,7 @@ namespace Nop.Services.Forums
         /// </returns>
         public virtual async Task<string> GetTopicSeNameAsync(ForumTopic forumTopic)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             var seName = await _urlRecordService.GetSeNameAsync(forumTopic.Subject, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 

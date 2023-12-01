@@ -77,11 +77,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             searchModel.AffliateId = affiliate.Id;
 
@@ -104,11 +102,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Affiliated customer search model</returns>
         protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             searchModel.AffliateId = affiliate.Id;
 
@@ -132,8 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<AffiliateSearchModel> PrepareAffiliateSearchModelAsync(AffiliateSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -151,8 +146,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AffiliateListModel> PrepareAffiliateListModelAsync(AffiliateSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get affiliates
             var affiliates = await _affiliateService.GetAllAffiliatesAsync(searchModel.SearchFriendlyUrlName,
@@ -243,11 +237,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             //get parameters to filter orders
             var startDateValue = !searchModel.StartDate.HasValue ? null
@@ -302,11 +294,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             //get customers
             var customers = await _customerService.GetAllCustomersAsync(affiliateId: affiliate.Id,

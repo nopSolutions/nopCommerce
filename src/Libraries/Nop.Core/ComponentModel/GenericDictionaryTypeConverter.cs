@@ -13,20 +13,20 @@ namespace Nop.Core.ComponentModel
         /// <summary>
         /// Type converter
         /// </summary>
-        protected readonly TypeConverter typeConverterKey;
+        protected readonly TypeConverter _typeConverterKey;
 
         /// <summary>
         /// Type converter
         /// </summary>
-        protected readonly TypeConverter typeConverterValue;
+        protected readonly TypeConverter _typeConverterValue;
 
         public GenericDictionaryTypeConverter()
         {
-            typeConverterKey = TypeDescriptor.GetConverter(typeof(K));
-            if (typeConverterKey == null)
+            _typeConverterKey = TypeDescriptor.GetConverter(typeof(K));
+            if (_typeConverterKey == null)
                 throw new InvalidOperationException("No type converter exists for type " + typeof(K).FullName);
-            typeConverterValue = TypeDescriptor.GetConverter(typeof(V));
-            if (typeConverterValue == null)
+            _typeConverterValue = TypeDescriptor.GetConverter(typeof(V));
+            if (_typeConverterValue == null)
                 throw new InvalidOperationException("No type converter exists for type " + typeof(V).FullName);
         }
 
@@ -59,17 +59,17 @@ namespace Nop.Core.ComponentModel
                 return base.ConvertFrom(context, culture, value);
 
             var input = (string)value;
-            var items = string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(';').Select(x => x.Trim()).ToArray();
+            var items = string.IsNullOrEmpty(input) ? [] : input.Split(';').Select(x => x.Trim()).ToArray();
 
             var result = new Dictionary<K, V>();
             foreach (var item in items)
             {
-                var keyValueStr = string.IsNullOrEmpty(item) ? Array.Empty<string>() : item.Split(',').Select(x => x.Trim()).ToArray();
+                var keyValueStr = string.IsNullOrEmpty(item) ? [] : item.Split(',').Select(x => x.Trim()).ToArray();
                 if (keyValueStr.Length != 2)
                     continue;
 
-                object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
-                object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
+                object dictionaryKey = (K)_typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
+                object dictionaryValue = (V)_typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
                 if (dictionaryKey == null || dictionaryValue == null)
                     continue;
 

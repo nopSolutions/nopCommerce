@@ -141,8 +141,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareStoreThemeModelsAsync(IList<StoreInformationSettingsModel.ThemeModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -174,8 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual Task<SortOptionSearchModel> PrepareSortOptionSearchModelAsync(SortOptionSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -193,8 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual Task<GdprConsentSearchModel> PrepareGdprConsentSearchModelAsync(GdprConsentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -751,8 +748,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAddSettingModelAsync(SettingModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
@@ -1318,8 +1314,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SortOptionListModel> PrepareSortOptionListModelAsync(SortOptionSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeId);
@@ -1566,7 +1561,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare CustomerSettings list availableCountries
             await _baseAdminModelFactory.PrepareCountriesAsync(model.CustomerSettings.AvailableCountries);
-            
+
             //prepare multi-factor authentication settings model
             model.MultiFactorAuthenticationSettings = await PrepareMultiFactorAuthenticationSettingsModelAsync();
 
@@ -1635,8 +1630,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GdprConsentListModel> PrepareGdprConsentListModelAsync(GdprConsentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get sort options
             var consentList = (await _gdprService.GetAllConsentsAsync()).ToPagedList(searchModel);
@@ -1783,8 +1777,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SettingSearchModel> PrepareSettingSearchModelAsync(SettingSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare model to add
             await PrepareAddSettingModelAsync(searchModel.AddSetting);
@@ -1805,8 +1798,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SettingListModel> PrepareSettingListModelAsync(SettingSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get settings
             var settings = (await _settingService.GetAllSettingsAsync()).AsQueryable();

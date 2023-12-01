@@ -148,7 +148,7 @@ namespace Nop.Web.Controllers
             var customer = await _workContext.GetCurrentCustomerAsync();
             return (await _orderService.SearchOrdersAsync(customerId: customer.Id,
                 productId: product.Id,
-                osIds: new List<int> { (int)OrderStatus.Complete },
+                osIds: [(int)OrderStatus.Complete],
                 pageSize: 1)).Any();
         }
 
@@ -220,7 +220,7 @@ namespace Nop.Web.Controllers
                 var currentVendor = await _workContext.GetCurrentVendorAsync();
                 if (currentVendor == null || currentVendor.Id == product.VendorId)
                 {
-                    DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.Admin }));
+                    DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.ADMIN }));
                 }
             }
 
@@ -460,9 +460,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
-            var productReview = await _productService.GetProductReviewByIdAsync(productReviewId);
-            if (productReview == null)
-                throw new ArgumentException("No product review found with the specified id");
+            var productReview = await _productService.GetProductReviewByIdAsync(productReviewId) ?? throw new ArgumentException("No product review found with the specified id");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)

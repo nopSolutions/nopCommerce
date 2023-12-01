@@ -20,8 +20,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         /// <returns>Represents a response of getting shipping rate options</returns>
         public Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
-            if (getShippingOptionRequest == null)
-                throw new ArgumentNullException(nameof(getShippingOptionRequest));
+            ArgumentNullException.ThrowIfNull(getShippingOptionRequest);
 
             var response = new GetShippingOptionResponse();
             response.ShippingOptions.Add(new ShippingOption
@@ -47,8 +46,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
-            if (getShippingOptionRequest == null)
-                throw new ArgumentNullException(nameof(getShippingOptionRequest));
+            ArgumentNullException.ThrowIfNull(getShippingOptionRequest);
 
             return Task.FromResult<decimal?>(GetRate());
         }

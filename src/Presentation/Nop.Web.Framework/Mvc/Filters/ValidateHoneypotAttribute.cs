@@ -62,8 +62,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidateHoneypotAsync(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

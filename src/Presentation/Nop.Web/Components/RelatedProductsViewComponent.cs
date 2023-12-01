@@ -39,7 +39,7 @@ namespace Nop.Web.Components
             //visible individually
             .Where(p => p.VisibleIndividually).ToListAsync();
 
-            if (!products.Any())
+            if (products.Count == 0)
                 return Content(string.Empty);
 
             var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();

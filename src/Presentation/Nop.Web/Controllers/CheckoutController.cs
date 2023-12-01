@@ -62,6 +62,7 @@ namespace Nop.Web.Controllers
         protected readonly RewardPointsSettings _rewardPointsSettings;
         protected readonly ShippingSettings _shippingSettings;
         protected readonly TaxSettings _taxSettings;
+        private static readonly string[] _separator = ["___"];
 
         #endregion
 
@@ -174,7 +175,7 @@ namespace Nop.Web.Controllers
         /// </returns>
         protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IList<ShoppingCartItem> cart, IFormCollection form)
         {
-            var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+            var pickupPoint = form["pickup-points-id"].ToString().Split(_separator, StringSplitOptions.None);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -183,10 +184,8 @@ namespace Nop.Web.Controllers
                 : null;
 
             var selectedPoint = (await _shippingService.GetPickupPointsAsync(cart, address,
-                customer, pickupPoint[1], store.Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
-
-            if (selectedPoint == null)
-                throw new Exception("Pickup point is not allowed");
+                    customer, pickupPoint[1], store.Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]))
+                ?? throw new Exception("Pickup point is not allowed");
 
             return selectedPoint;
         }
@@ -259,9 +258,8 @@ namespace Nop.Web.Controllers
                     throw new Exception("Your cart is empty");
 
                 //find address (ensure that it belongs to the current customer)
-                var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressModel.Id);
-                if (address == null)
-                    throw new Exception("Address can't be loaded");
+                var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressModel.Id)
+                    ?? throw new Exception("Address can't be loaded");
 
                 //custom address attributes
                 var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
@@ -349,7 +347,7 @@ namespace Nop.Web.Controllers
             var buttonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
-            if (!nonButtonPaymentMethods.Any() && buttonPaymentMethods.Any())
+            if (nonButtonPaymentMethods.Count == 0 && buttonPaymentMethods.Count != 0)
                 return RedirectToRoute("ShoppingCart");
 
             //reset checkout data
@@ -685,7 +683,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -843,7 +841,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -979,7 +977,7 @@ namespace Nop.Web.Controllers
             //parse selected method 
             if (string.IsNullOrEmpty(shippingoption))
                 return await ShippingMethod();
-            var splittedOption = shippingoption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+            var splittedOption = shippingoption.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
                 return await ShippingMethod();
             var selectedName = splittedOption[0];
@@ -989,11 +987,14 @@ namespace Nop.Web.Controllers
             //performance optimization. try cache first
             var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                 NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-            if (shippingOptions == null || !shippingOptions.Any())
+            if (shippingOptions == null || shippingOptions.Count == 0)
             {
                 //not found? let's load them using shipping service
-                shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                    customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
+                shippingOptions =
+                [
+                    .. (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                                        customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions,
+                ];
             }
             else
             {
@@ -1571,7 +1572,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                    var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1732,7 +1733,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+                    var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1808,7 +1809,7 @@ namespace Nop.Web.Controllers
                 //parse selected method 
                 if (string.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
-                var splittedOption = shippingoption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+                var splittedOption = shippingoption.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
                     throw new Exception("Selected shipping method can't be parsed");
                 var selectedName = splittedOption[0];
@@ -1818,11 +1819,14 @@ namespace Nop.Web.Controllers
                 //performance optimization. try cache first
                 var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                     NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-                if (shippingOptions == null || !shippingOptions.Any())
+                if (shippingOptions == null || shippingOptions.Count == 0)
                 {
                     //not found? let's load them using shipping service
-                    shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                        customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
+                    shippingOptions =
+                    [
+                        .. (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                                                customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions,
+                    ];
                 }
                 else
                 {
@@ -1831,10 +1835,8 @@ namespace Nop.Web.Controllers
                         .ToList();
                 }
 
-                var shippingOption = shippingOptions
-                    .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
-                if (shippingOption == null)
-                    throw new Exception("Selected shipping method can't be loaded");
+                var shippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase))
+                    ?? throw new Exception("Selected shipping method can't be loaded");
 
                 //save
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);

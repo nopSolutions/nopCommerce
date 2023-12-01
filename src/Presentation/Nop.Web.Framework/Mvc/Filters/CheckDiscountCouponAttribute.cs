@@ -72,11 +72,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckDiscountCouponAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //check request query parameters
-                if (!context.HttpContext.Request.Query.Any())
+                if (context.HttpContext.Request.Query.Count == 0)
                     return;
 
                 //only in GET requests
@@ -107,7 +106,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 foreach (var discount in discounts)
                 {
-                    var result = await _discountService.ValidateDiscountAsync(discount, customer, couponCodes.ToArray());
+                    var result = await _discountService.ValidateDiscountAsync(discount, customer, [.. couponCodes]);
                     if (!result.IsValid)
                         continue;
 

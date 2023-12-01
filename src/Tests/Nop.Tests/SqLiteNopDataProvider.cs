@@ -270,8 +270,7 @@ namespace Nop.Tests
         /// <returns>Connection string</returns>
         public string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            ArgumentNullException.ThrowIfNull(nopConnectionString);
 
             if (nopConnectionString.IntegratedSecurity)
                 throw new NopException("Data provider supports connection only with password");

@@ -172,8 +172,7 @@ namespace Nop.Web.Factories
         public virtual async Task<ApplyVendorModel> PrepareApplyVendorModelAsync(ApplyVendorModel model,
             bool validateVendor, bool excludeProperties, string vendorAttributesXml)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (validateVendor && customer.VendorId > 0)
@@ -211,8 +210,7 @@ namespace Nop.Web.Factories
         public virtual async Task<VendorInfoModel> PrepareVendorInfoModelAsync(VendorInfoModel model,
             bool excludeProperties, string overriddenVendorAttributesXml = "")
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var vendor = await _workContext.GetCurrentVendorAsync();
             if (!excludeProperties)

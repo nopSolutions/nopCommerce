@@ -17,7 +17,7 @@ namespace Nop.Services.ScheduleTasks
     {
         #region Fields
 
-        protected static readonly List<TaskThread> _taskThreads = new();
+        protected static readonly List<TaskThread> _taskThreads = [];
         protected readonly AppSettings _appSettings;
         protected readonly IScheduleTaskService _scheduleTaskService;
         protected readonly IStoreContext _storeContext;
@@ -51,7 +51,7 @@ namespace Nop.Services.ScheduleTasks
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            if (_taskThreads.Any())
+            if (_taskThreads.Count != 0)
                 return;
 
             //initialize and start schedule tasks
