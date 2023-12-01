@@ -8,7 +8,7 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
 {
     public class TestTaskScheduler : TaskScheduler
     {
-        public TestTaskScheduler(AppSettings appSettings, IHttpClientFactory httpClientFactory, IScheduleTaskService scheduleTaskService, IServiceScopeFactory serviceScopeFactory, IStoreContext storeContext) : base(appSettings, httpClientFactory, scheduleTaskService, serviceScopeFactory, storeContext)
+        public TestTaskScheduler(AppSettings appSettings, IHttpClientFactory httpClientFactory, IScheduleTaskService scheduleTaskService, IServiceScopeFactory serviceScopeFactory, IStoreContext storeContext) : base(appSettings, httpClientFactory, serviceScopeFactory)
         {
         }
 
