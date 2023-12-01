@@ -32,6 +32,7 @@ namespace Nop.Services.Orders
         protected readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         protected readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         protected readonly IShipmentService _shipmentService;
+        private static readonly char[] _separator = [';'];
 
         #endregion
 
@@ -320,13 +321,13 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
-            if (osIds != null && osIds.Any())
+            if (osIds != null && osIds.Count != 0)
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
-            if (psIds != null && psIds.Any())
+            if (psIds != null && psIds.Count != 0)
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
-            if (ssIds != null && ssIds.Any())
+            if (ssIds != null && ssIds.Count != 0)
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             if (!string.IsNullOrEmpty(orderNotes))
@@ -381,7 +382,7 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
-            var lines = taxRatesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = taxRatesStr.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
                 if (string.IsNullOrEmpty(line.Trim()))
@@ -404,7 +405,7 @@ namespace Nop.Services.Orders
             }
 
             //add at least one tax rate (0%)
-            if (!taxRatesDictionary.Any())
+            if (taxRatesDictionary.Count == 0)
                 taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
 
             return taxRatesDictionary;
@@ -420,8 +421,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> HasItemsToAddToShipmentAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             foreach (var orderItem in await GetOrderItemsAsync(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
@@ -446,8 +446,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> HasItemsToShipAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.PickupInStore)
                 return false;
@@ -465,8 +464,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> HasItemsToReadyForPickupAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!order.PickupInStore)
                 return false;
@@ -484,8 +482,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> HasItemsToDeliverAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             return await HasShipmentItemsAsync(order, shipment => (shipment.ShippedDateUtc.HasValue || shipment.ReadyForPickupDateUtc.HasValue) && !shipment.DeliveryDateUtc.HasValue);
         }
@@ -618,8 +615,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<int> GetTotalNumberOfItemsInAllShipmentsAsync(OrderItem orderItem)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
             var totalInShipments = 0;
             var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
@@ -648,8 +644,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
             var totalInShipments = await GetTotalNumberOfItemsInAllShipmentsAsync(orderItem);
 
@@ -829,8 +824,7 @@ namespace Nop.Services.Orders
         /// <returns>Formatted text</returns>
         public virtual string FormatOrderNoteText(OrderNote orderNote)
         {
-            if (orderNote == null)
-                throw new ArgumentNullException(nameof(orderNote));
+            ArgumentNullException.ThrowIfNull(orderNote);
 
             var text = orderNote.Note;
 
@@ -960,8 +954,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<RecurringPaymentHistory>> GetRecurringPaymentHistoryAsync(RecurringPayment recurringPayment)
         {
-            if (recurringPayment is null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             return await _recurringPaymentHistoryRepository.Table
                 .Where(rph => rph.RecurringPaymentId == recurringPayment.Id)

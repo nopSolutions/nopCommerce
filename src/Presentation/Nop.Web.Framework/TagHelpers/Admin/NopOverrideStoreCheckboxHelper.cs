@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string PARENT_CONTAINER_ATTRIBUTE_NAME = "asp-parent-container";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly IHtmlHelper _htmlHelper;
@@ -46,11 +46,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             //clear the output
             output.SuppressOutput();
@@ -73,7 +71,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (!string.IsNullOrEmpty(ParentContainer))
                     dataInputSelector = "#" + ParentContainer + " input, #" + ParentContainer + " textarea, #" + ParentContainer + " select";
 
-                if (dataInputIds.Any())
+                if (dataInputIds.Count != 0)
                     dataInputSelector = "#" + string.Join(", #", dataInputIds);
 
                 var onClick = $"checkOverriddenStoreValue(this, '{dataInputSelector}')";

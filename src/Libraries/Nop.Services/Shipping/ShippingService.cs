@@ -142,8 +142,7 @@ namespace Nop.Services.Shipping
         protected virtual async Task<(decimal width, decimal length, decimal height)> GetAssociatedProductDimensionsAsync(ShoppingCartItem shoppingCartItem,
             bool ignoreFreeShippedItems = false)
         {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
+            ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
             decimal length;
             decimal height;
@@ -274,8 +273,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<bool> CountryRestrictionExistsAsync(ShippingMethod shippingMethod, int countryId)
         {
-            if (shippingMethod == null)
-                throw new ArgumentNullException(nameof(shippingMethod));
+            ArgumentNullException.ThrowIfNull(shippingMethod);
 
             var result = await _shippingMethodCountryMappingRepository.Table
                 .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
@@ -424,7 +422,7 @@ namespace Nop.Services.Shipping
                     matchedByCountry.Add(warehouse);
             }
             //no country matches. return any
-            if (!matchedByCountry.Any())
+            if (matchedByCountry.Count == 0)
                 return warehouses.FirstOrDefault();
 
             //find by state
@@ -439,7 +437,7 @@ namespace Nop.Services.Shipping
                     matchedByState.Add(warehouse);
             }
 
-            if (matchedByState.Any())
+            if (matchedByState.Count != 0)
                 return matchedByState.FirstOrDefault();
 
             //no state matches. return any
@@ -461,8 +459,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<decimal> GetShoppingCartItemWeightAsync(ShoppingCartItem shoppingCartItem, bool ignoreFreeShippedItems = false)
         {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
+            ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
 
@@ -527,8 +524,7 @@ namespace Nop.Services.Shipping
         public virtual async Task<decimal> GetTotalWeightAsync(GetShippingOptionRequest request,
             bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var totalWeight = decimal.Zero;
 
@@ -561,8 +557,7 @@ namespace Nop.Services.Shipping
         /// </returns>
         public virtual async Task<(decimal width, decimal length, decimal height)> GetDimensionsAsync(IList<GetShippingOptionRequest.PackageItem> packageItems, bool ignoreFreeShippedItems = false)
         {
-            if (packageItems == null)
-                throw new ArgumentNullException(nameof(packageItems));
+            ArgumentNullException.ThrowIfNull(packageItems);
 
             decimal length;
             decimal height;
@@ -717,10 +712,10 @@ namespace Nop.Services.Shipping
 
                 var warehouseId = warehouse?.Id ?? 0;
 
-                if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
+                //add item to existing request
+                if (requests.TryGetValue(warehouseId, out var value) && !product.ShipSeparately)
                 {
-                    //add item to existing request
-                    requests[warehouseId].Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
+                    value.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
                 }
                 else
                 {
@@ -728,13 +723,13 @@ namespace Nop.Services.Shipping
                     var request = new GetShippingOptionRequest
                     {
                         //store
-                        StoreId = storeId
-                    };
-                    //customer
-                    request.Customer = await _customerService.GetShoppingCartCustomerAsync(cart);
+                        StoreId = storeId,
+                        //customer
+                        Customer = await _customerService.GetShoppingCartCustomerAsync(cart),
 
-                    //ship to
-                    request.ShippingAddress = shippingAddress;
+                        //ship to
+                        ShippingAddress = shippingAddress
+                    };
                     //ship from
                     Address originAddress = null;
                     if (warehouse != null)
@@ -744,11 +739,8 @@ namespace Nop.Services.Shipping
                         request.WarehouseFrom = warehouse;
                     }
 
-                    if (originAddress == null)
-                    {
-                        //no warehouse address. in this case use the default shipping origin
-                        originAddress = await _addressService.GetAddressByIdAsync(_shippingSettings.ShippingOriginAddressId);
-                    }
+                    //no warehouse address. in this case use the default shipping origin
+                    originAddress ??= await _addressService.GetAddressByIdAsync(_shippingSettings.ShippingOriginAddressId);
 
                     if (originAddress != null)
                     {
@@ -818,8 +810,7 @@ namespace Nop.Services.Shipping
             Address shippingAddress, Customer customer = null, string allowedShippingRateComputationMethodSystemName = "",
             int storeId = 0)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var result = new GetShippingOptionResponse();
 

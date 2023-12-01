@@ -121,8 +121,7 @@ namespace Nop.Services.ScheduleTasks
         /// <param name="task">Task</param>
         public virtual async Task InsertTaskAsync(ScheduleTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             if (task.Enabled && !task.LastEnabledUtc.HasValue)
                 task.LastEnabledUtc = DateTime.UtcNow;

@@ -482,8 +482,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ContactUsModel> PrepareContactUsModelAsync(ContactUsModel model, bool excludeProperties)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             if (!excludeProperties)
             {
@@ -510,11 +509,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ContactVendorModel> PrepareContactVendorModelAsync(ContactVendorModel model, Vendor vendor, bool excludeProperties)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             if (!excludeProperties)
             {

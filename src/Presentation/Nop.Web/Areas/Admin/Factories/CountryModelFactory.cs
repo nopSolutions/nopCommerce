@@ -50,11 +50,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>State and province search model</returns>
         protected virtual StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
+            ArgumentNullException.ThrowIfNull(country);
 
             searchModel.CountryId = country.Id;
 
@@ -78,8 +76,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<CountrySearchModel> PrepareCountrySearchModelAsync(CountrySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -97,8 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CountryListModel> PrepareCountryListModelAsync(CountrySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get countries
             var countries = (await _countryService.GetAllCountriesAsync(showHidden: true)).ToPagedList(searchModel);
@@ -182,11 +178,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<StateProvinceListModel> PrepareStateProvinceListModelAsync(StateProvinceSearchModel searchModel, Country country)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
+            ArgumentNullException.ThrowIfNull(country);
 
             //get comments
             var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToPagedList(searchModel);

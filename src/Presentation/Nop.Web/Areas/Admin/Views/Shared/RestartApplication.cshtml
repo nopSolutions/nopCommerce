@@ -7,9 +7,9 @@
         $.ajax({
             type: "GET",
             url: "@Url.Action("RestartApplication", "Common")",
-            complete: function() {
+            complete: function () {
                 window.setTimeout(function () {
-                    window.location.replace('@(!string.IsNullOrEmpty(Model) ? Model : Url.Action("Index", "Home", new { area = AreaNames.Admin }))');
+                    window.location.replace('@(!string.IsNullOrEmpty(Model) ? Model : Url.Action("Index", "Home", new { area = AreaNames.ADMIN }))');
                 }, @(commonSettings.RestartTimeout ?? NopCommonDefaults.RestartTimeout));
             }
         });

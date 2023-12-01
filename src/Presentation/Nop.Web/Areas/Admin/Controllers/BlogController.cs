@@ -337,7 +337,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var comments = await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray());
+            var comments = await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds]);
 
             await _blogService.DeleteBlogCommentsAsync(comments);
             //activity log
@@ -360,7 +360,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter not approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds])).Where(comment => !comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {
@@ -389,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds])).Where(comment => comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {

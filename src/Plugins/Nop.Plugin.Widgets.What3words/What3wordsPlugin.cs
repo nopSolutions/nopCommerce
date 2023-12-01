@@ -82,8 +82,7 @@ namespace Nop.Plugin.Widgets.What3words
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone is null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             if (widgetZone.Equals(PublicWidgetZones.OrderSummaryBillingAddress) ||
                 widgetZone.Equals(PublicWidgetZones.OrderSummaryShippingAddress) ||

@@ -16,11 +16,9 @@ namespace Nop.Services.Catalog
         /// <returns>Filtered tier prices</returns>
         public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, Store store)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
+            ArgumentNullException.ThrowIfNull(store);
 
             return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == store.Id);
         }
@@ -33,13 +31,11 @@ namespace Nop.Services.Catalog
         /// <returns>Filtered tier prices</returns>
         public static IEnumerable<TierPrice> FilterByCustomerRole(this IEnumerable<TierPrice> source, int[] customerRoleIds)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (customerRoleIds == null)
-                throw new ArgumentNullException(nameof(customerRoleIds));
+            ArgumentNullException.ThrowIfNull(customerRoleIds);
 
-            if (!customerRoleIds.Any())
+            if (customerRoleIds.Length == 0)
                 return source;
 
             return source.Where(tierPrice =>
@@ -53,8 +49,7 @@ namespace Nop.Services.Catalog
         /// <returns>Filtered tier prices</returns>
         public static IEnumerable<TierPrice> RemoveDuplicatedQuantities(this IEnumerable<TierPrice> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             var tierPrices = source.ToList();
 
@@ -84,8 +79,7 @@ namespace Nop.Services.Catalog
         /// <returns>Filtered tier prices</returns>
         public static IEnumerable<TierPrice> FilterByDate(this IEnumerable<TierPrice> source, DateTime? date = null)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             if (!date.HasValue)
                 date = DateTime.UtcNow;

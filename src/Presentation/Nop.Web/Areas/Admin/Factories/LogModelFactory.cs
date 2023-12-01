@@ -58,8 +58,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LogSearchModel> PrepareLogSearchModelAsync(LogSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available log levels
             await _baseAdminModelFactory.PrepareLogLevelsAsync(searchModel.AvailableLogLevels);
@@ -80,8 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LogListModel> PrepareLogListModelAsync(LogSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter log
             var createdOnFromValue = searchModel.CreatedOnFrom.HasValue

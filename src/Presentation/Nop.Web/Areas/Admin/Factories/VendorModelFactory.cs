@@ -86,11 +86,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedCustomerModelsAsync(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var associatedCustomers = await _customerService.GetAllCustomersAsync(vendorId: vendor.Id);
             foreach (var customer in associatedCustomers)
@@ -111,8 +109,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareVendorAttributeModelsAsync(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //get available vendor attributes
             var vendorAttributes = await _vendorAttributeService.GetAllAttributesAsync();
@@ -206,11 +203,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Vendor note search model</returns>
         protected virtual VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             searchModel.VendorId = vendor.Id;
 
@@ -234,8 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -253,8 +247,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get vendors
             var vendors = await _vendorService.GetAllVendorsAsync(showHidden: true,
@@ -362,11 +355,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             //get vendor notes
             var vendorNotes = await _vendorService.GetVendorNotesByVendorAsync(vendor.Id, searchModel.Page - 1, searchModel.PageSize);

@@ -80,6 +80,7 @@ namespace Nop.Web.Factories
         protected readonly SeoSettings _seoSettings;
         protected readonly ShippingSettings _shippingSettings;
         protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -183,8 +184,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModelAsync(Product product, SpecificationAttributeGroup group)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
                     product.Id, specificationAttributeGroupId: group?.Id, showOnProductPage: true);
@@ -285,8 +285,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ProductOverviewModel.ProductPriceModel> PrepareProductOverviewPriceModelAsync(Product product, bool forceRedirectionAfterAddingToCart = false)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var priceModel = new ProductOverviewModel.ProductPriceModel
             {
@@ -627,8 +626,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<PictureModel>> PrepareProductOverviewPicturesModelAsync(Product product, int? productThumbPictureSize = null)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             //If a size has been set in the view, we use it in priority
@@ -688,8 +686,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ProductDetailsModel.ProductBreadcrumbModel> PrepareProductBreadcrumbModelAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
             {
@@ -737,8 +734,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<ProductTagModel>> PrepareProductTagModelsAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var productsTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
@@ -767,8 +763,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ProductDetailsModel.ProductPriceModel> PrepareProductPriceModelAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new ProductDetailsModel.ProductPriceModel
             {
@@ -867,8 +862,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ProductDetailsModel.AddToCartModel> PrepareProductAddToCartModelAsync(Product product, ShoppingCartItem updatecartitem)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new ProductDetailsModel.AddToCartModel
             {
@@ -954,8 +948,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<ProductDetailsModel.ProductAttributeModel>> PrepareProductAttributeModelsAsync(Product product, ShoppingCartItem updatecartitem)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new List<ProductDetailsModel.ProductAttributeModel>();
             var store = updatecartitem != null ? await _storeService.GetStoreByIdAsync(updatecartitem.StoreId) : await _storeContext.GetCurrentStoreAsync();
@@ -981,7 +974,7 @@ namespace Nop.Web.Factories
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
 
@@ -1177,8 +1170,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<ProductDetailsModel.TierPriceModel>> PrepareProductTierPriceModelsAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -1212,8 +1204,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<ManufacturerBriefInfoModel>> PrepareProductManufacturerModelsAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = await (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
                 .SelectAwait(async pm =>
@@ -1243,8 +1234,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels, IList<VideoModel> allVideoModels)> PrepareProductDetailsPictureModelAsync(Product product, bool isAssociatedProduct)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //default picture size
             var defaultPictureSize = isAssociatedProduct ?
@@ -1347,14 +1337,10 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareProductTemplateViewPathAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
-            var template = await _productTemplateService.GetProductTemplateByIdAsync(product.ProductTemplateId) ??
-                           (await _productTemplateService.GetAllProductTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _productTemplateService.GetProductTemplateByIdAsync(product.ProductTemplateId) ??
+                           (await _productTemplateService.GetAllProductTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }
@@ -1377,8 +1363,7 @@ namespace Nop.Web.Factories
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)
         {
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
+            ArgumentNullException.ThrowIfNull(products);
 
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
@@ -1434,8 +1419,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<IList<ProductCombinationModel>> PrepareProductCombinationModelsAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var result = new List<ProductCombinationModel>();
 
@@ -1493,8 +1477,7 @@ namespace Nop.Web.Factories
         public virtual async Task<ProductDetailsModel> PrepareProductDetailsModelAsync(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //standard properties
             var model = new ProductDetailsModel
@@ -1749,8 +1732,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProductReviewsModel> PrepareProductReviewsModelAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new ProductReviewsModel
             {
@@ -1970,11 +1952,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProductEmailAFriendModel> PrepareProductEmailAFriendModelAsync(ProductEmailAFriendModel model, Product product, bool excludeProperties)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             model.ProductId = product.Id;
             model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
@@ -1999,8 +1979,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new ProductSpecificationModel();
 

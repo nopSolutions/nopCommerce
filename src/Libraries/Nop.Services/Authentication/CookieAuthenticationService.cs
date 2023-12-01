@@ -44,8 +44,7 @@ namespace Nop.Services.Authentication
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SignInAsync(Customer customer, bool isPersistent)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //create claims for customer's username and email
             var claims = new List<Claim>();

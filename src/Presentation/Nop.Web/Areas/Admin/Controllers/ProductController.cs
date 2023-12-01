@@ -76,6 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IWebHelper _webHelper;
         protected readonly IWorkContext _workContext;
         protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -383,7 +384,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var cblAttributes = form[controlId].ToString();
                         if (!string.IsNullOrEmpty(cblAttributes))
                         {
-                            foreach (var item in cblAttributes.Split(new[] { ',' },
+                            foreach (var item in cblAttributes.Split(_separator,
                                 StringSplitOptions.RemoveEmptyEntries))
                             {
                                 var selectedAttributeId = int.Parse(item);
@@ -501,8 +502,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async Task SaveProductWarehouseInventoryAsync(Product product, ProductModel model)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (model.ManageInventoryMethodId != (int)ManageInventoryMethod.ManageStock)
                 return;
@@ -640,7 +640,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 var anyValueSelected = false;
                                 foreach (var item in cblAttributes.ToString()
-                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId <= 0)
@@ -921,7 +921,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await SaveDiscountMappingsAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, model.SelectedProductTags.ToArray());
+                await _productTagService.UpdateProductTagsAsync(product, [.. model.SelectedProductTags]);
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
@@ -1043,7 +1043,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await UpdateLocalesAsync(product, model);
 
                 //tags
-                await _productTagService.UpdateProductTagsAsync(product, model.SelectedProductTags.ToArray());
+                await _productTagService.UpdateProductTagsAsync(product, [.. model.SelectedProductTags]);
 
                 //warehouses
                 await SaveProductWarehouseInventoryAsync(product, model);
@@ -1183,7 +1183,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+            await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync([.. selectedIds]))
                 .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList());
 
             return Json(new { Result = true });
@@ -1262,7 +1262,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var ids = new List<int>();
             var rangeArray = productIds
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .ToList();
 
@@ -1272,7 +1272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ids.Add(tmp1);
             }
 
-            var products = await _productService.GetProductsByIdsAsync(ids.ToArray());
+            var products = await _productService.GetProductsByIdsAsync([.. ids]);
             for (var i = 0; i <= products.Count - 1; i++)
             {
                 result += products[i].Name;
@@ -1412,7 +1412,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
             if (selectedProducts.Any())
             {
                 var existingRelatedProducts = await _productService.GetRelatedProductsByProductId1Async(model.ProductId, showHidden: true);
@@ -1519,7 +1519,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
             if (selectedProducts.Any())
             {
                 var existingCrossSellProducts = await _productService.GetCrossSellProductsByProductId1Async(model.ProductId, showHidden: true);
@@ -1643,7 +1643,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
 
             var tryToAddSelfGroupedProduct = selectedProducts
                 .Select(p => p.Id)
@@ -1705,7 +1705,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             var files = form.Files.ToList();
-            if (!files.Any())
+            if (files.Count == 0)
                 return Json(new { success = false });
 
             //a vendor should have access only to his products
@@ -2294,7 +2294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
+            var tags = await _productTagService.GetProductTagsByIdsAsync([.. selectedIds]);
             await _productTagService.DeleteProductTagsAsync(tags);
 
             return Json(new { Result = true });
@@ -2495,7 +2495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 products.AddRange(await _productService.GetProductsByIdsAsync(ids));
@@ -2582,7 +2582,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 products.AddRange(await _productService.GetProductsByIdsAsync(ids));
@@ -3505,7 +3505,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (existingCombination != null)
                 warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
-            if (!warnings.Any())
+            if (warnings.Count == 0)
             {
                 //save combination
                 var combination = model.ToEntity<ProductAttributeCombination>();
@@ -3575,7 +3575,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
                 .SelectAwait(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
 
-            if (requiredAttributeNames.Any())
+            if (requiredAttributeNames.Count != 0)
             {
                 model = await _productModelFactory.PrepareProductAttributeCombinationModelAsync(model, product, null, true);
                 var pavModels = model.ProductAttributes.SelectMany(pa => pa.Values)
@@ -3661,7 +3661,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (existingCombination != null && existingCombination.Id != model.Id && existingCombination.AttributesXml.Equals(attributesXml))
                 warnings.Add(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
-            if (!warnings.Any() && ModelState.IsValid)
+            if (warnings.Count == 0 && ModelState.IsValid)
             {
                 var previousStockQuantity = combination.StockQuantity;
 

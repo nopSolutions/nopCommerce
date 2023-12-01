@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName)
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
-            Arguments = new object[] { formKeyName, formValue, actionParameterName };
+            Arguments = [formKeyName, formValue, actionParameterName];
         }
 
         #endregion
@@ -60,8 +60,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckParameterBasedOnFormNameAndValueAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //if form key with '_formKeyName' exists and value of this form parameter equals passed '_formValue', 
                 //then set specified '_actionParameterName' to true

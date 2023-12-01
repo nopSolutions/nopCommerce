@@ -57,9 +57,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckNotNullValidationAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-                
+                ArgumentNullException.ThrowIfNull(context);
+
                 //only in POST requests
                 if (!context.HttpContext.Request.IsPostRequest())
                     return;
@@ -75,7 +74,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .Where(modelState => modelState.Value.ValidationState == ModelValidationState.Invalid
                         && modelState.Value.Errors.Any(error => error.ErrorMessage.Equals(NopValidationDefaults.NotNullValidationLocaleName)))
                     .ToList();
-                if (!nullModelValues.Any())
+                if (nullModelValues.Count == 0)
                     return;
 
                 //get model passed to the action

@@ -229,8 +229,7 @@ namespace Nop.Services.Catalog
             Customer customer,
             decimal productPriceWithoutDiscount)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var appliedDiscounts = new List<Discount>();
             var appliedDiscountAmount = decimal.Zero;
@@ -337,8 +336,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey,
                 product,
@@ -419,8 +417,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<decimal> GetProductCostAsync(Product product, string attributesXml)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var cost = product.ProductCost;
             var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
@@ -466,8 +463,7 @@ namespace Nop.Services.Catalog
             decimal? productPrice = null,
             int quantity = 1)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             var adjustment = decimal.Zero;
             switch (value.AttributeValueType)

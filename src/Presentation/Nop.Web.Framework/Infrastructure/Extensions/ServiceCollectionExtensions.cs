@@ -30,7 +30,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Framework.WebOptimizer;
-using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.AspNetCore8;
 using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 

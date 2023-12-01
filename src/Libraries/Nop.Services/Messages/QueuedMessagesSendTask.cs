@@ -14,6 +14,7 @@ namespace Nop.Services.Messages
         protected readonly IEmailSender _emailSender;
         protected readonly ILogger _logger;
         protected readonly IQueuedEmailService _queuedEmailService;
+        private static readonly char[] _separator = [';'];
 
         #endregion
 
@@ -46,10 +47,10 @@ namespace Nop.Services.Messages
             {
                 var bcc = string.IsNullOrWhiteSpace(queuedEmail.Bcc)
                             ? null
-                            : queuedEmail.Bcc.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.Bcc.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
                 var cc = string.IsNullOrWhiteSpace(queuedEmail.CC)
                             ? null
-                            : queuedEmail.CC.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.CC.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {

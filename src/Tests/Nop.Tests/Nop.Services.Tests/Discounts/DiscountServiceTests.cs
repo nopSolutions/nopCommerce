@@ -48,7 +48,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             var discount = CreateDiscount();
             var customer = CreateCustomer();
 
-            var result = await _discountService.ValidateDiscountAsync(discount, customer, new[] { "CouponCode 1" });
+            var result = await _discountService.ValidateDiscountAsync(discount, customer, ["CouponCode 1"]);
             result.IsValid.Should().BeTrue();
         }
 
@@ -87,7 +87,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             var discount = CreateDiscount();
             var customer = CreateCustomer();
 
-            var result = await _discountService.ValidateDiscountAsync(discount, customer, new[] { "CouponCode 2" });
+            var result = await _discountService.ValidateDiscountAsync(discount, customer, ["CouponCode 2"]);
             result.IsValid.Should().BeFalse();
         }
 
@@ -231,8 +231,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             return _discountService.GetDiscountAmount(discount, amount);
 

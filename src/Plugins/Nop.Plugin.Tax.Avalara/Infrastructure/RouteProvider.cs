@@ -26,7 +26,7 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
             //override some of default routes in Admin area
             endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.TaxCategoriesRouteName,
                 pattern: "Admin/Tax/Categories",
-                defaults: new { controller = "AvalaraTax", action = "Categories", area = AreaNames.Admin });
+                defaults: new { controller = "AvalaraTax", action = "Categories", area = AreaNames.ADMIN });
 
             endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.ExemptionCertificatesRouteName,
                 pattern: $"{lang}/customer/exemption-certificates",

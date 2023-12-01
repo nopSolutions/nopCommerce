@@ -82,11 +82,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
             searchModel.ManufacturerId = manufacturer.Id;
 
@@ -110,8 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ManufacturerSearchModel> PrepareManufacturerSearchModelAsync(ManufacturerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
@@ -151,8 +148,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ManufacturerListModel> PrepareManufacturerListModelAsync(ManufacturerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get manufacturers
             var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true,
@@ -264,11 +260,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ManufacturerProductListModel> PrepareManufacturerProductListModelAsync(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
             //get product manufacturers
             var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(showHidden: true,
@@ -303,8 +297,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available categories
             await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
@@ -337,8 +330,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,

@@ -66,6 +66,7 @@ namespace Nop.Web.Factories
         protected readonly MediaSettings _mediaSettings;
         protected readonly SeoSettings _seoSettings;
         protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [',', ' '];
 
         #endregion
 
@@ -180,7 +181,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(command.Price))
                 return result;
 
-            var fromTo = command.Price.Trim().Split(new[] { '-' });
+            var fromTo = command.Price.Trim().Split(['-']);
             if (fromTo.Length == 2)
             {
                 var rawFromPrice = fromTo[0]?.Trim();
@@ -382,11 +383,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(Category category, CatalogProductsCommand command)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CategoryModel
             {
@@ -487,11 +486,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareCategoryTemplateViewPathAsync(int templateId)
         {
-            var template = await _categoryTemplateService.GetCategoryTemplateByIdAsync(templateId) ??
-                           (await _categoryTemplateService.GetAllCategoryTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _categoryTemplateService.GetCategoryTemplateByIdAsync(templateId) ??
+                           (await _categoryTemplateService.GetAllCategoryTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }
@@ -690,11 +686,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -926,11 +920,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new ManufacturerModel
             {
@@ -968,11 +960,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1069,11 +1059,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareManufacturerTemplateViewPathAsync(int templateId)
         {
-            var template = await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(templateId) ??
-                           (await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(templateId) ??
+                           (await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }
@@ -1194,11 +1181,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new VendorModel
             {
@@ -1227,11 +1212,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareVendorProductsModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1445,11 +1428,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new ProductsByTagModel
             {
@@ -1473,11 +1454,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1562,8 +1541,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1601,11 +1579,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<SearchModel> PrepareSearchModelAsync(SearchModel model, CatalogProductsCommand command)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
             var categoriesModels = new List<SearchModel.CategoryModel>();
@@ -1630,7 +1606,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            if (categoriesModels.Any())
+            if (categoriesModels.Count != 0)
             {
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
@@ -1704,8 +1680,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1988,7 +1963,7 @@ namespace Nop.Web.Factories
             model.AllowCustomersToSelectPageSize = false;
             if (allowCustomersToSelectPageSize && pageSizeOptions != null)
             {
-                var pageSizes = pageSizeOptions.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var pageSizes = pageSizeOptions.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 if (pageSizes.Any())
                 {

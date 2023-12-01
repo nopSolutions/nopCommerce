@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly IHtmlHelper _htmlHelper;
@@ -47,11 +47,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(output);
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;

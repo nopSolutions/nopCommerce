@@ -57,13 +57,11 @@ namespace Nop.Plugin.Misc.Brevo.Data
             this.RenameLocales(new Dictionary<string, string>
             {
                 ["Plugins.Misc.Sendinblue.AccountInfo"] = "Plugins.Misc.Brevo.AccountInfo",
-                ["Plugins.Misc.Sendinblue.AccountInfo"] = "Plugins.Misc.Brevo.AccountInfo",
                 ["Plugins.Misc.Sendinblue.AccountInfo.Hint"] = "Plugins.Misc.Brevo.AccountInfo.Hint",
                 ["Plugins.Misc.Sendinblue.ActivateSMTP"] = "Plugins.Misc.Brevo.ActivateSMTP",
                 ["Plugins.Misc.Sendinblue.AddNewSMSNotification"] = "Plugins.Misc.Brevo.AddNewSMSNotification",
                 ["Plugins.Misc.Sendinblue.BillingAddressPhone"] = "Plugins.Misc.Brevo.BillingAddressPhone",
                 ["Plugins.Misc.Sendinblue.CustomerPhone"] = "Plugins.Misc.Brevo.CustomerPhone",
-                ["Plugins.Misc.Sendinblue.EditTemplate"] = "Plugins.Misc.Brevo.EditTemplate",
                 ["Plugins.Misc.Sendinblue.EditTemplate"] = "Plugins.Misc.Brevo.EditTemplate",
                 ["Plugins.Misc.Sendinblue.Fields.AllowedTokens.Hint"] = "Plugins.Misc.Brevo.Fields.AllowedTokens.Hint",
                 ["Plugins.Misc.Sendinblue.Fields.ApiKey"] = "Plugins.Misc.Brevo.Fields.ApiKey",
@@ -131,7 +129,7 @@ namespace Nop.Plugin.Misc.Brevo.Data
             #region settings
 
             var sendinblueSettings = _dataProvider.GetTable<Setting>().Where(x => x.Name.StartsWith("sendinbluesettings.")).ToList();
-            if (sendinblueSettings.Any())
+            if (sendinblueSettings.Count != 0)
             { 
                 foreach (var setting in sendinblueSettings)
                 {

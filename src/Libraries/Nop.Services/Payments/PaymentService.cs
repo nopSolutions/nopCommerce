@@ -110,8 +110,7 @@ namespace Nop.Services.Payments
         /// </returns>
         public virtual async Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;
@@ -372,10 +371,9 @@ namespace Nop.Services.Payments
         /// <returns>Serialized CustomValues</returns>
         public virtual string SerializeCustomValues(ProcessPaymentRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
-            if (!request.CustomValues.Any())
+            if (request.CustomValues.Count == 0)
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -403,11 +401,10 @@ namespace Nop.Services.Payments
         /// <returns>Serialized CustomValues CustomValues</returns>
         public virtual Dictionary<string, object> DeserializeCustomValues(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (string.IsNullOrWhiteSpace(order.CustomValuesXml))
-                return new Dictionary<string, object>();
+                return [];
 
             var serializer = new XmlSerializer(typeof(DictionarySerializer));
 
@@ -415,7 +412,7 @@ namespace Nop.Services.Payments
             using var xmlReader = XmlReader.Create(textReader);
             if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
                 return ds.Dictionary;
-            return new Dictionary<string, object>();
+            return [];
         }
 
         /// <summary>

@@ -76,6 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IStoreService _storeService;
         protected readonly IWorkContext _workContext;
         protected readonly IUploadService _uploadService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -165,11 +166,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -216,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(
                     await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
 
-                var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.Admin });
+                var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.ADMIN });
                 return View("RestartApplication", returnUrl);
             }
 
@@ -602,7 +603,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             CreatedOnUtc = DateTime.UtcNow
                         };
                     //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
-                    model.DefaultTaxAddress.Id = addressId;                    
+                    model.DefaultTaxAddress.Id = addressId;
                     originAddress = model.DefaultTaxAddress.ToEntity(originAddress);
                     if (originAddress.Id > 0)
                         await _addressService.UpdateAddressAsync(originAddress);
@@ -1539,11 +1540,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //security settings
                 var securitySettings = await _settingService.LoadSettingAsync<SecuritySettings>(storeScope);
-                if (securitySettings.AdminAreaAllowedIpAddresses == null)
-                    securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
+                securitySettings.AdminAreaAllowedIpAddresses ??= [];
                 securitySettings.AdminAreaAllowedIpAddresses.Clear();
                 if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
-                    foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         if (!string.IsNullOrWhiteSpace(s))
                             securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
                 securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
@@ -1553,7 +1553,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeScope);
                 robotsTxtSettings.AllowSitemapXml = model.RobotsTxtSettings.AllowSitemapXml;
                 robotsTxtSettings.AdditionsRules = model.RobotsTxtSettings.AdditionsRules?.Split(Environment.NewLine).ToList();
-                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? new List<int>();
+                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? [];
                 robotsTxtSettings.DisallowPaths = model.RobotsTxtSettings.DisallowPaths?.Split(Environment.NewLine).ToList();
                 robotsTxtSettings.LocalizableDisallowPaths = model.RobotsTxtSettings.LocalizableDisallowPaths?.Split(Environment.NewLine).ToList();
 

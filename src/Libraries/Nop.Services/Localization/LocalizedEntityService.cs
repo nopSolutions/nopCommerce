@@ -236,8 +236,7 @@ namespace Nop.Services.Localization
             TPropType localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
@@ -249,13 +248,9 @@ namespace Nop.Services.Localization
                     keySelector));
             }
 
-            var propInfo = member.Member as PropertyInfo;
-            if (propInfo == null)
-            {
-                throw new ArgumentException(string.Format(
+            var propInfo = member.Member as PropertyInfo ?? throw new ArgumentException(string.Format(
                        "Expression '{0}' refers to a field, not a property.",
                        keySelector));
-            }
 
             //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
             var localeKeyGroup = entity.GetType().Name;

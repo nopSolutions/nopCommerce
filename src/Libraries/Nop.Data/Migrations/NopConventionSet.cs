@@ -12,8 +12,7 @@ namespace Nop.Data.Migrations
 
         public NopConventionSet(INopDataProvider dataProvider)
         {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
+            ArgumentNullException.ThrowIfNull(dataProvider);
 
             var defaultConventionSet = new DefaultConventionSet();
 

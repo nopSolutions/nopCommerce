@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         private static readonly INopFileProvider _fileProvider;
         private static readonly List<KeyValuePair<string, Version>> _baseAppLibraries;
         private static readonly Dictionary<string, Version> _pluginLibraries;
-        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = new();
+        private static readonly Dictionary<string, PluginLoadedAssemblyInfo> _loadedAssemblies = [];
         private static readonly ReaderWriterLockSlim _locker = new();
 
         #endregion
@@ -31,8 +31,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //we use the default file provider, since the DI isn't initialized yet
             _fileProvider = CommonHelper.DefaultFileProvider;
 
-            _baseAppLibraries = new List<KeyValuePair<string, Version>>();
-            _pluginLibraries = new Dictionary<string, Version>();
+            _baseAppLibraries = [];
+            _pluginLibraries = [];
 
             //get all libraries from /bin/{version}/ directory
             foreach (var file in _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"))
@@ -198,14 +198,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         continue;
 
                     //loaded assembly not found
-                    if (!_loadedAssemblies.ContainsKey(assemblyName))
+                    if (!_loadedAssemblies.TryGetValue(assemblyName, out var pluginLoadedAssemblyInfo))
                     {
                         //add it to the list to find collisions later
-                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, GetAssemblyVersion(assembly.Location)));
+                        pluginLoadedAssemblyInfo = new PluginLoadedAssemblyInfo(assemblyName, GetAssemblyVersion(assembly.Location));
+                        _loadedAssemblies.Add(assemblyName, pluginLoadedAssemblyInfo);
                     }
 
                     //set assembly name and plugin name for further using
-                    _loadedAssemblies[assemblyName].References.Add((pluginName, GetAssemblyVersion(filePath)));
+                    pluginLoadedAssemblyInfo.References.Add((pluginName, GetAssemblyVersion(filePath)));
 
                     return true;
                 }
@@ -230,11 +231,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="pluginConfig">Plugin config</param>
         public static void InitializePlugins(this ApplicationPartManager applicationPartManager, PluginConfig pluginConfig)
         {
-            if (applicationPartManager == null)
-                throw new ArgumentNullException(nameof(applicationPartManager));
+            ArgumentNullException.ThrowIfNull(applicationPartManager);
 
-            if (pluginConfig == null)
-                throw new ArgumentNullException(nameof(pluginConfig));
+            ArgumentNullException.ThrowIfNull(pluginConfig);
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))

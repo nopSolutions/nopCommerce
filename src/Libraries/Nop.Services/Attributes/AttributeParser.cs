@@ -23,6 +23,7 @@ namespace Nop.Services.Attributes
 
         protected readonly string _attributeName;
         protected readonly string _attributeValueName;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -423,8 +424,7 @@ namespace Nop.Services.Attributes
         /// </returns>
         public virtual async Task<string> ParseCustomAttributesAsync(IFormCollection form, string attributeControlName)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = string.Empty;
 
@@ -441,7 +441,7 @@ namespace Nop.Services.Attributes
                         break;
 
                     case AttributeControlType.Checkboxes:
-                        foreach (var attributeValue in attributeValues.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        foreach (var attributeValue in attributeValues.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
                             if (!int.TryParse(attributeValue, out value) || value <= 0)
                                 continue;

@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Menu
         /// </summary>
         public SiteMapNode()
         {
-            RouteValues = new RouteValueDictionary();
+            RouteValues = [];
             ChildNodes = new List<SiteMapNode>();
         }
 

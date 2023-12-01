@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.Zettle.Infrastructure
         {
             endpointRouteBuilder.MapControllerRoute(name: ZettleDefaults.ConfigurationRouteName,
                 pattern: "Admin/Zettle/Configure",
-                defaults: new { controller = "ZettleAdmin", action = "Configure", area = AreaNames.Admin });
+                defaults: new { controller = "ZettleAdmin", action = "Configure", area = AreaNames.ADMIN });
 
             endpointRouteBuilder.MapControllerRoute(name: ZettleDefaults.WebhookRouteName,
                 pattern: "zettle/webhook",

@@ -57,8 +57,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         /// </returns>
         public async Task<DiscountRequirementValidationResult> CheckRequirementAsync(DiscountRequirementValidationRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             //invalid by default
             var result = new DiscountRequirementValidationResult();

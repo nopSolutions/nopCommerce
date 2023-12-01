@@ -26,7 +26,7 @@ namespace Nop.Plugin.Misc.Brevo
         /// <summary>
         /// Gets a URL to edit message template on Brevo account
         /// </summary>
-        public static string EditMessageTemplateUrl = "https://my.brevo.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
+        public static string EditMessageTemplateUrl => "https://my.brevo.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
 
         /// <summary>
         /// Gets a name of the route to the import contacts callback
@@ -341,26 +341,26 @@ namespace Nop.Plugin.Misc.Brevo
         /// <summary>
         /// Generic attribute name to hide general settings block on the plugin configuration page
         /// </summary>
-        public static string HideGeneralBlock = "BrevoPage.HideGeneralBlock";
+        public static string HideGeneralBlock => "BrevoPage.HideGeneralBlock";
 
         /// <summary>
         /// Generic attribute name to hide synchronization block on the plugin configuration page
         /// </summary>
-        public static string HideSynchronizationBlock = "BrevoPage.HideSynchronizationBlock";
+        public static string HideSynchronizationBlock => "BrevoPage.HideSynchronizationBlock";
 
         /// <summary>
         /// Generic attribute name to hide transactional block on the plugin configuration page
         /// </summary>
-        public static string HideTransactionalBlock = "BrevoPage.HideTransactionalBlock";
+        public static string HideTransactionalBlock => "BrevoPage.HideTransactionalBlock";
 
         /// <summary>
         /// Generic attribute name to hide SMS block on the plugin configuration page
         /// </summary>
-        public static string HideSmsBlock = "BrevoPage.HideSmsBlock";
+        public static string HideSmsBlock => "BrevoPage.HideSmsBlock";
 
         /// <summary>
         /// Generic attribute name to hide marketing automation block on the plugin configuration page
         /// </summary>
-        public static string HideMarketingAutomationBlock = "BrevoPage.HideMarketingAutomationBlock";
+        public static string HideMarketingAutomationBlock => "BrevoPage.HideMarketingAutomationBlock";
     }
 }

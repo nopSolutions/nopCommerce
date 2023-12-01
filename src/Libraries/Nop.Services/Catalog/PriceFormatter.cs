@@ -58,8 +58,7 @@ namespace Nop.Services.Catalog
         protected virtual string GetCurrencyString(decimal amount,
             bool showCurrency, Currency targetCurrency)
         {
-            if (targetCurrency == null)
-                throw new ArgumentNullException(nameof(targetCurrency));
+            ArgumentNullException.ThrowIfNull(targetCurrency);
 
             string result;
             if (!string.IsNullOrEmpty(targetCurrency.CustomFormatting))
@@ -326,8 +325,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatRentalProductPeriodAsync(Product product, string price)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (!product.IsRental)
                 return price;
@@ -484,8 +482,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (!product.BasepriceEnabled)
                 return null;

@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly IHtmlHelper _htmlHelper;
@@ -47,11 +47,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             //clear the output
             output.SuppressOutput();

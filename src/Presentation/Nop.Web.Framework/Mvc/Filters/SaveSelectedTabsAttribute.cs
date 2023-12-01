@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             PersistForTheNextRequest = persistForTheNextRequest;
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore, persistForTheNextRequest };
+            Arguments = [ignore, persistForTheNextRequest];
         }
 
         #endregion
@@ -78,9 +78,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task SaveSelectedTabAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-                
+                ArgumentNullException.ThrowIfNull(context);
+
                 //only in POST requests
                 if (!context.HttpContext.Request.IsPostRequest())
                     return;

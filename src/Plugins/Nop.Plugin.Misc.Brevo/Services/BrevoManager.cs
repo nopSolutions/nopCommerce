@@ -28,7 +28,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
     /// <summary>
     /// Represents Brevo manager
     /// </summary>
-    public class BrevoManager
+    public partial class BrevoManager
     {
         #region Fields
 
@@ -326,7 +326,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     {
                         NotifyUrl = notificationUrl,
                         FileBody = csv,
-                        ListIds = new List<long?> { listId }
+                        ListIds = [listId]
                     };
 
                     //start import
@@ -377,7 +377,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
                     var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
                     var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
-                        .Select(contact => contact.email).ToList() ?? new List<string>();
+                        .Select(contact => contact.email).ToList() ?? [];
 
                     foreach (var email in blackListedEmails)
                     {
@@ -441,6 +441,12 @@ namespace Nop.Plugin.Misc.Brevo.Services
             return string.Empty;
         }
 
+        [GeneratedRegex("(%[^\\%]*.%)")]
+        private static partial Regex SpecialCharRegex();
+
+        [GeneratedRegex("({{\\s*params\\..*?\\s*}})")]
+        private static partial Regex ParamsRegex();
+
         #endregion
 
         #region Methods
@@ -468,7 +474,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     //use only passed store identifier for the manual synchronization
                     //use all store ids for the synchronization task
                     var storeIds = !synchronizationTask
-                        ? new List<int> { storeId }
+                        ? [storeId]
                         : new List<int> { 0 }.Union((await _storeService.GetAllStoresAsync()).Select(store => store.Id)).ToList();
 
                     var importMessages = await ImportContactsAsync(storeIds);
@@ -631,7 +637,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     {
                         Email = subscription.Email,
                         Attributes = attributes,
-                        ListIds = new List<long?> { listId },
+                        ListIds = [listId],
                         UpdateEnabled = true
                     };
                     await client.CreateContactAsync(createContact);
@@ -642,7 +648,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     var updateContact = new UpdateContact
                     {
                         Attributes = attributes,
-                        ListIds = new List<long?> { listId },
+                        ListIds = [listId],
                         EmailBlacklisted = false
                     };
                     await client.UpdateContactAsync(subscription.Email, updateContact);
@@ -681,7 +687,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                 //update contact
                 var updateContact = new UpdateContact
                 {
-                    UnlinkListIds = new List<long?> { listId }
+                    UnlinkListIds = [listId]
                 };
                 await client.UpdateContactAsync(subscription.Email, updateContact);
             }
@@ -754,7 +760,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
                 var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
                 var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
-                    new List<CreateWebhook.EventsEnum> { CreateWebhook.EventsEnum.Unsubscribed }, CreateWebhook.TypeEnum.Transactional);
+                    [CreateWebhook.EventsEnum.Unsubscribed], CreateWebhook.TypeEnum.Transactional);
                 var result = await client.CreateWebhookAsync(webhook);
 
                 return (int)result.Id;
@@ -776,8 +782,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
         {
             try
             {
-                if (order is null)
-                    throw new ArgumentNullException(nameof(order));
+                ArgumentNullException.ThrowIfNull(order);
 
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                 if (customer.Email is null)
@@ -1190,7 +1195,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
 
                 //get all available senders
                 var senders = await sendersClient.GetSendersAsync();
-                if (!senders.Senders.Any())
+                if (senders.Senders.Count == 0)
                     return (0, "There are no senders");
 
                 var currentSender = senders.Senders.FirstOrDefault(sender => sender.Id.ToString() == senderId);
@@ -1258,9 +1263,9 @@ namespace Nop.Plugin.Misc.Brevo.Services
 
                 //the original body and subject of the email template are the same as that of the message template
                 var body = message.Body.Replace("%if", "\"if\"").Replace("endif%", "\"endif\"");
-                body = Regex.Replace(body, "(%[^\\%]*.%)", x => $"{{{{ params.{x.ToString().Replace("%", "").Replace(".", "_").ToUpperInvariant()} }}}}");
+                body = SpecialCharRegex().Replace(body, x => $"{{{{ params.{x.ToString().Replace("%", "").Replace(".", "_").ToUpperInvariant()} }}}}");
                 var subject = message.Subject.Replace("%if", "\"if\"").Replace("endif%", "\"endif\"");
-                subject = Regex.Replace(subject, "(%[^\\%]*.%)", x => $"{{{{ params.{x.ToString().Replace("%", "").Replace(".", "_").ToUpperInvariant()} }}}}");
+                subject = SpecialCharRegex().Replace(subject, x => $"{{{{ params.{x.ToString().Replace("%", "").Replace(".", "_").ToUpperInvariant()} }}}}");
 
                 //create email template
                 var createSmtpTemplate = new CreateSmtpTemplate(sender: new CreateSmtpTemplateSender(emailAccount.DisplayName, emailAccount.Email),
@@ -1299,9 +1304,9 @@ namespace Nop.Plugin.Misc.Brevo.Services
                 var template = await client.GetSmtpTemplateAsync(templateId);
 
                 //bring attributes to tokens format
-                var subject = Regex.Replace(template.Subject, "({{\\s*params\\..*?\\s*}})", x => $"%{x.ToString().Replace("{", "").Replace("}", "").Replace("params.", "").Replace("_", ".").Trim()}%");
+                var subject = ParamsRegex().Replace(template.Subject, x => $"%{x.ToString().Replace("{", "").Replace("}", "").Replace("params.", "").Replace("_", ".").Trim()}%");
                 subject = subject.Replace("\"if\"", "%if").Replace("\"endif\"", "endif%");
-                var body = Regex.Replace(template.HtmlContent, "({{\\s*params\\..*?\\s*}})", x => $"%{x.ToString().Replace("{", "").Replace("}", "").Replace("params.", "").Replace("_", ".").Trim()}%");
+                var body = ParamsRegex().Replace(template.HtmlContent, x => $"%{x.ToString().Replace("{", "").Replace("}", "").Replace("params.", "").Replace("_", ".").Trim()}%");
                 body = body.Replace("\"if\"", "%if").Replace("\"endif\"", "endif%");
 
                 //map template to queued email
@@ -1382,7 +1387,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
 
                 //create SMS campaign
                 var campaign = await client.CreateSmsCampaignAsync(new CreateSmsCampaign(name: CommonHelper.EnsureMaximumLength(text, 20),
-                    sender: from, content: text, recipients: new CreateSmsCampaignRecipients(new List<long?> { listId })));
+                    sender: from, content: text, recipients: new CreateSmsCampaignRecipients([listId])));
 
                 //send campaign
                 await client.SendSmsCampaignNowAsync(campaign.Id);
@@ -1395,7 +1400,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
             }
 
             return string.Empty;
-        }
+        }        
 
         #endregion
 

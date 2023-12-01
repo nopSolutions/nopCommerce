@@ -197,8 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<CopyProductModel> PrepareCopyProductModelAsync(CopyProductModel model, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.Id = product.Id;
             model.Name = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copy.Name.New"), product.Name);
@@ -216,8 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductWarehouseInventoryModelsAsync(IList<ProductWarehouseInventoryModel> models, Product product)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             foreach (var warehouse in await _shippingService.GetAllWarehousesAsync())
             {
@@ -304,11 +302,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task PrepareProductAttributeConditionModelAsync(ProductAttributeConditionModel model,
             ProductAttributeMapping productAttributeMapping)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (productAttributeMapping == null)
-                throw new ArgumentNullException(nameof(productAttributeMapping));
+            ArgumentNullException.ThrowIfNull(model);
+            ArgumentNullException.ThrowIfNull(productAttributeMapping);
 
             model.ProductAttributeMappingId = productAttributeMapping.Id;
             model.EnableCondition = !string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml);
@@ -406,11 +401,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Related product search model</returns>
         protected virtual RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -428,11 +420,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Cross-sell product search model</returns>
         protected virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -450,11 +439,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Associated product search model</returns>
         protected virtual AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -472,11 +458,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product picture search model</returns>
         protected virtual ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -494,11 +477,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product video search model</returns>
         protected virtual ProductVideoSearchModel PrepareProductVideoSearchModel(ProductVideoSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -516,11 +496,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product order search model</returns>
         protected virtual ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -538,11 +515,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Tier price search model</returns>
         protected virtual TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -563,11 +537,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         protected virtual async Task<StockQuantityHistorySearchModel> PrepareStockQuantityHistorySearchModelAsync(StockQuantityHistorySearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -589,11 +560,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel searchModel,
             Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -612,11 +580,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel searchModel,
             ProductAttributeMapping productAttributeMapping)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (productAttributeMapping == null)
-                throw new ArgumentNullException(nameof(productAttributeMapping));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(productAttributeMapping);
 
             searchModel.ProductAttributeMappingId = productAttributeMapping.Id;
 
@@ -635,11 +600,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ProductAttributeCombinationSearchModel PrepareProductAttributeCombinationSearchModel(
             ProductAttributeCombinationSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -658,11 +620,8 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ProductSpecificationAttributeSearchModel PrepareProductSpecificationAttributeSearchModel(
             ProductSpecificationAttributeSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             searchModel.ProductId = product.Id;
 
@@ -686,8 +645,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductSearchModel> PrepareProductSearchModelAsync(ProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
@@ -760,8 +718,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductListModel> PrepareProductListModelAsync(ProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter comments
             var overridePublished = searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1);
@@ -1012,8 +969,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddRequiredProductSearchModel> PrepareAddRequiredProductSearchModelAsync(AddRequiredProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -1048,8 +1004,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddRequiredProductListModel> PrepareAddRequiredProductListModelAsync(AddRequiredProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1093,11 +1048,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<RelatedProductListModel> PrepareRelatedProductListModelAsync(RelatedProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get related products
             var relatedProducts = (await _productService
@@ -1130,8 +1082,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddRelatedProductSearchModel> PrepareAddRelatedProductSearchModelAsync(AddRelatedProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -1166,8 +1117,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddRelatedProductListModel> PrepareAddRelatedProductListModelAsync(AddRelatedProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1211,11 +1161,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CrossSellProductListModel> PrepareCrossSellProductListModelAsync(CrossSellProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get cross-sell products
             var crossSellProducts = (await _productService
@@ -1253,8 +1200,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddCrossSellProductSearchModel> PrepareAddCrossSellProductSearchModelAsync(AddCrossSellProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -1289,8 +1235,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddCrossSellProductListModel> PrepareAddCrossSellProductListModelAsync(AddCrossSellProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1334,11 +1279,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AssociatedProductListModel> PrepareAssociatedProductListModelAsync(AssociatedProductSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             var vendor = await _workContext.GetCurrentVendorAsync();
             //get associated products
@@ -1371,8 +1313,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddAssociatedProductSearchModel> PrepareAddAssociatedProductSearchModelAsync(AddAssociatedProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -1407,8 +1348,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddAssociatedProductListModel> PrepareAddAssociatedProductListModelAsync(AddAssociatedProductSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1461,11 +1401,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductPictureListModel> PrepareProductPictureListModelAsync(ProductPictureSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get product pictures
             var productPictures = (await _productService.GetProductPicturesByProductIdAsync(product.Id)).ToPagedList(searchModel);
@@ -1505,11 +1442,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductVideoListModel> PrepareProductVideoListModelAsync(ProductVideoSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get product videos
             var productVideos = (await _productService.GetProductVideosByProductIdAsync(product.Id)).ToPagedList(searchModel);
@@ -1547,11 +1481,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductSpecificationAttributeListModel> PrepareProductSpecificationAttributeListModelAsync(
             ProductSpecificationAttributeSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get product specification attributes
             var productSpecificationAttributes = (await _specificationAttributeService
@@ -1629,12 +1560,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
             }
 
-            var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value);
-
-            if (attribute == null)
-            {
-                throw new ArgumentException("No specification attribute found with the specified id");
-            }
+            var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value) 
+                ?? throw new ArgumentException("No specification attribute found with the specified id");
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1716,8 +1643,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<ProductTagSearchModel> PrepareProductTagSearchModelAsync(ProductTagSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -1735,8 +1661,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductTagListModel> PrepareProductTagListModelAsync(ProductTagSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get product tags
             var productTags = (await (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
@@ -1810,11 +1735,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductOrderListModel> PrepareProductOrderListModelAsync(ProductOrderSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get orders
             var orders = await _orderService.SearchOrdersAsync(productId: searchModel.ProductId,
@@ -1862,11 +1784,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<TierPriceListModel> PrepareTierPriceListModelAsync(TierPriceSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get tier prices
             var tierPrices = (await _productService.GetTierPricesByProductAsync(product.Id))
@@ -1911,8 +1830,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<TierPriceModel> PrepareTierPriceModelAsync(TierPriceModel model,
             Product product, TierPrice tierPrice, bool excludeProperties = false)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (tierPrice != null)
             {
@@ -1941,11 +1859,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<StockQuantityHistoryListModel> PrepareStockQuantityHistoryListModelAsync(StockQuantityHistorySearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get stock quantity history
             var stockQuantityHistory = await _productService.GetStockQuantityHistoryAsync(product: product,
@@ -1998,11 +1913,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeMappingListModel> PrepareProductAttributeMappingListModelAsync(ProductAttributeMappingSearchModel searchModel,
             Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get product attribute mappings
             var productAttributeMappings = (await _productAttributeService
@@ -2060,8 +1972,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             Func<ProductAttributeMappingLocalizedModel, int, Task> localizedModelConfiguration = null;
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (productAttributeMapping != null)
             {
@@ -2131,11 +2042,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeValueListModel> PrepareProductAttributeValueListModelAsync(ProductAttributeValueSearchModel searchModel,
             ProductAttributeMapping productAttributeMapping)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (productAttributeMapping == null)
-                throw new ArgumentNullException(nameof(productAttributeMapping));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(productAttributeMapping);
 
             //get product attribute values
             var productAttributeValues = (await _productAttributeService
@@ -2197,8 +2105,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeValueModel> PrepareProductAttributeValueModelAsync(ProductAttributeValueModel model,
             ProductAttributeMapping productAttributeMapping, ProductAttributeValue productAttributeValue, bool excludeProperties = false)
         {
-            if (productAttributeMapping == null)
-                throw new ArgumentNullException(nameof(productAttributeMapping));
+            ArgumentNullException.ThrowIfNull(productAttributeMapping);
 
             Func<ProductAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
@@ -2274,8 +2181,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AssociateProductToAttributeValueSearchModel> PrepareAssociateProductToAttributeValueSearchModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -2311,8 +2217,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AssociateProductToAttributeValueListModel> PrepareAssociateProductToAttributeValueListModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -2358,11 +2263,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeCombinationListModel> PrepareProductAttributeCombinationListModelAsync(
             ProductAttributeCombinationSearchModel searchModel, Product product)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(searchModel);
+            ArgumentNullException.ThrowIfNull(product);
 
             //get product attribute combinations
             var productAttributeCombinations = (await _productAttributeService
@@ -2419,8 +2321,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeCombinationModel> PrepareProductAttributeCombinationModelAsync(ProductAttributeCombinationModel model,
             Product product, ProductAttributeCombination productAttributeCombination, bool excludeProperties = false)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (productAttributeCombination != null)
             {

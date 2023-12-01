@@ -61,11 +61,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             searchModel.GiftCardId = giftCard.Id;
 
@@ -89,8 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GiftCardSearchModel> PrepareGiftCardSearchModelAsync(GiftCardSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
             searchModel.ActivatedList.Add(new SelectListItem
@@ -125,8 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GiftCardListModel> PrepareGiftCardListModelAsync(GiftCardSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter gift cards
             var isActivatedOnly = searchModel.ActivatedId == 0 ? null : searchModel.ActivatedId == 1 ? true : (bool?)false;
@@ -206,11 +202,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<GiftCardUsageHistoryListModel> PrepareGiftCardUsageHistoryListModelAsync(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             //get gift card usage history
             var usageHistory = (await _giftCardService.GetGiftCardUsageHistoryAsync(giftCard))

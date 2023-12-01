@@ -11,7 +11,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class WidgetsGoogleAnalyticsController : BasePluginController

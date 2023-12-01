@@ -12,8 +12,7 @@
         /// <returns>Result</returns>
         public static bool IsSearchEngineAccount(this Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;
@@ -30,8 +29,7 @@
         /// <returns>Result</returns>
         public static bool IsBackgroundTaskAccount(this Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;

@@ -51,14 +51,12 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </returns>
         public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRatesAsync(string exchangeRateCurrencyCode)
         {
-            if (exchangeRateCurrencyCode == null)
-                throw new ArgumentNullException(nameof(exchangeRateCurrencyCode));
+            ArgumentNullException.ThrowIfNull(exchangeRateCurrencyCode);
 
             //add euro with rate 1
             var ratesToEuro = new List<Core.Domain.Directory.ExchangeRate>
             {
-                new Core.Domain.Directory.ExchangeRate
-                {
+                new() {
                     CurrencyCode = "EUR",
                     Rate = 1,
                     UpdatedOn = DateTime.UtcNow
@@ -109,9 +107,8 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
                 return ratesToEuro;
 
             //use only currencies that are supported by ECB
-            var exchangeRateCurrency = ratesToEuro.FirstOrDefault(rate => rate.CurrencyCode.Equals(exchangeRateCurrencyCode, StringComparison.InvariantCultureIgnoreCase));
-            if (exchangeRateCurrency == null)
-                throw new NopException(await _localizationService.GetResourceAsync("Plugins.ExchangeRate.EcbExchange.Error"));
+            var exchangeRateCurrency = ratesToEuro.FirstOrDefault(rate => rate.CurrencyCode.Equals(exchangeRateCurrencyCode, StringComparison.InvariantCultureIgnoreCase)) 
+                ?? throw new NopException(await _localizationService.GetResourceAsync("Plugins.ExchangeRate.EcbExchange.Error"));
 
             //return result for the selected (not euro) currency
             return ratesToEuro.Select(rate => new Core.Domain.Directory.ExchangeRate

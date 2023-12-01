@@ -64,11 +64,7 @@ namespace Nop.Web.Framework
             string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
             var allStores = await _storeService.GetAllStoresAsync();
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
-
-            if (store == null)
-                //load the first found store
-                store = allStores.FirstOrDefault();
+            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host)) ?? allStores.FirstOrDefault();
 
             _cachedStore = store ?? throw new Exception("No store could be loaded");
 
@@ -92,11 +88,7 @@ namespace Nop.Web.Framework
                 return from s in query orderby s.DisplayOrder, s.Id select s;
             }, _ => default, includeDeleted: false);
 
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
-
-            if (store == null)
-                //load the first found store
-                store = allStores.FirstOrDefault();
+            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host)) ?? allStores.FirstOrDefault();
 
             _cachedStore = store ?? throw new Exception("No store could be loaded");
 

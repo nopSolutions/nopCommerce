@@ -45,7 +45,7 @@ namespace Nop.Web.Components
             //availability dates
             .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
-            if (!products.Any())
+            if (products.Count == 0)
                 return Content("");
 
             //prepare model

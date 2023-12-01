@@ -18,6 +18,7 @@ namespace Nop.Services.Catalog
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IProductService _productService;
         protected readonly IWebHelper _webHelper;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -48,15 +49,15 @@ namespace Nop.Services.Catalog
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext?.Request == null)
-                return new List<int>();
+                return [];
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
             if (!httpContext.Request.Cookies.TryGetValue(cookieName, out var productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
-                return new List<int>();
+                return [];
 
             //get array of string product identifiers from cookie
-            var productIds = productIdsCookie.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var productIds = productIdsCookie.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
             //return list of int product identifiers
             return productIds.Select(int.Parse).Distinct().ToList();
@@ -118,7 +119,7 @@ namespace Nop.Services.Catalog
             var productIds = GetComparedProductIds();
 
             //return list of product
-            return (await _productService.GetProductsByIdsAsync(productIds.ToArray()))
+            return (await _productService.GetProductsByIdsAsync([.. productIds]))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 

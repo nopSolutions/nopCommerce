@@ -48,7 +48,7 @@ namespace Nop.Services.Helpers
 
             return el != null && el.Attribute("value")?.Value.ToLowerInvariant() == "true";
         }
-        
+
         /// <summary>
         /// Gets the additional crawler list
         /// </summary>
@@ -91,7 +91,7 @@ namespace Nop.Services.Helpers
                 crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
             }
 
-            if (crawlerItems == null || !crawlerItems.Any())
+            if (crawlerItems == null || crawlerItems.Count == 0)
             {
                 //try to load crawler list from full user agents file
                 using var sr = new StreamReader(userAgentStringsPath);
@@ -103,7 +103,7 @@ namespace Nop.Services.Helpers
                 comments = rootElement?.Element("comments");
             }
 
-            if (crawlerItems == null || !crawlerItems.Any())
+            if (crawlerItems == null || crawlerItems.Count == 0)
                 throw new Exception("Incorrect file format");
 
             if (_fileProvider.FileExists(additionalCrawlersFilePath))

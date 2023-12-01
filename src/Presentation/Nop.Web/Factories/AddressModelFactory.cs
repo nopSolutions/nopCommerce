@@ -175,11 +175,9 @@ namespace Nop.Web.Factories
             Customer customer = null,
             string overrideAttributesXml = "")
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (addressSettings == null)
-                throw new ArgumentNullException(nameof(addressSettings));
+            ArgumentNullException.ThrowIfNull(addressSettings);
 
             var languageId = customer != null ? (customer?.LanguageId ?? 0) : (await _workContext.GetWorkingLanguageAsync()).Id;
 
@@ -252,7 +250,7 @@ namespace Nop.Web.Factories
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();
-                    if (states.Any())
+                    if (states.Count != 0)
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 

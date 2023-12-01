@@ -201,7 +201,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         #region Methods
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> Configure()
         {
             var model = new ConfigurationModel();
@@ -211,7 +211,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -233,7 +233,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSync")]
         public async Task<IActionResult> SaveSynchronization(ConfigurationModel model)
@@ -261,7 +261,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("sync")]
         public async Task<IActionResult> Synchronization(ConfigurationModel model)
@@ -285,7 +285,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetSynchronizationInfo()
         {
@@ -296,7 +296,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSMTP")]
         public async Task<IActionResult> ConfigureSMTP(ConfigurationModel model)
@@ -356,7 +356,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> MessageList(BrevoMessageTemplateSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -384,7 +384,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
                         UseBrevoTemplate = templateId.HasValue,
                         EditLink = templateId.HasValue
                             ? $"{string.Format(BrevoDefaults.EditMessageTemplateUrl, templateId.Value)}"
-                            : Url.Action("Edit", "MessageTemplate", new { id = messageTemplate.Id, area = AreaNames.Admin })
+                            : Url.Action("Edit", "MessageTemplate", new { id = messageTemplate.Id, area = AreaNames.ADMIN })
                     };
                 });
             });
@@ -394,7 +394,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> MessageUpdate(BrevoMessageTemplateModel model)
         {
             if (!ModelState.IsValid)
@@ -419,7 +419,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
             {
                 //standard message template
                 await _genericAttributeService.SaveAttributeAsync<int?>(message, BrevoDefaults.TemplateIdAttribute, null);
-                model.EditLink = Url.Action("Edit", "MessageTemplate", new { id = model.Id, area = AreaNames.Admin });
+                model.EditLink = Url.Action("Edit", "MessageTemplate", new { id = model.Id, area = AreaNames.ADMIN });
             }
 
             //update message template
@@ -433,7 +433,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSMS")]
         public async Task<IActionResult> ConfigureSMS(ConfigurationModel model)
@@ -461,7 +461,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> SMSList(SmsSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -527,7 +527,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> SMSAdd(SmsModel model)
         {
             if (!ModelState.IsValid)
@@ -546,7 +546,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> SMSDelete(SmsModel model)
         {
             if (!ModelState.IsValid)
@@ -565,7 +565,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("submitCampaign")]
         public async Task<IActionResult> SubmitCampaign(ConfigurationModel model)
@@ -583,7 +583,7 @@ namespace Nop.Plugin.Misc.Brevo.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveMA")]
         public async Task<IActionResult> ConfigureMA(ConfigurationModel model)

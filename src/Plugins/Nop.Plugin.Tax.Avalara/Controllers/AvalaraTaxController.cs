@@ -182,9 +182,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return AccessDeniedView();
 
             //try to get a tax category with the specified id
-            var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id);
-            if (taxCategory == null)
-                throw new ArgumentException("No tax category found with the specified id");
+            var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)
+                ?? throw new ArgumentException("No tax category found with the specified id");
 
             //delete generic attributes 
             await _genericAttributeService.SaveAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute, null);

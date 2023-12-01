@@ -344,7 +344,7 @@ namespace Nop.Web.Factories
                 SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId,
                     ensureTwoPublishedLanguages: false)
             }, await GetHttpProtocolAsync());
-            
+
             url = GetLocalizedUrl(url, lang);
 
             return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
@@ -537,7 +537,7 @@ namespace Nop.Web.Factories
                     .Select(url => url.Value)
                     .ToList()).ToList();
 
-            if (!sitemaps.Any())
+            if (sitemaps.Count == 0)
                 return;
 
             await using var stream = new MemoryStream();
@@ -617,8 +617,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel)
         {
-            if (pageModel == null)
-                throw new ArgumentNullException(nameof(pageModel));
+            ArgumentNullException.ThrowIfNull(pageModel);
 
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();

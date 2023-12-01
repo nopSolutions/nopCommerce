@@ -38,13 +38,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </returns>
         public async Task<string> SendEventAsync(FacebookPixelConfiguration facebookPixelConfiguration, ConversionsEvent conversionsEvent)
         {
-            var urlString = string.Join($"/", new string[]
-            {
+            var urlString = string.Join($"/",
+            [
                 FacebookPixelDefaults.FbConversionsApiBaseAddress,
                 FacebookPixelDefaults.FbConversionsApiVersion,
                 facebookPixelConfiguration.PixelId,
                 FacebookPixelDefaults.FbConversionsApiEventEndpoint
-            }) + $"?access_token=" + facebookPixelConfiguration.AccessToken;
+            ]) + $"?access_token=" + facebookPixelConfiguration.AccessToken;
 
             var jsonString = JsonConvert.SerializeObject(conversionsEvent, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var requestContent = new StringContent(jsonString, Encoding.UTF8, MimeTypes.ApplicationJson);

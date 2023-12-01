@@ -119,7 +119,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-                DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.ADMIN }));
 
             //activity log
             await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-                DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.ADMIN }));
 
             //activity log
             await _customerActivityService.InsertActivityAsync("PublicStore.ViewManufacturer",
@@ -241,7 +241,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-                DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.ADMIN }));
 
             //model
             var model = await _catalogModelFactory.PrepareVendorModelAsync(vendor, command);

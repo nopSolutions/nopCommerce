@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public HttpsRequirementAttribute(bool ignore = false) : base(typeof(HttpsRequirementFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -74,9 +74,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckHttpsRequirementAsync(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-                
+                ArgumentNullException.ThrowIfNull(context);
+
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly
                 if (!context.HttpContext.Request.IsGetRequest())
                     return;

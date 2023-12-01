@@ -79,8 +79,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone == null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             return typeof(FacebookPixelViewComponent);
         }

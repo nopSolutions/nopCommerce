@@ -313,8 +313,7 @@ namespace Nop.Services.Plugins
         /// </returns>
         public virtual async Task<IList<IDescriptor>> UploadPluginsAndThemesAsync(IFormFile archivefile)
         {
-            if (archivefile == null)
-                throw new ArgumentNullException(nameof(archivefile));
+            ArgumentNullException.ThrowIfNull(archivefile);
 
             var zipFilePath = string.Empty;
             var descriptors = new List<IDescriptor>();
@@ -361,8 +360,7 @@ namespace Nop.Services.Plugins
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadIconsArchiveAsync(IFormFile archivefile)
         {
-            if (archivefile == null)
-                throw new ArgumentNullException(nameof(archivefile));
+            ArgumentNullException.ThrowIfNull(archivefile);
 
             var zipFilePath = string.Empty;
             try
@@ -397,8 +395,7 @@ namespace Nop.Services.Plugins
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadFaviconAsync(IFormFile favicon)
         {
-            if (favicon == null)
-                throw new ArgumentNullException(nameof(favicon));
+            ArgumentNullException.ThrowIfNull(favicon);
 
             //only icons are supported
             if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
