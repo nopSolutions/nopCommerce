@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 //exclude some properties from mapping configuration and models
                 if (typeof(IConfig).IsAssignableFrom(mapConfiguration.DestinationType))
                     map.ForMember(nameof(IConfig.Name), options => options.Ignore());
-
+               
                 //exclude Locales from mapping ILocalizedModel
                 if (typeof(ILocalizedModel).IsAssignableFrom(mapConfiguration.DestinationType))
                     map.ForMember(nameof(ILocalizedModel<ILocalizedModel>.Locales), options => options.Ignore());
@@ -211,7 +211,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<DataConfig, DataConfigModel>()
                 .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
-            CreateMap<DataConfigModel, DataConfig>();
+            CreateMap<DataConfigModel, DataConfig>()
+                .ForMember(entity => entity.WithNoLock, options => options.Ignore());
 
             CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
             CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
