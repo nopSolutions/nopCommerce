@@ -27,7 +27,6 @@ namespace Nop.Services.Catalog
 
         private static readonly char[] _separator = [','];
 
-
         #endregion
 
         #region Ctor
@@ -1123,6 +1122,7 @@ namespace Nop.Services.Catalog
         #region Properties
 
         protected string ChildElementName { get; set; } = "ProductAttribute";
+        
         #endregion
     }
 }
