@@ -209,7 +209,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             {
                 //get error details
                 var message = ex.Message;
-                if (ex.Detail.Any())
+                if (ex.Detail.Length != 0)
                 {
                     message = ex.Detail.Aggregate(message, (details, detail) =>
                         $"{details}{Environment.NewLine}{detail.Severity} error: {detail.PrimaryErrorCode?.Description}");
@@ -233,7 +233,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 {
                     //use the RequestOption field to indicate the specific types of information to receive
                     //15 = POD, Signature Image, COD, Receiver Address, All Activity (all that's available)
-                    RequestOption = new[] { "15" }
+                    RequestOption = ["15"]
                 },
                 InquiryNumber = trackingNumber
             };
@@ -365,7 +365,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             {
                 //get error details
                 var message = ex.Message;
-                if (ex.Detail.Any())
+                if (ex.Detail.Length != 0)
                 {
                     message = ex.Detail.Aggregate(message, (details, detail) =>
                         $"{details}{Environment.NewLine}{detail.Severity} error: {detail.PrimaryErrorCode?.Description}");
@@ -394,7 +394,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 {
                     //used to define the request type
                     //Shop - the server validates the shipment, and returns rates for all UPS products from the ShipFrom to the ShipTo addresses
-                    RequestOption = new[] { "Shop" }
+                    RequestOption = ["Shop"]
                 }
             };
 
@@ -405,7 +405,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
             var addressFromDetails = new UPSRate.ShipAddressType
             {
-                AddressLine = new[] { shippingOptionRequest.AddressFrom },
+                AddressLine = [shippingOptionRequest.AddressFrom],
                 City = shippingOptionRequest.CityFrom,
                 StateProvinceCode = stateCodeFrom,
                 CountryCode = countryCodeFrom,
@@ -413,7 +413,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             };
             var addressToDetails = new UPSRate.ShipToAddressType
             {
-                AddressLine = new[] { shippingOptionRequest.ShippingAddress.Address1, shippingOptionRequest.ShippingAddress.Address2 },
+                AddressLine = [shippingOptionRequest.ShippingAddress.Address1, shippingOptionRequest.ShippingAddress.Address2],
                 City = shippingOptionRequest.ShippingAddress.City,
                 StateProvinceCode = stateCodeTo,
                 CountryCode = (await _countryService.GetCountryByAddressAsync(shippingOptionRequest.ShippingAddress))?.TwoLetterIsoCode,
@@ -840,7 +840,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 return ((await PrepareShippingOptionsAsync(rateResponse)).Select(shippingOption =>
                 {
                     //correct option name
-                    if (!shippingOption.Name.ToLowerInvariant().StartsWith("ups"))
+                    if (!shippingOption.Name.StartsWith("ups", StringComparison.InvariantCultureIgnoreCase))
                         shippingOption.Name = $"UPS {shippingOption.Name}";
                     if (saturdayDelivery)
                         shippingOption.Name = $"{shippingOption.Name} - Saturday Delivery";

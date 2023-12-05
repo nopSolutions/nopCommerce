@@ -125,8 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareDefaultItemAsync(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null, string defaultItemValue = "0")
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //whether to insert the first special item for the default value
             if (!withSpecialDefaultItem)
@@ -251,8 +250,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareActivityLogTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available activity log types
             var availableActivityTypes = await _customerActivityService.GetAllActivityTypesAsync();
@@ -274,8 +272,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareOrderStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available order statuses
             var availableStatusItems = await OrderStatus.Pending.ToSelectListAsync(false);
@@ -297,8 +294,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePaymentStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available payment statuses
             var availableStatusItems = await PaymentStatus.Pending.ToSelectListAsync(false);
@@ -320,8 +316,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareShippingStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available shipping statuses
             var availableStatusItems = await ShippingStatus.NotYetShipped.ToSelectListAsync(false);
@@ -343,8 +338,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCountriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available countries
             var availableCountries = await _countryService.GetAllCountriesAsync(showHidden: true);
@@ -368,8 +362,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task PrepareStatesAndProvincesAsync(IList<SelectListItem> items, int? countryId,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             if (countryId.HasValue)
             {
@@ -399,8 +392,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareLanguagesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available languages
             var availableLanguages = await _languageService.GetAllLanguagesAsync(showHidden: true);
@@ -422,8 +414,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareStoresAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available stores
             var availableStores = await _storeService.GetAllStoresAsync();
@@ -445,8 +436,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCustomerRolesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available customer roles
             var availableCustomerRoles = await _customerService.GetAllCustomerRolesAsync();
@@ -468,8 +458,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareEmailAccountsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available email accounts
             var availableEmailAccounts = await _emailAccountService.GetAllEmailAccountsAsync();
@@ -491,8 +480,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTaxCategoriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available tax categories
             var availableTaxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
@@ -515,8 +503,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCategoriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available categories
             var availableCategoryItems = await GetCategoryListAsync();
@@ -538,8 +525,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareManufacturersAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available manufacturers
             var availableManufacturerItems = await GetManufacturerListAsync();
@@ -561,8 +547,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareVendorsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available vendors
             var availableVendorItems = await GetVendorListAsync();
@@ -584,8 +569,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareProductTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available product types
             var availableProductTypeItems = await ProductType.SimpleProduct.ToSelectListAsync(false);
@@ -607,8 +591,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCategoryTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available category templates
             var availableTemplates = await _categoryTemplateService.GetAllCategoryTemplatesAsync();
@@ -630,8 +613,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTimeZonesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available time zones
             var availableTimeZones = _dateTimeHelper.GetSystemTimeZones();
@@ -653,8 +635,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareShoppingCartTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available shopping cart types
             var availableShoppingCartTypeItems = await ShoppingCartType.ShoppingCart.ToSelectListAsync(false);
@@ -676,8 +657,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTaxDisplayTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available tax display types
             var availableTaxDisplayTypeItems = await TaxDisplayType.ExcludingTax.ToSelectListAsync(false);
@@ -699,8 +679,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCurrenciesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available currencies
             var availableCurrencies = await _currencyService.GetAllCurrenciesAsync(true);
@@ -722,8 +701,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareDiscountTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available discount types
             var availableDiscountTypeItems = await DiscountType.AssignedToOrderTotal.ToSelectListAsync(false);
@@ -745,8 +723,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareLogLevelsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available log levels
             var availableLogLevelItems = await LogLevel.Debug.ToSelectListAsync(false);
@@ -769,8 +746,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task PrepareManufacturerTemplatesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available manufacturer templates
             var availableTemplates = await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync();
@@ -792,8 +768,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareLoadPluginModesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available load plugin modes
             var availableLoadPluginModeItems = await LoadPluginsMode.All.ToSelectListAsync(false);
@@ -815,8 +790,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePluginGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available plugin groups
             var availablePluginGroups = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
@@ -838,8 +812,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task PrepareReturnRequestStatusesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available return request statuses
             var availableStatusItems = await ReturnRequestStatus.Pending.ToSelectListAsync(false);
@@ -861,8 +834,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareProductTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available product templates
             var availableTemplates = await _productTemplateService.GetAllProductTemplatesAsync();
@@ -884,8 +856,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available topic templates
             var availableTemplates = await _topicTemplateService.GetAllTopicTemplatesAsync();
@@ -907,8 +878,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareWarehousesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available warehouses
             var availableWarehouses = await _shippingService.GetAllWarehousesAsync();
@@ -930,8 +900,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareDeliveryDatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available delivery dates
             var availableDeliveryDates = await _dateRangeService.GetAllDeliveryDatesAsync();
@@ -954,8 +923,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task PrepareProductAvailabilityRangesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available product availability ranges
             var availableProductAvailabilityRanges = await _dateRangeService.GetAllProductAvailabilityRangesAsync();
@@ -977,8 +945,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareGdprRequestTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available request types
             var gdprRequestTypeItems = await GdprRequestType.ConsentAgree.ToSelectListAsync(false);
@@ -1000,8 +967,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareSpecificationAttributeGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //prepare available specification attribute groups
             var availableSpecificationAttributeGroups = await _specificationAttributeService.GetSpecificationAttributeGroupsAsync();

@@ -249,8 +249,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
             if (!_brevoSettings.UseMarketingAutomation)
                 return;
 
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 

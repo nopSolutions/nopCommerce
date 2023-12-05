@@ -72,8 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<TopicSearchModel> PrepareTopicSearchModelAsync(TopicSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
@@ -96,8 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<TopicListModel> PrepareTopicListModelAsync(TopicSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get topics
             var topics = await _topicService.GetAllTopicsAsync(showHidden: true,

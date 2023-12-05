@@ -1173,22 +1173,23 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
 
+            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            {
+                var records = await _staticCacheManager.GetAsync(
+                    _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordSlugLookupCacheKey),
+                    async () => (await GetAllUrlRecordsAsync())
+                        .GroupBy(x => x.Slug.ToLower())
+                        .ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.IsActive).ThenBy(x => x.Id).First()));
+
+                return records.TryGetValue(slug.ToLower(), out var record)
+                    ? record
+                    : null;
+            }
+
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                if (_localizationSettings.LoadAllUrlRecordsOnStartup)
-                {
-                    var lookup = await _staticCacheManager.GetAsync(
-                        _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordSlugLookupCacheKey),
-                        async () => (await GetAllUrlRecordsAsync())
-                            .ToGroupedDictionary(x => x.Slug.ToLowerInvariant()));
-
-                    return lookup.TryGetValue(slug.ToLowerInvariant(), out var records)
-                        ? records.OrderByDescending(x => x.IsActive).ThenBy(x => x.Id).FirstOrDefault()
-                        : null;
-                }
-
                 // gradual loading
                 var query = from ur in _urlRecordRepository.Table
                             where ur.Slug == slug
@@ -1249,25 +1250,28 @@ namespace Nop.Services.Seo
         /// </returns>
         public virtual async Task<string> GetActiveSlugAsync(int entityId, string entityName, int languageId)
         {
+            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            {
+                //value tuples aren't json-serializable by default, so we use a string key
+                static string formatKey(string name, int id) => $"{name}:{id}";
+
+                var activeSlugs = await _staticCacheManager.GetAsync(
+                    _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordEntityIdLookupCacheKey, languageId),
+                    async () => (await GetAllUrlRecordsAsync())
+                        .Where(x => x.IsActive && x.LanguageId == languageId)
+                        .GroupBy(x => formatKey(x.EntityName, x.EntityId))
+                        .ToDictionary(g => g.Key, g => g.MinBy(x => x.Id).Slug));
+
+                return activeSlugs.TryGetValue(formatKey(entityName, entityId), out var slug)
+                    ? slug
+                    : string.Empty;
+            }
+
             //gradual loading
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordCacheKey, entityId, entityName, languageId);
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                if (_localizationSettings.LoadAllUrlRecordsOnStartup)
-                {
-                    var lookup = await _staticCacheManager.GetAsync(
-                        _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordEntityIdLookupCacheKey, languageId),
-                        async () => (await GetAllUrlRecordsAsync()) // these are cached
-                            .Where(x => x.IsActive && x.LanguageId == languageId)
-                            .ToGroupedDictionary(x => x.EntityId));
-
-                    return lookup.TryGetValue(entityId, out var records)
-                        ? records.Where(x => x.EntityName == entityName).MinBy(x => x.Id)?.Slug ?? string.Empty
-                        : string.Empty;
-                }
-
-                //gradual loading
                 var query = from ur in _urlRecordRepository.Table
                             where ur.EntityId == entityId &&
                                   ur.EntityName == entityName &&
@@ -1278,7 +1282,7 @@ namespace Nop.Services.Seo
 
                 //little hack here. nulls aren't cacheable so set it to ""
                 return await query.FirstOrDefaultAsync() ?? string.Empty;
-            }) ?? string.Empty;
+            });
         }
 
         /// <summary>
@@ -1291,8 +1295,7 @@ namespace Nop.Services.Seo
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveSlugAsync<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -1397,8 +1400,7 @@ namespace Nop.Services.Seo
         public virtual async Task<string> GetSeNameAsync<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityName = entity.GetType().Name;
 
@@ -1510,8 +1512,7 @@ namespace Nop.Services.Seo
         /// </returns>
         public virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityName = entity.GetType().Name;
 

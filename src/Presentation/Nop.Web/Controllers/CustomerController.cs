@@ -96,6 +96,7 @@ namespace Nop.Web.Controllers
         protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         protected readonly StoreInformationSettings _storeInformationSettings;
         protected readonly TaxSettings _taxSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -215,8 +216,7 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task<string> ParseSelectedProviderAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var store = await _storeContext.GetCurrentStoreAsync();
 
@@ -240,8 +240,7 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = "";
             var attributes = await _customerAttributeService.GetAllAttributesAsync();
@@ -268,7 +267,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -567,7 +566,7 @@ namespace Nop.Web.Controllers
                     .SaveAttributeAsync<int?>(_workContext.OriginalCustomerIfImpersonated, NopCustomerDefaults.ImpersonatedCustomerIdAttribute, null);
 
                 //redirect back to customer details page (admin area)
-                return RedirectToAction("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin });
+                return RedirectToAction("Edit", "Customer", new { id = customer.Id, area = AreaNames.ADMIN });
             }
 
             //activity log

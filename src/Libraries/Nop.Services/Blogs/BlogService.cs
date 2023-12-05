@@ -17,6 +17,7 @@ namespace Nop.Services.Blogs
         protected readonly IRepository<BlogPost> _blogPostRepository;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreMappingService _storeMappingService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -227,8 +228,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
         {
-            if (blogPosts == null)
-                throw new ArgumentNullException(nameof(blogPosts));
+            ArgumentNullException.ThrowIfNull(blogPosts);
 
             var rez = await blogPosts
                 .Where(p => dateFrom.Date <= (p.StartDateUtc ?? p.CreatedOnUtc) && (p.StartDateUtc ?? p.CreatedOnUtc).Date <= dateTo)
@@ -247,13 +247,12 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<string>> ParseTagsAsync(BlogPost blogPost)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             if (blogPost.Tags == null)
                 return new List<string>();
 
-            var tags = await blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            var tags = await blogPost.Tags.Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(tag => tag.Trim())
                 .Where(tag => !string.IsNullOrEmpty(tag))
                 .ToListAsync();
@@ -269,8 +268,7 @@ namespace Nop.Services.Blogs
         /// <returns>Result</returns>
         public virtual bool BlogPostIsAvailable(BlogPost blogPost, DateTime? dateTime = null)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             if (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= (dateTime ?? DateTime.UtcNow))
                 return false;

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Plugin.Tax.Avalara.Models.ItemClassification;
 using Nop.Plugin.Tax.Avalara.Models.Log;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
@@ -21,8 +22,11 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
             Companies = new List<SelectListItem>();
             TaxOriginAddressTypes = new List<SelectListItem>();
             TaxTransactionLogSearchModel = new TaxTransactionLogSearchModel();
+            ItemClassificationSearchModel = new ItemClassificationSearchModel();
             SelectedCustomerRoleIds = new List<int>();
             AvailableCustomerRoles = new List<SelectListItem>();
+            SelectedCountryIds = new List<int>();
+            AvailableCountries = new List<SelectListItem>();
         }
 
         #endregion
@@ -101,6 +105,21 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.CustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+        #endregion
+
+        #region Item Classification
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.UseItemClassification")]
+        public bool UseItemClassification { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.Countries")]
+        public IList<int> SelectedCountryIds { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
+
+        public ItemClassificationSearchModel ItemClassificationSearchModel { get; set; }
+
+        public bool HideItemClassificationBlock { get; set; }
 
         #endregion
 

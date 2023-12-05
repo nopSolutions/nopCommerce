@@ -81,11 +81,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Category product search model</returns>
         protected virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
             searchModel.CategoryId = category.Id;
 
@@ -109,8 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
@@ -150,8 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
             //get categories
             var categories = await _categoryService.GetAllCategoriesAsync(categoryName: searchModel.SearchCategoryName,
                 showHidden: true,
@@ -267,11 +263,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, Category category)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
             //get product categories
             var productCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(category.Id,
@@ -306,8 +300,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available categories
             await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
@@ -340,8 +333,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,

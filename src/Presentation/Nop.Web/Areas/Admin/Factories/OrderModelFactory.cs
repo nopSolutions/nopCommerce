@@ -93,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected readonly ShippingSettings _shippingSettings;
         protected readonly IUrlRecordService _urlRecordService;
         protected readonly TaxSettings _taxSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -269,11 +270,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderItemModelsAsync(IList<OrderItemModel> models, Order order)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
@@ -383,11 +382,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareReturnRequestBriefModelsAsync(IList<OrderItemModel.ReturnRequestBriefModel> models, OrderItem orderItem)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
             var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(orderItemId: orderItem.Id);
             foreach (var returnRequest in returnRequests)
@@ -408,11 +405,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelTotalsAsync(OrderModel model, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
@@ -474,7 +469,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 .FormatOrderPriceAsync(order.OrderTax, order.CurrencyRate, order.CustomerCurrencyCode,
                 _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
             var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
-            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
             var displayTax = !displayTaxRates;
             foreach (var tr in taxRates)
             {
@@ -560,11 +555,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelPaymentInfoAsync(OrderModel model, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
@@ -640,11 +633,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelShippingInfoAsync(OrderModel model, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             model.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
             if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
@@ -691,14 +682,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductAttributeModelsAsync(IList<AddProductToOrderModel.ProductAttributeModel> models, Order order, Product product)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var attributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in attributes)
@@ -716,7 +704,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
 
@@ -773,14 +761,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentItemModelAsync(ShipmentItemModel model, OrderItem orderItem, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (orderItem is null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (orderItem.ProductId != product.Id)
                 throw new ArgumentException($"{nameof(orderItem.ProductId)} != {nameof(product.Id)}");
@@ -821,8 +806,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentStatusEventModelsAsync(IList<ShipmentStatusEventModel> models, Shipment shipment)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             var shipmentTracker = await _shipmentService.GetShipmentTrackerAsync(shipment);
             var shipmentEvents = await shipmentTracker?.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
@@ -853,11 +837,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Order shipment search model</returns>
         protected virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             searchModel.OrderId = order.Id;
 
@@ -877,8 +859,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Shipment item search model</returns>
         protected virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -894,11 +875,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Order note search model</returns>
         protected virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             searchModel.OrderId = order.Id;
 
@@ -922,8 +901,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderSearchModel> PrepareOrderSearchModelAsync(OrderSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
             searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
@@ -1028,8 +1006,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderListModel> PrepareOrderListModelAsync(OrderSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter orders
             var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
@@ -1112,8 +1089,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderAggreratorModel> PrepareOrderAggregatorModelAsync(OrderSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             if (!_orderSettings.DisplayOrderSummary)
                 return null;
@@ -1175,10 +1151,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var model = new OrderAggreratorModel
             {
-                aggregatorprofit = profitSum,
-                aggregatorshipping = shippingSum,
-                aggregatortax = taxSum,
-                aggregatortotal = totalSum
+                AggregatorProfit = profitSum,
+                AggregatorShipping = shippingSum,
+                AggregatorTax = taxSum,
+                AggregatorTotal = totalSum
             };
 
             return model;
@@ -1263,14 +1239,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<UploadLicenseModel> PrepareUploadLicenseModelAsync(UploadLicenseModel model, Order order, OrderItem orderItem)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
             model.LicenseDownloadId = orderItem.LicenseDownloadId ?? 0;
             model.OrderId = order.Id;
@@ -1290,11 +1263,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToOrderSearchModel> PrepareAddProductToOrderSearchModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             searchModel.OrderId = order.Id;
 
@@ -1324,8 +1295,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToOrderListModel> PrepareAddProductToOrderListModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,
@@ -1364,14 +1334,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddProductToOrderModel> PrepareAddProductToOrderModelAsync(AddProductToOrderModel model, Order order, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
             var store = await _storeService.GetStoreByIdAsync(order.StoreId);
@@ -1418,14 +1385,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderAddressModel> PrepareOrderAddressModelAsync(OrderAddressModel model, Order order, Address address)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             model.OrderId = order.Id;
 
@@ -1447,8 +1411,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ShipmentSearchModel> PrepareShipmentSearchModelAsync(ShipmentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available countries
             await _baseAdminModelFactory.PrepareCountriesAsync(searchModel.AvailableCountries);
@@ -1478,8 +1441,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ShipmentListModel> PrepareShipmentListModelAsync(ShipmentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter shipments
             var vendor = await _workContext.GetCurrentVendorAsync();
@@ -1645,11 +1607,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderShipmentListModel> PrepareOrderShipmentListModelAsync(OrderShipmentSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var vendor = await _workContext.GetCurrentVendorAsync();
             //get shipments
@@ -1683,11 +1643,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ShipmentItemListModel> PrepareShipmentItemListModelAsync(ShipmentItemSearchModel searchModel, Shipment shipment)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
             //get shipments
             var shipmentItems = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id)).ToPagedList(searchModel);
@@ -1745,11 +1703,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OrderNoteListModel> PrepareOrderNoteListModelAsync(OrderNoteSearchModel searchModel, Order order)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //get notes
             var orderNotes = (await _orderService.GetOrderNotesByOrderIdAsync(order.Id)).OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
@@ -1788,8 +1744,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<BestsellerBriefSearchModel> PrepareBestsellerBriefSearchModelAsync(BestsellerBriefSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize(5);
@@ -1807,8 +1762,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<BestsellerBriefListModel> PrepareBestsellerBriefListModelAsync(BestsellerBriefSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             var vendor = await _workContext.GetCurrentVendorAsync();
             //get bestsellers
@@ -1927,7 +1881,7 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             //pending
-            orderStatuses = new List<int> { (int)OrderStatus.Pending };
+            orderStatuses = [(int)OrderStatus.Pending];
             var osPending = await _orderReportService.GetOrderAverageReportLineAsync(osIds: orderStatuses);
             orderIncompleteReportModels.Add(new OrderIncompleteReportModel
             {

@@ -45,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IGenericAttributeService _genericAttributeService;
         protected readonly IWorkContext _workContext;
         protected readonly ShippingSettings _shippingSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -827,10 +828,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var formKey = "restrict_" + shippingMethod.Id;
                 var countryIdsToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
-                    ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
                     .ToList()
-                    : new List<int>();
+                    : [];
 
                 foreach (var country in countries)
                 {

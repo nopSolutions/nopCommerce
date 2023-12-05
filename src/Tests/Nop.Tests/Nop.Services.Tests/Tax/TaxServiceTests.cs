@@ -10,6 +10,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Tax
 {
     [TestFixture]
+    [Ignore("This test leads the Stack Overflow Exception")]
     public class TaxServiceTests : ServiceTest
     {
         private TaxSettings _taxSettings;

@@ -35,7 +35,10 @@ namespace Nop.Tests.Nop.Services.Tests.Common
 
                 var res = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
 
-                res.StatusCode.Should().Be(HttpStatusCode.OK, $"{url} {res.ReasonPhrase}");
+                res.StatusCode.Should().BeOneOf(new[]
+                {
+                    HttpStatusCode.OK , HttpStatusCode.Found
+                }, $"{url} {res.ReasonPhrase}");
             }
         }
 

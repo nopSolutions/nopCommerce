@@ -109,8 +109,7 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<Address> LoadPickupPointTaxAddressAsync(PickupPoint pickupPoint)
         {
-            if (pickupPoint == null)
-                throw new ArgumentNullException(nameof(pickupPoint));
+            ArgumentNullException.ThrowIfNull(pickupPoint);
 
             var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
             var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
@@ -139,8 +138,7 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<TaxRateRequest> PrepareTaxRateRequestAsync(Product product, int taxCategoryId, Customer customer, decimal price)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var taxRateRequest = new TaxRateRequest
@@ -152,7 +150,7 @@ namespace Nop.Services.Tax
                 CurrentStoreId = store.Id
             };
 
-            var basedOn = _taxSettings.TaxBasedOn;            
+            var basedOn = _taxSettings.TaxBasedOn;
 
             //tax is based on pickup point address
             if (_taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
@@ -673,8 +671,7 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            if (cav == null)
-                throw new ArgumentNullException(nameof(cav));
+            ArgumentNullException.ThrowIfNull(cav);
 
             var taxRate = decimal.Zero;
 

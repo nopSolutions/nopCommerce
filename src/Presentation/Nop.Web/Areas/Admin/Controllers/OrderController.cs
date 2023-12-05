@@ -64,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IWorkContext _workContext;
         protected readonly IWorkflowMessageService _workflowMessageService;
         protected readonly OrderSettings _orderSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -174,8 +175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async ValueTask<bool> HasAccessToShipmentAsync(Shipment shipment)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
             if (await _workContext.GetCurrentVendorAsync() == null)
                 //not a vendor; has access
@@ -338,7 +338,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids))
@@ -438,7 +438,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).WhereAwait(HasAccessToOrderAsync).ToListAsync());
@@ -783,13 +783,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var errors = new List<string>();
                 if (online)
-                    errors = (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund)).ToList();
+                    errors = [.. (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund))];
                 else
                     await _orderProcessingService.PartiallyRefundOfflineAsync(order, amountToRefund);
 
                 await LogEditOrderAsync(order.Id);
 
-                if (!errors.Any())
+                if (errors.Count == 0)
                 {
                     //success
                     ViewBag.RefreshPage = true;
@@ -1024,7 +1024,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await _orderService.GetOrdersByIdsAsync(ids));
@@ -1089,7 +1089,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
-                message = errors.Any() ? errors.ToArray() : null
+                message = errors.Count != 0 ? errors.ToArray() : null
             });
         }
 
@@ -1668,7 +1668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetRentalProductWarningsAsync(product, rentalStartDate, rentalEndDate));
-            if (!warnings.Any())
+            if (warnings.Count == 0)
             {
                 //no errors
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -2056,7 +2056,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipmentItems.Any())
+            if (shipmentItems.Count != 0)
             {
                 shipment.TotalWeight = totalWeight;
                 await _shipmentService.InsertShipmentAsync(shipment);
@@ -2495,7 +2495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(ids));
@@ -2533,7 +2533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2562,10 +2562,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2597,7 +2597,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)

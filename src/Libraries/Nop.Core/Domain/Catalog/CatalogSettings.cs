@@ -9,8 +9,8 @@ namespace Nop.Core.Domain.Catalog
     {
         public CatalogSettings()
         {
-            ProductSortingEnumDisabled = new List<int>();
-            ProductSortingEnumDisplayOrder = new Dictionary<int, int>();
+            ProductSortingEnumDisabled = [];
+            ProductSortingEnumDisplayOrder = [];
         }
 
         /// <summary>

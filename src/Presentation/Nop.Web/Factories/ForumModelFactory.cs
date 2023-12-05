@@ -88,20 +88,17 @@ namespace Nop.Web.Factories
         {
             var list = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Normal"),
                     Value = ((int)ForumTopicType.Normal).ToString()
                 },
 
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Sticky"),
                     Value = ((int)ForumTopicType.Sticky).ToString()
                 },
 
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Announcement"),
                     Value = ((int)ForumTopicType.Announcement).ToString()
                 }
@@ -152,8 +149,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumGroupModel> PrepareForumGroupModelAsync(ForumGroup forumGroup)
         {
-            if (forumGroup == null)
-                throw new ArgumentNullException(nameof(forumGroup));
+            ArgumentNullException.ThrowIfNull(forumGroup);
 
             var forumGroupModel = new ForumGroupModel
             {
@@ -263,8 +259,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumPageModel> PrepareForumPageModelAsync(Forum forum, int page)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             var model = new ForumPageModel
             {
@@ -317,8 +312,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumTopicPageModel> PrepareForumTopicPageModelAsync(ForumTopic forumTopic, int page)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             //load posts
             var posts = await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
@@ -433,8 +427,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             var model = new TopicMoveModel
             {
@@ -455,11 +448,9 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicCreateModelAsync(Forum forum, EditForumTopicModel model)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = false;
@@ -482,15 +473,11 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicEditModelAsync(ForumTopic forumTopic, EditForumTopicModel model, bool excludeProperties)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = true;
@@ -531,12 +518,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostCreateModelAsync(ForumTopic forumTopic, int? quote, bool excludeProperties)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
@@ -601,16 +585,11 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostEditModelAsync(ForumPost forumPost, bool excludeProperties)
         {
-            if (forumPost == null)
-                throw new ArgumentNullException(nameof(forumPost));
+            ArgumentNullException.ThrowIfNull(forumPost);
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
-            if (forumTopic == null)
-                throw new ArgumentException("forum topic cannot be loaded");
+            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId) ?? throw new ArgumentException("forum topic cannot be loaded");
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
@@ -663,43 +642,35 @@ namespace Nop.Web.Factories
             // Create the values for the "Limit results to previous" select list
             var limitList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.AllResults"),
                     Value = "0"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1day"),
                     Value = "1"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.7days"),
                     Value = "7"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.2weeks"),
                     Value = "14"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1month"),
                     Value = "30"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.3months"),
                     Value = "92"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.6months"),
                     Value = "183"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1year"),
                     Value = "365"
                 }
@@ -709,8 +680,7 @@ namespace Nop.Web.Factories
             // Create the values for the "Search in forum" select list
             var forumsSelectList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchInForum.All"),
                     Value = "0",
                     Selected = true,
@@ -740,18 +710,15 @@ namespace Nop.Web.Factories
             // Create the values for "Search within" select list            
             var withinList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.All).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.All")
                 },
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.TopicTitlesOnly).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.TopicTitlesOnly")
                 },
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.PostTextOnly).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.PostTextOnly")
                 }
@@ -1012,8 +979,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
         {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
+            ArgumentNullException.ThrowIfNull(topic);
 
             var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
             var firstPost = await _forumService.GetFirstPostAsync(topic);
@@ -1048,8 +1014,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             var forumModel = new ForumRowModel
             {

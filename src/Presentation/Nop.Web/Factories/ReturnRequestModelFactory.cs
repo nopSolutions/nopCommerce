@@ -79,11 +79,9 @@ namespace Nop.Web.Factories
         public virtual async Task<SubmitReturnRequestModel> PrepareSubmitReturnRequestModelAsync(SubmitReturnRequestModel model,
             Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.OrderId = order.Id;
             model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
@@ -166,8 +164,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<IList<SubmitReturnRequestModel.OrderItemModel>> PrepareSubmitReturnRequestOrderItemModelsAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var models = new List<SubmitReturnRequestModel.OrderItemModel>();
 

@@ -106,7 +106,7 @@ namespace Nop.Services.Logging
         /// </returns>
         public virtual async Task<ActivityLog> InsertActivityAsync(Customer customer, string systemKeyword, string comment, BaseEntity entity = null)
         {
-            if (customer == null)
+            if (customer == null || customer.IsSearchEngineAccount())
                 return null;
 
             //try to get activity log type by passed system keyword

@@ -40,8 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available countries
             await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);

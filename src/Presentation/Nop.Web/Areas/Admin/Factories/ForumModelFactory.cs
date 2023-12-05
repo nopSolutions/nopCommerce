@@ -38,8 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Forum search model</returns>
         protected virtual ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -61,8 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<ForumGroupSearchModel> PrepareForumGroupSearchModelAsync(ForumGroupSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare nested search model
             PrepareForumSearchModel(searchModel.ForumSearch);
@@ -83,8 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ForumGroupListModel> PrepareForumGroupListModelAsync(ForumGroupSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get forum groups
             var forumGroups = (await _forumService.GetAllForumGroupsAsync()).ToPagedList(searchModel);
@@ -141,11 +138,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ForumListModel> PrepareForumListModelAsync(ForumSearchModel searchModel, ForumGroup forumGroup)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (forumGroup == null)
-                throw new ArgumentNullException(nameof(forumGroup));
+            ArgumentNullException.ThrowIfNull(forumGroup);
 
             //get forums
             var forums = (await _forumService.GetAllForumsByGroupIdAsync(forumGroup.Id)).ToPagedList(searchModel);

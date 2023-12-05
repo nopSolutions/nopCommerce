@@ -344,8 +344,7 @@ namespace Nop.Services.Shipping
         public virtual async Task<int> GetQuantityInShipmentsAsync(Product product, int warehouseId,
             bool ignoreShipped, bool ignoreDelivered)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)

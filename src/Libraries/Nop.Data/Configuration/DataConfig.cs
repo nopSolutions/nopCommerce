@@ -27,6 +27,11 @@ namespace Nop.Data.Configuration
         public int? SQLCommandTimeout { get; set; } = null;
 
         /// <summary>
+        /// Gets or sets a value that indicates whether to add NoLock hint to SELECT statements (Reltates to SQL Server only)
+        /// </summary>
+        public bool WithNoLock { get; set; } = false;
+
+        /// <summary>
         /// Gets a section name to load configuration
         /// </summary>
         [JsonIgnore]

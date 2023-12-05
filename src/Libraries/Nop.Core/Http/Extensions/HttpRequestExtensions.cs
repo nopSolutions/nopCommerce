@@ -20,6 +20,16 @@ namespace Nop.Core.Http.Extensions
         }
 
         /// <summary>
+        /// Check if the request is the GET request
+        /// </summary>
+        /// <param name="request">Request to check</param>
+        /// <returns>True if the request is GET request, false in all other cases</returns>
+        public static bool IsGetRequest(this HttpRequest request)
+        {
+            return request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
         /// Gets the form value
         /// </summary>
         /// <param name="request">Request</param>
@@ -68,14 +78,14 @@ namespace Nop.Core.Http.Extensions
 
             var form = await request.ReadFormAsync();
 
-            return  predicate == null ? form.Any() : form.Keys.Any(predicate);
+            return  predicate == null ? form.Count != 0 : form.Keys.Any(predicate);
         }
 
         /// <summary>
         /// Gets the value associated with the specified form key
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="formKey"></param>
+        /// <param name="request">Request</param>
+        /// <param name="formKey">The form key</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains True and the form value if the form contains an element with the specified key; otherwise, false and default value.

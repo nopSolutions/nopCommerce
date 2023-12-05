@@ -38,7 +38,7 @@ namespace Nop.Web.Models.ShoppingCart
             public ShoppingCartItemModel()
             {
                 Picture = new PictureModel();
-                AllowedQuantities = new List<SelectListItem>();
+                AllowedQuantities = [];
                 Warnings = new List<string>();
             }
 

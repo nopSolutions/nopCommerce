@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
@@ -251,8 +252,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
 
             //update view count
-            forumTopic.Views += 1;
-            await _forumService.UpdateTopicAsync(forumTopic);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!customer.IsSearchEngineAccount())
+            {
+                forumTopic.Views += 1;
+                await _forumService.UpdateTopicAsync(forumTopic);
+            }
 
             return View(model);
         }

@@ -80,8 +80,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NewsContentModel> PrepareNewsContentModelAsync(NewsContentModel newsContentModel, int? filterByNewsItemId)
         {
-            if (newsContentModel == null)
-                throw new ArgumentNullException(nameof(newsContentModel));
+            ArgumentNullException.ThrowIfNull(newsContentModel);
 
             //prepare nested search models
             await PrepareNewsItemSearchModelAsync(newsContentModel.NewsItems);
@@ -101,8 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsItemSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get news items
             var newsItems = await _newsService.GetAllNewsAsync(showHidden: true,
@@ -193,8 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NewsCommentSearchModel> PrepareNewsCommentSearchModelAsync(NewsCommentSearchModel searchModel, NewsItem newsItem)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
@@ -232,8 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NewsCommentListModel> PrepareNewsCommentListModelAsync(NewsCommentSearchModel searchModel, int? newsItemId)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter comments
             var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
@@ -275,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText, false, true, false, false, false, false);
-                    commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
+                    commentModel.StoreName = storeNames.TryGetValue(newsComment.StoreId, out var value) ? value : "Deleted";
 
                     return commentModel;
                 });
@@ -294,8 +290,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);

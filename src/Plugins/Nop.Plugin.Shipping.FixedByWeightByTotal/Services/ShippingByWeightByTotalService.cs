@@ -34,7 +34,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Get filtered shipping by weight records

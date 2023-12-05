@@ -67,8 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModelAsync(QueuedEmailSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare default search values
             searchModel.SearchMaxSentTries = 10;
@@ -89,8 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<QueuedEmailListModel> PrepareQueuedEmailListModelAsync(QueuedEmailSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter emails
             var startDateValue = !searchModel.SearchStartDate.HasValue ? null

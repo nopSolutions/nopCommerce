@@ -104,7 +104,7 @@ namespace Nop.Services.Orders
             var notActivatedPoints = query
                 .Where(historyEntry => !historyEntry.PointsBalance.HasValue && historyEntry.CreatedOnUtc < nowUtc)
                 .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
-            if (!notActivatedPoints.Any())
+            if (notActivatedPoints.Count == 0)
                 return;
 
             //get current points balance
@@ -201,8 +201,7 @@ namespace Nop.Services.Orders
         public virtual async Task<int> AddRewardPointsHistoryEntryAsync(Customer customer, int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (storeId == 0)
                 throw new ArgumentException("Store ID should be valid");

@@ -348,7 +348,7 @@ namespace Nop.Core
             {
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
-                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+                int[] redirectionStatusCodes = [StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found];
 
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
@@ -425,13 +425,12 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public virtual bool IsAjaxRequest(HttpRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             if (request.Headers == null)
                 return false;
 
-            return request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            return request.Headers.XRequestedWith == "XMLHttpRequest";
         }
 
         #endregion

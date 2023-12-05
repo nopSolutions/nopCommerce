@@ -78,8 +78,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var pagingPosts = false;
             var postsPage = 0;
@@ -114,8 +113,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProfileInfoModel> PrepareProfileInfoModelAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //avatar
             var avatarUrl = "";
@@ -210,8 +208,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (page > 0)
             {

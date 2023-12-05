@@ -124,11 +124,9 @@ namespace Nop.Services.Messages
         public virtual async Task<int> SendCampaignAsync(Campaign campaign, EmailAccount emailAccount,
             IEnumerable<NewsLetterSubscription> subscriptions)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
+            ArgumentNullException.ThrowIfNull(campaign);
 
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             var totalEmailsSent = 0;
 
@@ -176,11 +174,9 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
+            ArgumentNullException.ThrowIfNull(campaign);
 
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             var tokens = new List<Token>();
             await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);

@@ -420,7 +420,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
+            var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync([.. selectedIds]);
             await _manufacturerService.DeleteManufacturersAsync(manufacturers);
 
             var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
@@ -588,7 +588,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //get selected products
-            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
             if (selectedProducts.Any())
             {
                 var existingProductmanufacturers = await _manufacturerService

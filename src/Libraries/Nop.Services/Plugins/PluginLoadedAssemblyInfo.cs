@@ -15,7 +15,7 @@
         public PluginLoadedAssemblyInfo(string shortName, Version assemblyInMemory)
         {
             ShortName = shortName;
-            References = new List<(string PluginName, Version AssemblyVersion)>();
+            References = [];
             AssemblyInMemory = assemblyInMemory;
         }
 

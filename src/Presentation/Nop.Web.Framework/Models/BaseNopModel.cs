@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Models
         /// </summary>
         public BaseNopModel()
         {
-            CustomProperties = new Dictionary<string, string>();
+            CustomProperties = [];
             PostInitialize();
         }
 

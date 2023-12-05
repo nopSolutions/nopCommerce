@@ -211,7 +211,7 @@ namespace Nop.Web.Factories
 
                         return pickupPointModel;
                     }).ToListAsync();
-                }                    
+                }
                 else
                     foreach (var error in pickupPointsResponse.Errors)
                         model.Warnings.Add(error);
@@ -618,8 +618,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var model = new CheckoutCompletedModel
             {
@@ -656,8 +655,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<OnePageCheckoutModel> PrepareOnePageCheckoutModelAsync(IList<ShoppingCartItem> cart)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
 

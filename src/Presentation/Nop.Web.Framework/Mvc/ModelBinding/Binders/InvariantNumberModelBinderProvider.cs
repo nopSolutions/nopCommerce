@@ -12,16 +12,16 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     {
         #region Fields
 
-        protected static readonly HashSet<Type> _integerTypes = new()
-        {
+        protected static readonly HashSet<Type> _integerTypes =
+        [
             typeof(int), typeof(long), typeof(short), typeof(sbyte),
             typeof(byte), typeof(ulong), typeof(ushort), typeof(uint), typeof(BigInteger)
-        };
+        ];
 
-        protected static readonly HashSet<Type> _floatingPointTypes = new()
-        {
+        protected static readonly HashSet<Type> _floatingPointTypes =
+        [
             typeof(double), typeof(decimal), typeof(float)
-        };
+        ];
 
         #endregion
 
@@ -32,8 +32,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
         /// <returns>Instance of model binder for floating-point types</returns>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            if (context is null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             var modelType = context.Metadata.UnderlyingOrModelType;
 

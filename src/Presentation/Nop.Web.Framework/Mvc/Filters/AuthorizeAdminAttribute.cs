@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public AuthorizeAdminAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -66,8 +66,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task AuthorizeAdminAsync(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

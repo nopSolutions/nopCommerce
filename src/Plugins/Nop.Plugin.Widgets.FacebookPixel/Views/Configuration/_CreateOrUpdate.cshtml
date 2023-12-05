@@ -8,18 +8,36 @@
             <div class="card card-default">
                 <div class="card-body">
                     <p>
-                        To configure the Facebook Pixel you will need your pixel's ID, which you can find in the <a href="https://business.facebook.com/events_manager" target="_blank">Ads Manager &gt; Events Manager</a>. If you have not created a pixel, <a href="https://www.facebook.com/business/help/952192354843755" target="_blank">follow these instructions</a> to create one - all you will need is the pixel's ID.<br />
+                        To configure the Facebook Pixel you will need your pixel's ID, which you can find in the <a
+                            href="https://business.facebook.com/events_manager" target="_blank">Ads Manager &gt; Events
+                            Manager</a>. If you have not created a pixel, <a
+                            href="https://www.facebook.com/business/help/952192354843755" target="_blank">follow these
+                            instructions</a> to create one - all you will need is the pixel's ID.<br />
                         <br />
-                        Standard events are predefined visitor actions that correspond to common, conversion-related activities, such as searching for a product, viewing a product, or purchasing a product.<br />
+                        Standard events are predefined visitor actions that correspond to common, conversion-related
+                        activities, such as searching for a product, viewing a product, or purchasing a product.<br />
                         You can configure tracking of these events by enabling the appropriate settings below.<br />
-                        <em>Note: As an additional parameter, some events include product SKU or product combination SKU; make sure that they are filled out correctly in your catalog.</em><br />
+                        <em>Note: As an additional parameter, some events include product SKU or product combination
+                            SKU; make sure that they are filled out correctly in your catalog.</em><br />
                         <br />
-                        If predefined standard events aren't suitable for your needs, you can track your own custom events, which also can be used to define custom audiences for ad optimization.<br />
-                        You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our forums</a>.<br />
+                        If predefined standard events aren't suitable for your needs, you can track your own custom
+                        events, which also can be used to define custom audiences for ad optimization.<br />
+                        You can configure them below. Specify the name and choose widget zones in which the custom event
+                        will be tracked. If you don't know which zone to use for your custom event, you can ask about it
+                        in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our
+                            forums</a>.<br />
                         <br />
-                        The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates consistent data protection rules across Europe. Businesses who advertise with the Facebook companies can continue to use Facebook platforms and solutions in the same way they do today.<br />
-                        If you already enabled the <a href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.Admin })" target="_blank">settings</a> to display Cookie Consent for users, you can pause sending pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the appropriate settings below.<br />
-                        See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect" target="_blank">What data does the Facebook pixel collect?</a><br />
+                        The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates
+                        consistent data protection rules across Europe. Businesses who advertise with the Facebook
+                        companies can continue to use Facebook platforms and solutions in the same way they do
+                        today.<br />
+                        If you already enabled the <a
+                            href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.ADMIN })"
+                            target="_blank">settings</a> to display Cookie Consent for users, you can pause sending
+                        pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the
+                        appropriate settings below.<br />
+                        See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect"
+                            target="_blank">What data does the Facebook pixel collect?</a><br />
                     </p>
                     <div class="form-group row">
                         <div class="col-md-3">
@@ -41,7 +59,8 @@
                             }
                             else
                             {
-                                <nop-editor asp-for="PixelId" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.PixelId })" />
+                                <nop-editor asp-for="PixelId" asp-required="true"
+                                    html-attributes="@(new { disabled = true, value =  Model.PixelId })" />
                                 <input asp-for="PixelId" type="hidden" />
                             }
                             <span asp-validation-for="PixelId"></span>
@@ -68,7 +87,8 @@
                                 }
                                 else
                                 {
-                                    <nop-editor asp-for="AccessToken" asp-required="true" html-attributes="@(new { disabled = true, value =  Model.AccessToken })" />
+                                    <nop-editor asp-for="AccessToken" asp-required="true"
+                                        html-attributes="@(new { disabled = true, value =  Model.AccessToken })" />
                                     <input asp-for="AccessToken" type="hidden" />
                                 }
                                 <span asp-validation-for="AccessToken"></span>
@@ -203,12 +223,12 @@
                             <span asp-validation-for="DisableForUsersNotAcceptingCookieConsent"></span>
                         </div>
                         <script>
-	                        $(document).ready(function () {
+                            $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.DisableForUsersNotAcceptingCookieConsent)").click(toggleCheckbox);
                                 $("#@Html.IdFor(model => model.ConversionsApiEnabled)").click(toggleConversionsApiFormField);
-	                            toggleCheckbox();
+                                toggleCheckbox();
                                 toggleConversionsApiFormField();
-	                        });
+                            });
 
                             function toggleCheckbox() {
                                 warningValidation('@Url.Action("CookieSettingsWarning", "FacebookPixel")', '@Html.NameFor(model => model.DisableForUsersNotAcceptingCookieConsent)',
@@ -261,37 +281,43 @@
                         }
 
                         @await Html.PartialAsync("Table", new DataTablesModel
-                        {
-                            Name = "grid",
-                            UrlRead = new DataUrl("CustomEventList", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
-                            UrlDelete = new DataUrl("CustomEventDelete", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
-                            SearchButtonId = "search",
-                            Length = Model.CustomEventSearchModel.PageSize,
-                            LengthMenu = Model.CustomEventSearchModel.AvailablePageSizes,
-                            Filters = new List<FilterParameter>
-                            {
-                                new FilterParameter(nameof(Model.CustomEventSearchModel.WidgetZone), nameof(CustomEventSearchModel))
-                            },
-                            ColumnCollection = new List<ColumnProperty>
-                            {
-                                new ColumnProperty(nameof(CustomEventModel.EventName))
-                                {
-                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName").Text,
-                                    Width = "200"
-                                },
-                                new ColumnProperty(nameof(CustomEventModel.WidgetZonesName))
-                                {
-                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones").Text
-                                },
-                                new ColumnProperty(nameof(CustomEventModel.EventName))
-                                {
-                                    Title = T("Admin.Common.Delete").Text,
-                                    Width = "100",
-                                    ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
-                                }
-                            }
-                        })
+               {
+                   Name = "grid",
+                   UrlRead = new DataUrl("CustomEventList", "FacebookPixel", new RouteValueDictionary
+                   {
+                       [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id
+                   }),
+                   UrlDelete = new DataUrl("CustomEventDelete", "FacebookPixel", new RouteValueDictionary
+                   {
+                       [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id
+                   }),
+                   SearchButtonId = "search",
+                   Length = Model.CustomEventSearchModel.PageSize,
+                   LengthMenu = Model.CustomEventSearchModel.AvailablePageSizes,
+                   Filters = new List<FilterParameter>
+                    {
+                    new FilterParameter(nameof(Model.CustomEventSearchModel.WidgetZone), nameof(CustomEventSearchModel))
+                    },
+                   ColumnCollection = new List<ColumnProperty>
+                    {
+                    new ColumnProperty(nameof(CustomEventModel.EventName))
+                    {
+                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName").Text,
+                    Width = "200"
+                    },
+                    new ColumnProperty(nameof(CustomEventModel.WidgetZonesName))
+                    {
+                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones").Text
+                    },
+                    new ColumnProperty(nameof(CustomEventModel.EventName))
+                    {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                    }
+                    }
+               })
                     </div>
                     <div class="card-footer">
                         <div class="form-group row">
@@ -308,9 +334,11 @@
                                 <nop-label asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" asp-items="@Model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones" asp-multiple="true" />
+                                <nop-select asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds"
+                                    asp-items="@Model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones"
+                                    asp-multiple="true" />
                                 <script>
-                                    $(document).ready(function() {
+                                    $(document).ready(function () {
                                         var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').select2({
                                             closeOnSelect: false,
                                         });
@@ -320,7 +348,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-9 offset-md-3">
-                                <button type="button" id="add" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                                <button type="button" id="add"
+                                    class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                             </div>
                         </div>
 

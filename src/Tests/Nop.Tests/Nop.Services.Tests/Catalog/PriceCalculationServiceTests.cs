@@ -95,9 +95,9 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             var tierPrices = new List<TierPrice>
             {
-                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 2, Price = 25 },
-                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 5, Price = 20 },
-                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 10, Price = 15 }
+                new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 2, Price = 25 },
+                new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 5, Price = 20 },
+                new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 10, Price = 15 }
             };
 
             foreach (var tierPrice in tierPrices)

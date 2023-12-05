@@ -236,9 +236,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (order != null)
                 {
-                    var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId);
-                    if (customerLang == null)
-                        customerLang = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+                    var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId) ?? (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
                     if (customerLang != null)
                         languageId = customerLang.Id;
                 }

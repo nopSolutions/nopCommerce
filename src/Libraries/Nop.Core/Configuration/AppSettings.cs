@@ -21,7 +21,7 @@ namespace Nop.Core.Configuration
             _configurations = configurations
                 ?.OrderBy(config => config.GetOrder())
                 ?.ToDictionary(config => config.GetType(), config => config)
-                ?? new Dictionary<Type, IConfig>();
+                ?? [];
         }
 
         #endregion

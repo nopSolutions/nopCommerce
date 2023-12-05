@@ -229,7 +229,7 @@ namespace Nop.Services.Authentication.External
 
             if (session != null)
             {
-                var existsErrors = (await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey))?.ToList() ?? new List<string>();
+                var existsErrors = (await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey))?.ToList() ?? [];
 
                 existsErrors.AddRange(errors);
 
@@ -272,8 +272,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<IActionResult> AuthenticateAsync(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -317,8 +316,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<IList<ExternalAuthenticationRecord>> GetCustomerExternalAuthenticationRecordsAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var associationRecords = _externalAuthenticationRecordRepository.Table.Where(ear => ear.CustomerId == customer.Id);
 
@@ -332,8 +330,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteExternalAuthenticationRecordAsync(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
-            if (externalAuthenticationRecord == null)
-                throw new ArgumentNullException(nameof(externalAuthenticationRecord));
+            ArgumentNullException.ThrowIfNull(externalAuthenticationRecord);
 
             await _externalAuthenticationRecordRepository.DeleteAsync(externalAuthenticationRecord, false);
         }
@@ -348,8 +345,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
@@ -365,8 +361,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AssociateExternalAccountWithUserAsync(Customer customer, ExternalAuthenticationParameters parameters)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var externalAuthenticationRecord = new ExternalAuthenticationRecord
             {
@@ -391,8 +386,7 @@ namespace Nop.Services.Authentication.External
         /// </returns>
         public virtual async Task<Customer> GetUserByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
@@ -409,8 +403,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RemoveAssociationAsync(ExternalAuthenticationParameters parameters)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));

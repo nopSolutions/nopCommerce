@@ -31,7 +31,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
+                url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.ADMIN }))",
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
                     if (data.success) {
@@ -165,7 +165,7 @@
                     $(document).ready(function () {
                         $("#@clientId").fineUploader({
                             request: {
-                                endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.Admin }))'
+                                endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }))'
                             },
                             template: "@(clientId)-qq-template",
                             multiple: false
@@ -189,7 +189,7 @@
                     <div id="@(clientId + "downloadurl")" class="float-left my-1">
                         @if (download != null)
                         {
-                            <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.Admin }))"><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
+                            <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN }))"><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
                         }
                     </div>
                     <div class="float-left my-1">

@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             PluginConfigModel = new PluginConfigModel();
             CommonConfigModel = new CommonConfigModel();
             WebOptimizerConfigModel = new WebOptimizerConfigModel();
-            EnvironmentVariables = new List<string>();
+            EnvironmentVariables = [];
         }
 
         #endregion

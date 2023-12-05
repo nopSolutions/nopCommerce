@@ -146,7 +146,7 @@ namespace Nop.Web.Models.Catalog
         {
             public AddToCartModel()
             {
-                AllowedQuantities = new List<SelectListItem>();
+                AllowedQuantities = [];
             }
             public int ProductId { get; set; }
 

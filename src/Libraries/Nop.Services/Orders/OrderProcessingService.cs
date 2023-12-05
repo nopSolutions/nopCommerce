@@ -71,6 +71,7 @@ namespace Nop.Services.Orders
         protected readonly IShippingService _shippingService;
         protected readonly IShoppingCartService _shoppingCartService;
         protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
         protected readonly ITaxService _taxService;
         protected readonly IVendorService _vendorService;
@@ -121,6 +122,7 @@ namespace Nop.Services.Orders
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
+            IStoreMappingService storeMappingService,
             IStoreService storeService,
             ITaxService taxService,
             IVendorService vendorService,
@@ -167,6 +169,7 @@ namespace Nop.Services.Orders
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
+            _storeMappingService = storeMappingService;
             _storeService = storeService;
             _taxService = taxService;
             _vendorService = vendorService;
@@ -550,14 +553,14 @@ namespace Nop.Services.Orders
 
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyByIdAsync(details.Customer.CurrencyId ?? 0);
-            var customerCurrency = currencyTmp != null && currencyTmp.Published ? currencyTmp : currentCurrency;
+            var customerCurrency = currencyTmp != null && currencyTmp.Published && await _storeMappingService.AuthorizeAsync(currencyTmp) ? currencyTmp : currentCurrency;
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
 
             //customer language
             details.CustomerLanguage = await _languageService.GetLanguageByIdAsync(details.Customer.LanguageId ?? 0);
-            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
+            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published || !await _storeMappingService.AuthorizeAsync(details.CustomerLanguage))
                 details.CustomerLanguage = await _workContext.GetWorkingLanguageAsync();
         }
 
@@ -839,8 +842,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AwardRewardPointsAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
@@ -884,8 +886,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ReduceRewardPointsAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //ensure that reward points were already earned for this order before
             if (!order.RewardPointsHistoryEntryId.HasValue)
@@ -918,8 +919,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ReturnBackRedeemedRewardPointsAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
@@ -957,10 +957,9 @@ namespace Nop.Services.Orders
                         if (!string.IsNullOrEmpty(gc.RecipientEmail) &&
                             !string.IsNullOrEmpty(gc.SenderEmail))
                         {
-                            var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId) ??
-                                               (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
-                            if (customerLang == null)
-                                throw new Exception("No languages could be loaded");
+                            var customerLang = (await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId) ??
+                                               (await _languageService.GetAllLanguagesAsync()).FirstOrDefault())
+                                               ?? throw new Exception("No languages could be loaded");
                             var queuedEmailIds = await _workflowMessageService.SendGiftCardNotificationAsync(gc, customerLang.Id);
                             if (queuedEmailIds.Any())
                                 isRecipientNotified = true;
@@ -989,8 +988,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SetOrderStatusAsync(Order order, OrderStatus os, bool notifyCustomer)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var prevOrderStatus = order.OrderStatus;
             if (prevOrderStatus == os)
@@ -1073,8 +1071,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessOrderPaidAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //raise event
             await _eventPublisher.PublishAsync(new OrderPaidEvent(order));
@@ -1129,8 +1126,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessCustomerRolesWithPurchasedProductSpecifiedAsync(Order order, bool add)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //purchased product identifiers
             var purchasedProductIds = new List<int>();
@@ -1152,7 +1148,7 @@ namespace Nop.Services.Orders
                 .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
                 .ToList();
 
-            if (!customerRoles.Any())
+            if (customerRoles.Count == 0)
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -1389,7 +1385,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveGiftCardUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
-            if (details.AppliedGiftCards == null || !details.AppliedGiftCards.Any())
+            if (details.AppliedGiftCards == null || details.AppliedGiftCards.Count == 0)
                 return;
 
             foreach (var agc in details.AppliedGiftCards)
@@ -1410,7 +1406,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveDiscountUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
-            if (details.AppliedDiscounts == null || !details.AppliedDiscounts.Any())
+            if (details.AppliedDiscounts == null || details.AppliedDiscounts.Count == 0)
                 return;
 
             foreach (var discount in details.AppliedDiscounts)
@@ -1436,8 +1432,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CheckAndSaveOrderStatusAsync(Order order, bool needOrderSave)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var completed = false;
             var isOrderSaved = !needOrderSave;
@@ -1522,8 +1517,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<PlaceOrderResult> PlaceOrderAsync(ProcessPaymentRequest processPaymentRequest)
         {
-            if (processPaymentRequest == null)
-                throw new ArgumentNullException(nameof(processPaymentRequest));
+            ArgumentNullException.ThrowIfNull(processPaymentRequest);
 
             var result = new PlaceOrderResult();
             try
@@ -1534,10 +1528,8 @@ namespace Nop.Services.Orders
                 //prepare order details
                 var details = await PreparePlaceOrderDetailsAsync(processPaymentRequest);
 
-                var processPaymentResult = await GetProcessPaymentResultAsync(processPaymentRequest, details);
-
-                if (processPaymentResult == null)
-                    throw new NopException("processPaymentResult is not available");
+                var processPaymentResult = await GetProcessPaymentResultAsync(processPaymentRequest, details)
+                    ?? throw new NopException("processPaymentResult is not available");
 
                 if (processPaymentResult.Success)
                 {
@@ -1684,8 +1676,7 @@ namespace Nop.Services.Orders
 
             async Task<(List<ShoppingCartItem> restoredCart, ShoppingCartItem updatedShoppingCartItem)> restoreShoppingCartAsync(Order order, int updatedOrderItemId)
             {
-                if (order is null)
-                    throw new ArgumentNullException(nameof(order));
+                ArgumentNullException.ThrowIfNull(order);
 
                 var cart = (await _orderService.GetOrderItemsAsync(order.Id)).Select(item => new ShoppingCartItem
                 {
@@ -1714,8 +1705,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteOrderAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //check whether the order wasn't cancelled before
             //if it already was cancelled, then there's no need to make the following adjustments
@@ -1763,21 +1753,18 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IEnumerable<string>> ProcessNextRecurringPaymentAsync(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             try
             {
                 if (!recurringPayment.IsActive)
                     throw new NopException("Recurring payment is not active");
 
-                var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
-                if (initialOrder == null)
-                    throw new NopException("Initial order could not be loaded");
+                var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId)
+                    ?? throw new NopException("Initial order could not be loaded");
 
-                var customer = await _customerService.GetCustomerByIdAsync(initialOrder.CustomerId);
-                if (customer == null)
-                    throw new NopException("Customer could not be loaded");
+                var customer = await _customerService.GetCustomerByIdAsync(initialOrder.CustomerId)
+                    ?? throw new NopException("Customer could not be loaded");
 
                 if (await GetNextPaymentDateAsync(recurringPayment) is null)
                     throw new NopException("Next payment date could not be calculated");
@@ -1962,8 +1949,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<string>> CancelRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             var initialOrder = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
             if (initialOrder == null)
@@ -1998,8 +1984,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new CancelRecurringPaymentResult();
+                result ??= new CancelRecurringPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
             }
 
@@ -2109,12 +2094,9 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ShipAsync(Shipment shipment, bool notifyCustomer)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             if (order.PickupInStore)
                 throw new Exception("This shipment is can't be shipped. The order has been placed with 'pickup in store' shipping option.");
@@ -2161,12 +2143,9 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ReadyForPickupAsync(Shipment shipment, bool notifyCustomer)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             if (!order.PickupInStore)
                 throw new Exception("This shipment is can't be marked as 'ready for pickup'. The order has been placed without 'pickup in store' shipping option.");
@@ -2197,12 +2176,9 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeliverAsync(Shipment shipment, bool notifyCustomer)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             if (!order.PickupInStore && !shipment.ShippedDateUtc.HasValue)
                 throw new Exception("This shipment is not shipped yet");
@@ -2257,8 +2233,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether cancel is allowed</returns>
         public virtual bool CanCancelOrder(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -2274,8 +2249,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CancelOrderAsync(Order order, bool notifyCustomer)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!CanCancelOrder(order))
                 throw new NopException("Cannot do cancel for order.");
@@ -2313,8 +2287,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether order can be marked as authorized</returns>
         public virtual bool CanMarkOrderAsAuthorized(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -2332,8 +2305,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MarkAsAuthorizedAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             order.PaymentStatusId = (int)PaymentStatus.Authorized;
             await _orderService.UpdateOrderAsync(order);
@@ -2357,8 +2329,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> CanCaptureAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderStatus == OrderStatus.Cancelled ||
                 order.OrderStatus == OrderStatus.Pending)
@@ -2381,8 +2352,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<string>> CaptureAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!await CanCaptureAsync(order))
                 throw new NopException("Cannot do capture for order.");
@@ -2418,8 +2388,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new CapturePaymentResult();
+                result ??= new CapturePaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
             }
 
@@ -2451,8 +2420,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether order can be marked as paid</returns>
         public virtual bool CanMarkOrderAsPaid(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -2472,8 +2440,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MarkOrderAsPaidAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!CanMarkOrderAsPaid(order))
                 throw new NopException("You can't mark this order as paid");
@@ -2501,8 +2468,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> CanRefundAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2532,8 +2498,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<string>> RefundAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!await CanRefundAsync(order))
                 throw new NopException("Cannot do refund for order.");
@@ -2577,8 +2542,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new RefundPaymentResult();
+                result ??= new RefundPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
             }
 
@@ -2611,8 +2575,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether order can be marked as refunded</returns>
         public virtual bool CanRefundOffline(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2638,8 +2601,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RefundOfflineAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!CanRefundOffline(order))
                 throw new NopException("You can't refund this order");
@@ -2685,8 +2647,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> CanPartiallyRefundAsync(Order order, decimal amountToRefund)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2721,8 +2682,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<string>> PartiallyRefundAsync(Order order, decimal amountToRefund)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!await CanPartiallyRefundAsync(order, amountToRefund))
                 throw new NopException("Cannot do partial refund for order.");
@@ -2769,8 +2729,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new RefundPaymentResult();
+                result ??= new RefundPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
             }
 
@@ -2803,8 +2762,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether order can be marked as partially refunded</returns>
         public virtual bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2835,8 +2793,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PartiallyRefundOfflineAsync(Order order, decimal amountToRefund)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!CanPartiallyRefundOffline(order, amountToRefund))
                 throw new NopException("You can't partially refund (offline) this order");
@@ -2879,8 +2836,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> CanVoidAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2906,8 +2862,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<string>> VoidAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!await CanVoidAsync(order))
                 throw new NopException("Cannot do void for order.");
@@ -2937,8 +2892,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new VoidPaymentResult();
+                result ??= new VoidPaymentResult();
                 result.AddError($"Error: {exc.Message}. Full exception: {exc}");
             }
 
@@ -2970,8 +2924,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether order can be marked as voided</returns>
         public virtual bool CanVoidOffline(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2993,8 +2946,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task VoidOfflineAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!CanVoidOffline(order))
                 throw new NopException("You can't void this order");
@@ -3022,8 +2974,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<string>> ReOrderAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
@@ -3093,8 +3044,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> ValidateMinOrderSubtotalAmountAsync(IList<ShoppingCartItem> cart)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             //min order amount sub-total validation
             if (!cart.Any() || _orderSettings.MinOrderSubtotalAmount <= decimal.Zero)
@@ -3119,8 +3069,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> ValidateMinOrderTotalAmountAsync(IList<ShoppingCartItem> cart)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             if (!cart.Any() || _orderSettings.MinOrderTotalAmount <= decimal.Zero)
                 return true;
@@ -3144,8 +3093,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> IsPaymentWorkflowRequiredAsync(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var result = true;
 
@@ -3165,8 +3113,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<DateTime?> GetNextPaymentDateAsync(RecurringPayment recurringPayment)
         {
-            if (recurringPayment is null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             if (!recurringPayment.IsActive)
                 return null;
@@ -3206,8 +3153,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<int> GetCyclesRemainingAsync(RecurringPayment recurringPayment)
         {
-            if (recurringPayment is null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             var historyCollection = await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment);
 
@@ -3230,8 +3176,8 @@ namespace Nop.Services.Orders
             public PlaceOrderContainer()
             {
                 Cart = new List<ShoppingCartItem>();
-                AppliedDiscounts = new List<Discount>();
-                AppliedGiftCards = new List<AppliedGiftCard>();
+                AppliedDiscounts = [];
+                AppliedGiftCards = [];
             }
 
             /// <summary>

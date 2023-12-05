@@ -23,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IPermissionService _permissionService;
         protected readonly ISecurityModelFactory _securityModelFactory;
         protected readonly IWorkContext _workContext;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -87,8 +88,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var formKey = "allow_" + cr.Id;
                 var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
-                    ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
-                    : new List<string>();
+                    ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
+                    : [];
 
                 foreach (var pr in permissionRecords)
                 {

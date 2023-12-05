@@ -357,7 +357,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync(selectedIds.ToArray());
+            var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync([.. selectedIds]);
             await _checkoutAttributeService.DeleteAttributesAsync(checkoutAttributes);
 
             foreach (var checkoutAttribute in checkoutAttributes)

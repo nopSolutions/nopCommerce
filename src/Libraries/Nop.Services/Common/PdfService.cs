@@ -202,7 +202,7 @@ namespace Nop.Services.Common
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 var text = _htmlFormatter.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
-                addressResult.AddressAttributes = text.Split('\n').ToList();
+                addressResult.AddressAttributes = [.. text.Split('\n')];
             }
 
             //vendors payment details
@@ -287,7 +287,7 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         var text = _htmlFormatter.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
-                        addressResult.AddressAttributes = text.Split('\n').ToList();
+                        addressResult.AddressAttributes = [.. text.Split('\n')];
                     }
                 }
                 else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
@@ -341,7 +341,7 @@ namespace Nop.Services.Common
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList();
 
-            if (!orderNotes.Any())
+            if (orderNotes.Count == 0)
                 return notesResult;
 
             foreach (var orderNote in orderNotes)
@@ -384,7 +384,7 @@ namespace Nop.Services.Common
                 if (!string.IsNullOrEmpty(oi.AttributeDescription))
                 {
                     var attributes = _htmlFormatter.ConvertHtmlToPlainText(oi.AttributeDescription, true, true);
-                    productItem.ProductAttributes = attributes.Split('\n').ToList();
+                    productItem.ProductAttributes = [.. attributes.Split('\n')];
                 }
 
                 //SKU
@@ -563,7 +563,7 @@ namespace Nop.Services.Common
                 {
                     taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -649,8 +649,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task PrintOrderToPdfAsync(Stream stream, Order order, Language language = null, Store store = null, Vendor vendor = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //store info
             store ??= await _storeContext.GetCurrentStoreAsync();
@@ -691,13 +690,13 @@ namespace Nop.Services.Common
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
             var column1Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) ?
-                new List<string>()
+                []
                 : pdfSettingsByStore.InvoiceFooterTextColumn1
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
             var column2Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2) ?
-                new List<string>()
+                []
                 : pdfSettingsByStore.InvoiceFooterTextColumn2
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
@@ -741,11 +740,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintOrdersToPdfAsync(Stream stream, IList<Order> orders, Language language = null, Vendor vendor = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (orders == null)
-                throw new ArgumentNullException(nameof(orders));
+            ArgumentNullException.ThrowIfNull(orders);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -772,11 +769,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintPackagingSlipsToPdfAsync(Stream stream, IList<Shipment> shipments, Language language = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (shipments == null)
-                throw new ArgumentNullException(nameof(shipments));
+            ArgumentNullException.ThrowIfNull(shipments);
 
             using var archive = new ZipArchive(stream, ZipArchiveMode.Create, true);
 
@@ -802,11 +797,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintPackagingSlipToPdfAsync(Stream stream, Shipment shipment, Language language = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
             var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
 
@@ -859,11 +852,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintProductsToPdfAsync(Stream stream, IList<Product> products)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
+            ArgumentNullException.ThrowIfNull(products);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
             var pdfSettingsByStore = await _settingService.LoadSettingAsync<PdfSettings>(currentStore.Id);

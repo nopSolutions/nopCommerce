@@ -67,7 +67,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (hasAdminAccess)
-                DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
+                DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.ADMIN }));
 
             //template
             var templateViewPath = await _topicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);

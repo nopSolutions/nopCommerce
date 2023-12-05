@@ -168,8 +168,7 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsent consent, bool accepted)
         {
-            if (consent == null)
-                throw new ArgumentNullException(nameof(consent));
+            ArgumentNullException.ThrowIfNull(consent);
 
             var requiredMessage = await _localizationService.GetLocalizedAsync(consent, x => x.RequiredMessage);
             return new GdprConsentModel
@@ -200,11 +199,9 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerInfoModel> PrepareCustomerInfoModelAsync(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -277,7 +274,7 @@ namespace Nop.Web.Factories
                 {
                     //states
                     var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
-                    if (states.Any())
+                    if (states.Count != 0)
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
@@ -392,8 +389,7 @@ namespace Nop.Web.Factories
         public virtual async Task<RegisterModel> PrepareRegisterModelAsync(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -469,7 +465,7 @@ namespace Nop.Web.Factories
                 {
                     //states
                     var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
-                    if (states.Any())
+                    if (states.Count != 0)
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
@@ -541,8 +537,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual Task<PasswordRecoveryModel> PreparePasswordRecoveryModelAsync(PasswordRecoveryModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage;
 
@@ -832,11 +827,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual Task<UserAgreementModel> PrepareUserAgreementModelAsync(OrderItem orderItem, Product product)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var model = new UserAgreementModel
             {
@@ -871,8 +864,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CustomerAvatarModel> PrepareCustomerAvatarModelAsync(CustomerAvatarModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.AvatarUrl = await _pictureService.GetPictureUrlAsync(
                 await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AvatarPictureIdAttribute),
@@ -980,8 +972,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var result = new List<CustomerAttributeModel>();
 

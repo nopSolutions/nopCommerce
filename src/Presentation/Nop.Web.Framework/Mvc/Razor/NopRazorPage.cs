@@ -20,12 +20,9 @@ namespace Nop.Web.Framework.Mvc.Razor
         {
             get
             {
-                if (_localizationService == null)
-                    _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                _localizationService ??= EngineContext.Current.Resolve<ILocalizationService>();
 
-                if (_localizer == null)
-                {
-                    _localizer = (format, args) =>
+                _localizer ??= (format, args) =>
                     {
                         var resFormat = _localizationService.GetResourceAsync(format).Result;
                         if (string.IsNullOrEmpty(resFormat))
@@ -36,7 +33,6 @@ namespace Nop.Web.Framework.Mvc.Razor
                             ? resFormat
                             : string.Format(resFormat, args));
                     };
-                }
                 return _localizer;
             }
         }

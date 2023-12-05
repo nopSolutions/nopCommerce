@@ -4458,12 +4458,6 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime">
-    <Value>Bundled files cache time</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint">
-    <Value>Set bundled files cache time (in minutes).</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime">
     <Value>Default cache time</Value>
   </LocaleResource>

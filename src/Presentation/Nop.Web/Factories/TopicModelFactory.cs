@@ -51,8 +51,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelAsync(Topic topic)
         {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
+            ArgumentNullException.ThrowIfNull(topic);
 
             return new TopicModel
             {
@@ -99,11 +98,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareTemplateViewPathAsync(int topicTemplateId)
         {
-            var template = await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
-                           (await _topicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
+                           (await _topicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }

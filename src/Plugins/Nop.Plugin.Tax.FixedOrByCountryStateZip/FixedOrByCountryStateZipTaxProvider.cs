@@ -89,7 +89,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             //the tax rate calculation by fixed rate
             if (!_countryStateZipSettings.CountryStateZipEnabled)
             {
-                result.TaxRate = await _settingService.GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxRateRequest.TaxCategoryId));
+                result.TaxRate = await _settingService.GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxRateRequest.TaxCategoryId));
                 return result;
             }
 
@@ -176,10 +176,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
                 if (taxRate > decimal.Zero && taxValue > decimal.Zero)
                 {
-                    if (!taxRates.ContainsKey(taxRate))
+                    if (!taxRates.TryGetValue(taxRate, out var value))
                         taxRates.Add(taxRate, taxValue);
                     else
-                        taxRates[taxRate] = taxRates[taxRate] + taxValue;
+                        taxRates[taxRate] = value + taxValue;
                 }
             }
             taxTotal += subTotalTaxTotal;
@@ -200,10 +200,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
                     if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
                     {
-                        if (!taxRates.ContainsKey(taxRate))
+                        if (!taxRates.TryGetValue(taxRate, out var value))
                             taxRates.Add(taxRate, shippingTax);
                         else
-                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
+                            taxRates[taxRate] = value + shippingTax;
                     }
                 }
             }
@@ -235,16 +235,16 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
                 if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
                 {
-                    if (!taxRates.ContainsKey(taxRate))
+                    if (!taxRates.TryGetValue(taxRate, out var value))
                         taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
                     else
-                        taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
+                        taxRates[taxRate] = value + paymentMethodAdditionalFeeTax;
                 }
             }
             taxTotal += paymentMethodAdditionalFeeTax;
 
             //add at least one tax rate (0%)
-            if (!taxRates.Any())
+            if (taxRates.Count == 0)
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             if (taxTotal < decimal.Zero)
@@ -314,7 +314,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             //fixed rates
             var fixedRates = await (await _taxCategoryService.GetAllTaxCategoriesAsync())
-                .SelectAwait(async taxCategory => await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
+                .SelectAwait(async taxCategory => await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxCategory.Id)))
                 .Where(setting => setting != null).ToListAsync();
             await _settingService.DeleteSettingsAsync(fixedRates);
 

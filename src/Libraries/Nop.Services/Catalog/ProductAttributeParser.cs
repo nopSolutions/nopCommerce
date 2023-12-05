@@ -25,6 +25,8 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
         protected readonly IWorkContext _workContext;
 
+        private static readonly char[] _separator = [','];
+
         #endregion
 
         #region Ctor
@@ -221,7 +223,7 @@ namespace Nop.Services.Catalog
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
                                 foreach (var item in ctrlAttributes.ToString()
-                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -721,8 +723,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<bool?> IsConditionMetAsync(ProductAttributeMapping pam, string selectedAttributesXml)
         {
-            if (pam == null)
-                throw new ArgumentNullException(nameof(pam));
+            ArgumentNullException.ThrowIfNull(pam);
 
             var conditionAttributeXml = pam.ConditionAttributeXml;
             if (string.IsNullOrEmpty(conditionAttributeXml))
@@ -773,8 +774,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<ProductAttributeCombination> FindProductAttributeCombinationAsync(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //anyway combination cannot contains non combinable attributes
             if (string.IsNullOrEmpty(attributesXml))
@@ -797,8 +797,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<string>> GenerateAllCombinationsAsync(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var allProductAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
 
@@ -839,7 +838,7 @@ namespace Nop.Services.Catalog
                         //add several values attribute types (checkboxes)
 
                         //checkboxes could have several values ticked
-                        foreach (var oldXml in attributesXml.Any() ? attributesXml : new List<string> { string.Empty })
+                        foreach (var oldXml in attributesXml.Count != 0 ? attributesXml : [string.Empty])
                         {
                             foreach (var checkboxCombination in CreateCombination(attributeValues))
                             {
@@ -856,7 +855,7 @@ namespace Nop.Services.Catalog
                     {
                         //add one value attribute types (dropdownlist, radiobutton, color squares)
 
-                        foreach (var oldXml in attributesXml.Any() ? attributesXml : new List<string> { string.Empty })
+                        foreach (var oldXml in attributesXml.Count != 0 ? attributesXml : [string.Empty])
                         {
                             currentAttributesXml.AddRange(attributeValues.Select(attributeValue =>
                                 AddProductAttribute(oldXml, productAttributeMapping, attributeValue.Id.ToString())));
@@ -899,10 +898,8 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(product);
+            ArgumentNullException.ThrowIfNull(form);
 
             var customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
@@ -927,10 +924,8 @@ namespace Nop.Services.Catalog
         /// <returns>Customer entered price of the product</returns>
         public virtual int ParseEnteredQuantity(Product product, IFormCollection form)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(product);
+            ArgumentNullException.ThrowIfNull(form);
 
             var quantity = 1;
             foreach (var formKey in form.Keys)
@@ -952,10 +947,8 @@ namespace Nop.Services.Catalog
         /// <param name="endDate">End date</param>
         public virtual void ParseRentalDates(Product product, IFormCollection form, out DateTime? startDate, out DateTime? endDate)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(product);
+            ArgumentNullException.ThrowIfNull(form);
 
             startDate = null;
             endDate = null;
@@ -992,10 +985,8 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> ParseProductAttributesAsync(Product product, IFormCollection form, List<string> errors)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(product);
+            ArgumentNullException.ThrowIfNull(form);
 
             //product attributes
             var attributesXml = await GetProductAttributesXmlAsync(product, form, errors);
@@ -1131,7 +1122,7 @@ namespace Nop.Services.Catalog
         #region Properties
 
         protected string ChildElementName { get; set; } = "ProductAttribute";
-
+        
         #endregion
     }
 }

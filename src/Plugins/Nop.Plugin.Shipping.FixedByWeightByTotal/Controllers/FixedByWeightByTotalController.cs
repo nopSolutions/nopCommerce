@@ -23,7 +23,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class FixedByWeightByTotalController : BasePluginController
     {
@@ -176,9 +176,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                     ShippingMethodName = shippingMethod.Name,
 
                     Rate = await _settingService
-                        .GetSettingByKeyAsync<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)),
+                        .GetSettingByKeyAsync<decimal>(string.Format(FixedByWeightByTotalDefaults.FIXED_RATE_SETTINGS_KEY, shippingMethod.Id)),
                     TransitDays = await _settingService
-                        .GetSettingByKeyAsync<int?>(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethod.Id))
+                        .GetSettingByKeyAsync<int?>(string.Format(FixedByWeightByTotalDefaults.TRANSIT_DAYS_SETTINGS_KEY, shippingMethod.Id))
                 });
             });
 
@@ -191,8 +191,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            await _settingService.SetSettingAsync(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, model.ShippingMethodId), model.Rate, 0, false);
-            await _settingService.SetSettingAsync(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, model.ShippingMethodId), model.TransitDays, 0, false);
+            await _settingService.SetSettingAsync(string.Format(FixedByWeightByTotalDefaults.FIXED_RATE_SETTINGS_KEY, model.ShippingMethodId), model.Rate, 0, false);
+            await _settingService.SetSettingAsync(string.Format(FixedByWeightByTotalDefaults.TRANSIT_DAYS_SETTINGS_KEY, model.ShippingMethodId), model.TransitDays, 0, false);
 
             await _settingService.ClearCacheAsync();
 
@@ -421,7 +421,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (selectedCountry != null && c.Id == selectedCountry.Id) });
             //states
-            var states = selectedCountry != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(selectedCountry.Id, showHidden: true)).ToList() : new List<StateProvince>();
+            var states = selectedCountry != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(selectedCountry.Id, showHidden: true)).ToList()
+                : [];
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });

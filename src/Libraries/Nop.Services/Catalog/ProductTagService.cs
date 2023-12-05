@@ -65,10 +65,8 @@ namespace Nop.Services.Catalog
         protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
         {
             var mappingRecord = await _productProductTagMappingRepository.Table
-                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
-
-            if (mappingRecord is null)
-                throw new Exception("Mapping record not found");
+                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId)
+                ?? throw new Exception("Mapping record not found");
 
             await _productProductTagMappingRepository.DeleteAsync(mappingRecord);
         }
@@ -84,8 +82,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         protected virtual async Task<bool> ProductTagExistsAsync(Product product, int productTagId)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             return await _productProductTagMappingRepository.Table
                 .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
@@ -140,8 +137,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTagsAsync(IList<ProductTag> productTags)
         {
-            if (productTags == null)
-                throw new ArgumentNullException(nameof(productTags));
+            ArgumentNullException.ThrowIfNull(productTags);
 
             foreach (var productTag in productTags)
                 await DeleteProductTagAsync(productTag);
@@ -232,8 +228,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagAsync(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
             await _productTagRepository.UpdateAsync(productTag);
 
@@ -254,8 +249,8 @@ namespace Nop.Services.Catalog
         public virtual async Task<int> GetProductCountByProductTagIdAsync(int productTagId, int storeId, bool showHidden = false)
         {
             var dictionary = await GetProductCountAsync(storeId, showHidden);
-            if (dictionary.ContainsKey(productTagId))
-                return dictionary[productTagId];
+            if (dictionary.TryGetValue(productTagId, out var value))
+                return value;
 
             return 0;
         }
@@ -320,8 +315,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagsAsync(Product product, string[] productTags)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //product tags
             var existingProductTags = await GetAllProductTagsByProductIdAsync(product.Id);

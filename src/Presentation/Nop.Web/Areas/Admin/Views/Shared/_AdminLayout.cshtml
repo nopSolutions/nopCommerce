@@ -113,7 +113,7 @@
                                 </a>
                                 <ul class="maintenance-menu dropdown-menu dropdown-menu-right" role="menu">
                                     <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
+                                        <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.ADMIN">
                                             <input name="returnurl" type="hidden" value="@returnUrl">
                                             <div class="input-group-append">
                                                 <button type="submit" style="width:210px;background-color: Transparent;">
@@ -123,7 +123,7 @@
                                         </form>
                                     </li>
                                     <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
+                                        <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.ADMIN">
                                             <input name="returnurl" type="hidden" value="@returnUrl">
                                             <button id="restart-application" type="submit" style="width:210px;background-color: Transparent;">
                                                 <span>@T("Admin.Header.RestartApplication")</span>

@@ -169,8 +169,7 @@ namespace Nop.Web.Framework.Controllers
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
                 locale.LanguageId = language.Id;
 
-                if (configure != null)
-                    configure.Invoke(locale, locale.LanguageId);
+                configure?.Invoke(locale, locale.LanguageId);
 
                 locales.Add(locale);
             }

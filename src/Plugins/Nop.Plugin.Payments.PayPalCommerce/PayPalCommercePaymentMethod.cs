@@ -244,7 +244,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
             //request succeeded
             var refundIds = await _genericAttributeService
                 .GetAttributeAsync<List<string>>(refundPaymentRequest.Order, PayPalCommerceDefaults.RefundIdAttributeName)
-                ?? new List<string>();
+                ?? [];
             if (!refundIds.Contains(refund.Id))
                 refundIds.Add(refund.Id);
             await _genericAttributeService.SaveAttributeAsync(refundPaymentRequest.Order, PayPalCommerceDefaults.RefundIdAttributeName, refundIds);
@@ -330,8 +330,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </returns>
         public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var errors = new List<string>();
 
@@ -352,8 +351,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// </returns>
         public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             //already set
             return await _actionContextAccessor.ActionContext.HttpContext.Session
@@ -405,8 +403,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone == null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             if (widgetZone.Equals(PublicWidgetZones.CheckoutPaymentInfoTop) ||
                 widgetZone.Equals(PublicWidgetZones.OpcContentBefore) ||

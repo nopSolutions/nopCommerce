@@ -188,8 +188,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareStoreUrlWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether current store URL matches the store configured URL
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -221,8 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareExchangeRateCurrencyWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether primary exchange rate currency set
             var primaryExchangeRateCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId);
@@ -260,8 +258,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePrimaryStoreCurrencyWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether primary store currency set
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
@@ -289,8 +286,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareBaseWeightWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether base measure weight set
             var baseWeight = await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
@@ -328,8 +324,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareBaseDimensionWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether base measure dimension set
             var baseDimension = await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
@@ -367,8 +362,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePaymentMethodsWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether payment methods activated
             if ((await _paymentPluginManager.LoadAllPluginsAsync()).Any())
@@ -395,8 +389,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePerformanceSettingsWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //check whether "IgnoreStoreLimitations" setting disabled
             if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStoresAsync()).Count == 1)
@@ -426,8 +419,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareFilePermissionsWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             var dirPermissionsOk = true;
             var dirsToCheck = _fileProvider.GetDirectoriesWrite();
@@ -487,8 +479,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Backup file search model</returns>
         protected virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -610,7 +601,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var notInstalled = plugins.Select(p => p.FriendlyName).ToList();
 
-            if (!notInstalled.Any())
+            if (notInstalled.Count == 0)
                 return;
 
             models.Add(new SystemWarningModel
@@ -679,7 +670,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 notEnabledSystemNames.Add(plugin.PluginDescriptor.SystemName);
             }
 
-            if (notEnabled.Any())
+            if (notEnabled.Count != 0)
             {
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
@@ -708,8 +699,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SystemInfoModel> PrepareSystemInfoModelAsync(SystemInfoModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.NopVersion = NopVersion.FULL_VERSION;
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
@@ -789,8 +779,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProxyConnectionWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //whether proxy is enabled
             if (!_proxySettings.Enabled)
@@ -825,8 +814,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //incompatible plugins
             await PrepareIncompatibleWarningModelAsync(models);
@@ -904,8 +892,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
@@ -931,8 +918,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get backup files
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
@@ -964,8 +950,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<UrlRecordSearchModel> PrepareUrlRecordSearchModelAsync(UrlRecordSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available languages
             //we insert 0 as 'Standard' language.
@@ -1009,8 +994,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<UrlRecordListModel> PrepareUrlRecordListModelAsync(UrlRecordSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
             var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
@@ -1104,8 +1088,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<PopularSearchTermSearchModel> PreparePopularSearchTermSearchModelAsync(PopularSearchTermSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize(5);
@@ -1123,8 +1106,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PopularSearchTermListModel> PreparePopularSearchTermListModelAsync(PopularSearchTermSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get popular search terms
             var searchTermRecordLines = await _searchTermService.GetStatsAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);

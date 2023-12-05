@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
+            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync([.. selectedIds]);
             await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
 
             foreach (var productAttribute in productAttributes)

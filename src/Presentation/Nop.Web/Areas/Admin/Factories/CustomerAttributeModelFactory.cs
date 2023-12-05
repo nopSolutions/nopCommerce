@@ -45,11 +45,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
+            ArgumentNullException.ThrowIfNull(customerAttribute);
 
             searchModel.CustomerAttributeId = customerAttribute.Id;
 
@@ -73,8 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<CustomerAttributeSearchModel> PrepareCustomerAttributeSearchModelAsync(CustomerAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -92,8 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerAttributeListModel> PrepareCustomerAttributeListModelAsync(CustomerAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get customer attributes
             var customerAttributes = (await _customerAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
@@ -165,11 +161,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerAttributeValueListModel> PrepareCustomerAttributeValueListModelAsync(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
+            ArgumentNullException.ThrowIfNull(customerAttribute);
 
             //get customer attribute values
             var customerAttributeValues = (await _customerAttributeService
@@ -199,8 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerAttributeValueModel> PrepareCustomerAttributeValueModelAsync(CustomerAttributeValueModel model,
             CustomerAttribute customerAttribute, CustomerAttributeValue customerAttributeValue, bool excludeProperties = false)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
+            ArgumentNullException.ThrowIfNull(customerAttribute);
 
             Func<CustomerAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 

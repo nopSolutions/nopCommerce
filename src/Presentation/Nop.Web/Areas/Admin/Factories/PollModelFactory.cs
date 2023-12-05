@@ -56,11 +56,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Poll answer search model</returns>
         protected virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
+            ArgumentNullException.ThrowIfNull(poll);
 
             searchModel.PollId = poll.Id;
 
@@ -84,8 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PollSearchModel> PreparePollSearchModelAsync(PollSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available stores
             await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
@@ -108,8 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PollListModel> PreparePollListModelAsync(PollSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get polls
             var polls = await _pollService.GetPollsAsync(showHidden: true,
@@ -191,11 +187,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PollAnswerListModel> PreparePollAnswerListModelAsync(PollAnswerSearchModel searchModel, Poll poll)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
+            ArgumentNullException.ThrowIfNull(poll);
 
             //get poll answers
             var pollAnswers = await _pollService.GetPollAnswerByPollAsync(poll.Id, searchModel.Page - 1, searchModel.PageSize);

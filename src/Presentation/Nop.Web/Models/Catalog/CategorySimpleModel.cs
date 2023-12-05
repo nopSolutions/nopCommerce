@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     {
         public CategorySimpleModel()
         {
-            SubCategories = new List<CategorySimpleModel>();
+            SubCategories = [];
         }
 
         public string Name { get; set; }

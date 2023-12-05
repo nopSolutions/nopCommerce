@@ -64,7 +64,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #region Methods
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
@@ -81,7 +81,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))

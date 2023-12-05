@@ -236,8 +236,7 @@ namespace Nop.Services.Gdpr
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertLogAsync(Customer customer, int consentId, GdprRequestType requestType, string requestDetails)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var gdprLog = new GdprLog
             {
@@ -263,8 +262,7 @@ namespace Nop.Services.Gdpr
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PermanentDeleteCustomerAsync(Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //blog comments
             var blogComments = await _blogService.GetAllCommentsAsync(customerId: customer.Id);

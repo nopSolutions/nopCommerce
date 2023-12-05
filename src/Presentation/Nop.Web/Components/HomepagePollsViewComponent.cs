@@ -16,7 +16,7 @@ namespace Nop.Web.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = await _pollModelFactory.PrepareHomepagePollModelsAsync();
-            if (!model.Any())
+            if (model.Count == 0)
                 return Content("");
 
             return View(model);

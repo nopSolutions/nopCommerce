@@ -9,10 +9,5 @@
         /// Gets or sets the default cache time in minutes
         /// </summary>
         public int DefaultCacheTime { get; protected set; } = 60;
-        
-        /// <summary>
-        /// Gets or sets the bundled files cache time in minutes
-        /// </summary>
-        public int BundledFilesCacheTime { get; protected set; } = 120;
     }
 }
