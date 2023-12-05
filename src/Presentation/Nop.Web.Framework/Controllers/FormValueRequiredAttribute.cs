@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Controllers
 {
@@ -54,7 +55,7 @@ namespace Nop.Web.Framework.Controllers
         /// <returns>Result</returns>
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
+            if (!routeContext.HttpContext.Request.IsPostRequest())
                 return false;
 
             var form = routeContext.HttpContext.Request.ReadFormAsync().Result;

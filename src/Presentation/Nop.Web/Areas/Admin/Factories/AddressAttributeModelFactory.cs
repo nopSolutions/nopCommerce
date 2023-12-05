@@ -48,11 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Address attribute value search model</returns>
         protected virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel searchModel, AddressAttribute addressAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
+            ArgumentNullException.ThrowIfNull(addressAttribute);
 
             searchModel.AddressAttributeId = addressAttribute.Id;
 
@@ -76,8 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<AddressAttributeSearchModel> PrepareAddressAttributeSearchModelAsync(AddressAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -95,8 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<AddressAttributeListModel> PrepareAddressAttributeListModelAsync(AddressAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get address attributes
             var addressAttributes = (await _addressAttributeService.GetAllAttributesAsync()).ToPagedList(searchModel);
@@ -168,11 +164,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AddressAttributeValueListModel> PrepareAddressAttributeValueListModelAsync(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
+            ArgumentNullException.ThrowIfNull(addressAttribute);
 
             //get address attribute values
             var addressAttributeValues = (await _addressAttributeService.GetAttributeValuesAsync(addressAttribute.Id)).ToPagedList(searchModel);
@@ -201,8 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<AddressAttributeValueModel> PrepareAddressAttributeValueModelAsync(AddressAttributeValueModel model,
             AddressAttribute addressAttribute, AddressAttributeValue addressAttributeValue, bool excludeProperties = false)
         {
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
+            ArgumentNullException.ThrowIfNull(addressAttribute);
 
             Func<AddressAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
@@ -235,8 +228,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCustomAddressAttributesAsync(IList<AddressModel.AddressAttributeModel> models, Address address)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             var attributes = await _addressAttributeService.GetAllAttributesAsync();
             foreach (var attribute in attributes)

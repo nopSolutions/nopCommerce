@@ -149,7 +149,7 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         }
 
         [Test]
-        public async Task SholThrowsExceptionButNotCacheIt()
+        public async Task SholdThrowsExceptionButNotCacheIt()
         {
             var cacheKey = new CacheKey("some_key_1");
 

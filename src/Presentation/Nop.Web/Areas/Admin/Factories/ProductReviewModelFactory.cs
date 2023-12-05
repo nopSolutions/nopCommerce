@@ -74,8 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductReviewSearchModel> PrepareProductReviewSearchModelAsync(ProductReviewSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -117,8 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductReviewListModel> PrepareProductReviewListModelAsync(ProductReviewSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter reviews
             var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue ? null
@@ -233,11 +231,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductReviewReviewTypeMappingSearchModel> PrepareProductReviewReviewTypeMappingSearchModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
+            ArgumentNullException.ThrowIfNull(productReview);
 
             searchModel.ProductReviewId = productReview.Id;
 
@@ -260,11 +256,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
+            ArgumentNullException.ThrowIfNull(productReview);
 
             //get product review and review type mappings
             var productReviewReviewTypeMappings = (await _reviewTypeService

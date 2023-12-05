@@ -85,7 +85,7 @@ namespace Nop.Web.Factories
             else
             {
                 //some country is selected
-                if (!result.Any())
+                if (result.Count == 0)
                 {
                     //country does not have states
                     result.Insert(0, new StateProvinceModel

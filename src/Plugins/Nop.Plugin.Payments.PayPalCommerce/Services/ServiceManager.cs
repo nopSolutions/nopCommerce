@@ -504,7 +504,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     }
                 };
 
-                orderDetails.PurchaseUnits = new List<PurchaseUnitRequest> { purchaseUnit };
+                orderDetails.PurchaseUnits = [purchaseUnit];
 
                 var orderRequest = new OrdersCreateRequest().RequestBody(orderDetails);
                 return await HandleCheckoutRequestAsync<OrdersCreateRequest, Order>(settings, orderRequest);
@@ -789,9 +789,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     "capture" => await getWebhookResource<PayPalCheckoutSdk.Payments.Capture>(),
                     "refund" => await getWebhookResource<PayPalCheckoutSdk.Payments.Refund>(),
                     _ => null
-                };
-                if (webhookResource is null)
-                    throw new NopException($"Unknown webhook resource type '{webhookResourceType}'");
+                } ?? throw new NopException($"Unknown webhook resource type '{webhookResourceType}'");
 
                 var orderReference = webhookResource is Order payPalOrder
                     ? payPalOrder.PurchaseUnits?.FirstOrDefault()?.CustomId
@@ -891,7 +889,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 {
                     case "completed":
                         var refundIds = await _genericAttributeService.GetAttributeAsync<List<string>>(order, PayPalCommerceDefaults.RefundIdAttributeName)
-                            ?? new List<string>();
+                            ?? [];
                         if (!refundIds.Contains(refund.Id))
                         {
                             if (decimal.TryParse(refund.Amount?.Value, out var refundedAmount))

@@ -48,11 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
             SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
+            ArgumentNullException.ThrowIfNull(specificationAttribute);
 
             searchModel.SpecificationAttributeId = specificationAttribute.Id;
 
@@ -71,11 +69,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
             SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
+            ArgumentNullException.ThrowIfNull(specificationAttribute);
 
             searchModel.SpecificationAttributeId = specificationAttribute.Id;
 
@@ -99,8 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModelAsync(SpecificationAttributeGroupSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -118,8 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModelAsync(SpecificationAttributeGroupSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get specification attribute groups
             var specificationAttributeGroups = await _specificationAttributeService
@@ -189,8 +183,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModelAsync(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get specification attributes
             var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id)).ToPagedList(searchModel);
@@ -260,11 +253,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<SpecificationAttributeOptionListModel> PrepareSpecificationAttributeOptionListModelAsync(
             SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
+            ArgumentNullException.ThrowIfNull(specificationAttribute);
 
             //get specification attribute options
             var options = (await _specificationAttributeService
@@ -304,8 +295,7 @@ namespace Nop.Web.Areas.Admin.Factories
             SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption,
             bool excludeProperties = false)
         {
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
+            ArgumentNullException.ThrowIfNull(specificationAttribute);
 
             Func<SpecificationAttributeOptionLocalizedModel, int, Task> localizedModelConfiguration = null;
 
@@ -344,11 +334,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<SpecificationAttributeProductListModel> PrepareSpecificationAttributeProductListModelAsync(
             SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
+            ArgumentNullException.ThrowIfNull(specificationAttribute);
 
             //get products
             var products = await _specificationAttributeService.GetProductsBySpecificationAttributeIdAsync(

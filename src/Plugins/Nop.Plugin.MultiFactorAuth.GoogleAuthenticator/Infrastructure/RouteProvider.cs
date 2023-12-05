@@ -17,7 +17,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Infrastructure
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             endpointRouteBuilder.MapControllerRoute(GoogleAuthenticatorDefaults.ConfigurationRouteName, "Plugins/GoogleAuthenticator/Configure",
-                new { controller = "GoogleAuthenticator", action = "Configure", area = AreaNames.Admin });
+                new { controller = "GoogleAuthenticator", action = "Configure", area = AreaNames.ADMIN });
         }
 
         /// <summary>

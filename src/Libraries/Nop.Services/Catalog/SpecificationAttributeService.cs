@@ -295,8 +295,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSpecificationAttributesAsync(IList<SpecificationAttribute> specificationAttributes)
         {
-            if (specificationAttributes == null)
-                throw new ArgumentNullException(nameof(specificationAttributes));
+            ArgumentNullException.ThrowIfNull(specificationAttributes);
 
             foreach (var specificationAttribute in specificationAttributes)
                 await DeleteSpecificationAttributeAsync(specificationAttribute);
@@ -412,8 +411,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<int[]> GetNotExistingSpecificationAttributeOptionsAsync(int[] attributeOptionIds)
         {
-            if (attributeOptionIds == null)
-                throw new ArgumentNullException(nameof(attributeOptionIds));
+            ArgumentNullException.ThrowIfNull(attributeOptionIds);
 
             var query = _specificationAttributeOptionRepository.Table;
             var queryFilter = attributeOptionIds.Distinct().ToArray();

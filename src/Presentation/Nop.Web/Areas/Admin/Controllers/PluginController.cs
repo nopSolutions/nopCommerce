@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
@@ -8,6 +9,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
+using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -32,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        protected readonly CatalogSettings _catalogSettings;
         protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         protected readonly IAuthenticationPluginManager _authenticationPluginManager;
         protected readonly ICommonModelFactory _commonModelFactory;
@@ -45,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected readonly IPickupPluginManager _pickupPluginManager;
         protected readonly IPluginModelFactory _pluginModelFactory;
         protected readonly IPluginService _pluginService;
+        protected readonly ISearchPluginManager _searchPluginManager;
         protected readonly ISettingService _settingService;
         protected readonly IShippingPluginManager _shippingPluginManager;
         protected readonly IUploadService _uploadService;
@@ -60,7 +64,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public PluginController(ExternalAuthenticationSettings externalAuthenticationSettings,
+        public PluginController(CatalogSettings catalogSettings,
+            ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
             ICommonModelFactory commonModelFactory,
             ICustomerActivityService customerActivityService,
@@ -73,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPickupPluginManager pickupPluginManager,
             IPluginModelFactory pluginModelFactory,
             IPluginService pluginService,
+            ISearchPluginManager searchPluginManager,
             ISettingService settingService,
             IShippingPluginManager shippingPluginManager,
             IUploadService uploadService,
@@ -84,6 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             TaxSettings taxSettings,
             WidgetSettings widgetSettings)
         {
+            _catalogSettings = catalogSettings;
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _authenticationPluginManager = authenticationPluginManager;
             _commonModelFactory = commonModelFactory;
@@ -97,6 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pickupPluginManager = pickupPluginManager;
             _pluginModelFactory = pluginModelFactory;
             _pluginService = pluginService;
+            _searchPluginManager = searchPluginManager;
             _settingService = settingService;
             _shippingPluginManager = shippingPluginManager;
             _uploadService = uploadService;
@@ -126,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var warnings = new List<SystemWarningModel>();
             await _commonModelFactory.PreparePluginsWarningModelAsync(warnings);
 
-            if (warnings.Any())
+            if (warnings.Count != 0)
                 _notificationService.WarningNotification(string.Join("<br />", warnings), false);
 
             return View(model);
@@ -191,16 +199,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //events
-                if (pluginDescriptors.Any())
+                if (pluginDescriptors.Count != 0)
                     await _eventPublisher.PublishAsync(new PluginsUploadedEvent(pluginDescriptors));
 
-                if (themeDescriptors.Any())
+                if (themeDescriptors.Count != 0)
                     await _eventPublisher.PublishAsync(new ThemesUploadedEvent(themeDescriptors));
 
                 var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
-                if (themeDescriptors.Any())
+                if (themeDescriptors.Count != 0)
                     return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)
@@ -530,6 +538,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
 
                         break;
+
+                    case ISearchProvider _:
+                        if (!model.IsEnabled)
+                        {
+                            //mark as disabled
+                            _catalogSettings.ActiveSearchProviderSystemName = string.Empty;
+                            await _settingService.SaveSettingAsync(_catalogSettings);
+                            break;
+                        }
+
+                        //mark as enabled
+                        _catalogSettings.ActiveSearchProviderSystemName = model.SystemName;
+                        await _settingService.SaveSettingAsync(_catalogSettings);
+                        break;
+
                     case IWidgetPlugin widgetPlugin:
                         pluginIsActive = _widgetPluginManager.IsPluginActive(widgetPlugin);
                         if (pluginIsActive && !model.IsEnabled)

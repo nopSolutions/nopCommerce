@@ -49,8 +49,8 @@ namespace Nop.Services.Messages
             var tempData = _tempDataDictionaryFactory.GetTempData(context);
 
             //Messages have stored in a serialized list
-            var messages = tempData.ContainsKey(NopMessageDefaults.NotificationListKey)
-                ? JsonConvert.DeserializeObject<IList<NotifyData>>(tempData[NopMessageDefaults.NotificationListKey].ToString())
+            var messages = tempData.TryGetValue(NopMessageDefaults.NotificationListKey, out var value) 
+                ? JsonConvert.DeserializeObject<IList<NotifyData>>(value.ToString())
                 : new List<NotifyData>();
 
             messages.Add(new NotifyData

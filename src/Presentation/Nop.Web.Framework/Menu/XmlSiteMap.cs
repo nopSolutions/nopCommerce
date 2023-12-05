@@ -19,6 +19,7 @@ namespace Nop.Web.Framework.Menu
         protected readonly ILocalizationService _localizationService;
         protected readonly INopFileProvider _fileProvider;
         protected readonly IPermissionService _permissionService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -76,7 +77,7 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.ActionName = actionName;
 
                 //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
-                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
+                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } };
             }
             else if (!string.IsNullOrEmpty(url))
                 siteMapNode.Url = url;
@@ -87,7 +88,7 @@ namespace Nop.Web.Framework.Menu
             //permission name
             var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
             if (!string.IsNullOrEmpty(permissionNames))
-                siteMapNode.Visible = await permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                siteMapNode.Visible = await permissionNames.Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .AnyAwaitAsync(async permissionName => await _permissionService.AuthorizeAsync(permissionName.Trim()));
             else
                 siteMapNode.Visible = true;

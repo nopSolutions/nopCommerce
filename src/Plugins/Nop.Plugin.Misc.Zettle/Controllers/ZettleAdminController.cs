@@ -24,7 +24,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.Zettle.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class ZettleAdminController : BasePluginController
@@ -238,7 +238,7 @@ namespace Nop.Plugin.Misc.Zettle.Controllers
                 _zettleSettings.WebhookUrl = string.Empty;
                 _zettleSettings.WebhookKey = string.Empty;
                 _zettleSettings.ImportId = string.Empty;
-                _zettleSettings.InventoryTrackingIds = new();
+                _zettleSettings.InventoryTrackingIds = [];
 
                 if (ZettleService.IsConfigured(_zettleSettings))
                 {
@@ -324,7 +324,7 @@ namespace Nop.Plugin.Misc.Zettle.Controllers
             _zettleSettings.WebhookUrl = string.Empty;
             _zettleSettings.WebhookKey = string.Empty;
             _zettleSettings.ImportId = string.Empty;
-            _zettleSettings.InventoryTrackingIds = new();
+            _zettleSettings.InventoryTrackingIds = [];
             await _settingService.SaveSettingAsync(_zettleSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Zettle.Credentials.AccessRevoked"));

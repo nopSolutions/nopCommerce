@@ -71,8 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DashboardModel> PrepareDashboardModelAsync(DashboardModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
@@ -89,8 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PreparePopularSearchTermReportModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var searchModel = new PopularSearchTermSearchModel();
             searchModel = await _commonModelFactory.PreparePopularSearchTermSearchModelAsync(searchModel);
@@ -106,11 +104,11 @@ namespace Nop.Web.Areas.Admin.Factories
             ">";
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(PopularSearchTermModel.Keyword))
+                new(nameof(PopularSearchTermModel.Keyword))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SearchTermReport.Keyword")
                 },
-                new ColumnProperty(nameof(PopularSearchTermModel.Count))
+                new(nameof(PopularSearchTermModel.Count))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SearchTermReport.Count")
                 }
@@ -129,8 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PrepareBestsellersBriefReportByAmountModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var searchModel = new BestsellerBriefSearchModel();
             searchModel = await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(searchModel);
@@ -145,19 +142,19 @@ namespace Nop.Web.Areas.Admin.Factories
                        ">";
             model.ColumnCollection = new List<ColumnProperty>
                 {
-                    new ColumnProperty(nameof(BestsellerModel.ProductName))
+                    new(nameof(BestsellerModel.ProductName))
                     {
                         Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.Name")
                     },
-                    new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                    new(nameof(BestsellerModel.TotalQuantity))
                     {
                         Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
                     },
-                    new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                    new(nameof(BestsellerModel.TotalAmount))
                     {
                         Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
                     },
-                    new ColumnProperty(nameof(BestsellerModel.ProductId))
+                    new(nameof(BestsellerModel.ProductId))
                     {
                         Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
                         Width = "80",
@@ -179,8 +176,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PrepareBestsellersBriefReportByQuantityModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var searchModel = new BestsellerBriefSearchModel();
             searchModel = await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(searchModel);
@@ -195,19 +191,19 @@ namespace Nop.Web.Areas.Admin.Factories
                   ">";
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(BestsellerModel.ProductName))
+                new(nameof(BestsellerModel.ProductName))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.Name")
                 },
-                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                new(nameof(BestsellerModel.TotalQuantity))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")
                 },
-                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                new(nameof(BestsellerModel.TotalAmount))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")
                 },
-                new ColumnProperty(nameof(BestsellerModel.ProductId))
+                new(nameof(BestsellerModel.ProductId))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
                     Width = "80",
@@ -230,8 +226,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PrepareLatestOrdersModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.Name = "orders-grid";
             model.UrlRead = new DataUrl("OrderList", "Order", null);
@@ -243,30 +238,30 @@ namespace Nop.Web.Areas.Admin.Factories
                   ">";
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                new(nameof(OrderModel.CustomOrderNumber))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.CustomOrderNumber"),
                     Width = "80"
                 },
-                new ColumnProperty(nameof(OrderModel.OrderStatus))
+                new(nameof(OrderModel.OrderStatus))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.OrderStatus"),
                     Width = "100",
                     Render = new RenderCustom("renderColumnOrderStatus")
                 },
-                new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                new(nameof(OrderModel.CustomerEmail))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.Customer"),
                     Width = "250",
                     Render = new RenderCustom("renderColumnCustomerEmail")
                 },
-                new ColumnProperty(nameof(OrderModel.CreatedOn))
+                new(nameof(OrderModel.CreatedOn))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Orders.Fields.CreatedOn"),
                     Width = "100",
                     Render = new RenderDate()
                 },
-                new ColumnProperty(nameof(OrderModel.Id))
+                new(nameof(OrderModel.Id))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.Common.View"),
                     Width = "50",
@@ -288,8 +283,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PrepareOrderIncompleteModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.Name = "incomplete-order-report-grid";
             model.UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null);
@@ -298,16 +292,16 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Info = false;
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                new(nameof(OrderIncompleteReportModel.Item))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Item")
                 },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
+                new(nameof(OrderIncompleteReportModel.Total))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Total"),
                     Width = "50"
                 },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
+                new(nameof(OrderIncompleteReportModel.Count))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.Count"),
                     Width = "120",
@@ -329,8 +323,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<DataTablesModel> PrepareOrderAverageModelAsync(DataTablesModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.Name = "average-order-report-grid";
             model.UrlRead = new DataUrl("OrderAverageReportList", "Order", null);
@@ -339,27 +332,27 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Info = false;
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
+                new(nameof(OrderAverageReportModel.OrderStatus))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.OrderStatus")
                 },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
+                new(nameof(OrderAverageReportModel.SumTodayOrders))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumTodayOrders")
                 },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
+                new(nameof(OrderAverageReportModel.SumThisWeekOrders))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisWeekOrders")
                 },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
+                new(nameof(OrderAverageReportModel.SumThisMonthOrders))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisMonthOrders")
                 },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
+                new(nameof(OrderAverageReportModel.SumThisYearOrders))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumThisYearOrders")
                 },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
+                new(nameof(OrderAverageReportModel.SumAllTimeOrders))
                 {
                     Title = await _localizationService.GetResourceAsync("Admin.SalesReport.Average.SumAllTimeOrders")
                 }

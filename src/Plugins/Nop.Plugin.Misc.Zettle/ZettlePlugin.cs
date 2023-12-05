@@ -100,7 +100,7 @@ namespace Nop.Plugin.Misc.Zettle
                         ControllerName = "ZettleAdmin",
                         ActionName = "Configure",
                         IconClass = "far fa-circle",
-                        RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } }
+                        RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
                     }
                 }
             });

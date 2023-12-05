@@ -113,8 +113,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                 if (filter.Contains(property.PropertyName))
                     continue;
 
-                var objectProperty = replacePairs.ContainsKey(property.PropertyName)
-                    ? objectProperties.FirstOrDefault(p => p.Name == replacePairs[property.PropertyName])
+                var objectProperty = replacePairs.TryGetValue(property.PropertyName, out var value) ? objectProperties.FirstOrDefault(p => p.Name == value)
                     : objectProperties.FirstOrDefault(p => p.Name == property.PropertyName);
 
                 if (objectProperty == null)
@@ -212,9 +211,8 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var manager = await GetPropertyManagerAsync<Order>(workbook);
 
             // get the first worksheet in the workbook
-            var worksheet = workbook.Worksheets.FirstOrDefault();
-            if (worksheet == null)
-                throw new NopException("No worksheet found");
+            var worksheet = workbook.Worksheets.FirstOrDefault()
+                ?? throw new NopException("No worksheet found");
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
 
@@ -256,7 +254,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             manager.SetSelectList("PaymentStatus", await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false));
             manager.SetSelectList("ShippingStatus", await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false));
 
-            AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
+            AreAllObjectPropertiesPresent(order, manager, [.. ignore]);
             PropertiesShouldEqual(order, manager, replacePairs);
 
             var addressFields = new List<string>
@@ -304,9 +302,8 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var manager = await GetPropertyManagerAsync<Manufacturer>(workbook);
 
             // get the first worksheet in the workbook
-            var worksheet = workbook.Worksheets.FirstOrDefault();
-            if (worksheet == null)
-                throw new NopException("No worksheet found");
+            var worksheet = workbook.Worksheets.FirstOrDefault()
+                ?? throw new NopException("No worksheet found");
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
 
@@ -314,7 +311,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             var ignore = new List<string> { "Picture", "EntityCacheKey", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts", "DiscountManufacturerMappings" };
 
-            AreAllObjectPropertiesPresent(manufacturer, manager, ignore.ToArray());
+            AreAllObjectPropertiesPresent(manufacturer, manager, [.. ignore]);
             PropertiesShouldEqual(manufacturer, manager, new Dictionary<string, string>());
 
             manager.GetDefaultProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().NotBeNull();
@@ -330,9 +327,8 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var manager = await GetPropertyManagerAsync<Customer>(workbook);
 
             // get the first worksheet in the workbook
-            var worksheet = workbook.Worksheets.FirstOrDefault();
-            if (worksheet == null)
-                throw new NopException("No worksheet found");
+            var worksheet = workbook.Worksheets.FirstOrDefault()
+                ?? throw new NopException("No worksheet found");
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
             manager.SetSelectList("VatNumberStatus", await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false));
@@ -388,7 +384,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             if(!_customerSettings.FaxEnabled)
                 ignore.Add("Fax");
             
-            AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
+            AreAllObjectPropertiesPresent(customer, manager, [.. ignore]);
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
         }
 
@@ -402,16 +398,15 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var manager = await GetPropertyManagerAsync<Category>(workbook);
 
             // get the first worksheet in the workbook
-            var worksheet = workbook.Worksheets.FirstOrDefault();
-            if (worksheet == null)
-                throw new NopException("No worksheet found");
+            var worksheet = workbook.Worksheets.FirstOrDefault()
+                ?? throw new NopException("No worksheet found");
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
             var category = categories.First();
 
             var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
 
-            AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
+            AreAllObjectPropertiesPresent(category, manager, [.. ignore]);
             PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
 
             manager.GetDefaultProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().NotBeNull();
@@ -464,9 +459,8 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             var manager = await GetPropertyManagerAsync<Product>(workbook);
 
             // get the first worksheet in the workbook
-            var worksheet = workbook.Worksheets.FirstOrDefault();
-            if (worksheet == null)
-                throw new NopException("No worksheet found");
+            var worksheet = workbook.Worksheets.FirstOrDefault()
+                ?? throw new NopException("No worksheet found");
 
             manager.SetSelectList("ProductType", await ProductType.SimpleProduct.ToSelectListAsync(useLocalization: false));
             manager.SetSelectList("GiftCardType", await GiftCardType.Virtual.ToSelectListAsync(useLocalization: false));
@@ -495,7 +489,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
 
-            AreAllObjectPropertiesPresent(product, manager, ignore.ToArray());
+            AreAllObjectPropertiesPresent(product, manager, [.. ignore]);
             PropertiesShouldEqual(product, manager, replacePairs);
         }
 

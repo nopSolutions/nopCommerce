@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public ShipmentModel()
         {
             ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
-            Items = new List<ShipmentItemModel>();
+            Items = [];
         }
 
         #endregion

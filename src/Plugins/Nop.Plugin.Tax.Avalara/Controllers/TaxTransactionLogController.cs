@@ -92,7 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());
+            await _taxTransactionLogService.DeleteTaxTransactionLogAsync([.. selectedIds]);
 
             return Json(new { Result = true });
         }

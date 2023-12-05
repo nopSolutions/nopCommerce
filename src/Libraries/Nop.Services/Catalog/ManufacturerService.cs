@@ -76,8 +76,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountManufacturerMappingAsync(Discount discount)
         {
-            if (discount is null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
@@ -168,8 +167,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<int>> GetAppliedManufacturerIdsAsync(Discount discount, Customer customer)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.ManufacturerIdsByDiscountCacheKey,
                 discount,
@@ -476,8 +474,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string[]> GetNotExistingManufacturersAsync(string[] manufacturerIdsNames)
         {
-            if (manufacturerIdsNames == null)
-                throw new ArgumentNullException(nameof(manufacturerIdsNames));
+            ArgumentNullException.ThrowIfNull(manufacturerIdsNames);
 
             var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
             var queryFilter = manufacturerIdsNames.Distinct().ToArray();
@@ -486,8 +483,8 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (!queryFilter.Any())
-                return queryFilter.ToArray();
+            if (queryFilter.Length == 0)
+                return [.. queryFilter];
 
             //filtering by IDs
             filter = await query.Select(c => c.Id.ToString())

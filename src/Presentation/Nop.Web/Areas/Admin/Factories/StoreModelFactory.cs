@@ -49,8 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -68,8 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get stores
             var stores = (await _storeService.GetAllStoresAsync()).ToPagedList(searchModel);

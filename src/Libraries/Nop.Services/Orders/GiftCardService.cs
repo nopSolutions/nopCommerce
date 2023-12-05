@@ -230,8 +230,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<decimal> GetGiftCardRemainingAmountAsync(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             var result = giftCard.Amount;
 
@@ -254,8 +253,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(GiftCard giftCard)
         {
-            if (giftCard is null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.GiftCardId == giftCard.Id)
@@ -272,8 +270,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.UsedWithOrderId == order.Id)
@@ -300,8 +297,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> IsGiftCardValidAsync(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             if (!giftCard.IsGiftCardActivated)
                 return false;

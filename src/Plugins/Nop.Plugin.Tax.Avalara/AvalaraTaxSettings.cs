@@ -101,7 +101,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets or sets the identifiers of customer roles for which certificates are available
         /// </summary>
-        public List<int> CustomerRoleIds { get; set; } = new();
+        public List<int> CustomerRoleIds { get; set; } = [];
 
         /// <summary>
         /// Gets or sets a value indicating whether to disaply a preview of customer's new certificate before signing and submitting
@@ -117,6 +117,20 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets or sets a value indicating whether to disable the upload of prefilled documents, so that customers must generate a new copy of the certificate by entering their information
         /// </summary>
         public bool FillOnly { get; set; }
+
+        #endregion
+
+        #region Item Classification
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use item classification
+        /// </summary>
+        public bool UseItemClassification { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifiers of countries for which the HS code needs to be calculated
+        /// </summary>
+        public List<int> SelectedCountryIds { get; set; } = [];
 
         #endregion
     }

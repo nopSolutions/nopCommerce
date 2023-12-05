@@ -13,12 +13,12 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Payments.Manual.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class PaymentManualController : BasePaymentController
     {
         #region Fields
-        
+
         protected readonly ILocalizationService _localizationService;
         protected readonly INotificationService _notificationService;
         protected readonly IPermissionService _permissionService;

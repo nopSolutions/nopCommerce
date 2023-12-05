@@ -42,11 +42,8 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<SmtpClient> BuildAsync(EmailAccount emailAccount = null)
         {
-            if (emailAccount is null)
-            {
-                emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            emailAccount ??= await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
                 ?? throw new NopException("Email account could not be loaded");
-            }
 
             var client = new SmtpClient
             {

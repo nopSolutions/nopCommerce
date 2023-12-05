@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
+using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Localization;
@@ -36,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Factories
         protected readonly IPaymentPluginManager _paymentPluginManager;
         protected readonly IPickupPluginManager _pickupPluginManager;
         protected readonly IPluginService _pluginService;
+        protected readonly ISearchPluginManager _searchPluginManager;
         protected readonly IShippingPluginManager _shippingPluginManager;
         protected readonly IStaticCacheManager _staticCacheManager;
         protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
@@ -57,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
+            ISearchPluginManager searchPluginManager,
             IShippingPluginManager shippingPluginManager,
             IStaticCacheManager staticCacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
@@ -74,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _paymentPluginManager = paymentPluginManager;
             _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
+            _searchPluginManager = searchPluginManager;
             _shippingPluginManager = shippingPluginManager;
             _staticCacheManager = staticCacheManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
@@ -94,11 +98,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="plugin">Plugin</param>
         protected virtual void PrepareInstalledPluginModel(PluginModel model, IPlugin plugin)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
+            ArgumentNullException.ThrowIfNull(plugin);
 
             //prepare configuration URL
             model.ConfigurationUrl = plugin.GetConfigurationPageUrl();
@@ -135,6 +137,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
                     break;
 
+                case ISearchProvider searchProvider:
+                    model.IsEnabled = _searchPluginManager.IsPluginActive(searchProvider);
+                    break;
+
                 case IWidgetPlugin widgetPlugin:
                     model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                     break;
@@ -159,8 +165,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PluginSearchModel> PreparePluginSearchModelAsync(PluginSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available load plugin modes
             await _baseAdminModelFactory.PrepareLoadPluginModesAsync(searchModel.AvailableLoadModes, false);
@@ -186,8 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<PluginListModel> PreparePluginListModelAsync(PluginSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter plugins
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
@@ -278,8 +282,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OfficialFeedPluginSearchModel> PrepareOfficialFeedPluginSearchModelAsync(OfficialFeedPluginSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare available versions
             var pluginVersions = await _officialFeedManager.GetVersionsAsync();
@@ -351,8 +354,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OfficialFeedPluginListModel> PrepareOfficialFeedPluginListModelAsync(OfficialFeedPluginSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get plugins
             var plugins = await _officialFeedManager.GetAllPluginsAsync(categoryId: searchModel.SearchCategoryId,

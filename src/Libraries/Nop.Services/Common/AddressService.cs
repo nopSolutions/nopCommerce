@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 using Nop.Services.Attributes;
@@ -22,7 +21,6 @@ namespace Nop.Services.Common
         protected readonly ICountryService _countryService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IRepository<Address> _addressRepository;
-        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStateProvinceService _stateProvinceService;
 
         #endregion
@@ -35,7 +33,6 @@ namespace Nop.Services.Common
             ICountryService countryService,
             ILocalizationService localizationService,
             IRepository<Address> addressRepository,
-            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
@@ -44,7 +41,6 @@ namespace Nop.Services.Common
             _countryService = countryService;
             _localizationService = localizationService;
             _addressRepository = addressRepository;
-            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
         }
 
@@ -122,8 +118,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAddressAsync(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             address.CreatedOnUtc = DateTime.UtcNow;
 
@@ -143,8 +138,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAddressAsync(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             //some validation
             if (address.CountryId == 0)
@@ -165,8 +159,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<bool> IsAddressValidAsync(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             if (string.IsNullOrWhiteSpace(address.FirstName))
                 return false;
@@ -405,7 +398,7 @@ namespace Nop.Services.Common
             }
 
             var formatString = string.Format(format, fieldsList.Select(x => !string.IsNullOrEmpty(x.Value) ? $"{x.Value}{separator}" : x.Value).ToArray())
-                .TrimEnd(separator.ToArray());
+                .TrimEnd([.. separator]);
 
             return (formatString, fieldsList);
         }

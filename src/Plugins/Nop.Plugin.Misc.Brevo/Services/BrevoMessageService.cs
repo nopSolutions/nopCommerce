@@ -235,11 +235,8 @@ namespace Nop.Plugin.Misc.Brevo.Services
             string replyToEmailAddress = null, string replyToName = null, string fromEmail = null, string fromName = null,
             string subject = null)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
-
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(messageTemplate);
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             //try to send SMS notification
             await SendSmsNotificationAsync(messageTemplate, tokens);

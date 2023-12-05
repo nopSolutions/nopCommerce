@@ -47,7 +47,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         [Test]
         public async Task CanLoadActiveShippingRateComputationMethods()
         {
-            var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(new List<string> { "FixedRateTestShippingRateComputationMethod" });
+            var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(["FixedRateTestShippingRateComputationMethod"]);
             shippingRateComputationMethods.Should().NotBeNull();
             shippingRateComputationMethods.Any().Should().BeTrue();
         }

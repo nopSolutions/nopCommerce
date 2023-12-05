@@ -42,16 +42,16 @@ namespace Nop.Web.Framework.UI
         protected readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly SeoSettings _seoSettings;
 
-        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
-        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
-        protected readonly List<CssReferenceMeta> _cssParts = new();
+        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = [];
+        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = [];
+        protected readonly List<CssReferenceMeta> _cssParts = [];
 
-        protected readonly List<string> _canonicalUrlParts = new();
-        protected readonly List<string> _headCustomParts = new();
-        protected readonly List<string> _metaDescriptionParts = new();
-        protected readonly List<string> _metaKeywordParts = new();
-        protected readonly List<string> _pageCssClassParts = new();
-        protected readonly List<string> _titleParts = new();
+        protected readonly List<string> _canonicalUrlParts = [];
+        protected readonly List<string> _headCustomParts = [];
+        protected readonly List<string> _metaDescriptionParts = [];
+        protected readonly List<string> _metaKeywordParts = [];
+        protected readonly List<string> _pageCssClassParts = [];
+        protected readonly List<string> _titleParts = [];
 
         protected string _activeAdminMenuSystemName;
         protected string _editPageUrl;
@@ -120,9 +120,7 @@ namespace Nop.Web.Framework.UI
                 throw new ArgumentNullException(nameof(keys));
 
             var hashInput = string.Join(',', keys);
-
-            using var sha = MD5.Create();
-            var input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+            var input = MD5.HashData(Encoding.Unicode.GetBytes(hashInput));
 
             var key = string.Concat(WebEncoders.Base64UrlEncode(input));
 
@@ -144,11 +142,10 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(bundlePath))
                 throw new ArgumentNullException(nameof(bundlePath));
 
-            if (createAsset is null)
-                throw new ArgumentNullException(nameof(createAsset));
+            ArgumentNullException.ThrowIfNull(createAsset);
 
             if (sourceFiles.Length == 0)
-                sourceFiles = new[] { bundlePath };
+                sourceFiles = [bundlePath];
 
             //remove the base path from the generated URL if exists
             var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
@@ -336,7 +333,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
+                _scriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -367,7 +364,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
+                _scriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -395,10 +392,10 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateScripts(ResourceLocation location)
         {
-            if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
+            if (!_scriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (!_scriptParts.Any())
+            if (_scriptParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
@@ -406,10 +403,9 @@ namespace Nop.Web.Framework.UI
 
             var httpContext = _actionContextAccessor.ActionContext.HttpContext;
 
-            if (woConfig.EnableJavaScriptBundling && _scriptParts[location].Any(item => !item.ExcludeFromBundle))
+            if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
             {
-                var sources = _scriptParts[location]
-                   .Where(item => !item.ExcludeFromBundle && item.IsLocal)
+                var sources = value.Where(item => !item.ExcludeFromBundle && item.IsLocal)
                    .Select(item => item.Src)
                    .Distinct().ToArray();
 
@@ -422,8 +418,7 @@ namespace Nop.Web.Framework.UI
                     MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
             }
 
-            var scripts = _scriptParts[location]
-                .Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
+            var scripts = value.Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
                 .Distinct();
 
             foreach (var item in scripts)
@@ -454,7 +449,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new());
+                _inlineScriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -473,7 +468,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new());
+                _inlineScriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -491,14 +486,14 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateInlineScripts(ResourceLocation location)
         {
-            if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
+            if (!_inlineScriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (!_inlineScriptParts.Any())
+            if (_inlineScriptParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
-            foreach (var item in _inlineScriptParts[location])
+            foreach (var item in value)
             {
                 result.Append(item);
                 result.Append(Environment.NewLine);
@@ -565,7 +560,7 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCssFiles()
-        {            
+        {
             if (_cssParts.Count == 0)
                 return HtmlString.Empty;
 
@@ -702,7 +697,7 @@ namespace Nop.Web.Framework.UI
         {
             //use only distinct rows
             var distinctParts = _headCustomParts.Distinct().ToList();
-            if (!distinctParts.Any())
+            if (distinctParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();

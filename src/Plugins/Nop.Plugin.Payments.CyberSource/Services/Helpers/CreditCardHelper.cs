@@ -5,7 +5,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
     /// <summary>
     /// Credit card helper
     /// </summary>
-    public class CreditCardHelper
+    public partial class CreditCardHelper
     {
         #region Fields
 
@@ -23,14 +23,39 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
 
         static CreditCardHelper()
         {
-            _specialCharRemoveRegex = new Regex("[*'\",_&#^@ ]");
-            _americanExpressRegx = new Regex("^3[47][0-9]{13}$");
-            _discoverRegx = new Regex("^6(?:011|5[0-9]{2})[0-9]{12}$");
-            _mastercardRegx = new Regex("^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$");
-            _visaRegx = new Regex("^4[0-9]{12}(?:[0-9]{3})?$");
-            _dinersClubRegx = new Regex("^3(?:0[0-5]|[68][0-9])[0-9]{11}$");
-            _jcbRegx = new Regex(@"^(?:2131|1800|35\d{3})\d{11}$");
+            _specialCharRemoveRegex = SpecialCharRemoveRegex();
+            _americanExpressRegx = AmericanExpressRegx();
+            _discoverRegx = DiscoverRegx();
+            _mastercardRegx = MastercardRegx();
+            _visaRegx = VisaRegx();
+            _dinersClubRegx = DinersClubRegx();
+            _jcbRegx = JcbRegx();
         }
+
+        #endregion
+
+        #region Utilites
+
+        [GeneratedRegex("[*'\",_&#^@ ]")]
+        private static partial Regex SpecialCharRemoveRegex();
+
+        [GeneratedRegex("^3[47][0-9]{13}$")]
+        private static partial Regex AmericanExpressRegx();
+
+        [GeneratedRegex("^6(?:011|5[0-9]{2})[0-9]{12}$")]
+        private static partial Regex DiscoverRegx();
+        
+        [GeneratedRegex("^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$")]
+        private static partial Regex MastercardRegx();
+        
+        [GeneratedRegex("^4[0-9]{12}(?:[0-9]{3})?$")]
+        private static partial Regex VisaRegx();
+        
+        [GeneratedRegex("^3(?:0[0-5]|[68][0-9])[0-9]{11}$")]
+        private static partial Regex DinersClubRegx();
+        
+        [GeneratedRegex(@"^(?:2131|1800|35\d{3})\d{11}$")]
+        private static partial Regex JcbRegx();
 
         #endregion
 
@@ -117,7 +142,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
 
             cardNumber = RemoveSpecialCharacters(cardNumber);
 
-            return cardNumber.Length >= 6 ? cardNumber.Substring(0, 6) : cardNumber;
+            return cardNumber.Length >= 6 ? cardNumber[..6] : cardNumber;
         }
 
         /// <summary>
@@ -132,7 +157,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
 
             cardNumber = RemoveSpecialCharacters(cardNumber);
 
-            return cardNumber.Length >= 4 ? cardNumber.Substring(cardNumber.Length - 4) : cardNumber;
+            return cardNumber.Length >= 4 ? cardNumber[^4..] : cardNumber;
         }
 
         #endregion
@@ -207,7 +232,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
             /// Gets the jcb card type
             /// </summary>
             public static string Jcb => "007";
-        }
+        }        
 
         #endregion
     }

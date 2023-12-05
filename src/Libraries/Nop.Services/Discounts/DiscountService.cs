@@ -89,7 +89,7 @@ namespace Nop.Services.Discounts
                 if (requirement.IsGroup)
                 {
                     var childRequirements = requirements.Where(r => r.ParentId == requirement.Id).ToList();
-                    
+
                     //get child requirements for the group
                     var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
                     result = await GetValidationResultAsync(childRequirements, interactionType, customer, errors);
@@ -100,7 +100,7 @@ namespace Nop.Services.Discounts
                     var store = await _storeContext.GetCurrentStoreAsync();
                     var requirementRulePlugin = await _discountPluginManager
                         .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, store.Id);
-                    
+
                     if (requirementRulePlugin == null)
                         continue;
 
@@ -243,13 +243,13 @@ namespace Nop.Services.Discounts
         public virtual async Task<IList<Discount>> GetAppliedDiscountsAsync<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
             var discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
-            
+
             var appliedDiscounts = await _shortTermCacheManager.GetAsync(async () =>
                 {
                     return await (from d in _discountRepository.Table
-                        join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
-                        where ad.EntityId == entity.Id
-                        select d).ToListAsync();
+                                  join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
+                                  where ad.EntityId == entity.Id
+                                  select d).ToListAsync();
                 }, NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
 
             return appliedDiscounts;
@@ -287,8 +287,7 @@ namespace Nop.Services.Discounts
         /// <returns>The discount amount</returns>
         public virtual decimal GetDiscountAmount(Discount discount, decimal amount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             //calculate discount amount
             decimal result;
@@ -319,8 +318,7 @@ namespace Nop.Services.Discounts
         public virtual List<Discount> GetPreferredDiscount(IList<Discount> discounts,
             decimal amount, out decimal discountAmount)
         {
-            if (discounts == null)
-                throw new ArgumentNullException(nameof(discounts));
+            ArgumentNullException.ThrowIfNull(discounts);
 
             var result = new List<Discount>();
             discountAmount = decimal.Zero;
@@ -366,11 +364,9 @@ namespace Nop.Services.Discounts
         /// <returns>Result</returns>
         public virtual bool ContainsDiscount(IList<Discount> discounts, Discount discount)
         {
-            if (discounts == null)
-                throw new ArgumentNullException(nameof(discounts));
+            ArgumentNullException.ThrowIfNull(discounts);
 
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             return discounts.Any(dis1 => discount.Id == dis1.Id);
         }
@@ -423,8 +419,7 @@ namespace Nop.Services.Discounts
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<DiscountRequirement>> GetDiscountRequirementsByParentAsync(DiscountRequirement discountRequirement)
         {
-            if (discountRequirement is null)
-                throw new ArgumentNullException(nameof(discountRequirement));
+            ArgumentNullException.ThrowIfNull(discountRequirement);
 
             return await _discountRequirementRepository.GetAllAsync(
                 query => query.Where(dr => dr.ParentId == discountRequirement.Id),
@@ -439,8 +434,7 @@ namespace Nop.Services.Discounts
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountRequirementAsync(DiscountRequirement discountRequirement, bool recursive = false)
         {
-            if (discountRequirement == null)
-                throw new ArgumentNullException(nameof(discountRequirement));
+            ArgumentNullException.ThrowIfNull(discountRequirement);
 
             if (recursive && await GetDiscountRequirementsByParentAsync(discountRequirement) is IList<DiscountRequirement> children && children.Any())
                 foreach (var child in children)
@@ -472,7 +466,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-        
+
         /// <summary>
         /// Validate discount
         /// </summary>
@@ -485,11 +479,9 @@ namespace Nop.Services.Discounts
         /// </returns>
         public virtual async Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //invalid by default
             var result = new DiscountValidationResult();

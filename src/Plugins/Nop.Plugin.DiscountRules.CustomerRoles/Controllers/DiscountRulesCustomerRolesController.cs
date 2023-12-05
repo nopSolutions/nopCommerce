@@ -15,7 +15,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
@@ -68,9 +68,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 return Content("Access denied");
 
             //load the discount
-            var discount = await _discountService.GetDiscountByIdAsync(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
+                ?? throw new ArgumentException("Discount could not be loaded");
 
             //check whether the discount requirement exists
             if (discountRequirementId.HasValue && await _discountService.GetDiscountRequirementByIdAsync(discountRequirementId.Value) is null)
@@ -83,16 +82,15 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             {
                 RequirementId = discountRequirementId ?? 0,
                 DiscountId = discountId,
-                CustomerRoleId = restrictedRoleId
+                CustomerRoleId = restrictedRoleId,
+                //set available customer roles
+                AvailableCustomerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).Select(role => new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = role.Id == restrictedRoleId
+                }).ToList()
             };
-
-            //set available customer roles
-            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).Select(role => new SelectListItem
-            {
-                Text = role.Name,
-                Value = role.Id.ToString(),
-                Selected = role.Id == restrictedRoleId
-            }).ToList();
             model.AvailableCustomerRoles.Insert(0, new SelectListItem
             {
                 Text = await _localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"),

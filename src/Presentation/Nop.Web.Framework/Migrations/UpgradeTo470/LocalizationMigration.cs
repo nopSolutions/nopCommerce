@@ -48,6 +48,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 //6893
                 "Admin.Configuration.AppSettings.Cache.ShortTermCacheTime",
+
+                //#6894
+                "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime",
+                "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint",
             });
 
             #endregion
@@ -173,6 +177,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled.Hint"] = "Set if you need three gender options available - Male, female, neutral (as per German laws).",
                 ["Admin.Customers.Customers.Fields.Gender.Neutral"] = "Neutral",
                 ["Account.Fields.Gender.Neutral"] = "Neutral",
+
+                //#6930
+                ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
+                ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
 
             }, languageId);
 

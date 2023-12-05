@@ -98,8 +98,7 @@ namespace Nop.Data.Migrations
         /// <param name="commitVersionOnly">Commit only version information</param>
         public virtual void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation, bool commitVersionOnly = false)
         {
-            if (assembly is null)
-                throw new ArgumentNullException(nameof(assembly));
+            ArgumentNullException.ThrowIfNull(assembly);
 
             foreach (var migrationInfo in GetMigrations(assembly, commitVersionOnly && migrationProcessType != MigrationProcessType.NoMatter, migrationProcessType).OrderBy(migration => migration.Version))
                 ApplyUpMigration(migrationInfo, commitVersionOnly);
@@ -111,8 +110,7 @@ namespace Nop.Data.Migrations
         /// <param name="assembly">Assembly to find migrations</param>
         public virtual void ApplyUpSchemaMigrations(Assembly assembly)
         {
-            if (assembly is null)
-                throw new ArgumentNullException(nameof(assembly));
+            ArgumentNullException.ThrowIfNull(assembly);
 
             foreach (var migrationInfo in GetMigrations(assembly, false, MigrationProcessType.NoMatter, isSchemaMigration: true).OrderBy(migration => migration.Version))
                 ApplyUpMigration(migrationInfo);
@@ -124,8 +122,7 @@ namespace Nop.Data.Migrations
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
         {
-            if (assembly is null)
-                throw new ArgumentNullException(nameof(assembly));
+            ArgumentNullException.ThrowIfNull(assembly);
 
             foreach (var migrationInfo in GetMigrations(assembly, false, MigrationProcessType.NoMatter, true).OrderByDescending(migration => migration.Version))
                 ApplyDownMigration(migrationInfo);
@@ -137,8 +134,7 @@ namespace Nop.Data.Migrations
         /// <param name="migrationInfo">Migration to rollback</param>
         public void ApplyDownMigration(IMigrationInfo migrationInfo)
         {
-            if (migrationInfo is null)
-                throw new ArgumentNullException(nameof(migrationInfo));
+            ArgumentNullException.ThrowIfNull(migrationInfo);
 
             _migrationRunner.Down(migrationInfo.Migration);
             _versionLoader.Value.DeleteVersion(migrationInfo.Version);
@@ -151,8 +147,7 @@ namespace Nop.Data.Migrations
         /// <param name="commitVersionOnly">Commit only version information</param>
         public void ApplyUpMigration(IMigrationInfo migrationInfo, bool commitVersionOnly = false)
         {
-            if (migrationInfo is null)
-                throw new ArgumentNullException(nameof(migrationInfo));
+            ArgumentNullException.ThrowIfNull(migrationInfo);
 
             if (!commitVersionOnly)
                 _migrationRunner.Up(migrationInfo.Migration);

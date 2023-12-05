@@ -50,7 +50,7 @@ namespace Nop.Services.Tax
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ITaxProvider taxProvider)
         {
-            return IsPluginActive(taxProvider, new List<string> { _taxSettings.ActiveTaxProviderSystemName });
+            return IsPluginActive(taxProvider, [_taxSettings.ActiveTaxProviderSystemName]);
         }
 
         /// <summary>

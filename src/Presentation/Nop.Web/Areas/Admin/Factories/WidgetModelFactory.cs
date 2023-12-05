@@ -41,8 +41,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<WidgetSearchModel> PrepareWidgetSearchModelAsync(WidgetSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -60,8 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get widgets
             var widgets = (await _widgetPluginManager.LoadAllPluginsAsync())

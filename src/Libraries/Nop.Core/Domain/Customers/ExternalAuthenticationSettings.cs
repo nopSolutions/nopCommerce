@@ -12,7 +12,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public ExternalAuthenticationSettings()
         {
-            ActiveAuthenticationMethodSystemNames = new List<string>();
+            ActiveAuthenticationMethodSystemNames = [];
         }
 
         /// <summary>

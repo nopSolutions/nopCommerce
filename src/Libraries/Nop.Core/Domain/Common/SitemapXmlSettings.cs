@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Common
     {
         public SitemapXmlSettings()
         {
-            SitemapCustomUrls = new List<string>();
+            SitemapCustomUrls = [];
         }
 
         /// <summary>

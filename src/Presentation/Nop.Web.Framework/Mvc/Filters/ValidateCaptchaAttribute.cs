@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ValidateCaptchaAttribute(string actionParameterName = "captchaValid") : base(typeof(ValidateCaptchaFilter))
         {
-            Arguments = new object[] { actionParameterName };
+            Arguments = [actionParameterName];
         }
 
         #endregion
@@ -78,8 +78,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidateCaptchaAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

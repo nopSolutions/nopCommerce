@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+﻿﻿using System.IO.Compression;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
@@ -45,8 +45,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Adjusted width and height</returns>
         protected virtual (int width, int height) ValidateImageMeasures(SKBitmap image, int maxWidth = 0, int maxHeight = 0)
         {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
+            ArgumentNullException.ThrowIfNull(image);
 
             float width = Math.Min(image.Width, maxWidth);
             float height = Math.Min(image.Height, maxHeight);
@@ -225,7 +224,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </param>
         public virtual void DirectoryMove(string sourceDirName, string destDirName)
         {
-            if (destDirName.IndexOf(sourceDirName, StringComparison.InvariantCulture) == 0)
+            if (destDirName.StartsWith(sourceDirName, StringComparison.InvariantCulture))
                 throw new RoxyFilemanException("E_CannotMoveDirToChild");
 
             var sourceDirInfo = new DirectoryInfo(GetFullPath(sourceDirName));
@@ -378,9 +377,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
         /// <returns>
-        /// The list of <see cref="RoxyImageInfo"/>
+        /// The list of <see cref="RoxyFileInfo"/>
         /// </returns>
-        public virtual IEnumerable<RoxyImageInfo> GetFiles(string directoryPath = "", string type = "")
+        public virtual IEnumerable<RoxyFileInfo> GetFiles(string directoryPath = "", string type = "")
         {
             var files = GetDirectoryContents(directoryPath);
 
@@ -388,10 +387,23 @@ namespace Nop.Services.Media.RoxyFileman
                 .Where(f => !f.IsDirectory && isMatchType(f.Name))
                 .Select(f =>
                 {
-                    using var skData = SKData.Create(f.PhysicalPath);
-                    var image = SKBitmap.DecodeBounds(skData);
+                    var width = 0;
+                    var height = 0;
 
-                    return new RoxyImageInfo(getRelativePath(f.Name), f.LastModified, f.Length, image.Width, image.Height);
+                    if (GetFileType(f.Name) == "image")
+                    {
+                        using var skData = SKData.Create(f.PhysicalPath);
+                        
+                        if (skData != null)
+                        {
+                            var image = SKBitmap.DecodeBounds(skData);
+
+                            width = image.Width;
+                            height = image.Height;
+                        }
+                    }
+
+                    return new RoxyFileInfo(getRelativePath(f.Name), f.LastModified, f.Length, width, height);
                 });
 
             bool isMatchType(string name) => string.IsNullOrEmpty(type) || GetFileType(name) == type;

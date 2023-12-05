@@ -50,8 +50,7 @@ namespace Nop.Data.DataProviders
         /// <param name="dataParameters">Command parameters</param>
         protected virtual CommandInfo CreateDbCommand(string sql, DataParameter[] dataParameters)
         {
-            if (dataParameters is null)
-                throw new ArgumentNullException(nameof(dataParameters));
+            ArgumentNullException.ThrowIfNull(dataParameters);
 
             var dataConnection = CreateDataConnection(LinqToDbDataProvider);
 
@@ -65,8 +64,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Database connection</returns>
         protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
         {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
+            ArgumentNullException.ThrowIfNull(dataProvider);
 
             var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
             {
@@ -481,7 +479,7 @@ namespace Nop.Data.DataProviders
         {
             var command = CreateDbCommand(procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
-            return Task.FromResult<IList<T>>(rez ?? new List<T>());
+            return Task.FromResult<IList<T>>(rez ?? []);
         }
 
         /// <summary>
@@ -497,7 +495,7 @@ namespace Nop.Data.DataProviders
         public virtual Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
-            return Task.FromResult<IList<T>>(dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>());
+            return Task.FromResult<IList<T>>(dataContext.Query<T>(sql, parameters)?.ToList() ?? []);
         }
 
         /// <summary>

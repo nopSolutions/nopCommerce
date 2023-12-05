@@ -11,18 +11,18 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
     {
         private IConcurrentCollection<int> _sut;
 
-        private void Profile(Action action)
+        private static void Profile(Action action)
         {
             var sw = new Stopwatch();
             var memory = GC.GetTotalMemory(true) / 1024.0 / 1024.0;
             sw.Start();
-            
+
             action.Invoke();
 
             sw.Stop();
             var delta = GC.GetTotalMemory(true) / 1024.0 / 1024.0 - memory;
-            Console.WriteLine("Elapsed teme: {0:F}s", sw.ElapsedMilliseconds / 1000.0);
-            Console.WriteLine("Memory usege: {0:F}Mb", delta);
+            Console.WriteLine("Elapsed time: {0:F} s", sw.ElapsedMilliseconds / 1000.0);
+            Console.WriteLine("Memory usage: {0:F} MB", delta);
         }
 
         [SetUp]
@@ -80,16 +80,16 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
             _sut.Add("abb", 1);
             _sut.Remove("ab");
             _sut.TryGetValue("ab", out _).Should().BeFalse();
-            _sut.Keys.Should().BeEquivalentTo(new[] { "abc", "a", "b", "aa", "abb", "bbb" });
+            _sut.Keys.Should().BeEquivalentTo(["abc", "a", "b", "aa", "abb", "bbb"]);
             Assert.DoesNotThrow(() => _sut.Remove("ab"));
             _sut.Remove("bb");
             _sut.TryGetValue("b", out _).Should().BeTrue();
             _sut.TryGetValue("bbb", out _).Should().BeTrue();
 
             _sut.Prune("b", out _sut);
-            _sut.Keys.Should().BeEquivalentTo(new[] { "b", "bbb" });
+            _sut.Keys.Should().BeEquivalentTo(["b", "bbb"]);
             _sut.Remove("b");
-            _sut.Keys.Should().BeEquivalentTo(new[] { "bbb" });
+            _sut.Keys.Should().BeEquivalentTo(["bbb"]);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
                 _sut.Add(key, 1);
             _sut.Keys.Should().BeEquivalentTo(keys);
         }
-        
+
         [Test]
         public void CanPrune()
         {
@@ -113,30 +113,30 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
             _sut.Add("abd", 1);
             _sut.Prune("bc", out _).Should().BeFalse();
             _sut.Prune("ab", out var subtree).Should().BeTrue();
-            subtree.Keys.Should().BeEquivalentTo(new[] { "ab", "abc", "abd" });
-            _sut.Keys.Should().BeEquivalentTo(new[] { "a", "b", "bba", "bbb" });
+            subtree.Keys.Should().BeEquivalentTo(["ab", "abc", "abd"]);
+            _sut.Keys.Should().BeEquivalentTo(["a", "b", "bba", "bbb"]);
             _sut.Prune("b", out subtree).Should().BeTrue();
-            subtree.Keys.Should().BeEquivalentTo(new[] { "b", "bba", "bbb" });
-            _sut.Keys.Should().BeEquivalentTo(new[] { "a" });
+            subtree.Keys.Should().BeEquivalentTo(["b", "bba", "bbb"]);
+            _sut.Keys.Should().BeEquivalentTo(["a"]);
 
             _sut = subtree;
             _sut.Prune("bb", out subtree).Should().BeTrue();
-            subtree.Keys.Should().BeEquivalentTo(new[] { "bba", "bbb" });
-            _sut.Keys.Should().BeEquivalentTo(new[] { "b" });
+            subtree.Keys.Should().BeEquivalentTo(["bba", "bbb"]);
+            _sut.Keys.Should().BeEquivalentTo(["b"]);
             _sut = subtree;
             _sut.Prune("bba", out subtree);
-            subtree.Keys.Should().BeEquivalentTo(new[] { "bba" });
-            _sut.Keys.Should().BeEquivalentTo(new[] { "bbb" });
+            subtree.Keys.Should().BeEquivalentTo(["bba"]);
+            _sut.Keys.Should().BeEquivalentTo(["bbb"]);
 
             _sut = new ConcurrentTrie<int>();
             _sut.Add("aaa", 1);
             _sut.Prune("a", out subtree).Should().BeTrue();
-            subtree.Keys.Should().BeEquivalentTo(new[] { "aaa" });
+            subtree.Keys.Should().BeEquivalentTo(["aaa"]);
             _sut.Keys.Should().BeEmpty();
             _sut = subtree;
             _sut.Prune("aa", out subtree).Should().BeTrue();
             _sut.Keys.Should().BeEmpty();
-            subtree.Keys.Should().BeEquivalentTo(new[] { "aaa" });
+            subtree.Keys.Should().BeEquivalentTo(["aaa"]);
         }
 
         [Test]
@@ -144,13 +144,13 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
         {
             _sut.Add("a", 1);
             _sut.Add("b", 1);
-            _sut.Add("ab", 1);
-            _sut.Add("abc", 2);
+            _sut.Add("abc", 1);
+            _sut.Add("abcd", 2);
             var keys = _sut.Keys.ToList();
             _sut.Search("ab").Should().BeEquivalentTo(new KeyValuePair<string, int>[]
             {
-                new("ab", 1),
-                new("abc", 2)
+                new("abc", 1),
+                new("abcd", 2)
             });
             _sut.Keys.Should().BeEquivalentTo(keys);
         }
@@ -184,7 +184,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
         [Test]
         [TestCase(typeof(NopConcurrentCollection<int>))]
         [TestCase(typeof(ConcurrentTrie<int>))]
-        [Ignore("Not a test, used for profiling.")]
+        [Ignore("Expensive concurrency test, enable manually.")]
         public void DoesNotBreakDuringParallelAddRemove(Type oType)
         {
             var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
@@ -205,14 +205,14 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
                     }
                 });
             });
-            
+
             sut.Keys.Count().Should().Be(0);
         }
 
         [Test]
         [TestCase(typeof(NopConcurrentCollection<int>))]
         [TestCase(typeof(ConcurrentTrie<int>))]
-        [Ignore("Not a test, used for profiling.")]
+        [Ignore("Expensive concurrency test, enable manually.")]
         public void DoesNotBreakDuringParallelAddPrune(Type oType)
         {
             var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
@@ -231,7 +231,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure
                     st.Keys.Count().Should().Be(1000);
                 });
             });
-            
+
             sut.Keys.Count().Should().Be(0);
         }
 

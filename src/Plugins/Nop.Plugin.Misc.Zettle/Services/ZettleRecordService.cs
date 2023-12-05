@@ -251,7 +251,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
 
                 if (attributeCombinationId == 0 || _repository.Table.FirstOrDefault(record => record.ProductId == productId) is not ZettleRecord productRecord)
                 {
-                    var (records, _) = await PrepareRecordsToAddAsync(new List<int> { productId });
+                    var (records, _) = await PrepareRecordsToAddAsync([productId]);
                     await InsertRecordsAsync(records);
                 }
                 else
@@ -318,7 +318,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 return null;
 
             var newProductIds = productIds.Except(_repository.Table.Select(record => record.ProductId)).ToList();
-            if (!newProductIds.Any())
+            if (newProductIds.Count == 0)
                 return null;
 
             var (records, invalidProducts) = await PrepareRecordsToAddAsync(newProductIds);

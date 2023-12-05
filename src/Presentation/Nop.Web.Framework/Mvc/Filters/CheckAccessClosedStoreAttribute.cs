@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -80,8 +80,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckAccessClosedStoreAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

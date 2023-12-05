@@ -188,8 +188,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<string> GetAffiliateFullNameAsync(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
 
@@ -211,8 +210,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual Task<string> GenerateUrlAsync(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var storeUrl = _webHelper.GetStoreLocation();
             var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
@@ -235,8 +233,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<string> ValidateFriendlyUrlNameAsync(Affiliate affiliate, string friendlyUrlName)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             //ensure we have only valid chars
             friendlyUrlName = await _urlRecordService.GetSeNameAsync(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);

@@ -29,7 +29,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var items = new List<GetShippingOptionRequest.PackageItem>
             {
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                     {
                         Quantity = 1,
                         ProductId = product.Id
@@ -42,14 +42,14 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
             width.Should().Be(0);
             height.Should().Be(0);
 
-            items = new List<GetShippingOptionRequest.PackageItem>
-            {
+            items =
+            [
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                     {
                         Quantity = 2,
                         ProductId = product.Id
                     }, product)
-            };
+            ];
 
             (width, length, height) = await _shippingService.GetDimensionsAsync(items);
 
@@ -68,7 +68,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var items = new List<GetShippingOptionRequest.PackageItem>
             {
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                 {
                     Quantity = 1,
                     ProductId = product.Id
@@ -92,7 +92,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var items = new List<GetShippingOptionRequest.PackageItem>
             {
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                 {
                     Quantity = 2,
                     ProductId = product.Id
@@ -116,7 +116,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var items = new List<GetShippingOptionRequest.PackageItem>
             {
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                 {
                     Quantity = 3,
                     ProductId = product.Id
@@ -147,12 +147,12 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
 
             var items = new List<GetShippingOptionRequest.PackageItem>
             {
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                                 {
                                     Quantity = 3,
                                     ProductId = product1.Id
                                 }, product1),
-                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                new(new ShoppingCartItem
                                 {
                                     Quantity = 1,
                                     ProductId = product2.Id

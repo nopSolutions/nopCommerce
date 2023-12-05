@@ -48,8 +48,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <returns>A task that represents the asynchronous operation</returns>
         public override Task ExecuteAsync(ActionContext context, RedirectResult result)
         {
-            if (result == null)
-                throw new ArgumentNullException(nameof(result));
+            ArgumentNullException.ThrowIfNull(result);
 
             if (_securitySettings.AllowNonAsciiCharactersInHeaders)
             {

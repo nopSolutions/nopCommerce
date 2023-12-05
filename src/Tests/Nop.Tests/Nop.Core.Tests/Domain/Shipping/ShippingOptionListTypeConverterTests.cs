@@ -27,15 +27,13 @@ namespace Nop.Tests.Nop.Core.Tests.Domain.Shipping
         {
             var shippingOptionsInput = new List<ShippingOption>
             {
-                new ShippingOption
-                {
+                new() {
                     Name = "a1",
                     Description = "a2",
                     Rate = 3.57M,
                     ShippingRateComputationMethodSystemName = "a4"
                 },
-                new ShippingOption
-                {
+                new() {
                     Name = "b1",
                     Description = "b2",
                     Rate = 7.00M,

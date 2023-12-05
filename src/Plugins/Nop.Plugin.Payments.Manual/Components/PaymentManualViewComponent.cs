@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Web.Framework.Components;
 
@@ -14,10 +15,10 @@ namespace Nop.Plugin.Payments.Manual.Components
             {
                 CreditCardTypes = new List<SelectListItem>
                 {
-                    new SelectListItem { Text = "Visa", Value = "visa" },
-                    new SelectListItem { Text = "Master card", Value = "MasterCard" },
-                    new SelectListItem { Text = "Discover", Value = "Discover" },
-                    new SelectListItem { Text = "Amex", Value = "Amex" },
+                    new() { Text = "Visa", Value = "visa" },
+                    new() { Text = "Master card", Value = "MasterCard" },
+                    new() { Text = "Discover", Value = "Discover" },
+                    new() { Text = "Amex", Value = "Amex" },
                 }
             };
 
@@ -35,7 +36,7 @@ namespace Nop.Plugin.Payments.Manual.Components
             }
 
             //set postback values (we cannot access "Form" with "GET" requests)
-            if (Request.Method != WebRequestMethods.Http.Get)
+            if (!Request.IsGetRequest())
             {
                 var form = await Request.ReadFormAsync();
 

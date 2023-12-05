@@ -16,7 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         {
             ProductAttributes = new List<ProductAttributeModel>();
             GiftCard = new GiftCardModel();
-            Warnings = new List<string>();
+            Warnings = [];
         }
 
         #endregion

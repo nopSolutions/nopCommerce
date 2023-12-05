@@ -48,8 +48,7 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLanguageAsync(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
@@ -180,8 +179,7 @@ namespace Nop.Services.Localization
         /// <returns>ISO language code</returns>
         public virtual string GetTwoLetterIsoLanguageName(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             if (string.IsNullOrEmpty(language.LanguageCulture))
                 return "en";

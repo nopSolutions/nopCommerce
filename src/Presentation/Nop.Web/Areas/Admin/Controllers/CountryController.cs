@@ -298,7 +298,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
+            var countries = await _countryService.GetCountriesByIdsAsync([.. selectedIds]);
             foreach (var country in countries)
             {
                 country.Published = true;
@@ -317,7 +317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
+            var countries = await _countryService.GetCountriesByIdsAsync([.. selectedIds]);
             foreach (var country in countries)
             {
                 country.Published = false;
@@ -492,7 +492,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(countryId));
 
             var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
-            var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : new List<StateProvince>();
+            var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : [];
             var result = (from s in states
                           select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
@@ -517,7 +517,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     //some country is selected
-                    if (!result.Any())
+                    if (result.Count == 0)
                     {
                         //country does not have states
                         result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });

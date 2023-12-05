@@ -13,8 +13,7 @@
         /// <returns>Result</returns>
         public static bool ContainsSystemName(this SiteMapNode node, string systemName)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (string.IsNullOrWhiteSpace(systemName))
                 return false;

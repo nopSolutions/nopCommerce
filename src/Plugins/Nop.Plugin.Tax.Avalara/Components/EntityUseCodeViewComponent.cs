@@ -106,7 +106,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             {
                 Value = useCode.code,
                 Text = $"{useCode.name} ({string.Join(", ", useCode.validCountries)})"
-            }).ToList() ?? new List<SelectListItem>();
+            }).ToList() ?? [];
 
             //add the special item for 'undefined' with empty guid value
             var defaultValue = Guid.Empty.ToString();

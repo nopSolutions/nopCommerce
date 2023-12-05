@@ -55,7 +55,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             //ACL
-            if (_avalaraTaxSettings.CustomerRoleIds.Any())
+            if (_avalaraTaxSettings.CustomerRoleIds.Count != 0)
             {
                 var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                 if (!customerRoleIds.Intersect(_avalaraTaxSettings.CustomerRoleIds).Any())
@@ -77,12 +77,11 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                     SignedDate = certificate.signedDate.ToShortDateString(),
                     ExpirationDate = certificate.expirationDate.ToShortDateString(),
                     ExposureZone = certificate.exposureZone?.name
-                }).ToList() ?? new List<ExemptionCertificateModel>()
-            };
-
-            model.AvailableExposureZones = (await _avalaraTaxManager.GetExposureZonesAsync())
+                }).ToList() ?? [],
+                AvailableExposureZones = (await _avalaraTaxManager.GetExposureZonesAsync())
                 .Select(zone => new SelectListItem(zone.name, zone.name))
-                .ToList();
+                .ToList()
+            };
 
             return View("~/Plugins/Tax.Avalara/Views/Customer/ExemptionCertificates.cshtml", model);
         }
@@ -102,7 +101,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             //ACL
-            if (_avalaraTaxSettings.CustomerRoleIds.Any())
+            if (_avalaraTaxSettings.CustomerRoleIds.Count != 0)
             {
                 var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                 if (!customerRoleIds.Intersect(_avalaraTaxSettings.CustomerRoleIds).Any())

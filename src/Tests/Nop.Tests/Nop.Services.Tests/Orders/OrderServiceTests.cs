@@ -35,14 +35,14 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         [Test]
         public async Task ItShouldReturnEmptyOrdersWhenOrderIdsEmpty()
         {
-            var orders = await _orderService.GetOrdersByIdsAsync(Array.Empty<int>());
+            var orders = await _orderService.GetOrdersByIdsAsync([]);
             orders.Count.Should().Be(0);
         }
 
         [Test]
         public async Task ItShouldReturnOrdersByIds()
         {
-            var orders = await _orderService.GetOrdersByIdsAsync(new[] { 1, 2 });
+            var orders = await _orderService.GetOrdersByIdsAsync([1, 2]);
             orders.Count.Should().Be(2);
         }
 

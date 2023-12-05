@@ -57,11 +57,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Locale resource search model</returns>
         protected virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel searchModel, Language language)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             searchModel.LanguageId = language.Id;
 
@@ -85,8 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<LanguageSearchModel> PrepareLanguageSearchModelAsync(LanguageSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -104,8 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LanguageListModel> PrepareLanguageListModelAsync(LanguageSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get languages
             var languages = (await _languageService.GetAllLanguagesAsync(showHidden: true)).ToPagedList(searchModel);
@@ -178,11 +174,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<LocaleResourceListModel> PrepareLocaleResourceListModelAsync(LocaleResourceSearchModel searchModel, Language language)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             //get locale resources
             var localeResources = (await _localizationService.GetAllResourceValuesAsync(language.Id, loadPublicLocales: null))

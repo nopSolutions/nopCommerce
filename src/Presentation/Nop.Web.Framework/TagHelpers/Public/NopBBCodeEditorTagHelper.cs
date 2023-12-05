@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
         protected const string FOR_ATTRIBUTE_NAME = "asp-for";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly IWebHelper _webHelper;
@@ -42,11 +42,9 @@ namespace Nop.Web.Framework.TagHelpers.Public
         /// <returns>A task that represents the asynchronous operation</returns>
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;

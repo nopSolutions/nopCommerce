@@ -205,8 +205,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<SendPrivateMessageModel> PrepareSendPrivateMessageModelAsync(Customer customerTo, PrivateMessage replyToPM)
         {
-            if (customerTo == null)
-                throw new ArgumentNullException(nameof(customerTo));
+            ArgumentNullException.ThrowIfNull(customerTo);
 
             var model = new SendPrivateMessageModel
             {
@@ -239,8 +238,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<PrivateMessageModel> PreparePrivateMessageModelAsync(PrivateMessage pm)
         {
-            if (pm == null)
-                throw new ArgumentNullException(nameof(pm));
+            ArgumentNullException.ThrowIfNull(pm);
 
             var fromCustomer = await _customerService.GetCustomerByIdAsync(pm.FromCustomerId);
             var toCustomer = await _customerService.GetCustomerByIdAsync(pm.ToCustomerId);

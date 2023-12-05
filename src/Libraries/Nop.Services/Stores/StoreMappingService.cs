@@ -84,8 +84,7 @@ namespace Nop.Services.Stores
         public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId)
             where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (query is null)
-                throw new ArgumentNullException(nameof(query));
+            ArgumentNullException.ThrowIfNull(query);
 
             if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
                 return query;
@@ -117,8 +116,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<IList<StoreMapping>> GetStoreMappingsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -144,8 +142,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStoreMappingAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException(nameof(storeId));
@@ -174,8 +171,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<int[]> GetStoresIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -200,8 +196,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual int[] GetStoresIdsWithAccess<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;

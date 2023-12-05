@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.NopMobileApp.Controllers
 {
     [AutoValidateAntiforgeryToken]
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     public class NopMobileAppController : BasePluginController
     {
         #region Fields

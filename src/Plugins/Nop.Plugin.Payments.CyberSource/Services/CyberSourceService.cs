@@ -213,11 +213,11 @@ namespace Nop.Plugin.Payments.CyberSource.Services
             if (saveCardOnFile)
             {
                 requestObj.ProcessingInformation.ActionList.Add(CyberSourceDefaults.TokenCreateActionName);
-                requestObj.ProcessingInformation.ActionTokenTypes = new List<string>
-                {
+                requestObj.ProcessingInformation.ActionTokenTypes =
+                [
                     CyberSourceDefaults.CustomerActionTokenTypeName,
                     CyberSourceDefaults.PaymentInstrumentActionTokenTypeName
-                };
+                ];
             }
 
             var apiInstance = new PaymentsApi(GetConfiguration());
@@ -345,11 +345,11 @@ namespace Nop.Plugin.Payments.CyberSource.Services
             if (saveCardOnFile)
             {
                 requestObj.ProcessingInformation.ActionList.Add(CyberSourceDefaults.TokenCreateActionName);
-                requestObj.ProcessingInformation.ActionTokenTypes = new List<string>
-                {
+                requestObj.ProcessingInformation.ActionTokenTypes =
+                [
                     CyberSourceDefaults.CustomerActionTokenTypeName,
                     CyberSourceDefaults.PaymentInstrumentActionTokenTypeName
-                };
+                ];
             }
 
             if (_cyberSourceSettings.PayerAuthenticationEnabled)

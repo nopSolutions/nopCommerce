@@ -186,7 +186,7 @@ namespace Nop.Tests
 
             var rootPath =
                 new DirectoryInfo(
-                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
+                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine([.. @"\..\..\Presentation\Nop.Web".Split('\\', '/')])}")
                     .FullName;
 
             //Presentation\Nop.Web\wwwroot
@@ -199,10 +199,8 @@ namespace Nop.Tests
 
             services.AddWebEncoders();
 
-            var httpContext = new DefaultHttpContext
-            {
-                Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } }
-            };
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers.Append(HeaderNames.Host, NopTestsDefaults.HostIpAddress);
 
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
             httpContextAccessor.Setup(p => p.HttpContext).Returns(httpContext);

@@ -25,7 +25,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class FacebookPixelController : BasePluginController

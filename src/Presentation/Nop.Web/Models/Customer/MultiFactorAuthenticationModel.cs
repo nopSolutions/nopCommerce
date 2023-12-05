@@ -7,7 +7,7 @@ namespace Nop.Web.Models.Customer
     {
         public MultiFactorAuthenticationModel()
         {
-            Providers = new List<MultiFactorAuthenticationProviderModel>();
+            Providers = [];
         }
 
         [NopResourceDisplayName("Account.MultiFactorAuthentication.Fields.IsEnabled")]

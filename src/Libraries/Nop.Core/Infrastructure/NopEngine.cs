@@ -204,9 +204,7 @@ namespace Nop.Core.Infrastructure
                     //try to resolve constructor parameters
                     var parameters = constructor.GetParameters().Select(parameter =>
                     {
-                        var service = Resolve(parameter.ParameterType);
-                        if (service == null)
-                            throw new NopException("Unknown dependency");
+                        var service = Resolve(parameter.ParameterType) ?? throw new NopException("Unknown dependency");
                         return service;
                     });
 
@@ -247,10 +245,10 @@ namespace Nop.Core.Infrastructure
                     if (string.IsNullOrEmpty(name.Name))
                         return null;
 
-                    if (!_assemblies.ContainsKey(name.Name))
+                    if (!_assemblies.TryGetValue(name.Name, out var value))
                         return null;
 
-                    var assemblies = _assemblies[name.Name];
+                    var assemblies = value;
 
                     if (!assemblies.Any())
                         return null;
@@ -276,7 +274,7 @@ namespace Nop.Core.Infrastructure
                     assemblies.TryAdd(name.FullName, assembly);
                 }
 
-                if (_assemblies.Any())
+                if (_assemblies.Count != 0)
                     return getAssembly(assemblyFullName);
                 
                 var fileProvider = CommonHelper.DefaultFileProvider;

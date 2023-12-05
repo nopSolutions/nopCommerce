@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         protected const string DISPLAY_HINT_ATTRIBUTE_NAME = "asp-display-hint";
 
         #endregion
-        
+
         #region Fields
 
         protected readonly ILocalizationService _localizationService;
@@ -49,11 +49,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             //generate label
             var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, null, new { @class = "col-form-label" });

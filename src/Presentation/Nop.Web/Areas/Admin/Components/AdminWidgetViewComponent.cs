@@ -41,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Components
             var models = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData, false);
 
             //no data?
-            if (!models.Any())
+            if (models.Count == 0)
                 return Content(string.Empty);
 
             return View(models);
