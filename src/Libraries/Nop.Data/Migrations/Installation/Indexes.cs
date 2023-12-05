@@ -90,6 +90,10 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(ProductTag.Name)).Ascending()
                 .WithOptions().NonClustered();
 
+            Create.Index("IX_Product_Name").OnTable(nameof (Product))
+                .OnColumn(nameof(Product.Name)).Ascending()
+                .WithOptions().NonClustered();
+
             Create.Index("IX_Product_SubjectToAcl").OnTable(nameof(Product))
                 .OnColumn(nameof(Product.SubjectToAcl)).Ascending()
                 .WithOptions().NonClustered();
