@@ -237,6 +237,10 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(Forum.DisplayOrder)).Ascending()
                 .WithOptions().NonClustered();
 
+            Create.Index("IX_Forums_Topic_Subject").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
+                .OnColumn(nameof(ForumTopic.Subject)).Ascending()
+                .WithOptions().NonClustered();
+
             Create.Index("IX_Customer_Username").OnTable(nameof(Customer))
                 .OnColumn(nameof(Customer.Username)).Ascending()
                 .WithOptions().NonClustered();
