@@ -182,6 +182,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
                 ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
 
+                //#6941
+                ["Permission.ManageAppSettings"] = "Admin area. Manage App Settings",
+
+
             }, languageId);
 
             #endregion
