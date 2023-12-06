@@ -1,0 +1,53 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "FoxNetSoft.Plugin.Misc.WebPImages/1.00": {
+        "dependencies": {
+          "Magick.NET-Q8-AnyCPU": "13.0.0.0",
+          "Magick.NET.Core": "13.0.0.0"
+        },
+        "runtime": {
+          "FoxNetSoft.Plugin.Misc.WebPImages.dll": {}
+        }
+      },
+      "Magick.NET-Q8-AnyCPU/13.0.0.0": {
+        "runtime": {
+          "Magick.NET-Q8-AnyCPU.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.1.0"
+          }
+        }
+      },
+      "Magick.NET.Core/13.0.0.0": {
+        "runtime": {
+          "Magick.NET.Core.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FoxNetSoft.Plugin.Misc.WebPImages/1.00": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Magick.NET-Q8-AnyCPU/13.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Magick.NET.Core/13.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

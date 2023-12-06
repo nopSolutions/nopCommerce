@@ -1,0 +1,176 @@
+﻿@model FoxNetSoft.Plugin.Misc.WebPImages.Models.ConfigureModel
+@{
+    Layout = "_ConfigurePlugin";
+    //Html.SetActiveMenuItemSystemName("FoxNetSoft.WebPImages.Configure");
+}
+<form asp-controller="WebPImages" asp-action="Configure" method="post">
+    <script>
+        $(document).ready(function () {
+            $("#LossyCompression").click(toggleLossyCompression);
+            $("#EnableCDN").click(toggleEnableCDN);
+            $("#showDebugInfo").click(toggleshowDebugInfo);
+
+            toggleLossyCompression();
+            toggleEnableCDN();
+            toggleshowDebugInfo();
+        });
+        function toggleshowDebugInfo() {
+            if ($('#showDebugInfo').is(':checked')) {
+                $('#pnlclearlogfile, #pnlgetlogfile').showElement();
+            }
+            else {
+                $('#pnlclearlogfile, #pnlgetlogfile').hideElement();
+            }
+        }
+        function toggleEnableCDN() {
+            if ($('#EnableCDN').is(':checked')) {
+                $('#pnlCDNPictureUrl').showElement();
+            }
+            else {
+                $('#pnlCDNPictureUrl').hideElement();
+            }
+        }
+        function toggleLossyCompression() {
+            if ($('#LossyCompression').is(':checked')) {
+                $('#pnLossyCompressionQuality').showElement();
+            }
+            else {
+                $('#pnLossyCompressionQuality').hideElement();
+            }
+        }
+    </script>
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    @if (Model.IsRegisted == true)
+                    {
+                        @T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.IsRegisted")
+                    }
+                    else
+                    {
+                        @T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.IsNoRegisted")
+                        <br />
+                        <a href="https://www.foxnetsoft.com/webpimages" target="blank">Buy It Now</a>
+                    }
+                </p>
+                <p>
+                    @T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.RestartNopcommerce")
+                </p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="UseAVIFImages" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseAVIFImages" />
+                        <span asp-validation-for="UseAVIFImages"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="UseWebImages" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseWebImages" />
+                        <span asp-validation-for="UseWebImages"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LossyCompression" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LossyCompression" />
+                        <span asp-validation-for="LossyCompression"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="LossyCompression">
+                    <div class="form-group row" id="pnLossyCompressionQuality">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LossyCompressionQuality" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="LossyCompressionQuality" />
+                            <span asp-validation-for="LossyCompressionQuality"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+            </div>
+        </div>
+        <div class="card card-default" style="display:none;">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="EnableCDN_OverrideForStore" asp-input="EnableCDN" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableCDN" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableCDN" />
+                        <span asp-validation-for="EnableCDN"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="pnlCDNPictureUrl">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CDNPictureUrl_OverrideForStore" asp-input="CDNPictureUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CDNPictureUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CDNPictureUrl" />
+                        <span asp-validation-for="CDNPictureUrl"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="showDebugInfo" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="showDebugInfo" />
+                        <span asp-validation-for="showDebugInfo"></span>
+                        <div id="pnlclearlogfile">
+                            <a href="@Url.Action("ClearLogFile")" class="k-button">@T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.ClearLogFile")</a>
+                        </div>
+                        <div id="pnlgetlogfile">
+                            <a href="@Url.Action("GetLogFile")" class="k-button">@T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.GetLogFile")</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <input class="form-control text-box single-line" id="StoreUrl" name="StoreUrl" value="@Model.StoreUrl" type="text" readonly="readonly">
+                        <span asp-validation-for="StoreUrl"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SerialNumber" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SerialNumber" />
+                        <span asp-validation-for="SerialNumber"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <p>
+                    Installation and configuring plug-in at our site <a href="https://www.foxnetsoft.com/documentation-webpimages" target="blank">https://www.foxnetsoft.com/documentation-webpimages</a>
+                    <br />
+                    <a href="https://www.foxnetsoft.com" target="blank">www.foxnetsoft.com</a>
+                    <br />
+                    <div id="pnldownloaddatabases">
+                        <a href="@Url.Action("DownloadLibraries")" class="k-button">@T("Admin.FoxNetSoft.Plugin.Misc.WebPImages.Download")</a>
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+</form>
